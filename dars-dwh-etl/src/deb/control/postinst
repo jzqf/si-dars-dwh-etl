@@ -1,0 +1,93 @@
+#!/bin/sh
+set -e
+
+# Where the ETL definition will be installed
+# !!! NOTE have to be aligned with property <installpath> in pom.xml of artefact dwh-etl
+APP_DIR=/opt/dwh/dwh-etl
+
+# Where the configurations will be deployed
+ETC_DIR=/etc/dwh/dwh-etl
+
+# INstall Log filename
+INST_LOG=$APP_DIR/dwh-etl_install.log
+
+case "$1" in
+
+	configure)
+
+# set the approriate environment variables for the etl user
+		DATE=`date +%Y-%m-%d:%H:%M:%S`
+		if [ ! -e /home/etl/.profile ]; then
+			cp  ${APP_DIR}/templates/dwh-etl.env /home/etl/.profile
+			chown etl:etl /home/etl/.profile
+			echo "$DATE - INFO: Created /home/etl/.profile for user etl." >> $INST_LOG
+		else
+			echo "$DATE - SKIPPED: creation of: /home/etl/.profile for user etl, ALREADY EXISTS" >> $INST_LOG
+		fi
+
+# Create folder for customer specific properties
+		DATE=`date +%Y-%m-%d:%H:%M:%S`
+		if [ ! -d ${ETC_DIR}/config ]; then
+			mkdir -p ${ETC_DIR}/config
+			chown etl:etl ${ETC_DIR}/config
+			chmod 755 ${ETC_DIR}/config
+			echo "$DATE - INFO: Created config: ${ETC_DIR}/config." >> $INST_LOG
+		else
+			echo "$DATE - SKIPPED: creation of config: ${ETC_DIR}/config, ALREADY EXISTS" >> $INST_LOG
+		fi
+
+# Set dwh customer specific properties
+		DATE=`date +%Y-%m-%d:%H:%M:%S`
+		if [ ! -e ${ETC_DIR}/config/dwh.properties ]; then
+			cp ${APP_DIR}/templates/dwh.properties ${ETC_DIR}/config/dwh.properties
+			chown etl:etl ${ETC_DIR}/config/dwh.properties
+			chmod 666 ${ETC_DIR}/config/dwh.properties
+			echo "$DATE - INFO: Created DWH config: ${ETC_DIR}/config/dwh.properties." >> $INST_LOG
+		else
+			echo "$DATE - SKIPPED: creation of DWH config: ${ETC_DIR}/config/dwh.properties, ALREADY EXISTS" >> $INST_LOG
+		fi
+
+# Create folder for q-free specific properties
+		DATE=`date +%Y-%m-%d:%H:%M:%S`
+		if [ ! -d ${ETC_DIR}/q-free ]; then
+			mkdir -p ${ETC_DIR}/q-free
+			chown etl:etl ${ETC_DIR}/q-free
+			chmod 750 ${ETC_DIR}/q-free
+			echo "$DATE - INFO: Created DWH directory for Q-Free specific props: ${ETC_DIR}/q-free." >> $INST_LOG
+		else
+			echo "$DATE - SKIPPED: creation of DWH directory for Q-Free specific props: ${ETC_DIR}/q-free, ALREADY EXISTS" >> $INST_LOG
+		fi
+
+# Set dwh customer q-free properties
+		DATE=`date +%Y-%m-%d:%H:%M:%S`
+		if [ ! -e ${ETC_DIR}/q-free/dwh-qfree.properties ]; then
+			cp  ${APP_DIR}/templates/dwh-qfree.properties ${ETC_DIR}/q-free/dwh-qfree.properties
+			chown etl:etl ${ETC_DIR}/q-free/dwh-qfree.properties
+			chmod 640 ${ETC_DIR}/q-free/dwh-qfree.properties
+			echo "$DATE - INFO: Created Q-Free DWH specific props: ${ETC_DIR}/q-free/dwh-qfree.properties" >> $INST_LOG
+		else
+			echo "$DATE - SKIPPED: creation of Q-Free DWH specific props: ${ETC_DIR}/q-free/dwh-qfree.properties, ALREADY EXISTS" >> $INST_LOG
+		fi
+
+# Install cron-job for user etl
+		DATE=`date +%Y-%m-%d:%H:%M:%S`
+		if [ ! -e /etc/cron.d/dwh-etl ]; then
+			cp  ${APP_DIR}/templates/dwh-etl.cron /etc/cron.d/dwh-etl
+			echo "$DATE - INFO: Created dwh-etl execition cron job: /etc/cron.d/dwh-etl" >> $INST_LOG
+		else
+			echo "$DATE - SKIPPED: creation of dwh-etl execition cron job: /etc/cron.d/dwh-etl, ALREADY EXISTS" >> $INST_LOG
+		fi
+
+		;;
+
+	abort-upgrade|abort-deconfigure|abort-remove)
+		;;
+
+	*)
+		echo "$0 called with unknown argument \`$1'" >&2
+		exit 1
+		;;
+esac
+
+#DEBHELPER#
+exit 0

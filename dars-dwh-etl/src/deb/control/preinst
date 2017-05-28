@@ -1,0 +1,29 @@
+#!/bin/sh
+
+set -e
+
+case "$1" in
+    install|upgrade)
+
+        # Create "tdp" user if it doesn't exist.
+        if ! id tdp > /dev/null 2>&1 ; then
+            adduser --system --home /home/tdp --group --shell /bin/bash tdp
+        fi
+
+        # Create "etl" user if it doesn't exist.
+        if ! id etl > /dev/null 2>&1 ; then
+            adduser --system --home /home/etl --group --shell /bin/bash etl
+        fi
+    ;;
+
+    abort-upgrade)
+    ;;
+
+    *)
+        echo "preinst called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+
+exit 0
