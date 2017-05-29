@@ -8,7 +8,7 @@
 # Linux. For example, to run this script daily at 2 a.m., use the following
 # entry in the "etl" user's crontab:
 #
-# 0 2 * * * . $HOME/.profile; $DWH_HOME/scripts/dwh_tdp_update.sh
+# 0 2 * * * . $HOME/.profile; $DWH_HOME/bin/dwh_tdp_update.sh
 #
 # This script can also be run manually from a bash shell. Be sure that this is
 # done as the "etl" Linux user because this script expects certain environment
@@ -18,13 +18,8 @@
 # Version history:
 #
 # Version:  1.0
-# Updated:  2016.04.12
+# Updated:  2017.05.29
 # Author:   Jeffrey Zelt
 # Changes:  Initial version
-#
-# Version:  1.1
-# Updated:  2016.07.05
-# Author:   Jeffrey Zelt
-# Changes:  jb_dwh_tdp_update.kjb now also updates TDP data mart
 
-$DWH_HOME/scripts/dwh_tdp_kitchen.sh /dwh_tdp/jb_dwh_tdp_update.kjb
+$DWH_HOME/bin/dwh_tdp_kitchen.sh /dwh_tdp/jb_dwh_tdp_update.kjb

@@ -2,17 +2,22 @@
 
 set -e
 
+# NOTE: We must be aligned with properties <app.rootDir>, <app.user> & <app.group> in pom.xml:
+APP_ROOTDIR=/opt/qfree
+APP_USER=etl
+APP_GROUP=etl
+
 case "$1" in
     install|upgrade)
 
-        # Create "tdp" user if it doesn't exist.
-        if ! id tdp > /dev/null 2>&1 ; then
-            adduser --system --home /home/tdp --group --shell /bin/bash tdp
-        fi
+#        # Create "tdp" user if it doesn't exist.
+#        if ! id tdp > /dev/null 2>&1 ; then
+#            adduser --system --home /home/tdp --group --shell /bin/bash tdp
+#        fi
 
-        # Create "etl" user if it doesn't exist.
-        if ! id etl > /dev/null 2>&1 ; then
-            adduser --system --home /home/etl --group --shell /bin/bash etl
+        # Create "${APP_USER}" user if it doesn't exist.
+        if ! id ${APP_USER} > /dev/null 2>&1 ; then
+            adduser --system --home /home/${APP_USER} --group --shell /bin/bash ${APP_USER}
         fi
     ;;
 
@@ -24,6 +29,5 @@ case "$1" in
         exit 1
     ;;
 esac
-
 
 exit 0

@@ -13,15 +13,14 @@
 # sensible value - the values displayed here may not be valid in your
 # environment.
 #
-#export DWH_HOME=/opt/dwh/dwh-etl
-#export DWH_LOGDIR=$DWH_HOME/logging
+#export DWH_HOME=/opt/qfree/etl
+#export DWH_LOGDIR=$DWH_HOME/logs
 #export KETTLE_HOME=$DWH_HOME/pdi_config
-#export JAVA_HOME=/usr/lib/jvm/java-8-oracle
 #
 # Version history:
 #
 # Version:  1.0
-# Updated:  2016.04.12
+# Updated:  2017.05.29
 # Author:   Jeffrey Zelt
 # Changes:  Initial version
 
