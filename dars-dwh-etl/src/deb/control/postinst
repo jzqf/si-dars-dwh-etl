@@ -1,39 +1,34 @@
 #!/bin/sh
 set -e
 
-# NOTE: We must be aligned with properties <app.rootDir>, <app.user> & <app.group> in pom.xml:
-APP_ROOTDIR=/opt/qfree
-APP_USER=etl
-APP_GROUP=etl
-
 # Where the ETL definition will be installed:
-APP_DIR=${APP_ROOTDIR}/${APP_USER}
+APP_DIR=[[app.rootDir]]/[[app.user]]
 
 # Where the configuration files will be deployed:
 CONF_DIR=${APP_DIR}/conf
 
 # Install log filename:
-INST_LOG=${APP_DIR}/logs/dwh-etl_install.log
+INST_LOG=${APP_DIR}/logs/[[app.name]]_install.log
 
 case "$1" in
 
 	configure)
 
-		# Set the appropriate environment variables for the $APP_USER user
+		# Set the appropriate environment variables for the [[app.user]] user
 		DATE=`date +%Y-%m-%d:%H:%M:%S`
-		if [ ! -e /home/$APP_USER/.profile ]; then
-			cp  ${APP_DIR}/templates/dwh-etl.env /home/$APP_USER/.profile
-			chown $APP_USER:$APP_GROUP /home/$APP_USER/.profile
-			echo "$DATE - INFO: Created /home/$APP_USER/.profile for user $APP_USER." >> $INST_LOG
+		if [ ! -e /home/[[app.user]]/.profile ]; then
+			cp  ${APP_DIR}/templates/[[app.name]].env /home/[[app.user]]/.profile
+			chown [[app.user]]:[[app.group]] /home/[[app.user]]/.profile
+			echo "$DATE - INFO: Created /home/[[app.user]]/.profile for user [[app.user]]." >> $INST_LOG
 		else
-			echo "$DATE - SKIPPED: creation of: /home/$APP_USER/.profile for user $APP_USER, ALREADY EXISTS" >> $INST_LOG
+			echo "$DATE - SKIPPED: creation of: /home/[[app.user]]/.profile for user [[app.user]], ALREADY EXISTS" >> $INST_LOG
 		fi
 
 		# Install customer-specific configuration properties file:
 		DATE=`date +%Y-%m-%d:%H:%M:%S`
 		if [ ! -e ${CONF_DIR}/dwh.properties ]; then
 			cp ${APP_DIR}/templates/dwh.properties ${CONF_DIR}/dwh.properties
-			chown $APP_USER:$APP_GROUP ${CONF_DIR}/dwh.properties
+			chown [[app.user]]:[[app.group]] ${CONF_DIR}/dwh.properties
 			chmod 666 ${CONF_DIR}/dwh.properties
 			echo "$DATE - INFO: Created DWH config: ${CONF_DIR}/dwh.properties." >> $INST_LOG
 		else
@@ -44,18 +39,18 @@ case "$1" in
 		DATE=`date +%Y-%m-%d:%H:%M:%S`
 		if [ ! -e ${CONF_DIR}/dwh-qfree.properties ]; then
 			cp  ${APP_DIR}/templates/dwh-qfree.properties ${CONF_DIR}/dwh-qfree.properties
-			chown $APP_USER:$APP_GROUP ${CONF_DIR}/dwh-qfree.properties
+			chown [[app.user]]:[[app.group]] ${CONF_DIR}/dwh-qfree.properties
 			chmod 640 ${CONF_DIR}/dwh-qfree.properties
 			echo "$DATE - INFO: Created Q-Free DWH specific props: ${CONF_DIR}/dwh-qfree.properties" >> $INST_LOG
 		else
 			echo "$DATE - SKIPPED: creation of Q-Free DWH specific props: ${CONF_DIR}/dwh-qfree.properties, ALREADY EXISTS" >> $INST_LOG
 		fi
 
-		# Install cron-job for user $APP_USER. The name of the file is set to
+		# Install cron-job for user [[app.user]]. The name of the file is set to
 		# [[artifactId]], which should be relatively unique.
 		DATE=`date +%Y-%m-%d:%H:%M:%S`
 		if [ ! -e /etc/cron.d/[[artifactId]] ]; then
-			cp  ${APP_DIR}/templates/dwh-etl.cron /etc/cron.d/[[artifactId]]
+			cp  ${APP_DIR}/templates/[[app.name]].cron /etc/cron.d/[[artifactId]]
 			echo "$DATE - INFO: Created [[artifactId]] execution cron job: /etc/cron.d/[[artifactId]]" >> $INST_LOG
 		else
 			echo "$DATE - SKIPPED: creation of [[artifactId]] execution cron job: /etc/cron.d/[[artifactId]], ALREADY EXISTS" >> $INST_LOG

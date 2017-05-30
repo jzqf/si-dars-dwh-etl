@@ -15,9 +15,10 @@
     <description>ETL framework for DARS OBO data warehouse</description>
 
     <properties>
+        <app.name>dwh-etl</app.name>    <!-- artifactId without the "dars-" prefix -->
         <app.rootDir>/opt/qfree</app.rootDir>
-        <app.user>etl</app.user>
-        <app.group>etl</app.group>
+        <app.user>dwh_etl</app.user>
+        <app.group>dwh_etl</app.group>
     </properties>
 
     <build>
@@ -75,6 +76,23 @@
                         </configuration>
                     </execution>
 
+                    <execution>
+                        <id>filter-template-files</id>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/generated-templates</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>templates</directory>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+
                 </executions>
             </plugin>
             
@@ -102,6 +120,7 @@
                                         <path>${app.rootDir}/${app.user}/logs/oldlogs</path>
                                         <path>${app.rootDir}/${app.user}/pdi_config</path>
                                         <path>${app.rootDir}/${app.user}/pdi_repository</path>
+                                        <path>${app.rootDir}/${app.user}/templates/</path>
                                     </paths>
                                     <mapper>
                                       <type>perm</type>
@@ -111,9 +130,35 @@
                                 </data>
 
                                 <data>
+                                    <src>${basedir}/bin</src>
+                                    <type>directory</type>
+                                    <includes>*.sh</includes>
+                                    <mapper>
+                                        <type>perm</type>
+                                        <prefix>${app.rootDir}/${app.user}/bin</prefix>
+                                        <user>${app.user}</user>
+                                        <group>${app.group}</group>
+                                        <filemode>755</filemode>
+                                    </mapper>
+                                </data>
+
+                                <data>
                                     <src>${basedir}/lib</src>
                                     <type>directory</type>
                                     <includes>**/*</includes>
+                                    <mapper>
+                                        <type>perm</type>
+                                        <prefix>${app.rootDir}/${app.user}/lib</prefix>
+                                        <user>${app.user}</user>
+                                        <group>${app.group}</group>
+                                        <filemode>644</filemode>
+                                    </mapper>
+                                </data>
+
+                                <data>
+                                    <src>${basedir}/lib</src>
+                                    <type>directory</type>
+                                    <includes>dwh_merge_local_properties.jar</includes>
                                     <mapper>
                                         <type>perm</type>
                                         <prefix>${app.rootDir}/${app.user}/lib</prefix>
@@ -135,18 +180,7 @@
                                         <filemode>644</filemode>
                                     </mapper>
                                 </data>
-                                <data>
-                                    <src>${basedir}/lib</src>
-                                    <type>directory</type>
-                                    <includes>dwh_merge_local_properties.jar</includes>
-                                    <mapper>
-                                        <type>perm</type>
-                                        <prefix>${app.rootDir}/${app.user}/lib</prefix>
-                                        <user>${app.user}</user>
-                                        <group>${app.group}</group>
-                                        <filemode>644</filemode>
-                                    </mapper>
-                                </data>
+
                                 <!--
                                 <data>
                                     <src>${basedir}/pdi_config/simple_jndi</src>
@@ -185,6 +219,7 @@
                                         <filemode>644</filemode>
                                     </mapper>
                                 </data>
+
                                 <data>
                                     <src>${basedir}/pdi_repository</src>
                                     <type>directory</type>
@@ -221,22 +256,11 @@
                                         <filemode>644</filemode>
                                     </mapper>
                                 </data>
-                                <data>
-                                    <src>${basedir}/bin</src>
-                                    <type>directory</type>
-                                    <includes>*.sh</includes>
-                                    <mapper>
-                                        <type>perm</type>
-                                        <prefix>${app.rootDir}/${app.user}/bin</prefix>
-                                        <user>${app.user}</user>
-                                        <group>${app.group}</group>
-                                        <filemode>755</filemode>
-                                    </mapper>
-                                </data>
+
                                 <data>
                                     <src>${basedir}/templates</src>
                                     <type>directory</type>
-                                    <includes>*.*</includes>
+                                    <includes>*.properties</includes>	<!-- dwh-qfree.properties, dwh.properties -->
                                     <mapper>
                                         <type>perm</type>
                                         <prefix>${app.rootDir}/${app.user}/templates</prefix>
@@ -245,6 +269,41 @@
                                         <filemode>644</filemode>
                                     </mapper>
                                 </data>
+                                <data>
+                                    <src>${project.build.directory}/generated-templates/${app.name}.cron</src>
+                                    <type>file</type>
+                                    <mapper>
+                                        <type>perm</type>
+                                        <prefix>${app.rootDir}/${app.user}/templates</prefix>
+                                        <user>${app.user}</user>
+                                        <group>${app.group}</group>
+                                        <filemode>644</filemode>
+                                    </mapper>
+                                </data>
+                                <data>
+                                    <src>${project.build.directory}/generated-templates/${app.name}.env</src>
+                                    <type>file</type>
+                                    <mapper>
+                                        <type>perm</type>
+                                        <prefix>${app.rootDir}/${app.user}/templates</prefix>
+                                        <user>${app.user}</user>
+                                        <group>${app.group}</group>
+                                        <filemode>644</filemode>
+                                    </mapper>
+                                </data>
+<!--                                 <data> -->
+<!--                                     <src>${basedir}/templates</src> -->
+<!--                                     <type>directory</type> -->
+<!--                                     <includes>*.*</includes> -->
+<!--                                     <mapper> -->
+<!--                                         <type>perm</type> -->
+<!--                                         <prefix>${app.rootDir}/${app.user}/templates</prefix> -->
+<!--                                         <user>${app.user}</user> -->
+<!--                                         <group>${app.group}</group> -->
+<!--                                         <filemode>644</filemode> -->
+<!--                                     </mapper> -->
+<!--                                 </data> -->
+
                             </dataSet>
                         </configuration>
                     </execution>

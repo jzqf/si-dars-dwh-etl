@@ -2,11 +2,6 @@
 
 set -e
 
-# NOTE: We must be aligned with properties <app.rootDir>, <app.user> & <app.group> in pom.xml:
-APP_ROOTDIR=/opt/qfree
-APP_USER=etl
-APP_GROUP=etl
-
 case "$1" in
     install|upgrade)
 
@@ -15,9 +10,9 @@ case "$1" in
 #            adduser --system --home /home/tdp --group --shell /bin/bash tdp
 #        fi
 
-        # Create "${APP_USER}" user if it doesn't exist.
-        if ! id ${APP_USER} > /dev/null 2>&1 ; then
-            adduser --system --home /home/${APP_USER} --group --shell /bin/bash ${APP_USER}
+        # Create application user, "[[app.user]]", if it doesn't exist.
+        if ! id [[app.user]] > /dev/null 2>&1 ; then
+            adduser [[app.user]] --shell=/bin/bash --home /home/[[app.user]] --disabled-password --system --group
         fi
     ;;
 
