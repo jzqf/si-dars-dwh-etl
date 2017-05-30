@@ -14,16 +14,6 @@ case "$1" in
 
 	configure)
 
-		# Set the appropriate environment variables for the [[app.user]] user
-		DATE=`date +%Y-%m-%d:%H:%M:%S`
-		if [ ! -e /home/[[app.user]]/.profile ]; then
-			cp  ${APP_DIR}/templates/[[app.name]].env /home/[[app.user]]/.profile
-			chown [[app.user]]:[[app.group]] /home/[[app.user]]/.profile
-			echo "$DATE - INFO: Created /home/[[app.user]]/.profile for user [[app.user]]." >> $INST_LOG
-		else
-			echo "$DATE - SKIPPED: creation of: /home/[[app.user]]/.profile for user [[app.user]], ALREADY EXISTS" >> $INST_LOG
-		fi
-
 		# Install customer-specific configuration properties file:
 		DATE=`date +%Y-%m-%d:%H:%M:%S`
 		if [ ! -e ${CONF_DIR}/dwh.properties ]; then
@@ -50,10 +40,21 @@ case "$1" in
 		# [[artifactId]], which should be relatively unique.
 		DATE=`date +%Y-%m-%d:%H:%M:%S`
 		if [ ! -e /etc/cron.d/[[artifactId]] ]; then
-			cp  ${APP_DIR}/templates/[[app.name]].cron /etc/cron.d/[[artifactId]]
+			cp  ${APP_DIR}/templates/[[app.name]].cron /etc/cron.d/[[app.name]]
 			echo "$DATE - INFO: Created [[artifactId]] execution cron job: /etc/cron.d/[[artifactId]]" >> $INST_LOG
 		else
 			echo "$DATE - SKIPPED: creation of [[artifactId]] execution cron job: /etc/cron.d/[[artifactId]], ALREADY EXISTS" >> $INST_LOG
+		fi
+
+		# Ensure that the appropriate environment variables get set for the 
+		# [[app.user]] Linux account.
+		DATE=`date +%Y-%m-%d:%H:%M:%S`
+		if [ ! -e /home/[[app.user]]/.profile ]; then
+			cp  ${APP_DIR}/templates/[[app.name]].env /home/[[app.user]]/.profile
+			chown [[app.user]]:[[app.group]] /home/[[app.user]]/.profile
+			echo "$DATE - INFO: Created /home/[[app.user]]/.profile for user [[app.user]]." >> $INST_LOG
+		else
+			echo "$DATE - SKIPPED: creation of: /home/[[app.user]]/.profile for user [[app.user]], ALREADY EXISTS" >> $INST_LOG
 		fi
 
 		;;

@@ -7,13 +7,13 @@
 # Prerequisites:
 #
 # The following environment variables should exist when this script executes.
-# These should be defined automatically for you when you log into the "etl"
+# These should be defined automatically for you when you log into the "${app.user}"
 # account. If you want to use different a value here for one of these variables,
 # uncomment the the corresponding line below, but be sure to give the variable a
 # sensible value - the values displayed here may not be valid in your
 # environment.
 #
-#export DWH_HOME=/opt/qfree/etl
+#export DWH_HOME=/opt/qfree/${app.user}
 #export DWH_LOGDIR=$DWH_HOME/logs
 #export KETTLE_HOME=$DWH_HOME/pdi_config
 #
@@ -27,7 +27,7 @@
 IFS='
 '  # explicitly set IFS for security reasons (space, tab, newline)
 
-# PATH will be set, if necessary, in ~etl/.profile
+# PATH will be set, if necessary, in ~${app.user}/.profile
 #
 #export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
@@ -37,11 +37,13 @@ VERSION=1.0
 USAGE="$PROGRAM JOB"
 
 # Lock directory to ensure only one copy of a DWH script is running at any time.
-LOCK_DIR="/tmp/dwh_tdp-lock"
+# Currently, each DARS ETL project should use this same lock directory so that
+# no two script from *any* ETL project will run concurrently.
+LOCK_DIR="/tmp/dars-qfree-etl.lock"
 
 PDI_REPOSITORY=$DWH_HOME/pdi_repository
 JOB_DIR=$PDI_REPOSITORY
-LOG_FILE=$DWH_LOGDIR/dwh.log
+LOG_FILE=$DWH_LOGDIR/${app.name}.log
 LOG_LEVEL=Basic
 
 log_error()

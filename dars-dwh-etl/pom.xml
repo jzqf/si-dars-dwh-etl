@@ -93,6 +93,23 @@
                         </configuration>
                     </execution>
 
+                    <execution>
+                        <id>filter-shell-scripts</id>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/generated-scripts</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>bin</directory>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+
                 </executions>
             </plugin>
             
@@ -129,8 +146,20 @@
                                     </mapper>
                                 </data>
 
-                                <data>
+                                <!-- <data>
                                     <src>${basedir}/bin</src>
+                                    <type>directory</type>
+                                    <includes>*.sh</includes>
+                                    <mapper>
+                                        <type>perm</type>
+                                        <prefix>${app.rootDir}/${app.user}/bin</prefix>
+                                        <user>${app.user}</user>
+                                        <group>${app.group}</group>
+                                        <filemode>755</filemode>
+                                    </mapper>
+                                </data> -->
+                                <data>
+                                    <src>${project.build.directory}/generated-scripts</src>
                                     <type>directory</type>
                                     <includes>*.sh</includes>
                                     <mapper>
@@ -172,6 +201,7 @@
                                     <src>${basedir}/logs</src>
                                     <type>directory</type>
                                     <includes>*</includes>
+                                    <excludes>*.log</excludes>
                                     <mapper>
                                         <type>perm</type>
                                         <prefix>${app.rootDir}/${app.user}/logs</prefix>
@@ -316,7 +346,6 @@
         <resources>
             <resource>
                 <directory>.</directory>
-                <!-- Includes & excludes added by Jeffrey Zelt 2016.05.11 -->
 	            <includes>
 	            	<include>lib/**</include>
 	            	<include>logs/**</include>
@@ -327,7 +356,7 @@
 	            </includes>
 	            <excludes>
 	            	<exclude>development/**</exclude>
-	            	<exclude>logs/dwh.log</exclude>
+	            	<exclude>logs/*.log</exclude>
 	            	<exclude>pdi_repository/development/**</exclude>
 	            </excludes>
             </resource>
