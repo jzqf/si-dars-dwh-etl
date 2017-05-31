@@ -1,365 +1,377 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <parent>
-        <groupId>com.qfree.bo.dars</groupId>
-        <artifactId>dars-pom</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
-    </parent>
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<parent>
+		<groupId>com.qfree.bo.dars</groupId>
+		<artifactId>dars-pom</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
 
-    <modelVersion>4.0.0</modelVersion>
-    <artifactId>dars-dwh-etl</artifactId>
-    <version>0.5.0-SNAPSHOT</version>
-    <name>DARS OBO DWH Framework</name>
-    <description>ETL framework for DARS OBO data warehouse</description>
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>dars-dwh-etl</artifactId>
+	<version>0.5.0-SNAPSHOT</version>
+	<name>DARS OBO DWH Framework</name>
+	<description>ETL framework for DARS OBO data warehouse</description>
 
-    <properties>
-        <app.name>dwh-etl</app.name>    <!-- artifactId without the "dars-" prefix -->
-        <app.rootDir>/opt/qfree</app.rootDir>
-        <app.user>dwh_etl</app.user>
-        <app.group>dwh_etl</app.group>
-    </properties>
+	<properties>
+		<app.name>dwh-etl</app.name>	<!-- artifactId without the "dars-" prefix -->
+		<app.rootDir>/opt/qfree</app.rootDir>
+		<app.user>dwh_etl</app.user>
+		<app.group>dwh_etl</app.group>
+	</properties>
 
-    <build>
-        <plugins>
-        
-        	<!--
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>test-jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            -->
-            
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <executions>
+	<build>
+		<plugins>
+		
+			<!--
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>test-jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			-->
+			
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
 
-                    <execution>
-                        <id>filter-jdeb-files</id>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <phase>process-resources</phase>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}/jdeb-resources</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>src/deb/control</directory>
-                                    <filtering>true</filtering>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
+					<execution>
+						<id>filter-jdeb-files</id>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<phase>process-resources</phase>
+						<configuration>
+							<outputDirectory>${project.build.directory}/jdeb-resources</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/deb/control</directory>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
 
-                    <execution>
-                        <id>filter-kettle-files</id>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <phase>process-resources</phase>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}/generated-config</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>pdi_config/.kettle</directory>
-                                    <filtering>true</filtering>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
+					<execution>
+						<id>filter-kettle-files</id>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<phase>process-resources</phase>
+						<configuration>
+							<outputDirectory>${project.build.directory}/generated-config</outputDirectory>
+							<resources>
+								<resource>
+									<directory>pdi_config/.kettle</directory>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
 
-                    <execution>
-                        <id>filter-template-files</id>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <phase>process-resources</phase>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}/generated-templates</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>templates</directory>
-                                    <filtering>true</filtering>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
+					<execution>
+						<id>filter-template-files</id>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<phase>process-resources</phase>
+						<configuration>
+							<outputDirectory>${project.build.directory}/generated-templates</outputDirectory>
+							<resources>
+								<resource>
+									<directory>templates</directory>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
 
-                    <execution>
-                        <id>filter-shell-scripts</id>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <phase>process-resources</phase>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}/generated-scripts</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>bin</directory>
-                                    <filtering>true</filtering>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
+					<execution>
+						<id>filter-shell-scripts</id>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<phase>process-resources</phase>
+						<configuration>
+							<outputDirectory>${project.build.directory}/generated-scripts</outputDirectory>
+							<resources>
+								<resource>
+									<directory>bin</directory>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
 
-                </executions>
-            </plugin>
-            
-            <plugin>
-                <groupId>org.vafer</groupId>
-                <artifactId>jdeb</artifactId>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>jdeb</goal>
-                        </goals>
-                        <configuration>
-                            <controlDir>${basedir}/src/deb/control</controlDir>
-                            <timestamped>true</timestamped>
-                            <dataSet>
+				</executions>
+			</plugin>
 
-                                <data>
-                                    <type>template</type>
-                                    <paths>
-                                        <path>${app.rootDir}/${app.user}/bin</path>
-                                        <path>${app.rootDir}/${app.user}/conf</path>
-                                        <path>${app.rootDir}/${app.user}/lib</path>
-                                        <path>${app.rootDir}/${app.user}/logs</path>
-                                        <path>${app.rootDir}/${app.user}/logs/oldlogs</path>
-                                        <path>${app.rootDir}/${app.user}/pdi_config</path>
-                                        <path>${app.rootDir}/${app.user}/pdi_repository</path>
-                                        <path>${app.rootDir}/${app.user}/templates/</path>
-                                    </paths>
-                                    <mapper>
-                                      <type>perm</type>
-                                        <user>${app.user}</user>
-                                        <group>${app.group}</group>
-                                    </mapper>
-                                </data>
+			<!-- This plugin must appear before the "jdeb" plugin so that the JAR
+			     file "dwh_merge_local_properties.jar" is generated before it is 
+			     packaged in the Debian package.
+			-->
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+					<finalName>dwh_merge_local_properties</finalName>
+					<appendAssemblyId>false</appendAssemblyId>	<!-- suppress "-jar-with-dependencies.jar" suffix in JAR name -->
+					<attach>false</attach>						<!-- avoids Maven warning during build -->
+					<archive>
+						<manifest>
+							<!-- MainClass in manifest to make an executable jar -->
+							<mainClass>com.qfree.bo.dwh.MergeProperties</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id>	<!-- this is used for inheritance merges -->
+						<phase>package</phase>	<!-- bind to the packaging phase -->
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.vafer</groupId>
+				<artifactId>jdeb</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>jdeb</goal>
+						</goals>
+						<configuration>
+							<controlDir>${basedir}/src/deb/control</controlDir>
+							<timestamped>true</timestamped>
+							<dataSet>
 
-                                <!-- <data>
-                                    <src>${basedir}/bin</src>
-                                    <type>directory</type>
-                                    <includes>*.sh</includes>
-                                    <mapper>
-                                        <type>perm</type>
-                                        <prefix>${app.rootDir}/${app.user}/bin</prefix>
-                                        <user>${app.user}</user>
-                                        <group>${app.group}</group>
-                                        <filemode>755</filemode>
-                                    </mapper>
-                                </data> -->
-                                <data>
-                                    <src>${project.build.directory}/generated-scripts</src>
-                                    <type>directory</type>
-                                    <includes>*.sh</includes>
-                                    <mapper>
-                                        <type>perm</type>
-                                        <prefix>${app.rootDir}/${app.user}/bin</prefix>
-                                        <user>${app.user}</user>
-                                        <group>${app.group}</group>
-                                        <filemode>755</filemode>
-                                    </mapper>
-                                </data>
+								<data>
+									<type>template</type>
+									<paths>
+										<path>${app.rootDir}/${app.user}/bin</path>
+										<path>${app.rootDir}/${app.user}/conf</path>
+										<path>${app.rootDir}/${app.user}/lib</path>
+										<path>${app.rootDir}/${app.user}/logs</path>
+										<path>${app.rootDir}/${app.user}/logs/oldlogs</path>
+										<path>${app.rootDir}/${app.user}/pdi_config</path>
+										<path>${app.rootDir}/${app.user}/pdi_repository</path>
+										<path>${app.rootDir}/${app.user}/templates/</path>
+									</paths>
+									<mapper>
+									  <type>perm</type>
+										<user>${app.user}</user>
+										<group>${app.group}</group>
+									</mapper>
+								</data>
 
-                                <data>
-                                    <src>${basedir}/lib</src>
-                                    <type>directory</type>
-                                    <includes>**/*</includes>
-                                    <mapper>
-                                        <type>perm</type>
-                                        <prefix>${app.rootDir}/${app.user}/lib</prefix>
-                                        <user>${app.user}</user>
-                                        <group>${app.group}</group>
-                                        <filemode>644</filemode>
-                                    </mapper>
-                                </data>
+								<!-- <data>
+									<src>${basedir}/bin</src>
+									<type>directory</type>
+									<includes>*.sh</includes>
+									<mapper>
+										<type>perm</type>
+										<prefix>${app.rootDir}/${app.user}/bin</prefix>
+										<user>${app.user}</user>
+										<group>${app.group}</group>
+										<filemode>755</filemode>
+									</mapper>
+								</data> -->
+								<data>
+									<src>${project.build.directory}/generated-scripts</src>
+									<type>directory</type>
+									<includes>*.sh</includes>
+									<mapper>
+										<type>perm</type>
+										<prefix>${app.rootDir}/${app.user}/bin</prefix>
+										<user>${app.user}</user>
+										<group>${app.group}</group>
+										<filemode>755</filemode>
+									</mapper>
+								</data>
 
-                                <data>
-                                    <src>${basedir}/lib</src>
-                                    <type>directory</type>
-                                    <includes>dwh_merge_local_properties.jar</includes>
-                                    <mapper>
-                                        <type>perm</type>
-                                        <prefix>${app.rootDir}/${app.user}/lib</prefix>
-                                        <user>${app.user}</user>
-                                        <group>${app.group}</group>
-                                        <filemode>644</filemode>
-                                    </mapper>
-                                </data>
+								<data>
+									<src>${basedir}/lib</src>
+									<type>directory</type>
+									<includes>**/*</includes>
+									<mapper>
+										<type>perm</type>
+										<prefix>${app.rootDir}/${app.user}/lib</prefix>
+										<user>${app.user}</user>
+										<group>${app.group}</group>
+										<filemode>644</filemode>
+									</mapper>
+								</data>
 
-                                <data>
-                                    <src>${basedir}/logs</src>
-                                    <type>directory</type>
-                                    <includes>*</includes>
-                                    <excludes>*.log</excludes>
-                                    <mapper>
-                                        <type>perm</type>
-                                        <prefix>${app.rootDir}/${app.user}/logs</prefix>
-                                        <user>${app.user}</user>
-                                        <group>${app.group}</group>
-                                        <filemode>644</filemode>
-                                    </mapper>
-                                </data>
+								<data>
+									<src>${basedir}/target/dwh_merge_local_properties.jar</src>
+									<type>file</type>
+									<!-- <includes>dwh_merge_local_properties.jar</includes> -->
+									<mapper>
+										<type>perm</type>
+										<prefix>${app.rootDir}/${app.user}/lib</prefix>
+										<user>${app.user}</user>
+										<group>${app.group}</group>
+										<filemode>644</filemode>
+									</mapper>
+								</data>
 
-                                <!--
-                                <data>
-                                    <src>${basedir}/pdi_config/simple_jndi</src>
-                                    <type>directory</type>
-                                    <includes>jdbc.properties</includes>
-                                    <mapper>
-                                        <type>perm</type>
-                                        <prefix>${app.rootDir}/${app.user}/pdi_config/simple_jndi</prefix>
-                                        <user>${app.user}</user>
-                                        <group>${app.group}</group>
-                                        <filemode>644</filemode>
-                                    </mapper>
-                                </data>
-                                -->
-                                <data>
-                                    <src>${basedir}/pdi_config/.kettle</src>
-                                    <type>directory</type>
-                                    <includes>*,**/*</includes>
-                                    <excludes>.gitignore, kettle.properties</excludes>
-                                    <mapper>
-                                        <type>perm</type>
-                                        <prefix>${app.rootDir}/${app.user}/pdi_config/.kettle</prefix>
-                                        <user>${app.user}</user>
-                                        <group>${app.group}</group>
-                                        <filemode>644</filemode>
-                                    </mapper>
-                                </data>
-                                <data>
-                                    <src>${project.build.directory}/generated-config/kettle.properties</src>
-                                    <type>file</type>
-                                    <mapper>
-                                        <type>perm</type>
-                                        <prefix>${app.rootDir}/${app.user}/pdi_config/.kettle</prefix>
-                                        <user>${app.user}</user>
-                                        <group>${app.group}</group>
-                                        <filemode>644</filemode>
-                                    </mapper>
-                                </data>
+								<data>
+									<src>${basedir}/logs</src>
+									<type>directory</type>
+									<includes>*</includes>
+									<excludes>*.log</excludes>
+									<mapper>
+										<type>perm</type>
+										<prefix>${app.rootDir}/${app.user}/logs</prefix>
+										<user>${app.user}</user>
+										<group>${app.group}</group>
+										<filemode>644</filemode>
+									</mapper>
+								</data>
 
-                                <data>
-                                    <src>${basedir}/pdi_repository</src>
-                                    <type>directory</type>
-                                    <includes>*.kdb</includes>
-                                    <mapper>
-                                        <type>perm</type>
-                                        <prefix>${app.rootDir}/${app.user}/pdi_repository</prefix>
-                                        <user>${app.user}</user>
-                                        <group>${app.group}</group>
-                                        <filemode>644</filemode>
-                                    </mapper>
-                                </data>
-                                <data>
-                                    <src>${basedir}/pdi_repository/dwh_tdp</src>
-                                    <type>directory</type>
-                                    <includes>*,**/*</includes>
-                                    <mapper>
-                                        <type>perm</type>
-                                        <prefix>${app.rootDir}/${app.user}/pdi_repository/dwh_tdp</prefix>
-                                        <user>${app.user}</user>
-                                        <group>${app.group}</group>
-                                        <filemode>644</filemode>
-                                    </mapper>
-                                </data>
-                                <data>
-                                    <src>${basedir}/pdi_repository/dwh_generic</src>
-                                    <type>directory</type>
-                                    <includes>*,**/*</includes>
-                                    <mapper>
-                                        <type>perm</type>
-                                        <prefix>${app.rootDir}/${app.user}/pdi_repository/dwh_generic</prefix>
-                                        <user>${app.user}</user>
-                                        <group>${app.group}</group>
-                                        <filemode>644</filemode>
-                                    </mapper>
-                                </data>
+								<!--
+								<data>
+									<src>${basedir}/pdi_config/simple_jndi</src>
+									<type>directory</type>
+									<includes>jdbc.properties</includes>
+									<mapper>
+										<type>perm</type>
+										<prefix>${app.rootDir}/${app.user}/pdi_config/simple_jndi</prefix>
+										<user>${app.user}</user>
+										<group>${app.group}</group>
+										<filemode>644</filemode>
+									</mapper>
+								</data>
+								-->
+								<data>
+									<src>${basedir}/pdi_config/.kettle</src>
+									<type>directory</type>
+									<includes>*,**/*</includes>
+									<excludes>.gitignore, kettle.properties</excludes>
+									<mapper>
+										<type>perm</type>
+										<prefix>${app.rootDir}/${app.user}/pdi_config/.kettle</prefix>
+										<user>${app.user}</user>
+										<group>${app.group}</group>
+										<filemode>644</filemode>
+									</mapper>
+								</data>
+								<data>
+									<src>${project.build.directory}/generated-config/kettle.properties</src>
+									<type>file</type>
+									<mapper>
+										<type>perm</type>
+										<prefix>${app.rootDir}/${app.user}/pdi_config/.kettle</prefix>
+										<user>${app.user}</user>
+										<group>${app.group}</group>
+										<filemode>644</filemode>
+									</mapper>
+								</data>
 
-                                <data>
-                                    <src>${basedir}/templates</src>
-                                    <type>directory</type>
-                                    <includes>*.properties</includes>	<!-- dwh-qfree.properties, dwh.properties -->
-                                    <mapper>
-                                        <type>perm</type>
-                                        <prefix>${app.rootDir}/${app.user}/templates</prefix>
-                                        <user>${app.user}</user>
-                                        <group>${app.group}</group>
-                                        <filemode>644</filemode>
-                                    </mapper>
-                                </data>
-                                <data>
-                                    <src>${project.build.directory}/generated-templates/${app.name}.cron</src>
-                                    <type>file</type>
-                                    <mapper>
-                                        <type>perm</type>
-                                        <prefix>${app.rootDir}/${app.user}/templates</prefix>
-                                        <user>${app.user}</user>
-                                        <group>${app.group}</group>
-                                        <filemode>644</filemode>
-                                    </mapper>
-                                </data>
-                                <data>
-                                    <src>${project.build.directory}/generated-templates/${app.name}.env</src>
-                                    <type>file</type>
-                                    <mapper>
-                                        <type>perm</type>
-                                        <prefix>${app.rootDir}/${app.user}/templates</prefix>
-                                        <user>${app.user}</user>
-                                        <group>${app.group}</group>
-                                        <filemode>644</filemode>
-                                    </mapper>
-                                </data>
-<!--                                 <data> -->
-<!--                                     <src>${basedir}/templates</src> -->
-<!--                                     <type>directory</type> -->
-<!--                                     <includes>*.*</includes> -->
-<!--                                     <mapper> -->
-<!--                                         <type>perm</type> -->
-<!--                                         <prefix>${app.rootDir}/${app.user}/templates</prefix> -->
-<!--                                         <user>${app.user}</user> -->
-<!--                                         <group>${app.group}</group> -->
-<!--                                         <filemode>644</filemode> -->
-<!--                                     </mapper> -->
-<!--                                 </data> -->
+								<data>
+									<src>${basedir}/pdi_repository</src>
+									<type>directory</type>
+									<includes>*.kdb</includes>
+									<mapper>
+										<type>perm</type>
+										<prefix>${app.rootDir}/${app.user}/pdi_repository</prefix>
+										<user>${app.user}</user>
+										<group>${app.group}</group>
+										<filemode>644</filemode>
+									</mapper>
+								</data>
+								<data>
+									<src>${basedir}/pdi_repository/dwh_tdp</src>
+									<type>directory</type>
+									<includes>*,**/*</includes>
+									<mapper>
+										<type>perm</type>
+										<prefix>${app.rootDir}/${app.user}/pdi_repository/dwh_tdp</prefix>
+										<user>${app.user}</user>
+										<group>${app.group}</group>
+										<filemode>644</filemode>
+									</mapper>
+								</data>
+								<data>
+									<src>${basedir}/pdi_repository/dwh_generic</src>
+									<type>directory</type>
+									<includes>*,**/*</includes>
+									<mapper>
+										<type>perm</type>
+										<prefix>${app.rootDir}/${app.user}/pdi_repository/dwh_generic</prefix>
+										<user>${app.user}</user>
+										<group>${app.group}</group>
+										<filemode>644</filemode>
+									</mapper>
+								</data>
 
-                            </dataSet>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+								<data>
+									<src>${basedir}/templates</src>
+									<type>directory</type>
+									<includes>*.properties</includes>	<!-- dwh-qfree.properties, dwh.properties -->
+									<mapper>
+										<type>perm</type>
+										<prefix>${app.rootDir}/${app.user}/templates</prefix>
+										<user>${app.user}</user>
+										<group>${app.group}</group>
+										<filemode>644</filemode>
+									</mapper>
+								</data>
+								<data>
+									<src>${project.build.directory}/generated-templates/${app.name}.cron</src>
+									<type>file</type>
+									<mapper>
+										<type>perm</type>
+										<prefix>${app.rootDir}/${app.user}/templates</prefix>
+										<user>${app.user}</user>
+										<group>${app.group}</group>
+										<filemode>644</filemode>
+									</mapper>
+								</data>
+								<data>
+									<src>${project.build.directory}/generated-templates/${app.name}.env</src>
+									<type>file</type>
+									<mapper>
+										<type>perm</type>
+										<prefix>${app.rootDir}/${app.user}/templates</prefix>
+										<user>${app.user}</user>
+										<group>${app.group}</group>
+										<filemode>644</filemode>
+									</mapper>
+								</data>
+<!--								 <data> -->
+<!--									 <src>${basedir}/templates</src> -->
+<!--									 <type>directory</type> -->
+<!--									 <includes>*.*</includes> -->
+<!--									 <mapper> -->
+<!--										 <type>perm</type> -->
+<!--										 <prefix>${app.rootDir}/${app.user}/templates</prefix> -->
+<!--										 <user>${app.user}</user> -->
+<!--										 <group>${app.group}</group> -->
+<!--										 <filemode>644</filemode> -->
+<!--									 </mapper> -->
+<!--								 </data> -->
 
-        </plugins>
+							</dataSet>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 
-        <!-- Include ETL dirs in classpath -->
-        <resources>
-            <resource>
-                <directory>.</directory>
-	            <includes>
-	            	<include>lib/**</include>
-	            	<include>logs/**</include>
-	            	<include>pdi_config/**</include>
-	            	<include>pdi_repository/**</include>
-	            	<include>bin/**</include>
-	            	<include>templates/**</include>
-	            </includes>
-	            <excludes>
-	            	<exclude>development/**</exclude>
-	            	<exclude>logs/*.log</exclude>
-	            	<exclude>pdi_repository/development/**</exclude>
-	            </excludes>
-            </resource>
-        </resources>
-    </build>
+		</plugins>
+		
+	</build>
 </project>
