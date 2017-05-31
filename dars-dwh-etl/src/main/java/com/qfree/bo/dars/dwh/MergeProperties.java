@@ -1,4 +1,4 @@
-package com.qfree.bo.dwh;
+package com.qfree.bo.dars.dwh;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
