@@ -27,13 +27,13 @@
 
   <connection>
     <name>dwh_tdp_logging</name>
-    <server>&#x24;&#x7b;DWH_TDP_LOGGING_DB_HOST&#x7d;</server>
+    <server>&#x24;&#x7b;QF_TDP_LOGGING_DB_HOST&#x7d;</server>
     <type>POSTGRESQL</type>
     <access>Native</access>
-    <database>&#x24;&#x7b;DWH_TDP_LOGGING_DB_DATABASE&#x7d;</database>
-    <port>&#x24;&#x7b;DWH_TDP_LOGGING_DB_PORT&#x7d;</port>
-    <username>&#x24;&#x7b;DWH_TDP_LOGGING_DB_USERNAME&#x7d;</username>
-    <password>&#x24;&#x7b;DWH_TDP_LOGGING_DB_PASSWORD&#x7d;</password>
+    <database>&#x24;&#x7b;QF_TDP_LOGGING_DB_DATABASE&#x7d;</database>
+    <port>&#x24;&#x7b;QF_TDP_LOGGING_DB_PORT&#x7d;</port>
+    <username>&#x24;&#x7b;QF_TDP_LOGGING_DB_USERNAME&#x7d;</username>
+    <password>&#x24;&#x7b;QF_TDP_LOGGING_DB_PASSWORD&#x7d;</password>
     <servername/>
     <data_tablespace/>
     <index_tablespace/>
@@ -41,7 +41,7 @@
       <attribute><code>FORCE_IDENTIFIERS_TO_LOWERCASE</code><attribute>N</attribute></attribute>
       <attribute><code>FORCE_IDENTIFIERS_TO_UPPERCASE</code><attribute>N</attribute></attribute>
       <attribute><code>IS_CLUSTERED</code><attribute>N</attribute></attribute>
-      <attribute><code>PORT_NUMBER</code><attribute>&#x24;&#x7b;DWH_TDP_LOGGING_DB_PORT&#x7d;</attribute></attribute>
+      <attribute><code>PORT_NUMBER</code><attribute>&#x24;&#x7b;QF_TDP_LOGGING_DB_PORT&#x7d;</attribute></attribute>
       <attribute><code>PRESERVE_RESERVED_WORD_CASE</code><attribute>N</attribute></attribute>
       <attribute><code>QUOTE_ALL_FIELDS</code><attribute>N</attribute></attribute>
       <attribute><code>SUPPORTS_BOOLEAN_DATA_TYPE</code><attribute>Y</attribute></attribute>
@@ -52,13 +52,13 @@
 
   <connection>
     <name>dwh_tdp_etl</name>
-    <server>&#x24;&#x7b;DWH_TDP_ETL_DB_HOST&#x7d;</server>
+    <server>&#x24;&#x7b;QF_TDP_ETL_DB_HOST&#x7d;</server>
     <type>POSTGRESQL</type>
     <access>Native</access>
-    <database>&#x24;&#x7b;DWH_TDP_ETL_DB_DATABASE&#x7d;</database>
-    <port>&#x24;&#x7b;DWH_TDP_ETL_DB_PORT&#x7d;</port>
-    <username>&#x24;&#x7b;DWH_TDP_ETL_DB_USERNAME&#x7d;</username>
-    <password>&#x24;&#x7b;DWH_TDP_ETL_DB_PASSWORD&#x7d;</password>
+    <database>&#x24;&#x7b;QF_TDP_ETL_DB_DATABASE&#x7d;</database>
+    <port>&#x24;&#x7b;QF_TDP_ETL_DB_PORT&#x7d;</port>
+    <username>&#x24;&#x7b;QF_TDP_ETL_DB_USERNAME&#x7d;</username>
+    <password>&#x24;&#x7b;QF_TDP_ETL_DB_PASSWORD&#x7d;</password>
     <servername/>
     <data_tablespace/>
     <index_tablespace/>
@@ -66,7 +66,7 @@
       <attribute><code>FORCE_IDENTIFIERS_TO_LOWERCASE</code><attribute>N</attribute></attribute>
       <attribute><code>FORCE_IDENTIFIERS_TO_UPPERCASE</code><attribute>N</attribute></attribute>
       <attribute><code>IS_CLUSTERED</code><attribute>N</attribute></attribute>
-      <attribute><code>PORT_NUMBER</code><attribute>&#x24;&#x7b;DWH_TDP_ETL_DB_PORT&#x7d;</attribute></attribute>
+      <attribute><code>PORT_NUMBER</code><attribute>&#x24;&#x7b;QF_TDP_ETL_DB_PORT&#x7d;</attribute></attribute>
       <attribute><code>PRESERVE_RESERVED_WORD_CASE</code><attribute>N</attribute></attribute>
       <attribute><code>QUOTE_ALL_FIELDS</code><attribute>N</attribute></attribute>
       <attribute><code>SUPPORTS_BOOLEAN_DATA_TYPE</code><attribute>Y</attribute></attribute>
@@ -133,13 +133,13 @@
 
   <connection>
     <name>dwh_tdp_mirror</name>
-    <server>&#x24;&#x7b;DWH_TDP_MIRROR_DB_HOST&#x7d;</server>
+    <server>&#x24;&#x7b;QF_TDP_MIRROR_DB_HOST&#x7d;</server>
     <type>POSTGRESQL</type>
     <access>Native</access>
-    <database>&#x24;&#x7b;DWH_TDP_MIRROR_DB_DATABASE&#x7d;</database>
-    <port>&#x24;&#x7b;DWH_TDP_MIRROR_DB_PORT&#x7d;</port>
-    <username>&#x24;&#x7b;DWH_TDP_MIRROR_DB_USERNAME&#x7d;</username>
-    <password>&#x24;&#x7b;DWH_TDP_MIRROR_DB_PASSWORD&#x7d;</password>
+    <database>&#x24;&#x7b;QF_TDP_MIRROR_DB_DATABASE&#x7d;</database>
+    <port>&#x24;&#x7b;QF_TDP_MIRROR_DB_PORT&#x7d;</port>
+    <username>&#x24;&#x7b;QF_TDP_MIRROR_DB_USERNAME&#x7d;</username>
+    <password>&#x24;&#x7b;QF_TDP_MIRROR_DB_PASSWORD&#x7d;</password>
     <servername/>
     <data_tablespace/>
     <index_tablespace/>
@@ -147,7 +147,7 @@
       <attribute><code>FORCE_IDENTIFIERS_TO_LOWERCASE</code><attribute>N</attribute></attribute>
       <attribute><code>FORCE_IDENTIFIERS_TO_UPPERCASE</code><attribute>N</attribute></attribute>
       <attribute><code>IS_CLUSTERED</code><attribute>N</attribute></attribute>
-      <attribute><code>PORT_NUMBER</code><attribute>&#x24;&#x7b;DWH_TDP_MIRROR_DB_PORT&#x7d;</attribute></attribute>
+      <attribute><code>PORT_NUMBER</code><attribute>&#x24;&#x7b;QF_TDP_MIRROR_DB_PORT&#x7d;</attribute></attribute>
       <attribute><code>PRESERVE_RESERVED_WORD_CASE</code><attribute>N</attribute></attribute>
       <attribute><code>QUOTE_ALL_FIELDS</code><attribute>N</attribute></attribute>
       <attribute><code>SUPPORTS_BOOLEAN_DATA_TYPE</code><attribute>Y</attribute></attribute>
@@ -158,13 +158,13 @@
 
   <connection>
     <name>tdp_archive</name>
-    <server>&#x24;&#x7b;DWH_TDP_ARCHIVE_DB_HOST&#x7d;</server>
+    <server>&#x24;&#x7b;QF_TDP_ARCHIVE_DB_HOST&#x7d;</server>
     <type>POSTGRESQL</type>
     <access>Native</access>
-    <database>&#x24;&#x7b;DWH_TDP_ARCHIVE_DB_DATABASE&#x7d;</database>
-    <port>&#x24;&#x7b;DWH_TDP_ARCHIVE_DB_PORT&#x7d;</port>
-    <username>&#x24;&#x7b;DWH_TDP_ARCHIVE_DB_USERNAME&#x7d;</username>
-    <password>&#x24;&#x7b;DWH_TDP_ARCHIVE_DB_PASSWORD&#x7d;</password>
+    <database>&#x24;&#x7b;QF_TDP_ARCHIVE_DB_DATABASE&#x7d;</database>
+    <port>&#x24;&#x7b;QF_TDP_ARCHIVE_DB_PORT&#x7d;</port>
+    <username>&#x24;&#x7b;QF_TDP_ARCHIVE_DB_USERNAME&#x7d;</username>
+    <password>&#x24;&#x7b;QF_TDP_ARCHIVE_DB_PASSWORD&#x7d;</password>
     <servername/>
     <data_tablespace/>
     <index_tablespace/>
@@ -172,7 +172,7 @@
       <attribute><code>FORCE_IDENTIFIERS_TO_LOWERCASE</code><attribute>N</attribute></attribute>
       <attribute><code>FORCE_IDENTIFIERS_TO_UPPERCASE</code><attribute>N</attribute></attribute>
       <attribute><code>IS_CLUSTERED</code><attribute>N</attribute></attribute>
-      <attribute><code>PORT_NUMBER</code><attribute>&#x24;&#x7b;DWH_TDP_ARCHIVE_DB_PORT&#x7d;</attribute></attribute>
+      <attribute><code>PORT_NUMBER</code><attribute>&#x24;&#x7b;QF_TDP_ARCHIVE_DB_PORT&#x7d;</attribute></attribute>
       <attribute><code>PRESERVE_RESERVED_WORD_CASE</code><attribute>N</attribute></attribute>
       <attribute><code>QUOTE_ALL_FIELDS</code><attribute>N</attribute></attribute>
       <attribute><code>SUPPORTS_BOOLEAN_DATA_TYPE</code><attribute>Y</attribute></attribute>
