@@ -9,7 +9,7 @@
 # Linux. For example, to run this script daily at 2 a.m., use the following
 # entry in the "${app.user}" user's crontab:
 #
-# 0 2 * * * . $HOME/.profile; $DWH_HOME/bin/dwh_tdp_mirrored_tables-update.sh
+# 0 2 * * * . $HOME/.profile; $DWH_HOME/bin/dwh_mirrored_tables-update.sh
 #
 # This script can also be run manually from a bash shell. Be sure that this is
 # done under the "${app.user}" Linux account because this script expects certain 
@@ -23,4 +23,4 @@
 # Author:   Jeffrey Zelt
 # Changes:  Initial version
 
-$DWH_HOME/bin/dwh_tdp_kitchen.sh /dwh_tdp/mirror/jb_dwh_tdp_mirrored_tables-update.kjb
+$DWH_HOME/bin/kitchen.sh /dwh_tdp/mirror/jb_dwh_tdp_mirrored_tables-update.kjb
