@@ -23,4 +23,4 @@
 # Author:   Jeffrey Zelt
 # Changes:  Initial version
 
-$DWH_HOME/bin/kitchen.sh /dwh/data_mart/jb_dma-update.kjb
+$DWH_HOME/bin/kitchen.sh /data_mart/jb_dma-update.kjb
