@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# This script updates the tables in the TDP data warehouse (DWH) that comprise 
-# the star-schema TDP data mart.
+# This script updates the tables in the data mart that is maintained by this
+# project.
 #
 # This script should be scheduled to run according to a sensible periodic
 # schedule. Although any scheduler can be used for this purpose, the simplest is

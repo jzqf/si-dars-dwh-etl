@@ -1,8 +1,6 @@
 #!/bin/bash
 #
-# This runs a job from a PDI repository. The specified job should perform some
-# sort of useful work in the TDP data warehouse (DWH), such as updating all or
-# part of it.
+# This runs a job from the PDI repository for this project.
 #
 # Prerequisites:
 #

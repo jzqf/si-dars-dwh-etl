@@ -1,6 +1,7 @@
 #!/bin/bash
 #
-# This script updates the TDP data warehouse (DWH). 
+# This script updates the data warehouse (DWH) that is maintained by this
+# project. 
 #
 # This script should be scheduled to run according to a sensible periodic
 # schedule. Although any scheduler can be used for this purpose, the simplest is
