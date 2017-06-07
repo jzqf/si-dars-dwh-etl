@@ -23,4 +23,4 @@
 # Author:   Jeffrey Zelt
 # Changes:  Initial version
 
-$DWH_HOME/bin/kitchen.sh /dwh_tdp/mirror/jb_dwh_mirrored_tables-update.kjb
+$DWH_HOME/bin/kitchen.sh /dwh/mirror/jb_dwh_mirrored_tables-update.kjb
