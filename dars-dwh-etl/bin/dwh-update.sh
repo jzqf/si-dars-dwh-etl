@@ -22,4 +22,4 @@
 # Author:   Jeffrey Zelt
 # Changes:  Initial version
 
-$DWH_HOME/bin/kitchen.sh /dwh_tdp/jb_dwh_tdp_update.kjb
+$DWH_HOME/bin/kitchen.sh /dwh_tdp/jb_dwh-update.kjb
