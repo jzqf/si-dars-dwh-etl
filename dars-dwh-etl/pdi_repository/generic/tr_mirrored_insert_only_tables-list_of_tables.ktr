@@ -182,7 +182,7 @@
            <schema_name/>
            </partitioning>
     <connection>etl_db</connection>
-    <sql>SELECT&#xa;    schema_name AS &#x22;schema&#x22;,&#xa;    table_name AS &#x22;table&#x22;&#xa;FROM&#xa;    etl.table_config&#xa;WHERE&#xa;    source_db_id&#x3d;&#x24;&#x7b;PARAM_SOURCE_DB_ID&#x7d; AND&#xa;    mirror&#x3d;true AND&#xa;    can_insert_rows&#x3d;true AND&#xa;    can_update_rows&#x3d;false AND&#xa;    can_delete_rows&#x3d;false AND&#xa;	use_custom_mirror_algorithm&#x3d;false&#xa;ORDER BY&#xa;	schema_name, table_name&#xa;</sql>
+    <sql>SELECT&#xa;    source_schema_name AS &#x22;schema&#x22;,&#xa;    source_table_name AS &#x22;table&#x22;&#xa;FROM&#xa;    etl.table_meta&#xa;WHERE&#xa;    source_db_id&#x3d;&#x24;&#x7b;PARAM_SOURCE_DB_ID&#x7d; AND&#xa;    mirror&#x3d;true AND&#xa;    can_insert_rows&#x3d;true AND&#xa;    can_update_rows&#x3d;false AND&#xa;    can_delete_rows&#x3d;false AND&#xa;	use_custom_mirror_algorithm&#x3d;false&#xa;ORDER BY&#xa;	source_schema_name, source_table_name&#xa;</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>

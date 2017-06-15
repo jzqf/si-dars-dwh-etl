@@ -810,13 +810,13 @@ set column names at all!</note>
     </partitioning>
     <connection>etl_db</connection>
     <sql>SELECT
-    table_name AS "source_col_name",
-    table_name AS "target_col_name"
+    source_table_name AS "source_col_name",
+    source_table_name AS "target_col_name"
 FROM
-    etl.table_config
+    etl.table_meta
 WHERE
-    schema_name = '${PARAM_SCHEMA}' AND
-    table_name = '${PARAM_TABLE}'
+    source_schema_name = '${PARAM_SCHEMA}' AND
+    source_table_name = '${PARAM_TABLE}'
 </sql>
     <limit>0</limit>
     <lookup />

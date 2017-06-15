@@ -1,6 +1,6 @@
 <transformation>
   <info>
-    <name>tr_mirror_compare-update_table_config</name>
+    <name>tr_mirror_compare-update_table_meta</name>
     <description/>
     <extended_description/>
     <trans_version/>
@@ -89,7 +89,7 @@
   </info>
   <notepads>
     <notepad>
-      <note>This transformation updates the mirror comparison statistics in etl.table_config for the specified table.&#xa;These statistics &#x28;&#x22;compared_rows_equal&#x22;, &#x22;compared_rows_unequal&#x22;, ...&#x29; are computed to verify that&#xa;the implementation of the mirrorring algorithm for the specified table is working correctly.&#xa;This transformation has parameters&#x3a;&#xa;&#xa;	PARAM_SOURCE_DB_ID			ID of database containing the source tables to mirror&#xa;	PARAM_SCHEMA					Schema of mirrored table to compare&#xa;	PARAM_TABLE					Name of mirrored table to compare</note>
+      <note>This transformation updates the mirror comparison statistics in etl.table_meta for the specified table.&#xa;These statistics &#x28;&#x22;compared_rows_equal&#x22;, &#x22;compared_rows_unequal&#x22;, ...&#x29; are computed to verify that&#xa;the implementation of the mirrorring algorithm for the specified table is working correctly.&#xa;This transformation has parameters&#x3a;&#xa;&#xa;	PARAM_SOURCE_DB_ID			ID of database containing the source tables to mirror&#xa;	PARAM_SCHEMA					Schema of mirrored table to compare&#xa;	PARAM_TABLE					Name of mirrored table to compare</note>
       <xloc>16</xloc>
       <yloc>0</yloc>
       <width>700</width>
@@ -194,7 +194,7 @@
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>This is needed so that we can set the compare statitics values to zero, instead of not &#xa;updating the &#x22;table_config&#x22; row at all for the case where the TDP and DWH tables are&#xa;both empty.</note>
+      <note>This is needed so that we can set the compare statitics values to zero, instead of not &#xa;updating the &#x22;table_meta&#x22; row at all for the case where the TDP and DWH tables are&#xa;both empty.</note>
       <xloc>320</xloc>
       <yloc>480</yloc>
       <width>574</width>
@@ -267,10 +267,10 @@
   <hop> <from>Group by flagfield</from><to>Transpose rows -&#x3e; columns</to><enabled>Y</enabled> </hop>
   <hop> <from>Sort rows</from><to>Group by flagfield</to><enabled>Y</enabled> </hop>
   <hop> <from>Mapping input specification&#x3a; flagfield</from><to>Sort rows</to><enabled>Y</enabled> </hop>
-  <hop> <from>Update table_config with compare statistics</from><to>Mapping output specification</to><enabled>Y</enabled> </hop>
+  <hop> <from>Update table_meta with compare statistics</from><to>Mapping output specification</to><enabled>Y</enabled> </hop>
   <hop> <from>Transpose rows -&#x3e; columns</from><to>Detect empty stream</to><enabled>Y</enabled> </hop>
-  <hop> <from>Detect empty stream</from><to>Update table_config with compare statistics</to><enabled>Y</enabled> </hop>
-  <hop> <from>Transpose rows -&#x3e; columns</from><to>Update table_config with compare statistics</to><enabled>Y</enabled> </hop>
+  <hop> <from>Detect empty stream</from><to>Update table_meta with compare statistics</to><enabled>Y</enabled> </hop>
+  <hop> <from>Transpose rows -&#x3e; columns</from><to>Update table_meta with compare statistics</to><enabled>Y</enabled> </hop>
   </order>
   <step>
     <name>Group by flagfield</name>
@@ -474,7 +474,7 @@
     </step>
 
   <step>
-    <name>Update table_config with compare statistics</name>
+    <name>Update table_meta with compare statistics</name>
     <type>ExecSQL</type>
     <description/>
     <distribute>Y</distribute>
@@ -489,7 +489,7 @@
     <single_statement>Y</single_statement>
     <replace_variables>Y</replace_variables>
     <quoteString>N</quoteString>
-    <sql>UPDATE&#xa;    etl.table_config&#xa;SET&#xa;    last_compared_on&#x3d;LOCALTIMESTAMP&#xa;   ,compared_rows_equal&#x3d;COALESCE&#x28;&#x3f;, 0&#x29;&#xa;   ,compared_rows_unequal&#x3d;COALESCE&#x28;&#x3f;, 0&#x29;&#xa;   ,compared_rows_missing&#x3d;COALESCE&#x28;&#x3f;, 0&#x29;&#xa;   ,compared_rows_extra&#x3d;COALESCE&#x28;&#x3f;, 0&#x29;&#xa;WHERE&#xa;    source_db_id&#x3d;&#x24;&#x7b;PARAM_SOURCE_DB_ID&#x7d; AND&#xa;    schema_name&#x3d;&#x27;&#x24;&#x7b;PARAM_SCHEMA&#x7d;&#x27; AND&#xa;    table_name&#x3d;&#x27;&#x24;&#x7b;PARAM_TABLE&#x7d;&#x27;</sql>
+    <sql>UPDATE&#xa;    etl.table_meta&#xa;SET&#xa;    last_compared_on&#x3d;LOCALTIMESTAMP&#xa;   ,compared_rows_equal&#x3d;COALESCE&#x28;&#x3f;, 0&#x29;&#xa;   ,compared_rows_unequal&#x3d;COALESCE&#x28;&#x3f;, 0&#x29;&#xa;   ,compared_rows_missing&#x3d;COALESCE&#x28;&#x3f;, 0&#x29;&#xa;   ,compared_rows_extra&#x3d;COALESCE&#x28;&#x3f;, 0&#x29;&#xa;WHERE&#xa;    source_db_id&#x3d;&#x24;&#x7b;PARAM_SOURCE_DB_ID&#x7d; AND&#xa;    source_schema_name&#x3d;&#x27;&#x24;&#x7b;PARAM_SCHEMA&#x7d;&#x27; AND&#xa;    source_table_name&#x3d;&#x27;&#x24;&#x7b;PARAM_TABLE&#x7d;&#x27;</sql>
     <set_params>Y</set_params>
     <insert_field/>
     <update_field/>

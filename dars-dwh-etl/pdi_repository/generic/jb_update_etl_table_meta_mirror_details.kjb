@@ -1,5 +1,5 @@
 <job>
-  <name>jb_update_etl_table_config_mirror_details</name>
+  <name>jb_update_etl_table_meta_mirror_details</name>
     <description/>
     <extended_description/>
     <job_version/>
@@ -122,10 +122,10 @@
       <yloc>176</yloc>
       </entry>
     <entry>
-      <name>Update table_config mirror details</name>
+      <name>Update table_meta mirror details</name>
       <description/>
       <type>SQL</type>
-      <sql>UPDATE&#xa;    etl.table_config&#xa;SET&#xa;    mirror_last_updated_treatment_id &#x3d; &#x24;&#x7b;PARAM_TABLE_MIRROR_TREATMENT_ID&#x7d;,&#xa;    mirror_last_updated_on           &#x3d; LOCALTIMESTAMP&#xa;WHERE&#xa;    source_db_id &#x3d; &#x24;&#x7b;PARAM_SOURCE_DB_ID&#x7d; AND&#xa;    schema_name  &#x3d; &#x27;&#x24;&#x7b;PARAM_SCHEMA&#x7d;&#x27; AND&#xa;    table_name   &#x3d; &#x27;&#x24;&#x7b;PARAM_TABLE&#x7d;&#x27;</sql>
+      <sql>UPDATE&#xa;    etl.table_meta&#xa;SET&#xa;    mirror_last_updated_treatment_id &#x3d; &#x24;&#x7b;PARAM_TABLE_MIRROR_TREATMENT_ID&#x7d;,&#xa;    mirror_last_updated_on           &#x3d; LOCALTIMESTAMP&#xa;WHERE&#xa;    source_db_id &#x3d; &#x24;&#x7b;PARAM_SOURCE_DB_ID&#x7d; AND&#xa;    source_schema_name  &#x3d; &#x27;&#x24;&#x7b;PARAM_SCHEMA&#x7d;&#x27; AND&#xa;    source_table_name   &#x3d; &#x27;&#x24;&#x7b;PARAM_TABLE&#x7d;&#x27;</sql>
       <useVariableSubstitution>T</useVariableSubstitution>
       <sqlfromfile>F</sqlfromfile>
       <sqlfilename/>
@@ -154,7 +154,7 @@
   <hops>
     <hop>
       <from>START</from>
-      <to>Update table_config mirror details</to>
+      <to>Update table_meta mirror details</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -162,7 +162,7 @@
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>Update table_config mirror details</from>
+      <from>Update table_meta mirror details</from>
       <to>Write To Log - All parameters</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -173,7 +173,7 @@
   </hops>
   <notepads>
     <notepad>
-      <note>This job updates a row of the etl.table_config table after a table has been updated in the DWH that is a mirror of a table in&#xa;a source database. This job has parameters&#x3a;&#xa;&#xa;	PARAM_SOURCE_DB_ID						ID of database containing the source table&#xa;	PARAM_SCHEMA								Schema of table&#xa;	PARAM_TABLE								Name of table&#xa;	PARAM_TABLE_MIRROR_TREATMENT_ID	ID that specifies the algorithm to use for mirroring the table</note>
+      <note>This job updates a row of the etl.table_meta table after a table has been updated in the DWH that is a mirror of a table in&#xa;a source database. This job has parameters&#x3a;&#xa;&#xa;	PARAM_SOURCE_DB_ID						ID of database containing the source table&#xa;	PARAM_SCHEMA								Schema of table&#xa;	PARAM_TABLE								Name of table&#xa;	PARAM_TABLE_MIRROR_TREATMENT_ID	ID that specifies the algorithm to use for mirroring the table</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
       <width>819</width>
