@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/06/16 09:19:36.783</modified_date>
+  <modified_date>2017/06/16 11:40:27.551</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CDC_CURRENT_LOAD</name>
@@ -370,7 +370,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>32</xloc>
-      <yloc>240</yloc>
+      <yloc>224</yloc>
     </entry>
     <entry>
       <name>tr_mirrored_insert_only_tables-list_of_tables</name>
@@ -407,7 +407,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>304</xloc>
-      <yloc>240</yloc>
+      <yloc>224</yloc>
     </entry>
     <entry>
       <name>jb_mirrored_insert_only_tables-inject_meta-update_one</name>
@@ -461,7 +461,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>704</xloc>
-      <yloc>240</yloc>
+      <yloc>224</yloc>
     </entry>
   </entries>
   <hops>
@@ -486,23 +486,22 @@
   </hops>
   <notepads>
     <notepad>
-      <note>This job updates a selection of "insert-only" tables in the PSA that are mirrored from the TDP archive database. This job has parameters:
+      <note>This job updates a selection of "insert-only" tables in the target PSA database that are mirrored from a source database. This job has parameters:
 
 	PARAM_SOURCE_DB_ID			ID the "source" database containing tables will be mirrored to a "target" database
 	PARAM_CDC_LAST_LOAD
 	PARAM_CDC_CURRENT_LOAD
 
-The parameters PARAM_CDC_LAST_LOAD &amp; PARAM_CDC_CURRENT_LOAD are passed to "jb_mirrored_insert_only_tables-update_one"
-because of the settings "Pass all parameter values down to the sub-job" that are selected for their respective job entries. 
+The parameters PARAM_SOURCE_DB_ID, PARAM_CDC_LAST_LOAD &amp; PARAM_CDC_CURRENT_LOAD are passed to  the sub-transformation
+"tr_mirrored_insert_only_tables-list_of_tables" and the sub-job "jb_mirrored_insert_only_tables-inject_meta-update_one" because the settings 
+"Pass parameter values to sub transformation" &amp; "Pass parameter values to sub job" are selected for these respective job entries. 
 
-The sub-job is RUN ONCE FOR EACH table specified by the first transformation. Each time the  sub-job is is run, it is *also* passed the 
-parameters PARAM_SCHEMA and PARAM_TABLE. These parameters are configured in the settings for the job entry for 
-"jb_mirrored_insert_only_tables-update_one". The PARAM_SCHEMA and PARAM_TABLE parameters are assigned the schema name and 
-table name for the next table to update.</note>
+The sub-job is RUN ONCE FOR EACH table specified by "tr_mirrored_insert_only_tables-list_of_tables". Each time the  sub-job is is run, it is *also* 
+passed the parameters PARAM_SCHEMA, PARAM_TABLE, PARAM_TARGET_SCHEMA &amp; PARAM_TARGET_TABLE. </note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>802</width>
-      <heigth>192</heigth>
+      <width>856</width>
+      <heigth>178</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -522,7 +521,7 @@ table name for the next table to update.</note>
       <note>Create list of tables to update. This subtransformation 
 is passed parameter PARAM_SOURCE_DB_ID</note>
       <xloc>144</xloc>
-      <yloc>304</yloc>
+      <yloc>288</yloc>
       <width>332</width>
       <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
@@ -544,7 +543,7 @@ is passed parameter PARAM_SOURCE_DB_ID</note>
       <note>Update each mirrored, insert-only table. This 
 sub-job is RUN ONCE FOR EACH TABLE TO UPDATE.</note>
       <xloc>560</xloc>
-      <yloc>304</yloc>
+      <yloc>288</yloc>
       <width>310</width>
       <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
