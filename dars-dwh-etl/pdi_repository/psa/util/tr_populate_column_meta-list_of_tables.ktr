@@ -1,13 +1,18 @@
 <transformation>
   <info>
-    <name>tr_mirrored_insert_only_tables-list_of_tables-hardcoded</name>
+    <name>tr_populate_column_meta-list_of_tables</name>
     <description />
     <extended_description />
     <trans_version />
     <trans_type>Normal</trans_type>
     <trans_status>0</trans_status>
-    <directory>/dwh/mirror</directory>
+    <directory>/psa/util</directory>
     <parameters>
+      <parameter>
+        <name>PARAM_SOURCE_DB_ID</name>
+        <default_value>1</default_value>
+        <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
+      </parameter>
     </parameters>
     <log>
       <trans-log-table>
@@ -47,7 +52,7 @@
           <id>LINES_WRITTEN</id>
           <enabled>Y</enabled>
           <name>LINES_WRITTEN</name>
-          <subject>Tables to update</subject>
+          <subject />
         </field>
         <field>
           <id>LINES_UPDATED</id>
@@ -429,19 +434,29 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/06/17 20:29:04.099</modified_date>
+    <modified_date>2017/06/17 09:51:01.197</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>This transformation specifies the "insert-only" tables from the TDP archive database that shall be updated.</note>
-      <xloc>16</xloc>
-      <yloc>16</yloc>
-      <width>733</width>
-      <heigth>27</heigth>
+      <note>This transformation specifies the tables from a "source" database that will be mirrored to corresponding tables of a "target" database.
+The "source" database is specified by PARAM_SOURCE_DB_ID.
+
+The stream from this transformation is copied to the "result" of this transformation. This result set is used in the parent job to execute
+a sub-transformation once for each row in this stream. At the same time, the stream values from the row are assigned to parameters 
+that are passed to the sub-transformation. This procedure can be used to generate column metadata for each  table in the "source" 
+and "target" databases.
+
+This transformation has parameter:
+
+	PARAM_SOURCE_DB_ID			ID the "source" database containing tables will be mirrored to a "target" database</note>
+      <xloc>0</xloc>
+      <yloc>0</yloc>
+      <width>799</width>
+      <heigth>164</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>11</fontsize>
+      <fontsize>10</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -456,13 +471,20 @@
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>These three steps are for loading the "etl.table_meta" table.</note>
-      <xloc>272</xloc>
-      <yloc>176</yloc>
-      <width>417</width>
-      <heigth>27</heigth>
+      <note>The stream created by this step consists of the three fields: 
+
+	table_meta_id 
+	source_schema_name
+	source_table_name 
+
+Each row specifies a table to mirror from the source database,
+as well as the table it will be mirrored to in the target database.</note>
+      <xloc>16</xloc>
+      <yloc>256</yloc>
+      <width>383</width>
+      <heigth>122</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>11</fontsize>
+      <fontsize>10</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -581,156 +603,14 @@
   </connection>
   <order>
     <hop>
-      <from>Tables to update</from>
-      <to>Add sequence - table_meta_id</to>
+      <from>Table input - Get list of tables</from>
+      <to>Copy rows to result</to>
       <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Add sequence - table_meta_id</from>
-      <to>Add remaining fields</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Add remaining fields</from>
-      <to>Table output</to>
-      <enabled>N</enabled>
     </hop>
   </order>
   <step>
-    <name>Add remaining fields</name>
-    <type>Constant</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <fields>
-      <field>
-        <name>source_db_id</name>
-        <type>Integer</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif>1</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>can_insert_rows</name>
-        <type>Boolean</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif>Y</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>can_update_rows</name>
-        <type>Boolean</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif>N</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>can_delete_rows</name>
-        <type>Boolean</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif>N</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>use_custom_mirror_algorithm</name>
-        <type>Boolean</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif>N</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>mirror</name>
-        <type>Boolean</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif>Y</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-    </fields>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>480</xloc>
-      <yloc>112</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Add sequence - table_meta_id</name>
-    <type>Sequence</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <valuename>table_meta_id</valuename>
-    <use_database>N</use_database>
-    <connection />
-    <schema />
-    <seqname>SEQ_</seqname>
-    <use_counter>Y</use_counter>
-    <counter_name />
-    <start_at>1</start_at>
-    <increment_by>1</increment_by>
-    <max_value>999999999</max_value>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>272</xloc>
-      <yloc>112</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Table output</name>
-    <type>TableOutput</type>
+    <name>Table input - Get list of tables</name>
+    <type>TableInput</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -740,60 +620,23 @@
       <schema_name />
     </partitioning>
     <connection>etl_db</connection>
-    <schema>etl</schema>
-    <table>table_meta</table>
-    <commit>1000</commit>
-    <truncate>Y</truncate>
-    <ignore_errors>N</ignore_errors>
-    <use_batch>N</use_batch>
-    <specify_fields>Y</specify_fields>
-    <partitioning_enabled>N</partitioning_enabled>
-    <partitioning_field />
-    <partitioning_daily>N</partitioning_daily>
-    <partitioning_monthly>Y</partitioning_monthly>
-    <tablename_in_field>N</tablename_in_field>
-    <tablename_field />
-    <tablename_in_table>Y</tablename_in_table>
-    <return_keys>N</return_keys>
-    <return_field />
-    <fields>
-      <field>
-        <column_name>table_meta_id</column_name>
-        <stream_name>table_meta_id</stream_name>
-      </field>
-      <field>
-        <column_name>source_db_id</column_name>
-        <stream_name>source_db_id</stream_name>
-      </field>
-      <field>
-        <column_name>source_schema_name</column_name>
-        <stream_name>schema</stream_name>
-      </field>
-      <field>
-        <column_name>source_table_name</column_name>
-        <stream_name>table</stream_name>
-      </field>
-      <field>
-        <column_name>can_insert_rows</column_name>
-        <stream_name>can_insert_rows</stream_name>
-      </field>
-      <field>
-        <column_name>can_update_rows</column_name>
-        <stream_name>can_update_rows</stream_name>
-      </field>
-      <field>
-        <column_name>can_delete_rows</column_name>
-        <stream_name>can_delete_rows</stream_name>
-      </field>
-      <field>
-        <column_name>use_custom_mirror_algorithm</column_name>
-        <stream_name>use_custom_mirror_algorithm</stream_name>
-      </field>
-      <field>
-        <column_name>mirror</column_name>
-        <stream_name>mirror</stream_name>
-      </field>
-    </fields>
+    <sql>SELECT
+    table_meta_id, 
+    source_schema_name,
+    source_table_name 
+FROM 
+    etl.table_meta 
+WHERE 
+    source_db_id = ${PARAM_SOURCE_DB_ID} 
+ORDER BY 
+    source_schema_name ASC, 
+    source_table_name ASC
+</sql>
+    <limit>0</limit>
+    <lookup />
+    <execute_each_row>N</execute_each_row>
+    <variables_active>Y</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
     <cluster_schema />
     <remotesteps>
       <input>
@@ -802,14 +645,14 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>672</xloc>
-      <yloc>112</yloc>
+      <xloc>176</xloc>
+      <yloc>192</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Tables to update</name>
-    <type>DataGrid</type>
+    <name>Copy rows to result</name>
+    <type>RowsToResult</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -818,84 +661,6 @@
       <method>none</method>
       <schema_name />
     </partitioning>
-    <fields>
-      <field>
-        <name>schema</name>
-        <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>table</name>
-        <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-    </fields>
-    <data>
-      <line>
-        <item>eip</item>
-        <item>group_result</item>
-      </line>
-      <line>
-        <item>eip</item>
-        <item>image_result</item>
-      </line>
-      <line>
-        <item>eip</item>
-        <item>passage_result</item>
-      </line>
-      <line>
-        <item>fs_file</item>
-        <item>tdp_file</item>
-      </line>
-      <line>
-        <item>passage</item>
-        <item>flag</item>
-      </line>
-      <line>
-        <item>passage</item>
-        <item>image</item>
-      </line>
-      <line>
-        <item>passage</item>
-        <item>image_alpr_result</item>
-      </line>
-      <line>
-        <item>passage</item>
-        <item>obu</item>
-      </line>
-      <line>
-        <item>passage</item>
-        <item>obu_data</item>
-      </line>
-      <line>
-        <item>passage</item>
-        <item>passage</item>
-      </line>
-      <line>
-        <item>passage</item>
-        <item>passage_alpr_result</item>
-      </line>
-      <line>
-        <item>workflow</item>
-        <item>asyncqueue</item>
-      </line>
-      <line>
-        <item>workflow</item>
-        <item>passage_workflow</item>
-      </line>
-    </data>
     <cluster_schema />
     <remotesteps>
       <input>
@@ -904,8 +669,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>64</xloc>
-      <yloc>112</yloc>
+      <xloc>592</xloc>
+      <yloc>192</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

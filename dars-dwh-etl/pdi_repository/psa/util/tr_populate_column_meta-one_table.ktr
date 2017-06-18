@@ -1,13 +1,33 @@
 <transformation>
   <info>
-    <name>tr_mirrored_insert_only_tables-list_of_tables-hardcoded</name>
+    <name>tr_populate_column_meta-one_table</name>
     <description />
     <extended_description />
     <trans_version />
     <trans_type>Normal</trans_type>
     <trans_status>0</trans_status>
-    <directory>/dwh/mirror</directory>
+    <directory>/psa/util</directory>
     <parameters>
+      <parameter>
+        <name>PARAM_SCHEMA</name>
+        <default_value>passage</default_value>
+        <description>Name of schema containing source table to mirror to target table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_SOURCE_DB_ID</name>
+        <default_value>1</default_value>
+        <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TABLE</name>
+        <default_value>image</default_value>
+        <description>Name of source table to mirror to target table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TABLE_META_ID</name>
+        <default_value>666</default_value>
+        <description>ID of the etl.table_meta row that the new etl.column_meta rows will be linked to</description>
+      </parameter>
     </parameters>
     <log>
       <trans-log-table>
@@ -47,7 +67,7 @@
           <id>LINES_WRITTEN</id>
           <enabled>Y</enabled>
           <name>LINES_WRITTEN</name>
-          <subject>Tables to update</subject>
+          <subject />
         </field>
         <field>
           <id>LINES_UPDATED</id>
@@ -429,19 +449,29 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/06/17 20:29:04.099</modified_date>
+    <modified_date>2017/06/18 13:04:54.584</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>This transformation specifies the "insert-only" tables from the TDP archive database that shall be updated.</note>
+      <note>This transformation writes default rows to the etl.column_meta table for a single specified table from the source database.
+It is assumed that the column names in the target database will be identical to the column names in the source database. 
+
+Therefore, this transformation writes one row to the etl.column_meta table for every column of the specified source table.
+
+This transformation has parameters:
+
+	PARAM_SOURCE_DB_ID			ID the "source" database containing the table for generating column metadata
+	PARAM_SCHEMA				Name of schema containing source table for generating column meatdata
+	PARAM_TABLE					Name of source table for generating column meatdata
+	PARAM_TABLE_META_ID		ID of the etl.table_meta row that the new etl.column_meta rows will be linked to</note>
       <xloc>16</xloc>
-      <yloc>16</yloc>
-      <width>733</width>
-      <heigth>27</heigth>
+      <yloc>0</yloc>
+      <width>731</width>
+      <heigth>164</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>11</fontsize>
+      <fontsize>10</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -456,13 +486,149 @@
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>These three steps are for loading the "etl.table_meta" table.</note>
-      <xloc>272</xloc>
-      <yloc>176</yloc>
-      <width>417</width>
-      <heigth>27</heigth>
+      <note>Append a field to the stream that contain:
+1.	The value of ${PARAM_TABLE_META_ID}. Thi s is the value of the foreign key that will link the
+	 new column_meta rows to its parent table_meta row.
+2.	The value of ${QF_COLUMN_MIGRATION_ID_MIRROR}. This assumes that all columns will be 
+	migrated/mirrored.</note>
+      <xloc>336</xloc>
+      <yloc>432</yloc>
+      <width>575</width>
+      <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>11</fontsize>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Get names of all columns from the specified table.</note>
+      <xloc>336</xloc>
+      <yloc>192</yloc>
+      <width>305</width>
+      <heigth>24</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Duplicate field "source_column_name" to "target_column_name". This assumes that the column
+names in the target database are identical to the column names in the source database.</note>
+      <xloc>336</xloc>
+      <yloc>368</yloc>
+      <width>565</width>
+      <heigth>38</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Add sequence field "column_meta_id_1" to the stream. This sequence starts at 1. Below, we create
+a new field "column_meta_id" by adding MAX(column_meta_id) to these values.  "column_meta_id"
+will hold primary key values for the new etl.column_meta rows to insert.</note>
+      <xloc>336</xloc>
+      <yloc>528</yloc>
+      <width>586</width>
+      <heigth>52</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Add a constant field to the stream named "max_column_meta_id" that contains that
+value of MAX(column_meta_id). This is so that we can compute column_meta_id 
+values that are not  yet used for new rows to insert in table etl.column_meta.</note>
+      <xloc>624</xloc>
+      <yloc>608</yloc>
+      <width>500</width>
+      <heigth>52</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Add constant field "column_meta_id" to "column_meta_id_1" to create a new field "column_meta_id"
+to hold primary key values for the new etl.column_meta rows to insert.</note>
+      <xloc>384</xloc>
+      <yloc>704</yloc>
+      <width>598</width>
+      <heigth>38</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Create a row for "etl_batch_id" column.</note>
+      <xloc>624</xloc>
+      <yloc>288</yloc>
+      <width>240</width>
+      <heigth>24</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -579,26 +745,122 @@
       </attribute>
     </attributes>
   </connection>
+  <connection>
+    <name>obo_db</name>
+    <server>${QF_OBO_DB_HOST}</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>${QF_OBO_DB_DATABASE}</database>
+    <port>${QF_OBO_DB_PORT}</port>
+    <username>${QF_OBO_DB_USERNAME}</username>
+    <password>${QF_OBO_DB_PASSWORD}</password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>${QF_OBO_DB_PORT}</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
   <order>
     <hop>
-      <from>Tables to update</from>
-      <to>Add sequence - table_meta_id</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Add sequence - table_meta_id</from>
-      <to>Add remaining fields</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Add remaining fields</from>
-      <to>Table output</to>
+      <from>Table input - Column mapping metadata</from>
+      <to>Write to log</to>
       <enabled>N</enabled>
+    </hop>
+    <hop>
+      <from>Duplicate column name field</from>
+      <to>Get Variables</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Write to log</from>
+      <to>Duplicate column name field</to>
+      <enabled>N</enabled>
+    </hop>
+    <hop>
+      <from>Get Variables</from>
+      <to>Add sequence - column_meta_id</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Get MAX(column_meta_id) from etl.column_meta</from>
+      <to>Join Rows (cartesian product)</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Add sequence - column_meta_id</from>
+      <to>Join Rows (cartesian product)</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Join Rows (cartesian product)</from>
+      <to>Create column_meta_id sequence for new rows</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Create column_meta_id sequence for new rows</from>
+      <to>Remove fields "column_meta_id_1" &amp; "max_column_meta_id"</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Remove fields "column_meta_id_1" &amp; "max_column_meta_id"</from>
+      <to>Insert new etl.column_meta rows</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Table input - Column mapping metadata</from>
+      <to>Append streams</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Append streams</from>
+      <to>Duplicate column name field</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Add row for "etl_batch_id" column</from>
+      <to>Append streams</to>
+      <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Add remaining fields</name>
-    <type>Constant</type>
+    <name>Duplicate column name field</name>
+    <type>SelectValues</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -609,76 +871,63 @@
     </partitioning>
     <fields>
       <field>
-        <name>source_db_id</name>
+        <name>source_column_name</name>
+        <rename>source_column_name</rename>
+      </field>
+      <field>
+        <name>source_column_name</name>
+        <rename>target_column_name</rename>
+      </field>
+      <select_unspecified>N</select_unspecified>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>176</xloc>
+      <yloc>368</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Get Variables</name>
+    <type>GetVariable</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <field>
+        <name>table_meta_id</name>
+        <variable>${PARAM_TABLE_META_ID}</variable>
         <type>Integer</type>
         <format />
         <currency />
         <decimal />
         <group />
-        <nullif>1</nullif>
         <length>-1</length>
         <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
+        <trim_type>none</trim_type>
       </field>
       <field>
-        <name>can_insert_rows</name>
-        <type>Boolean</type>
+        <name>migration_treatment_id</name>
+        <variable>${QF_COLUMN_MIGRATION_ID_MIRROR}</variable>
+        <type>Integer</type>
         <format />
         <currency />
         <decimal />
         <group />
-        <nullif>Y</nullif>
         <length>-1</length>
         <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>can_update_rows</name>
-        <type>Boolean</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif>N</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>can_delete_rows</name>
-        <type>Boolean</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif>N</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>use_custom_mirror_algorithm</name>
-        <type>Boolean</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif>N</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>mirror</name>
-        <type>Boolean</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif>Y</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
+        <trim_type>none</trim_type>
       </field>
     </fields>
     <cluster_schema />
@@ -689,13 +938,133 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>480</xloc>
-      <yloc>112</yloc>
+      <xloc>176</xloc>
+      <yloc>448</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Add sequence - table_meta_id</name>
+    <name>Table input - Column mapping metadata</name>
+    <type>TableInput</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <connection>obo_db</connection>
+    <sql>SELECT 
+--    table_catalog, 
+--    table_schema, 
+--    table_name, 
+    column_name AS "source_column_name"
+--   , ordinal_position 
+FROM 
+    information_schema.columns 
+WHERE
+	table_schema = '${PARAM_SCHEMA}' AND 
+    table_name = '${PARAM_TABLE}'
+ORDER BY 
+    ordinal_position;</sql>
+    <limit>0</limit>
+    <lookup />
+    <execute_each_row>N</execute_each_row>
+    <variables_active>Y</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>176</xloc>
+      <yloc>192</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Insert new etl.column_meta rows</name>
+    <type>TableOutput</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <connection>etl_db</connection>
+    <schema>${QF_ETL_DB_SCHEMA}</schema>
+    <table>column_meta</table>
+    <commit>1000</commit>
+    <truncate>N</truncate>
+    <ignore_errors>N</ignore_errors>
+    <use_batch>Y</use_batch>
+    <specify_fields>N</specify_fields>
+    <partitioning_enabled>N</partitioning_enabled>
+    <partitioning_field />
+    <partitioning_daily>N</partitioning_daily>
+    <partitioning_monthly>Y</partitioning_monthly>
+    <tablename_in_field>N</tablename_in_field>
+    <tablename_field />
+    <tablename_in_table>Y</tablename_in_table>
+    <return_keys>N</return_keys>
+    <return_field />
+    <fields>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>176</xloc>
+      <yloc>864</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Write to log</name>
+    <type>WriteToLog</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <loglevel>log_level_basic</loglevel>
+    <displayHeader>Y</displayHeader>
+    <limitRows>N</limitRows>
+    <limitRowsNumber>0</limitRowsNumber>
+    <logmessage>PARAM_SOURCE_DB_ID  = ${PARAM_SOURCE_DB_ID}
+PARAM_SCHEMA        = ${PARAM_SCHEMA}
+PARAM_TABLE         = ${PARAM_TABLE}
+PARAM_TABLE_META_ID = ${PARAM_TABLE_META_ID}</logmessage>
+    <fields>
+      </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>32</xloc>
+      <yloc>272</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Add sequence - column_meta_id</name>
     <type>Sequence</type>
     <description />
     <distribute>Y</distribute>
@@ -705,11 +1074,11 @@
       <method>none</method>
       <schema_name />
     </partitioning>
-    <valuename>table_meta_id</valuename>
+    <valuename>column_meta_id_1</valuename>
     <use_database>N</use_database>
-    <connection />
-    <schema />
-    <seqname>SEQ_</seqname>
+    <connection>etl_db</connection>
+    <schema>${QF_ETL_DB_SCHEMA}</schema>
+    <seqname>column_meta_column_meta_id_seq</seqname>
     <use_counter>Y</use_counter>
     <counter_name />
     <start_at>1</start_at>
@@ -723,14 +1092,14 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>272</xloc>
-      <yloc>112</yloc>
+      <xloc>176</xloc>
+      <yloc>544</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Table output</name>
-    <type>TableOutput</type>
+    <name>Get MAX(column_meta_id) from etl.column_meta</name>
+    <type>TableInput</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -740,59 +1109,123 @@
       <schema_name />
     </partitioning>
     <connection>etl_db</connection>
-    <schema>etl</schema>
-    <table>table_meta</table>
-    <commit>1000</commit>
-    <truncate>Y</truncate>
-    <ignore_errors>N</ignore_errors>
-    <use_batch>N</use_batch>
-    <specify_fields>Y</specify_fields>
-    <partitioning_enabled>N</partitioning_enabled>
-    <partitioning_field />
-    <partitioning_daily>N</partitioning_daily>
-    <partitioning_monthly>Y</partitioning_monthly>
-    <tablename_in_field>N</tablename_in_field>
-    <tablename_field />
-    <tablename_in_table>Y</tablename_in_table>
-    <return_keys>N</return_keys>
-    <return_field />
+    <sql>SELECT 
+    -- COALESCE used in case the table is empty.
+    COALESCE(MAX(column_meta_id), 0) AS "max_column_meta_id" 
+FROM 
+    etl.column_meta</sql>
+    <limit>0</limit>
+    <lookup />
+    <execute_each_row>N</execute_each_row>
+    <variables_active>N</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>448</xloc>
+      <yloc>624</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Join Rows (cartesian product)</name>
+    <type>JoinRows</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>out</prefix>
+    <cache_size>500</cache_size>
+    <main />
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <leftvalue />
+        <function>=</function>
+        <rightvalue />
+      </condition>
+    </compare>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>176</xloc>
+      <yloc>624</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Create column_meta_id sequence for new rows</name>
+    <type>Calculator</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <calculation>
+      <field_name>column_meta_id</field_name>
+      <calc_type>ADD</calc_type>
+      <field_a>column_meta_id_1</field_a>
+      <field_b>max_column_meta_id</field_b>
+      <field_c />
+      <value_type>Integer</value_type>
+      <value_length>-1</value_length>
+      <value_precision>-1</value_precision>
+      <remove>N</remove>
+      <conversion_mask />
+      <decimal_symbol />
+      <grouping_symbol />
+      <currency_symbol />
+    </calculation>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>176</xloc>
+      <yloc>704</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Remove fields "column_meta_id_1" &amp; "max_column_meta_id"</name>
+    <type>SelectValues</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
     <fields>
-      <field>
-        <column_name>table_meta_id</column_name>
-        <stream_name>table_meta_id</stream_name>
-      </field>
-      <field>
-        <column_name>source_db_id</column_name>
-        <stream_name>source_db_id</stream_name>
-      </field>
-      <field>
-        <column_name>source_schema_name</column_name>
-        <stream_name>schema</stream_name>
-      </field>
-      <field>
-        <column_name>source_table_name</column_name>
-        <stream_name>table</stream_name>
-      </field>
-      <field>
-        <column_name>can_insert_rows</column_name>
-        <stream_name>can_insert_rows</stream_name>
-      </field>
-      <field>
-        <column_name>can_update_rows</column_name>
-        <stream_name>can_update_rows</stream_name>
-      </field>
-      <field>
-        <column_name>can_delete_rows</column_name>
-        <stream_name>can_delete_rows</stream_name>
-      </field>
-      <field>
-        <column_name>use_custom_mirror_algorithm</column_name>
-        <stream_name>use_custom_mirror_algorithm</stream_name>
-      </field>
-      <field>
-        <column_name>mirror</column_name>
-        <stream_name>mirror</stream_name>
-      </field>
+      <select_unspecified>N</select_unspecified>
+      <remove>
+        <name>column_meta_id_1</name>
+      </remove>
+      <remove>
+        <name>max_column_meta_id</name>
+      </remove>
     </fields>
     <cluster_schema />
     <remotesteps>
@@ -802,13 +1235,39 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>672</xloc>
-      <yloc>112</yloc>
+      <xloc>176</xloc>
+      <yloc>784</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Tables to update</name>
+    <name>Append streams</name>
+    <type>Append</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <head_name>Table input - Column mapping metadata</head_name>
+    <tail_name>Add row for "etl_batch_id" column</tail_name>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>176</xloc>
+      <yloc>288</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Add row for "etl_batch_id" column</name>
     <type>DataGrid</type>
     <description />
     <distribute>Y</distribute>
@@ -820,80 +1279,20 @@
     </partitioning>
     <fields>
       <field>
-        <name>schema</name>
+        <name>source_column_name</name>
         <type>String</type>
         <format />
         <currency />
         <decimal />
         <group />
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>table</name>
-        <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>-1</length>
+        <length>80</length>
         <precision>-1</precision>
         <set_empty_string>N</set_empty_string>
       </field>
     </fields>
     <data>
       <line>
-        <item>eip</item>
-        <item>group_result</item>
-      </line>
-      <line>
-        <item>eip</item>
-        <item>image_result</item>
-      </line>
-      <line>
-        <item>eip</item>
-        <item>passage_result</item>
-      </line>
-      <line>
-        <item>fs_file</item>
-        <item>tdp_file</item>
-      </line>
-      <line>
-        <item>passage</item>
-        <item>flag</item>
-      </line>
-      <line>
-        <item>passage</item>
-        <item>image</item>
-      </line>
-      <line>
-        <item>passage</item>
-        <item>image_alpr_result</item>
-      </line>
-      <line>
-        <item>passage</item>
-        <item>obu</item>
-      </line>
-      <line>
-        <item>passage</item>
-        <item>obu_data</item>
-      </line>
-      <line>
-        <item>passage</item>
-        <item>passage</item>
-      </line>
-      <line>
-        <item>passage</item>
-        <item>passage_alpr_result</item>
-      </line>
-      <line>
-        <item>workflow</item>
-        <item>asyncqueue</item>
-      </line>
-      <line>
-        <item>workflow</item>
-        <item>passage_workflow</item>
+        <item>etl_batch_id</item>
       </line>
     </data>
     <cluster_schema />
@@ -904,8 +1303,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>64</xloc>
-      <yloc>112</yloc>
+      <xloc>448</xloc>
+      <yloc>288</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
