@@ -72,6 +72,29 @@
 				<artifactId>maven-resources-plugin</artifactId>
 				<executions>
 
+					<!-- This is so that ${project.version} in config.properties 
+					     gets replaced with this project's current version. 
+					-->
+					<execution>
+						<id>filter-config.properties</id>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<phase>process-resources</phase>
+						<configuration>
+							<outputDirectory>target/classes</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/main/resources</directory>
+									<filtering>true</filtering>
+									<includes>
+										<include>config.properties</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+
 					<execution>
 						<id>filter-jdeb-files</id>
 						<goals>
