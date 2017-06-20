@@ -21,12 +21,22 @@
       <parameter>
         <name>PARAM_SOURCE_SCHEMA</name>
         <default_value>passage</default_value>
-        <description>Schema of table to mirror</description>
+        <description>Name of schema containing source table to mirror to target table</description>
       </parameter>
       <parameter>
         <name>PARAM_SOURCE_TABLE</name>
         <default_value>image</default_value>
-        <description>Name of table to mirror</description>
+        <description>Name of source table to mirror to target table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_SCHEMA</name>
+        <default_value>passage</default_value>
+        <description>Name of schema containing target table to update</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_TABLE</name>
+        <default_value>image</default_value>
+        <description>Name of target table to update</description>
       </parameter>
     </parameters>
     <log>
@@ -449,7 +459,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/06/20 09:20:05.357</modified_date>
+    <modified_date>2017/06/20 14:25:05.356</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -463,7 +473,7 @@ ${PARAM_CDC_CURRENT_LOAD} will be evaluated.
 It is also necessary to specify the step from which fields will  be used to supply values for the "?" replacement characters. 
 In this case, the previous step is specified.</note>
       <xloc>320</xloc>
-      <yloc>528</yloc>
+      <yloc>512</yloc>
       <width>717</width>
       <heigth>108</heigth>
       <fontname>Ubuntu</fontname>
@@ -484,7 +494,7 @@ In this case, the previous step is specified.</note>
     <notepad>
       <note>Insert the new rows into the target PSA database.</note>
       <xloc>320</xloc>
-      <yloc>832</yloc>
+      <yloc>816</yloc>
       <width>301</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -506,7 +516,7 @@ In this case, the previous step is specified.</note>
       <note>Write parameters and max_id value to the log so it will be obvious which values 
 were used.</note>
       <xloc>320</xloc>
-      <yloc>464</yloc>
+      <yloc>448</yloc>
       <width>487</width>
       <heigth>42</heigth>
       <fontname>Ubuntu</fontname>
@@ -527,7 +537,7 @@ were used.</note>
     <notepad>
       <note>Get batch ID for current transformation. This will be stored in the DWH table.</note>
       <xloc>320</xloc>
-      <yloc>672</yloc>
+      <yloc>656</yloc>
       <width>470</width>
       <heigth>26</heigth>
       <fontname>Ubuntu</fontname>
@@ -576,12 +586,14 @@ as long as it is insert-only and it has the necessary "archive_id" &amp; "archiv
 
 	PARAM_CDC_LAST_LOAD		&lt;- not used in this transformation - MAX(archive_id) is used instead
 	PARAM_CDC_CURRENT_LOAD	Used so that a consistent max timestamp is used for all ETL
-	PARAM_SOURCE_SCHEMA				Schema of mirrored table
-	PARAM_SOURCE_TABLE					Name of mirrored table to update</note>
+	PARAM_SOURCE_SCHEMA		Schema of mirrored table
+	PARAM_SOURCE_TABLE		Name of mirrored table to update
+	PARAM_TARGET_SCHEMA		Name of schema containing target table to update (not currently used)
+	PARAM_TARGET_TABLE			Name of target table to update (not currently used)</note>
       <xloc>16</xloc>
       <yloc>0</yloc>
       <width>904</width>
-      <heigth>108</heigth>
+      <heigth>136</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -631,7 +643,7 @@ as long as it is insert-only and it has the necessary "archive_id" &amp; "archiv
     <notepad>
       <note>Select and possibly rename fields (table column names), as appropriate.</note>
       <xloc>320</xloc>
-      <yloc>752</yloc>
+      <yloc>736</yloc>
       <width>431</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -652,7 +664,7 @@ as long as it is insert-only and it has the necessary "archive_id" &amp; "archiv
     <notepad>
       <note>Metadata injected -></note>
       <xloc>0</xloc>
-      <yloc>752</yloc>
+      <yloc>736</yloc>
       <width>130</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -669,6 +681,27 @@ as long as it is insert-only and it has the necessary "archive_id" &amp; "archiv
       <bordercolorgreen>100</bordercolorgreen>
       <bordercolorblue>100</bordercolorblue>
       <drawshadow>N</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Uses "SELECT *" -></note>
+      <xloc>0</xloc>
+      <yloc>560</yloc>
+      <width>117</width>
+      <heigth>24</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>255</backgroundcolorgreen>
+      <backgroundcolorblue>0</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
     </notepad>
   </notepads>
   <connection>
@@ -933,7 +966,7 @@ as long as it is insert-only and it has the necessary "archive_id" &amp; "archiv
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>672</yloc>
+      <yloc>656</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -995,7 +1028,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>752</yloc>
+      <yloc>736</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1068,7 +1101,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>576</yloc>
+      <yloc>560</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1084,8 +1117,8 @@ ORDER BY
       <schema_name />
     </partitioning>
     <connection>psa_db</connection>
-    <schema>${PARAM_SOURCE_SCHEMA}</schema>
-    <table>${PARAM_SOURCE_TABLE}</table>
+    <schema>${PARAM_TARGET_SCHEMA}</schema>
+    <table>${PARAM_TARGET_TABLE}</table>
     <commit>1000</commit>
     <truncate>N</truncate>
     <ignore_errors>N</ignore_errors>
@@ -1111,7 +1144,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>832</yloc>
+      <yloc>816</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1148,7 +1181,7 @@ PARAM_SOURCE_TABLE            = ${PARAM_SOURCE_TABLE}</logmessage>
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>464</yloc>
+      <yloc>448</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
