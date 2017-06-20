@@ -9,7 +9,7 @@
     <directory>&#x2f;generic</directory>
     <parameters>
         <parameter>
-            <name>PARAM_SCHEMA</name>
+            <name>PARAM_SOURCE_SCHEMA</name>
             <default_value>passage</default_value>
             <description>Schema of table</description>
         </parameter>
@@ -19,7 +19,7 @@
             <description>ID of database containing the source table</description>
         </parameter>
         <parameter>
-            <name>PARAM_TABLE</name>
+            <name>PARAM_SOURCE_TABLE</name>
             <default_value>image</default_value>
             <description>Name of table</description>
         </parameter>
@@ -110,7 +110,7 @@
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>This transformation sets  variable QF_TABLE_MIRROR_TREATMENT_ID with the &#x22;mirror treatment ID&#x22; to use for the &#xa;specified table to the DWH. This transformation has parameters&#x3a;&#xa;&#xa;	PARAM_SOURCE_DB_ID			ID of database containing the source table&#xa;	PARAM_SCHEMA					Schema of mirrored table&#xa;	PARAM_TABLE					Name of mirrored table</note>
+      <note>This transformation sets  variable QF_TABLE_MIRROR_TREATMENT_ID with the &#x22;mirror treatment ID&#x22; to use for the &#xa;specified table to the DWH. This transformation has parameters&#x3a;&#xa;&#xa;	PARAM_SOURCE_DB_ID			ID of database containing the source table&#xa;	PARAM_SOURCE_SCHEMA					Schema of mirrored table&#xa;	PARAM_SOURCE_TABLE					Name of mirrored table</note>
       <xloc>16</xloc>
       <yloc>0</yloc>
       <width>794</width>
@@ -131,7 +131,7 @@
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Set variable QF_TABLE_MIRROR_TREATMENT_ID with the &#x22;mirror treatment id&#x22; to use &#xa;for the table that is specified by the parameters&#x3a;&#xa;&#xa;	PARAM_SOURCE_DB_ID			ID of database containing the source table&#xa;	PARAM_SCHEMA					Schema of mirrored table&#xa;	PARAM_TABLE					Name of mirrored table</note>
+      <note>Set variable QF_TABLE_MIRROR_TREATMENT_ID with the &#x22;mirror treatment id&#x22; to use &#xa;for the table that is specified by the parameters&#x3a;&#xa;&#xa;	PARAM_SOURCE_DB_ID			ID of database containing the source table&#xa;	PARAM_SOURCE_SCHEMA					Schema of mirrored table&#xa;	PARAM_SOURCE_TABLE					Name of mirrored table</note>
       <xloc>256</xloc>
       <yloc>288</yloc>
       <width>598</width>
@@ -216,7 +216,7 @@
            <schema_name/>
            </partitioning>
     <connection>etl_db</connection>
-    <sql>SELECT&#xa;    CASE&#xa;        WHEN NOT mirror THEN &#x24;&#x7b;QF_MIRROR_ALG_DO_NOT_MIRROR&#x7d;&#xa;        WHEN can_insert_rows AND NOT can_update_rows AND NOT can_delete_rows AND NOT use_custom_mirror_algorithm THEN &#x24;&#x7b;QF_MIRROR_ALG_INSERT_ONLY_GENERIC&#x7d;&#xa;        WHEN can_insert_rows AND NOT can_update_rows AND NOT can_delete_rows AND     use_custom_mirror_algorithm THEN &#x24;&#x7b;QF_MIRROR_ALG_INSERT_ONLY_CUSTOM&#x7d;&#xa;        WHEN can_insert_rows AND     can_update_rows AND NOT can_delete_rows AND     use_custom_mirror_algorithm THEN &#x24;&#x7b;QF_MIRROR_ALG_INSERT_OR_UPDATE_CUSTOM&#x7d;&#xa;    ELSE -1&#xa;    END AS &#x22;mirror_treatment&#x22;&#xa;FROM&#xa;    etl.table_meta&#xa;WHERE&#xa;    source_db_id &#x3d; &#x24;&#x7b;PARAM_SOURCE_DB_ID&#x7d; AND&#xa;    source_schema_name &#x3d; &#x27;&#x24;&#x7b;PARAM_SCHEMA&#x7d;&#x27; AND&#xa;    source_table_name &#x3d;&#x27;&#x24;&#x7b;PARAM_TABLE&#x7d;&#x27;&#xa;&#xa;-- The rest of this query is present only to treat the case where there is no row present for the specified database,&#xa;-- schema and table. In this case, we still want to return a value for &#x22;mirror_treatment&#x22;, in this case the value&#x3a;&#xa;--&#xa;--     &#x24;&#x7b;QF_MIRROR_ALG_DO_NOT_MIRROR&#x7d;&#x3a;&#xa;&#xa;UNION ALL&#xa;SELECT&#xa;    &#x24;&#x7b;QF_MIRROR_ALG_DO_NOT_MIRROR&#x7d; AS &#x22;mirror_treatment&#x22;&#xa;WHERE&#xa;    NOT EXISTS &#x28;&#xa;        SELECT&#xa;            1&#xa;        FROM&#xa;            etl.table_meta&#xa;        WHERE&#xa;            source_db_id &#x3d; &#x24;&#x7b;PARAM_SOURCE_DB_ID&#x7d; AND&#xa;            source_schema_name &#x3d; &#x27;&#x24;&#x7b;PARAM_SCHEMA&#x7d;&#x27; AND&#xa;            source_table_name &#x3d;&#x27;&#x24;&#x7b;PARAM_TABLE&#x7d;&#x27;&#xa;     &#x29;&#xa;&#x3b;</sql>
+    <sql>SELECT&#xa;    CASE&#xa;        WHEN NOT mirror THEN &#x24;&#x7b;QF_MIRROR_ALG_DO_NOT_MIRROR&#x7d;&#xa;        WHEN can_insert_rows AND NOT can_update_rows AND NOT can_delete_rows AND NOT use_custom_mirror_algorithm THEN &#x24;&#x7b;QF_MIRROR_ALG_INSERT_ONLY_GENERIC&#x7d;&#xa;        WHEN can_insert_rows AND NOT can_update_rows AND NOT can_delete_rows AND     use_custom_mirror_algorithm THEN &#x24;&#x7b;QF_MIRROR_ALG_INSERT_ONLY_CUSTOM&#x7d;&#xa;        WHEN can_insert_rows AND     can_update_rows AND NOT can_delete_rows AND     use_custom_mirror_algorithm THEN &#x24;&#x7b;QF_MIRROR_ALG_INSERT_OR_UPDATE_CUSTOM&#x7d;&#xa;    ELSE -1&#xa;    END AS &#x22;mirror_treatment&#x22;&#xa;FROM&#xa;    etl.table_meta&#xa;WHERE&#xa;    source_db_id &#x3d; &#x24;&#x7b;PARAM_SOURCE_DB_ID&#x7d; AND&#xa;    source_schema_name &#x3d; &#x27;&#x24;&#x7b;PARAM_SOURCE_SCHEMA&#x7d;&#x27; AND&#xa;    source_table_name &#x3d;&#x27;&#x24;&#x7b;PARAM_SOURCE_TABLE&#x7d;&#x27;&#xa;&#xa;-- The rest of this query is present only to treat the case where there is no row present for the specified database,&#xa;-- schema and table. In this case, we still want to return a value for &#x22;mirror_treatment&#x22;, in this case the value&#x3a;&#xa;--&#xa;--     &#x24;&#x7b;QF_MIRROR_ALG_DO_NOT_MIRROR&#x7d;&#x3a;&#xa;&#xa;UNION ALL&#xa;SELECT&#xa;    &#x24;&#x7b;QF_MIRROR_ALG_DO_NOT_MIRROR&#x7d; AS &#x22;mirror_treatment&#x22;&#xa;WHERE&#xa;    NOT EXISTS &#x28;&#xa;        SELECT&#xa;            1&#xa;        FROM&#xa;            etl.table_meta&#xa;        WHERE&#xa;            source_db_id &#x3d; &#x24;&#x7b;PARAM_SOURCE_DB_ID&#x7d; AND&#xa;            source_schema_name &#x3d; &#x27;&#x24;&#x7b;PARAM_SOURCE_SCHEMA&#x7d;&#x27; AND&#xa;            source_table_name &#x3d;&#x27;&#x24;&#x7b;PARAM_SOURCE_TABLE&#x7d;&#x27;&#xa;     &#x29;&#xa;&#x3b;</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
@@ -273,7 +273,7 @@
       <displayHeader>Y</displayHeader>
       <limitRows>N</limitRows>
       <limitRowsNumber>0</limitRowsNumber>
-      <logmessage>PARAM_SOURCE_DB_ID &#x3d; &#x24;&#x7b;PARAM_SOURCE_DB_ID&#x7d;&#xa;PARAM_SCHEMA       &#x3d; &#x24;&#x7b;PARAM_SCHEMA&#x7d;&#xa;PARAM_TABLE        &#x3d; &#x24;&#x7b;PARAM_TABLE&#x7d;</logmessage>
+      <logmessage>PARAM_SOURCE_DB_ID &#x3d; &#x24;&#x7b;PARAM_SOURCE_DB_ID&#x7d;&#xa;PARAM_SOURCE_SCHEMA       &#x3d; &#x24;&#x7b;PARAM_SOURCE_SCHEMA&#x7d;&#xa;PARAM_SOURCE_TABLE        &#x3d; &#x24;&#x7b;PARAM_SOURCE_TABLE&#x7d;</logmessage>
     <fields>
       <field>
         <name>mirror_treatment</name>

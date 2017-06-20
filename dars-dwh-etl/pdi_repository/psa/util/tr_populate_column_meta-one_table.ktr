@@ -9,7 +9,7 @@
     <directory>/psa/util</directory>
     <parameters>
       <parameter>
-        <name>PARAM_SCHEMA</name>
+        <name>PARAM_SOURCE_SCHEMA</name>
         <default_value>passage</default_value>
         <description>Name of schema containing source table to mirror to target table</description>
       </parameter>
@@ -19,7 +19,7 @@
         <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
       </parameter>
       <parameter>
-        <name>PARAM_TABLE</name>
+        <name>PARAM_SOURCE_TABLE</name>
         <default_value>image</default_value>
         <description>Name of source table to mirror to target table</description>
       </parameter>
@@ -463,8 +463,8 @@ Therefore, this transformation writes one row to the etl.column_meta table for e
 This transformation has parameters:
 
 	PARAM_SOURCE_DB_ID			ID the "source" database containing the table for generating column metadata
-	PARAM_SCHEMA				Name of schema containing source table for generating column meatdata
-	PARAM_TABLE					Name of source table for generating column meatdata
+	PARAM_SOURCE_SCHEMA				Name of schema containing source table for generating column meatdata
+	PARAM_SOURCE_TABLE					Name of source table for generating column meatdata
 	PARAM_TABLE_META_ID		ID of the etl.table_meta row that the new etl.column_meta rows will be linked to</note>
       <xloc>16</xloc>
       <yloc>0</yloc>
@@ -1242,8 +1242,8 @@ FROM
 FROM 
     information_schema.columns 
 WHERE
-	table_schema = '${PARAM_SCHEMA}' AND 
-    table_name = '${PARAM_TABLE}'
+	table_schema = '${PARAM_SOURCE_SCHEMA}' AND 
+    table_name = '${PARAM_SOURCE_TABLE}'
 ORDER BY 
     ordinal_position;</sql>
     <limit>0</limit>

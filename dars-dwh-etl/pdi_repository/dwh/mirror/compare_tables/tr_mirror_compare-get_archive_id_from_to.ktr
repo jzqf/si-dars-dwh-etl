@@ -14,12 +14,12 @@
             <description>Timestamp of last successful load of the TDP &#x22;mirror&#x22; tables in the DWH</description>
         </parameter>
         <parameter>
-            <name>PARAM_SCHEMA</name>
+            <name>PARAM_SOURCE_SCHEMA</name>
             <default_value>passage</default_value>
             <description>Schema of mirrored table to compare</description>
         </parameter>
         <parameter>
-            <name>PARAM_TABLE</name>
+            <name>PARAM_SOURCE_TABLE</name>
             <default_value>passage</default_value>
             <description>Name of mirrored table to compare</description>
         </parameter>
@@ -89,7 +89,7 @@
   </info>
   <notepads>
     <notepad>
-      <note>This transformation computes the &#x22;from&#x22; and &#x22;to&#x22; values for the &#x22;archive_id&#x22; column of a table that is being mirrored to the DWH.&#xa;These values are used for selecting rows of the TDP archive DB table and the DWH table so that they can be compared to verify that &#xa;the TDP archive table is being mirrored correctly. These values are assigned to the vairables&#x3a;&#xa;&#xa;	QF_MIRROR_COMPARE_ARCHIVE_ID_FROM&#xa;	QF_MIRROR_COMPARE_ARCHIVE_ID_TO&#xa;&#xa;This transformation has parameters&#x3a;&#xa;&#xa;	PARAM_LAST_LOAD_TIMESTAMP	Timestamp when the DWH mirror tables were updated from TDP archive DB&#xa;	PARAM_SCHEMA						Schema of mirrored table to compare&#xa;	PARAM_TABLE						Name of mirrored table to compare</note>
+      <note>This transformation computes the &#x22;from&#x22; and &#x22;to&#x22; values for the &#x22;archive_id&#x22; column of a table that is being mirrored to the DWH.&#xa;These values are used for selecting rows of the TDP archive DB table and the DWH table so that they can be compared to verify that &#xa;the TDP archive table is being mirrored correctly. These values are assigned to the vairables&#x3a;&#xa;&#xa;	QF_MIRROR_COMPARE_ARCHIVE_ID_FROM&#xa;	QF_MIRROR_COMPARE_ARCHIVE_ID_TO&#xa;&#xa;This transformation has parameters&#x3a;&#xa;&#xa;	PARAM_LAST_LOAD_TIMESTAMP	Timestamp when the DWH mirror tables were updated from TDP archive DB&#xa;	PARAM_SOURCE_SCHEMA						Schema of mirrored table to compare&#xa;	PARAM_SOURCE_TABLE						Name of mirrored table to compare</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
       <width>882</width>
@@ -198,7 +198,7 @@
            <schema_name/>
            </partitioning>
     <connection>obo_db</connection>
-    <sql>SELECT&#xa;    COALESCE&#x28;MIN&#x28;archive_id&#x29;, -1&#x29; AS &#x22;archive_id_from&#x22;&#xa;FROM&#xa;    &#x24;&#x7b;PARAM_SCHEMA&#x7d;.&#x24;&#x7b;PARAM_TABLE&#x7d;&#xa;&#x3b;</sql>
+    <sql>SELECT&#xa;    COALESCE&#x28;MIN&#x28;archive_id&#x29;, -1&#x29; AS &#x22;archive_id_from&#x22;&#xa;FROM&#xa;    &#x24;&#x7b;PARAM_SOURCE_SCHEMA&#x7d;.&#x24;&#x7b;PARAM_SOURCE_TABLE&#x7d;&#xa;&#x3b;</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
@@ -224,7 +224,7 @@
            <schema_name/>
            </partitioning>
     <connection>dwh_db</connection>
-    <sql>SELECT&#xa;    COALESCE&#x28;MAX&#x28;archive_id&#x29;, -1&#x29; AS &#x22;archive_id_to&#x22;&#xa;FROM&#xa;    &#x24;&#x7b;PARAM_SCHEMA&#x7d;.&#x24;&#x7b;PARAM_TABLE&#x7d;&#xa;--WHERE&#xa;--    archive_date &#x3c;&#x3d; TIMESTAMP &#x27;&#x24;&#x7b;PARAM_LAST_LOAD_TIMESTAMP&#x7d;&#x27;  &#x3c;-- I don&#x27;t think that this is necessary&#xa;&#x3b;</sql>
+    <sql>SELECT&#xa;    COALESCE&#x28;MAX&#x28;archive_id&#x29;, -1&#x29; AS &#x22;archive_id_to&#x22;&#xa;FROM&#xa;    &#x24;&#x7b;PARAM_SOURCE_SCHEMA&#x7d;.&#x24;&#x7b;PARAM_SOURCE_TABLE&#x7d;&#xa;--WHERE&#xa;--    archive_date &#x3c;&#x3d; TIMESTAMP &#x27;&#x24;&#x7b;PARAM_LAST_LOAD_TIMESTAMP&#x7d;&#x27;  &#x3c;-- I don&#x27;t think that this is necessary&#xa;&#x3b;</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>

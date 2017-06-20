@@ -21,12 +21,12 @@
       <description>Timestamp of last successful load from the source database</description>
     </parameter>
     <parameter>
-      <name>PARAM_SCHEMA</name>
+      <name>PARAM_SOURCE_SCHEMA</name>
       <default_value />
       <description>Name of schema containing source table to mirror to target table</description>
     </parameter>
     <parameter>
-      <name>PARAM_TABLE</name>
+      <name>PARAM_SOURCE_TABLE</name>
       <default_value />
       <description>Name of source table to mirror to target table</description>
     </parameter>
@@ -486,8 +486,8 @@ SET
     mirror_last_updated_on           = LOCALTIMESTAMP
 WHERE
     source_db_id = ${QF_TABLE_META_SOURCE_DB_ID_OBO} AND
-    source_schema_name  = '${PARAM_SCHEMA}' AND
-    source_table_name   = '${PARAM_TABLE}'</sql>
+    source_schema_name  = '${PARAM_SOURCE_SCHEMA}' AND
+    source_table_name   = '${PARAM_SOURCE_TABLE}'</sql>
       <useVariableSubstitution>T</useVariableSubstitution>
       <sqlfromfile>F</sqlfromfile>
       <sqlfilename />
@@ -572,7 +572,7 @@ WHERE
         <parameter>
           <name>PARAM_ERROR_MESSAGE</name>
           <stream_name />
-          <value>Error updating DWH mirror table: ${PARAM_SCHEMA}.${PARAM_TABLE}</value>
+          <value>Error updating DWH mirror table: ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</value>
         </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
@@ -647,8 +647,8 @@ WHERE
 
 	PARAM_CDC_LAST_LOAD
 	PARAM_CDC_CURRENT_LOAD
-	PARAM_SCHEMA						Name of schema containing source table to mirror to target table
-	PARAM_TABLE						Name of source table to mirror to target table
+	PARAM_SOURCE_SCHEMA						Name of schema containing source table to mirror to target table
+	PARAM_SOURCE_TABLE						Name of source table to mirror to target table
 	PARAM_TARGET_SCHEMA			Name of schema containing target table to update (not currently used)
 	PARAM_TARGET_TABLE				Name of target table to update (not currently used)</note>
       <xloc>16</xloc>

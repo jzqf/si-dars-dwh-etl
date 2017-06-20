@@ -9,7 +9,7 @@
     <directory>&#x2f;dwh&#x2f;mirror&#x2f;compare_tables</directory>
     <parameters>
         <parameter>
-            <name>PARAM_SCHEMA</name>
+            <name>PARAM_SOURCE_SCHEMA</name>
             <default_value>passage</default_value>
             <description>Schema of mirrored table to compare</description>
         </parameter>
@@ -19,7 +19,7 @@
             <description>ID of database containing the source tables to mirror</description>
         </parameter>
         <parameter>
-            <name>PARAM_TABLE</name>
+            <name>PARAM_SOURCE_TABLE</name>
             <default_value>passage</default_value>
             <description>Name of mirrored table to compare</description>
         </parameter>
@@ -89,7 +89,7 @@
   </info>
   <notepads>
     <notepad>
-      <note>This transformation updates the mirror comparison statistics in etl.table_meta for the specified table.&#xa;These statistics &#x28;&#x22;compared_rows_equal&#x22;, &#x22;compared_rows_unequal&#x22;, ...&#x29; are computed to verify that&#xa;the implementation of the mirrorring algorithm for the specified table is working correctly.&#xa;This transformation has parameters&#x3a;&#xa;&#xa;	PARAM_SOURCE_DB_ID			ID of database containing the source tables to mirror&#xa;	PARAM_SCHEMA					Schema of mirrored table to compare&#xa;	PARAM_TABLE					Name of mirrored table to compare</note>
+      <note>This transformation updates the mirror comparison statistics in etl.table_meta for the specified table.&#xa;These statistics &#x28;&#x22;compared_rows_equal&#x22;, &#x22;compared_rows_unequal&#x22;, ...&#x29; are computed to verify that&#xa;the implementation of the mirrorring algorithm for the specified table is working correctly.&#xa;This transformation has parameters&#x3a;&#xa;&#xa;	PARAM_SOURCE_DB_ID			ID of database containing the source tables to mirror&#xa;	PARAM_SOURCE_SCHEMA					Schema of mirrored table to compare&#xa;	PARAM_SOURCE_TABLE					Name of mirrored table to compare</note>
       <xloc>16</xloc>
       <yloc>0</yloc>
       <width>700</width>
@@ -489,7 +489,7 @@
     <single_statement>Y</single_statement>
     <replace_variables>Y</replace_variables>
     <quoteString>N</quoteString>
-    <sql>UPDATE&#xa;    etl.table_meta&#xa;SET&#xa;    last_compared_on&#x3d;LOCALTIMESTAMP&#xa;   ,compared_rows_equal&#x3d;COALESCE&#x28;&#x3f;, 0&#x29;&#xa;   ,compared_rows_unequal&#x3d;COALESCE&#x28;&#x3f;, 0&#x29;&#xa;   ,compared_rows_missing&#x3d;COALESCE&#x28;&#x3f;, 0&#x29;&#xa;   ,compared_rows_extra&#x3d;COALESCE&#x28;&#x3f;, 0&#x29;&#xa;WHERE&#xa;    source_db_id&#x3d;&#x24;&#x7b;PARAM_SOURCE_DB_ID&#x7d; AND&#xa;    source_schema_name&#x3d;&#x27;&#x24;&#x7b;PARAM_SCHEMA&#x7d;&#x27; AND&#xa;    source_table_name&#x3d;&#x27;&#x24;&#x7b;PARAM_TABLE&#x7d;&#x27;</sql>
+    <sql>UPDATE&#xa;    etl.table_meta&#xa;SET&#xa;    last_compared_on&#x3d;LOCALTIMESTAMP&#xa;   ,compared_rows_equal&#x3d;COALESCE&#x28;&#x3f;, 0&#x29;&#xa;   ,compared_rows_unequal&#x3d;COALESCE&#x28;&#x3f;, 0&#x29;&#xa;   ,compared_rows_missing&#x3d;COALESCE&#x28;&#x3f;, 0&#x29;&#xa;   ,compared_rows_extra&#x3d;COALESCE&#x28;&#x3f;, 0&#x29;&#xa;WHERE&#xa;    source_db_id&#x3d;&#x24;&#x7b;PARAM_SOURCE_DB_ID&#x7d; AND&#xa;    source_schema_name&#x3d;&#x27;&#x24;&#x7b;PARAM_SOURCE_SCHEMA&#x7d;&#x27; AND&#xa;    source_table_name&#x3d;&#x27;&#x24;&#x7b;PARAM_SOURCE_TABLE&#x7d;&#x27;</sql>
     <set_params>Y</set_params>
     <insert_field/>
     <update_field/>

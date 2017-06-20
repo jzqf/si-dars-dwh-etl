@@ -19,12 +19,12 @@
             <description>Timestamp of last successful load from the source database</description>
         </parameter>
         <parameter>
-            <name>PARAM_SCHEMA</name>
+            <name>PARAM_SOURCE_SCHEMA</name>
             <default_value>passage</default_value>
             <description>Schema of table to mirror</description>
         </parameter>
         <parameter>
-            <name>PARAM_TABLE</name>
+            <name>PARAM_SOURCE_TABLE</name>
             <default_value>image</default_value>
             <description>Name of table to mirror</description>
         </parameter>
@@ -199,7 +199,7 @@
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>This transformation updates the DWH mirror of an &#x22;insert-only&#x22; table from the TDP archive database. This is a generic algorithm that &#xa;can work with &#x2a;any&#x2a; table, as long as it is insert-only and it has the necessary &#x22;archive_id&#x22; &#x26; &#x22;archive_date&#x22; columns.&#xa;This transformation has parameters&#x3a;&#xa;&#xa;	PARAM_CDC_LAST_LOAD		&#x3c;- not used in this transformation - MAX&#x28;archive_id&#x29; is used instead&#xa;	PARAM_CDC_CURRENT_LOAD&#xa;	PARAM_SCHEMA					Schema of mirrored table&#xa;	PARAM_TABLE					Name of mirrored table to update</note>
+      <note>This transformation updates the DWH mirror of an &#x22;insert-only&#x22; table from the TDP archive database. This is a generic algorithm that &#xa;can work with &#x2a;any&#x2a; table, as long as it is insert-only and it has the necessary &#x22;archive_id&#x22; &#x26; &#x22;archive_date&#x22; columns.&#xa;This transformation has parameters&#x3a;&#xa;&#xa;	PARAM_CDC_LAST_LOAD		&#x3c;- not used in this transformation - MAX&#x28;archive_id&#x29; is used instead&#xa;	PARAM_CDC_CURRENT_LOAD&#xa;	PARAM_SOURCE_SCHEMA					Schema of mirrored table&#xa;	PARAM_SOURCE_TABLE					Name of mirrored table to update</note>
       <xloc>16</xloc>
       <yloc>0</yloc>
       <width>894</width>
@@ -381,7 +381,7 @@
            <schema_name/>
            </partitioning>
     <connection>dwh_db</connection>
-    <sql>SELECT&#xa;    COALESCE&#x28;MAX&#x28;archive_id&#x29;, &#x24;&#x7b;QF_ARCHIVE_ID_LOWER_BOUND&#x7d;&#x29; AS max_id&#xa;FROM&#xa;    &#x24;&#x7b;PARAM_SCHEMA&#x7d;.&#x24;&#x7b;PARAM_TABLE&#x7d;&#xa;</sql>
+    <sql>SELECT&#xa;    COALESCE&#x28;MAX&#x28;archive_id&#x29;, &#x24;&#x7b;QF_ARCHIVE_ID_LOWER_BOUND&#x7d;&#x29; AS max_id&#xa;FROM&#xa;    &#x24;&#x7b;PARAM_SOURCE_SCHEMA&#x7d;.&#x24;&#x7b;PARAM_SOURCE_TABLE&#x7d;&#xa;</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
@@ -433,7 +433,7 @@
            <schema_name/>
            </partitioning>
     <connection>obo_db</connection>
-    <sql>SELECT&#xa;    &#x2a;&#xa;FROM&#xa;    &#x24;&#x7b;PARAM_SCHEMA&#x7d;.&#x24;&#x7b;PARAM_TABLE&#x7d;&#xa;WHERE&#xa;    archive_id &#x3e; &#x3f; AND&#xa;    --archive_date &#x3e;  &#x27;&#x24;&#x7b;PARAM_CDC_LAST_LOAD&#x7d;&#x27; AND &#xa;	archive_date &#x3c;&#x3d; &#x27;&#x24;&#x7b;PARAM_CDC_CURRENT_LOAD&#x7d;&#x27;&#xa;ORDER BY&#xa;    archive_id</sql>
+    <sql>SELECT&#xa;    &#x2a;&#xa;FROM&#xa;    &#x24;&#x7b;PARAM_SOURCE_SCHEMA&#x7d;.&#x24;&#x7b;PARAM_SOURCE_TABLE&#x7d;&#xa;WHERE&#xa;    archive_id &#x3e; &#x3f; AND&#xa;    --archive_date &#x3e;  &#x27;&#x24;&#x7b;PARAM_CDC_LAST_LOAD&#x7d;&#x27; AND &#xa;	archive_date &#x3c;&#x3d; &#x27;&#x24;&#x7b;PARAM_CDC_CURRENT_LOAD&#x7d;&#x27;&#xa;ORDER BY&#xa;    archive_id</sql>
     <limit>0</limit>
     <lookup>Write to log&#x3a; parameters, max_id</lookup>
     <execute_each_row>N</execute_each_row>
@@ -459,8 +459,8 @@
            <schema_name/>
            </partitioning>
     <connection>dwh_db</connection>
-    <schema>&#x24;&#x7b;PARAM_SCHEMA&#x7d;</schema>
-    <table>&#x24;&#x7b;PARAM_TABLE&#x7d;</table>
+    <schema>&#x24;&#x7b;PARAM_SOURCE_SCHEMA&#x7d;</schema>
+    <table>&#x24;&#x7b;PARAM_SOURCE_TABLE&#x7d;</table>
     <commit>1000</commit>
     <truncate>N</truncate>
     <ignore_errors>N</ignore_errors>
@@ -500,7 +500,7 @@
       <displayHeader>Y</displayHeader>
       <limitRows>N</limitRows>
       <limitRowsNumber>0</limitRowsNumber>
-      <logmessage>PARAM_CDC_LAST_LOAD    &#x3d; &#x24;&#x7b;PARAM_CDC_LAST_LOAD&#x7d;&#xa;PARAM_CDC_CURRENT_LOAD &#x3d; &#x24;&#x7b;PARAM_CDC_CURRENT_LOAD&#x7d;&#xa;PARAM_SCHEMA           &#x3d; &#x24;&#x7b;PARAM_SCHEMA&#x7d;&#xa;PARAM_TABLE            &#x3d; &#x24;&#x7b;PARAM_TABLE&#x7d;</logmessage>
+      <logmessage>PARAM_CDC_LAST_LOAD    &#x3d; &#x24;&#x7b;PARAM_CDC_LAST_LOAD&#x7d;&#xa;PARAM_CDC_CURRENT_LOAD &#x3d; &#x24;&#x7b;PARAM_CDC_CURRENT_LOAD&#x7d;&#xa;PARAM_SOURCE_SCHEMA           &#x3d; &#x24;&#x7b;PARAM_SOURCE_SCHEMA&#x7d;&#xa;PARAM_SOURCE_TABLE            &#x3d; &#x24;&#x7b;PARAM_SOURCE_TABLE&#x7d;</logmessage>
     <fields>
       <field>
         <name>max_id</name>
