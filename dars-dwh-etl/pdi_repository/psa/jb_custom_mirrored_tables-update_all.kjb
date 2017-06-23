@@ -1,5 +1,5 @@
 <job>
-  <name>jb_mirrored_insert_only_tables-inject_meta-update_one</name>
+  <name>jb_custom_mirrored_tables-update_all</name>
   <description />
   <extended_description />
   <job_version />
@@ -8,11 +8,11 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/06/22 16:55:26.702</modified_date>
+  <modified_date>2017/06/23 08:10:10.684</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CDC_CURRENT_LOAD</name>
-      <default_value>2017.06.15 00:00:00</default_value>
+      <default_value>2017.06.23 00:00:00</default_value>
       <description>Timestamp of the current load (no rows after this timestamp will be loaded)</description>
     </parameter>
     <parameter>
@@ -24,26 +24,6 @@
       <name>PARAM_SOURCE_DB_ID</name>
       <default_value>1</default_value>
       <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_SOURCE_SCHEMA</name>
-      <default_value>passage</default_value>
-      <description>Name of schema containing source table to mirror to target table</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_SOURCE_TABLE</name>
-      <default_value>passage</default_value>
-      <description>Name of source table to mirror to target table</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_TARGET_SCHEMA</name>
-      <default_value>passage</default_value>
-      <description>Name of schema containing target table to update (not currently used)</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_TARGET_TABLE</name>
-      <default_value>passage</default_value>
-      <description>Name of target table to update (not currently used)</description>
     </parameter>
   </parameters>
   <connection>
@@ -440,18 +420,18 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>608</xloc>
-      <yloc>176</yloc>
+      <xloc>144</xloc>
+      <yloc>304</yloc>
     </entry>
     <entry>
-      <name>tr_mirrored_insert_only_table-inject_meta-update</name>
+      <name>tr_custom_mirrored_tables-list_of_tables</name>
       <description />
       <type>TRANS</type>
       <specification_method>rep_name</specification_method>
       <trans_object_id />
       <filename />
-      <transname>tr_mirrored_insert_only_table-inject_meta-update</transname>
-      <directory>${Internal.Entry.Current.Directory}</directory>
+      <transname>tr_custom_mirrored_tables-list_of_tables</transname>
+      <directory>/generic</directory>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
@@ -477,21 +457,21 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>608</xloc>
-      <yloc>448</yloc>
+      <xloc>144</xloc>
+      <yloc>512</yloc>
     </entry>
     <entry>
-      <name>jb_update_etl_table_meta_mirror_details</name>
+      <name>jb_custom_mirrored_table_dispatcher</name>
       <description />
       <type>JOB</type>
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
-      <jobname>jb_update_etl_table_meta_mirror_details</jobname>
-      <directory>/generic</directory>
+      <jobname>jb_custom_mirrored_table_dispatcher</jobname>
+      <directory>${Internal.Entry.Current.Directory}</directory>
       <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
+      <params_from_previous>Y</params_from_previous>
+      <exec_per_row>Y</exec_per_row>
       <set_logfile>N</set_logfile>
       <logfile />
       <logext />
@@ -507,75 +487,45 @@
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
         <parameter>
-          <name>PARAM_SOURCE_DB_ID</name>
-          <stream_name />
-          <value>${QF_TABLE_META_SOURCE_DB_ID_OBO}</value>
+          <name>PARAM_SOURCE_SCHEMA</name>
+          <stream_name>source_schema</stream_name>
+          <value />
         </parameter>
         <parameter>
-          <name>PARAM_TABLE_MIRROR_TREATMENT_ID</name>
-          <stream_name />
-          <value>${QF_MIRROR_ALG_INSERT_ONLY_GENERIC}</value>
+          <name>PARAM_SOURCE_TABLE</name>
+          <stream_name>source_table</stream_name>
+          <value />
+        </parameter>
+        <parameter>
+          <name>PARAM_SOURCE_SCHEMA_DOT_TABLE</name>
+          <stream_name>source_schema_dot_table</stream_name>
+          <value />
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_SCHEMA</name>
+          <stream_name>target_schema</stream_name>
+          <value />
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_TABLE</name>
+          <stream_name>target_table</stream_name>
+          <value />
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_SCHEMA_DOT_TABLE</name>
+          <stream_name>target_schema_dot_table</stream_name>
+          <value />
         </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>608</xloc>
-      <yloc>688</yloc>
+      <xloc>144</xloc>
+      <yloc>624</yloc>
     </entry>
     <entry>
-      <name>jb_log_error 2</name>
-      <description />
-      <type>JOB</type>
-      <specification_method>rep_name</specification_method>
-      <job_object_id />
-      <filename />
-      <jobname>jb_log_error</jobname>
-      <directory>/generic</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Nothing</loglevel>
-      <slave_server_name />
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <expand_remote_job>N</expand_remote_job>
-      <create_parent_folder>N</create_parent_folder>
-      <pass_export>N</pass_export>
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-        <parameter>
-          <name>PARAM_ERROR_MESSAGE</name>
-          <stream_name />
-          <value>Error updating DWH mirror table: ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</value>
-        </parameter>
-      </parameters>
-      <set_append_logfile>N</set_append_logfile>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>816</xloc>
-      <yloc>448</yloc>
-    </entry>
-    <entry>
-      <name>Abort job</name>
-      <description />
-      <type>ABORT</type>
-      <message />
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>944</xloc>
-      <yloc>368</yloc>
-    </entry>
-    <entry>
-      <name>Is there column mapping metadata for this table?</name>
+      <name>Are there any custom mirroring algorithms enabled ?</name>
       <description />
       <type>EVAL_TABLE_CONTENT</type>
       <connection>etl_db</connection>
@@ -586,65 +536,28 @@
       <is_custom_sql>Y</is_custom_sql>
       <is_usevars>Y</is_usevars>
       <custom_sql>SELECT
-    c.source_column_name AS "source_col_name", 
-    c.target_column_name AS "target_col_name" 
-FROM 
-    etl.column_meta c 
-INNER JOIN 
-    etl.table_meta t ON t.table_meta_id = c.table_meta_id 
-WHERE 
-    t.source_db_id = ${PARAM_SOURCE_DB_ID} AND 
-    t.source_schema_name = '${PARAM_SOURCE_SCHEMA}' AND 
-    t.source_table_name = '${PARAM_SOURCE_TABLE}'  AND 
-    c.mirror_column = true
-ORDER BY 
-    c.source_column_name ASC</custom_sql>
+    source_schema_name AS "source_schema",
+    source_table_name  AS "source_table",
+    source_schema_name || '.' || source_table_name AS "source_schema_dot_table",
+    target_schema_name AS "target_schema",
+    target_table_name  AS "target_table", 
+    target_schema_name || '.' || target_table_name AS "target_schema_dot_table"
+FROM
+    etl.table_meta
+WHERE
+    source_db_id=${PARAM_SOURCE_DB_ID} AND
+    mirror=true AND
+	use_custom_mirror_algorithm=true
+ORDER BY
+	source_schema_name, 
+    source_table_name</custom_sql>
       <add_rows_result>N</add_rows_result>
       <clear_result_rows>Y</clear_result_rows>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>608</xloc>
-      <yloc>304</yloc>
-    </entry>
-    <entry>
-      <name>jb_log_error 1</name>
-      <description />
-      <type>JOB</type>
-      <specification_method>rep_name</specification_method>
-      <job_object_id />
-      <filename />
-      <jobname>jb_log_error</jobname>
-      <directory>/generic</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Nothing</loglevel>
-      <slave_server_name />
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <expand_remote_job>N</expand_remote_job>
-      <create_parent_folder>N</create_parent_folder>
-      <pass_export>N</pass_export>
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-        <parameter>
-          <name>PARAM_ERROR_MESSAGE</name>
-          <stream_name />
-          <value>No column metadata has been configured for source table: ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</value>
-        </parameter>
-      </parameters>
-      <set_append_logfile>N</set_append_logfile>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>1</nr>
-      <xloc>816</xloc>
-      <yloc>304</yloc>
+      <xloc>144</xloc>
+      <yloc>400</yloc>
     </entry>
     <entry>
       <name>Success</name>
@@ -653,32 +566,27 @@ ORDER BY
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>944</xloc>
-      <yloc>304</yloc>
+      <xloc>448</xloc>
+      <yloc>400</yloc>
+    </entry>
+    <entry>
+      <name>Write To Log</name>
+      <description />
+      <type>WRITE_TO_LOG</type>
+      <logmessage>There are no table-specific custom mirroring algorithms enabled</logmessage>
+      <loglevel>Basic</loglevel>
+      <logsubject />
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>352</xloc>
+      <yloc>400</yloc>
     </entry>
   </entries>
   <hops>
     <hop>
-      <from>tr_mirrored_insert_only_table-inject_meta-update</from>
-      <to>jb_update_etl_table_meta_mirror_details</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>tr_mirrored_insert_only_table-inject_meta-update</from>
-      <to>jb_log_error 2</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>jb_log_error 2</from>
-      <to>Abort job</to>
+      <from>tr_custom_mirrored_tables-list_of_tables</from>
+      <to>jb_custom_mirrored_table_dispatcher</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -687,7 +595,7 @@ ORDER BY
     </hop>
     <hop>
       <from>START</from>
-      <to>Is there column mapping metadata for this table?</to>
+      <to>Are there any custom mirroring algorithms enabled ?</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -695,8 +603,8 @@ ORDER BY
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>Is there column mapping metadata for this table?</from>
-      <to>tr_mirrored_insert_only_table-inject_meta-update</to>
+      <from>Are there any custom mirroring algorithms enabled ?</from>
+      <to>tr_custom_mirrored_tables-list_of_tables</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -704,27 +612,18 @@ ORDER BY
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Is there column mapping metadata for this table?</from>
-      <to>jb_log_error 1</to>
+      <from>Are there any custom mirroring algorithms enabled ?</from>
+      <to>Write To Log</to>
       <from_nr>0</from_nr>
-      <to_nr>1</to_nr>
+      <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>N</evaluation>
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>jb_log_error 1</from>
-      <to>Abort job</to>
-      <from_nr>1</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>N</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>jb_log_error 1</from>
+      <from>Write To Log</from>
       <to>Success</to>
-      <from_nr>1</from_nr>
+      <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>Y</evaluation>
@@ -733,20 +632,29 @@ ORDER BY
   </hops>
   <notepads>
     <notepad>
-      <note>This job updates a single "insert-only" table in the target PSA database that mirrors a table from a source database. 
-This job has parameters:
+      <note>This job updates a selection of tables in the target PSA database that are mirrored from a source database using a CUSTOM algorithm, i.e., a
+custom job &amp; transformation is used that is specific to the table being updated. This job has parameters:
 
+	PARAM_SOURCE_DB_ID			ID the "source" database containing tables will be mirrored to a "target" database
 	PARAM_CDC_LAST_LOAD
 	PARAM_CDC_CURRENT_LOAD
-	PARAM_SOURCE_DB_ID				ID the "source" database containing tables will be mirrored to a "target" database
-	PARAM_SOURCE_SCHEMA			Name of schema containing source table to mirror to target table
-	PARAM_SOURCE_TABLE			Name of source table to mirror to target table
-	PARAM_TARGET_SCHEMA			Name of schema containing target table to update (not currently used)
-	PARAM_TARGET_TABLE				Name of target table to update (not currently used)</note>
+
+These 3 parameters are also passed to the dispatcher sub-job because the setting "Pass parameter values to sub job" is selected for this 
+sub-job entry. 
+
+The dispatcher sub-job is RUN ONCE FOR EACH row returned by "tr_custom_mirrored_tables-list_of_tables". As a result, each time this sub-job 
+is is run it is *also* passed the parameters:
+
+	PARAM_SOURCE_SCHEMA
+	PARAM_SOURCE_TABLE
+	PARAM_SOURCE_SCHEMA_DOT_TABLE
+	PARAM_TARGET_SCHEMA
+	PARAM_TARGET_TABLE
+	PARAM_TARGET_SCHEMA_DOT_TABLE</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>730</width>
-      <heigth>150</heigth>
+      <width>843</width>
+      <heigth>276</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -763,13 +671,12 @@ This job has parameters:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Update the etl.table_meta row that corresponds to the table treated in the 
-current job. This records which mirror algorithm was used, as well as when the 
-mirroring was performed.</note>
-      <xloc>0</xloc>
-      <yloc>672</yloc>
-      <width>467</width>
-      <heigth>52</heigth>
+      <note>Create list of tables to update. This subtransformation 
+is passed parameter PARAM_SOURCE_DB_ID</note>
+      <xloc>272</xloc>
+      <yloc>496</yloc>
+      <width>332</width>
+      <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -786,15 +693,12 @@ mirroring was performed.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>This "Abort" is needed so that the the 
-root calling job will know that 
-execution has failed. It will then direct
-the execution flow to the job that 
-sends out failure e-mails.</note>
-      <xloc>992</xloc>
-      <yloc>352</yloc>
-      <width>232</width>
-      <heigth>80</heigth>
+      <note>Update each mirrored, insert-only table. This 
+sub-job is RUN ONCE FOR EACH TABLE TO UPDATE.</note>
+      <xloc>272</xloc>
+      <yloc>608</yloc>
+      <width>310</width>
+      <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -811,65 +715,18 @@ sends out failure e-mails.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>This allows execution to continue without attempting to 
-update a target table for the case where no column 
-mapping metdata is provided for the table.</note>
-      <xloc>992</xloc>
-      <yloc>288</yloc>
-      <width>340</width>
-      <heigth>52</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>This step updates the target table using an ETL Metadata Injection step.</note>
-      <xloc>0</xloc>
-      <yloc>448</yloc>
-      <width>429</width>
-      <heigth>24</heigth>
-      <fontname />
-      <fontsize>-1</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>&lt;- It is possible to execute here jobs or transformations that contain custom, table-specific code for UPDATING 
-the rows just inserted by "tr_mirrored_insert_only_table-inject_meta-update". Such a custom job ro transformation
-will need to make use of the value of a variable named QF_LAST_UPDATE_ARCHIVE_ID that must be set to the 
-value of "max_id" in the template transformation (this is not currently done).
-
-But since updates are expensive, it might be better, instead, to not perform the generic mirroring by 
-"tr_mirrored_insert_only_table-inject_meta-update" and, instead, write a custom transformation for mirroring the 
-table that is executed either from this job or from job "jb_psa-update". This custom job can be written to use only 
-INSERTs, at the expense of duplicating code from the template transformation, 
-"tmplt_mirrored_insert_only_table-update". Such a transformation will not need a value for 
-QF_LAST_UPDATE_ARCHIVE_ID because it can compute a value that will be used for INSERTing new rows.</note>
-      <xloc>656</xloc>
-      <yloc>512</yloc>
-      <width>677</width>
-      <heigth>164</heigth>
+      <note>The query here must match the query in tr_custom_mirrored_tables-list_of_tables
+that is  the next entry to execute. This is necessary to avoid executing the dispather
+job below for the case where there are no rows in the result set of 
+tr_custom_mirrored_tables-list_of_tables. It seems that if a sub-job  is executed 
+that is configured with the setting"Execute every input row" but the result set is 
+empty, it is still executed, and in addition PDI throws an exception. So the 
+work-around is to detect here when there will be no rows in the result set and to 
+avoid executing the dispatcher sub-job in that case.</note>
+      <xloc>496</xloc>
+      <yloc>336</yloc>
+      <width>492</width>
+      <heigth>122</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -886,20 +743,12 @@ QF_LAST_UPDATE_ARCHIVE_ID because it can compute a value that will be used for I
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>The query in this step must match the query in 
-tr_mirrored_insert_only_table-inject_meta-update
-that is executed below. This is because a PDI runtime error occurs if an empty
-stream is sent to an ETL Metadata Injection step. To avoid this possibility in 
-tr_mirrored_insert_only_table-inject_meta-update, we check that metadata
-is available here before executing that transformation. The only reason why
-this case should occur is if a table is marked for mirroring, but no column 
-mapping metdata is provided - this should never occur, but we check in 
-order to provide a warning message, rather than letting PDI choke on this 
-problem.</note>
-      <xloc>0</xloc>
-      <yloc>240</yloc>
-      <width>459</width>
-      <heigth>150</heigth>
+      <note>Query use here should be the same as the query in the previous
+step, "Are there any custom mirroring algorithms enabled ?"</note>
+      <xloc>624</xloc>
+      <yloc>496</yloc>
+      <width>377</width>
+      <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>

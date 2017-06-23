@@ -1,47 +1,17 @@
 <transformation>
   <info>
-    <name>tr_mirrored_insert_only_table-inject_meta-update</name>
+    <name>tr_custom_mirrored_tables-list_of_tables</name>
     <description />
     <extended_description />
     <trans_version />
     <trans_type>Normal</trans_type>
     <trans_status>0</trans_status>
-    <directory>/psa</directory>
+    <directory>/generic</directory>
     <parameters>
-      <parameter>
-        <name>PARAM_CDC_CURRENT_LOAD</name>
-        <default_value>1900.01.01 00:00:00</default_value>
-        <description>Timestamp of the current load (no rows after this timestamp will be loaded)</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_CDC_LAST_LOAD</name>
-        <default_value>1900.01.01 00:00:00</default_value>
-        <description>Timestamp of last successful load from the source database</description>
-      </parameter>
       <parameter>
         <name>PARAM_SOURCE_DB_ID</name>
         <default_value>-1</default_value>
         <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_SOURCE_SCHEMA</name>
-        <default_value>passage</default_value>
-        <description>Name of schema containing source table to mirror to target table</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_SOURCE_TABLE</name>
-        <default_value>image</default_value>
-        <description>Name of source table to mirror to target table</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_TARGET_SCHEMA</name>
-        <default_value>passage</default_value>
-        <description>Name of schema containing target table to update</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_TARGET_TABLE</name>
-        <default_value>image</default_value>
-        <description>Name of target table to update</description>
       </parameter>
     </parameters>
     <log>
@@ -76,7 +46,7 @@
           <id>LINES_READ</id>
           <enabled>Y</enabled>
           <name>LINES_READ</name>
-          <subject />
+          <subject>Copy rows to result</subject>
         </field>
         <field>
           <id>LINES_WRITTEN</id>
@@ -464,26 +434,26 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/06/22 16:45:27.988</modified_date>
+    <modified_date>2017/06/23 08:10:07.137</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>This transformation uses ETL Metadata injection to control how columns of a source table in a source database are mapped to columns 
-of a target table in a target database. This is a generic algorithm that can work with *any* table, as long as it is insert-only and it has the 
-necessary "archive_id" &amp; "archive_date" columns. This transformation has parameters:
+      <note>This transformation specifies the tables from a "source" database that will be mirrored to a "target" database using a table-specific
+mirroring algorithm. The "source" database is specified by PARAM_SOURCE_DB_ID.
 
-	PARAM_CDC_LAST_LOAD		
-	PARAM_CDC_CURRENT_LOAD
-	PARAM_SOURCE_DB_ID			ID the "source" database containing tables will be mirrored to a "target" database
-	PARAM_SOURCE_SCHEMA		Name of schema containing source table to mirror to target table
-	PARAM_SOURCE_TABLE		Name of source table to mirror to target table
-	PARAM_TARGET_SCHEMA		Name of schema containing target table to update (not currently used)
-	PARAM_TARGET_TABLE			Name of target table to update (not currently used)</note>
-      <xloc>16</xloc>
+The stream from this transformation is copied to the "result" of this transformation. This result set is used in the parent job to 
+execute a sub-job once for each row in this stream. At the same time, the stream values from the row are assigned to parameters
+that are passed to the sub-job. This procedure can be used to mirror each  table in the "source" database  to its matching table in 
+the "target" database.
+
+This transformation has parameter:
+
+	PARAM_SOURCE_DB_ID			ID the "source" database containing tables will be mirrored to a "target" database</note>
+      <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>802</width>
+      <width>777</width>
       <heigth>164</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -501,20 +471,48 @@ necessary "archive_id" &amp; "archive_date" columns. This transformation has par
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Either of these 2 steps can be used to inject metadata to specify the fields to stream to the
-target PSA database table via the template transformation. They also enable the specified
-fields to be renamed to match column names in the target table.
+      <note>The stream created by this step consists of the four fields: 
 
-Only *one* of these steps should have an enabled hop to the ETL Metadata Injection step!
+	source_schema
+	source_table
+	source_schema_dot_table
+	target_schema
+	target_table
+	target_schema_dot_table
 
-The Data Grid step is only used for testing this transformation by running it in Spoon using 
-manually supplied parameter values (or default values set for the parameters). When you 
-disable a hop to the ETL Metadata Injection step, all configuration settings may be cleared,
-so do not do this unless you are prepared to reconfigure this step.</note>
-      <xloc>880</xloc>
-      <yloc>176</yloc>
-      <width>541</width>
-      <heigth>150</heigth>
+Each row specifies a table to mirror from the source database,
+as well as the table it will be mirrored to in the target database.</note>
+      <xloc>400</xloc>
+      <yloc>192</yloc>
+      <width>383</width>
+      <heigth>164</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>This places an empty row in the stream in case there are no tables
+located by the "table input" step above; otherwise, it does nothing.
+This is necessary because if a sub-job is configured with the setting 
+"Execute every input row", it seems that it is still executed if there
+are now rows in the result set; however, in this case PDI throws an
+exception. This is a way to avoid that error, but it is necessary to
+detect empty parameters in the sub-job to dectect this situation.</note>
+      <xloc>400</xloc>
+      <yloc>384</yloc>
+      <width>401</width>
+      <heigth>108</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -532,13 +530,14 @@ so do not do this unless you are prepared to reconfigure this step.</note>
     </notepad>
     <notepad>
       <note>The query here must match the query in 
-jb_mirrored_insert_only_tables-inject_meta-update_one 
-where this transformation is executed. See the 
-comments in that job for an explanation.</note>
+jb_custom_mirrored_tables-update_all 
+in the job where this transformation is 
+executed. See the comments in that job 
+for an explanation.</note>
       <xloc>16</xloc>
       <yloc>192</yloc>
-      <width>340</width>
-      <heigth>66</heigth>
+      <width>242</width>
+      <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -659,19 +658,14 @@ comments in that job for an explanation.</note>
   </connection>
   <order>
     <hop>
-      <from>Data Grid - Column mapping metadata</from>
-      <to>ETL Metadata Injection - tmplt_mirrored_insert_only_table-update</to>
-      <enabled>N</enabled>
-    </hop>
-    <hop>
-      <from>Table input - Column mapping metadata</from>
-      <to>ETL Metadata Injection - tmplt_mirrored_insert_only_table-update</to>
+      <from>Load list of tables</from>
+      <to>Copy rows to result</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Data Grid - Column mapping metadata</name>
-    <type>DataGrid</type>
+    <name>Copy rows to result</name>
+    <type>RowsToResult</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -680,64 +674,6 @@ comments in that job for an explanation.</note>
       <method>none</method>
       <schema_name />
     </partitioning>
-    <fields>
-      <field>
-        <name>source_col_name</name>
-        <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>64</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>target_col_name</name>
-        <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>64</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-    </fields>
-    <data>
-      <line>
-        <item>passage_id</item>
-        <item>passage_id</item>
-      </line>
-      <line>
-        <item>passage_status_id</item>
-        <item>passage_status_id</item>
-      </line>
-      <line>
-        <item>passage_date</item>
-        <item>passage_date</item>
-      </line>
-      <line>
-        <item>arrival_date</item>
-        <item>arrival_date</item>
-      </line>
-      <line>
-        <item>charging_point_id</item>
-        <item>charging_point_id</item>
-      </line>
-      <line>
-        <item>archive_id</item>
-        <item>archive_id</item>
-      </line>
-      <line>
-        <item>archive_date</item>
-        <item>archive_date</item>
-      </line>
-      <line>
-        <item>etl_batch_id</item>
-        <item>etl_batch_id</item>
-      </line>
-    </data>
     <cluster_schema />
     <remotesteps>
       <input>
@@ -746,67 +682,16 @@ comments in that job for an explanation.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>736</xloc>
-      <yloc>192</yloc>
+      <xloc>320</xloc>
+      <yloc>416</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>ETL Metadata Injection - tmplt_mirrored_insert_only_table-update</name>
-    <type>MetaInject</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <specification_method>rep_name</specification_method>
-    <trans_object_id />
-    <trans_name>tmplt_mirrored_insert_only_table-update</trans_name>
-    <filename />
-    <directory_path>${Internal.Entry.Current.Directory}</directory_path>
-    <source_step />
-    <source_output_fields>    </source_output_fields>
-    <target_file>/tmp/tmplt_mirrored_insert_only_table-update-injected.ktr</target_file>
-    <no_execution>N</no_execution>
-    <stream_source_step />
-    <stream_target_step />
-    <mappings>
-      <mapping>
-        <target_step_name>Map column names</target_step_name>
-        <target_attribute_key>FIELD_NAME</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Table input - Column mapping metadata</source_step>
-        <source_field>source_col_name</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Map column names</target_step_name>
-        <target_attribute_key>FIELD_RENAME</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Table input - Column mapping metadata</source_step>
-        <source_field>target_col_name</source_field>
-      </mapping>
-    </mappings>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>480</xloc>
-      <yloc>336</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Table input - Column mapping metadata</name>
+    <name>Load list of tables</name>
     <type>TableInput</type>
     <description />
-    <distribute>Y</distribute>
+    <distribute>N</distribute>
     <custom_distribution />
     <copies>1</copies>
     <partitioning>
@@ -815,19 +700,21 @@ comments in that job for an explanation.</note>
     </partitioning>
     <connection>etl_db</connection>
     <sql>SELECT
-    c.source_column_name AS "source_col_name", 
-    c.target_column_name AS "target_col_name" 
-FROM 
-    etl.column_meta c 
-INNER JOIN 
-    etl.table_meta t ON t.table_meta_id = c.table_meta_id 
-WHERE 
-    t.source_db_id = ${PARAM_SOURCE_DB_ID} AND 
-    t.source_schema_name = '${PARAM_SOURCE_SCHEMA}' AND 
-    t.source_table_name = '${PARAM_SOURCE_TABLE}'  AND 
-    c.mirror_column = true
-ORDER BY 
-    c.source_column_name ASC</sql>
+    source_schema_name AS "source_schema",
+    source_table_name  AS "source_table",
+    source_schema_name || '.' || source_table_name AS "source_schema_dot_table",
+    target_schema_name AS "target_schema",
+    target_table_name  AS "target_table", 
+    target_schema_name || '.' || target_table_name AS "target_schema_dot_table"
+FROM
+    etl.table_meta
+WHERE
+    source_db_id=${PARAM_SOURCE_DB_ID} AND
+    mirror=true AND
+	use_custom_mirror_algorithm=true
+ORDER BY
+	source_schema_name, 
+    source_table_name</sql>
     <limit>0</limit>
     <lookup />
     <execute_each_row>N</execute_each_row>
@@ -841,8 +728,8 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>480</xloc>
-      <yloc>192</yloc>
+      <xloc>320</xloc>
+      <yloc>208</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
