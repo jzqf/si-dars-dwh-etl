@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/06/23 08:40:07.016</modified_date>
+  <modified_date>2017/06/23 09:05:46.377</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CDC_CURRENT_LOAD</name>
@@ -683,10 +683,10 @@ job &amp; transformation is used that is specific to the table being updated in 
 	PARAM_CDC_CURRENT_LOAD
 
 The parameters PARAM_SOURCE_DB_ID, PARAM_CDC_LAST_LOAD &amp; PARAM_CDC_CURRENT_LOAD are passed to  the sub-transformation
-"tr_mirrored_insert_only_tables-list_of_tables" and the sub-job "jb_mirrored_insert_only_tables-inject_meta-update_one" because the settings 
+"tr_generic_mirrored_insert_only_tables-list_of_tables" and the sub-job "jb_mirrored_insert_only_tables-inject_meta-update_one" because the settings 
 "Pass parameter values to sub transformation" &amp; "Pass parameter values to sub job" are selected for these respective job entries. 
 
-The sub-job is RUN ONCE FOR EACH row returned by "tr_mirrored_insert_only_tables-list_of_tables". As a result, each time the  sub-job is is run it is
+The sub-job is RUN ONCE FOR EACH row returned by "tr_generic_mirrored_insert_only_tables-list_of_tables". As a result, each time the  sub-job is is run it is
 *also* passed the parameters:
 
 	PARAM_SOURCE_SCHEMA					May not be needed since the job that will be run will be specific for the specified PSA table 
@@ -699,7 +699,7 @@ The sub-job is RUN ONCE FOR EACH row returned by "tr_mirrored_insert_only_tables
 This job acts as a "dispatcher" in that it runs the appropriate job/transformation for the table that is specified by this job's parameters.</note>
       <xloc>16</xloc>
       <yloc>0</yloc>
-      <width>872</width>
+      <width>915</width>
       <heigth>318</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -753,11 +753,12 @@ table-specific custom update job.
 
 The "jb_log_error" &amp; "Abort job" entries after
 the "DUMMY" entry should be placed in the 
-"custom update" sub-job.</note>
+"custom update" sub-job (but executed only
+in case of a detected error, of course).</note>
       <xloc>512</xloc>
       <yloc>576</yloc>
       <width>274</width>
-      <heigth>122</heigth>
+      <heigth>136</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
