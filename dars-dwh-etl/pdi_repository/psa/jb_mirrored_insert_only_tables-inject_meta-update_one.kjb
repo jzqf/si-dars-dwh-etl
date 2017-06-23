@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/06/22 09:29:08.359</modified_date>
+  <modified_date>2017/06/22 16:55:26.702</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CDC_CURRENT_LOAD</name>
@@ -811,37 +811,6 @@ sends out failure e-mails.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>A PDI runtime error occurs if an empty stream is sent to an ETL Metadata 
-Injection step. To avoid this possibility in 
-tr_mirrored_insert_only_table-inject_meta-update, we check that metadata
-is available here before executing that transformation. The only reason why
-this case should occur is if a table is marked for mirroring, but no column 
-mapping metdata is provided - this should never occur, but we check in 
-order to provide a warning message, rather than letting PDI choke on this 
-problem.
-
-Alternatively, we could direct output to a Success job entry step so that
-execution would continue without attempting to update the target table.</note>
-      <xloc>0</xloc>
-      <yloc>240</yloc>
-      <width>451</width>
-      <heigth>164</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
       <note>This allows execution to continue without attempting to 
 update a target table for the case where no column 
 mapping metdata is provided for the table.</note>
@@ -888,19 +857,49 @@ mapping metdata is provided for the table.</note>
     <notepad>
       <note>&lt;- It is possible to execute here jobs or transformations that contain custom, table-specific code for UPDATING 
 the rows just inserted by "tr_mirrored_insert_only_table-inject_meta-update". Such a custom job ro transformation
-will need to make use of the value of a variable named QF_LAST_UPDATE_ARCHIVE_ID that must be set in the
-template transformation (this is not currently done).
+will need to make use of the value of a variable named QF_LAST_UPDATE_ARCHIVE_ID that must be set to the 
+value of "max_id" in the template transformation (this is not currently done).
 
 But since updates are expensive, it might be better, instead, to not perform the generic mirroring by 
 "tr_mirrored_insert_only_table-inject_meta-update" and, instead, write a custom transformation for mirroring the 
 table that is executed either from this job or from job "jb_psa-update". This custom job can be written to use only 
 INSERTs, at the expense of duplicating code from the template transformation, 
-"tmplt_mirrored_insert_only_table-update". Such a transformation will not nee a value for 
+"tmplt_mirrored_insert_only_table-update". Such a transformation will not need a value for 
 QF_LAST_UPDATE_ARCHIVE_ID because it can compute a value that will be used for INSERTing new rows.</note>
       <xloc>656</xloc>
       <yloc>512</yloc>
       <width>677</width>
       <heigth>164</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>255</backgroundcolorgreen>
+      <backgroundcolorblue>0</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>The query in this step must match the query in 
+tr_mirrored_insert_only_table-inject_meta-update
+that is executed below. This is because a PDI runtime error occurs if an empty
+stream is sent to an ETL Metadata Injection step. To avoid this possibility in 
+tr_mirrored_insert_only_table-inject_meta-update, we check that metadata
+is available here before executing that transformation. The only reason why
+this case should occur is if a table is marked for mirroring, but no column 
+mapping metdata is provided - this should never occur, but we check in 
+order to provide a warning message, rather than letting PDI choke on this 
+problem.</note>
+      <xloc>0</xloc>
+      <yloc>240</yloc>
+      <width>459</width>
+      <heigth>150</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
