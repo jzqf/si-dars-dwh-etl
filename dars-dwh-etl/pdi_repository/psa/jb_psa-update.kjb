@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/06/23 13:54:39.231</modified_date>
+  <modified_date>2017/06/26 09:17:23.735</modified_date>
   <parameters>
     </parameters>
   <connection>
@@ -669,6 +669,27 @@
       <xloc>32</xloc>
       <yloc>608</yloc>
     </entry>
+    <entry>
+      <name>Success</name>
+      <description />
+      <type>SUCCESS</type>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>448</xloc>
+      <yloc>544</yloc>
+    </entry>
+    <entry>
+      <name>Abort job</name>
+      <description />
+      <type>ABORT</type>
+      <message>Job jb_psa-update failed. See log and e-mail sent.</message>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>448</xloc>
+      <yloc>608</yloc>
+    </entry>
   </entries>
   <hops>
     <hop>
@@ -761,6 +782,24 @@
       <evaluation>Y</evaluation>
       <unconditional>Y</unconditional>
     </hop>
+    <hop>
+      <from>jb_send_default_email_job_notification - Success</from>
+      <to>Success</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>jb_send_default_email_job_notification - Failure</from>
+      <to>Abort job</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
   </hops>
   <notepads>
     <notepad>
@@ -792,7 +831,7 @@ should be assigned the batch ID of the root job (not this job). This may vary fr
     </notepad>
     <notepad>
       <note>Notify recipient(s) of SUCCESSFUL job execution.</note>
-      <xloc>448</xloc>
+      <xloc>512</xloc>
       <yloc>544</yloc>
       <width>294</width>
       <heigth>24</heigth>
@@ -813,7 +852,7 @@ should be assigned the batch ID of the root job (not this job). This may vary fr
     </notepad>
     <notepad>
       <note>Notify recipient(s) of FAILED job execution.</note>
-      <xloc>448</xloc>
+      <xloc>512</xloc>
       <yloc>608</yloc>
       <width>260</width>
       <heigth>24</heigth>
