@@ -1,16 +1,107 @@
 <job>
-  <name>jb_dwh_tdp_mirrored_tables-compare</name>
+  <name>jb_psa_mirrored_tables-compare_one</name>
   <description />
   <extended_description />
   <job_version />
   <job_status>0</job_status>
-  <directory>/dwh/mirror/compare_tables</directory>
+  <directory>/psa</directory>
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/06/26 12:02:14.217</modified_date>
+  <modified_date>2017/06/27 09:56:50.759</modified_date>
   <parameters>
-    </parameters>
+    <parameter>
+      <name>PARAM_CDC_LAST_LOAD</name>
+      <default_value>1900.01.01 00:00:00</default_value>
+      <description>Timestamp of last successful load from the source database</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_SOURCE_DB_ID</name>
+      <default_value>1</default_value>
+      <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_SOURCE_SCHEMA</name>
+      <default_value>passage</default_value>
+      <description>Name of schema containing source table to mirror to target table</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_SOURCE_SCHEMA_TABLE</name>
+      <default_value>passage.image</default_value>
+      <description>${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_SOURCE_TABLE</name>
+      <default_value>image</default_value>
+      <description>Name of source table to mirror to target table</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_TARGET_SCHEMA</name>
+      <default_value>passage</default_value>
+      <description>Name of schema containing target table to update (not currently used)</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_TARGET_SCHEMA_TABLE</name>
+      <default_value>passage.image</default_value>
+      <description>${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_TARGET_TABLE</name>
+      <default_value>image</default_value>
+      <description>Name of target table to update (not currently used)</description>
+    </parameter>
+  </parameters>
+  <connection>
+    <name>etl_db</name>
+    <server>${QF_ETL_DB_HOST}</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>${QF_ETL_DB_DATABASE}</database>
+    <port>${QF_ETL_DB_PORT}</port>
+    <username>${QF_ETL_DB_USERNAME}</username>
+    <password>${QF_ETL_DB_PASSWORD}</password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>${QF_ETL_DB_PORT}</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
   <connection>
     <name>logging_db</name>
     <server>${QF_LOGGING_DB_HOST}</server>
@@ -354,94 +445,18 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>32</xloc>
+      <xloc>448</xloc>
       <yloc>192</yloc>
     </entry>
     <entry>
-      <name>jb_init</name>
-      <description />
-      <type>JOB</type>
-      <specification_method>rep_name</specification_method>
-      <job_object_id />
-      <filename />
-      <jobname>jb_init</jobname>
-      <directory>/generic</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Nothing</loglevel>
-      <slave_server_name />
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <expand_remote_job>N</expand_remote_job>
-      <create_parent_folder>N</create_parent_folder>
-      <pass_export>N</pass_export>
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-      </parameters>
-      <set_append_logfile>N</set_append_logfile>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>144</xloc>
-      <yloc>192</yloc>
-    </entry>
-    <entry>
-      <name>tr_get_last_successful_load</name>
+      <name>tr_psa_mirrored_table-inject_meta-compare</name>
       <description />
       <type>TRANS</type>
       <specification_method>rep_name</specification_method>
       <trans_object_id />
       <filename />
-      <transname>tr_get_last_successful_load</transname>
-      <directory>/generic/cdc</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <clear_rows>N</clear_rows>
-      <clear_files>N</clear_files>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Basic</loglevel>
-      <cluster>N</cluster>
-      <slave_server_name />
-      <set_append_logfile>N</set_append_logfile>
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <create_parent_folder>N</create_parent_folder>
-      <logging_remote_work>N</logging_remote_work>
-      <run_configuration />
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-        <parameter>
-          <name>PARAM_CDC_TIMESTAMPS_ID</name>
-          <stream_name />
-          <value>${QF_OBO_DB_CDC_TIMESTAMPS_ID}</value>
-        </parameter>
-      </parameters>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>144</xloc>
-      <yloc>288</yloc>
-    </entry>
-    <entry>
-      <name>tr_list_of_tables_to_compare</name>
-      <description />
-      <type>TRANS</type>
-      <specification_method>rep_name</specification_method>
-      <trans_object_id />
-      <filename />
-      <transname>tr_list_of_tables_to_compare</transname>
-      <directory>/generic</directory>
+      <transname>tr_psa_mirrored_table-inject_meta-compare</transname>
+      <directory>${Internal.Entry.Current.Directory}</directory>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
@@ -463,30 +478,25 @@
       <run_configuration>Pentaho local</run_configuration>
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
-        <parameter>
-          <name>PARAM_SOURCE_DB_ID</name>
-          <stream_name />
-          <value>${QF_TABLE_META_SOURCE_DB_ID_OBO}</value>
-        </parameter>
       </parameters>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>144</xloc>
-      <yloc>384</yloc>
+      <xloc>576</xloc>
+      <yloc>448</yloc>
     </entry>
     <entry>
-      <name>jb_mirror_compare_table_dispatcher</name>
+      <name>jb_log_error 2</name>
       <description />
       <type>JOB</type>
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
-      <jobname>jb_mirror_compare_table_dispatcher</jobname>
-      <directory>/dwh/mirror/compare_tables</directory>
+      <jobname>jb_log_error</jobname>
+      <directory>/generic</directory>
       <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>Y</params_from_previous>
-      <exec_per_row>Y</exec_per_row>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
       <set_logfile>N</set_logfile>
       <logfile />
       <logext />
@@ -502,38 +512,200 @@
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
         <parameter>
-          <name>PARAM_SOURCE_SCHEMA</name>
-          <stream_name>source_schema</stream_name>
-          <value />
-        </parameter>
-        <parameter>
-          <name>PARAM_SOURCE_TABLE</name>
-          <stream_name>source_table</stream_name>
-          <value />
-        </parameter>
-        <parameter>
-          <name>PARAM_LAST_LOAD_TIMESTAMP</name>
+          <name>PARAM_ERROR_MESSAGE</name>
           <stream_name />
-          <value>${QF_LAST_SUCCESSFUL_LOAD}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_SOURCE_SCHEMA_TABLE</name>
-          <stream_name>source_schema_dot_table</stream_name>
-          <value />
+          <value>Error comparing PSA mirror table: ${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</value>
         </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>144</xloc>
-      <yloc>496</yloc>
+      <xloc>784</xloc>
+      <yloc>448</yloc>
+    </entry>
+    <entry>
+      <name>Abort job</name>
+      <description />
+      <type>ABORT</type>
+      <message />
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>912</xloc>
+      <yloc>384</yloc>
+    </entry>
+    <entry>
+      <name>Are there columns to compare for this table?</name>
+      <description />
+      <type>EVAL_TABLE_CONTENT</type>
+      <connection>etl_db</connection>
+      <schemaname />
+      <tablename />
+      <success_condition>rows_count_greater</success_condition>
+      <limit>0</limit>
+      <is_custom_sql>Y</is_custom_sql>
+      <is_usevars>Y</is_usevars>
+      <custom_sql>SELECT
+    c.source_column_name AS "source_col_name" 
+FROM 
+    etl.column_meta c 
+INNER JOIN 
+    etl.table_meta t ON t.table_meta_id = c.table_meta_id 
+WHERE 
+    t.source_db_id = ${PARAM_SOURCE_DB_ID} AND 
+    t.source_schema_name = '${PARAM_SOURCE_SCHEMA}' AND 
+    t.source_table_name = '${PARAM_SOURCE_TABLE}'  AND 
+    c.compare_column = true
+ORDER BY 
+    c.column_meta_id ASC  -- must use the same sort order in "Target column names to compare"</custom_sql>
+      <add_rows_result>N</add_rows_result>
+      <clear_result_rows>Y</clear_result_rows>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>576</xloc>
+      <yloc>304</yloc>
+    </entry>
+    <entry>
+      <name>jb_log_error 1</name>
+      <description />
+      <type>JOB</type>
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_log_error</jobname>
+      <directory>/generic</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_ERROR_MESSAGE</name>
+          <stream_name />
+          <value>No columns have been configured for comparing for source table: ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>1</nr>
+      <xloc>784</xloc>
+      <yloc>304</yloc>
+    </entry>
+    <entry>
+      <name>Success</name>
+      <description />
+      <type>SUCCESS</type>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>912</xloc>
+      <yloc>304</yloc>
+    </entry>
+    <entry>
+      <name>Write To Log: Parameters</name>
+      <description />
+      <type>WRITE_TO_LOG</type>
+      <logmessage>jb_psa_mirrored_tables-compare_one:
+PARAM_SOURCE_DB_ID        = ${PARAM_SOURCE_DB_ID}
+PARAM_CDC_LAST_LOAD       = ${PARAM_CDC_LAST_LOAD}
+PARAM_SOURCE_SCHEMA       = ${PARAM_SOURCE_SCHEMA}
+PARAM_SOURCE_TABLE        = ${PARAM_SOURCE_TABLE}
+PARAM_SOURCE_SCHEMA_TABLE = ${PARAM_SOURCE_SCHEMA_TABLE}
+PARAM_TARGET_SCHEMA       = ${PARAM_TARGET_SCHEMA}
+PARAM_TARGET_TABLE        = ${PARAM_TARGET_TABLE}
+PARAM_TARGET_SCHEMA_TABLE = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
+      <loglevel>Basic</loglevel>
+      <logsubject />
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>576</xloc>
+      <yloc>192</yloc>
+    </entry>
+    <entry>
+      <name>Success 2</name>
+      <description />
+      <type>SUCCESS</type>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>576</xloc>
+      <yloc>544</yloc>
     </entry>
   </entries>
   <hops>
     <hop>
+      <from>tr_psa_mirrored_table-inject_meta-compare</from>
+      <to>jb_log_error 2</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_log_error 2</from>
+      <to>Abort job</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Are there columns to compare for this table?</from>
+      <to>tr_psa_mirrored_table-inject_meta-compare</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Are there columns to compare for this table?</from>
+      <to>jb_log_error 1</to>
+      <from_nr>0</from_nr>
+      <to_nr>1</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_log_error 1</from>
+      <to>Abort job</to>
+      <from_nr>1</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>N</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_log_error 1</from>
+      <to>Success</to>
+      <from_nr>1</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
       <from>START</from>
-      <to>jb_init</to>
+      <to>Write To Log: Parameters</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -541,26 +713,17 @@
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>jb_init</from>
-      <to>tr_get_last_successful_load</to>
+      <from>Write To Log: Parameters</from>
+      <to>Are there columns to compare for this table?</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>tr_get_last_successful_load</from>
-      <to>tr_list_of_tables_to_compare</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>tr_list_of_tables_to_compare</from>
-      <to>jb_mirror_compare_table_dispatcher</to>
+      <from>tr_psa_mirrored_table-inject_meta-compare</from>
+      <to>Success 2</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -570,21 +733,23 @@
   </hops>
   <notepads>
     <notepad>
-      <note>This job compares the content of each mirrored table from the TDP Archive data base with the content of the mirrored tables
-in the DWH. This is dones to verify that the mirroring algorithm (in particular the CDC treatment) is correctly implemented
-for each table.
+      <note>This job "compares" a single mirrored table ia a source database with its corresponding mirror in the target PSA database.
+This job has parameters:
 
-"Pass batch ID?" is selected for this job so that the batch ID is passed to tr_set_job_batch_id_variable via jb_init, which assigns 
-this value to QF_JOB_BATCH_ID.
-
-If this job has a parent, the setting "Pass batch ID?" should also be set for the parent *if* it is desired that QF_JOB_BATCH_ID
-should be assigned the batch ID of the root job (not this job). This may vary from case to case.</note>
-      <xloc>16</xloc>
+	PARAM_SOURCE_DB_ID				ID the "source" database containing tables will be mirrored to a "target" database
+	PARAM_CDC_LAST_LOAD			Timestamp for when the target PSA DB mirror tables were last updated from the source DB
+	PARAM_SOURCE_SCHEMA			Name of schema containing source table to mirror to target table
+	PARAM_SOURCE_TABLE			Name of source table to mirror to target table
+	PARAM_SOURCE_SCHEMA_TABLE	${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
+	PARAM_TARGET_SCHEMA			Name of schema containing target table to update (not currently used)
+	PARAM_TARGET_TABLE				Name of target table to update (not currently used)
+	PARAM_TARGET_SCHEMA_TABLE	${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</note>
+      <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>864</width>
-      <heigth>163</heigth>
+      <width>785</width>
+      <heigth>164</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>11</fontsize>
+      <fontsize>10</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -599,13 +764,35 @@ should be assigned the batch ID of the root job (not this job). This may vary fr
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Get the "last successful load" timestamp for the source database and assign it to variable 
-QF_LAST_SUCCESSFUL_LOAD. This sub-transformation is passed the parameter:
-
-PARAM_CDC_TIMESTAMPS_ID = ${QF_OBO_DB_CDC_TIMESTAMPS_ID}</note>
-      <xloc>272</xloc>
-      <yloc>272</yloc>
-      <width>536</width>
+      <note>This "Abort" is needed to tell the the root calling
+that execution has failed.</note>
+      <xloc>960</xloc>
+      <yloc>384</yloc>
+      <width>293</width>
+      <heigth>38</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>This allows execution to continue without attempting
+to compare the source and target tables  for the case
+where no column mapping metdata is provided for 
+the table.</note>
+      <xloc>960</xloc>
+      <yloc>288</yloc>
+      <width>322</width>
       <heigth>66</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -623,40 +810,12 @@ PARAM_CDC_TIMESTAMPS_ID = ${QF_OBO_DB_CDC_TIMESTAMPS_ID}</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Create list of all mirrored tables, regardless of the mirroring algorithm used. This sub-transformation 
-is passed parameter:
-
-PARAM_SOURCE_DB_ID = ${QF_TABLE_META_SOURCE_DB_ID_OBO}</note>
-      <xloc>272</xloc>
-      <yloc>368</yloc>
-      <width>605</width>
-      <heigth>66</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Compute comparision statistics for each source (TDP archive) and destination (DWH) DB table. This sub-job is:
-	1.	RUN ONCE FOR EACH TABLE BEING MIRRORED.
-	2.	Passed the schema name and table name for the two tables to compare that
-		are provided by the previous transformation.
-	3.	Passed the additional parameter:
-			PARAM_LAST_LOAD_TIMESTAMP = ${QF_LAST_SUCCESSFUL_LOAD}</note>
-      <xloc>272</xloc>
+      <note>This transformation compares the source and target tables using an 
+"ETL Metadata Injection" step.</note>
+      <xloc>16</xloc>
       <yloc>448</yloc>
-      <width>647</width>
-      <heigth>94</heigth>
+      <width>409</width>
+      <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -667,6 +826,36 @@ PARAM_SOURCE_DB_ID = ${QF_TABLE_META_SOURCE_DB_ID_OBO}</note>
       <backgroundcolorred>255</backgroundcolorred>
       <backgroundcolorgreen>205</backgroundcolorgreen>
       <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>The query here must match the query "Source column names to compare"
+in tr_psa_mirrored_table-inject_meta-compare that is executed below. 
+This is because a PDI runtime error occurs if an empty stream is sent to 
+an "ETL Metadata Injection" step. To avoid this possibility in 
+tr_psa_mirrored_table-inject_meta-compare, we check that metadata
+is available here before executing that transformation. The only reason 
+why this case should occur is if a table is marked for mirroring, but no 
+column mapping metdata is provided - this should never occur, but we 
+check in order to provide a warning message, rather than letting PDI 
+choke on this problem.</note>
+      <xloc>0</xloc>
+      <yloc>256</yloc>
+      <width>436</width>
+      <heigth>150</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>255</backgroundcolorgreen>
+      <backgroundcolorblue>0</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
       <bordercolorblue>100</bordercolorblue>

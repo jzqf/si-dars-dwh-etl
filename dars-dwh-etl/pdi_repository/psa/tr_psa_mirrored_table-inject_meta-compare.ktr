@@ -1,37 +1,52 @@
 <transformation>
   <info>
-    <name>tr_mirror_compare_table-passage.passage</name>
+    <name>tr_psa_mirrored_table-inject_meta-compare</name>
     <description />
     <extended_description />
     <trans_version />
     <trans_type>Normal</trans_type>
     <trans_status>0</trans_status>
-    <directory>/dwh/mirror/compare_tables</directory>
+    <directory>/psa</directory>
     <parameters>
       <parameter>
-        <name>PARAM_ARCHIVE_ID_FROM</name>
-        <default_value>-1</default_value>
-        <description>Smallest value of "archive_id" to use for selecting rows to compare</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_ARCHIVE_ID_TO</name>
-        <default_value>-1</default_value>
-        <description>Largest value of "archive_id" to use for selecting rows to compare</description>
+        <name>PARAM_CDC_LAST_LOAD</name>
+        <default_value>1900.01.01 00:00:00</default_value>
+        <description>Timestamp of last successful load from the source database</description>
       </parameter>
       <parameter>
         <name>PARAM_SOURCE_DB_ID</name>
         <default_value>1</default_value>
-        <description>ID of database containing the source tables to mirror</description>
+        <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
       </parameter>
       <parameter>
         <name>PARAM_SOURCE_SCHEMA</name>
         <default_value>passage</default_value>
-        <description>Schema of mirrored table to compare</description>
+        <description>Name of schema containing source table to mirror to target table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_SOURCE_SCHEMA_TABLE</name>
+        <default_value>passage.image</default_value>
+        <description>${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</description>
       </parameter>
       <parameter>
         <name>PARAM_SOURCE_TABLE</name>
+        <default_value>image</default_value>
+        <description>Name of source table to mirror to target table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_SCHEMA</name>
         <default_value>passage</default_value>
-        <description>Name of mirrored table to compare</description>
+        <description>Name of schema containing target table to update (not currently used)</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_SCHEMA_TABLE</name>
+        <default_value>passage.image</default_value>
+        <description>${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_TABLE</name>
+        <default_value>image</default_value>
+        <description>Name of target table to update (not currently used)</description>
       </parameter>
     </parameters>
     <log>
@@ -454,67 +469,30 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/06/26 14:22:08.995</modified_date>
+    <modified_date>2017/06/27 09:59:30.709</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>Load the data from both the source database table 
-as well as the DWH table to which it is mirrored.</note>
-      <xloc>528</xloc>
-      <yloc>496</yloc>
-      <width>359</width>
-      <heigth>44</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>11</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>This transformation verifies that the passage.passage table has been correctly mirrored from the TDP archive DB to the DWH.
-This transformation has parameters:
+      <note>This transformation uses ETL Metadata injection to control how columns of a source table in a source database are compared to columns 
+of a target table in a target database. This is a generic algorithm that can work with *any* table, as long as the necessary metadata is
+available to be injected. This transformation has parameters:
 
-	PARAM_ARCHIVE_ID_FROM		Smallest value of "archive_id" to use for selecting rows to compare
-	PARAM_ARCHIVE_ID_TO			Largest value of "archive_id" to use for selecting rows to compare
-	PARAM_SOURCE_DB_ID			ID of database containing the source tables to mirror
-	PARAM_SOURCE_SCHEMA					Schema of mirrored table to compare
-	PARAM_SOURCE_TABLE					Name of mirrored table to compare
-
-To treat a new table, or to add new columns, modify existing columns or remove existing columns to/from the table being 
-mirrored, perform the following procedure:
-
-A.	Set default value of PARAM_SOURCE_SCHEMA &amp; PARAM_SOURCE_TABLE to schema &amp; table that is being treated by this job.
-
-B.	Both "Table input" steps (one for the TDP archive stream and one for the DWH stream):
-	1.	Check that the "FROM" clause refers to the correct schema.table.
-	2.	Check the that "ORDER BY" clause refers to the table's primary key column.
-
-C.	Both "Select/Rename values" steps (one for the TDP archive stream and one for the DWH stream):
-	1.	Click "Get fields to select" button and then select "Clear and add all".
-	2.	Click the "Fieldname" header to order the fields in ascending order.
-	3.	Select all fields,  copy them to the clipboard, remove them all and then paste the fields that were just copied.
-		This can all be performed by typing:  Ctrl-A, Ctrl-C, Delete, Ctrl-V
-
-D.	"Merge rows" step:
-	1.	Click "Get value fields" and then choose "Clear and add all".
-	2.	Check that the "Key field" is correct. If not click "Get key fields" and then remove all but the correct key field.</note>
+	PARAM_SOURCE_DB_ID				ID the "source" database containing tables will be mirrored to a "target" database
+	PARAM_CDC_LAST_LOAD			Timestamp for when the target PSA DB mirror tables were last updated from the source DB
+	PARAM_SOURCE_SCHEMA			Name of schema containing source table to mirror to target table
+	PARAM_SOURCE_TABLE			Name of source table to mirror to target table
+	PARAM_SOURCE_SCHEMA_TABLE	${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
+	PARAM_TARGET_SCHEMA			Name of schema containing target table to update (not currently used)
+	PARAM_TARGET_TABLE				Name of target table to update (not currently used)
+	PARAM_TARGET_SCHEMA_TABLE	${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</note>
       <xloc>16</xloc>
       <yloc>0</yloc>
-      <width>875</width>
-      <heigth>469</heigth>
+      <width>813</width>
+      <heigth>178</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>11</fontsize>
+      <fontsize>10</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -529,66 +507,24 @@ D.	"Merge rows" step:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Update the "table_meta" row for the table being compared with the comparison
-statistics: "compared_rows_equal", "compared_rows_unequal", ...</note>
-      <xloc>416</xloc>
-      <yloc>768</yloc>
-      <width>554</width>
-      <heigth>44</heigth>
+      <note>The query here must match the query in 
+jb_psa_mirrored_tables-compare_one 
+where this transformation is executed. See the 
+comments in that job for an explanation.</note>
+      <xloc>16</xloc>
+      <yloc>192</yloc>
+      <width>283</width>
+      <heigth>66</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>11</fontsize>
+      <fontsize>10</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
       <fontcolorgreen>0</fontcolorgreen>
       <fontcolorblue>0</fontcolorblue>
       <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Compare the two streams row by row and determine whether they are 
-identical, different, "new" or "deleted".</note>
-      <xloc>416</xloc>
-      <yloc>688</yloc>
-      <width>490</width>
-      <heigth>44</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>11</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>The fields in each stream must be identical and in 
-the same order when fed to the "Merge rows" step.</note>
-      <xloc>528</xloc>
-      <yloc>576</yloc>
-      <width>357</width>
-      <heigth>44</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>11</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
+      <backgroundcolorgreen>255</backgroundcolorgreen>
+      <backgroundcolorblue>0</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
       <bordercolorblue>100</bordercolorblue>
@@ -596,14 +532,14 @@ the same order when fed to the "Merge rows" step.</note>
     </notepad>
   </notepads>
   <connection>
-    <name>dwh_db</name>
-    <server>${QF_DWH_DB_HOST}</server>
+    <name>etl_db</name>
+    <server>${QF_ETL_DB_HOST}</server>
     <type>POSTGRESQL</type>
     <access>Native</access>
-    <database>${QF_DWH_DB_DATABASE}</database>
-    <port>${QF_DWH_DB_PORT}</port>
-    <username>${QF_DWH_DB_USERNAME}</username>
-    <password>${QF_DWH_DB_PASSWORD}</password>
+    <database>${QF_ETL_DB_DATABASE}</database>
+    <port>${QF_ETL_DB_PORT}</port>
+    <username>${QF_ETL_DB_USERNAME}</username>
+    <password>${QF_ETL_DB_PASSWORD}</password>
     <servername />
     <data_tablespace />
     <index_tablespace />
@@ -622,7 +558,7 @@ the same order when fed to the "Merge rows" step.</note>
       </attribute>
       <attribute>
         <code>PORT_NUMBER</code>
-        <attribute>${QF_DWH_DB_PORT}</attribute>
+        <attribute>${QF_ETL_DB_PORT}</attribute>
       </attribute>
       <attribute>
         <code>PRESERVE_RESERVED_WORD_CASE</code>
@@ -697,86 +633,15 @@ the same order when fed to the "Merge rows" step.</note>
       </attribute>
     </attributes>
   </connection>
-  <connection>
-    <name>obo_db</name>
-    <server>${QF_OBO_DB_HOST}</server>
-    <type>POSTGRESQL</type>
-    <access>Native</access>
-    <database>${QF_OBO_DB_DATABASE}</database>
-    <port>${QF_OBO_DB_PORT}</port>
-    <username>${QF_OBO_DB_USERNAME}</username>
-    <password>${QF_OBO_DB_PASSWORD}</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
-    <attributes>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>IS_CLUSTERED</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>PORT_NUMBER</code>
-        <attribute>${QF_OBO_DB_PORT}</attribute>
-      </attribute>
-      <attribute>
-        <code>PRESERVE_RESERVED_WORD_CASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>QUOTE_ALL_FIELDS</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>USE_POOLING</code>
-        <attribute>N</attribute>
-      </attribute>
-    </attributes>
-  </connection>
   <order>
     <hop>
-      <from>Get rows from DWH table</from>
-      <to>Set field order and remove etl_batch_id</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Get rows from TDP archive table</from>
-      <to>Set field order</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Set field order</from>
-      <to>Merge Rows (diff)</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Set field order and remove etl_batch_id</from>
-      <to>Merge Rows (diff)</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Merge Rows (diff)</from>
-      <to>tr_mirror_compare-update_table_meta</to>
+      <from>Target column names to compare 2</from>
+      <to>ETL Metadata Injection - tmplt_psa_compare_tables</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Get rows from DWH table</name>
+    <name>Source column names to compare</name>
     <type>TableInput</type>
     <description />
     <distribute>Y</distribute>
@@ -786,21 +651,20 @@ the same order when fed to the "Merge rows" step.</note>
       <method>none</method>
       <schema_name />
     </partitioning>
-    <connection>dwh_db</connection>
+    <connection>etl_db</connection>
     <sql>SELECT
-    *
-FROM
---    ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
-    passage.passage
-WHERE
-    archive_id >= ${PARAM_ARCHIVE_ID_FROM} AND
-    archive_id &lt;= ${PARAM_ARCHIVE_ID_TO}
---    archive_date >  '${PARAM_TIMESTAMP_FROM}' AND 
---    archive_date &lt;= '${PARAM_TIMESTAMP_TO}'
-ORDER BY
-    passage_id
---    archive_id
---LIMIT 1100</sql>
+    c.source_column_name AS "source_col_name" 
+FROM 
+    etl.column_meta c 
+INNER JOIN 
+    etl.table_meta t ON t.table_meta_id = c.table_meta_id 
+WHERE 
+    t.source_db_id = ${PARAM_SOURCE_DB_ID} AND 
+    t.source_schema_name = '${PARAM_SOURCE_SCHEMA}' AND 
+    t.source_table_name = '${PARAM_SOURCE_TABLE}'  AND 
+    c.compare_column = true
+ORDER BY 
+    c.column_meta_id ASC  -- must use the same sort order in "Target column names to compare"</sql>
     <limit>0</limit>
     <lookup />
     <execute_each_row>N</execute_each_row>
@@ -814,13 +678,13 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>368</xloc>
-      <yloc>496</yloc>
+      <xloc>480</xloc>
+      <yloc>192</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Get rows from TDP archive table</name>
+    <name>Target column names to compare 2</name>
     <type>TableInput</type>
     <description />
     <distribute>Y</distribute>
@@ -830,21 +694,20 @@ ORDER BY
       <method>none</method>
       <schema_name />
     </partitioning>
-    <connection>obo_db</connection>
+    <connection>etl_db</connection>
     <sql>SELECT
-    *
-FROM
---    ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
-    passage.passage
-WHERE
-    archive_id >= ${PARAM_ARCHIVE_ID_FROM} AND
-    archive_id &lt;= ${PARAM_ARCHIVE_ID_TO}
---    archive_date >  '${PARAM_TIMESTAMP_FROM}' AND 
---    archive_date &lt;= '${PARAM_TIMESTAMP_TO}'
-ORDER BY
-    passage_id
---    archive_id
---LIMIT 1100</sql>
+    c.target_column_name AS "target_col_name" 
+FROM 
+    etl.column_meta c 
+INNER JOIN 
+    etl.table_meta t ON t.table_meta_id = c.table_meta_id 
+WHERE 
+    t.source_db_id = ${PARAM_SOURCE_DB_ID} AND 
+    t.source_schema_name = '${PARAM_SOURCE_SCHEMA}' AND 
+    t.source_table_name = '${PARAM_SOURCE_TABLE}'  AND 
+    c.compare_column = true
+ORDER BY 
+    c.column_meta_id ASC  -- must use the same sort order in "Source column names to compare"</sql>
     <limit>0</limit>
     <lookup />
     <execute_each_row>N</execute_each_row>
@@ -858,14 +721,14 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>112</xloc>
-      <yloc>496</yloc>
+      <xloc>704</xloc>
+      <yloc>192</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Merge Rows (diff)</name>
-    <type>MergeRows</type>
+    <name>ETL Metadata Injection - tmplt_psa_compare_tables</name>
+    <type>Dummy</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -874,39 +737,6 @@ ORDER BY
       <method>none</method>
       <schema_name />
     </partitioning>
-    <keys>
-      <key>passage_id</key>
-    </keys>
-    <values>
-      <value>archive_date</value>
-      <value>archive_id</value>
-      <value>arrival_date</value>
-      <value>avc_class_id</value>
-      <value>charging_point_id</value>
-      <value>completion_category_id</value>
-      <value>completion_sub_category_id</value>
-      <value>component_id</value>
-      <value>external_passage_id</value>
-      <value>finished_date</value>
-      <value>lane_id</value>
-      <value>passage_date</value>
-      <value>passage_group_id</value>
-      <value>passage_id</value>
-      <value>passage_priority</value>
-      <value>passage_status_id</value>
-      <value>passage_type_id</value>
-      <value>pcs_rate</value>
-      <value>propertybag</value>
-      <value>sent_date</value>
-      <value>service_provider_id</value>
-      <value>vehicle_direction_id</value>
-      <value>wf_version_id</value>
-    </values>
-    <flag_field>flagfield</flag_field>
-    <reference>Set field order</reference>
-    <compare>Set field order and remove etl_batch_id</compare>
-    <compare>
-    </compare>
     <cluster_schema />
     <remotesteps>
       <input>
@@ -915,262 +745,8 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>240</xloc>
-      <yloc>688</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Set field order</name>
-    <type>SelectValues</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <fields>
-      <field>
-        <name>archive_date</name>
-      </field>
-      <field>
-        <name>archive_id</name>
-      </field>
-      <field>
-        <name>arrival_date</name>
-      </field>
-      <field>
-        <name>avc_class_id</name>
-      </field>
-      <field>
-        <name>charging_point_id</name>
-      </field>
-      <field>
-        <name>completion_category_id</name>
-      </field>
-      <field>
-        <name>completion_sub_category_id</name>
-      </field>
-      <field>
-        <name>component_id</name>
-      </field>
-      <field>
-        <name>external_passage_id</name>
-      </field>
-      <field>
-        <name>finished_date</name>
-      </field>
-      <field>
-        <name>lane_id</name>
-      </field>
-      <field>
-        <name>passage_date</name>
-      </field>
-      <field>
-        <name>passage_group_id</name>
-      </field>
-      <field>
-        <name>passage_id</name>
-      </field>
-      <field>
-        <name>passage_priority</name>
-      </field>
-      <field>
-        <name>passage_status_id</name>
-      </field>
-      <field>
-        <name>passage_type_id</name>
-      </field>
-      <field>
-        <name>pcs_rate</name>
-      </field>
-      <field>
-        <name>propertybag</name>
-      </field>
-      <field>
-        <name>sent_date</name>
-      </field>
-      <field>
-        <name>service_provider_id</name>
-      </field>
-      <field>
-        <name>vehicle_direction_id</name>
-      </field>
-      <field>
-        <name>wf_version_id</name>
-      </field>
-      <select_unspecified>N</select_unspecified>
-    </fields>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>112</xloc>
-      <yloc>576</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Set field order and remove etl_batch_id</name>
-    <type>SelectValues</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <fields>
-      <field>
-        <name>archive_date</name>
-      </field>
-      <field>
-        <name>archive_id</name>
-      </field>
-      <field>
-        <name>arrival_date</name>
-      </field>
-      <field>
-        <name>avc_class_id</name>
-      </field>
-      <field>
-        <name>charging_point_id</name>
-      </field>
-      <field>
-        <name>completion_category_id</name>
-      </field>
-      <field>
-        <name>completion_sub_category_id</name>
-      </field>
-      <field>
-        <name>component_id</name>
-      </field>
-      <field>
-        <name>etl_batch_id</name>
-      </field>
-      <field>
-        <name>external_passage_id</name>
-      </field>
-      <field>
-        <name>finished_date</name>
-      </field>
-      <field>
-        <name>lane_id</name>
-      </field>
-      <field>
-        <name>passage_date</name>
-      </field>
-      <field>
-        <name>passage_group_id</name>
-      </field>
-      <field>
-        <name>passage_id</name>
-      </field>
-      <field>
-        <name>passage_priority</name>
-      </field>
-      <field>
-        <name>passage_status_id</name>
-      </field>
-      <field>
-        <name>passage_type_id</name>
-      </field>
-      <field>
-        <name>pcs_rate</name>
-      </field>
-      <field>
-        <name>propertybag</name>
-      </field>
-      <field>
-        <name>sent_date</name>
-      </field>
-      <field>
-        <name>service_provider_id</name>
-      </field>
-      <field>
-        <name>vehicle_direction_id</name>
-      </field>
-      <field>
-        <name>wf_version_id</name>
-      </field>
-      <select_unspecified>N</select_unspecified>
-      <remove>
-        <name>etl_batch_id</name>
-      </remove>
-    </fields>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>368</xloc>
-      <yloc>576</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>tr_mirror_compare-update_table_meta</name>
-    <type>SimpleMapping</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <specification_method>rep_name</specification_method>
-    <trans_object_id />
-    <trans_name>tr_mirror_compare-update_table_meta</trans_name>
-    <filename />
-    <directory_path>/dwh/mirror/compare_tables</directory_path>
-    <mappings>
-      <input>
-        <mapping>
-          <input_step />
-          <output_step />
-          <main_path>Y</main_path>
-          <rename_on_output>Y</rename_on_output>
-          <description />
-          <connector>
-            <parent>flagfield</parent>
-            <child>flagfield</child>
-          </connector>
-        </mapping>
-      </input>
-      <output>
-        <mapping>
-          <input_step />
-          <output_step />
-          <main_path>Y</main_path>
-          <rename_on_output>N</rename_on_output>
-          <description />
-        </mapping>
-      </output>
-      <parameters>
-        <inherit_all_vars>Y</inherit_all_vars>
-      </parameters>
-    </mappings>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>240</xloc>
-      <yloc>784</yloc>
+      <xloc>480</xloc>
+      <yloc>336</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

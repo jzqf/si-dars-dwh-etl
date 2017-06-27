@@ -1,14 +1,14 @@
 <job>
-  <name>jb_dwh_tdp_mirrored_tables-compare</name>
+  <name>jb_psa_mirrored_tables-compare_all</name>
   <description />
   <extended_description />
   <job_version />
   <job_status>0</job_status>
-  <directory>/dwh/mirror/compare_tables</directory>
+  <directory>/psa</directory>
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/06/26 12:02:14.217</modified_date>
+  <modified_date>2017/06/26 14:10:47.411</modified_date>
   <parameters>
     </parameters>
   <connection>
@@ -355,7 +355,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>32</xloc>
-      <yloc>192</yloc>
+      <yloc>144</yloc>
     </entry>
     <entry>
       <name>jb_init</name>
@@ -389,7 +389,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>144</xloc>
-      <yloc>192</yloc>
+      <yloc>144</yloc>
     </entry>
     <entry>
       <name>tr_get_last_successful_load</name>
@@ -431,7 +431,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>144</xloc>
-      <yloc>288</yloc>
+      <yloc>240</yloc>
     </entry>
     <entry>
       <name>tr_list_of_tables_to_compare</name>
@@ -473,17 +473,17 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>144</xloc>
-      <yloc>384</yloc>
+      <yloc>336</yloc>
     </entry>
     <entry>
-      <name>jb_mirror_compare_table_dispatcher</name>
+      <name>jb_psa_mirrored_tables-compare_one</name>
       <description />
       <type>JOB</type>
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
-      <jobname>jb_mirror_compare_table_dispatcher</jobname>
-      <directory>/dwh/mirror/compare_tables</directory>
+      <jobname>jb_psa_mirrored_tables-compare_one</jobname>
+      <directory>${Internal.Entry.Current.Directory}</directory>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>Y</params_from_previous>
       <exec_per_row>Y</exec_per_row>
@@ -502,6 +502,16 @@
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
         <parameter>
+          <name>PARAM_SOURCE_DB_ID</name>
+          <stream_name />
+          <value>${QF_TABLE_META_SOURCE_DB_ID_OBO}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_CDC_LAST_LOAD</name>
+          <stream_name />
+          <value>${QF_LAST_SUCCESSFUL_LOAD}</value>
+        </parameter>
+        <parameter>
           <name>PARAM_SOURCE_SCHEMA</name>
           <stream_name>source_schema</stream_name>
           <value />
@@ -512,13 +522,23 @@
           <value />
         </parameter>
         <parameter>
-          <name>PARAM_LAST_LOAD_TIMESTAMP</name>
-          <stream_name />
-          <value>${QF_LAST_SUCCESSFUL_LOAD}</value>
-        </parameter>
-        <parameter>
           <name>PARAM_SOURCE_SCHEMA_TABLE</name>
           <stream_name>source_schema_dot_table</stream_name>
+          <value />
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_SCHEMA</name>
+          <stream_name>target_schema</stream_name>
+          <value />
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_TABLE</name>
+          <stream_name>target_table</stream_name>
+          <value />
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_SCHEMA_TABLE</name>
+          <stream_name>target_schema_dot_table</stream_name>
           <value />
         </parameter>
       </parameters>
@@ -527,7 +547,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>144</xloc>
-      <yloc>496</yloc>
+      <yloc>448</yloc>
     </entry>
   </entries>
   <hops>
@@ -560,7 +580,7 @@
     </hop>
     <hop>
       <from>tr_list_of_tables_to_compare</from>
-      <to>jb_mirror_compare_table_dispatcher</to>
+      <to>jb_psa_mirrored_tables-compare_one</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -570,21 +590,19 @@
   </hops>
   <notepads>
     <notepad>
-      <note>This job compares the content of each mirrored table from the TDP Archive data base with the content of the mirrored tables
-in the DWH. This is dones to verify that the mirroring algorithm (in particular the CDC treatment) is correctly implemented
-for each table.
+      <note>This job compares the content of each mirrored table from the source database with the content of the target tables in the PSA. This is done to 
+verify that the mirroring algorithm(s) is(are) correctly implemented for each table. This verifies also the CDC implementatiom for each table.
 
-"Pass batch ID?" is selected for this job so that the batch ID is passed to tr_set_job_batch_id_variable via jb_init, which assigns 
-this value to QF_JOB_BATCH_ID.
+"Pass batch ID?" is selected for this job so that the batch ID is passed to tr_set_job_batch_id_variable via jb_init, which assigns this value to QF_JOB_BATCH_ID.
 
-If this job has a parent, the setting "Pass batch ID?" should also be set for the parent *if* it is desired that QF_JOB_BATCH_ID
-should be assigned the batch ID of the root job (not this job). This may vary from case to case.</note>
-      <xloc>16</xloc>
+If this job has a parent, the setting "Pass batch ID?" should also be set for the parent *if* it is desired that QF_JOB_BATCH_ID should be assigned
+the batch ID of the root job (not this job). This may vary from case to case.</note>
+      <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>864</width>
-      <heigth>163</heigth>
+      <width>935</width>
+      <heigth>108</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>11</fontsize>
+      <fontsize>10</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -604,7 +622,7 @@ QF_LAST_SUCCESSFUL_LOAD. This sub-transformation is passed the parameter:
 
 PARAM_CDC_TIMESTAMPS_ID = ${QF_OBO_DB_CDC_TIMESTAMPS_ID}</note>
       <xloc>272</xloc>
-      <yloc>272</yloc>
+      <yloc>224</yloc>
       <width>536</width>
       <heigth>66</heigth>
       <fontname>Ubuntu</fontname>
@@ -628,7 +646,7 @@ is passed parameter:
 
 PARAM_SOURCE_DB_ID = ${QF_TABLE_META_SOURCE_DB_ID_OBO}</note>
       <xloc>272</xloc>
-      <yloc>368</yloc>
+      <yloc>304</yloc>
       <width>605</width>
       <heigth>66</heigth>
       <fontname>Ubuntu</fontname>
@@ -647,16 +665,20 @@ PARAM_SOURCE_DB_ID = ${QF_TABLE_META_SOURCE_DB_ID_OBO}</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Compute comparision statistics for each source (TDP archive) and destination (DWH) DB table. This sub-job is:
+      <note>Compute comparision statistics for each table that is mirrored from a source DB to the target PSA DB. This sub-job is:
+
 	1.	RUN ONCE FOR EACH TABLE BEING MIRRORED.
-	2.	Passed the schema name and table name for the two tables to compare that
-		are provided by the previous transformation.
-	3.	Passed the additional parameter:
-			PARAM_LAST_LOAD_TIMESTAMP = ${QF_LAST_SUCCESSFUL_LOAD}</note>
+
+	2.	Passed the schema name and table name for the two tables to compare that are provided by the previous
+		transformation.
+
+	3.	Passed the additional parameters:
+			PARAM_SOURCE_DB_ID		= ${QF_TABLE_META_SOURCE_DB_ID_OBO}
+			PARAM_CDC_LAST_LOAD	= ${QF_LAST_SUCCESSFUL_LOAD}</note>
       <xloc>272</xloc>
-      <yloc>448</yloc>
-      <width>647</width>
-      <heigth>94</heigth>
+      <yloc>400</yloc>
+      <width>693</width>
+      <heigth>150</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
