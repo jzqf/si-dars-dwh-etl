@@ -1,12 +1,12 @@
 <transformation>
   <info>
-    <name>tr_mirror_compare-update_table_meta</name>
+    <name>tr_update_table_meta_compare_stats</name>
     <description />
     <extended_description />
     <trans_version />
     <trans_type>Normal</trans_type>
     <trans_status>0</trans_status>
-    <directory>/dwh/mirror/compare_tables</directory>
+    <directory>/generic</directory>
     <parameters>
       <parameter>
         <name>PARAM_SOURCE_DB_ID</name>
@@ -444,26 +444,29 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/06/28 10:30:36.783</modified_date>
+    <modified_date>2017/06/28 10:48:54.142</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>This transformation updates the mirror comparison statistics in etl.table_meta for the specified table.
-These statistics ("compared_rows_equal", "compared_rows_unequal", ...) are computed to verify that
-the implementation of the mirrorring algorithm for the specified table is working correctly.
+      <note>This transformation updates the "comparison" statistics in etl.table_meta for the table that is specified by the parameters 
+passed to this transformation. These statistics ("compared_rows_equal", "compared_rows_unequal", ...) are computed to 
+verify that the implementation of the mirrorring algorithm for the specified table is working correctly.
+
+This transformation is designed to be executed via a "Simple mapping (sub-transformation)" step.
+
 This transformation has parameters:
 
 	PARAM_SOURCE_DB_ID			ID of database containing the source tables to mirror
-	PARAM_SOURCE_SCHEMA					Schema of mirrored table to compare
-	PARAM_SOURCE_TABLE					Name of mirrored table to compare</note>
+	PARAM_SOURCE_SCHEMA		Schema containing the "source" table that was compared to its "target" table
+	PARAM_SOURCE_TABLE		Name of the "source"  table that was compared to its "target" table</note>
       <xloc>16</xloc>
       <yloc>0</yloc>
-      <width>703</width>
-      <heigth>146</heigth>
+      <width>722</width>
+      <heigth>164</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>11</fontsize>
+      <fontsize>10</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -481,11 +484,11 @@ This transformation has parameters:
       <note>Count the number of rows that are identical, missing, different or unexpected.
 There will be a separate row for each of these values.</note>
       <xloc>320</xloc>
-      <yloc>336</yloc>
-      <width>544</width>
-      <heigth>44</heigth>
+      <yloc>352</yloc>
+      <width>464</width>
+      <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>11</fontsize>
+      <fontsize>10</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -503,11 +506,11 @@ There will be a separate row for each of these values.</note>
       <note>The row numbers computed in the previous step (one value per row) are 
 transposed here so that there is one value per COLUMN.</note>
       <xloc>320</xloc>
-      <yloc>416</yloc>
-      <width>503</width>
-      <heigth>44</heigth>
+      <yloc>432</yloc>
+      <width>434</width>
+      <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>11</fontsize>
+      <fontsize>10</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -524,95 +527,64 @@ transposed here so that there is one value per COLUMN.</note>
     <notepad>
       <note>Needed for the "Group by" step.</note>
       <xloc>320</xloc>
-      <yloc>256</yloc>
-      <width>227</width>
-      <heigth>27</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>11</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>This sub-transformation (mapping) takes a single input stream named "flagfield" 
-that has been set by a "Merge rows (diff)" step.</note>
-      <xloc>320</xloc>
-      <yloc>176</yloc>
-      <width>562</width>
-      <heigth>44</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>11</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>This is needed so that we can set the compare statistics values to zero, instead of not 
-updating the "table_meta" row at all for the case where the TDP and DWH tables are
-both empty.</note>
-      <xloc>320</xloc>
-      <yloc>480</yloc>
-      <width>589</width>
-      <heigth>61</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>11</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>This transformation is currently identical to:
-
-	/generic/tr_update_table_meta_compare_stats.ktr
-
-The current transformation can be eliminated in favour of 
-"tr_update_table_meta_compare_stats", but the current
-transformation is referenced from many other 
-transformations in the /dwh/mirror/compare_tables/
-repository directory. I did not feel I had the time to 
-update all references to the current transformation so 
-that I could eliminate it</note>
-      <xloc>736</xloc>
-      <yloc>0</yloc>
-      <width>348</width>
-      <heigth>164</heigth>
+      <yloc>272</yloc>
+      <width>198</width>
+      <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
-      <fontcolorred>255</fontcolorred>
-      <fontcolorgreen>255</fontcolorgreen>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
       <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>0</backgroundcolorred>
-      <backgroundcolorgreen>0</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>This sub-transformation (mapping) accepts a single input stream named "flagfield" 
+that has been set by a "Merge rows (diff)" step.</note>
+      <xloc>320</xloc>
+      <yloc>192</yloc>
+      <width>496</width>
+      <heigth>38</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>This is needed so that we can set the comparison statistics values to zero, instead of 
+not updating the etl.table_meta row at all for the case where the "source" and 
+"target" tables are both empty.</note>
+      <xloc>320</xloc>
+      <yloc>496</yloc>
+      <width>503</width>
+      <heigth>52</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
       <bordercolorblue>100</bordercolorblue>
@@ -823,7 +795,7 @@ that I could eliminate it</note>
     </remotesteps>
     <GUI>
       <xloc>160</xloc>
-      <yloc>336</yloc>
+      <yloc>352</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -856,7 +828,7 @@ that I could eliminate it</note>
     </remotesteps>
     <GUI>
       <xloc>160</xloc>
-      <yloc>176</yloc>
+      <yloc>192</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -880,7 +852,7 @@ that I could eliminate it</note>
     </remotesteps>
     <GUI>
       <xloc>160</xloc>
-      <yloc>656</yloc>
+      <yloc>640</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -921,7 +893,7 @@ that I could eliminate it</note>
     </remotesteps>
     <GUI>
       <xloc>160</xloc>
-      <yloc>256</yloc>
+      <yloc>272</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1006,7 +978,7 @@ that I could eliminate it</note>
     </remotesteps>
     <GUI>
       <xloc>160</xloc>
-      <yloc>416</yloc>
+      <yloc>432</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1027,7 +999,7 @@ that I could eliminate it</note>
     <replace_variables>Y</replace_variables>
     <quoteString>N</quoteString>
     <sql>UPDATE
-    etl.table_meta
+    ${QF_ETL_DB_SCHEMA}.table_meta
 SET
     last_compared_on=LOCALTIMESTAMP
    ,compared_rows_equal=COALESCE(?, 0)
@@ -1066,7 +1038,7 @@ WHERE
     </remotesteps>
     <GUI>
       <xloc>160</xloc>
-      <yloc>576</yloc>
+      <yloc>560</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
