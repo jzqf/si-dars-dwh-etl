@@ -24,4 +24,4 @@
 # Author:   Jeffrey Zelt
 # Changes:  Initial version
 
-$DWH_HOME/bin/kitchen.sh /psa/jb_psa_mirrored_tables-compare_all.kjb
+$DWH_HOME/bin/kitchen.sh /psa/jb_psa-compare.kjb
