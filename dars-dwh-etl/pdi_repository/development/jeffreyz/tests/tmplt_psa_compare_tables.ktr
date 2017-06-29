@@ -1,27 +1,62 @@
 <transformation>
   <info>
-    <name>tr_mirror_compare-update_table_meta</name>
+    <name>tmplt_psa_compare_tables</name>
     <description />
     <extended_description />
     <trans_version />
     <trans_type>Normal</trans_type>
     <trans_status>0</trans_status>
-    <directory>/dwh/mirror/compare_tables</directory>
+    <directory>/development/jeffreyz/tests</directory>
     <parameters>
+      <parameter>
+        <name>PARAM_ARCHIVE_ID_FROM</name>
+        <default_value>100</default_value>
+        <description>"from" value for the "archive_id" column of the source OBO table that is being compared to the PSA table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_ARCHIVE_ID_TO</name>
+        <default_value>110</default_value>
+        <description>"to" value for the "archive_id" column of the source OBO table that is being compared to the PSA table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_LAST_LOAD_TIMESTAMP</name>
+        <default_value>1900.01.01 00:00:00</default_value>
+        <description>Timestamp of last successful load from the source database</description>
+      </parameter>
       <parameter>
         <name>PARAM_SOURCE_DB_ID</name>
         <default_value>1</default_value>
-        <description>ID of database containing the source tables to mirror</description>
+        <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
       </parameter>
       <parameter>
         <name>PARAM_SOURCE_SCHEMA</name>
         <default_value>passage</default_value>
-        <description>Schema of mirrored table to compare</description>
+        <description>Name of schema containing source table to mirror to target table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_SOURCE_SCHEMA_TABLE</name>
+        <default_value>passage.image</default_value>
+        <description>${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</description>
       </parameter>
       <parameter>
         <name>PARAM_SOURCE_TABLE</name>
+        <default_value>image</default_value>
+        <description>Name of source table to mirror to target table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_SCHEMA</name>
         <default_value>passage</default_value>
-        <description>Name of mirrored table to compare</description>
+        <description>Name of schema containing target table to update (not currently used)</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_SCHEMA_TABLE</name>
+        <default_value>passage.image</default_value>
+        <description>${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_TABLE</name>
+        <default_value>image</default_value>
+        <description>Name of target table to update (not currently used)</description>
       </parameter>
     </parameters>
     <log>
@@ -444,232 +479,143 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/06/28 10:30:36.783</modified_date>
+    <modified_date>2017/06/28 08:57:11.454</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>This transformation updates the mirror comparison statistics in etl.table_meta for the specified table.
-These statistics ("compared_rows_equal", "compared_rows_unequal", ...) are computed to verify that
-the implementation of the mirrorring algorithm for the specified table is working correctly.
-This transformation has parameters:
-
-	PARAM_SOURCE_DB_ID			ID of database containing the source tables to mirror
-	PARAM_SOURCE_SCHEMA					Schema of mirrored table to compare
-	PARAM_SOURCE_TABLE					Name of mirrored table to compare</note>
-      <xloc>16</xloc>
-      <yloc>0</yloc>
-      <width>703</width>
-      <heigth>146</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>11</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Count the number of rows that are identical, missing, different or unexpected.
-There will be a separate row for each of these values.</note>
-      <xloc>320</xloc>
-      <yloc>336</yloc>
-      <width>544</width>
-      <heigth>44</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>11</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>The row numbers computed in the previous step (one value per row) are 
-transposed here so that there is one value per COLUMN.</note>
-      <xloc>320</xloc>
-      <yloc>416</yloc>
-      <width>503</width>
-      <heigth>44</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>11</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Needed for the "Group by" step.</note>
-      <xloc>320</xloc>
-      <yloc>256</yloc>
-      <width>227</width>
-      <heigth>27</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>11</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>This sub-transformation (mapping) takes a single input stream named "flagfield" 
-that has been set by a "Merge rows (diff)" step.</note>
-      <xloc>320</xloc>
-      <yloc>176</yloc>
-      <width>562</width>
-      <heigth>44</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>11</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>This is needed so that we can set the compare statistics values to zero, instead of not 
-updating the "table_meta" row at all for the case where the TDP and DWH tables are
-both empty.</note>
-      <xloc>320</xloc>
-      <yloc>480</yloc>
-      <width>589</width>
-      <heigth>61</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>11</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>This transformation is currently identical to:
-
-	/generic/tr_update_table_meta_compare_stats.ktr
-
-The current transformation can be eliminated in favour of 
-"tr_update_table_meta_compare_stats", but the current
-transformation is referenced from many other 
-transformations in the /dwh/mirror/compare_tables/
-repository directory. I did not feel I had the time to 
-update all references to the current transformation so 
-that I could eliminate it</note>
-      <xloc>736</xloc>
-      <yloc>0</yloc>
-      <width>348</width>
-      <heigth>164</heigth>
+      <note>Load the data from both the source (OBO) database table 
+and the target (PSA) database table to which it is mirrored.
+The "ORDER BY" clauses must consist of the tables' primary 
+key column(s). This is needed by the "Merge Rows" step.
+The fields in each stream must be identical and in the same
+order when fed to the "Merge rows" step.</note>
+      <xloc>528</xloc>
+      <yloc>224</yloc>
+      <width>359</width>
+      <heigth>94</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
-      <fontcolorred>255</fontcolorred>
-      <fontcolorgreen>255</fontcolorgreen>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
       <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>0</backgroundcolorred>
-      <backgroundcolorgreen>0</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>This transformation verifies that a table from the source (OBO) DB has been correctly mirrored from the target (PSA) DB. This is an ETL metadata 
+injection "template" transformation that can be used to compare *any* tables that are mirrored between these two databases. It has parameters:
+
+	PARAM_SOURCE_DB_ID				ID the "source" database containing tables will be mirrored to a "target" database
+	PARAM_LAST_LOAD_TIMESTAMP	Timestamp for when the target PSA DB mirror tables were last updated from the source DB
+	PARAM_ARCHIVE_ID_FROM			"from" value for the "archive_id" column of the source OBO table that is being compared to the PSA table
+	PARAM_ARCHIVE_ID_TO			"to" value for the "archive_id" column of the source OBO table that is being compared to the PSA table
+	PARAM_SOURCE_SCHEMA			Name of schema containing source table to compare to target table
+	PARAM_SOURCE_TABLE			Name of source table to compare to target table
+	PARAM_SOURCE_SCHEMA_TABLE	${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
+	PARAM_TARGET_SCHEMA			Name of schema containing target table to compare with (not currently used)
+	PARAM_TARGET_TABLE				Name of target table to compare with (not currently used)
+	PARAM_TARGET_SCHEMA_TABLE	${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</note>
+      <xloc>16</xloc>
+      <yloc>0</yloc>
+      <width>867</width>
+      <heigth>192</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Update the "table_meta" row for the tables being compared with the comparison statistics:
+
+	compared_rows_equal
+	compared_rows_unequal
+	...</note>
+      <xloc>416</xloc>
+      <yloc>512</yloc>
+      <width>544</width>
+      <heigth>80</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Compare the two streams row by row and determine whether they are 
+identical, different, "new" or "deleted".</note>
+      <xloc>416</xloc>
+      <yloc>432</yloc>
+      <width>423</width>
+      <heigth>38</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>The fields in each stream must be identical and in the same order
+when fed to the "Merge rows" step. The SELECT statements in the
+"Table input" steps set the field order appropriately, and this step
+here renames the fields from the target (PSA) DB to the field 
+names from the source (OBO) DB.</note>
+      <xloc>528</xloc>
+      <yloc>336</yloc>
+      <width>394</width>
+      <heigth>80</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
       <bordercolorblue>100</bordercolorblue>
       <drawshadow>Y</drawshadow>
     </notepad>
   </notepads>
-  <connection>
-    <name>etl_db</name>
-    <server>${QF_ETL_DB_HOST}</server>
-    <type>POSTGRESQL</type>
-    <access>Native</access>
-    <database>${QF_ETL_DB_DATABASE}</database>
-    <port>${QF_ETL_DB_PORT}</port>
-    <username>${QF_ETL_DB_USERNAME}</username>
-    <password>${QF_ETL_DB_PASSWORD}</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
-    <attributes>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>IS_CLUSTERED</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>PORT_NUMBER</code>
-        <attribute>${QF_ETL_DB_PORT}</attribute>
-      </attribute>
-      <attribute>
-        <code>PRESERVE_RESERVED_WORD_CASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>QUOTE_ALL_FIELDS</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>USE_POOLING</code>
-        <attribute>N</attribute>
-      </attribute>
-    </attributes>
-  </connection>
   <connection>
     <name>logging_db</name>
     <server>${QF_LOGGING_DB_HOST}</server>
@@ -721,46 +667,148 @@ that I could eliminate it</note>
       </attribute>
     </attributes>
   </connection>
+  <connection>
+    <name>obo_db</name>
+    <server>${QF_OBO_DB_HOST}</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>${QF_OBO_DB_DATABASE}</database>
+    <port>${QF_OBO_DB_PORT}</port>
+    <username>${QF_OBO_DB_USERNAME}</username>
+    <password>${QF_OBO_DB_PASSWORD}</password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>${QF_OBO_DB_PORT}</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
+  <connection>
+    <name>psa_db</name>
+    <server>${QF_PSA_DB_HOST}</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>${QF_PSA_DB_DATABASE}</database>
+    <port>${QF_PSA_DB_PORT}</port>
+    <username>${QF_PSA_DB_USERNAME}</username>
+    <password>${QF_DWH_DB_PASSWORD}</password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>${QF_PSA_DB_PORT}</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
   <order>
     <hop>
-      <from>Group by flagfield</from>
-      <to>Transpose rows -> columns</to>
+      <from>Get rows from target (PSA) DB table</from>
+      <to>Rename PSA field names -> OBO field names</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Sort rows</from>
-      <to>Group by flagfield</to>
+      <from>Get rows from source (OBO) DB table</from>
+      <to>Set field order</to>
+      <enabled>N</enabled>
+    </hop>
+    <hop>
+      <from>Set field order</from>
+      <to>Merge Rows (diff)</to>
+      <enabled>N</enabled>
+    </hop>
+    <hop>
+      <from>Rename PSA field names -> OBO field names</from>
+      <to>Merge Rows (diff)</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Mapping input specification: flagfield</from>
-      <to>Sort rows</to>
+      <from>Merge Rows (diff)</from>
+      <to>tr_mirror_compare-update_table_meta</to>
+      <enabled>N</enabled>
+    </hop>
+    <hop>
+      <from>Get rows from source (OBO) DB table</from>
+      <to>Merge Rows (diff)</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Update table_meta with compare statistics</from>
-      <to>Mapping output specification</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Transpose rows -> columns</from>
-      <to>Detect empty stream</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Detect empty stream</from>
-      <to>Update table_meta with compare statistics</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Transpose rows -> columns</from>
-      <to>Update table_meta with compare statistics</to>
-      <enabled>Y</enabled>
+      <from>Get rows from target (PSA) DB table</from>
+      <to>Merge Rows (diff)</to>
+      <enabled>N</enabled>
     </hop>
   </order>
   <step>
-    <name>Detect empty stream</name>
-    <type>DetectEmptyStream</type>
+    <name>Get rows from source (OBO) DB table</name>
+    <type>TableInput</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -769,6 +817,13 @@ that I could eliminate it</note>
       <method>none</method>
       <schema_name />
     </partitioning>
+    <connection>obo_db</connection>
+    <sql>SELECT image_id,file_id,passage_id,image_type_id,camera_id,file_name,image_orientation_id,image_arrival_date,image_date,propertybag,archive_id,archive_date FROM passage.image WHERE archive_id >= 100 AND archive_id &lt;= 110 ORDER BY image_id</sql>
+    <limit>0</limit>
+    <lookup />
+    <execute_each_row>N</execute_each_row>
+    <variables_active>Y</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
     <cluster_schema />
     <remotesteps>
       <input>
@@ -777,14 +832,14 @@ that I could eliminate it</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>64</xloc>
-      <yloc>496</yloc>
+      <xloc>112</xloc>
+      <yloc>224</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Group by flagfield</name>
-    <type>GroupBy</type>
+    <name>Get rows from target (PSA) DB table</name>
+    <type>TableInput</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -793,27 +848,13 @@ that I could eliminate it</note>
       <method>none</method>
       <schema_name />
     </partitioning>
-    <all_rows>N</all_rows>
-    <ignore_aggregate>N</ignore_aggregate>
-    <field_ignore />
-    <directory>%%java.io.tmpdir%%</directory>
-    <prefix>grp</prefix>
-    <add_linenr>N</add_linenr>
-    <linenr_fieldname />
-    <give_back_row>N</give_back_row>
-    <group>
-      <field>
-        <name>flagfield</name>
-      </field>
-    </group>
-    <fields>
-      <field>
-        <aggregate>count</aggregate>
-        <subject>flagfield</subject>
-        <type>COUNT_ALL</type>
-        <valuefield />
-      </field>
-    </fields>
+    <connection>psa_db</connection>
+    <sql>SELECT image_id,file_id,passage_id,image_type_id,camera_id,file_name,image_orientation_id,image_arrival_date,image_date,propertybag,archive_id,archive_date FROM passage.image WHERE archive_id >= 100 AND archive_id &lt;= 110 ORDER BY image_id</sql>
+    <limit>0</limit>
+    <lookup />
+    <execute_each_row>N</execute_each_row>
+    <variables_active>Y</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
     <cluster_schema />
     <remotesteps>
       <input>
@@ -822,14 +863,60 @@ that I could eliminate it</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>160</xloc>
-      <yloc>336</yloc>
+      <xloc>368</xloc>
+      <yloc>224</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Mapping input specification: flagfield</name>
-    <type>MappingInput</type>
+    <name>Merge Rows (diff)</name>
+    <type>MergeRows</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <keys>
+      <key>image_id</key>
+    </keys>
+    <values>
+      <value>image_id</value>
+      <value>file_id</value>
+      <value>passage_id</value>
+      <value>image_type_id</value>
+      <value>camera_id</value>
+      <value>file_name</value>
+      <value>image_orientation_id</value>
+      <value>image_arrival_date</value>
+      <value>image_date</value>
+      <value>propertybag</value>
+      <value>archive_id</value>
+      <value>archive_date</value>
+    </values>
+    <flag_field>flagfield</flag_field>
+    <reference>Get rows from source (OBO) DB table</reference>
+    <compare>Rename PSA field names -> OBO field names</compare>
+    <compare>
+    </compare>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>240</xloc>
+      <yloc>432</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Rename PSA field names -> OBO field names</name>
+    <type>SelectValues</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -840,10 +927,52 @@ that I could eliminate it</note>
     </partitioning>
     <fields>
       <field>
-        <name>flagfield</name>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
+        <name>image_id</name>
+        <rename>image_id</rename>
+      </field>
+      <field>
+        <name>file_id</name>
+        <rename>file_id</rename>
+      </field>
+      <field>
+        <name>passage_id</name>
+        <rename>passage_id</rename>
+      </field>
+      <field>
+        <name>image_type_id</name>
+        <rename>image_type_id</rename>
+      </field>
+      <field>
+        <name>camera_id</name>
+        <rename>camera_id</rename>
+      </field>
+      <field>
+        <name>file_name</name>
+        <rename>file_name</rename>
+      </field>
+      <field>
+        <name>image_orientation_id</name>
+        <rename>image_orientation_id</rename>
+      </field>
+      <field>
+        <name>image_arrival_date</name>
+        <rename>image_arrival_date</rename>
+      </field>
+      <field>
+        <name>image_date</name>
+        <rename>image_date</rename>
+      </field>
+      <field>
+        <name>propertybag</name>
+        <rename>propertybag</rename>
+      </field>
+      <field>
+        <name>archive_id</name>
+        <rename>archive_id</rename>
+      </field>
+      <field>
+        <name>archive_date</name>
+        <rename>archive_date</rename>
       </field>
       <select_unspecified>N</select_unspecified>
     </fields>
@@ -855,14 +984,14 @@ that I could eliminate it</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>160</xloc>
-      <yloc>176</yloc>
+      <xloc>368</xloc>
+      <yloc>336</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Mapping output specification</name>
-    <type>MappingOutput</type>
+    <name>Set field order</name>
+    <type>SelectValues</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -871,46 +1000,44 @@ that I could eliminate it</note>
       <method>none</method>
       <schema_name />
     </partitioning>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>160</xloc>
-      <yloc>656</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Sort rows</name>
-    <type>SortRows</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <directory>%%java.io.tmpdir%%</directory>
-    <prefix>out</prefix>
-    <sort_size>1000000</sort_size>
-    <free_memory />
-    <compress>N</compress>
-    <compress_variable />
-    <unique_rows>N</unique_rows>
     <fields>
       <field>
-        <name>flagfield</name>
-        <ascending>Y</ascending>
-        <case_sensitive>Y</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>2</collator_strength>
-        <presorted>N</presorted>
+        <name>archive_date</name>
       </field>
+      <field>
+        <name>archive_id</name>
+      </field>
+      <field>
+        <name>camera_id</name>
+      </field>
+      <field>
+        <name>file_id</name>
+      </field>
+      <field>
+        <name>file_name</name>
+      </field>
+      <field>
+        <name>image_arrival_date</name>
+      </field>
+      <field>
+        <name>image_date</name>
+      </field>
+      <field>
+        <name>image_id</name>
+      </field>
+      <field>
+        <name>image_orientation_id</name>
+      </field>
+      <field>
+        <name>image_type_id</name>
+      </field>
+      <field>
+        <name>passage_id</name>
+      </field>
+      <field>
+        <name>propertybag</name>
+      </field>
+      <select_unspecified>N</select_unspecified>
     </fields>
     <cluster_schema />
     <remotesteps>
@@ -920,99 +1047,14 @@ that I could eliminate it</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>160</xloc>
-      <yloc>256</yloc>
+      <xloc>112</xloc>
+      <yloc>336</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Transpose rows -> columns</name>
-    <type>Denormaliser</type>
-    <description />
-    <distribute>N</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <key_field>flagfield</key_field>
-    <group>
-        </group>
-    <fields>
-      <field>
-        <field_name>count</field_name>
-        <key_value>identical</key_value>
-        <target_name>compared_rows_equal</target_name>
-        <target_type>Integer</target_type>
-        <target_format />
-        <target_length>-1</target_length>
-        <target_precision>-1</target_precision>
-        <target_decimal_symbol />
-        <target_grouping_symbol />
-        <target_currency_symbol />
-        <target_null_string />
-        <target_aggregation_type>-</target_aggregation_type>
-      </field>
-      <field>
-        <field_name>count</field_name>
-        <key_value>changed</key_value>
-        <target_name>compared_rows_unequal</target_name>
-        <target_type>Integer</target_type>
-        <target_format />
-        <target_length>-1</target_length>
-        <target_precision>-1</target_precision>
-        <target_decimal_symbol />
-        <target_grouping_symbol />
-        <target_currency_symbol />
-        <target_null_string />
-        <target_aggregation_type>-</target_aggregation_type>
-      </field>
-      <field>
-        <field_name>count</field_name>
-        <key_value>deleted</key_value>
-        <target_name>compared_rows_missing</target_name>
-        <target_type>Integer</target_type>
-        <target_format />
-        <target_length>-1</target_length>
-        <target_precision>-1</target_precision>
-        <target_decimal_symbol />
-        <target_grouping_symbol />
-        <target_currency_symbol />
-        <target_null_string />
-        <target_aggregation_type>-</target_aggregation_type>
-      </field>
-      <field>
-        <field_name>count</field_name>
-        <key_value>new</key_value>
-        <target_name>compared_rows_extra</target_name>
-        <target_type>Integer</target_type>
-        <target_format />
-        <target_length>-1</target_length>
-        <target_precision>-1</target_precision>
-        <target_decimal_symbol />
-        <target_grouping_symbol />
-        <target_currency_symbol />
-        <target_null_string />
-        <target_aggregation_type>-</target_aggregation_type>
-      </field>
-    </fields>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>160</xloc>
-      <yloc>416</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Update table_meta with compare statistics</name>
-    <type>ExecSQL</type>
+    <name>tr_mirror_compare-update_table_meta</name>
+    <type>SimpleMapping</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -1021,42 +1063,38 @@ that I could eliminate it</note>
       <method>none</method>
       <schema_name />
     </partitioning>
-    <connection>etl_db</connection>
-    <execute_each_row>Y</execute_each_row>
-    <single_statement>Y</single_statement>
-    <replace_variables>Y</replace_variables>
-    <quoteString>N</quoteString>
-    <sql>UPDATE
-    etl.table_meta
-SET
-    last_compared_on=LOCALTIMESTAMP
-   ,compared_rows_equal=COALESCE(?, 0)
-   ,compared_rows_unequal=COALESCE(?, 0)
-   ,compared_rows_missing=COALESCE(?, 0)
-   ,compared_rows_extra=COALESCE(?, 0)
-WHERE
-    source_db_id=${PARAM_SOURCE_DB_ID} AND
-    source_schema_name='${PARAM_SOURCE_SCHEMA}' AND
-    source_table_name='${PARAM_SOURCE_TABLE}'</sql>
-    <set_params>Y</set_params>
-    <insert_field />
-    <update_field />
-    <delete_field />
-    <read_field />
-    <arguments>
-      <argument>
-        <name>compared_rows_equal</name>
-      </argument>
-      <argument>
-        <name>compared_rows_unequal</name>
-      </argument>
-      <argument>
-        <name>compared_rows_missing</name>
-      </argument>
-      <argument>
-        <name>compared_rows_extra</name>
-      </argument>
-    </arguments>
+    <specification_method>rep_name</specification_method>
+    <trans_object_id />
+    <trans_name>tr_mirror_compare-update_table_meta</trans_name>
+    <filename />
+    <directory_path>/dwh/mirror/compare_tables</directory_path>
+    <mappings>
+      <input>
+        <mapping>
+          <input_step />
+          <output_step />
+          <main_path>Y</main_path>
+          <rename_on_output>Y</rename_on_output>
+          <description />
+          <connector>
+            <parent>flagfield</parent>
+            <child>flagfield</child>
+          </connector>
+        </mapping>
+      </input>
+      <output>
+        <mapping>
+          <input_step />
+          <output_step />
+          <main_path>Y</main_path>
+          <rename_on_output>N</rename_on_output>
+          <description />
+        </mapping>
+      </output>
+      <parameters>
+        <inherit_all_vars>Y</inherit_all_vars>
+      </parameters>
+    </mappings>
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1065,8 +1103,8 @@ WHERE
       </output>
     </remotesteps>
     <GUI>
-      <xloc>160</xloc>
-      <yloc>576</yloc>
+      <xloc>240</xloc>
+      <yloc>528</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
