@@ -8,9 +8,14 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/06/29 10:24:22.020</modified_date>
+  <modified_date>2017/06/29 13:40:03.621</modified_date>
   <parameters>
-    </parameters>
+    <parameter>
+      <name>PARAM_MAX_NUM_COMPARE_ROWS</name>
+      <default_value>100000</default_value>
+      <description>Maximum number of rows that will be compared for these tables. Pass 0 for *all* rows.</description>
+    </parameter>
+  </parameters>
   <connection>
     <name>logging_db</name>
     <server>${QF_LOGGING_DB_HOST}</server>
@@ -355,7 +360,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>32</xloc>
-      <yloc>128</yloc>
+      <yloc>192</yloc>
     </entry>
     <entry>
       <name>jb_psa_init</name>
@@ -389,7 +394,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>128</xloc>
-      <yloc>128</yloc>
+      <yloc>192</yloc>
     </entry>
     <entry>
       <name>tr_get_last_successful_load</name>
@@ -431,7 +436,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>304</xloc>
-      <yloc>224</yloc>
+      <yloc>288</yloc>
     </entry>
     <entry>
       <name>tr_list_of_tables_to_compare</name>
@@ -473,7 +478,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>304</xloc>
-      <yloc>320</yloc>
+      <yloc>384</yloc>
     </entry>
     <entry>
       <name>jb_psa_mirrored_tables-compare_one</name>
@@ -547,7 +552,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>304</xloc>
-      <yloc>432</yloc>
+      <yloc>480</yloc>
     </entry>
     <entry>
       <name>jb_send_default_email_job_notification - Success</name>
@@ -596,7 +601,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>304</xloc>
-      <yloc>576</yloc>
+      <yloc>624</yloc>
     </entry>
     <entry>
       <name>jb_send_default_email_job_notification - Failure</name>
@@ -645,7 +650,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>304</xloc>
-      <yloc>640</yloc>
+      <yloc>688</yloc>
     </entry>
     <entry>
       <name>Success</name>
@@ -655,7 +660,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>496</xloc>
-      <yloc>576</yloc>
+      <yloc>624</yloc>
     </entry>
     <entry>
       <name>Abort job</name>
@@ -666,7 +671,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>496</xloc>
-      <yloc>640</yloc>
+      <yloc>688</yloc>
     </entry>
     <entry>
       <name>jb_log_error 1</name>
@@ -705,7 +710,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>160</xloc>
-      <yloc>224</yloc>
+      <yloc>288</yloc>
     </entry>
     <entry>
       <name>DUMMY</name>
@@ -725,7 +730,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>32</xloc>
-      <yloc>432</yloc>
+      <yloc>480</yloc>
     </entry>
     <entry>
       <name>DUMMY 2</name>
@@ -745,7 +750,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>32</xloc>
-      <yloc>640</yloc>
+      <yloc>688</yloc>
     </entry>
     <entry>
       <name>DUMMY 3</name>
@@ -765,7 +770,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>304</xloc>
-      <yloc>128</yloc>
+      <yloc>192</yloc>
     </entry>
   </entries>
   <hops>
@@ -864,7 +869,7 @@
       <to>DUMMY</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
-      <enabled>Y</enabled>
+      <enabled>N</enabled>
       <evaluation>N</evaluation>
       <unconditional>N</unconditional>
     </hop>
@@ -913,11 +918,15 @@ verify that the mirroring algorithm(s) is(are) correctly implemented for each ta
 "Pass batch ID?" is selected for this job so that the batch ID is passed to tr_set_job_batch_id_variable via jb_init, which assigns this value to QF_JOB_BATCH_ID.
 
 If this job has a parent, the setting "Pass batch ID?" should also be set for the parent *if* it is desired that QF_JOB_BATCH_ID should be assigned
-the batch ID of the root job (not this job). This may vary from case to case.</note>
+the batch ID of the root job (not this job). This may vary from case to case.
+
+This job has parameter:
+
+	PARAM_MAX_NUM_COMPARE_ROWS	Maximum number of rows that will be compared for these tables. 0 means *all* rows.</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
       <width>935</width>
-      <heigth>108</heigth>
+      <heigth>164</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -939,7 +948,7 @@ QF_CDC_LAST_LOAD. This sub-transformation is passed the parameter:
 
 PARAM_CDC_TIMESTAMPS_ID = ${QF_OBO_DB_CDC_TIMESTAMPS_ID}</note>
       <xloc>432</xloc>
-      <yloc>208</yloc>
+      <yloc>272</yloc>
       <width>533</width>
       <heigth>66</heigth>
       <fontname>Ubuntu</fontname>
@@ -958,14 +967,13 @@ PARAM_CDC_TIMESTAMPS_ID = ${QF_OBO_DB_CDC_TIMESTAMPS_ID}</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Create list of all mirrored tables, regardless of the mirroring algorithm used. This sub-transformation 
-is passed parameter:
+      <note>Create list of all tables to compare. This transformation is passed parameter:
 
 PARAM_SOURCE_DB_ID = ${QF_TABLE_META_SOURCE_DB_ID_OBO}</note>
       <xloc>432</xloc>
-      <yloc>288</yloc>
-      <width>605</width>
-      <heigth>66</heigth>
+      <yloc>368</yloc>
+      <width>461</width>
+      <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -991,11 +999,12 @@ PARAM_SOURCE_DB_ID = ${QF_TABLE_META_SOURCE_DB_ID_OBO}</note>
 
 	3.	Passed the additional parameters:
 			PARAM_SOURCE_DB_ID				= ${QF_TABLE_META_SOURCE_DB_ID_OBO}
-			PARAM_LAST_LOAD_TIMESTAMP	= ${QF_CDC_LAST_LOAD}</note>
+			PARAM_LAST_LOAD_TIMESTAMP	= ${QF_CDC_LAST_LOAD}
+			PARAM_MAX_NUM_COMPARE_ROWS</note>
       <xloc>432</xloc>
-      <yloc>384</yloc>
+      <yloc>432</yloc>
       <width>693</width>
-      <heigth>150</heigth>
+      <heigth>164</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -1014,7 +1023,7 @@ PARAM_SOURCE_DB_ID = ${QF_TABLE_META_SOURCE_DB_ID_OBO}</note>
     <notepad>
       <note>Notify recipient(s) of SUCCESSFUL job execution.</note>
       <xloc>560</xloc>
-      <yloc>560</yloc>
+      <yloc>624</yloc>
       <width>294</width>
       <heigth>24</heigth>
       <fontname />
@@ -1035,7 +1044,7 @@ PARAM_SOURCE_DB_ID = ${QF_TABLE_META_SOURCE_DB_ID_OBO}</note>
     <notepad>
       <note>Notify recipient(s) of FAILED job execution.</note>
       <xloc>560</xloc>
-      <yloc>624</yloc>
+      <yloc>688</yloc>
       <width>260</width>
       <heigth>24</heigth>
       <fontname />
