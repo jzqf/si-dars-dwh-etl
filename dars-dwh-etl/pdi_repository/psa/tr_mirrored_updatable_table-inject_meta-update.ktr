@@ -464,7 +464,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/07/01 19:30:54.700</modified_date>
+    <modified_date>2017/07/02 08:33:14.626</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -567,29 +567,6 @@ comments in that job for an explanation.</note>
       <fontcolorblue>0</fontcolorblue>
       <backgroundcolorred>255</backgroundcolorred>
       <backgroundcolorgreen>255</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Update this query to make use of
-a new etl.column_meta column 
-named "is_updatable_column".</note>
-      <xloc>160</xloc>
-      <yloc>432</yloc>
-      <width>204</width>
-      <heigth>52</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>0</backgroundcolorgreen>
       <backgroundcolorblue>0</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
@@ -809,6 +786,50 @@ ORDER BY
     </GUI>
   </step>
   <step>
+    <name>Target (PSA) updatable column metadata</name>
+    <type>TableInput</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <connection>etl_db</connection>
+    <sql>SELECT
+    c.target_column_name AS "target_col_name" 
+FROM 
+    etl.column_meta c 
+INNER JOIN 
+    etl.table_meta t ON t.table_meta_id = c.table_meta_id 
+WHERE 
+    t.source_db_id = ${PARAM_SOURCE_DB_ID} AND 
+    t.target_schema_name = '${PARAM_TARGET_SCHEMA}' AND 
+    t.target_table_name = '${PARAM_TARGET_TABLE}'  AND 
+    c.mirror_column = true AND
+    c.is_updatable_column = true
+ORDER BY 
+    c.target_column_name ASC</sql>
+    <limit>0</limit>
+    <lookup />
+    <execute_each_row>N</execute_each_row>
+    <variables_active>Y</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>368</xloc>
+      <yloc>448</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
     <name>tmplt_mirrored_updatable_table-update</name>
     <type>MetaInject</type>
     <description />
@@ -898,58 +919,6 @@ ORDER BY
     <GUI>
       <xloc>112</xloc>
       <yloc>336</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Target (PSA) updatable column metadata</name>
-    <type>TableInput</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <connection>etl_db</connection>
-    <sql>SELECT
-    c.target_column_name AS "target_col_name" 
-FROM 
-    etl.column_meta c 
-INNER JOIN 
-    etl.table_meta t ON t.table_meta_id = c.table_meta_id 
-WHERE 
-    t.source_db_id = ${PARAM_SOURCE_DB_ID} AND 
-    t.target_schema_name = '${PARAM_TARGET_SCHEMA}' AND 
-    t.target_table_name = '${PARAM_TARGET_TABLE}'  AND 
-    -- The "updatable" columns are currently defined as columns that are
-    -- mirrored, but that are not part of the primary key of the table.
-    -- We also exclude columns named "archive_id", "archive_date" and
-    -- 'etl_batch_id', but this should be improved eventually by adding a
-    -- new column to the etl.column_meta table named "is_updatable_column".
-    c.mirror_column = true AND
-    c.is_primary_key_column = false AND
-    c.target_column_name &lt;&gt; 'archive_id' AND
-    c.target_column_name &lt;&gt; 'archive_date' AND
-    c.target_column_name &lt;&gt; 'etl_batch_id' 
-ORDER BY 
-    c.target_column_name ASC</sql>
-    <limit>0</limit>
-    <lookup />
-    <execute_each_row>N</execute_each_row>
-    <variables_active>Y</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>368</xloc>
-      <yloc>448</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
