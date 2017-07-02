@@ -1,5 +1,5 @@
 <job>
-  <name>jb_mirrored_insert_only_tables-inject_meta-update_all</name>
+  <name>jb_mirrored_updatable_tables-inject_meta-update_all</name>
   <description />
   <extended_description />
   <job_version />
@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/06/30 08:55:46.586</modified_date>
+  <modified_date>2017/06/30 09:49:14.650</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CDC_CURRENT_LOAD</name>
@@ -373,13 +373,13 @@
       <yloc>128</yloc>
     </entry>
     <entry>
-      <name>tr_generic_mirrored_insert_only_tables-list_of_tables</name>
+      <name>tr_generic_mirrored_updatable_tables-list_of_tables</name>
       <description />
       <type>TRANS</type>
       <specification_method>rep_name</specification_method>
       <trans_object_id />
       <filename />
-      <transname>tr_generic_mirrored_insert_only_tables-list_of_tables</transname>
+      <transname>tr_generic_mirrored_updatable_tables-list_of_tables</transname>
       <directory>/generic</directory>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -410,13 +410,13 @@
       <yloc>224</yloc>
     </entry>
     <entry>
-      <name>jb_mirrored_insert_only_tables-inject_meta-update_one</name>
+      <name>jb_mirrored_updatable_tables-inject_meta-update_one</name>
       <description />
       <type>JOB</type>
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
-      <jobname>jb_mirrored_insert_only_tables-inject_meta-update_one</jobname>
+      <jobname>jb_mirrored_updatable_tables-inject_meta-update_one</jobname>
       <directory>${Internal.Entry.Current.Directory}</directory>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>Y</params_from_previous>
@@ -467,7 +467,7 @@
   <hops>
     <hop>
       <from>START</from>
-      <to>tr_generic_mirrored_insert_only_tables-list_of_tables</to>
+      <to>tr_generic_mirrored_updatable_tables-list_of_tables</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -475,8 +475,8 @@
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>tr_generic_mirrored_insert_only_tables-list_of_tables</from>
-      <to>jb_mirrored_insert_only_tables-inject_meta-update_one</to>
+      <from>tr_generic_mirrored_updatable_tables-list_of_tables</from>
+      <to>jb_mirrored_updatable_tables-inject_meta-update_one</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -486,7 +486,7 @@
   </hops>
   <notepads>
     <notepad>
-      <note>This job updates a selection of "insert-only" tables (INSERTs allowed, but no UPDATEs or DELETEs) in the target PSA database that are mirrored
+      <note>This job updates a selection of "updatable" tables (INSERTs &amp; UPDATEs allowed, but no DELETEs) in the target PSA database that are mirrored
 from a source database using a GENERIC algorithm. This job has parameters:
 
 	PARAM_SOURCE_DB_ID			ID the "source" database containing tables will be mirrored to a "target" database
@@ -494,7 +494,7 @@ from a source database using a GENERIC algorithm. This job has parameters:
 	PARAM_CDC_CURRENT_LOAD	Used so that a consistent max timestamp is used for all ETL</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>845</width>
+      <width>841</width>
       <heigth>94</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -535,8 +535,8 @@ from a source database using a GENERIC algorithm. This job has parameters:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Update each mirrored, insert-only table. This sub-job is RUN ONCE FOR EACH row returned by
-"tr_generic_mirrored_insert_only_tables-list_of_tables", i.e., once for each table to update.
+      <note>Update each mirrored, "updatable" table. This sub-job is RUN ONCE FOR EACH row returned by
+"tr_generic_mirrored_updatable_tables-list_of_tables", i.e., once for each table to update.
 Each time it is executed, it is passed the parameters:
 
 	PARAM_SOURCE_DB_ID			same		value is passed each time this  job is executed
@@ -548,7 +548,7 @@ Each time it is executed, it is passed the parameters:
 	PARAM_TARGET_TABLE			different	value is passed each time this job is executed</note>
       <xloc>352</xloc>
       <yloc>288</yloc>
-      <width>564</width>
+      <width>565</width>
       <heigth>164</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>

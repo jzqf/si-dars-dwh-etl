@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/06/22 16:55:26.702</modified_date>
+  <modified_date>2017/06/30 09:54:12.163</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CDC_CURRENT_LOAD</name>
@@ -478,7 +478,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>608</xloc>
-      <yloc>448</yloc>
+      <yloc>416</yloc>
     </entry>
     <entry>
       <name>jb_update_etl_table_meta_mirror_details</name>
@@ -522,7 +522,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>608</xloc>
-      <yloc>688</yloc>
+      <yloc>656</yloc>
     </entry>
     <entry>
       <name>jb_log_error 2</name>
@@ -561,7 +561,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>816</xloc>
-      <yloc>448</yloc>
+      <yloc>416</yloc>
     </entry>
     <entry>
       <name>Abort job</name>
@@ -572,7 +572,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>944</xloc>
-      <yloc>368</yloc>
+      <yloc>352</yloc>
     </entry>
     <entry>
       <name>Is there column mapping metadata for this table?</name>
@@ -605,7 +605,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>608</xloc>
-      <yloc>304</yloc>
+      <yloc>272</yloc>
     </entry>
     <entry>
       <name>jb_log_error 1</name>
@@ -644,7 +644,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>1</nr>
       <xloc>816</xloc>
-      <yloc>304</yloc>
+      <yloc>272</yloc>
     </entry>
     <entry>
       <name>Success</name>
@@ -654,7 +654,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>944</xloc>
-      <yloc>304</yloc>
+      <yloc>272</yloc>
     </entry>
   </entries>
   <hops>
@@ -736,16 +736,16 @@ ORDER BY
       <note>This job updates a single "insert-only" table in the target PSA database that mirrors a table from a source database. 
 This job has parameters:
 
-	PARAM_CDC_LAST_LOAD
-	PARAM_CDC_CURRENT_LOAD
-	PARAM_SOURCE_DB_ID				ID the "source" database containing tables will be mirrored to a "target" database
-	PARAM_SOURCE_SCHEMA			Name of schema containing source table to mirror to target table
-	PARAM_SOURCE_TABLE			Name of source table to mirror to target table
-	PARAM_TARGET_SCHEMA			Name of schema containing target table to update (not currently used)
-	PARAM_TARGET_TABLE				Name of target table to update (not currently used)</note>
+	PARAM_SOURCE_DB_ID			ID the "source" database containing tables will be mirrored to a "target" database
+	PARAM_CDC_LAST_LOAD		Timestamp for when *all* tables of the PSA were most recently updated successfully
+	PARAM_CDC_CURRENT_LOAD	Used so that a consistent max timestamp is used for all ETL
+	PARAM_SOURCE_SCHEMA		Name of schema containing source table to mirror to target table
+	PARAM_SOURCE_TABLE		Name of source table to mirror to target table
+	PARAM_TARGET_SCHEMA		Name of schema containing target table to update (not currently used)
+	PARAM_TARGET_TABLE			Name of target table to update (not currently used)</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>730</width>
+      <width>722</width>
       <heigth>150</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -766,8 +766,8 @@ This job has parameters:
       <note>Update the etl.table_meta row that corresponds to the table treated in the 
 current job. This records which mirror algorithm was used, as well as when the 
 mirroring was performed.</note>
-      <xloc>0</xloc>
-      <yloc>672</yloc>
+      <xloc>16</xloc>
+      <yloc>640</yloc>
       <width>467</width>
       <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
@@ -792,7 +792,7 @@ execution has failed. It will then direct
 the execution flow to the job that 
 sends out failure e-mails.</note>
       <xloc>992</xloc>
-      <yloc>352</yloc>
+      <yloc>336</yloc>
       <width>232</width>
       <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
@@ -811,13 +811,14 @@ sends out failure e-mails.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>This allows execution to continue without attempting to 
-update a target table for the case where no column 
-mapping metdata is provided for the table.</note>
+      <note>This allows execution to continue without
+attempting to update a target table for 
+the case where no column mapping 
+metdata is provided for the table.</note>
       <xloc>992</xloc>
-      <yloc>288</yloc>
-      <width>340</width>
-      <heigth>52</heigth>
+      <yloc>256</yloc>
+      <width>252</width>
+      <heigth>66</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -835,8 +836,8 @@ mapping metdata is provided for the table.</note>
     </notepad>
     <notepad>
       <note>This step updates the target table using an ETL Metadata Injection step.</note>
-      <xloc>0</xloc>
-      <yloc>448</yloc>
+      <xloc>16</xloc>
+      <yloc>416</yloc>
       <width>429</width>
       <heigth>24</heigth>
       <fontname />
@@ -855,20 +856,20 @@ mapping metdata is provided for the table.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>&lt;- It is possible to execute here jobs or transformations that contain custom, table-specific code for UPDATING 
-the rows just inserted by "tr_mirrored_insert_only_table-inject_meta-update". Such a custom job ro transformation
-will need to make use of the value of a variable named QF_LAST_UPDATE_ARCHIVE_ID that must be set to the 
-value of "max_id" in the template transformation (this is not currently done).
+      <note>&lt;- It is possible to execute here ETL code that contains custom, table-specific code for UPDATING the
+rows just inserted by "tr_mirrored_insert_only_table-inject_meta-update". Such a custom job or
+transformation will need to make use of the value of a variable named QF_LAST_UPDATE_ARCHIVE_ID
+that must be set to the value of "max_id" in the template transformation (this is not currently done).
 
-But since updates are expensive, it might be better, instead, to not perform the generic mirroring by 
-"tr_mirrored_insert_only_table-inject_meta-update" and, instead, write a custom transformation for mirroring the 
-table that is executed either from this job or from job "jb_psa-update". This custom job can be written to use only 
-INSERTs, at the expense of duplicating code from the template transformation, 
+But since updates are expensive, it might be better, instead, to not perform the generic mirroring at all by 
+"tr_mirrored_insert_only_table-inject_meta-update" and, instead, write a custom transformation for 
+mirroring the table that is executed either from "jb_custom_mirrored_tables-update_all". This custom job
+can be written to use only INSERTs, at the expense of duplicating code from the template transformation, 
 "tmplt_mirrored_insert_only_table-update". Such a transformation will not need a value for 
 QF_LAST_UPDATE_ARCHIVE_ID because it can compute a value that will be used for INSERTing new rows.</note>
-      <xloc>656</xloc>
-      <yloc>512</yloc>
-      <width>677</width>
+      <xloc>640</xloc>
+      <yloc>480</yloc>
+      <width>628</width>
       <heigth>164</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -888,18 +889,17 @@ QF_LAST_UPDATE_ARCHIVE_ID because it can compute a value that will be used for I
     <notepad>
       <note>The query in this step must match the query in 
 tr_mirrored_insert_only_table-inject_meta-update
-that is executed below. This is because a PDI runtime error occurs if an empty
-stream is sent to an ETL Metadata Injection step. To avoid this possibility in 
-tr_mirrored_insert_only_table-inject_meta-update, we check that metadata
-is available here before executing that transformation. The only reason why
-this case should occur is if a table is marked for mirroring, but no column 
-mapping metdata is provided - this should never occur, but we check in 
-order to provide a warning message, rather than letting PDI choke on this 
-problem.</note>
-      <xloc>0</xloc>
-      <yloc>240</yloc>
-      <width>459</width>
-      <heigth>150</heigth>
+that is executed below. This is because a PDI runtime error occurs if an 
+empty stream is sent to an ETL Metadata Injection step. To avoid this 
+from happening, we check that metadata is available here before 
+executing that transformation. The only reason why this case should 
+occur is if a table is marked for mirroring, but no column mapping 
+metadata is provided - this should never occur, but we check in order to 
+provide a warning message, rather than letting PDI choke on this problem.</note>
+      <xloc>16</xloc>
+      <yloc>224</yloc>
+      <width>445</width>
+      <heigth>136</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
