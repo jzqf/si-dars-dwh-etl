@@ -9,6 +9,16 @@
     <directory>/psa</directory>
     <parameters>
       <parameter>
+        <name>PARAM_INSERTED_ON_COLNAME</name>
+        <default_value>inserted_on</default_value>
+        <description>Name of column acting as "inserted_on" timestamp column of source table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_INSERT_ID_COLNAME</name>
+        <default_value>insert_id</default_value>
+        <description>Name of column acting as "insert_id" column of source table</description>
+      </parameter>
+      <parameter>
         <name>PARAM_LAST_LOAD_TIMESTAMP</name>
         <default_value>1900-01-01 00:00:00</default_value>
         <description>Timestamp for when the target PSA DB mirror tables were last updated from the source DB</description>
@@ -459,13 +469,13 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/06/29 13:31:48.882</modified_date>
+    <modified_date>2017/07/03 16:05:40.840</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>This transformation computes the "from" and "to" values for the "archive_id" column of a table that is being mirrored from the OBO
+      <note>This transformation computes the "from" and "to" values for the "insert_id" column of a table that is being mirrored from the OBO
 to the PSA. These values are used for selecting rows of the source (OBO) table and the target (PSA) table so that they can be 
 compared to verify that the source table is being mirrored correctly. These values are assigned to the variables:
 
@@ -477,10 +487,6 @@ Note 1:	The "from" value is computed from the source (OBO) table, while the "to"
 		was updated. If this were done, we would definitely flag rows that exist in the source DB but not in the target DB, but this 
 		does not actually indicate a problem with the mirroring algorithm, which is what the "compare" functionality is used for.
 
-Note 2:	It is assumed that there exists a column in both tables named exactly "archive_id". If such a column exists to act in this role 
-		but it is named differently, it will be necessary to add a boolean column "is_archive_id" to the etl.column_meta table, and 
-		then update eveything to use this new meta data instead of hardwiring the coumn name "archive_id".
-
 This transformation has parameters:
 
 	PARAM_LAST_LOAD_TIMESTAMP		Timestamp for when the target PSA DB mirror tables were last updated from the source DB
@@ -488,11 +494,13 @@ This transformation has parameters:
 	PARAM_SOURCE_TABLE				Name of source (OBO) table to compare
 	PARAM_TARGET_SCHEMA				Name of schema containing target (PSA) table to compare to
 	PARAM_TARGET_TABLE					Name of target (PSA) table to compare to
-	PARAM_MAX_NUM_COMPARE_ROWS	Maximum number of rows that will be compared for these tables. 0 means *all* rows.</note>
+	PARAM_MAX_NUM_COMPARE_ROWS	Maximum number of rows that will be compared for these tables. 0 means *all* rows.
+	PARAM_INSERT_ID_COLNAME			Name of column acting as "insert_id"  timestamp column of source table
+	PARAM_INSERTED_ON_COLNAME		Name of column acting as "inserted_on" column of source table</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
       <width>809</width>
-      <heigth>346</heigth>
+      <heigth>318</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -514,8 +522,8 @@ adjust "archive_id_from", if necessary, so that no more than the specified numbe
 rows will be compared. In this step, the field "archive_id_from" is configured with:
 
 	Replace value = Y</note>
-      <xloc>464</xloc>
-      <yloc>496</yloc>
+      <xloc>416</xloc>
+      <yloc>480</yloc>
       <width>511</width>
       <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
@@ -689,12 +697,12 @@ rows will be compared. In this step, the field "archive_id_from" is configured w
   </connection>
   <order>
     <hop>
-      <from>Get "from" archive_id from TDP table</from>
+      <from>Get "from" "insert_id" from TDP table</from>
       <to>Join Rows (cartesian product)</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Get "to" archive_id from DWH table</from>
+      <from>Get "to" "insert_id" from DWH table</from>
       <to>Join Rows (cartesian product)</to>
       <enabled>Y</enabled>
     </hop>
@@ -705,155 +713,10 @@ rows will be compared. In this step, the field "archive_id_from" is configured w
     </hop>
     <hop>
       <from>Adjust "archive_id_from", if necessary</from>
-      <to>Set archive id "from" &amp; "to" variables</to>
+      <to>Set "insert_id" "from" &amp; "to" variables</to>
       <enabled>Y</enabled>
     </hop>
   </order>
-  <step>
-    <name>Get "from" archive_id from TDP table</name>
-    <type>TableInput</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <connection>obo_db</connection>
-    <sql>SELECT
-    COALESCE(MIN(archive_id), ${QF_ARCHIVE_ID_LOWER_BOUND}) AS "archive_id_from"
-FROM
-    ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</sql>
-    <limit>0</limit>
-    <lookup />
-    <execute_each_row>N</execute_each_row>
-    <variables_active>Y</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>144</xloc>
-      <yloc>368</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Get "to" archive_id from DWH table</name>
-    <type>TableInput</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <connection>psa_db</connection>
-    <sql>SELECT
-    COALESCE(MAX(archive_id), ${QF_ARCHIVE_ID_LOWER_BOUND}) AS "archive_id_to"
-FROM
-    ${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}
---WHERE
---    archive_date &lt;= TIMESTAMP '${PARAM_LAST_LOAD_TIMESTAMP}'  &lt;-- I don't think that this is necessary</sql>
-    <limit>0</limit>
-    <lookup />
-    <execute_each_row>N</execute_each_row>
-    <variables_active>Y</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>496</xloc>
-      <yloc>368</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Join Rows (cartesian product)</name>
-    <type>JoinRows</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <directory>%%java.io.tmpdir%%</directory>
-    <prefix>out</prefix>
-    <cache_size>500</cache_size>
-    <main />
-    <compare>
-      <condition>
-        <negated>N</negated>
-        <leftvalue />
-        <function>=</function>
-        <rightvalue />
-      </condition>
-    </compare>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>320</xloc>
-      <yloc>432</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Set archive id "from" &amp; "to" variables</name>
-    <type>SetVariable</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <fields>
-      <field>
-        <field_name>archive_id_from</field_name>
-        <variable_name>QF_MIRROR_COMPARE_ARCHIVE_ID_FROM</variable_name>
-        <variable_type>ROOT_JOB</variable_type>
-        <default_value />
-      </field>
-      <field>
-        <field_name>archive_id_to</field_name>
-        <variable_name>QF_MIRROR_COMPARE_ARCHIVE_ID_TO</variable_name>
-        <variable_type>ROOT_JOB</variable_type>
-        <default_value />
-      </field>
-    </fields>
-    <use_formatting>Y</use_formatting>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>320</xloc>
-      <yloc>592</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
   <step>
     <name>Adjust "archive_id_from", if necessary</name>
     <type>ScriptValueMod</type>
@@ -919,8 +782,153 @@ if(max_num_rows > 0) {
       </output>
     </remotesteps>
     <GUI>
-      <xloc>320</xloc>
-      <yloc>512</yloc>
+      <xloc>272</xloc>
+      <yloc>496</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Get "from" "insert_id" from TDP table</name>
+    <type>TableInput</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <connection>obo_db</connection>
+    <sql>SELECT
+    COALESCE(MIN(${PARAM_INSERT_ID_COLNAME}), ${QF_ARCHIVE_ID_LOWER_BOUND}) AS "archive_id_from"
+FROM
+    ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</sql>
+    <limit>0</limit>
+    <lookup />
+    <execute_each_row>N</execute_each_row>
+    <variables_active>Y</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>96</xloc>
+      <yloc>352</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Get "to" "insert_id" from DWH table</name>
+    <type>TableInput</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <connection>psa_db</connection>
+    <sql>SELECT
+    COALESCE(MAX(${PARAM_INSERT_ID_COLNAME}), ${QF_ARCHIVE_ID_LOWER_BOUND}) AS "archive_id_to"
+FROM
+    ${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}
+--WHERE
+--    ${PARAM_INSERTED_ON_COLNAME} &lt;= TIMESTAMP '${PARAM_LAST_LOAD_TIMESTAMP}'  &lt;-- I don't think that this is necessary</sql>
+    <limit>0</limit>
+    <lookup />
+    <execute_each_row>N</execute_each_row>
+    <variables_active>Y</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>448</xloc>
+      <yloc>352</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Join Rows (cartesian product)</name>
+    <type>JoinRows</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>out</prefix>
+    <cache_size>500</cache_size>
+    <main />
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <leftvalue />
+        <function>=</function>
+        <rightvalue />
+      </condition>
+    </compare>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>272</xloc>
+      <yloc>416</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Set "insert_id" "from" &amp; "to" variables</name>
+    <type>SetVariable</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <field>
+        <field_name>archive_id_from</field_name>
+        <variable_name>QF_MIRROR_COMPARE_ARCHIVE_ID_FROM</variable_name>
+        <variable_type>ROOT_JOB</variable_type>
+        <default_value />
+      </field>
+      <field>
+        <field_name>archive_id_to</field_name>
+        <variable_name>QF_MIRROR_COMPARE_ARCHIVE_ID_TO</variable_name>
+        <variable_type>ROOT_JOB</variable_type>
+        <default_value />
+      </field>
+    </fields>
+    <use_formatting>Y</use_formatting>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>272</xloc>
+      <yloc>576</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
