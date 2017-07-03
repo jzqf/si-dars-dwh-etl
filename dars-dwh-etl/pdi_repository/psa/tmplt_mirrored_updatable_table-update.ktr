@@ -474,7 +474,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/07/03 10:06:21.752</modified_date>
+    <modified_date>2017/07/03 11:12:53.043</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -482,12 +482,12 @@
     <notepad>
       <note>Load the data from the source (OBO) table that will be moved to the target (PSA) table.
 
-It is important to sort these rows chronologically (by either "archive_id" or archive_date") so that if this transformation fails in the 
-middle somewhere and if this transaction does not run in a single transaction, then next time this transformation is executed, we
-want to start again where we left off (by computing, e.g., MAX(archive_id) for the PSA table).</note>
+It is important to sort these rows chronologically (by either the "insert_id" or "inserted_on" columns) so that if this transformation
+fails in the middle somewhere and if this transaction does not run in a single transaction, then next time this transformation is 
+executed, we want to start again where we left off (by computing, e.g., MAX(insert_id) for the PSA table).</note>
       <xloc>272</xloc>
       <yloc>432</yloc>
-      <width>767</width>
+      <width>765</width>
       <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -600,18 +600,18 @@ algorithm that can work with *any* table,  as long as rows cannot be deleted fro
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Get the maximum value stored in column "archive_id" of the target (PSA) DB table that will be updated by this transformation. 
+      <note>Get the maximum value stored in the "insert_id"column of the target (PSA) DB table that will be updated by this transformation. 
 This will be used to the select data from the source (OBO) DB table that was inserted since the last update. 
 
-We could, instead, treat this by getting the maximum value for column "archive_date" and then loading all rows from the source
-table whose value of "archive_date" is >= to this timestamp. We need to include "=" here because of the finite resolutiuon of 
+We could, instead, treat this by getting the maximum value the "inserted_on" column and then loading all rows from the source
+table whose value of "inserted_on" is >= to this timestamp. We need to include "=" here because of the finite resolutiuon of 
 timestamp values. If we used only ">", we could miss rows that were inserted *after* the last update if they received exactly the
-same value as MAX(archive_date) that was obtained here. However, this approach may process a small number of rows from 
+same value as MAX(inserted_on) that was obtained here. However, this approach may process a small number of rows from 
 the source table that were migrated to the target table during the last successful update (again, because timestamp values are 
 not unique), but that is OK here because the algorithm used in this transformation can handle attempts to insert rows that already
 exist in the target table.
 
-Alternatively, we could eliminate this step entirely and load source (OBO) rows for: archive_date >= PARAM_CDC_LAST_LOAD,
+Alternatively, we could eliminate this step entirely and load source (OBO) rows for: inserted_on >= PARAM_CDC_LAST_LOAD,
 but this will not be as efficient for the case when we need to re-start the mirroring process after it fails for some reason. In that
 case we would re-process all of the rows that were successfully mirrored during the previous run.</note>
       <xloc>272</xloc>
@@ -657,36 +657,6 @@ expected, even though it made use of the parameters that were removed.</note>
       <fontcolorblue>0</fontcolorblue>
       <backgroundcolorred>255</backgroundcolorred>
       <backgroundcolorgreen>255</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Replace "finished_date" with "last_updated_on" or whatever 
-column we settle on for an updatable table CDC algorithm.
-Or generate the query dynamically and then inject it. It might
-be simples to specify this column name via a named parameter,
-e.g., PARAM_LAST_UPDATED_ON_COLNAME. But since this
-template transformation does not support parameter passing
-in the usual way, it will requre that this parameter be defined 
-as a variable in the calling transformation:
-
-	tr_mirrored_updatable_table-inject_meta-update</note>
-      <xloc>256</xloc>
-      <yloc>432</yloc>
-      <width>378</width>
-      <heigth>150</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>0</backgroundcolorgreen>
       <backgroundcolorblue>0</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
@@ -778,57 +748,6 @@ as a variable in the calling transformation:
       <drawshadow>Y</drawshadow>
     </notepad>
   </notepads>
-  <connection>
-    <name>dwh_db</name>
-    <server>${QF_DWH_DB_HOST}</server>
-    <type>POSTGRESQL</type>
-    <access>Native</access>
-    <database>${QF_DWH_DB_DATABASE}</database>
-    <port>${QF_DWH_DB_PORT}</port>
-    <username>${QF_DWH_DB_USERNAME}</username>
-    <password>${QF_DWH_DB_PASSWORD}</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
-    <attributes>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>IS_CLUSTERED</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>PORT_NUMBER</code>
-        <attribute>${QF_DWH_DB_PORT}</attribute>
-      </attribute>
-      <attribute>
-        <code>PRESERVE_RESERVED_WORD_CASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>QUOTE_ALL_FIELDS</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>USE_POOLING</code>
-        <attribute>N</attribute>
-      </attribute>
-    </attributes>
-  </connection>
   <connection>
     <name>logging_db</name>
     <server>${QF_LOGGING_DB_HOST}</server>
@@ -1055,9 +974,9 @@ as a variable in the calling transformation:
       <method>none</method>
       <schema_name />
     </partitioning>
-    <connection>dwh_db</connection>
+    <connection>psa_db</connection>
     <sql>SELECT
-    COALESCE(MAX(archive_id), ${QF_ARCHIVE_ID_LOWER_BOUND}) AS max_id
+    COALESCE(MAX(${PARAM_INSERT_ID_COLNAME}), ${QF_ARCHIVE_ID_LOWER_BOUND}) AS max_id
 FROM
     ${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}
 </sql>
@@ -1124,13 +1043,13 @@ FROM
     ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
 WHERE
     (
-        archive_id > ?                                  -- newly INSERTed rows
-        --archive_date >  '${PARAM_CDC_LAST_LOAD}' AND  -- alternate possibility, instead of the previous line
-        OR ${PARAM_LAST_UPDATED_ON_COLNAME} >= '${PARAM_CDC_LAST_LOAD}'    -- updated rows
+        ${PARAM_INSERT_ID_COLNAME} > ?                                  -- newly INSERTed rows
+        --${PARAM_INSERTED_ON_COLNAME} >  '${PARAM_CDC_LAST_LOAD}' AND  -- alternate possibility, instead of the previous line
+        OR ${PARAM_LAST_UPDATED_ON_COLNAME} >= '${PARAM_CDC_LAST_LOAD}' -- updated rows
     )
-	AND archive_date &lt;= '${PARAM_CDC_CURRENT_LOAD}'     -- to avoid loading rows that are inserted after the job starts
+	AND ${PARAM_INSERTED_ON_COLNAME} &lt;= '${PARAM_CDC_CURRENT_LOAD}'     -- to avoid loading rows that are inserted after the job starts
 ORDER BY
-    archive_id</sql>
+    ${PARAM_INSERT_ID_COLNAME}</sql>
     <limit>0</limit>
     <lookup>Write to log: parameters, max_id</lookup>
     <execute_each_row>N</execute_each_row>
