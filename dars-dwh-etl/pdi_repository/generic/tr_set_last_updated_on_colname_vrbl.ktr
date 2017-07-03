@@ -454,7 +454,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/07/02 17:43:55.726</modified_date>
+    <modified_date>2017/07/03 08:39:21.004</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -488,10 +488,10 @@ that functions as a "last_updated_on" column. This transformation has parameters
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>&lt;- TODO: I should abort if more thna one column name is placed in the stream here</note>
+      <note>&lt;- TODO: I should abort if MORE THAN ONE column name is placed in the stream here</note>
       <xloc>352</xloc>
       <yloc>160</yloc>
-      <width>492</width>
+      <width>509</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -512,8 +512,8 @@ that functions as a "last_updated_on" column. This transformation has parameters
       <note>Set PDI variable:
 
 	QF_LAST_UPDATED_ON_COLNAME</note>
-      <xloc>288</xloc>
-      <yloc>432</yloc>
+      <xloc>32</xloc>
+      <yloc>512</yloc>
       <width>242</width>
       <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
@@ -536,8 +536,8 @@ that functions as a "last_updated_on" column. This transformation has parameters
 This Abort step must have the option "Abort with error" selected in 
 order that this situation will be propagated back up to the main job as
 a failure so that a failure email will be sent.</note>
-      <xloc>432</xloc>
-      <yloc>352</yloc>
+      <xloc>256</xloc>
+      <yloc>384</yloc>
       <width>432</width>
       <heigth>66</heigth>
       <fontname>Ubuntu</fontname>
@@ -661,7 +661,7 @@ a failure so that a failure email will be sent.</note>
   <order>
     <hop>
       <from>Get "last_updated_on" column name for source table</from>
-      <to>Write "source_col_name" to log</to>
+      <to>Write "last_updated_on_col_name" to log</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
@@ -670,12 +670,12 @@ a failure so that a failure email will be sent.</note>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Write "source_col_name" to log</from>
+      <from>Write "last_updated_on_col_name" to log</from>
       <to>Detect empty stream</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Write "source_col_name" to log</from>
+      <from>Write "last_updated_on_col_name" to log</from>
       <to>Data Validator</to>
       <enabled>Y</enabled>
     </hop>
@@ -708,8 +708,8 @@ a failure so that a failure email will be sent.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>384</xloc>
-      <yloc>368</yloc>
+      <xloc>352</xloc>
+      <yloc>320</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -728,8 +728,8 @@ a failure so that a failure email will be sent.</note>
     <concat_errors>N</concat_errors>
     <concat_separator>|</concat_separator>
     <validator_field>
-      <name>source_col_name</name>
-      <validation_name>source_col_name NOT NULL</validation_name>
+      <name>last_updated_on_col_name</name>
+      <validation_name>last_updated_on_col_name NOT NULL or blank</validation_name>
       <max_length />
       <min_length>1</min_length>
       <null_allowed>N</null_allowed>
@@ -749,7 +749,7 @@ a failure so that a failure email will be sent.</note>
       <regular_expression />
       <regular_expression_not_allowed />
       <error_code />
-      <error_description />
+      <error_description>last_updated_on_col_name cannot be NULL or blank</error_description>
       <is_sourcing_values>N</is_sourcing_values>
       <sourcing_step />
       <sourcing_field />
@@ -787,8 +787,8 @@ a failure so that a failure email will be sent.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>272</xloc>
-      <yloc>368</yloc>
+      <xloc>352</xloc>
+      <yloc>240</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -805,7 +805,7 @@ a failure so that a failure email will be sent.</note>
     </partitioning>
     <connection>etl_db</connection>
     <sql>SELECT
-    c.source_column_name AS "source_col_name"
+    c.source_column_name AS "last_updated_on_col_name"
 FROM 
     etl.column_meta c 
 INNER JOIN 
@@ -848,7 +848,7 @@ ORDER BY
     </partitioning>
     <fields>
       <field>
-        <field_name>source_col_name</field_name>
+        <field_name>last_updated_on_col_name</field_name>
         <variable_name>QF_LAST_UPDATED_ON_COLNAME</variable_name>
         <variable_type>ROOT_JOB</variable_type>
         <default_value />
@@ -869,7 +869,7 @@ ORDER BY
     </GUI>
   </step>
   <step>
-    <name>Write "source_col_name" to log</name>
+    <name>Write "last_updated_on_col_name" to log</name>
     <type>WriteToLog</type>
     <description />
     <distribute>N</distribute>
@@ -886,7 +886,7 @@ ORDER BY
     <logmessage />
     <fields>
       <field>
-        <name>source_col_name</name>
+        <name>last_updated_on_col_name</name>
       </field>
     </fields>
     <cluster_schema />

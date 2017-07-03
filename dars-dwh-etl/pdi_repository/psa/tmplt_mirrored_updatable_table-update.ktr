@@ -19,8 +19,18 @@
         <description>Timestamp of last successful load from the source database</description>
       </parameter>
       <parameter>
+        <name>PARAM_INSERTED_ON_COLNAME</name>
+        <default_value>inserted_on</default_value>
+        <description>Name of column acting as "inserted_on" timestamp column of source table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_INSERT_ID_COLNAME</name>
+        <default_value>insert_id</default_value>
+        <description>Name of column acting as "insert_id" column of source table</description>
+      </parameter>
+      <parameter>
         <name>PARAM_LAST_UPDATED_ON_COLNAME</name>
-        <default_value />
+        <default_value>last_updated_on</default_value>
         <description>Name of "last_updated_on" timestamp column of source table</description>
       </parameter>
       <parameter>
@@ -464,7 +474,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/07/03 07:09:20.461</modified_date>
+    <modified_date>2017/07/03 10:06:21.752</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -476,7 +486,7 @@ It is important to sort these rows chronologically (by either "archive_id" or ar
 middle somewhere and if this transaction does not run in a single transaction, then next time this transformation is executed, we
 want to start again where we left off (by computing, e.g., MAX(archive_id) for the PSA table).</note>
       <xloc>272</xloc>
-      <yloc>400</yloc>
+      <yloc>432</yloc>
       <width>767</width>
       <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
@@ -517,7 +527,7 @@ it takes a long time for this transformation to end. During this period the "Pau
 running" top" shows that both "postgres"and "java" processes are actively using a 25-75% of the CPU. When this CPU usage stops, 
 the  "Pause" and "Stop" buttons become disabled, showing that the transformation is finally finished. Strange.</note>
       <xloc>272</xloc>
-      <yloc>656</yloc>
+      <yloc>688</yloc>
       <width>773</width>
       <heigth>304</heigth>
       <fontname>Ubuntu</fontname>
@@ -538,7 +548,7 @@ the  "Pause" and "Stop" buttons become disabled, showing that the transformation
     <notepad>
       <note>Get batch ID for current transformation. This will be stored in the PSA table for auditing/logging.</note>
       <xloc>272</xloc>
-      <yloc>512</yloc>
+      <yloc>544</yloc>
       <width>576</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -559,7 +569,7 @@ the  "Pause" and "Stop" buttons become disabled, showing that the transformation
     <notepad>
       <note>This transformation updates the PSA mirror of a table from the source database that can receive INSERTs or UPDATES. This is a generic
 algorithm that can work with *any* table,  as long as rows cannot be deleted from the source or target table, and it has the necessary 
-"archive_id", "archive_date" &amp; "last_updated_on" columns. This transformation has parameters:
+"insert_id", "inserted_on" &amp; "last_updated_on" columns. This transformation has parameters:
 
 	PARAM_CDC_LAST_LOAD				Timestamp for when *all* tables of the PSA were most recently updated successfully
 	PARAM_CDC_CURRENT_LOAD			Used so that a consistent max timestamp is used for all ETL
@@ -567,11 +577,13 @@ algorithm that can work with *any* table,  as long as rows cannot be deleted fro
 	PARAM_SOURCE_TABLE				Name of mirrored table to update
 	PARAM_TARGET_SCHEMA				Name of schema containing target table to update (not currently used)
 	PARAM_TARGET_TABLE					Name of target table to update (not currently used)
+	PARAM_INSERT_ID_COLNAME			Name of column acting as "insert_id"  timestamp column of source table
+	PARAM_INSERTED_ON_COLNAME		Name of column acting as "inserted_on" column of source table
 	PARAM_LAST_UPDATED_ON_COLNAME	Name of "last_updated_on" timestamp column of source table</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
       <width>795</width>
-      <heigth>164</heigth>
+      <heigth>192</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -603,7 +615,7 @@ Alternatively, we could eliminate this step entirely and load source (OBO) rows 
 but this will not be as efficient for the case when we need to re-start the mirroring process after it fails for some reason. In that
 case we would re-process all of the rows that were successfully mirrored during the previous run.</note>
       <xloc>272</xloc>
-      <yloc>176</yloc>
+      <yloc>208</yloc>
       <width>766</width>
       <heigth>206</heigth>
       <fontname>Ubuntu</fontname>
@@ -663,7 +675,7 @@ as a variable in the calling transformation:
 
 	tr_mirrored_updatable_table-inject_meta-update</note>
       <xloc>256</xloc>
-      <yloc>400</yloc>
+      <yloc>432</yloc>
       <width>378</width>
       <heigth>150</heigth>
       <fontname>Ubuntu</fontname>
@@ -684,7 +696,7 @@ as a variable in the calling transformation:
     <notepad>
       <note>Uses "SELECT *" -></note>
       <xloc>0</xloc>
-      <yloc>416</yloc>
+      <yloc>448</yloc>
       <width>117</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -705,7 +717,7 @@ as a variable in the calling transformation:
     <notepad>
       <note>Select and possibly map/rename fields (table column names), as appropriate.</note>
       <xloc>272</xloc>
-      <yloc>592</yloc>
+      <yloc>624</yloc>
       <width>462</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -726,7 +738,7 @@ as a variable in the calling transformation:
     <notepad>
       <note>Metadata injected -></note>
       <xloc>0</xloc>
-      <yloc>592</yloc>
+      <yloc>624</yloc>
       <width>130</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -747,7 +759,7 @@ as a variable in the calling transformation:
     <notepad>
       <note>Metadata injected -></note>
       <xloc>0</xloc>
-      <yloc>816</yloc>
+      <yloc>848</yloc>
       <width>130</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -982,7 +994,7 @@ as a variable in the calling transformation:
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Get max ID for CDC: PSA.schema.table</from>
+      <from>Get max "insert_id" for: PSA.schema.table</from>
       <to>Write to log: parameters, max_id</to>
       <enabled>Y</enabled>
     </hop>
@@ -1028,12 +1040,12 @@ as a variable in the calling transformation:
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>512</yloc>
+      <yloc>544</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Get max ID for CDC: PSA.schema.table</name>
+    <name>Get max "insert_id" for: PSA.schema.table</name>
     <type>TableInput</type>
     <description />
     <distribute>Y</distribute>
@@ -1063,7 +1075,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>240</yloc>
+      <yloc>272</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1090,7 +1102,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>592</yloc>
+      <yloc>624</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1133,7 +1145,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>416</yloc>
+      <yloc>448</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1176,7 +1188,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>704</yloc>
+      <yloc>736</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1210,7 +1222,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>816</yloc>
+      <yloc>848</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1250,7 +1262,7 @@ PARAM_TARGET_TABLE     = ${PARAM_TARGET_TABLE}</logmessage>
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>320</yloc>
+      <yloc>352</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
