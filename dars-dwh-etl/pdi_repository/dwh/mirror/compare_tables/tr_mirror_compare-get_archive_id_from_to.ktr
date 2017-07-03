@@ -454,8 +454,8 @@
 These values are used for selecting rows of the TDP archive DB table and the DWH table so that they can be compared to verify that 
 the TDP archive table is being mirrored correctly. These values are assigned to the variables:
 
-	QF_MIRROR_COMPARE_ARCHIVE_ID_FROM
-	QF_MIRROR_COMPARE_ARCHIVE_ID_TO
+	QF_MIRROR_COMPARE_INSERT_ID_FROM
+	QF_MIRROR_COMPARE_INSERT_ID_TO
 
 This transformation has parameters:
 
@@ -638,7 +638,7 @@ This transformation has parameters:
   <order>
     <hop>
       <from>Get "from" archive_id from TDP table</from>
-      <to>Set QF_MIRROR_COMPARE_ARCHIVE_ID_FROM</to>
+      <to>Set QF_MIRROR_COMPARE_INSERT_ID_FROM</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
@@ -660,7 +660,7 @@ This transformation has parameters:
     </partitioning>
     <connection>obo_db</connection>
     <sql>SELECT
-    COALESCE(MIN(archive_id), ${QF_ARCHIVE_ID_LOWER_BOUND}) AS "archive_id_from"
+    COALESCE(MIN(archive_id), ${QF_ARCHIVE_ID_LOWER_BOUND}) AS "insert_id_from"
 FROM
     ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</sql>
     <limit>0</limit>
@@ -694,7 +694,7 @@ FROM
     </partitioning>
     <connection>dwh_db</connection>
     <sql>SELECT
-    COALESCE(MAX(archive_id), ${QF_ARCHIVE_ID_LOWER_BOUND}) AS "archive_id_to"
+    COALESCE(MAX(archive_id), ${QF_ARCHIVE_ID_LOWER_BOUND}) AS "insert_id_to"
 FROM
     ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
 --WHERE
@@ -718,7 +718,7 @@ FROM
     </GUI>
   </step>
   <step>
-    <name>Set QF_MIRROR_COMPARE_ARCHIVE_ID_FROM</name>
+    <name>Set QF_MIRROR_COMPARE_INSERT_ID_FROM</name>
     <type>SetVariable</type>
     <description />
     <distribute>Y</distribute>
@@ -730,8 +730,8 @@ FROM
     </partitioning>
     <fields>
       <field>
-        <field_name>archive_id_from</field_name>
-        <variable_name>QF_MIRROR_COMPARE_ARCHIVE_ID_FROM</variable_name>
+        <field_name>insert_id_from</field_name>
+        <variable_name>QF_MIRROR_COMPARE_INSERT_ID_FROM</variable_name>
         <variable_type>ROOT_JOB</variable_type>
         <default_value />
       </field>
@@ -763,8 +763,8 @@ FROM
     </partitioning>
     <fields>
       <field>
-        <field_name>archive_id_to</field_name>
-        <variable_name>QF_MIRROR_COMPARE_ARCHIVE_ID_TO</variable_name>
+        <field_name>insert_id_to</field_name>
+        <variable_name>QF_MIRROR_COMPARE_INSERT_ID_TO</variable_name>
         <variable_type>ROOT_JOB</variable_type>
         <default_value />
       </field>

@@ -9,12 +9,12 @@
     <directory>/dwh/mirror/compare_tables</directory>
     <parameters>
       <parameter>
-        <name>PARAM_ARCHIVE_ID_FROM</name>
+        <name>PARAM_INSERT_ID_FROM</name>
         <default_value>-1</default_value>
         <description>Smallest value of "archive_id" to use for selecting rows to compare</description>
       </parameter>
       <parameter>
-        <name>PARAM_ARCHIVE_ID_TO</name>
+        <name>PARAM_INSERT_ID_TO</name>
         <default_value>-1</default_value>
         <description>Largest value of "archive_id" to use for selecting rows to compare</description>
       </parameter>
@@ -485,8 +485,8 @@ as well as the DWH table to which it is mirrored.</note>
       <note>This transformation verifies that the passage.passage table has been correctly mirrored from the TDP archive DB to the DWH.
 This transformation has parameters:
 
-	PARAM_ARCHIVE_ID_FROM		Smallest value of "archive_id" to use for selecting rows to compare
-	PARAM_ARCHIVE_ID_TO			Largest value of "archive_id" to use for selecting rows to compare
+	PARAM_INSERT_ID_FROM		Smallest value of "archive_id" to use for selecting rows to compare
+	PARAM_INSERT_ID_TO			Largest value of "archive_id" to use for selecting rows to compare
 	PARAM_SOURCE_DB_ID			ID of database containing the source tables to mirror
 	PARAM_SOURCE_SCHEMA					Schema of mirrored table to compare
 	PARAM_SOURCE_TABLE					Name of mirrored table to compare
@@ -793,8 +793,8 @@ FROM
 --    ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
     passage.passage
 WHERE
-    archive_id >= ${PARAM_ARCHIVE_ID_FROM} AND
-    archive_id &lt;= ${PARAM_ARCHIVE_ID_TO}
+    archive_id >= ${PARAM_INSERT_ID_FROM} AND
+    archive_id &lt;= ${PARAM_INSERT_ID_TO}
 --    archive_date >  '${PARAM_TIMESTAMP_FROM}' AND 
 --    archive_date &lt;= '${PARAM_TIMESTAMP_TO}'
 ORDER BY
@@ -837,8 +837,8 @@ FROM
 --    ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
     passage.passage
 WHERE
-    archive_id >= ${PARAM_ARCHIVE_ID_FROM} AND
-    archive_id &lt;= ${PARAM_ARCHIVE_ID_TO}
+    archive_id >= ${PARAM_INSERT_ID_FROM} AND
+    archive_id &lt;= ${PARAM_INSERT_ID_TO}
 --    archive_date >  '${PARAM_TIMESTAMP_FROM}' AND 
 --    archive_date &lt;= '${PARAM_TIMESTAMP_TO}'
 ORDER BY

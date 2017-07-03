@@ -9,12 +9,12 @@
     <directory>&#x2f;dwh&#x2f;mirror&#x2f;compare_tables</directory>
     <parameters>
         <parameter>
-            <name>PARAM_ARCHIVE_ID_FROM</name>
+            <name>PARAM_INSERT_ID_FROM</name>
             <default_value>-1</default_value>
             <description>Smallest value of &#x22;archive_id&#x22; to use for selecting rows to compare</description>
         </parameter>
         <parameter>
-            <name>PARAM_ARCHIVE_ID_TO</name>
+            <name>PARAM_INSERT_ID_TO</name>
             <default_value>-1</default_value>
             <description>Largest value of &#x22;archive_id&#x22; to use for selecting rows to compare</description>
         </parameter>
@@ -120,7 +120,7 @@
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>This transformation verifies that the passage.passage_bag table has been correctly mirrored from the TDP archive DB to the DWH.&#xa;This transformation has parameters&#x3a;&#xa;&#xa;	PARAM_ARCHIVE_ID_FROM		Smallest value of &#x22;archive_id&#x22; to use for selecting rows to compare&#xa;	PARAM_ARCHIVE_ID_TO			Largest value of &#x22;archive_id&#x22; to use for selecting rows to compare&#xa;	PARAM_SOURCE_DB_ID			ID of database containing the source tables to mirror&#xa;	PARAM_SOURCE_SCHEMA					Schema of mirrored table to compare&#xa;	PARAM_SOURCE_TABLE					Name of mirrored table to compare&#xa;&#xa;To treat a new table, or to add new columns, modify existing columns or remove existing columns to&#x2f;from the table being &#xa;mirrored, perform the following procedure&#x3a;&#xa;&#xa;A.	Set default value of PARAM_SOURCE_SCHEMA &#x26; PARAM_SOURCE_TABLE to schema &#x26; table that is being treated by this job.&#xa;&#xa;B.	Both &#x22;Table input&#x22; steps &#x28;one for the TDP archive stream and one for the DWH stream&#x29;&#x3a;&#xa;	1.	Check that the &#x22;FROM&#x22; clause refers to the correct schema.table.&#xa;	2.	Check the that &#x22;ORDER BY&#x22; clause refers to the table&#x27;s primary key column.&#xa;&#xa;C.	Both &#x22;Select&#x2f;Rename values&#x22; steps &#x28;one for the TDP archive stream and one for the DWH stream&#x29;&#x3a;&#xa;	1.	Click &#x22;Get fields to select&#x22; button and then select &#x22;Clear and add all&#x22;.&#xa;	2.	Click the &#x22;Fieldname&#x22; header to order the fields in ascending order.&#xa;	3.	Select all fields,  copy them to the clipboard, remove them all and then paste the fields that were just copied.&#xa;		This can all be performed by typing&#x3a;  Ctrl-A, Ctrl-C, Delete, Ctrl-V&#xa;&#xa;D.	&#x22;Merge rows&#x22; step&#x3a;&#xa;	1.	Click &#x22;Get value fields&#x22; and then choose &#x22;Clear and add all&#x22;.&#xa;	2.	Check that the &#x22;Key field&#x22; is correct. If not click &#x22;Get key fields&#x22; and then remove all but the correct key field.</note>
+      <note>This transformation verifies that the passage.passage_bag table has been correctly mirrored from the TDP archive DB to the DWH.&#xa;This transformation has parameters&#x3a;&#xa;&#xa;	PARAM_INSERT_ID_FROM		Smallest value of &#x22;archive_id&#x22; to use for selecting rows to compare&#xa;	PARAM_INSERT_ID_TO			Largest value of &#x22;archive_id&#x22; to use for selecting rows to compare&#xa;	PARAM_SOURCE_DB_ID			ID of database containing the source tables to mirror&#xa;	PARAM_SOURCE_SCHEMA					Schema of mirrored table to compare&#xa;	PARAM_SOURCE_TABLE					Name of mirrored table to compare&#xa;&#xa;To treat a new table, or to add new columns, modify existing columns or remove existing columns to&#x2f;from the table being &#xa;mirrored, perform the following procedure&#x3a;&#xa;&#xa;A.	Set default value of PARAM_SOURCE_SCHEMA &#x26; PARAM_SOURCE_TABLE to schema &#x26; table that is being treated by this job.&#xa;&#xa;B.	Both &#x22;Table input&#x22; steps &#x28;one for the TDP archive stream and one for the DWH stream&#x29;&#x3a;&#xa;	1.	Check that the &#x22;FROM&#x22; clause refers to the correct schema.table.&#xa;	2.	Check the that &#x22;ORDER BY&#x22; clause refers to the table&#x27;s primary key column.&#xa;&#xa;C.	Both &#x22;Select&#x2f;Rename values&#x22; steps &#x28;one for the TDP archive stream and one for the DWH stream&#x29;&#x3a;&#xa;	1.	Click &#x22;Get fields to select&#x22; button and then select &#x22;Clear and add all&#x22;.&#xa;	2.	Click the &#x22;Fieldname&#x22; header to order the fields in ascending order.&#xa;	3.	Select all fields,  copy them to the clipboard, remove them all and then paste the fields that were just copied.&#xa;		This can all be performed by typing&#x3a;  Ctrl-A, Ctrl-C, Delete, Ctrl-V&#xa;&#xa;D.	&#x22;Merge rows&#x22; step&#x3a;&#xa;	1.	Click &#x22;Get value fields&#x22; and then choose &#x22;Clear and add all&#x22;.&#xa;	2.	Check that the &#x22;Key field&#x22; is correct. If not click &#x22;Get key fields&#x22; and then remove all but the correct key field.</note>
       <xloc>16</xloc>
       <yloc>0</yloc>
       <width>877</width>
@@ -295,7 +295,7 @@
            <schema_name/>
            </partitioning>
     <connection>dwh_db</connection>
-    <sql>SELECT&#xa;    &#x2a;&#xa;FROM&#xa;--    &#x24;&#x7b;PARAM_SOURCE_SCHEMA&#x7d;.&#x24;&#x7b;PARAM_SOURCE_TABLE&#x7d;&#xa;    passage.passage_bag&#xa;WHERE&#xa;    archive_id &#x3e;&#x3d; &#x24;&#x7b;PARAM_ARCHIVE_ID_FROM&#x7d; AND&#xa;    archive_id &#x3c;&#x3d; &#x24;&#x7b;PARAM_ARCHIVE_ID_TO&#x7d;&#xa;--    archive_date &#x3e;  &#x27;&#x24;&#x7b;PARAM_TIMESTAMP_FROM&#x7d;&#x27; AND &#xa;--    archive_date &#x3c;&#x3d; &#x27;&#x24;&#x7b;PARAM_TIMESTAMP_TO&#x7d;&#x27;&#xa;ORDER BY&#xa;    property_id&#xa;--    archive_id&#xa;--LIMIT 1100</sql>
+    <sql>SELECT&#xa;    &#x2a;&#xa;FROM&#xa;--    &#x24;&#x7b;PARAM_SOURCE_SCHEMA&#x7d;.&#x24;&#x7b;PARAM_SOURCE_TABLE&#x7d;&#xa;    passage.passage_bag&#xa;WHERE&#xa;    archive_id &#x3e;&#x3d; &#x24;&#x7b;PARAM_INSERT_ID_FROM&#x7d; AND&#xa;    archive_id &#x3c;&#x3d; &#x24;&#x7b;PARAM_INSERT_ID_TO&#x7d;&#xa;--    archive_date &#x3e;  &#x27;&#x24;&#x7b;PARAM_TIMESTAMP_FROM&#x7d;&#x27; AND &#xa;--    archive_date &#x3c;&#x3d; &#x27;&#x24;&#x7b;PARAM_TIMESTAMP_TO&#x7d;&#x27;&#xa;ORDER BY&#xa;    property_id&#xa;--    archive_id&#xa;--LIMIT 1100</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
@@ -321,7 +321,7 @@
            <schema_name/>
            </partitioning>
     <connection>obo_db</connection>
-    <sql>SELECT&#xa;    &#x2a;&#xa;FROM&#xa;--    &#x24;&#x7b;PARAM_SOURCE_SCHEMA&#x7d;.&#x24;&#x7b;PARAM_SOURCE_TABLE&#x7d;&#xa;    passage.passage_bag&#xa;WHERE&#xa;    archive_id &#x3e;&#x3d; &#x24;&#x7b;PARAM_ARCHIVE_ID_FROM&#x7d; AND&#xa;    archive_id &#x3c;&#x3d; &#x24;&#x7b;PARAM_ARCHIVE_ID_TO&#x7d;&#xa;--    archive_date &#x3e;  &#x27;&#x24;&#x7b;PARAM_TIMESTAMP_FROM&#x7d;&#x27; AND &#xa;--    archive_date &#x3c;&#x3d; &#x27;&#x24;&#x7b;PARAM_TIMESTAMP_TO&#x7d;&#x27;&#xa;ORDER BY&#xa;    property_id&#xa;--    archive_id&#xa;--LIMIT 1100</sql>
+    <sql>SELECT&#xa;    &#x2a;&#xa;FROM&#xa;--    &#x24;&#x7b;PARAM_SOURCE_SCHEMA&#x7d;.&#x24;&#x7b;PARAM_SOURCE_TABLE&#x7d;&#xa;    passage.passage_bag&#xa;WHERE&#xa;    archive_id &#x3e;&#x3d; &#x24;&#x7b;PARAM_INSERT_ID_FROM&#x7d; AND&#xa;    archive_id &#x3c;&#x3d; &#x24;&#x7b;PARAM_INSERT_ID_TO&#x7d;&#xa;--    archive_date &#x3e;  &#x27;&#x24;&#x7b;PARAM_TIMESTAMP_FROM&#x7d;&#x27; AND &#xa;--    archive_date &#x3c;&#x3d; &#x27;&#x24;&#x7b;PARAM_TIMESTAMP_TO&#x7d;&#x27;&#xa;ORDER BY&#xa;    property_id&#xa;--    archive_id&#xa;--LIMIT 1100</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>

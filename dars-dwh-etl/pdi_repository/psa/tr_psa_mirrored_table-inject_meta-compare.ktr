@@ -9,12 +9,12 @@
     <directory>/psa</directory>
     <parameters>
       <parameter>
-        <name>PARAM_ARCHIVE_ID_FROM</name>
+        <name>PARAM_INSERT_ID_FROM</name>
         <default_value>100</default_value>
         <description>"from" value for the "insert_id" column of the source OBO table that is being compared to the PSA table</description>
       </parameter>
       <parameter>
-        <name>PARAM_ARCHIVE_ID_TO</name>
+        <name>PARAM_INSERT_ID_TO</name>
         <default_value>110</default_value>
         <description>"to" value for the "insert_id" column of the source OBO table that is being compared to the PSA table</description>
       </parameter>
@@ -501,8 +501,8 @@ available to be injected. This transformation has parameters:
 
 	PARAM_SOURCE_DB_ID				ID the "source" database containing tables will be mirrored to a "target" database
 	PARAM_LAST_LOAD_TIMESTAMP	Timestamp for when the target PSA DB mirror tables were last updated from the source DB
-	PARAM_ARCHIVE_ID_FROM			"from" value for the "insert_id" column of the source OBO table that is being compared to the PSA table
-	PARAM_ARCHIVE_ID_TO			"to" value for the "insert_id" column of the source OBO table that is being compared to the PSA table
+	PARAM_INSERT_ID_FROM			"from" value for the "insert_id" column of the source OBO table that is being compared to the PSA table
+	PARAM_INSERT_ID_TO			"to" value for the "insert_id" column of the source OBO table that is being compared to the PSA table
 	PARAM_INSERT_ID_COLNAME		Name of column acting as "insert_id"  timestamp column of source table
 	PARAM_INSERTED_ON_COLNAME	Name of column acting as "inserted_on" column of source table
 	PARAM_SOURCE_SCHEMA			Name of schema containing source table to compare to target table
@@ -847,7 +847,7 @@ SELECT
     -- Create SELECT statement:
     'SELECT ' || CAST(select_list.str_value AS VARCHAR) || 
     ' FROM ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE} ' || 
-    'WHERE ${PARAM_INSERT_ID_COLNAME} >= ${PARAM_ARCHIVE_ID_FROM} AND ${PARAM_INSERT_ID_COLNAME} &lt;= ${PARAM_ARCHIVE_ID_TO} ' ||
+    'WHERE ${PARAM_INSERT_ID_COLNAME} >= ${PARAM_INSERT_ID_FROM} AND ${PARAM_INSERT_ID_COLNAME} &lt;= ${PARAM_INSERT_ID_TO} ' ||
     'ORDER BY ' || CAST(orderby_list.str_value AS VARCHAR) 
     AS "select_source_rows_sql" 
 FROM
@@ -936,7 +936,7 @@ SELECT
     -- Create SELECT statement:
     'SELECT ' || CAST(select_list.str_value AS VARCHAR) || 
     ' FROM ${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE} ' || 
-    'WHERE ${PARAM_INSERT_ID_COLNAME} >= ${PARAM_ARCHIVE_ID_FROM} AND ${PARAM_INSERT_ID_COLNAME} &lt;= ${PARAM_ARCHIVE_ID_TO} ' ||
+    'WHERE ${PARAM_INSERT_ID_COLNAME} >= ${PARAM_INSERT_ID_FROM} AND ${PARAM_INSERT_ID_COLNAME} &lt;= ${PARAM_INSERT_ID_TO} ' ||
     'ORDER BY ' || CAST(orderby_list.str_value AS VARCHAR) 
     AS "select_source_rows_sql" 
 FROM

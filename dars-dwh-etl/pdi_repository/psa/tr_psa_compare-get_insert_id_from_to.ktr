@@ -1,6 +1,6 @@
 <transformation>
   <info>
-    <name>tr_psa_compare-get_archive_id_from_to</name>
+    <name>tr_psa_compare-get_insert_id_from_to</name>
     <description />
     <extended_description />
     <trans_version />
@@ -479,8 +479,8 @@
 to the PSA. These values are used for selecting rows of the source (OBO) table and the target (PSA) table so that they can be 
 compared to verify that the source table is being mirrored correctly. These values are assigned to the variables:
 
-	QF_MIRROR_COMPARE_ARCHIVE_ID_FROM
-	QF_MIRROR_COMPARE_ARCHIVE_ID_TO
+	QF_MIRROR_COMPARE_INSERT_ID_FROM
+	QF_MIRROR_COMPARE_INSERT_ID_TO
 
 Note 1:	The "from" value is computed from the source (OBO) table, while the "to" value is computed from the target (PSA) column.
 		This is done so that we do not compare rows from the source table that were inserted *after* the last time the target table
@@ -518,8 +518,8 @@ This transformation has parameters:
     </notepad>
     <notepad>
       <note>If a value has been provided for PARAM_MAX_NUM_COMPARE_ROWS *other* than 0,
-adjust "archive_id_from", if necessary, so that no more than the specified number of 
-rows will be compared. In this step, the field "archive_id_from" is configured with:
+adjust "insert_id_from", if necessary, so that no more than the specified number of 
+rows will be compared. In this step, the field "insert_id_from" is configured with:
 
 	Replace value = Y</note>
       <xloc>416</xloc>
@@ -708,17 +708,17 @@ rows will be compared. In this step, the field "archive_id_from" is configured w
     </hop>
     <hop>
       <from>Join Rows (cartesian product)</from>
-      <to>Adjust "archive_id_from", if necessary</to>
+      <to>Adjust "insert_id_from", if necessary</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Adjust "archive_id_from", if necessary</from>
+      <from>Adjust "insert_id_from", if necessary</from>
       <to>Set "insert_id" "from" &amp; "to" variables</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Adjust "archive_id_from", if necessary</name>
+    <name>Adjust "insert_id_from", if necessary</name>
     <type>ScriptValueMod</type>
     <description />
     <distribute>Y</distribute>
@@ -739,7 +739,7 @@ rows will be compared. In this step, the field "archive_id_from" is configured w
 
     This parameter specifies the maximum number of rows to compare.
     If this value is zero, then *all* rows will be compared. If this
-    value is non-zero, then the field "archive_id_from" will be 
+    value is non-zero, then the field "insert_id_from" will be 
     increased, if necessary, so that the specified number of rows
     will be compared.
 
@@ -752,22 +752,22 @@ var max_num_rows = getVariable("PARAM_MAX_NUM_COMPARE_ROWS", "0");
 //Alert("max_num_rows = " + max_num_rows);
 
 if(max_num_rows > 0) {
-	var numRows = archive_id_to - archive_id_from + 1;
+	var numRows = insert_id_to - insert_id_from + 1;
 	//Alert("numRows = " + numRows);
 	if(numRows > max_num_rows){
-		archive_id_from = archive_id_to - max_num_rows + 1;
+		insert_id_from = insert_id_to - max_num_rows + 1;
 	}
 }
 
-//Alert("archive_id_from = " + archive_id_from);
-//Alert("archive_id_to = " + archive_id_to);
+//Alert("insert_id_from = " + insert_id_from);
+//Alert("insert_id_to = " + insert_id_to);
 </jsScript_script>
       </jsScript>
     </jsScripts>
     <fields>
       <field>
-        <name>archive_id_from</name>
-        <rename>archive_id_from</rename>
+        <name>insert_id_from</name>
+        <rename>insert_id_from</rename>
         <type>Integer</type>
         <length>15</length>
         <precision>-1</precision>
@@ -800,7 +800,7 @@ if(max_num_rows > 0) {
     </partitioning>
     <connection>obo_db</connection>
     <sql>SELECT
-    COALESCE(MIN(${PARAM_INSERT_ID_COLNAME}), ${QF_ARCHIVE_ID_LOWER_BOUND}) AS "archive_id_from"
+    COALESCE(MIN(${PARAM_INSERT_ID_COLNAME}), ${QF_ARCHIVE_ID_LOWER_BOUND}) AS "insert_id_from"
 FROM
     ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</sql>
     <limit>0</limit>
@@ -834,7 +834,7 @@ FROM
     </partitioning>
     <connection>psa_db</connection>
     <sql>SELECT
-    COALESCE(MAX(${PARAM_INSERT_ID_COLNAME}), ${QF_ARCHIVE_ID_LOWER_BOUND}) AS "archive_id_to"
+    COALESCE(MAX(${PARAM_INSERT_ID_COLNAME}), ${QF_ARCHIVE_ID_LOWER_BOUND}) AS "insert_id_to"
 FROM
     ${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}
 --WHERE
@@ -906,14 +906,14 @@ FROM
     </partitioning>
     <fields>
       <field>
-        <field_name>archive_id_from</field_name>
-        <variable_name>QF_MIRROR_COMPARE_ARCHIVE_ID_FROM</variable_name>
+        <field_name>insert_id_from</field_name>
+        <variable_name>QF_MIRROR_COMPARE_INSERT_ID_FROM</variable_name>
         <variable_type>ROOT_JOB</variable_type>
         <default_value />
       </field>
       <field>
-        <field_name>archive_id_to</field_name>
-        <variable_name>QF_MIRROR_COMPARE_ARCHIVE_ID_TO</variable_name>
+        <field_name>insert_id_to</field_name>
+        <variable_name>QF_MIRROR_COMPARE_INSERT_ID_TO</variable_name>
         <variable_type>ROOT_JOB</variable_type>
         <default_value />
       </field>
