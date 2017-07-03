@@ -19,6 +19,16 @@
         <description>Timestamp of last successful load from the source database</description>
       </parameter>
       <parameter>
+        <name>PARAM_INSERTED_ON_COLNAME</name>
+        <default_value>inserted_on</default_value>
+        <description>Name of column acting as "inserted_on" timestamp column of source table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_INSERT_ID_COLNAME</name>
+        <default_value>insert_id</default_value>
+        <description>Name of column acting as "insert_id" column of source table</description>
+      </parameter>
+      <parameter>
         <name>PARAM_SOURCE_SCHEMA</name>
         <default_value>passage</default_value>
         <description>Name of schema containing source table to mirror to target table</description>
@@ -459,23 +469,21 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/06/30 10:51:16.477</modified_date>
+    <modified_date>2017/07/03 12:13:40.753</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>Load the data from the source database table that will be moved to the PSA table.
+      <note>Load the data from the source (OBO) table that will be moved to the target (PSA) table.
 
-It is important here to select "replace variables in script?"so that the references "?", ${PARAM_CDC_LAST_LOAD} and 
-${PARAM_CDC_CURRENT_LOAD} will be evaluated.
-
-It is also necessary to specify the step from which fields will  be used to supply values for the "?" replacement characters. 
-In this case, the previous step is specified.</note>
-      <xloc>320</xloc>
-      <yloc>528</yloc>
-      <width>717</width>
-      <heigth>108</heigth>
+It is important to sort these rows chronologically (by either the "insert_id" or "inserted_on" columns) so that if this transformation
+fails in the middle somewhere and if this transaction does not run in a single transaction, then next time this transformation is 
+executed, we want to start again where we left off (by computing, e.g., MAX(insert_id) for the PSA table).</note>
+      <xloc>304</xloc>
+      <yloc>688</yloc>
+      <width>765</width>
+      <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -493,8 +501,8 @@ In this case, the previous step is specified.</note>
     </notepad>
     <notepad>
       <note>Insert the new rows into the target PSA database.</note>
-      <xloc>320</xloc>
-      <yloc>832</yloc>
+      <xloc>304</xloc>
+      <yloc>960</yloc>
       <width>301</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -514,8 +522,8 @@ In this case, the previous step is specified.</note>
     </notepad>
     <notepad>
       <note>Write parameters and max_id value to the log so it will be obvious which values were used.</note>
-      <xloc>320</xloc>
-      <yloc>480</yloc>
+      <xloc>304</xloc>
+      <yloc>624</yloc>
       <width>542</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -535,8 +543,8 @@ In this case, the previous step is specified.</note>
     </notepad>
     <notepad>
       <note>Get batch ID for current transformation. This will be stored in the DWH table.</note>
-      <xloc>320</xloc>
-      <yloc>672</yloc>
+      <xloc>304</xloc>
+      <yloc>800</yloc>
       <width>470</width>
       <heigth>26</heigth>
       <fontname>Ubuntu</fontname>
@@ -555,15 +563,24 @@ In this case, the previous step is specified.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Get the maximum value stored in column "archive_id" of the PSA table that will be updated by this transformation. This will be used 
-to the select data from the source table in the source database that was inserted since the last PSA update. 
+      <note>Get the maximum value stored in the "insert_id"column of the target (PSA) DB table that will be updated by this transformation. 
+This will be used to the select data from the source (OBO) DB table that was inserted since the last update. 
 
-IMPORTANT:	We *cannot* use MAX(archive_date) for this purpose because the "archive_date" column will not, in general, be unique.
-				It may not be unique because of the finite resolution of timestamp values.</note>
-      <xloc>320</xloc>
-      <yloc>176</yloc>
-      <width>798</width>
-      <heigth>80</heigth>
+We could, instead, treat this by getting the maximum value the "inserted_on" column and then loading all rows from the source
+table whose value of "inserted_on" is >= to this timestamp. We need to include "=" here because of the finite resolutiuon of 
+timestamp values. If we used only ">", we could miss rows that were inserted *after* the last update if they received exactly the
+same value as MAX(inserted_on) that was obtained here. However, this approach may process a small number of rows from 
+the source table that were migrated to the target table during the last successful update (again, because timestamp values are 
+not unique), but that is OK here because the algorithm used in this transformation can handle attempts to insert rows that already
+exist in the target table.
+
+Alternatively, we could eliminate this step entirely and load source (OBO) rows for: inserted_on >= PARAM_CDC_LAST_LOAD,
+but this will not be as efficient for the case when we need to re-start the mirroring process after it fails for some reason. In that
+case we would re-process all of the rows that were successfully mirrored during the previous run.</note>
+      <xloc>304</xloc>
+      <yloc>192</yloc>
+      <width>766</width>
+      <heigth>206</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -581,19 +598,21 @@ IMPORTANT:	We *cannot* use MAX(archive_date) for this purpose because the "archi
     </notepad>
     <notepad>
       <note>This transformation updates the PSA mirror of an "insert-only" table from the source database. This is a generic algorithm
-that can work with *any* table,  as long as it is insert-only and it has the necessary "archive_id" &amp; "archive_date" columns. 
+that can work with *any* table,  as long as it is insert-only and it has the necessary  "insert_id" &amp; "inserted_on" columns. 
 This transformation has parameters:
 
-	PARAM_CDC_LAST_LOAD		Timestamp for when *all* tables of the PSA were most recently updated successfully
-	PARAM_CDC_CURRENT_LOAD	Used so that a consistent max timestamp is used for all ETL
-	PARAM_SOURCE_SCHEMA		Schema of mirrored table
-	PARAM_SOURCE_TABLE		Name of mirrored table to update
-	PARAM_TARGET_SCHEMA		Name of schema containing target table to update (not currently used)
-	PARAM_TARGET_TABLE			Name of target table to update (not currently used)</note>
-      <xloc>0</xloc>
+	PARAM_CDC_LAST_LOAD			Timestamp for when *all* tables of the PSA were most recently updated successfully
+	PARAM_CDC_CURRENT_LOAD		Used so that a consistent max timestamp is used for all ETL
+	PARAM_SOURCE_SCHEMA			Schema of mirrored table
+	PARAM_SOURCE_TABLE			Name of mirrored table to update
+	PARAM_TARGET_SCHEMA			Name of schema containing target table to update (not currently used)
+	PARAM_TARGET_TABLE				Name of target table to update (not currently used)
+	PARAM_INSERT_ID_COLNAME		Name of column acting as "insert_id"  timestamp column of source table
+	PARAM_INSERTED_ON_COLNAME	Name of column acting as "inserted_on" column of source table</note>
+      <xloc>16</xloc>
       <yloc>0</yloc>
-      <width>722</width>
-      <heigth>150</heigth>
+      <width>746</width>
+      <heigth>178</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -623,8 +642,8 @@ This transformation has parameters:
 		The schema and table names that you specified in step 3 above will be used to generate the SQL DDL commands for that table.
 		Before executing the SQL, modify it where appropriate. For example, replace "UNKNOWN" for timestamp columns with 
 		"timestamp without time zone", ...</note>
-      <xloc>320</xloc>
-      <yloc>272</yloc>
+      <xloc>304</xloc>
+      <yloc>416</yloc>
       <width>801</width>
       <heigth>192</heigth>
       <fontname>Ubuntu</fontname>
@@ -644,8 +663,8 @@ This transformation has parameters:
     </notepad>
     <notepad>
       <note>Select and possibly rename fields (table column names), as appropriate.</note>
-      <xloc>320</xloc>
-      <yloc>752</yloc>
+      <xloc>304</xloc>
+      <yloc>880</yloc>
       <width>431</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -666,7 +685,7 @@ This transformation has parameters:
     <notepad>
       <note>Metadata injected -></note>
       <xloc>0</xloc>
-      <yloc>752</yloc>
+      <yloc>880</yloc>
       <width>130</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -687,7 +706,7 @@ This transformation has parameters:
     <notepad>
       <note>Uses "SELECT *" -></note>
       <xloc>0</xloc>
-      <yloc>592</yloc>
+      <yloc>720</yloc>
       <width>117</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -997,8 +1016,8 @@ expected, even though it made use of the parameters that were removed.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>672</yloc>
+      <xloc>128</xloc>
+      <yloc>800</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1015,7 +1034,7 @@ expected, even though it made use of the parameters that were removed.</note>
     </partitioning>
     <connection>psa_db</connection>
     <sql>SELECT
-    COALESCE(MAX(archive_id), ${QF_ARCHIVE_ID_LOWER_BOUND}) AS max_id
+    COALESCE(MAX(${PARAM_INSERT_ID_COLNAME}), ${QF_ARCHIVE_ID_LOWER_BOUND}) AS max_id
 FROM
     ${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}
 </sql>
@@ -1032,8 +1051,8 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>208</yloc>
+      <xloc>128</xloc>
+      <yloc>224</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1059,8 +1078,8 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>752</yloc>
+      <xloc>128</xloc>
+      <yloc>880</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1092,8 +1111,8 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>256</xloc>
-      <yloc>320</yloc>
+      <xloc>240</xloc>
+      <yloc>464</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1114,11 +1133,11 @@ FROM
 FROM
     ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
 WHERE
-    archive_id > ? AND                              -- newly INSERTed rows
-    --archive_date >  '${PARAM_CDC_LAST_LOAD}' AND  -- alternate possibility, instead of the previous line
-	archive_date &lt;= '${PARAM_CDC_CURRENT_LOAD}'     -- to avoid loading rows that are inserted after the job starts
+    ${PARAM_INSERT_ID_COLNAME} > ? AND                            -- newly INSERTed rows
+    --${PARAM_INSERT_ID_COLNAME} >  '${PARAM_CDC_LAST_LOAD}' AND  -- alternate possibility, instead of the previous line
+	${PARAM_INSERTED_ON_COLNAME}  &lt;= '${PARAM_CDC_CURRENT_LOAD}'  -- to avoid loading rows that are inserted after the job starts
 ORDER BY
-    archive_id</sql>
+    ${PARAM_INSERT_ID_COLNAME}</sql>
     <limit>0</limit>
     <lookup>Write to log: parameters, max_id</lookup>
     <execute_each_row>N</execute_each_row>
@@ -1132,8 +1151,8 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>592</yloc>
+      <xloc>128</xloc>
+      <yloc>720</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1175,8 +1194,8 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>832</yloc>
+      <xloc>128</xloc>
+      <yloc>960</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1215,8 +1234,8 @@ PARAM_TARGET_TABLE     = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>480</yloc>
+      <xloc>128</xloc>
+      <yloc>624</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
