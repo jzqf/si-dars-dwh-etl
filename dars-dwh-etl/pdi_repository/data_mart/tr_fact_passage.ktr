@@ -725,7 +725,7 @@
            </partitioning>
     <fields>
       <field>
-        <name>etl_batch_id</name>
+        <name>etl_batch_id_insert</name>
         <type>batch ID</type>
         </field>
       </fields>
@@ -952,7 +952,7 @@
       </field>      <field>        <name>sent_time_tk</name>
       </field>      <field>        <name>charging_point_lane_tk</name>
       </field>      <field>        <name>archive_id</name>
-      </field>      <field>        <name>etl_batch_id</name>
+      </field>      <field>        <name>etl_batch_id_insert</name>
       </field>      <field>        <name>count_passages</name>
       </field>        <select_unspecified>N</select_unspecified>
       <meta>        <name>count_passages</name>
@@ -1016,7 +1016,7 @@
            <schema_name/>
            </partitioning>
     <connection>dma_source_db</connection>
-    <sql>SELECT&#xa;  passage_id&#xa;--, passage_status_id&#xa;--, component_id&#xa;, passage_date&#xa;, arrival_date&#xa;, finished_date&#xa;, sent_date&#xa;--, service_provider_id&#xa;, charging_point_id&#xa;, lane_id charging_point_lane_id&#xa;--, vehicle_direction_id&#xa;--, pcs_rate&#xa;--, avc_class_id&#xa;--, passage_priority&#xa;--, passage_type_id&#xa;--, external_passage_id&#xa;--, passage_group_id&#xa;--, propertybag&#xa;, archive_id&#xa;--, archive_date&#xa;--, etl_batch_id&#xa;--, completion_category_id&#xa;--, completion_sub_category_id&#xa;--, wf_version_id&#xa;FROM&#xa;    passage.passage&#xa;WHERE&#xa;    archive_id &#x3e; &#x3f;&#xa;ORDER BY&#xa;    archive_id</sql>
+    <sql>SELECT&#xa;  passage_id&#xa;--, passage_status_id&#xa;--, component_id&#xa;, passage_date&#xa;, arrival_date&#xa;, finished_date&#xa;, sent_date&#xa;--, service_provider_id&#xa;, charging_point_id&#xa;, lane_id charging_point_lane_id&#xa;--, vehicle_direction_id&#xa;--, pcs_rate&#xa;--, avc_class_id&#xa;--, passage_priority&#xa;--, passage_type_id&#xa;--, external_passage_id&#xa;--, passage_group_id&#xa;--, propertybag&#xa;, archive_id&#xa;--, archive_date&#xa;--, etl_batch_id_insert&#xa;--, completion_category_id&#xa;--, completion_sub_category_id&#xa;--, wf_version_id&#xa;FROM&#xa;    passage.passage&#xa;WHERE&#xa;    archive_id &#x3e; &#x3f;&#xa;ORDER BY&#xa;    archive_id</sql>
     <limit>0</limit>
     <lookup>Write to log&#x3a; max_id</lookup>
     <execute_each_row>N</execute_each_row>
@@ -1120,8 +1120,8 @@
           <stream_name>archive_id</stream_name>
         </field>
         <field>
-          <column_name>etl_batch_id</column_name>
-          <stream_name>etl_batch_id</stream_name>
+          <column_name>etl_batch_id_insert</column_name>
+          <stream_name>etl_batch_id_insert</stream_name>
         </field>
         <field>
           <column_name>count_passages</column_name>
