@@ -469,7 +469,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/07/03 12:13:40.753</modified_date>
+    <modified_date>2017/07/04 11:16:58.688</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -502,7 +502,7 @@ executed, we want to start again where we left off (by computing, e.g., MAX(inse
     <notepad>
       <note>Insert the new rows into the target PSA database.</note>
       <xloc>304</xloc>
-      <yloc>960</yloc>
+      <yloc>912</yloc>
       <width>301</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -542,11 +542,12 @@ executed, we want to start again where we left off (by computing, e.g., MAX(inse
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Get batch ID for current transformation. This will be stored in the DWH table.</note>
+      <note>Get batch ID for current transformation. This will be stored in the PSA table for auditing/logging. This step *must* come after the 
+"Map column names" step because the metadata injected into that step does not include this column/field.</note>
       <xloc>304</xloc>
-      <yloc>800</yloc>
-      <width>470</width>
-      <heigth>26</heigth>
+      <yloc>848</yloc>
+      <width>767</width>
+      <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -664,7 +665,7 @@ This transformation has parameters:
     <notepad>
       <note>Select and possibly rename fields (table column names), as appropriate.</note>
       <xloc>304</xloc>
-      <yloc>880</yloc>
+      <yloc>784</yloc>
       <width>431</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -685,7 +686,7 @@ This transformation has parameters:
     <notepad>
       <note>Metadata injected -></note>
       <xloc>0</xloc>
-      <yloc>880</yloc>
+      <yloc>784</yloc>
       <width>130</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -966,11 +967,6 @@ expected, even though it made use of the parameters that were removed.</note>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Table input -  OBO.schema.table</from>
-      <to>Get System Info - transformation batch ID</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>Write to log: parameters, max_id</from>
       <to>Table input -  OBO.schema.table</to>
       <enabled>Y</enabled>
@@ -981,18 +977,23 @@ expected, even though it made use of the parameters that were removed.</note>
       <enabled>N</enabled>
     </hop>
     <hop>
-      <from>Get System Info - transformation batch ID</from>
-      <to>Map column names</to>
+      <from>Map column names</from>
+      <to>Set etl_batch_id = Xform batch ID</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Map column names</from>
+      <from>Set etl_batch_id = Xform batch ID</from>
       <to>Table output - PSA.schema.table</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Table input -  OBO.schema.table</from>
+      <to>Map column names</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Get System Info - transformation batch ID</name>
+    <name>Set etl_batch_id = Xform batch ID</name>
     <type>SystemInfo</type>
     <description />
     <distribute>Y</distribute>
@@ -1017,7 +1018,7 @@ expected, even though it made use of the parameters that were removed.</note>
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>800</yloc>
+      <yloc>848</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1079,7 +1080,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>880</yloc>
+      <yloc>784</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1195,7 +1196,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>960</yloc>
+      <yloc>912</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
