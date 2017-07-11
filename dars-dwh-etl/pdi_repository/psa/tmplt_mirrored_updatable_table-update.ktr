@@ -474,7 +474,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/07/03 10:06:21.752</modified_date>
+    <modified_date>2017/07/05 13:48:35.693</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -482,12 +482,12 @@
     <notepad>
       <note>Load the data from the source (OBO) table that will be moved to the target (PSA) table.
 
-It is important to sort these rows chronologically (by either "archive_id" or archive_date") so that if this transformation fails in the 
-middle somewhere and if this transaction does not run in a single transaction, then next time this transformation is executed, we
-want to start again where we left off (by computing, e.g., MAX(archive_id) for the PSA table).</note>
+It is important to sort these rows chronologically (by either the "insert_id" or "inserted_on" columns) so that if this transformation
+fails in the middle somewhere and if this transaction does not run in a single transaction, then next time this transformation is 
+executed, we want to start again where we left off (by computing, e.g., MAX(insert_id) for the PSA table).</note>
       <xloc>272</xloc>
       <yloc>432</yloc>
-      <width>767</width>
+      <width>765</width>
       <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -505,9 +505,11 @@ want to start again where we left off (by computing, e.g., MAX(archive_id) for t
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Insert new rows into the DWH using a "Table output" step. Updates are handled by the "Update" step via an error handling hop. 
-'This requires a primary key constraint for the target table (or at least a "unique" constraint on the primary key column(s); 
-otherwise, error handling will not be triggered when attempting to insert a new row with a duplicate key.
+      <note>Insert new rows into the DWH using a "Table output" step. Error handing is enabled for this step so that if a rows already exists,
+the rows are passed to an "Update" step.
+
+IMPORTANT:	A primary key constraint (or at least a "unique" constraint on the primary key column(s)) for the target table is 
+				*required*; otherwise, error handling will not be triggered when attempting to insert a row with a duplicate key.
 
 PDI does not fully support error handling when using "batch processing" with the PostgreSQL JDBC driver (a message to this 
 effect is displayed when accepting the transformation settings dialog), so make sure "Use batch update for inserts" is *not* 
@@ -527,9 +529,9 @@ it takes a long time for this transformation to end. During this period the "Pau
 running" top" shows that both "postgres"and "java" processes are actively using a 25-75% of the CPU. When this CPU usage stops, 
 the  "Pause" and "Stop" buttons become disabled, showing that the transformation is finally finished. Strange.</note>
       <xloc>272</xloc>
-      <yloc>688</yloc>
+      <yloc>656</yloc>
       <width>773</width>
-      <heigth>304</heigth>
+      <heigth>332</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -546,11 +548,12 @@ the  "Pause" and "Stop" buttons become disabled, showing that the transformation
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Get batch ID for current transformation. This will be stored in the PSA table for auditing/logging.</note>
+      <note>Get batch ID for current transformation. This will be stored in the PSA table for auditing/logging. This step *must* come after the
+"Map column names" step because the metadata injected into that step does not include this column/field.</note>
       <xloc>272</xloc>
-      <yloc>544</yloc>
-      <width>576</width>
-      <heigth>24</heigth>
+      <yloc>592</yloc>
+      <width>764</width>
+      <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -600,18 +603,18 @@ algorithm that can work with *any* table,  as long as rows cannot be deleted fro
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Get the maximum value stored in column "archive_id" of the target (PSA) DB table that will be updated by this transformation. 
+      <note>Get the maximum value stored in the "insert_id"column of the target (PSA) DB table that will be updated by this transformation. 
 This will be used to the select data from the source (OBO) DB table that was inserted since the last update. 
 
-We could, instead, treat this by getting the maximum value for column "archive_date" and then loading all rows from the source
-table whose value of "archive_date" is >= to this timestamp. We need to include "=" here because of the finite resolutiuon of 
+We could, instead, treat this by getting the maximum value the "inserted_on" column and then loading all rows from the source
+table whose value of "inserted_on" is >= to this timestamp. We need to include "=" here because of the finite resolutiuon of 
 timestamp values. If we used only ">", we could miss rows that were inserted *after* the last update if they received exactly the
-same value as MAX(archive_date) that was obtained here. However, this approach may process a small number of rows from 
+same value as MAX(inserted_on) that was obtained here. However, this approach may process a small number of rows from 
 the source table that were migrated to the target table during the last successful update (again, because timestamp values are 
 not unique), but that is OK here because the algorithm used in this transformation can handle attempts to insert rows that already
 exist in the target table.
 
-Alternatively, we could eliminate this step entirely and load source (OBO) rows for: archive_date >= PARAM_CDC_LAST_LOAD,
+Alternatively, we could eliminate this step entirely and load source (OBO) rows for: inserted_on >= PARAM_CDC_LAST_LOAD,
 but this will not be as efficient for the case when we need to re-start the mirroring process after it fails for some reason. In that
 case we would re-process all of the rows that were successfully mirrored during the previous run.</note>
       <xloc>272</xloc>
@@ -640,14 +643,16 @@ is responsible for executing this template transformation) does not support para
 that the parameters that are defined for this template transformation can be used as expected. The explanation for this
 behaviour *MAY* be that the references to these parameters, e.g., ${PARAM_SOURCE_TABLE}, in this transformation are
 simply using the values defined for these variables in the parent transformation that contains the "ETL Metadata Injection" 
-step that references this  template transformation. Fortunately, all of the parameters that are used by this transformation
-are defined with the correct values in the parent transforation. I have tested this by removing the parameters entirely in 
-transformation"tmplt_mirrored_insert_only_table-update-NO_PARAMS". The result was that the transformation ran as 
-expected, even though it made use of the parameters that were removed.</note>
+step that references this template transformation. Fortunately, all of the parameters that are used by this transformation
+are defined with the correct values in the parent transformation. I have tested this by removing the parameters entirely. The 
+result was that the transformation ran as expected, even though it made use of the parameters that were removed.
+
+Note that if a target file is created by the "ETL metadata Ijection" step, then that transformation *can* have its parameters 
+passed to it in the normal fashion because it is a normal transformation (all metadata has been injected into it).</note>
       <xloc>816</xloc>
       <yloc>0</yloc>
       <width>749</width>
-      <heigth>150</heigth>
+      <heigth>178</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -657,36 +662,6 @@ expected, even though it made use of the parameters that were removed.</note>
       <fontcolorblue>0</fontcolorblue>
       <backgroundcolorred>255</backgroundcolorred>
       <backgroundcolorgreen>255</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Replace "finished_date" with "last_updated_on" or whatever 
-column we settle on for an updatable table CDC algorithm.
-Or generate the query dynamically and then inject it. It might
-be simples to specify this column name via a named parameter,
-e.g., PARAM_LAST_UPDATED_ON_COLNAME. But since this
-template transformation does not support parameter passing
-in the usual way, it will requre that this parameter be defined 
-as a variable in the calling transformation:
-
-	tr_mirrored_updatable_table-inject_meta-update</note>
-      <xloc>256</xloc>
-      <yloc>432</yloc>
-      <width>378</width>
-      <heigth>150</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>0</backgroundcolorgreen>
       <backgroundcolorblue>0</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
@@ -717,7 +692,7 @@ as a variable in the calling transformation:
     <notepad>
       <note>Select and possibly map/rename fields (table column names), as appropriate.</note>
       <xloc>272</xloc>
-      <yloc>624</yloc>
+      <yloc>528</yloc>
       <width>462</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -738,7 +713,7 @@ as a variable in the calling transformation:
     <notepad>
       <note>Metadata injected -></note>
       <xloc>0</xloc>
-      <yloc>624</yloc>
+      <yloc>528</yloc>
       <width>130</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -759,7 +734,7 @@ as a variable in the calling transformation:
     <notepad>
       <note>Metadata injected -></note>
       <xloc>0</xloc>
-      <yloc>848</yloc>
+      <yloc>880</yloc>
       <width>130</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -778,57 +753,6 @@ as a variable in the calling transformation:
       <drawshadow>Y</drawshadow>
     </notepad>
   </notepads>
-  <connection>
-    <name>dwh_db</name>
-    <server>${QF_DWH_DB_HOST}</server>
-    <type>POSTGRESQL</type>
-    <access>Native</access>
-    <database>${QF_DWH_DB_DATABASE}</database>
-    <port>${QF_DWH_DB_PORT}</port>
-    <username>${QF_DWH_DB_USERNAME}</username>
-    <password>${QF_DWH_DB_PASSWORD}</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
-    <attributes>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>IS_CLUSTERED</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>PORT_NUMBER</code>
-        <attribute>${QF_DWH_DB_PORT}</attribute>
-      </attribute>
-      <attribute>
-        <code>PRESERVE_RESERVED_WORD_CASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>QUOTE_ALL_FIELDS</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>USE_POOLING</code>
-        <attribute>N</attribute>
-      </attribute>
-    </attributes>
-  </connection>
   <connection>
     <name>logging_db</name>
     <server>${QF_LOGGING_DB_HOST}</server>
@@ -984,16 +908,6 @@ as a variable in the calling transformation:
   </connection>
   <order>
     <hop>
-      <from>Table input -  OBO.schema.table</from>
-      <to>Get System Info - transformation batch ID</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Table output - PSA.schema.table</from>
-      <to>Update - PSA.schema.table</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>Get max "insert_id" for: PSA.schema.table</from>
       <to>Write to log: parameters, max_id</to>
       <enabled>Y</enabled>
@@ -1004,46 +918,31 @@ as a variable in the calling transformation:
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Get System Info - transformation batch ID</from>
-      <to>Map column names</to>
+      <from>Table output - PSA.schema.table</from>
+      <to>Set etl_batch_id_last_update = Xform batch ID</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Set etl_batch_id_last_update = Xform batch ID</from>
+      <to>Update - PSA.schema.table</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
       <from>Map column names</from>
+      <to>Set etl_batch_id_insert = Xform batch ID</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Set etl_batch_id_insert = Xform batch ID</from>
       <to>Table output - PSA.schema.table</to>
       <enabled>Y</enabled>
     </hop>
+    <hop>
+      <from>Table input -  OBO.schema.table</from>
+      <to>Map column names</to>
+      <enabled>Y</enabled>
+    </hop>
   </order>
-  <step>
-    <name>Get System Info - transformation batch ID</name>
-    <type>SystemInfo</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <fields>
-      <field>
-        <name>etl_batch_id</name>
-        <type>batch ID</type>
-      </field>
-    </fields>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>128</xloc>
-      <yloc>544</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
   <step>
     <name>Get max "insert_id" for: PSA.schema.table</name>
     <type>TableInput</type>
@@ -1055,9 +954,9 @@ as a variable in the calling transformation:
       <method>none</method>
       <schema_name />
     </partitioning>
-    <connection>dwh_db</connection>
+    <connection>psa_db</connection>
     <sql>SELECT
-    COALESCE(MAX(archive_id), ${QF_ARCHIVE_ID_LOWER_BOUND}) AS max_id
+    COALESCE(MAX(${PARAM_INSERT_ID_COLNAME}), ${QF_ARCHIVE_ID_LOWER_BOUND}) AS max_id
 FROM
     ${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}
 </sql>
@@ -1102,7 +1001,67 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>624</yloc>
+      <yloc>528</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Set etl_batch_id_insert = Xform batch ID</name>
+    <type>SystemInfo</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <field>
+        <name>etl_batch_id_insert</name>
+        <type>batch ID</type>
+      </field>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>128</xloc>
+      <yloc>592</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Set etl_batch_id_last_update = Xform batch ID</name>
+    <type>SystemInfo</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <field>
+        <name>etl_batch_id_last_update</name>
+        <type>batch ID</type>
+      </field>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>128</xloc>
+      <yloc>800</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1124,13 +1083,13 @@ FROM
     ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
 WHERE
     (
-        archive_id > ?                                  -- newly INSERTed rows
-        --archive_date >  '${PARAM_CDC_LAST_LOAD}' AND  -- alternate possibility, instead of the previous line
-        OR ${PARAM_LAST_UPDATED_ON_COLNAME} >= '${PARAM_CDC_LAST_LOAD}'    -- updated rows
+        ${PARAM_INSERT_ID_COLNAME} > ?                                  -- newly INSERTed rows
+        --${PARAM_INSERTED_ON_COLNAME} >  '${PARAM_CDC_LAST_LOAD}' AND  -- alternate possibility, instead of the previous line
+        OR ${PARAM_LAST_UPDATED_ON_COLNAME} >= '${PARAM_CDC_LAST_LOAD}' -- updated rows
     )
-	AND archive_date &lt;= '${PARAM_CDC_CURRENT_LOAD}'     -- to avoid loading rows that are inserted after the job starts
+	AND ${PARAM_INSERTED_ON_COLNAME} &lt;= '${PARAM_CDC_CURRENT_LOAD}'     -- to avoid loading rows that are inserted after the job starts
 ORDER BY
-    archive_id</sql>
+    ${PARAM_INSERT_ID_COLNAME}</sql>
     <limit>0</limit>
     <lookup>Write to log: parameters, max_id</lookup>
     <execute_each_row>N</execute_each_row>
@@ -1188,7 +1147,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>736</yloc>
+      <yloc>704</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1222,7 +1181,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>848</yloc>
+      <yloc>880</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1269,7 +1228,7 @@ PARAM_TARGET_TABLE     = ${PARAM_TARGET_TABLE}</logmessage>
   <step_error_handling>
     <error>
       <source_step>Table output - PSA.schema.table</source_step>
-      <target_step>Update - PSA.schema.table</target_step>
+      <target_step>Set etl_batch_id_last_update = Xform batch ID</target_step>
       <is_enabled>Y</is_enabled>
       <nr_valuename />
       <descriptions_valuename />

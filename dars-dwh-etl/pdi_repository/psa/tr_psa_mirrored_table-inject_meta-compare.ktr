@@ -9,14 +9,24 @@
     <directory>/psa</directory>
     <parameters>
       <parameter>
-        <name>PARAM_ARCHIVE_ID_FROM</name>
-        <default_value>100</default_value>
-        <description>"from" value for the "archive_id" column of the source OBO table that is being compared to the PSA table</description>
+        <name>PARAM_INSERTED_ON_COLNAME</name>
+        <default_value>inserted_on</default_value>
+        <description>Name of column acting as "inserted_on" timestamp column of source table</description>
       </parameter>
       <parameter>
-        <name>PARAM_ARCHIVE_ID_TO</name>
+        <name>PARAM_INSERT_ID_COLNAME</name>
+        <default_value>insert_id</default_value>
+        <description>Name of column acting as "insert_id" column of source table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_INSERT_ID_FROM</name>
+        <default_value>100</default_value>
+        <description>"from" value for the "insert_id" column of the source OBO table that is being compared to the PSA table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_INSERT_ID_TO</name>
         <default_value>110</default_value>
-        <description>"to" value for the "archive_id" column of the source OBO table that is being compared to the PSA table</description>
+        <description>"to" value for the "insert_id" column of the source OBO table that is being compared to the PSA table</description>
       </parameter>
       <parameter>
         <name>PARAM_LAST_LOAD_TIMESTAMP</name>
@@ -479,7 +489,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/06/28 14:39:04.575</modified_date>
+    <modified_date>2017/07/05 13:15:58.182</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -491,8 +501,10 @@ available to be injected. This transformation has parameters:
 
 	PARAM_SOURCE_DB_ID				ID the "source" database containing tables will be mirrored to a "target" database
 	PARAM_LAST_LOAD_TIMESTAMP	Timestamp for when the target PSA DB mirror tables were last updated from the source DB
-	PARAM_ARCHIVE_ID_FROM			"from" value for the "archive_id" column of the source OBO table that is being compared to the PSA table
-	PARAM_ARCHIVE_ID_TO			"to" value for the "archive_id" column of the source OBO table that is being compared to the PSA table
+	PARAM_INSERT_ID_FROM			"from" value for the "insert_id" column of the source OBO table that is being compared to the PSA table
+	PARAM_INSERT_ID_TO			"to" value for the "insert_id" column of the source OBO table that is being compared to the PSA table
+	PARAM_INSERT_ID_COLNAME		Name of column acting as "insert_id"  timestamp column of source table
+	PARAM_INSERTED_ON_COLNAME	Name of column acting as "inserted_on" column of source table
 	PARAM_SOURCE_SCHEMA			Name of schema containing source table to compare to target table
 	PARAM_SOURCE_TABLE			Name of source table to compare to target table
 	PARAM_SOURCE_SCHEMA_TABLE	${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
@@ -501,8 +513,8 @@ available to be injected. This transformation has parameters:
 	PARAM_TARGET_SCHEMA_TABLE	${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>867</width>
-      <heigth>206</heigth>
+      <width>858</width>
+      <heigth>234</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -525,7 +537,7 @@ column names must match the query in
 where this transformation is executed. See the 
 comments in that job for an explanation.</note>
       <xloc>0</xloc>
-      <yloc>384</yloc>
+      <yloc>416</yloc>
       <width>283</width>
       <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
@@ -550,7 +562,7 @@ column names must match the query in
 where this transformation is executed. See the 
 comments in that job for an explanation.</note>
       <xloc>304</xloc>
-      <yloc>496</yloc>
+      <yloc>528</yloc>
       <width>283</width>
       <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
@@ -753,8 +765,8 @@ comments in that job for an explanation.</note>
         <target_step_name>Get rows from target (PSA) DB table</target_step_name>
         <target_attribute_key>SQL</target_attribute_key>
         <target_detail>N</target_detail>
-        <source_step>SELECT statement for source (OBO) DB</source_step>
-        <source_field>select_source_rows_sql</source_field>
+        <source_step>SELECT statement for target (PSA) DB</source_step>
+        <source_field>select_target_rows_sql</source_field>
       </mapping>
       <mapping>
         <target_step_name>Rename PSA field names -> OBO field names</target_step_name>
@@ -773,7 +785,7 @@ comments in that job for an explanation.</note>
     </remotesteps>
     <GUI>
       <xloc>416</xloc>
-      <yloc>320</yloc>
+      <yloc>352</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -835,7 +847,7 @@ SELECT
     -- Create SELECT statement:
     'SELECT ' || CAST(select_list.str_value AS VARCHAR) || 
     ' FROM ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE} ' || 
-    'WHERE archive_id >= ${PARAM_ARCHIVE_ID_FROM} AND archive_id &lt;= ${PARAM_ARCHIVE_ID_TO} ' ||
+    'WHERE ${PARAM_INSERT_ID_COLNAME} >= ${PARAM_INSERT_ID_FROM} AND ${PARAM_INSERT_ID_COLNAME} &lt;= ${PARAM_INSERT_ID_TO} ' ||
     'ORDER BY ' || CAST(orderby_list.str_value AS VARCHAR) 
     AS "select_source_rows_sql" 
 FROM
@@ -856,7 +868,7 @@ CROSS JOIN
     </remotesteps>
     <GUI>
       <xloc>272</xloc>
-      <yloc>224</yloc>
+      <yloc>256</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -924,9 +936,9 @@ SELECT
     -- Create SELECT statement:
     'SELECT ' || CAST(select_list.str_value AS VARCHAR) || 
     ' FROM ${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE} ' || 
-    'WHERE archive_id >= ${PARAM_ARCHIVE_ID_FROM} AND archive_id &lt;= ${PARAM_ARCHIVE_ID_TO} ' ||
+    'WHERE ${PARAM_INSERT_ID_COLNAME} >= ${PARAM_INSERT_ID_FROM} AND ${PARAM_INSERT_ID_COLNAME} &lt;= ${PARAM_INSERT_ID_TO} ' ||
     'ORDER BY ' || CAST(orderby_list.str_value AS VARCHAR) 
-    AS "select_source_rows_sql" 
+    AS "select_target_rows_sql" 
 FROM
     select_list
 CROSS JOIN
@@ -945,7 +957,7 @@ CROSS JOIN
     </remotesteps>
     <GUI>
       <xloc>608</xloc>
-      <yloc>224</yloc>
+      <yloc>256</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -990,7 +1002,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>112</xloc>
-      <yloc>320</yloc>
+      <yloc>352</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1033,7 +1045,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>416</xloc>
-      <yloc>432</yloc>
+      <yloc>464</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1081,7 +1093,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>720</xloc>
-      <yloc>320</yloc>
+      <yloc>352</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

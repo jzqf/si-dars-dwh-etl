@@ -1,6 +1,6 @@
 <transformation>
   <info>
-    <name>tmplt_mirrored_insert_only_table-update-NO_PARAMS</name>
+    <name>tr_psa_compare-get_insert_id_from_to</name>
     <description />
     <extended_description />
     <trans_version />
@@ -8,6 +8,46 @@
     <trans_status>0</trans_status>
     <directory>/psa</directory>
     <parameters>
+      <parameter>
+        <name>PARAM_INSERTED_ON_COLNAME</name>
+        <default_value>inserted_on</default_value>
+        <description>Name of column acting as "inserted_on" timestamp column of source table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_INSERT_ID_COLNAME</name>
+        <default_value>insert_id</default_value>
+        <description>Name of column acting as "insert_id" column of source table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_LAST_LOAD_TIMESTAMP</name>
+        <default_value>1900-01-01 00:00:00</default_value>
+        <description>Timestamp for when the target PSA DB mirror tables were last updated from the source DB</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_MAX_NUM_COMPARE_ROWS</name>
+        <default_value>10000</default_value>
+        <description>Maximum number of rows that will be compared for these tables. Pass 0 for *all* rows.</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_SOURCE_SCHEMA</name>
+        <default_value>passage</default_value>
+        <description>Schema of source (OBO) table to compare</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_SOURCE_TABLE</name>
+        <default_value>passage</default_value>
+        <description>Name of source (OBO) table to compare</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_SCHEMA</name>
+        <default_value>passage</default_value>
+        <description>Name of schema containing target (PSA) table to compare to</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_TABLE</name>
+        <default_value>passage</default_value>
+        <description>Name of target (PSA) table to compare to</description>
+      </parameter>
     </parameters>
     <log>
       <trans-log-table>
@@ -41,37 +81,37 @@
           <id>LINES_READ</id>
           <enabled>Y</enabled>
           <name>LINES_READ</name>
-          <subject>Table output - PSA.schema.table</subject>
+          <subject />
         </field>
         <field>
           <id>LINES_WRITTEN</id>
           <enabled>Y</enabled>
           <name>LINES_WRITTEN</name>
-          <subject>Table output - PSA.schema.table</subject>
+          <subject />
         </field>
         <field>
           <id>LINES_UPDATED</id>
           <enabled>Y</enabled>
           <name>LINES_UPDATED</name>
-          <subject>Table output - PSA.schema.table</subject>
+          <subject />
         </field>
         <field>
           <id>LINES_INPUT</id>
           <enabled>Y</enabled>
           <name>LINES_INPUT</name>
-          <subject>Table input -  OBO.schema.table</subject>
+          <subject />
         </field>
         <field>
           <id>LINES_OUTPUT</id>
           <enabled>Y</enabled>
           <name>LINES_OUTPUT</name>
-          <subject>Table output - PSA.schema.table</subject>
+          <subject />
         </field>
         <field>
           <id>LINES_REJECTED</id>
           <enabled>Y</enabled>
           <name>LINES_REJECTED</name>
-          <subject>Table output - PSA.schema.table</subject>
+          <subject />
         </field>
         <field>
           <id>ERRORS</id>
@@ -429,111 +469,62 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/06/21 12:12:30.803</modified_date>
+    <modified_date>2017/07/03 16:05:40.840</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>Load the data from the source database table that will be moved to the PSA table.
+      <note>This transformation computes the "from" and "to" values for the "insert_id" column of a table that is being mirrored from the OBO
+to the PSA. These values are used for selecting rows of the source (OBO) table and the target (PSA) table so that they can be 
+compared to verify that the source table is being mirrored correctly. These values are assigned to the variables:
 
-It is important here to select "replace variables in script?"so that the references "?", ${PARAM_CDC_LAST_LOAD} and 
-${PARAM_CDC_CURRENT_LOAD} will be evaluated.
+	QF_MIRROR_COMPARE_INSERT_ID_FROM
+	QF_MIRROR_COMPARE_INSERT_ID_TO
 
-It is also necessary to specify the step from which fields will  be used to supply values for the "?" replacement characters. 
-In this case, the previous step is specified.</note>
-      <xloc>320</xloc>
-      <yloc>512</yloc>
-      <width>717</width>
-      <heigth>108</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Insert the new rows into the target PSA database.</note>
-      <xloc>320</xloc>
-      <yloc>816</yloc>
-      <width>301</width>
-      <heigth>24</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Write parameters and max_id value to the log so it will be obvious which values 
-were used.</note>
-      <xloc>320</xloc>
-      <yloc>448</yloc>
-      <width>487</width>
-      <heigth>42</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Get batch ID for current transformation. This will be stored in the DWH table.</note>
-      <xloc>320</xloc>
-      <yloc>656</yloc>
-      <width>470</width>
-      <heigth>26</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Get the maximum value stored in column "archive_id" of the PSA table that will be updated by this transformation. This will be used 
-to the select data from the source table in the source database that was inserted since the last update. 
+Note 1:	The "from" value is computed from the source (OBO) table, while the "to" value is computed from the target (PSA) column.
+		This is done so that we do not compare rows from the source table that were inserted *after* the last time the target table
+		was updated. If this were done, we would definitely flag rows that exist in the source DB but not in the target DB, but this 
+		does not actually indicate a problem with the mirroring algorithm, which is what the "compare" functionality is used for.
 
-IMPORTANT:	We *cannot* use MAX(archive_date) for this purpose because the "archive_date" column will not, in general, be unique.
-				It may not be unique because of the finite resolution of timestamp values.</note>
-      <xloc>320</xloc>
-      <yloc>160</yloc>
-      <width>798</width>
+This transformation has parameters:
+
+	PARAM_LAST_LOAD_TIMESTAMP		Timestamp for when the target PSA DB mirror tables were last updated from the source DB
+	PARAM_SOURCE_SCHEMA				Schema of source (OBO) table to compare
+	PARAM_SOURCE_TABLE				Name of source (OBO) table to compare
+	PARAM_TARGET_SCHEMA				Name of schema containing target (PSA) table to compare to
+	PARAM_TARGET_TABLE					Name of target (PSA) table to compare to
+	PARAM_MAX_NUM_COMPARE_ROWS	Maximum number of rows that will be compared for these tables. 0 means *all* rows.
+	PARAM_INSERT_ID_COLNAME			Name of column acting as "insert_id"  timestamp column of source table
+	PARAM_INSERTED_ON_COLNAME		Name of column acting as "inserted_on" column of source table</note>
+      <xloc>0</xloc>
+      <yloc>0</yloc>
+      <width>809</width>
+      <heigth>318</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>If a value has been provided for PARAM_MAX_NUM_COMPARE_ROWS *other* than 0,
+adjust "insert_id_from", if necessary, so that no more than the specified number of 
+rows will be compared. In this step, the field "insert_id_from" is configured with:
+
+	Replace value = Y</note>
+      <xloc>416</xloc>
+      <yloc>480</yloc>
+      <width>511</width>
       <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -550,198 +541,7 @@ IMPORTANT:	We *cannot* use MAX(archive_date) for this purpose because the "archi
       <bordercolorblue>100</bordercolorblue>
       <drawshadow>Y</drawshadow>
     </notepad>
-    <notepad>
-      <note>This transformation updates the PSA mirror of an "insert-only" table from the source database. This is a generic algorithm that can work with *any* table, 
-as long as it is insert-only and it has the necessary "archive_id" &amp; "archive_date" columns. This transformation has NO parameters:</note>
-      <xloc>16</xloc>
-      <yloc>0</yloc>
-      <width>904</width>
-      <heigth>38</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>This step is only for generating the SQL for creating a new table using the "SQL" button of the "Table output" step below. To do this:
-	1.	Disable the hop from the "Get max ID for ..." step and enable the hop from the "Set max ID = -1" step.
-	2.	Disable the hop to the "Table output" step below.
-	3.	Preview the "Get System Info" step, specifying the required schema and table names for the appropriate parameters and the 
-		value '2100.01.01 00:00:00' for the parameter PARAM_CDC_CURRENT_LOAD. Ensure that the expected rows are displayed.
-	4.	Re-enable the hop to the "Table output" step below.
-	5.	Double-click the "Table output" step and then click the "SQL" button to generate the appropriete SQL to create the table. 
-		The schema and table names that you specified in step 3 above will be used to generate the SQL DDL commands for that table.
-		Before executing the SQL, modify it where appropriate. For example, replace "UNKNOWN" for timestamp columns with 
-		"timestamp without time zone", ...
-	6.	Re-enable the hop from the "Get max ID for ..." step and disable the hop from the "Set max ID = -1" step.</note>
-      <xloc>320</xloc>
-      <yloc>256</yloc>
-      <width>799</width>
-      <heigth>164</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Select and possibly rename fields (table column names), as appropriate.</note>
-      <xloc>320</xloc>
-      <yloc>736</yloc>
-      <width>431</width>
-      <heigth>24</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Metadata injected -></note>
-      <xloc>0</xloc>
-      <yloc>736</yloc>
-      <width>130</width>
-      <heigth>24</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>255</fontcolorred>
-      <fontcolorgreen>255</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>0</backgroundcolorred>
-      <backgroundcolorgreen>0</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>N</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Uses "SELECT *" -></note>
-      <xloc>0</xloc>
-      <yloc>560</yloc>
-      <width>117</width>
-      <heigth>24</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>255</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>This transformation is not used. It was created by duplicating the template transformation of the same name, but without the final "-NO_PARAMS". All parameters have been removed 
-from this transformation to show that the parameters can still be used in this transformation. Could it be that the references to these parameters, e.g., ${PARAM_SOURCE_TABLE}, in 
-this transformation are simply using the values defined for these variables in the parent transformation that contains the "ETL Metadata Injection" step that references this  template
-transformation?</note>
-      <xloc>16</xloc>
-      <yloc>64</yloc>
-      <width>1078</width>
-      <heigth>66</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>255</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
   </notepads>
-  <connection>
-    <name>dma_db</name>
-    <server>${QF_DMA_DB_HOST}</server>
-    <type>POSTGRESQL</type>
-    <access>Native</access>
-    <database>${QF_DMA_DB_DATABASE}</database>
-    <port>${QF_DMA_DB_PORT}</port>
-    <username>${QF_DMA_DB_USERNAME}</username>
-    <password>${QF_DMA_DB_PASSWORD}</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
-    <attributes>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>IS_CLUSTERED</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>PORT_NUMBER</code>
-        <attribute>${QF_DMA_DB_PORT}</attribute>
-      </attribute>
-      <attribute>
-        <code>PRESERVE_RESERVED_WORD_CASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>QUOTE_ALL_FIELDS</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>USE_POOLING</code>
-        <attribute>N</attribute>
-      </attribute>
-    </attributes>
-  </connection>
   <connection>
     <name>logging_db</name>
     <server>${QF_LOGGING_DB_HOST}</server>
@@ -897,39 +697,29 @@ transformation?</note>
   </connection>
   <order>
     <hop>
-      <from>Get max ID for CDC: PSA.schema.table</from>
-      <to>Write to log: parameters, max_id</to>
+      <from>Get "from" "insert_id" from TDP table</from>
+      <to>Join Rows (cartesian product)</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Table input -  OBO.schema.table</from>
-      <to>Get System Info - transformation batch ID</to>
+      <from>Get "to" "insert_id" from DWH table</from>
+      <to>Join Rows (cartesian product)</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Write to log: parameters, max_id</from>
-      <to>Table input -  OBO.schema.table</to>
+      <from>Join Rows (cartesian product)</from>
+      <to>Adjust "insert_id_from", if necessary</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Set max ID = -1</from>
-      <to>Write to log: parameters, max_id</to>
-      <enabled>N</enabled>
-    </hop>
-    <hop>
-      <from>Get System Info - transformation batch ID</from>
-      <to>Map column names</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Map column names</from>
-      <to>Table output - PSA.schema.table</to>
+      <from>Adjust "insert_id_from", if necessary</from>
+      <to>Set "insert_id" "from" &amp; "to" variables</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Get System Info - transformation batch ID</name>
-    <type>SystemInfo</type>
+    <name>Adjust "insert_id_from", if necessary</name>
+    <type>ScriptValueMod</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -938,10 +728,50 @@ transformation?</note>
       <method>none</method>
       <schema_name />
     </partitioning>
+    <compatible>N</compatible>
+    <optimizationLevel>9</optimizationLevel>
+    <jsScripts>
+      <jsScript>
+        <jsScript_type>0</jsScript_type>
+        <jsScript_name>Script 1</jsScript_name>
+        <jsScript_script>/*
+  PARAM_MAX_NUM_COMPARE_ROWS: 
+
+    This parameter specifies the maximum number of rows to compare.
+    If this value is zero, then *all* rows will be compared. If this
+    value is non-zero, then the field "insert_id_from" will be 
+    increased, if necessary, so that the specified number of rows
+    will be compared.
+
+  Author:  Jeffrey Zelt
+  Date:    2017.06.29
+  Changes: Initial version
+*/
+
+var max_num_rows = getVariable("PARAM_MAX_NUM_COMPARE_ROWS", "0");
+//Alert("max_num_rows = " + max_num_rows);
+
+if(max_num_rows > 0) {
+	var numRows = insert_id_to - insert_id_from + 1;
+	//Alert("numRows = " + numRows);
+	if(numRows > max_num_rows){
+		insert_id_from = insert_id_to - max_num_rows + 1;
+	}
+}
+
+//Alert("insert_id_from = " + insert_id_from);
+//Alert("insert_id_to = " + insert_id_to);
+</jsScript_script>
+      </jsScript>
+    </jsScripts>
     <fields>
       <field>
-        <name>etl_batch_id</name>
-        <type>batch ID</type>
+        <name>insert_id_from</name>
+        <rename>insert_id_from</rename>
+        <type>Integer</type>
+        <length>15</length>
+        <precision>-1</precision>
+        <replace>Y</replace>
       </field>
     </fields>
     <cluster_schema />
@@ -952,108 +782,13 @@ transformation?</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>656</yloc>
+      <xloc>272</xloc>
+      <yloc>496</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Get max ID for CDC: PSA.schema.table</name>
-    <type>TableInput</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <connection>psa_db</connection>
-    <sql>SELECT
-    COALESCE(MAX(archive_id), ${QF_ARCHIVE_ID_LOWER_BOUND}) AS max_id
-FROM
-    ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
-</sql>
-    <limit>0</limit>
-    <lookup />
-    <execute_each_row>N</execute_each_row>
-    <variables_active>Y</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>144</xloc>
-      <yloc>192</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Map column names</name>
-    <type>SelectValues</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <fields>
-      <select_unspecified>N</select_unspecified>
-    </fields>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>144</xloc>
-      <yloc>736</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Set max ID = -1</name>
-    <type>TableInput</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <connection>dma_db</connection>
-    <sql>SELECT
-    ${QF_ARCHIVE_ID_LOWER_BOUND} AS max_id
-</sql>
-    <limit>0</limit>
-    <lookup />
-    <execute_each_row>N</execute_each_row>
-    <variables_active>Y</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>256</xloc>
-      <yloc>288</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Table input -  OBO.schema.table</name>
+    <name>Get "from" "insert_id" from TDP table</name>
     <type>TableInput</type>
     <description />
     <distribute>Y</distribute>
@@ -1065,17 +800,11 @@ FROM
     </partitioning>
     <connection>obo_db</connection>
     <sql>SELECT
-    *
+    COALESCE(MIN(${PARAM_INSERT_ID_COLNAME}), ${QF_ARCHIVE_ID_LOWER_BOUND}) AS "insert_id_from"
 FROM
-    ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
-WHERE
-    archive_id > ? AND
-    --archive_date >  '${PARAM_CDC_LAST_LOAD}' AND 
-	archive_date &lt;= '${PARAM_CDC_CURRENT_LOAD}'
-ORDER BY
-    archive_id</sql>
+    ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</sql>
     <limit>0</limit>
-    <lookup>Write to log: parameters, max_id</lookup>
+    <lookup />
     <execute_each_row>N</execute_each_row>
     <variables_active>Y</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
@@ -1087,14 +816,14 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>560</yloc>
+      <xloc>96</xloc>
+      <yloc>352</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Table output - PSA.schema.table</name>
-    <type>TableOutput</type>
+    <name>Get "to" "insert_id" from DWH table</name>
+    <type>TableInput</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -1104,24 +833,17 @@ ORDER BY
       <schema_name />
     </partitioning>
     <connection>psa_db</connection>
-    <schema>${PARAM_TARGET_SCHEMA}</schema>
-    <table>${PARAM_TARGET_TABLE}</table>
-    <commit>1000</commit>
-    <truncate>N</truncate>
-    <ignore_errors>N</ignore_errors>
-    <use_batch>Y</use_batch>
-    <specify_fields>N</specify_fields>
-    <partitioning_enabled>N</partitioning_enabled>
-    <partitioning_field />
-    <partitioning_daily>N</partitioning_daily>
-    <partitioning_monthly>Y</partitioning_monthly>
-    <tablename_in_field>N</tablename_in_field>
-    <tablename_field />
-    <tablename_in_table>Y</tablename_in_table>
-    <return_keys>N</return_keys>
-    <return_field />
-    <fields>
-    </fields>
+    <sql>SELECT
+    COALESCE(MAX(${PARAM_INSERT_ID_COLNAME}), ${QF_ARCHIVE_ID_LOWER_BOUND}) AS "insert_id_to"
+FROM
+    ${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}
+--WHERE
+--    ${PARAM_INSERTED_ON_COLNAME} &lt;= TIMESTAMP '${PARAM_LAST_LOAD_TIMESTAMP}'  &lt;-- I don't think that this is necessary</sql>
+    <limit>0</limit>
+    <lookup />
+    <execute_each_row>N</execute_each_row>
+    <variables_active>Y</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1130,14 +852,14 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>816</yloc>
+      <xloc>448</xloc>
+      <yloc>352</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Write to log: parameters, max_id</name>
-    <type>WriteToLog</type>
+    <name>Join Rows (cartesian product)</name>
+    <type>JoinRows</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -1146,22 +868,18 @@ ORDER BY
       <method>none</method>
       <schema_name />
     </partitioning>
-    <loglevel>log_level_basic</loglevel>
-    <displayHeader>Y</displayHeader>
-    <limitRows>N</limitRows>
-    <limitRowsNumber>0</limitRowsNumber>
-    <logmessage>tmplt_mirrored_insert_only_table-update-NO_PARAMS:
-PARAM_CDC_LAST_LOAD    = ${PARAM_CDC_LAST_LOAD}
-PARAM_CDC_CURRENT_LOAD = ${PARAM_CDC_CURRENT_LOAD}
-PARAM_SOURCE_SCHEMA           = ${PARAM_SOURCE_SCHEMA}
-PARAM_SOURCE_TABLE            = ${PARAM_SOURCE_TABLE}
-PARAM_TARGET_SCHEMA           = ${PARAM_TARGET_SCHEMA}
-PARAM_TARGET_TABLE            = ${PARAM_TARGET_TABLE}</logmessage>
-    <fields>
-      <field>
-        <name>max_id</name>
-      </field>
-    </fields>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>out</prefix>
+    <cache_size>500</cache_size>
+    <main />
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <leftvalue />
+        <function>=</function>
+        <rightvalue />
+      </condition>
+    </compare>
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1170,8 +888,47 @@ PARAM_TARGET_TABLE            = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>448</yloc>
+      <xloc>272</xloc>
+      <yloc>416</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Set "insert_id" "from" &amp; "to" variables</name>
+    <type>SetVariable</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <field>
+        <field_name>insert_id_from</field_name>
+        <variable_name>QF_MIRROR_COMPARE_INSERT_ID_FROM</variable_name>
+        <variable_type>ROOT_JOB</variable_type>
+        <default_value />
+      </field>
+      <field>
+        <field_name>insert_id_to</field_name>
+        <variable_name>QF_MIRROR_COMPARE_INSERT_ID_TO</variable_name>
+        <variable_type>ROOT_JOB</variable_type>
+        <default_value />
+      </field>
+    </fields>
+    <use_formatting>Y</use_formatting>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>272</xloc>
+      <yloc>576</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
