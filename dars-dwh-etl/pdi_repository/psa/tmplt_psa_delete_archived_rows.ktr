@@ -1,6 +1,6 @@
 <transformation>
   <info>
-    <name>tmplt_mirrored_updatable_table-update</name>
+    <name>tmplt_psa_delete_archived_rows</name>
     <description />
     <extended_description />
     <trans_version />
@@ -9,49 +9,64 @@
     <directory>/psa</directory>
     <parameters>
       <parameter>
-        <name>PARAM_CDC_CURRENT_LOAD</name>
-        <default_value>1900.01.01 00:00:00</default_value>
-        <description>Timestamp of the current load (no rows after this timestamp will be loaded)</description>
+        <name>PARAM_COMPARE_BEFORE_DELETE</name>
+        <default_value>Y</default_value>
+        <description>"Y" if rows to be deleted shall first be compared to rows in target PSA table</description>
       </parameter>
       <parameter>
-        <name>PARAM_CDC_LAST_LOAD</name>
+        <name>PARAM_LAST_LOAD_TIMESTAMP</name>
         <default_value>1900.01.01 00:00:00</default_value>
         <description>Timestamp of last successful load from the source database</description>
       </parameter>
       <parameter>
-        <name>PARAM_INSERTED_ON_COLNAME</name>
-        <default_value>inserted_on</default_value>
-        <description>Name of column acting as "inserted_on" timestamp column of source table</description>
+        <name>PARAM_LAST_UPDATED_ON_SOURCE_COLNAME</name>
+        <default_value />
+        <description>Column of source table that acts as a "last_updated_on" timestamp column</description>
       </parameter>
       <parameter>
-        <name>PARAM_INSERT_ID_COLNAME</name>
-        <default_value>insert_id</default_value>
-        <description>Name of column acting as "insert_id" column of source table</description>
+        <name>PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS</name>
+        <default_value>2000000000</default_value>
+        <description>Number of seconds after the "row_can_be_deleted_from" timestamp that an archived row can be deleted</description>
       </parameter>
       <parameter>
-        <name>PARAM_LAST_UPDATED_ON_COLNAME</name>
-        <default_value>last_updated_on</default_value>
-        <description>Name of "last_updated_on" timestamp column of source table</description>
+        <name>PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME</name>
+        <default_value />
+        <description>Column of source table that acts as a "row_can_be_deleted_from" timestamp column</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_SOURCE_DB_ID</name>
+        <default_value>1</default_value>
+        <description>ID of database containing the source tables to mirror</description>
       </parameter>
       <parameter>
         <name>PARAM_SOURCE_SCHEMA</name>
         <default_value>passage</default_value>
-        <description>Name of schema containing source table to mirror to target table</description>
+        <description>Schema of mirrored table to compare</description>
       </parameter>
       <parameter>
         <name>PARAM_SOURCE_TABLE</name>
-        <default_value>passage</default_value>
-        <description>Name of source table to mirror to target table</description>
+        <default_value>image</default_value>
+        <description>Name of mirrored table to compare</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TABLE_META_ID</name>
+        <default_value>605</default_value>
+        <description>Primary key of etl.table_meta row for "source" table from which rows will be deleted</description>
       </parameter>
       <parameter>
         <name>PARAM_TARGET_SCHEMA</name>
         <default_value>passage</default_value>
-        <description>Name of schema containing target table to update</description>
+        <description>Name of schema containing target table to update (not currently used)</description>
       </parameter>
       <parameter>
         <name>PARAM_TARGET_TABLE</name>
-        <default_value>passage</default_value>
-        <description>Name of target table to update</description>
+        <default_value>image</default_value>
+        <description>Name of target table to update (not currently used)</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_USE_CUSTOM_DELETE_ALGORITHM</name>
+        <default_value>N</default_value>
+        <description>"Y" if a custom DELETE algorithm shall be used for this table</description>
       </parameter>
     </parameters>
     <log>
@@ -86,37 +101,37 @@
           <id>LINES_READ</id>
           <enabled>Y</enabled>
           <name>LINES_READ</name>
-          <subject>Table output - PSA.schema.table</subject>
+          <subject />
         </field>
         <field>
           <id>LINES_WRITTEN</id>
           <enabled>Y</enabled>
           <name>LINES_WRITTEN</name>
-          <subject>Table output - PSA.schema.table</subject>
+          <subject />
         </field>
         <field>
           <id>LINES_UPDATED</id>
           <enabled>Y</enabled>
           <name>LINES_UPDATED</name>
-          <subject>Table output - PSA.schema.table</subject>
+          <subject />
         </field>
         <field>
           <id>LINES_INPUT</id>
           <enabled>Y</enabled>
           <name>LINES_INPUT</name>
-          <subject>Table input -  OBO.schema.table</subject>
+          <subject />
         </field>
         <field>
           <id>LINES_OUTPUT</id>
           <enabled>Y</enabled>
           <name>LINES_OUTPUT</name>
-          <subject>Table output - PSA.schema.table</subject>
+          <subject />
         </field>
         <field>
           <id>LINES_REJECTED</id>
           <enabled>Y</enabled>
           <name>LINES_REJECTED</name>
-          <subject>Table output - PSA.schema.table</subject>
+          <subject />
         </field>
         <field>
           <id>ERRORS</id>
@@ -474,21 +489,23 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/07/17 07:01:29.998</modified_date>
+    <modified_date>2017/07/18 13:19:25.223</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>Load the data from the source (OBO) table that will be moved to the target (PSA) table.
-
-It is important to sort these rows chronologically (by either the "insert_id" or "inserted_on" columns) so that if this transformation
-fails in the middle somewhere and if this transaction does not run in a single transaction, then next time this transformation is 
-executed, we want to start again where we left off (by computing, e.g., MAX(insert_id) for the PSA table).</note>
-      <xloc>272</xloc>
-      <yloc>432</yloc>
-      <width>765</width>
-      <heigth>80</heigth>
+      <note>Load the data from both the source (OBO) database table and
+the target (PSA) database table to which it is mirrored. The 
+"ORDER BY" clauses must consist of the tables' primary key 
+column(s). This is needed by the "Merge Rows" step. The fields 
+in each stream must be identical and in the same order when 
+fed to the "Merge rows" step. The SELECT statements in these 
+two "Table input" steps set the field order appropriately.</note>
+      <xloc>512</xloc>
+      <yloc>256</yloc>
+      <width>375</width>
+      <heigth>108</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -505,87 +522,57 @@ executed, we want to start again where we left off (by computing, e.g., MAX(inse
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Insert new rows into the DWH using a "Table output" step. Error handing is enabled for this step so that if a rows already exists,
-the rows are passed to an "Update" step.
+      <note>This transformation verifies that a table from the source (OBO) DB has been correctly mirrored from the target (PSA) DB. This is an ETL metadata 
+injection "template" transformation that can be used to compare *any* tables that are mirrored between these two databases. It has parameters:
 
-IMPORTANT:	A primary key constraint (or at least a "unique" constraint on the primary key column(s)) for the target table is 
-				*required*; otherwise, error handling will not be triggered when attempting to insert a row with a duplicate key.
-
-PDI does not fully support error handling when using "batch processing" with the PostgreSQL JDBC driver (a message to this 
-effect is displayed when accepting the transformation settings dialog), so make sure "Use batch update for inserts" is *not* 
-selected here!
-
-See:
-
-	/development/jeffreyz/tests/cdc_timestamps/tr_TEST_mirror_update-passage.passage-table_output
-
-for tests  benchmark results I obtained to test the speed of varrious INSERT/UPDATE algorithms. Using a "Table output" step with 
-an error handling hop to an "Update" step provides an approximately 2x speedup over an "Insert/Update" step for inserts *and* 
-it does not exhibit (for inserts only) the behaviour where a "java"and "postgres" process continue to run with a high CPU load long 
-after the transformation is finished.
-
-An odd behaviour is observed when the error handling sends rows to the "Update" step. After processing a large number of rows, 
-it takes a long time for this transformation to end. During this period the "Pause" and "Stop" buttons remain enabled. Furthermore,
-running" top" shows that both "postgres"and "java" processes are actively using a 25-75% of the CPU. When this CPU usage stops, 
-the  "Pause" and "Stop" buttons become disabled, showing that the transformation is finally finished. Strange.</note>
-      <xloc>272</xloc>
-      <yloc>656</yloc>
-      <width>773</width>
-      <heigth>332</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Get batch ID for current transformation. This will be stored in the PSA table for auditing/logging. This step *must* come after the
-"Map column names" step because the metadata injected into that step does not include this column/field.</note>
-      <xloc>272</xloc>
-      <yloc>592</yloc>
-      <width>764</width>
-      <heigth>38</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>This transformation updates the PSA mirror of a table from the source database that can receive INSERTs or UPDATES. This is a generic
-algorithm that can work with *any* table,  as long as rows cannot be deleted from the source or target table, and it has the necessary 
-"insert_id", "inserted_on" &amp; "last_updated_on" columns. This transformation has parameters:
-
-	PARAM_CDC_LAST_LOAD				Timestamp for when *all* tables of the PSA were most recently updated successfully
-	PARAM_CDC_CURRENT_LOAD			Used so that a consistent max timestamp is used for all ETL
-	PARAM_SOURCE_SCHEMA				Schema of mirrored table
-	PARAM_SOURCE_TABLE				Name of mirrored table to update
-	PARAM_TARGET_SCHEMA				Name of schema containing target table to update (not currently used)
-	PARAM_TARGET_TABLE					Name of target table to update (not currently used)
-	PARAM_INSERT_ID_COLNAME			Name of column acting as "insert_id"  timestamp column of source table
-	PARAM_INSERTED_ON_COLNAME		Name of column acting as "inserted_on" column of source table
-	PARAM_LAST_UPDATED_ON_COLNAME	Name of "last_updated_on" timestamp column of source table</note>
+	PARAM_SOURCE_DB_ID								ID the "source" database containing tables will be mirrored to a "target" database
+	PARAM_LAST_LOAD_TIMESTAMP					Timestamp for when the target PSA DB mirror tables were last updated from the source DB
+	PARAM_SOURCE_SCHEMA							Name of schema containing source table to compare to target table
+	PARAM_SOURCE_TABLE							Name of source table to compare to target table
+	PARAM_TARGET_SCHEMA							Name of schema containing target table to compare with (not currently used)
+	PARAM_TARGET_TABLE								Name of target table to compare with (not currently used)
+	PARAM_COMPARE_BEFORE_DELETE					"Y" if rows to be deleted shall first be compared to rows in target PSA table
+	PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS	Number of seconds after the "row_can_be_deleted_from" timestamp that an archived row can be deleted
+	PARAM_USE_CUSTOM_DELETE_ALGORITHM			"Y" if a custom DELETE algorithm shall be used for this table
+	PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME	Column of source table that acts as a "row_can_be_deleted_from" timestamp column
+	PARAM_LAST_UPDATED_ON_SOURCE_COLNAME	Column of source table that acts as a "last_updated_on" timestamp column
+	PARAM_TABLE_META_ID							Primary key of etl.table_meta row for "source" table from which rows will be deleted</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>795</width>
+      <width>963</width>
+      <heigth>220</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Update the "table_meta" row for the tables being compared with the comparison statistics:
+
+	compared_rows_equal
+	compared_rows_unequal
+	...
+
+This sub-transformation (mapping) is passed a single stream field "flagfield" that is 
+generated by the "Merge Rows (diff)" step. In order to update the appropriate 
+etl.table_meta row, it is also passed the parameters:
+
+	PARAM_SOURCE_DB_ID
+	PARAM_SOURCE_SCHEMA
+	PARAM_SOURCE_TABLE</note>
+      <xloc>352</xloc>
+      <yloc>560</yloc>
+      <width>544</width>
       <heigth>192</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -603,24 +590,12 @@ algorithm that can work with *any* table,  as long as rows cannot be deleted fro
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Get the maximum value stored in the "insert_id"column of the target (PSA) DB table that will be updated by this transformation. 
-This will be used to the select data from the source (OBO) DB table that was inserted since the last update. 
-
-We could, instead, treat this by getting the maximum value the "inserted_on" column and then loading all rows from the source
-table whose value of "inserted_on" is >= to this timestamp. We need to include "=" here because of the finite resolutiuon of 
-timestamp values. If we used only ">", we could miss rows that were inserted *after* the last update if they received exactly the
-same value as MAX(inserted_on) that was obtained here. However, this approach may process a small number of rows from 
-the source table that were migrated to the target table during the last successful update (again, because timestamp values are 
-not unique), but that is OK here because the algorithm used in this transformation can handle attempts to insert rows that already
-exist in the target table.
-
-Alternatively, we could eliminate this step entirely and load source (OBO) rows for: inserted_on >= PARAM_CDC_LAST_LOAD,
-but this will not be as efficient for the case when we need to re-start the mirroring process after it fails for some reason. In that
-case we would re-process all of the rows that were successfully mirrored during the previous run.</note>
-      <xloc>272</xloc>
-      <yloc>208</yloc>
-      <width>766</width>
-      <heigth>206</heigth>
+      <note>Compare the two streams row by row and determine whether they are 
+identical, different, "new" or "deleted".</note>
+      <xloc>352</xloc>
+      <yloc>496</yloc>
+      <width>423</width>
+      <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -637,64 +612,13 @@ case we would re-process all of the rows that were successfully mirrored during 
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Although this transformation has parameters whose values are used in its steps, these parameters are not passed values from
-the parent transformation in the usual way this is normally done in PDI. This is because the "ETL Metadata Injection" step (which
-is responsible for executing this template transformation) does not support parameter passing. Nevertheless, it appears
-that the parameters that are defined for this template transformation can be used as expected. The explanation for this
-behaviour *MAY* be that the references to these parameters, e.g., ${PARAM_SOURCE_TABLE}, in this transformation are
-simply using the values defined for these variables in the parent transformation that contains the "ETL Metadata Injection" 
-step that references this template transformation. Fortunately, all of the parameters that are used by this transformation
-are defined with the correct values in the parent transformation. I have tested this by removing the parameters entirely. The 
-result was that the transformation ran as expected, even though it made use of the parameters that were removed.
-
-Note that if a target file is created by the "ETL metadata Ijection" step, then that transformation *can* have its parameters 
-passed to it in the normal fashion because it is a normal transformation (all metadata has been injected into it).</note>
-      <xloc>816</xloc>
-      <yloc>0</yloc>
-      <width>749</width>
-      <heigth>178</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>255</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Uses "SELECT *" -></note>
-      <xloc>0</xloc>
-      <yloc>448</yloc>
-      <width>117</width>
-      <heigth>24</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>255</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Select and possibly map/rename fields (table column names), as appropriate.</note>
-      <xloc>272</xloc>
-      <yloc>528</yloc>
-      <width>462</width>
-      <heigth>24</heigth>
+      <note>Rename the stream fields from the target (PSA) DB to the
+field names from the source (OBO) DB. This is required for
+the "Merge rows" step.</note>
+      <xloc>512</xloc>
+      <yloc>384</yloc>
+      <width>348</width>
+      <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -705,48 +629,6 @@ passed to it in the normal fashion because it is a normal transformation (all me
       <backgroundcolorred>255</backgroundcolorred>
       <backgroundcolorgreen>205</backgroundcolorgreen>
       <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Metadata injected -></note>
-      <xloc>0</xloc>
-      <yloc>528</yloc>
-      <width>130</width>
-      <heigth>24</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>255</fontcolorred>
-      <fontcolorgreen>255</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>0</backgroundcolorred>
-      <backgroundcolorgreen>0</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Metadata injected -></note>
-      <xloc>0</xloc>
-      <yloc>880</yloc>
-      <width>130</width>
-      <heigth>24</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>255</fontcolorred>
-      <fontcolorgreen>255</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>0</backgroundcolorred>
-      <backgroundcolorgreen>0</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
       <bordercolorblue>100</bordercolorblue>
@@ -908,43 +790,28 @@ passed to it in the normal fashion because it is a normal transformation (all me
   </connection>
   <order>
     <hop>
-      <from>Get max "insert_id" for: PSA.schema.table</from>
-      <to>Write to log: parameters, max_id</to>
+      <from>Get rows from target (PSA) DB table</from>
+      <to>Rename PSA field names -> OBO field names</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Write to log: parameters, max_id</from>
-      <to>Table input -  OBO.schema.table</to>
+      <from>Rename PSA field names -> OBO field names</from>
+      <to>Merge Rows (diff)</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Table output - PSA.schema.table</from>
-      <to>Set etl_batch_id_last_update = Xform batch ID</to>
+      <from>Merge Rows (diff)</from>
+      <to>tr_update_table_meta_compare_stats</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Set etl_batch_id_last_update = Xform batch ID</from>
-      <to>Update - PSA.schema.table</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Map column names</from>
-      <to>Set etl_batch_id_insert = Xform batch ID</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Set etl_batch_id_insert = Xform batch ID</from>
-      <to>Table output - PSA.schema.table</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Table input -  OBO.schema.table</from>
-      <to>Map column names</to>
+      <from>Get rows from source (OBO) DB table</from>
+      <to>Merge Rows (diff)</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Get max "insert_id" for: PSA.schema.table</name>
+    <name>Get rows from source (OBO) DB table</name>
     <type>TableInput</type>
     <description />
     <distribute>Y</distribute>
@@ -954,12 +821,8 @@ passed to it in the normal fashion because it is a normal transformation (all me
       <method>none</method>
       <schema_name />
     </partitioning>
-    <connection>psa_db</connection>
-    <sql>SELECT
-    COALESCE(MAX(${PARAM_INSERT_ID_COLNAME}), ${QF_ARCHIVE_ID_LOWER_BOUND}) AS max_id
-FROM
-    ${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}
-</sql>
+    <connection>obo_db</connection>
+    <sql />
     <limit>0</limit>
     <lookup />
     <execute_each_row>N</execute_each_row>
@@ -973,13 +836,77 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>128</xloc>
+      <xloc>112</xloc>
       <yloc>272</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Map column names</name>
+    <name>Get rows from target (PSA) DB table</name>
+    <type>TableInput</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <connection>psa_db</connection>
+    <sql />
+    <limit>0</limit>
+    <lookup />
+    <execute_each_row>N</execute_each_row>
+    <variables_active>Y</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>352</xloc>
+      <yloc>272</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Merge Rows (diff)</name>
+    <type>MergeRows</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <keys>
+    </keys>
+    <values>
+    </values>
+    <flag_field>flagfield</flag_field>
+    <reference>Get rows from source (OBO) DB table</reference>
+    <compare>Rename PSA field names -> OBO field names</compare>
+    <compare>
+    </compare>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>208</xloc>
+      <yloc>496</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Rename PSA field names -> OBO field names</name>
     <type>SelectValues</type>
     <description />
     <distribute>Y</distribute>
@@ -1000,14 +927,14 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>128</xloc>
-      <yloc>528</yloc>
+      <xloc>352</xloc>
+      <yloc>400</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Set etl_batch_id_insert = Xform batch ID</name>
-    <type>SystemInfo</type>
+    <name>tr_update_table_meta_compare_stats</name>
+    <type>SimpleMapping</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -1016,12 +943,38 @@ FROM
       <method>none</method>
       <schema_name />
     </partitioning>
-    <fields>
-      <field>
-        <name>etl_batch_id_insert</name>
-        <type>batch ID</type>
-      </field>
-    </fields>
+    <specification_method>rep_name</specification_method>
+    <trans_object_id />
+    <trans_name>tr_update_table_meta_compare_stats</trans_name>
+    <filename />
+    <directory_path>/generic</directory_path>
+    <mappings>
+      <input>
+        <mapping>
+          <input_step />
+          <output_step />
+          <main_path>Y</main_path>
+          <rename_on_output>Y</rename_on_output>
+          <description />
+          <connector>
+            <parent>flagfield</parent>
+            <child>flagfield</child>
+          </connector>
+        </mapping>
+      </input>
+      <output>
+        <mapping>
+          <input_step />
+          <output_step />
+          <main_path>Y</main_path>
+          <rename_on_output>N</rename_on_output>
+          <description />
+        </mapping>
+      </output>
+      <parameters>
+        <inherit_all_vars>Y</inherit_all_vars>
+      </parameters>
+    </mappings>
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1030,216 +983,12 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>128</xloc>
-      <yloc>592</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Set etl_batch_id_last_update = Xform batch ID</name>
-    <type>SystemInfo</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <fields>
-      <field>
-        <name>etl_batch_id_last_update</name>
-        <type>batch ID</type>
-      </field>
-    </fields>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>128</xloc>
-      <yloc>800</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Table input -  OBO.schema.table</name>
-    <type>TableInput</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <connection>obo_db</connection>
-    <sql>SELECT
-    *
-FROM
-    ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
-WHERE
-    (
-        ${PARAM_INSERT_ID_COLNAME} > ?                                  -- newly INSERTed rows
-        --${PARAM_INSERTED_ON_COLNAME} >  '${PARAM_CDC_LAST_LOAD}' AND  -- alternate possibility, instead of the previous line
-        OR ${PARAM_LAST_UPDATED_ON_COLNAME} >= '${PARAM_CDC_LAST_LOAD}' -- updated rows (may include rows updated on previous run that have
-                                                                        -- ${PARAM_LAST_UPDATED_ON_COLNAME} = '${PARAM_CDC_LAST_LOAD}' due
-                                                                        -- to the finite resolution of timestamp values)
-    )
-	AND ${PARAM_INSERTED_ON_COLNAME} &lt;= '${PARAM_CDC_CURRENT_LOAD}'     -- to avoid loading rows that are inserted after the job starts
-ORDER BY
-    ${PARAM_INSERT_ID_COLNAME}</sql>
-    <limit>0</limit>
-    <lookup>Write to log: parameters, max_id</lookup>
-    <execute_each_row>N</execute_each_row>
-    <variables_active>Y</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>128</xloc>
-      <yloc>448</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Table output - PSA.schema.table</name>
-    <type>TableOutput</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <connection>psa_db</connection>
-    <schema>${PARAM_TARGET_SCHEMA}</schema>
-    <table>${PARAM_TARGET_TABLE}</table>
-    <commit>1000</commit>
-    <truncate>N</truncate>
-    <ignore_errors>N</ignore_errors>
-    <use_batch>N</use_batch>
-    <specify_fields>N</specify_fields>
-    <partitioning_enabled>N</partitioning_enabled>
-    <partitioning_field />
-    <partitioning_daily>N</partitioning_daily>
-    <partitioning_monthly>Y</partitioning_monthly>
-    <tablename_in_field>N</tablename_in_field>
-    <tablename_field />
-    <tablename_in_table>Y</tablename_in_table>
-    <return_keys>N</return_keys>
-    <return_field />
-    <fields>
-    </fields>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>128</xloc>
-      <yloc>704</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Update - PSA.schema.table</name>
-    <type>Update</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <connection>psa_db</connection>
-    <skip_lookup>N</skip_lookup>
-    <commit>100</commit>
-    <use_batch>N</use_batch>
-    <error_ignored>N</error_ignored>
-    <ignore_flag_field />
-    <lookup>
-      <schema>${PARAM_TARGET_SCHEMA}</schema>
-      <table>${PARAM_TARGET_TABLE}</table>
-    </lookup>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>128</xloc>
-      <yloc>880</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Write to log: parameters, max_id</name>
-    <type>WriteToLog</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <loglevel>log_level_basic</loglevel>
-    <displayHeader>Y</displayHeader>
-    <limitRows>N</limitRows>
-    <limitRowsNumber>0</limitRowsNumber>
-    <logmessage>tmplt_mirrored_updatable_table-update:
-PARAM_CDC_LAST_LOAD    = ${PARAM_CDC_LAST_LOAD}
-PARAM_CDC_CURRENT_LOAD = ${PARAM_CDC_CURRENT_LOAD}
-PARAM_SOURCE_SCHEMA    = ${PARAM_SOURCE_SCHEMA}
-PARAM_SOURCE_TABLE     = ${PARAM_SOURCE_TABLE}
-PARAM_TARGET_SCHEMA    = ${PARAM_TARGET_SCHEMA}
-PARAM_TARGET_TABLE     = ${PARAM_TARGET_TABLE}</logmessage>
-    <fields>
-      <field>
-        <name>max_id</name>
-      </field>
-    </fields>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>128</xloc>
-      <yloc>352</yloc>
+      <xloc>208</xloc>
+      <yloc>576</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step_error_handling>
-    <error>
-      <source_step>Table output - PSA.schema.table</source_step>
-      <target_step>Set etl_batch_id_last_update = Xform batch ID</target_step>
-      <is_enabled>Y</is_enabled>
-      <nr_valuename />
-      <descriptions_valuename />
-      <fields_valuename />
-      <codes_valuename />
-      <max_errors />
-      <max_pct_errors />
-      <min_pct_rows />
-    </error>
   </step_error_handling>
   <slave-step-copy-partition-distribution>
   </slave-step-copy-partition-distribution>

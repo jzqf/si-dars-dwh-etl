@@ -1,5 +1,5 @@
 <job>
-  <name>jb_psa-compare</name>
+  <name>jb_psa-delete_archived_rows</name>
   <description />
   <extended_description />
   <job_version />
@@ -8,14 +8,9 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/07/13 18:55:51.312</modified_date>
+  <modified_date>2017/07/18 11:59:41.005</modified_date>
   <parameters>
-    <parameter>
-      <name>PARAM_MAX_NUM_COMPARE_ROWS</name>
-      <default_value>100000</default_value>
-      <description>Maximum number of rows that will be compared for these tables. Pass 0 for *all* rows.</description>
-    </parameter>
-  </parameters>
+    </parameters>
   <connection>
     <name>logging_db</name>
     <server>${QF_LOGGING_DB_HOST}</server>
@@ -439,13 +434,13 @@
       <yloc>288</yloc>
     </entry>
     <entry>
-      <name>tr_list_of_tables_to_compare</name>
+      <name>tr_list_of_tables_to_delete_rows_from</name>
       <description />
       <type>TRANS</type>
       <specification_method>rep_name</specification_method>
       <trans_object_id />
       <filename />
-      <transname>tr_list_of_tables_to_compare</transname>
+      <transname>tr_list_of_tables_to_delete_rows_from</transname>
       <directory>/generic</directory>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -481,14 +476,14 @@
       <yloc>384</yloc>
     </entry>
     <entry>
-      <name>jb_psa_mirrored_tables-compare_one</name>
+      <name>jb_psa_delete_archived_rows-table</name>
       <description />
       <type>JOB</type>
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
-      <jobname>jb_psa_mirrored_tables-compare_one</jobname>
-      <directory>/psa</directory>
+      <jobname>jb_psa_delete_archived_rows-table</jobname>
+      <directory>${Internal.Entry.Current.Directory}</directory>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>Y</params_from_previous>
       <exec_per_row>Y</exec_per_row>
@@ -544,6 +539,36 @@
         <parameter>
           <name>PARAM_TARGET_SCHEMA_TABLE</name>
           <stream_name>target_schema_dot_table</stream_name>
+          <value />
+        </parameter>
+        <parameter>
+          <name>PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS</name>
+          <stream_name>row_can_be_deleted_from_seconds</stream_name>
+          <value />
+        </parameter>
+        <parameter>
+          <name>PARAM_USE_CUSTOM_DELETE_ALGORITHM</name>
+          <stream_name>use_custom_delete_algorithm</stream_name>
+          <value />
+        </parameter>
+        <parameter>
+          <name>PARAM_COMPARE_BEFORE_DELETE</name>
+          <stream_name>compare_before_delete</stream_name>
+          <value />
+        </parameter>
+        <parameter>
+          <name>PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME</name>
+          <stream_name>row_can_be_deleted_from_source_colname</stream_name>
+          <value />
+        </parameter>
+        <parameter>
+          <name>PARAM_LAST_UPDATED_ON_SOURCE_COLNAME</name>
+          <stream_name>last_updated_on_source_colname</stream_name>
+          <value />
+        </parameter>
+        <parameter>
+          <name>PARAM_TABLE_META_ID</name>
+          <stream_name>table_meta_id</stream_name>
           <value />
         </parameter>
       </parameters>
@@ -785,7 +810,7 @@
     </hop>
     <hop>
       <from>tr_get_last_successful_load</from>
-      <to>tr_list_of_tables_to_compare</to>
+      <to>tr_list_of_tables_to_delete_rows_from</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -793,8 +818,8 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>tr_list_of_tables_to_compare</from>
-      <to>jb_psa_mirrored_tables-compare_one</to>
+      <from>tr_list_of_tables_to_delete_rows_from</from>
+      <to>jb_psa_delete_archived_rows-table</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -829,7 +854,7 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>jb_psa_mirrored_tables-compare_one</from>
+      <from>jb_psa_delete_archived_rows-table</from>
       <to>jb_send_default_email_job_notification - Success</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -856,7 +881,7 @@
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>tr_list_of_tables_to_compare</from>
+      <from>tr_list_of_tables_to_delete_rows_from</from>
       <to>DUMMY</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -865,7 +890,7 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>jb_psa_mirrored_tables-compare_one</from>
+      <from>jb_psa_delete_archived_rows-table</from>
       <to>DUMMY</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -912,21 +937,17 @@
   </hops>
   <notepads>
     <notepad>
-      <note>This job compares the content of each mirrored table from the source database with the content of the target tables in the PSA. This is done to 
-verify that the mirroring algorithm(s) is(are) correctly implemented for each table. This verifies also the CDC implementatiom for each table.
+      <note>This job deletes "source" (OBO) rows that have been archived/mirrored to tables in the "target" (PSA) DB. The selection of tables for which this deletion will be performed,
+as well as  some aspects of how and when this is performed, are controlled by settings stored in table etl.table_meta.
 
 "Pass batch ID?" is selected for this job so that the batch ID is passed to tr_set_job_batch_id_variable via jb_init, which assigns this value to QF_JOB_BATCH_ID.
 
 If this job has a parent, the setting "Pass batch ID?" should also be set for the parent *if* it is desired that QF_JOB_BATCH_ID should be assigned
-the batch ID of the root job (not this job). This may vary from case to case.
-
-This job has parameter:
-
-	PARAM_MAX_NUM_COMPARE_ROWS	Maximum number of rows that will be compared for these tables. 0 means *all* rows.</note>
+the batch ID of the root job (not this job). This may vary from case to case.</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>935</width>
-      <heigth>164</heigth>
+      <width>1005</width>
+      <heigth>108</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -947,7 +968,7 @@ This job has parameter:
 QF_CDC_LAST_LOAD. This sub-transformation is passed the parameter:
 
 PARAM_CDC_TIMESTAMPS_ID = ${QF_OBO_DB_CDC_TIMESTAMPS_ID}</note>
-      <xloc>432</xloc>
+      <xloc>448</xloc>
       <yloc>272</yloc>
       <width>533</width>
       <heigth>66</heigth>
@@ -967,12 +988,12 @@ PARAM_CDC_TIMESTAMPS_ID = ${QF_OBO_DB_CDC_TIMESTAMPS_ID}</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Create list of all tables to compare. This transformation is passed parameter:
+      <note>Create list of tables to delete rows from. This transformation is passed parameter:
 
 PARAM_SOURCE_DB_ID = ${QF_TABLE_META_SOURCE_DB_ID_OBO}</note>
-      <xloc>432</xloc>
+      <xloc>448</xloc>
       <yloc>368</yloc>
-      <width>461</width>
+      <width>493</width>
       <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -990,21 +1011,20 @@ PARAM_SOURCE_DB_ID = ${QF_TABLE_META_SOURCE_DB_ID_OBO}</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Compute comparision statistics for each table that is mirrored from a source DB to the target PSA DB. This sub-job is:
+      <note>Delete rows from each "source" table that is configured for this operation. This sub-job is:
 
 	1.	RUN ONCE FOR EACH TABLE BEING MIRRORED.
 
-	2.	Passed the schema name and table name for the two tables to compare that are provided by the previous
-		transformation.
+	2.	Passed the schema name and table name for the two tables to compare that are provided by
+		the previous transformation, as well as additional parameters associated with each table.
 
 	3.	Passed the additional parameters:
 			PARAM_SOURCE_DB_ID				= ${QF_TABLE_META_SOURCE_DB_ID_OBO}
-			PARAM_LAST_LOAD_TIMESTAMP	= ${QF_CDC_LAST_LOAD}
-			PARAM_MAX_NUM_COMPARE_ROWS</note>
-      <xloc>432</xloc>
+			PARAM_LAST_LOAD_TIMESTAMP	= ${QF_CDC_LAST_LOAD}</note>
+      <xloc>448</xloc>
       <yloc>432</yloc>
-      <width>693</width>
-      <heigth>164</heigth>
+      <width>601</width>
+      <heigth>150</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
