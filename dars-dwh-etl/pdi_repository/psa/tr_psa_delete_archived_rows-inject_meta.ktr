@@ -10,8 +10,28 @@
     <parameters>
       <parameter>
         <name>PARAM_COMPARE_BEFORE_DELETE</name>
-        <default_value>Y</default_value>
+        <default_value>N</default_value>
         <description>"Y" if rows to be deleted shall first be compared to rows in target PSA table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_INSERTED_ON_COLNAME</name>
+        <default_value>inserted_on</default_value>
+        <description>Name of column acting as "inserted_on" timestamp column of source table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_INSERT_ID_COLNAME</name>
+        <default_value>insert_id</default_value>
+        <description>Name of column acting as "insert_id" column of source table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_INSERT_ID_FROM</name>
+        <default_value>100</default_value>
+        <description>"from" value for the "insert_id" column of the source OBO table that is being compared to the PSA table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_INSERT_ID_TO</name>
+        <default_value>110</default_value>
+        <description>"to" value for the "insert_id" column of the source OBO table that is being compared to the PSA table</description>
       </parameter>
       <parameter>
         <name>PARAM_LAST_LOAD_TIMESTAMP</name>
@@ -489,7 +509,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/07/18 14:09:51.433</modified_date>
+    <modified_date>2017/07/18 15:21:06.479</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -549,6 +569,27 @@ the comments in that job for an explanation.</note>
       <fontcolorblue>0</fontcolorblue>
       <backgroundcolorred>255</backgroundcolorred>
       <backgroundcolorgreen>255</backgroundcolorgreen>
+      <backgroundcolorblue>0</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Delete "...INSERT..." parmeters that I added for testing only!</note>
+      <xloc>208</xloc>
+      <yloc>320</yloc>
+      <width>436</width>
+      <heigth>28</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>12</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>255</fontcolorred>
+      <fontcolorgreen>255</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>0</backgroundcolorred>
+      <backgroundcolorgreen>0</backgroundcolorgreen>
       <backgroundcolorblue>0</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
@@ -703,8 +744,8 @@ the comments in that job for an explanation.</note>
     <directory_path>${Internal.Entry.Current.Directory}</directory_path>
     <source_step />
     <source_output_fields>    </source_output_fields>
-    <target_file />
-    <no_execution>N</no_execution>
+    <target_file>/tmp/tr_psa_delete_archived_rows.ktr</target_file>
+    <no_execution>Y</no_execution>
     <stream_source_step />
     <stream_target_step />
     <mappings>
@@ -953,13 +994,17 @@ CROSS JOIN
 FROM 
     etl.column_meta 
 WHERE 
-    table_meta_id = ${PARAM_TABLE_META_ID} AND 
-    -- Although the primary key columns don't need to be compared, they
-    -- are needed by the "Merge Rows" step so they are included here.
-    -- This also ensures that there will be columns to compare.
-    (compare_column=true OR is_primary_key_column=true)
+    table_meta_id = ${PARAM_TABLE_META_ID} AND (
+        -- Although the primary key columns don't need to be compared, they
+        -- are needed by the "Merge Rows" step so they are included here.
+        -- This also ensures that there will be columns to compare.
+        is_primary_key_column=true OR              -- always compare this/these column(s)
+        is_last_updated_on_column=true OR          -- always compare this column, if defined
+        is_row_can_be_deleted_from_column=true OR  -- always compare this column, if defined
+        (compare_column=true AND '${PARAM_COMPARE_BEFORE_DELETE}'='Y')
+    )
 ORDER BY 
-    column_meta_id ASC  -- must use the same sort order in "Target column names to compare"</sql>
+    column_meta_id ASC  -- must use the same sort order in "Target (PSA) column names to compare"</sql>
     <limit>0</limit>
     <lookup />
     <execute_each_row>N</execute_each_row>
@@ -1034,13 +1079,17 @@ ORDER BY
 FROM 
     etl.column_meta 
 WHERE 
-    table_meta_id = ${PARAM_TABLE_META_ID} AND 
-    -- Although the primary key columns don't need to be compared, they
-    -- are needed by the "Merge Rows" step so they are included here.
-    -- This also ensures that there will be columns to compare.
-    (compare_column=true OR is_primary_key_column=true)
+    table_meta_id = ${PARAM_TABLE_META_ID} AND (
+        -- Although the primary key columns don't need to be compared, they
+        -- are needed by the "Merge Rows" step so they are included here.
+        -- This also ensures that there will be columns to compare.
+        is_primary_key_column=true OR              -- always compare this/these column(s)
+        is_last_updated_on_column=true OR          -- always compare this column, if defined
+        is_row_can_be_deleted_from_column=true OR  -- always compare this column, if defined
+        (compare_column=true AND '${PARAM_COMPARE_BEFORE_DELETE}'='Y')
+    )
 ORDER BY 
-    column_meta_id ASC  -- must use the same sort order in "Target column names to compare"</sql>
+    column_meta_id ASC  -- must use the same sort order in "Source (OBO) column names to compare"</sql>
     <limit>0</limit>
     <lookup />
     <execute_each_row>N</execute_each_row>
