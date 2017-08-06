@@ -1,142 +1,16 @@
 <job>
-  <name>jb_psa_delete_archived_rows-table</name>
+  <name>jb_psa-delete_archived_rows</name>
   <description />
   <extended_description />
   <job_version />
   <job_status>0</job_status>
-  <directory>/psa</directory>
+  <directory>/psa/compare_before_delete-old_code</directory>
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/08/04 09:33:07.484</modified_date>
+  <modified_date>2017/08/06 20:27:31.836</modified_date>
   <parameters>
-    <parameter>
-      <name>PARAM_CAN_DELETE_ROW_SOURCE_COLNAME</name>
-      <default_value />
-      <description>Column of source table that indicates if the row can be deleted immediately</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_COMPARE_BEFORE_DELETE</name>
-      <default_value>Y</default_value>
-      <description>"Y" if rows to be deleted shall first be compared to rows in target PSA table</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_LAST_LOAD_TIMESTAMP</name>
-      <default_value>1900.01.01 00:00:00</default_value>
-      <description>Timestamp of last successful load from the source database</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_LAST_UPDATED_ON_SOURCE_COLNAME</name>
-      <default_value />
-      <description>Column of source table that acts as a "last_updated_on" timestamp column</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS</name>
-      <default_value>2000000000</default_value>
-      <description>Number of seconds after the "row_can_be_deleted_from" timestamp that an archived row can be deleted</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME</name>
-      <default_value />
-      <description>Column of source table that acts as a "row_can_be_deleted_from" timestamp column</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_SOURCE_DB_ID</name>
-      <default_value>1</default_value>
-      <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_SOURCE_SCHEMA</name>
-      <default_value>passage</default_value>
-      <description>Name of schema containing source table to mirror to target table</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_SOURCE_SCHEMA_TABLE</name>
-      <default_value>passage.image</default_value>
-      <description>${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_SOURCE_TABLE</name>
-      <default_value>image</default_value>
-      <description>Name of source table to mirror to target table</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_TABLE_META_ID</name>
-      <default_value>0</default_value>
-      <description>Primary key of etl.table_meta row for "source" table from which rows will be deleted</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_TARGET_SCHEMA</name>
-      <default_value>passage</default_value>
-      <description>Name of schema containing target table to update (not currently used)</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_TARGET_SCHEMA_TABLE</name>
-      <default_value>passage.image</default_value>
-      <description>${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_TARGET_TABLE</name>
-      <default_value>image</default_value>
-      <description>Name of target table to update (not currently used)</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_USE_CUSTOM_DELETE_ALGORITHM</name>
-      <default_value>N</default_value>
-      <description>"Y" if a custom DELETE algorithm shall be used for this table</description>
-    </parameter>
-  </parameters>
-  <connection>
-    <name>etl_db</name>
-    <server>${QF_ETL_DB_HOST}</server>
-    <type>POSTGRESQL</type>
-    <access>Native</access>
-    <database>${QF_ETL_DB_DATABASE}</database>
-    <port>${QF_ETL_DB_PORT}</port>
-    <username>${QF_ETL_DB_USERNAME}</username>
-    <password>${QF_ETL_DB_PASSWORD}</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
-    <attributes>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>IS_CLUSTERED</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>PORT_NUMBER</code>
-        <attribute>${QF_ETL_DB_PORT}</attribute>
-      </attribute>
-      <attribute>
-        <code>PRESERVE_RESERVED_WORD_CASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>QUOTE_ALL_FIELDS</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>USE_POOLING</code>
-        <attribute>N</attribute>
-      </attribute>
-    </attributes>
-  </connection>
+    </parameters>
   <connection>
     <name>logging_db</name>
     <server>${QF_LOGGING_DB_HOST}</server>
@@ -480,18 +354,94 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>224</xloc>
-      <yloc>304</yloc>
+      <xloc>32</xloc>
+      <yloc>128</yloc>
     </entry>
     <entry>
-      <name>tr_psa_delete_archived_rows-inject_meta</name>
+      <name>jb_psa_init</name>
+      <description />
+      <type>JOB</type>
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_psa_init</jobname>
+      <directory>/psa</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>128</xloc>
+      <yloc>128</yloc>
+    </entry>
+    <entry>
+      <name>tr_get_last_successful_load</name>
       <description />
       <type>TRANS</type>
       <specification_method>rep_name</specification_method>
       <trans_object_id />
       <filename />
-      <transname>tr_psa_delete_archived_rows-inject_meta</transname>
-      <directory>${Internal.Entry.Current.Directory}</directory>
+      <transname>tr_get_last_successful_load</transname>
+      <directory>/generic/cdc</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <clear_rows>N</clear_rows>
+      <clear_files>N</clear_files>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Basic</loglevel>
+      <cluster>N</cluster>
+      <slave_server_name />
+      <set_append_logfile>N</set_append_logfile>
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <create_parent_folder>N</create_parent_folder>
+      <logging_remote_work>N</logging_remote_work>
+      <run_configuration />
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_CDC_TIMESTAMPS_ID</name>
+          <stream_name />
+          <value>${QF_OBO_DB_CDC_TIMESTAMPS_ID}</value>
+        </parameter>
+      </parameters>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>304</xloc>
+      <yloc>224</yloc>
+    </entry>
+    <entry>
+      <name>tr_list_of_tables_to_delete_rows_from</name>
+      <description />
+      <type>TRANS</type>
+      <specification_method>rep_name</specification_method>
+      <trans_object_id />
+      <filename />
+      <transname>tr_list_of_tables_to_delete_rows_from</transname>
+      <directory>/generic</directory>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
@@ -513,22 +463,136 @@
       <run_configuration>Pentaho local</run_configuration>
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_SOURCE_DB_ID</name>
+          <stream_name />
+          <value>${QF_TABLE_META_SOURCE_DB_ID_OBO}</value>
+        </parameter>
       </parameters>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>432</xloc>
-      <yloc>688</yloc>
+      <xloc>304</xloc>
+      <yloc>320</yloc>
     </entry>
     <entry>
-      <name>jb_log_error 3</name>
+      <name>jb_psa_delete_archived_rows-table</name>
       <description />
       <type>JOB</type>
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
-      <jobname>jb_log_error</jobname>
-      <directory>/generic</directory>
+      <jobname>jb_psa_delete_archived_rows-table</jobname>
+      <directory>${Internal.Entry.Current.Directory}</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>Y</params_from_previous>
+      <exec_per_row>Y</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_SOURCE_DB_ID</name>
+          <stream_name />
+          <value>${QF_TABLE_META_SOURCE_DB_ID_OBO}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_LAST_LOAD_TIMESTAMP</name>
+          <stream_name />
+          <value>${QF_CDC_LAST_LOAD}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_SOURCE_SCHEMA</name>
+          <stream_name>source_schema</stream_name>
+          <value />
+        </parameter>
+        <parameter>
+          <name>PARAM_SOURCE_TABLE</name>
+          <stream_name>source_table</stream_name>
+          <value />
+        </parameter>
+        <parameter>
+          <name>PARAM_SOURCE_SCHEMA_TABLE</name>
+          <stream_name>source_schema_dot_table</stream_name>
+          <value />
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_SCHEMA</name>
+          <stream_name>target_schema</stream_name>
+          <value />
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_TABLE</name>
+          <stream_name>target_table</stream_name>
+          <value />
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_SCHEMA_TABLE</name>
+          <stream_name>target_schema_dot_table</stream_name>
+          <value />
+        </parameter>
+        <parameter>
+          <name>PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS</name>
+          <stream_name>row_can_be_deleted_from_seconds</stream_name>
+          <value />
+        </parameter>
+        <parameter>
+          <name>PARAM_USE_CUSTOM_DELETE_ALGORITHM</name>
+          <stream_name>use_custom_delete_algorithm</stream_name>
+          <value />
+        </parameter>
+        <parameter>
+          <name>PARAM_COMPARE_BEFORE_DELETE</name>
+          <stream_name>compare_before_delete</stream_name>
+          <value />
+        </parameter>
+        <parameter>
+          <name>PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME</name>
+          <stream_name>row_can_be_deleted_from_source_colname</stream_name>
+          <value />
+        </parameter>
+        <parameter>
+          <name>PARAM_CAN_DELETE_ROW_SOURCE_COLNAME</name>
+          <stream_name>can_delete_row_source_colname</stream_name>
+          <value />
+        </parameter>
+        <parameter>
+          <name>PARAM_LAST_UPDATED_ON_SOURCE_COLNAME</name>
+          <stream_name>last_updated_on_source_colname</stream_name>
+          <value />
+        </parameter>
+        <parameter>
+          <name>PARAM_TABLE_META_ID</name>
+          <stream_name>table_meta_id</stream_name>
+          <value />
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>304</xloc>
+      <yloc>416</yloc>
+    </entry>
+    <entry>
+      <name>jb_send_default_email_job_notification - Success</name>
+      <description />
+      <type>JOB</type>
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_send_default_email_job_notification</jobname>
+      <directory>/generic/email</directory>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
@@ -547,56 +611,76 @@
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
         <parameter>
-          <name>PARAM_ERROR_MESSAGE</name>
+          <name>PARAM_JOB_BATCH_ID</name>
           <stream_name />
-          <value>Error executing tr_psa_delete_archived_rows-inject_meta for source OBO table: ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</value>
+          <value>${QF_JOB_BATCH_ID}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_JOB_NAME</name>
+          <stream_name />
+          <value>${Internal.Job.Name}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_SUCCESS</name>
+          <stream_name />
+          <value>true</value>
         </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>224</xloc>
-      <yloc>688</yloc>
+      <xloc>304</xloc>
+      <yloc>560</yloc>
     </entry>
     <entry>
-      <name>Abort job</name>
+      <name>jb_send_default_email_job_notification - Failure</name>
       <description />
-      <type>ABORT</type>
-      <message>Aborting job jb_psa_delete_archived_rows-table ...</message>
+      <type>JOB</type>
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_send_default_email_job_notification</jobname>
+      <directory>/generic/email</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_JOB_BATCH_ID</name>
+          <stream_name />
+          <value>${QF_JOB_BATCH_ID}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_JOB_NAME</name>
+          <stream_name />
+          <value>${Internal.Job.Name}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_SUCCESS</name>
+          <stream_name />
+          <value>false</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>80</xloc>
-      <yloc>592</yloc>
-    </entry>
-    <entry>
-      <name>Write To Log: Parameters</name>
-      <description />
-      <type>WRITE_TO_LOG</type>
-      <logmessage>jb_psa_delete_archived_rows-table:
-PARAM_SOURCE_DB_ID                           = ${PARAM_SOURCE_DB_ID}
-PARAM_LAST_LOAD_TIMESTAMP                    = ${PARAM_LAST_LOAD_TIMESTAMP}
-PARAM_SOURCE_SCHEMA                          = ${PARAM_SOURCE_SCHEMA}
-PARAM_SOURCE_TABLE                           = ${PARAM_SOURCE_TABLE}
-PARAM_SOURCE_SCHEMA_TABLE                    = ${PARAM_SOURCE_SCHEMA_TABLE}
-PARAM_TARGET_SCHEMA                          = ${PARAM_TARGET_SCHEMA}
-PARAM_TARGET_TABLE                           = ${PARAM_TARGET_TABLE}
-PARAM_TARGET_SCHEMA_TABLE                    = ${PARAM_TARGET_SCHEMA_TABLE}
-PARAM_COMPARE_BEFORE_DELETE                  = ${PARAM_COMPARE_BEFORE_DELETE}
-PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS        = ${PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS}
-PARAM_USE_CUSTOM_DELETE_ALGORITHM            = ${PARAM_USE_CUSTOM_DELETE_ALGORITHM}
-PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME = ${PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME}
-PARAM_CAN_DELETE_ROW_SOURCE_COLNAME          = ${PARAM_CAN_DELETE_ROW_SOURCE_COLNAME}
-PARAM_LAST_UPDATED_ON_SOURCE_COLNAME         = ${PARAM_LAST_UPDATED_ON_SOURCE_COLNAME}
-PARAM_TABLE_META_ID                          = ${PARAM_TABLE_META_ID}</logmessage>
-      <loglevel>Basic</loglevel>
-      <logsubject />
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>432</xloc>
-      <yloc>304</yloc>
+      <xloc>304</xloc>
+      <yloc>624</yloc>
     </entry>
     <entry>
       <name>Success</name>
@@ -605,8 +689,19 @@ PARAM_TABLE_META_ID                          = ${PARAM_TABLE_META_ID}</logmessag
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>432</xloc>
-      <yloc>784</yloc>
+      <xloc>496</xloc>
+      <yloc>560</yloc>
+    </entry>
+    <entry>
+      <name>Abort job</name>
+      <description />
+      <type>ABORT</type>
+      <message>Job ${Internal.Job.Name} failed. See log and e-mail sent.</message>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>496</xloc>
+      <yloc>624</yloc>
     </entry>
     <entry>
       <name>jb_log_error 1</name>
@@ -637,181 +732,81 @@ PARAM_TABLE_META_ID                          = ${PARAM_TABLE_META_ID}</logmessag
         <parameter>
           <name>PARAM_ERROR_MESSAGE</name>
           <stream_name />
-          <value>No primary key columns have been configured for source OBO table: ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</value>
+          <value>Error occurred in tr_get_last_successful_load</value>
         </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
       <parallel>N</parallel>
       <draw>Y</draw>
-      <nr>2</nr>
-      <xloc>224</xloc>
-      <yloc>496</yloc>
+      <nr>0</nr>
+      <xloc>160</xloc>
+      <yloc>224</yloc>
     </entry>
     <entry>
-      <name>Are primary key columns configured for this table?</name>
+      <name>DUMMY</name>
       <description />
-      <type>EVAL_TABLE_CONTENT</type>
-      <connection>etl_db</connection>
-      <schemaname />
-      <tablename />
-      <success_condition>rows_count_greater</success_condition>
-      <limit>0</limit>
-      <is_custom_sql>Y</is_custom_sql>
-      <is_usevars>Y</is_usevars>
-      <custom_sql>SELECT
-    source_column_name AS "key_col_name" 
-FROM 
-    etl.column_meta 
-WHERE 
-    table_meta_id = ${PARAM_TABLE_META_ID} AND 
-    is_primary_key_column = true
-ORDER BY 
-    primary_key_column_order</custom_sql>
-      <add_rows_result>N</add_rows_result>
-      <clear_result_rows>Y</clear_result_rows>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>1</nr>
-      <xloc>432</xloc>
-      <yloc>496</yloc>
-    </entry>
-    <entry>
-      <name>Use custom delete algorithm?</name>
-      <description />
-      <type>SIMPLE_EVAL</type>
-      <valuetype>variable</valuetype>
-      <fieldname />
-      <variablename>${PARAM_USE_CUSTOM_DELETE_ALGORITHM}</variablename>
-      <fieldtype>boolean</fieldtype>
-      <mask />
-      <comparevalue />
-      <minvalue />
-      <maxvalue />
-      <successcondition>equal</successcondition>
-      <successnumbercondition>equal</successnumbercondition>
-      <successbooleancondition>true</successbooleancondition>
-      <successwhenvarset>N</successwhenvarset>
+      <type>SPECIAL</type>
+      <start>N</start>
+      <dummy>Y</dummy>
+      <repeat>N</repeat>
+      <schedulerType>0</schedulerType>
+      <intervalSeconds>0</intervalSeconds>
+      <intervalMinutes>60</intervalMinutes>
+      <hour>12</hour>
+      <minutes>0</minutes>
+      <weekDay>1</weekDay>
+      <DayOfMonth>1</DayOfMonth>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>432</xloc>
-      <yloc>400</yloc>
+      <xloc>32</xloc>
+      <yloc>416</yloc>
     </entry>
     <entry>
-      <name>Log: Must write ETL! </name>
+      <name>DUMMY 2</name>
       <description />
-      <type>WRITE_TO_LOG</type>
-      <logmessage>**************************************
-**************************************
-**************************************
-PARAM_USE_CUSTOM_DELETE_ALGORITHM = Y
-Must write code!!!!!!!!!!!!!!!!!!!!!!!
-**************************************
-**************************************
-**************************************</logmessage>
-      <loglevel>Basic</loglevel>
-      <logsubject />
+      <type>SPECIAL</type>
+      <start>N</start>
+      <dummy>Y</dummy>
+      <repeat>N</repeat>
+      <schedulerType>0</schedulerType>
+      <intervalSeconds>0</intervalSeconds>
+      <intervalMinutes>60</intervalMinutes>
+      <hour>12</hour>
+      <minutes>0</minutes>
+      <weekDay>1</weekDay>
+      <DayOfMonth>1</DayOfMonth>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>608</xloc>
-      <yloc>400</yloc>
+      <xloc>32</xloc>
+      <yloc>624</yloc>
     </entry>
     <entry>
-      <name>Abort job 2</name>
+      <name>DUMMY 3</name>
       <description />
-      <type>ABORT</type>
-      <message>Write ETL code for performing "custom" row deletion!!!!!!!!!!!!</message>
+      <type>SPECIAL</type>
+      <start>N</start>
+      <dummy>Y</dummy>
+      <repeat>N</repeat>
+      <schedulerType>0</schedulerType>
+      <intervalSeconds>0</intervalSeconds>
+      <intervalMinutes>60</intervalMinutes>
+      <hour>12</hour>
+      <minutes>0</minutes>
+      <weekDay>1</weekDay>
+      <DayOfMonth>1</DayOfMonth>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>720</xloc>
-      <yloc>400</yloc>
-    </entry>
-    <entry>
-      <name>"can_delete_row" column configured for table?</name>
-      <description />
-      <type>SIMPLE_EVAL</type>
-      <valuetype>variable</valuetype>
-      <fieldname />
-      <variablename>${PARAM_CAN_DELETE_ROW_SOURCE_COLNAME}</variablename>
-      <fieldtype>string</fieldtype>
-      <mask />
-      <comparevalue />
-      <minvalue />
-      <maxvalue />
-      <successcondition>different</successcondition>
-      <successnumbercondition>equal</successnumbercondition>
-      <successbooleancondition>false</successbooleancondition>
-      <successwhenvarset>N</successwhenvarset>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>432</xloc>
-      <yloc>592</yloc>
-    </entry>
-    <entry>
-      <name>jb_log_error 2</name>
-      <description />
-      <type>JOB</type>
-      <specification_method>rep_name</specification_method>
-      <job_object_id />
-      <filename />
-      <jobname>jb_log_error</jobname>
-      <directory>/generic</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Nothing</loglevel>
-      <slave_server_name />
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <expand_remote_job>N</expand_remote_job>
-      <create_parent_folder>N</create_parent_folder>
-      <pass_export>N</pass_export>
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-        <parameter>
-          <name>PARAM_ERROR_MESSAGE</name>
-          <stream_name />
-          <value>No "can_delete_row" column has been configured for source OBO table: ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</value>
-        </parameter>
-      </parameters>
-      <set_append_logfile>N</set_append_logfile>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>2</nr>
-      <xloc>224</xloc>
-      <yloc>592</yloc>
+      <xloc>304</xloc>
+      <yloc>128</yloc>
     </entry>
   </entries>
   <hops>
     <hop>
-      <from>tr_psa_delete_archived_rows-inject_meta</from>
-      <to>jb_log_error 3</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>jb_log_error 3</from>
-      <to>Abort job</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
       <from>START</from>
-      <to>Write To Log: Parameters</to>
+      <to>jb_psa_init</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -819,35 +814,53 @@ Must write code!!!!!!!!!!!!!!!!!!!!!!!
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>tr_psa_delete_archived_rows-inject_meta</from>
+      <from>tr_get_last_successful_load</from>
+      <to>tr_list_of_tables_to_delete_rows_from</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>tr_list_of_tables_to_delete_rows_from</from>
+      <to>jb_psa_delete_archived_rows-table</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_send_default_email_job_notification - Success</from>
       <to>Success</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>jb_log_error 1</from>
+      <from>jb_send_default_email_job_notification - Failure</from>
       <to>Abort job</to>
-      <from_nr>2</from_nr>
+      <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>N</evaluation>
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>Are primary key columns configured for this table?</from>
+      <from>tr_get_last_successful_load</from>
       <to>jb_log_error 1</to>
-      <from_nr>1</from_nr>
-      <to_nr>2</to_nr>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>N</evaluation>
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Use custom delete algorithm?</from>
-      <to>Log: Must write ETL! </to>
+      <from>jb_psa_delete_archived_rows-table</from>
+      <to>jb_send_default_email_job_notification - Success</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -855,44 +868,62 @@ Must write code!!!!!!!!!!!!!!!!!!!!!!!
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Log: Must write ETL! </from>
-      <to>Abort job 2</to>
+      <from>jb_psa_init</from>
+      <to>DUMMY</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Write To Log: Parameters</from>
-      <to>Use custom delete algorithm?</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Use custom delete algorithm?</from>
-      <to>Are primary key columns configured for this table?</to>
-      <from_nr>0</from_nr>
-      <to_nr>1</to_nr>
       <enabled>Y</enabled>
       <evaluation>N</evaluation>
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Are primary key columns configured for this table?</from>
-      <to>"can_delete_row" column configured for table?</to>
-      <from_nr>1</from_nr>
+      <from>jb_log_error 1</from>
+      <to>DUMMY</to>
+      <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>tr_list_of_tables_to_delete_rows_from</from>
+      <to>DUMMY</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>"can_delete_row" column configured for table?</from>
-      <to>tr_psa_delete_archived_rows-inject_meta</to>
+      <from>jb_psa_delete_archived_rows-table</from>
+      <to>DUMMY</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>DUMMY</from>
+      <to>DUMMY 2</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>DUMMY 2</from>
+      <to>jb_send_default_email_job_notification - Failure</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>jb_psa_init</from>
+      <to>DUMMY 3</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -900,49 +931,28 @@ Must write code!!!!!!!!!!!!!!!!!!!!!!!
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>"can_delete_row" column configured for table?</from>
-      <to>jb_log_error 2</to>
+      <from>DUMMY 3</from>
+      <to>tr_get_last_successful_load</to>
       <from_nr>0</from_nr>
-      <to_nr>2</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>jb_log_error 2</from>
-      <to>Abort job</to>
-      <from_nr>2</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
-      <evaluation>N</evaluation>
+      <evaluation>Y</evaluation>
       <unconditional>Y</unconditional>
     </hop>
   </hops>
   <notepads>
     <notepad>
-      <note>This job deletes archived rows from a single table in a source database that is mirrored to a target table in the PSA database.
-This job has parameters:
+      <note>This job deletes "source" (OBO) rows that have been archived/mirrored to tables in the "target" (PSA) DB. The selection of tables for which this deletion will be performed,
+as well as  some aspects of how and when this is performed, are controlled by settings stored in table etl.table_meta.
 
-	PARAM_SOURCE_DB_ID								ID the "source" database containing tables that are mirrored to a "target" database
-	PARAM_LAST_LOAD_TIMESTAMP					Timestamp for when the target PSA DB mirror tables were last updated from the source DB.
-														Used to ensure that we do not delete rows that are not yet fully archived/mirrored.
-	PARAM_SOURCE_SCHEMA							Name of schema containing source table that is mirrored to target PSA table
-	PARAM_SOURCE_TABLE							Name of source table that is mirrored to target PSA table
-	PARAM_SOURCE_SCHEMA_TABLE					${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
-	PARAM_TARGET_SCHEMA							Name of schema containing target table that is mirrored to target PSA table (not currently used)
-	PARAM_TARGET_TABLE								Name of target table that is mirrored to target PSA table (not currently used)
-	PARAM_TARGET_SCHEMA_TABLE					${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}
-	PARAM_COMPARE_BEFORE_DELETE					"Y" if rows to be deleted shall first be compared to rows in target PSA table
-	PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS	Number of seconds after the "row_can_be_deleted_from" timestamp that an archived row can be deleted
-	PARAM_USE_CUSTOM_DELETE_ALGORITHM			"Y" if a custom DELETE algorithm shall be used for this table
-	PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME	Column of source table that acts as a "row_can_be_deleted_from" timestamp column
-	PARAM_CAN_DELETE_ROW_SOURCE_COLNAME		Column of source table that indicates if the row can be deleted immediately
-	PARAM_LAST_UPDATED_ON_SOURCE_COLNAME	Column of source table that acts as a "last_updated_on" timestamp column
-	PARAM_TABLE_META_ID							Primary key of etl.table_meta row for "source" table from which rows will be deleted</note>
+"Pass batch ID?" is selected for this job so that the batch ID is passed to tr_set_job_batch_id_variable via jb_init, which assigns this value to QF_JOB_BATCH_ID.
+
+If this job has a parent, the setting "Pass batch ID?" should also be set for the parent *if* it is desired that QF_JOB_BATCH_ID should be assigned
+the batch ID of the root job (not this job). This may vary from case to case.</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>963</width>
-      <heigth>276</heigth>
+      <width>1005</width>
+      <heigth>108</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -959,12 +969,36 @@ This job has parameters:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>This "Abort" is needed to tell the
-root calling job that execution
-has failed.</note>
-      <xloc>0</xloc>
-      <yloc>640</yloc>
-      <width>200</width>
+      <note>Get the "last successful load" timestamp for the source database and assign it to variable
+QF_CDC_LAST_LOAD. This sub-transformation is passed the parameter:
+
+PARAM_CDC_TIMESTAMPS_ID = ${QF_OBO_DB_CDC_TIMESTAMPS_ID}</note>
+      <xloc>448</xloc>
+      <yloc>208</yloc>
+      <width>533</width>
+      <heigth>66</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Create list of tables to delete rows from. This transformation is passed parameter:
+
+PARAM_SOURCE_DB_ID = ${QF_TABLE_META_SOURCE_DB_ID_OBO}</note>
+      <xloc>448</xloc>
+      <yloc>304</yloc>
+      <width>493</width>
       <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -982,12 +1016,20 @@ has failed.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>This transformation deletes archived rows from the source and target tables using an
-"ETL Metadata Injection" step.</note>
-      <xloc>608</xloc>
-      <yloc>688</yloc>
-      <width>509</width>
-      <heigth>38</heigth>
+      <note>Delete rows from each "source" table that is configured for this operation. This sub-job is:
+
+	1.	RUN ONCE FOR EACH TABLE BEING MIRRORED.
+
+	2.	Passed the schema name and table name for the two tables to compare that are provided by
+		the previous transformation, as well as additional parameters associated with each table.
+
+	3.	Passed the additional parameters:
+			PARAM_SOURCE_DB_ID				= ${QF_TABLE_META_SOURCE_DB_ID_OBO}
+			PARAM_LAST_LOAD_TIMESTAMP	= ${QF_CDC_LAST_LOAD}</note>
+      <xloc>448</xloc>
+      <yloc>368</yloc>
+      <width>601</width>
+      <heigth>150</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -1004,87 +1046,34 @@ has failed.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>The query in this step must match the query in the step "Source (OBO) primary key column names"
-in the transformation "tr_psa_delete_archived_rows-inject_meta" that is executed below. This is to
-avoid a PDI runtime error that occurs if an empty stream is sent to an "ETL Metadata Injection" step.
-To avoid this possibility in "tr_psa_delete_archived_rows-inject_meta", we check that metadata is 
-available here before executing that transformation. This should never occur in practice, but we check
-anyway in order to provide a clear warning message, rather than letting PDI choke on this problem.</note>
-      <xloc>608</xloc>
-      <yloc>464</yloc>
-      <width>603</width>
-      <heigth>94</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>255</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>This transformation
-must abort this job if 
-the compare is not 
-successful for every row?
-Maybe not.</note>
-      <xloc>496</xloc>
-      <yloc>736</yloc>
-      <width>157</width>
-      <heigth>80</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>255</fontcolorred>
-      <fontcolorgreen>255</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>0</backgroundcolorred>
-      <backgroundcolorgreen>0</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>&lt;- Write ETL!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</note>
-      <xloc>768</xloc>
-      <yloc>400</yloc>
-      <width>424</width>
+      <note>Notify recipient(s) of SUCCESSFUL job execution.</note>
+      <xloc>560</xloc>
+      <yloc>560</yloc>
+      <width>294</width>
       <heigth>24</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontname />
+      <fontsize>-1</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
-      <fontcolorred>255</fontcolorred>
-      <fontcolorgreen>255</fontcolorgreen>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
       <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>0</backgroundcolorred>
-      <backgroundcolorgreen>0</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
       <bordercolorblue>100</bordercolorblue>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>This is to provide a nice error message in the log so that it is clear that a "can_delete_row" must be
-configured for the table. Without this check PDI will choke when it tries to reference this column and
-it will be harder to track down the problem.</note>
-      <xloc>608</xloc>
-      <yloc>592</yloc>
-      <width>594</width>
-      <heigth>52</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <note>Notify recipient(s) of FAILED job execution.</note>
+      <xloc>560</xloc>
+      <yloc>624</yloc>
+      <width>260</width>
+      <heigth>24</heigth>
+      <fontname />
+      <fontsize>-1</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
