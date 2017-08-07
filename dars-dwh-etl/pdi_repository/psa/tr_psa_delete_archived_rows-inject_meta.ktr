@@ -14,11 +14,6 @@
         <description>Column of source table that indicates if the row can be deleted immediately</description>
       </parameter>
       <parameter>
-        <name>PARAM_COMPARE_BEFORE_DELETE</name>
-        <default_value>N</default_value>
-        <description>"Y" if rows to be deleted shall first be compared to rows in target PSA table</description>
-      </parameter>
-      <parameter>
         <name>PARAM_LAST_LOAD_TIMESTAMP</name>
         <default_value>1900.01.01 00:00:00</default_value>
         <description>Timestamp of last successful load from the source database</description>
@@ -494,7 +489,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/08/04 09:32:07.780</modified_date>
+    <modified_date>2017/08/07 09:41:08.191</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -511,7 +506,6 @@ has parameters:
 	PARAM_SOURCE_TABLE							Name of source table to compare to target table
 	PARAM_TARGET_SCHEMA							Name of schema containing target table to compare with (not currently used)
 	PARAM_TARGET_TABLE								Name of target table to compare with (not currently used)
-	PARAM_COMPARE_BEFORE_DELETE					"Y" if rows to be deleted shall first be compared to rows in target PSA table
 	PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS	Number of seconds after the "row_can_be_deleted_from" timestamp that an archived row can be deleted
 	PARAM_USE_CUSTOM_DELETE_ALGORITHM			"Y" if a custom DELETE algorithm shall be used for this table
 	PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME	Column of source table that acts as a "row_can_be_deleted_from" timestamp column
@@ -521,7 +515,7 @@ has parameters:
       <xloc>0</xloc>
       <yloc>0</yloc>
       <width>963</width>
-      <heigth>262</heigth>
+      <heigth>248</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -543,8 +537,8 @@ column names must match the query in
 "jb_psa_delete_archived_rows-table" from
 where this transformation is executed. See
 the comments in that job for an explanation.</note>
-      <xloc>304</xloc>
-      <yloc>560</yloc>
+      <xloc>688</xloc>
+      <yloc>448</yloc>
       <width>269</width>
       <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
@@ -667,32 +661,17 @@ the comments in that job for an explanation.</note>
   </connection>
   <order>
     <hop>
-      <from>SELECT statement for target (PSA) DB</from>
-      <to>ETL Metadata Injection: tmplt_psa_delete_archived_rows</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Target (PSA) column names to compare</from>
-      <to>ETL Metadata Injection: tmplt_psa_delete_archived_rows</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>Source (OBO) primary key column names</from>
       <to>ETL Metadata Injection: tmplt_psa_delete_archived_rows</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Source (OBO) column names to compare</from>
+      <from>SELECT statement for source (OBO) DB table</from>
       <to>ETL Metadata Injection: tmplt_psa_delete_archived_rows</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>SELECT statement for source (OBO) DB</from>
-      <to>ETL Metadata Injection: tmplt_psa_delete_archived_rows</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Target (PSA) "can_delete_row" column metadata</from>
+      <from>Source (OBO) "can_delete_row" column metadata</from>
       <to>ETL Metadata Injection: tmplt_psa_delete_archived_rows</to>
       <enabled>Y</enabled>
     </hop>
@@ -715,94 +694,59 @@ the comments in that job for an explanation.</note>
     <directory_path>${Internal.Entry.Current.Directory}</directory_path>
     <source_step />
     <source_output_fields>    </source_output_fields>
-    <target_file>/tmp/tr_tmplt_psa_delete_archived_rows.ktr</target_file>
-    <no_execution>Y</no_execution>
+    <target_file />
+    <no_execution>N</no_execution>
     <stream_source_step />
     <stream_target_step />
     <mappings>
       <mapping>
-        <target_step_name>Update: Mark row for deletion</target_step_name>
-        <target_attribute_key>KEY_STREAM2</target_attribute_key>
+        <target_step_name>Update: Mark rows for deletion</target_step_name>
+        <target_attribute_key>UPDATE_LOOKUP</target_attribute_key>
         <target_detail>Y</target_detail>
-        <source_step>Source (OBO) primary key column names</source_step>
-        <source_field>no_field</source_field>
+        <source_step>Source (OBO) "can_delete_row" column metadata</source_step>
+        <source_field>can_delete_row_col_name</source_field>
       </mapping>
       <mapping>
-        <target_step_name>Get rows from source (OBO) DB table</target_step_name>
-        <target_attribute_key>SQL</target_attribute_key>
-        <target_detail>N</target_detail>
-        <source_step>SELECT statement for source (OBO) DB</source_step>
-        <source_field>select_source_rows_sql</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Merge Rows (diff)</target_step_name>
-        <target_attribute_key>KEY_FIELDS</target_attribute_key>
-        <target_detail>N</target_detail>
-        <source_step>Source (OBO) primary key column names</source_step>
-        <source_field>key_col_name</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Update: Mark row for deletion</target_step_name>
-        <target_attribute_key>KEY_STREAM</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Source (OBO) primary key column names</source_step>
-        <source_field>key_col_name</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Rename PSA field names -> OBO field names</target_step_name>
-        <target_attribute_key>FIELD_RENAME</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Source (OBO) column names to compare</source_step>
-        <source_field>source_col_name</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Update: Mark row for deletion</target_step_name>
-        <target_attribute_key>KEY_LOOKUP</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Source (OBO) primary key column names</source_step>
-        <source_field>key_col_name</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Merge Rows (diff)</target_step_name>
-        <target_attribute_key>VALUE_FIELDS</target_attribute_key>
-        <target_detail>N</target_detail>
-        <source_step>Source (OBO) column names to compare</source_step>
-        <source_field>source_col_name</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Update: Mark row for deletion</target_step_name>
-        <target_attribute_key>UPDATE_STREAM</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Target (PSA) "can_delete_row" column metadata</source_step>
-        <source_field>true_field</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Get rows from target (PSA) DB table</target_step_name>
-        <target_attribute_key>SQL</target_attribute_key>
-        <target_detail>N</target_detail>
-        <source_step>SELECT statement for target (PSA) DB</source_step>
-        <source_field>select_target_rows_sql</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Update: Mark row for deletion</target_step_name>
+        <target_step_name>Update: Mark rows for deletion</target_step_name>
         <target_attribute_key>KEY_CONDITION</target_attribute_key>
         <target_detail>Y</target_detail>
         <source_step>Source (OBO) primary key column names</source_step>
         <source_field>key_field_value_comparator</source_field>
       </mapping>
       <mapping>
-        <target_step_name>Update: Mark row for deletion</target_step_name>
-        <target_attribute_key>UPDATE_LOOKUP</target_attribute_key>
+        <target_step_name>Update: Mark rows for deletion</target_step_name>
+        <target_attribute_key>UPDATE_STREAM</target_attribute_key>
         <target_detail>Y</target_detail>
-        <source_step>Target (PSA) "can_delete_row" column metadata</source_step>
-        <source_field>can_delete_row_col_name</source_field>
+        <source_step>Source (OBO) "can_delete_row" column metadata</source_step>
+        <source_field>true_field_name</source_field>
       </mapping>
       <mapping>
-        <target_step_name>Rename PSA field names -> OBO field names</target_step_name>
-        <target_attribute_key>FIELD_NAME</target_attribute_key>
+        <target_step_name>Get primary key column(s) from source (OBO) DB table</target_step_name>
+        <target_attribute_key>SQL</target_attribute_key>
+        <target_detail>N</target_detail>
+        <source_step>SELECT statement for source (OBO) DB table</source_step>
+        <source_field>select_source_rows_sql</source_field>
+      </mapping>
+      <mapping>
+        <target_step_name>Update: Mark rows for deletion</target_step_name>
+        <target_attribute_key>KEY_LOOKUP</target_attribute_key>
         <target_detail>Y</target_detail>
-        <source_step>Target (PSA) column names to compare</source_step>
-        <source_field>target_col_name</source_field>
+        <source_step>Source (OBO) primary key column names</source_step>
+        <source_field>key_col_name</source_field>
+      </mapping>
+      <mapping>
+        <target_step_name>Update: Mark rows for deletion</target_step_name>
+        <target_attribute_key>KEY_STREAM</target_attribute_key>
+        <target_detail>Y</target_detail>
+        <source_step>Source (OBO) primary key column names</source_step>
+        <source_field>key_col_name</source_field>
+      </mapping>
+      <mapping>
+        <target_step_name>Update: Mark rows for deletion</target_step_name>
+        <target_attribute_key>KEY_STREAM2</target_attribute_key>
+        <target_detail>Y</target_detail>
+        <source_step>Source (OBO) primary key column names</source_step>
+        <source_field>no_field</source_field>
       </mapping>
     </mappings>
     <cluster_schema />
@@ -813,13 +757,13 @@ the comments in that job for an explanation.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>416</xloc>
+      <xloc>160</xloc>
       <yloc>384</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>SELECT statement for source (OBO) DB</name>
+    <name>SELECT statement for source (OBO) DB table</name>
     <type>TableInput</type>
     <description />
     <distribute>Y</distribute>
@@ -831,9 +775,8 @@ the comments in that job for an explanation.</note>
     </partitioning>
     <connection>etl_db</connection>
     <sql>WITH
-    -- Create table with a string column that contains the columns from the 
-    -- source (OBO) table to compare with corresponding columns from the 
-    -- target (PSA) table:
+    -- Create table with a string column that contains the primary key column(s) from the 
+    -- source (OBO) table:
     select_list AS (
         SELECT 
             -- POSTGRESQL-SPECIFIC
@@ -841,20 +784,12 @@ the comments in that job for an explanation.</note>
         FROM 
             etl.column_meta 
         WHERE 
-            table_meta_id = ${PARAM_TABLE_META_ID} AND (
-                -- Although the primary key columns don't need to be compared, they
-                -- are needed by the "Merge Rows" step so they are included here.
-                -- This also ensures that there will be columns to compare.
-                is_primary_key_column=true OR              -- always compare this/these column(s)
-                is_last_updated_on_column=true OR          -- always compare this column, if defined
-                is_row_can_be_deleted_from_column=true OR  -- always compare this column, if defined
-                (compare_column=true AND '${PARAM_COMPARE_BEFORE_DELETE}'='Y')
-            )
+            table_meta_id = ${PARAM_TABLE_META_ID} AND 
+            is_primary_key_column = true 
     ),
     -- Create table with a string column that contains the "ORDER BY" clause. 
-    -- This consists of the columns that make up the primary key for the 
-    -- source (OBO) table. This is needed by the "Merge Rows" step in the 
-    -- template transformation.
+    -- This consists of the column(s) that make up the primary key for the 
+    -- source (OBO) table.
     orderby_list AS (
         SELECT 
            -- POSTGRESQL-SPECIFIC
@@ -866,9 +801,10 @@ the comments in that job for an explanation.</note>
             is_primary_key_column = true
     )
 SELECT
-    -- Create SELECT statement to select rows from source (OBO) table to compare/delete.
+    -- Create SELECT statement to select rows from source (OBO) table to delete.
     -- The WHERE clause includes only rows that should have been archived/mirrored.
     -- Only select rows with "can_delete_row" column = false because only thoses rows need to have this column updated to true.
+    -- This will greatly reduce the number of rows selected here if the rows with "can_delete_row" are not currently being deleted.
     'SELECT ' || CAST(select_list.str_value AS VARCHAR) || 
     ' FROM ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE} ' || 
     'WHERE ${PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME} + INTERVAL ''${PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS} seconds'' &lt; TIMESTAMP ''${PARAM_LAST_LOAD_TIMESTAMP}'' ' ||
@@ -892,133 +828,8 @@ CROSS JOIN
       </output>
     </remotesteps>
     <GUI>
-      <xloc>272</xloc>
+      <xloc>512</xloc>
       <yloc>288</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>SELECT statement for target (PSA) DB</name>
-    <type>TableInput</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <connection>etl_db</connection>
-    <sql>WITH
-    -- Create table with a string column that contains the columns from the 
-    -- target (PSA) table to compare with corresponding columns from the 
-    -- source (OBO) table:
-    select_list AS (
-        SELECT 
-           -- POSTGRESQL-SPECIFIC
-            array_to_string(array_agg(target_column_name ORDER BY column_meta_id ASC), ',') AS "str_value"
-        FROM 
-            etl.column_meta 
-        WHERE 
-            table_meta_id = ${PARAM_TABLE_META_ID} AND (
-                -- Although the primary key columns don't need to be compared, they
-                -- are needed by the "Merge Rows" step so they are included here.
-                -- This also ensures that there will be columns to compare.
-                is_primary_key_column=true OR              -- always compare this/these column(s)
-                is_last_updated_on_column=true OR          -- always compare this column, if defined
-                is_row_can_be_deleted_from_column=true OR  -- always compare this column, if defined
-                (compare_column=true AND '${PARAM_COMPARE_BEFORE_DELETE}'='Y')
-            )
-    ),
-    -- Create table with a string column that contains the "ORDER BY" clause. 
-    -- This consists of the columns that make up the primary key for the 
-    -- target (PSA) table. This is needed by the "Merge Rows" step in the 
-    -- template transformation.
-    orderby_list AS (
-        SELECT 
-           -- POSTGRESQL-SPECIFIC
-            array_to_string(array_agg(target_column_name ORDER BY primary_key_column_order ASC), ',') AS "str_value"
-        FROM 
-            etl.column_meta 
-        WHERE 
-            table_meta_id = ${PARAM_TABLE_META_ID} AND 
-            is_primary_key_column = true
-    )
-SELECT
-    -- Create SELECT statement to select rows from target (PSA) table to compare.
-    -- The WHERE clause includes only rows that should have been archived/mirrored.
-    -- Only select rows with "can_delete_row" column = false because only thoses rows need to have this column updated to true.
-    'SELECT ' || CAST(select_list.str_value AS VARCHAR) || 
-    ' FROM ${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE} ' || 
-    'WHERE ${PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME} + INTERVAL ''${PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS} seconds'' &lt; TIMESTAMP ''${PARAM_LAST_LOAD_TIMESTAMP}'' ' ||
-    ' AND ${PARAM_CAN_DELETE_ROW_SOURCE_COLNAME}=false ' ||
-    'ORDER BY ' || CAST(orderby_list.str_value AS VARCHAR) 
-    AS "select_target_rows_sql" 
-FROM
-    select_list
-CROSS JOIN
-    orderby_list</sql>
-    <limit>0</limit>
-    <lookup />
-    <execute_each_row>N</execute_each_row>
-    <variables_active>Y</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>608</xloc>
-      <yloc>288</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Source (OBO) column names to compare</name>
-    <type>TableInput</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <connection>etl_db</connection>
-    <sql>SELECT
-    source_column_name AS "source_col_name" 
-FROM 
-    etl.column_meta 
-WHERE 
-    table_meta_id = ${PARAM_TABLE_META_ID} AND (
-        -- Although the primary key columns don't need to be compared, they
-        -- are needed by the "Merge Rows" step so they are included here.
-        -- This also ensures that there will be columns to compare.
-        is_primary_key_column=true OR              -- always compare this/these column(s)
-        is_last_updated_on_column=true OR          -- always compare this column, if defined
-        is_row_can_be_deleted_from_column=true OR  -- always compare this column, if defined
-        (compare_column=true AND '${PARAM_COMPARE_BEFORE_DELETE}'='Y')
-    )
-ORDER BY 
-    column_meta_id ASC  -- must use the same sort order in "Target (PSA) column names to compare"</sql>
-    <limit>0</limit>
-    <lookup />
-    <execute_each_row>N</execute_each_row>
-    <variables_active>Y</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>112</xloc>
-      <yloc>384</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1061,13 +872,13 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>416</xloc>
-      <yloc>496</yloc>
+      <xloc>512</xloc>
+      <yloc>480</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Target (PSA) "can_delete_row" column metadata</name>
+    <name>Source (OBO) "can_delete_row" column metadata</name>
     <type>TableInput</type>
     <description />
     <distribute>Y</distribute>
@@ -1081,14 +892,12 @@ ORDER BY
     <sql>SELECT
     source_column_name AS "can_delete_row_col_name",
     -- This is a "constant" stream that is used to assign "true" to the "can_delete_row" column.
-    'Y' AS "true_field" 
+    'true_field' AS "true_field_name" 
 FROM 
     etl.column_meta 
 WHERE 
     table_meta_id = ${PARAM_TABLE_META_ID} AND 
-    is_can_delete_row_column = true
-ORDER BY 
-    primary_key_column_order</sql>
+    is_can_delete_row_column = true</sql>
     <limit>0</limit>
     <lookup />
     <execute_each_row>N</execute_each_row>
@@ -1102,53 +911,7 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>720</xloc>
-      <yloc>496</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Target (PSA) column names to compare</name>
-    <type>TableInput</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <connection>etl_db</connection>
-    <sql>SELECT
-    target_column_name AS "target_col_name" 
-FROM 
-    etl.column_meta 
-WHERE 
-    table_meta_id = ${PARAM_TABLE_META_ID} AND (
-        -- Although the primary key columns don't need to be compared, they
-        -- are needed by the "Merge Rows" step so they are included here.
-        -- This also ensures that there will be columns to compare.
-        is_primary_key_column=true OR              -- always compare this/these column(s)
-        is_last_updated_on_column=true OR          -- always compare this column, if defined
-        is_row_can_be_deleted_from_column=true OR  -- always compare this column, if defined
-        (compare_column=true AND '${PARAM_COMPARE_BEFORE_DELETE}'='Y')
-    )
-ORDER BY 
-    column_meta_id ASC  -- must use the same sort order in "Source (OBO) column names to compare"</sql>
-    <limit>0</limit>
-    <lookup />
-    <execute_each_row>N</execute_each_row>
-    <variables_active>Y</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>720</xloc>
+      <xloc>512</xloc>
       <yloc>384</yloc>
       <draw>Y</draw>
     </GUI>

@@ -8,17 +8,12 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/08/04 09:33:07.484</modified_date>
+  <modified_date>2017/08/07 09:41:49.983</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CAN_DELETE_ROW_SOURCE_COLNAME</name>
       <default_value />
       <description>Column of source table that indicates if the row can be deleted immediately</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_COMPARE_BEFORE_DELETE</name>
-      <default_value>Y</default_value>
-      <description>"Y" if rows to be deleted shall first be compared to rows in target PSA table</description>
     </parameter>
     <parameter>
       <name>PARAM_LAST_LOAD_TIMESTAMP</name>
@@ -583,7 +578,6 @@ PARAM_SOURCE_SCHEMA_TABLE                    = ${PARAM_SOURCE_SCHEMA_TABLE}
 PARAM_TARGET_SCHEMA                          = ${PARAM_TARGET_SCHEMA}
 PARAM_TARGET_TABLE                           = ${PARAM_TARGET_TABLE}
 PARAM_TARGET_SCHEMA_TABLE                    = ${PARAM_TARGET_SCHEMA_TABLE}
-PARAM_COMPARE_BEFORE_DELETE                  = ${PARAM_COMPARE_BEFORE_DELETE}
 PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS        = ${PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS}
 PARAM_USE_CUSTOM_DELETE_ALGORITHM            = ${PARAM_USE_CUSTOM_DELETE_ALGORITHM}
 PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME = ${PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME}
@@ -659,7 +653,12 @@ PARAM_TABLE_META_ID                          = ${PARAM_TABLE_META_ID}</logmessag
       <is_custom_sql>Y</is_custom_sql>
       <is_usevars>Y</is_usevars>
       <custom_sql>SELECT
-    source_column_name AS "key_col_name" 
+    source_column_name AS "key_col_name",
+    '=' AS "key_field_value_comparator",
+    -- "Stream field2" is not used in the "Update" step. Nevertheless, we must set 
+    -- it to something or an error is thrown during ETL metadata injection. The
+    -- only solution I have found is to inject an empty string for this field.
+    '' AS "no_field" 
 FROM 
     etl.column_meta 
 WHERE 
@@ -932,7 +931,6 @@ This job has parameters:
 	PARAM_TARGET_SCHEMA							Name of schema containing target table that is mirrored to target PSA table (not currently used)
 	PARAM_TARGET_TABLE								Name of target table that is mirrored to target PSA table (not currently used)
 	PARAM_TARGET_SCHEMA_TABLE					${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}
-	PARAM_COMPARE_BEFORE_DELETE					"Y" if rows to be deleted shall first be compared to rows in target PSA table
 	PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS	Number of seconds after the "row_can_be_deleted_from" timestamp that an archived row can be deleted
 	PARAM_USE_CUSTOM_DELETE_ALGORITHM			"Y" if a custom DELETE algorithm shall be used for this table
 	PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME	Column of source table that acts as a "row_can_be_deleted_from" timestamp column
@@ -942,7 +940,7 @@ This job has parameters:
       <xloc>0</xloc>
       <yloc>0</yloc>
       <width>963</width>
-      <heigth>276</heigth>
+      <heigth>262</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
