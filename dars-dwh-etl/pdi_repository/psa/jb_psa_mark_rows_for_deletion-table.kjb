@@ -1,5 +1,5 @@
 <job>
-  <name>jb_psa_delete_archived_rows-table</name>
+  <name>jb_psa_mark_rows_for_deletion-table</name>
   <description />
   <extended_description />
   <job_version />
@@ -479,13 +479,13 @@
       <yloc>304</yloc>
     </entry>
     <entry>
-      <name>tr_psa_delete_archived_rows-inject_meta</name>
+      <name>tr_psa_mark_rows_for_deletion-inject_meta</name>
       <description />
       <type>TRANS</type>
       <specification_method>rep_name</specification_method>
       <trans_object_id />
       <filename />
-      <transname>tr_psa_delete_archived_rows-inject_meta</transname>
+      <transname>tr_psa_mark_rows_for_deletion-inject_meta</transname>
       <directory>${Internal.Entry.Current.Directory}</directory>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -544,7 +544,7 @@
         <parameter>
           <name>PARAM_ERROR_MESSAGE</name>
           <stream_name />
-          <value>Error executing tr_psa_delete_archived_rows-inject_meta for source OBO table: ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</value>
+          <value>Error executing tr_psa_mark_rows_for_deletion-inject_meta for source OBO table: ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</value>
         </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
@@ -558,7 +558,7 @@
       <name>Abort job</name>
       <description />
       <type>ABORT</type>
-      <message>Aborting job jb_psa_delete_archived_rows-table ...</message>
+      <message>Aborting job jb_psa_mark_rows_for_deletion-table ...</message>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
@@ -569,7 +569,7 @@
       <name>Write To Log: Parameters</name>
       <description />
       <type>WRITE_TO_LOG</type>
-      <logmessage>jb_psa_delete_archived_rows-table:
+      <logmessage>jb_psa_mark_rows_for_deletion-table:
 PARAM_SOURCE_DB_ID                           = ${PARAM_SOURCE_DB_ID}
 PARAM_LAST_LOAD_TIMESTAMP                    = ${PARAM_LAST_LOAD_TIMESTAMP}
 PARAM_SOURCE_SCHEMA                          = ${PARAM_SOURCE_SCHEMA}
@@ -791,7 +791,7 @@ Must write code!!!!!!!!!!!!!!!!!!!!!!!
   </entries>
   <hops>
     <hop>
-      <from>tr_psa_delete_archived_rows-inject_meta</from>
+      <from>tr_psa_mark_rows_for_deletion-inject_meta</from>
       <to>jb_log_error 3</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -818,7 +818,7 @@ Must write code!!!!!!!!!!!!!!!!!!!!!!!
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>tr_psa_delete_archived_rows-inject_meta</from>
+      <from>tr_psa_mark_rows_for_deletion-inject_meta</from>
       <to>Success</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -891,7 +891,7 @@ Must write code!!!!!!!!!!!!!!!!!!!!!!!
     </hop>
     <hop>
       <from>"can_delete_row" column configured for table?</from>
-      <to>tr_psa_delete_archived_rows-inject_meta</to>
+      <to>tr_psa_mark_rows_for_deletion-inject_meta</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -1003,9 +1003,9 @@ has failed.</note>
     </notepad>
     <notepad>
       <note>The query in this step must match the query in the step "Source (OBO) primary key column names"
-in the transformation "tr_psa_delete_archived_rows-inject_meta" that is executed below. This is to
+in the transformation "tr_psa_mark_rows_for_deletion-inject_meta" that is executed below. This is to
 avoid a PDI runtime error that occurs if an empty stream is sent to an "ETL Metadata Injection" step.
-To avoid this possibility in "tr_psa_delete_archived_rows-inject_meta", we check that metadata is 
+To avoid this possibility in "tr_psa_mark_rows_for_deletion-inject_meta", we check that metadata is 
 available here before executing that transformation. This should never occur in practice, but we check
 anyway in order to provide a clear warning message, rather than letting PDI choke on this problem.</note>
       <xloc>608</xloc>
