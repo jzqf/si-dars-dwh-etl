@@ -8,27 +8,12 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/08/07 18:49:02.293</modified_date>
+  <modified_date>2017/08/08 08:27:17.894</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CAN_DELETE_ROW_SOURCE_COLNAME</name>
       <default_value />
       <description>Column of source table that indicates if the row can be deleted immediately</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_LAST_UPDATED_ON_SOURCE_COLNAME</name>
-      <default_value />
-      <description>Column of source table that acts as a "last_updated_on" timestamp column</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS</name>
-      <default_value>2000000000</default_value>
-      <description>Number of seconds after the "row_can_be_deleted_from" timestamp that an archived row can be deleted</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME</name>
-      <default_value />
-      <description>Column of source table that acts as a "row_can_be_deleted_from" timestamp column</description>
     </parameter>
     <parameter>
       <name>PARAM_SOURCE_DB_ID</name>
@@ -49,26 +34,6 @@
       <name>PARAM_SOURCE_TABLE</name>
       <default_value>passage_status</default_value>
       <description>Name of source table to mirror to target table</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_TABLE_META_ID</name>
-      <default_value>0</default_value>
-      <description>Primary key of etl.table_meta row for "source" table from which rows will be deleted</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_TARGET_SCHEMA</name>
-      <default_value>passage</default_value>
-      <description>Name of schema containing target table to update (not currently used)</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_TARGET_SCHEMA_TABLE</name>
-      <default_value>passage.passage_status</default_value>
-      <description>${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_TARGET_TABLE</name>
-      <default_value>passage_status</default_value>
-      <description>Name of target table to update (not currently used)</description>
     </parameter>
     <parameter>
       <name>PARAM_USE_CUSTOM_DELETE_ALGORITHM</name>
@@ -470,8 +435,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>352</xloc>
-      <yloc>240</yloc>
+      <xloc>128</xloc>
+      <yloc>144</yloc>
     </entry>
     <entry>
       <name>jb_log_error</name>
@@ -509,8 +474,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>176</xloc>
-      <yloc>528</yloc>
+      <xloc>304</xloc>
+      <yloc>432</yloc>
     </entry>
     <entry>
       <name>Abort job</name>
@@ -520,8 +485,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>64</xloc>
-      <yloc>528</yloc>
+      <xloc>448</xloc>
+      <yloc>432</yloc>
     </entry>
     <entry>
       <name>Write To Log: Parameters</name>
@@ -546,8 +511,8 @@ PARAM_TABLE_META_ID                          = ${PARAM_TABLE_META_ID}</logmessag
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>352</xloc>
-      <yloc>336</yloc>
+      <xloc>128</xloc>
+      <yloc>240</yloc>
     </entry>
     <entry>
       <name>Success</name>
@@ -556,8 +521,8 @@ PARAM_TABLE_META_ID                          = ${PARAM_TABLE_META_ID}</logmessag
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>352</xloc>
-      <yloc>624</yloc>
+      <xloc>128</xloc>
+      <yloc>528</yloc>
     </entry>
     <entry>
       <name>Delete marked rows from specified table</name>
@@ -575,8 +540,8 @@ WHERE
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>352</xloc>
-      <yloc>528</yloc>
+      <xloc>128</xloc>
+      <yloc>432</yloc>
     </entry>
     <entry>
       <name>Use custom delete algorithm?</name>
@@ -597,8 +562,8 @@ WHERE
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>352</xloc>
-      <yloc>432</yloc>
+      <xloc>128</xloc>
+      <yloc>336</yloc>
     </entry>
     <entry>
       <name>DUMMY</name>
@@ -617,8 +582,8 @@ WHERE
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>528</xloc>
-      <yloc>432</yloc>
+      <xloc>304</xloc>
+      <yloc>336</yloc>
     </entry>
   </entries>
   <hops>
@@ -703,19 +668,12 @@ WHERE
 	PARAM_SOURCE_SCHEMA							Name of schema containing source table that is mirrored to target PSA table
 	PARAM_SOURCE_TABLE							Name of source table that is mirrored to target PSA table
 	PARAM_SOURCE_SCHEMA_TABLE					${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
-	PARAM_TARGET_SCHEMA							Name of schema containing target table that is mirrored to target PSA table (not currently used)
-	PARAM_TARGET_TABLE								Name of target table that is mirrored to target PSA table (not currently used)
-	PARAM_TARGET_SCHEMA_TABLE					${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}
-	PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS	Number of seconds after the "row_can_be_deleted_from" timestamp that an archived row can be deleted
-	PARAM_USE_CUSTOM_DELETE_ALGORITHM			"Y" if a custom DELETE algorithm shall be used for this table
-	PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME	Column of source table that acts as a "row_can_be_deleted_from" timestamp column
 	PARAM_CAN_DELETE_ROW_SOURCE_COLNAME		Column of source table that indicates if the row can be deleted immediately
-	PARAM_LAST_UPDATED_ON_SOURCE_COLNAME	Column of source table that acts as a "last_updated_on" timestamp column
-	PARAM_TABLE_META_ID							Primary key of etl.table_meta row for "source" table from which rows will be deleted</note>
+	PARAM_USE_CUSTOM_DELETE_ALGORITHM			"Y" if a custom DELETE algorithm shall be used for this table</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>963</width>
-      <heigth>220</heigth>
+      <width>862</width>
+      <heigth>122</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -735,8 +693,8 @@ WHERE
       <note>This "Abort" is needed to
 tell the root calling job 
 that execution has failed.</note>
-      <xloc>16</xloc>
-      <yloc>592</yloc>
+      <xloc>400</xloc>
+      <yloc>496</yloc>
       <width>157</width>
       <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
@@ -755,36 +713,12 @@ that execution has failed.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>This transformation
-must abort this job if 
-an error is generated!
-Test!</note>
-      <xloc>496</xloc>
-      <yloc>512</yloc>
-      <width>137</width>
-      <heigth>66</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>255</fontcolorred>
-      <fontcolorgreen>255</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>0</backgroundcolorred>
-      <backgroundcolorgreen>0</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
       <note>If necessary, replace this Dummy entry here with code to delete
 rows using custom code. Hopefully, this will not be necessary, 
 but it should not be difficult to implement this functionality, if 
 necessary.</note>
-      <xloc>576</xloc>
-      <yloc>416</yloc>
+      <xloc>352</xloc>
+      <yloc>320</yloc>
       <width>379</width>
       <heigth>66</heigth>
       <fontname>Ubuntu</fontname>
