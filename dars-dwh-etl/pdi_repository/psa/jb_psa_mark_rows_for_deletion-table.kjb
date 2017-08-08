@@ -1,5 +1,5 @@
 <job>
-  <name>jb_psa_mirrored_tables-compare_one</name>
+  <name>jb_psa_mark_rows_for_deletion-table</name>
   <description />
   <extended_description />
   <job_version />
@@ -8,17 +8,32 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/07/17 14:32:23.354</modified_date>
+  <modified_date>2017/08/08 13:13:37.029</modified_date>
   <parameters>
+    <parameter>
+      <name>PARAM_CAN_DELETE_ROW_SOURCE_COLNAME</name>
+      <default_value />
+      <description>Column of source table that indicates if the row can be deleted immediately</description>
+    </parameter>
     <parameter>
       <name>PARAM_LAST_LOAD_TIMESTAMP</name>
       <default_value>1900.01.01 00:00:00</default_value>
       <description>Timestamp of last successful load from the source database</description>
     </parameter>
     <parameter>
-      <name>PARAM_MAX_NUM_COMPARE_ROWS</name>
-      <default_value>10000</default_value>
-      <description>Maximum number of rows that will be compared for these tables. Pass 0 for *all* rows.</description>
+      <name>PARAM_LAST_UPDATED_ON_SOURCE_COLNAME</name>
+      <default_value />
+      <description>Column of source table that acts as a "last_updated_on" timestamp column</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS</name>
+      <default_value>2000000000</default_value>
+      <description>Number of seconds after the "row_can_be_deleted_from" timestamp that an archived row can be deleted</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME</name>
+      <default_value />
+      <description>Column of source table that acts as a "row_can_be_deleted_from" timestamp column</description>
     </parameter>
     <parameter>
       <name>PARAM_SOURCE_DB_ID</name>
@@ -41,6 +56,11 @@
       <description>Name of source table to mirror to target table</description>
     </parameter>
     <parameter>
+      <name>PARAM_TABLE_META_ID</name>
+      <default_value>0</default_value>
+      <description>Primary key of etl.table_meta row for "source" table from which rows will be deleted</description>
+    </parameter>
+    <parameter>
       <name>PARAM_TARGET_SCHEMA</name>
       <default_value>passage</default_value>
       <description>Name of schema containing target table to update (not currently used)</description>
@@ -54,6 +74,11 @@
       <name>PARAM_TARGET_TABLE</name>
       <default_value>image</default_value>
       <description>Name of target table to update (not currently used)</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_USE_CUSTOM_DELETE_ALGORITHM</name>
+      <default_value>N</default_value>
+      <description>"Y" if a custom DELETE algorithm shall be used for this table</description>
     </parameter>
   </parameters>
   <connection>
@@ -450,17 +475,17 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>304</xloc>
-      <yloc>208</yloc>
+      <xloc>64</xloc>
+      <yloc>288</yloc>
     </entry>
     <entry>
-      <name>tr_psa_mirrored_table-inject_meta-compare</name>
+      <name>tr_psa_mark_rows_for_deletion-inject_meta</name>
       <description />
       <type>TRANS</type>
       <specification_method>rep_name</specification_method>
       <trans_object_id />
       <filename />
-      <transname>tr_psa_mirrored_table-inject_meta-compare</transname>
+      <transname>tr_psa_mark_rows_for_deletion-inject_meta</transname>
       <directory>${Internal.Entry.Current.Directory}</directory>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -483,445 +508,12 @@
       <run_configuration>Pentaho local</run_configuration>
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
-        <parameter>
-          <name>PARAM_INSERT_ID_FROM</name>
-          <stream_name />
-          <value>${QF_MIRROR_COMPARE_INSERT_ID_FROM}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_INSERT_ID_TO</name>
-          <stream_name />
-          <value>${QF_MIRROR_COMPARE_INSERT_ID_TO}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_INSERT_ID_COLNAME</name>
-          <stream_name />
-          <value>${QF_INSERT_ID_COLNAME}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_INSERTED_ON_COLNAME</name>
-          <stream_name />
-          <value>${QF_INSERTED_ON_COLNAME}</value>
-        </parameter>
       </parameters>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>544</xloc>
-      <yloc>960</yloc>
-    </entry>
-    <entry>
-      <name>jb_log_error 6</name>
-      <description />
-      <type>JOB</type>
-      <specification_method>rep_name</specification_method>
-      <job_object_id />
-      <filename />
-      <jobname>jb_log_error</jobname>
-      <directory>/generic</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Nothing</loglevel>
-      <slave_server_name />
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <expand_remote_job>N</expand_remote_job>
-      <create_parent_folder>N</create_parent_folder>
-      <pass_export>N</pass_export>
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-        <parameter>
-          <name>PARAM_ERROR_MESSAGE</name>
-          <stream_name />
-          <value>Error executing tr_psa_mirrored_table-inject_meta-compare for PSA mirror table: ${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</value>
-        </parameter>
-      </parameters>
-      <set_append_logfile>N</set_append_logfile>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>304</xloc>
-      <yloc>960</yloc>
-    </entry>
-    <entry>
-      <name>Abort job</name>
-      <description />
-      <type>ABORT</type>
-      <message />
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>96</xloc>
-      <yloc>560</yloc>
-    </entry>
-    <entry>
-      <name>Are there columns to compare for this table?</name>
-      <description />
-      <type>EVAL_TABLE_CONTENT</type>
-      <connection>etl_db</connection>
-      <schemaname />
-      <tablename />
-      <success_condition>rows_count_greater</success_condition>
-      <limit>0</limit>
-      <is_custom_sql>Y</is_custom_sql>
-      <is_usevars>Y</is_usevars>
-      <custom_sql>SELECT
-    c.source_column_name AS "source_col_name" 
-FROM 
-    etl.column_meta c 
-INNER JOIN 
-    etl.table_meta t ON t.table_meta_id = c.table_meta_id 
-WHERE 
-    t.source_db_id = ${PARAM_SOURCE_DB_ID} AND 
-    t.source_schema_name = '${PARAM_SOURCE_SCHEMA}' AND 
-    t.source_table_name = '${PARAM_SOURCE_TABLE}'  AND 
-    -- Although the primary key columns don't need to ne compared, they
-    -- are needed by the "Merge Rows" step so they are included here.
-    (c.compare_column=true OR c.is_primary_key_column=true)
-ORDER BY 
-    c.column_meta_id ASC  -- must use the same sort order in "Target column names to compare"</custom_sql>
-      <add_rows_result>N</add_rows_result>
-      <clear_result_rows>Y</clear_result_rows>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>544</xloc>
-      <yloc>320</yloc>
-    </entry>
-    <entry>
-      <name>jb_log_error 1</name>
-      <description />
-      <type>JOB</type>
-      <specification_method>rep_name</specification_method>
-      <job_object_id />
-      <filename />
-      <jobname>jb_log_error</jobname>
-      <directory>/generic</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Nothing</loglevel>
-      <slave_server_name />
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <expand_remote_job>N</expand_remote_job>
-      <create_parent_folder>N</create_parent_folder>
-      <pass_export>N</pass_export>
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-        <parameter>
-          <name>PARAM_ERROR_MESSAGE</name>
-          <stream_name />
-          <value>No columns have been configured to be compared for source table: ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</value>
-        </parameter>
-      </parameters>
-      <set_append_logfile>N</set_append_logfile>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>1</nr>
-      <xloc>304</xloc>
-      <yloc>320</yloc>
-    </entry>
-    <entry>
-      <name>Success 2</name>
-      <description />
-      <type>SUCCESS</type>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>96</xloc>
-      <yloc>320</yloc>
-    </entry>
-    <entry>
-      <name>Write To Log: Parameters</name>
-      <description />
-      <type>WRITE_TO_LOG</type>
-      <logmessage>jb_psa_mirrored_tables-compare_one:
-PARAM_SOURCE_DB_ID        = ${PARAM_SOURCE_DB_ID}
-PARAM_LAST_LOAD_TIMESTAMP = ${PARAM_LAST_LOAD_TIMESTAMP}
-PARAM_SOURCE_SCHEMA       = ${PARAM_SOURCE_SCHEMA}
-PARAM_SOURCE_TABLE        = ${PARAM_SOURCE_TABLE}
-PARAM_SOURCE_SCHEMA_TABLE = ${PARAM_SOURCE_SCHEMA_TABLE}
-PARAM_TARGET_SCHEMA       = ${PARAM_TARGET_SCHEMA}
-PARAM_TARGET_TABLE        = ${PARAM_TARGET_TABLE}
-PARAM_TARGET_SCHEMA_TABLE = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
-      <loglevel>Basic</loglevel>
-      <logsubject />
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>544</xloc>
-      <yloc>208</yloc>
-    </entry>
-    <entry>
-      <name>Success</name>
-      <description />
-      <type>SUCCESS</type>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>544</xloc>
-      <yloc>1056</yloc>
-    </entry>
-    <entry>
-      <name>tr_psa_compare-get_insert_id_from_to</name>
-      <description />
-      <type>TRANS</type>
-      <specification_method>rep_name</specification_method>
-      <trans_object_id />
-      <filename />
-      <transname>tr_psa_compare-get_insert_id_from_to</transname>
-      <directory>${Internal.Entry.Current.Directory}</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <clear_rows>N</clear_rows>
-      <clear_files>N</clear_files>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Basic</loglevel>
-      <cluster>N</cluster>
-      <slave_server_name />
-      <set_append_logfile>N</set_append_logfile>
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <create_parent_folder>N</create_parent_folder>
-      <logging_remote_work>N</logging_remote_work>
-      <run_configuration>Pentaho local</run_configuration>
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-        <parameter>
-          <name>PARAM_INSERT_ID_COLNAME</name>
-          <stream_name />
-          <value>${QF_INSERT_ID_COLNAME}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_INSERTED_ON_COLNAME</name>
-          <stream_name />
-          <value>${QF_INSERTED_ON_COLNAME}</value>
-        </parameter>
-      </parameters>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>544</xloc>
-      <yloc>608</yloc>
-    </entry>
-    <entry>
-      <name>Log: "insert_id" "from" &amp; "to" values</name>
-      <description />
-      <type>WRITE_TO_LOG</type>
-      <logmessage>jb_psa_mirrored_tables-compare_one:
-QF_MIRROR_COMPARE_INSERT_ID_FROM = ${QF_MIRROR_COMPARE_INSERT_ID_FROM}
-QF_MIRROR_COMPARE_INSERT_ID_TO   = ${QF_MIRROR_COMPARE_INSERT_ID_TO}
-</logmessage>
-      <loglevel>Basic</loglevel>
-      <logsubject />
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>544</xloc>
-      <yloc>704</yloc>
-    </entry>
-    <entry>
-      <name>jb_log_error 5</name>
-      <description />
-      <type>JOB</type>
-      <specification_method>rep_name</specification_method>
-      <job_object_id />
-      <filename />
-      <jobname>jb_log_error</jobname>
-      <directory>/generic</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Nothing</loglevel>
-      <slave_server_name />
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <expand_remote_job>N</expand_remote_job>
-      <create_parent_folder>N</create_parent_folder>
-      <pass_export>N</pass_export>
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-        <parameter>
-          <name>PARAM_ERROR_MESSAGE</name>
-          <stream_name />
-          <value>Error executing step 'Log: "insert_id" "from" &amp; "to" values' for PSA mirror table: ${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</value>
-        </parameter>
-      </parameters>
-      <set_append_logfile>N</set_append_logfile>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>304</xloc>
-      <yloc>704</yloc>
-    </entry>
-    <entry>
-      <name>jb_log_error 4</name>
-      <description />
-      <type>JOB</type>
-      <specification_method>rep_name</specification_method>
-      <job_object_id />
-      <filename />
-      <jobname>jb_log_error</jobname>
-      <directory>/generic</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Nothing</loglevel>
-      <slave_server_name />
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <expand_remote_job>N</expand_remote_job>
-      <create_parent_folder>N</create_parent_folder>
-      <pass_export>N</pass_export>
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-        <parameter>
-          <name>PARAM_ERROR_MESSAGE</name>
-          <stream_name />
-          <value>Error executing tr_psa_compare-get_insert_id_from_to for PSA mirror table: ${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</value>
-        </parameter>
-      </parameters>
-      <set_append_logfile>N</set_append_logfile>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>304</xloc>
-      <yloc>608</yloc>
-    </entry>
-    <entry>
-      <name>jb_log_error 2</name>
-      <description />
-      <type>JOB</type>
-      <specification_method>rep_name</specification_method>
-      <job_object_id />
-      <filename />
-      <jobname>jb_log_error</jobname>
-      <directory>/generic</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Nothing</loglevel>
-      <slave_server_name />
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <expand_remote_job>N</expand_remote_job>
-      <create_parent_folder>N</create_parent_folder>
-      <pass_export>N</pass_export>
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-        <parameter>
-          <name>PARAM_ERROR_MESSAGE</name>
-          <stream_name />
-          <value>No primary key columns have been configured for source table: ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</value>
-        </parameter>
-      </parameters>
-      <set_append_logfile>N</set_append_logfile>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>2</nr>
-      <xloc>304</xloc>
-      <yloc>416</yloc>
-    </entry>
-    <entry>
-      <name>Are there primary key columns configured for this table?</name>
-      <description />
-      <type>EVAL_TABLE_CONTENT</type>
-      <connection>etl_db</connection>
-      <schemaname />
-      <tablename />
-      <success_condition>rows_count_greater</success_condition>
-      <limit>0</limit>
-      <is_custom_sql>Y</is_custom_sql>
-      <is_usevars>Y</is_usevars>
-      <custom_sql>SELECT
-    c.source_column_name AS "key_col_name" 
-FROM 
-    etl.column_meta c 
-INNER JOIN 
-    etl.table_meta t ON t.table_meta_id = c.table_meta_id 
-WHERE 
-    t.source_db_id = ${PARAM_SOURCE_DB_ID} AND 
-    t.source_schema_name = '${PARAM_SOURCE_SCHEMA}' AND 
-    t.source_table_name = '${PARAM_SOURCE_TABLE}'  AND 
-    c.is_primary_key_column = true
-ORDER BY 
-    c.primary_key_column_order</custom_sql>
-      <add_rows_result>N</add_rows_result>
-      <clear_result_rows>Y</clear_result_rows>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>1</nr>
-      <xloc>544</xloc>
-      <yloc>416</yloc>
-    </entry>
-    <entry>
-      <name>tr_set_inserted_colnames_vrbls</name>
-      <description />
-      <type>TRANS</type>
-      <specification_method>rep_name</specification_method>
-      <trans_object_id />
-      <filename />
-      <transname>tr_set_inserted_colnames_vrbls</transname>
-      <directory>/generic</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <clear_rows>N</clear_rows>
-      <clear_files>N</clear_files>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Basic</loglevel>
-      <cluster>N</cluster>
-      <slave_server_name />
-      <set_append_logfile>N</set_append_logfile>
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <create_parent_folder>N</create_parent_folder>
-      <logging_remote_work>N</logging_remote_work>
-      <run_configuration>Pentaho local</run_configuration>
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-      </parameters>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>544</xloc>
-      <yloc>512</yloc>
+      <xloc>416</xloc>
+      <yloc>624</yloc>
     </entry>
     <entry>
       <name>jb_log_error 3</name>
@@ -952,173 +544,268 @@ ORDER BY
         <parameter>
           <name>PARAM_ERROR_MESSAGE</name>
           <stream_name />
-          <value>Error setting "INSERT_ID"/"INSERTED_ON" column name variables in tr_set_inserted_colnames_vrbls for source table: ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</value>
+          <value>Error executing tr_psa_mark_rows_for_deletion-inject_meta for source OBO table: ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</value>
         </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>304</xloc>
-      <yloc>512</yloc>
+      <xloc>208</xloc>
+      <yloc>624</yloc>
+    </entry>
+    <entry>
+      <name>Abort job</name>
+      <description />
+      <type>ABORT</type>
+      <message>Aborting job jb_psa_mark_rows_for_deletion-table ...</message>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>80</xloc>
+      <yloc>528</yloc>
+    </entry>
+    <entry>
+      <name>Write To Log: Parameters</name>
+      <description />
+      <type>WRITE_TO_LOG</type>
+      <logmessage>jb_psa_mark_rows_for_deletion-table:
+PARAM_SOURCE_DB_ID                           = ${PARAM_SOURCE_DB_ID}
+PARAM_LAST_LOAD_TIMESTAMP                    = ${PARAM_LAST_LOAD_TIMESTAMP}
+PARAM_SOURCE_SCHEMA                          = ${PARAM_SOURCE_SCHEMA}
+PARAM_SOURCE_TABLE                           = ${PARAM_SOURCE_TABLE}
+PARAM_SOURCE_SCHEMA_TABLE                    = ${PARAM_SOURCE_SCHEMA_TABLE}
+PARAM_TARGET_SCHEMA                          = ${PARAM_TARGET_SCHEMA}
+PARAM_TARGET_TABLE                           = ${PARAM_TARGET_TABLE}
+PARAM_TARGET_SCHEMA_TABLE                    = ${PARAM_TARGET_SCHEMA_TABLE}
+PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS        = ${PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS}
+PARAM_USE_CUSTOM_DELETE_ALGORITHM            = ${PARAM_USE_CUSTOM_DELETE_ALGORITHM}
+PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME = ${PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME}
+PARAM_CAN_DELETE_ROW_SOURCE_COLNAME          = ${PARAM_CAN_DELETE_ROW_SOURCE_COLNAME}
+PARAM_LAST_UPDATED_ON_SOURCE_COLNAME         = ${PARAM_LAST_UPDATED_ON_SOURCE_COLNAME}
+PARAM_TABLE_META_ID                          = ${PARAM_TABLE_META_ID}</logmessage>
+      <loglevel>Basic</loglevel>
+      <logsubject />
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>192</xloc>
+      <yloc>288</yloc>
+    </entry>
+    <entry>
+      <name>Success</name>
+      <description />
+      <type>SUCCESS</type>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>416</xloc>
+      <yloc>720</yloc>
+    </entry>
+    <entry>
+      <name>jb_log_error 1</name>
+      <description />
+      <type>JOB</type>
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_log_error</jobname>
+      <directory>/generic</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_ERROR_MESSAGE</name>
+          <stream_name />
+          <value>No primary key columns have been configured for source OBO table: ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>2</nr>
+      <xloc>208</xloc>
+      <yloc>432</yloc>
+    </entry>
+    <entry>
+      <name>Are primary key columns configured for this table?</name>
+      <description />
+      <type>EVAL_TABLE_CONTENT</type>
+      <connection>etl_db</connection>
+      <schemaname />
+      <tablename />
+      <success_condition>rows_count_greater</success_condition>
+      <limit>0</limit>
+      <is_custom_sql>Y</is_custom_sql>
+      <is_usevars>Y</is_usevars>
+      <custom_sql>SELECT
+    source_column_name AS "key_col_name",
+    '=' AS "key_field_value_comparator",
+    -- "Stream field2" is not used in the "Update" step. Nevertheless, we must set 
+    -- it to something or an error is thrown during ETL metadata injection. The
+    -- only solution I have found is to inject an empty string for this field.
+    '' AS "no_field" 
+FROM 
+    etl.column_meta 
+WHERE 
+    table_meta_id = ${PARAM_TABLE_META_ID} AND 
+    is_primary_key_column = true
+ORDER BY 
+    primary_key_column_order</custom_sql>
+      <add_rows_result>N</add_rows_result>
+      <clear_result_rows>Y</clear_result_rows>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>1</nr>
+      <xloc>416</xloc>
+      <yloc>432</yloc>
+    </entry>
+    <entry>
+      <name>Use custom algorithm?</name>
+      <description />
+      <type>SIMPLE_EVAL</type>
+      <valuetype>variable</valuetype>
+      <fieldname />
+      <variablename>${PARAM_USE_CUSTOM_DELETE_ALGORITHM}</variablename>
+      <fieldtype>boolean</fieldtype>
+      <mask />
+      <comparevalue />
+      <minvalue />
+      <maxvalue />
+      <successcondition>equal</successcondition>
+      <successnumbercondition>equal</successnumbercondition>
+      <successbooleancondition>true</successbooleancondition>
+      <successwhenvarset>N</successwhenvarset>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>416</xloc>
+      <yloc>288</yloc>
+    </entry>
+    <entry>
+      <name>Abort job 2</name>
+      <description />
+      <type>ABORT</type>
+      <message>jb_psa_mark_rows_for_deletion-table: Error thrown in jb_psa_mark_rows_for_deletion-custom. Aborting...</message>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>832</xloc>
+      <yloc>288</yloc>
+    </entry>
+    <entry>
+      <name>"can_delete_row" column configured for table?</name>
+      <description />
+      <type>SIMPLE_EVAL</type>
+      <valuetype>variable</valuetype>
+      <fieldname />
+      <variablename>${PARAM_CAN_DELETE_ROW_SOURCE_COLNAME}</variablename>
+      <fieldtype>string</fieldtype>
+      <mask />
+      <comparevalue />
+      <minvalue />
+      <maxvalue />
+      <successcondition>different</successcondition>
+      <successnumbercondition>equal</successnumbercondition>
+      <successbooleancondition>false</successbooleancondition>
+      <successwhenvarset>N</successwhenvarset>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>416</xloc>
+      <yloc>528</yloc>
+    </entry>
+    <entry>
+      <name>jb_log_error 2</name>
+      <description />
+      <type>JOB</type>
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_log_error</jobname>
+      <directory>/generic</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_ERROR_MESSAGE</name>
+          <stream_name />
+          <value>No "can_delete_row" column has been configured for source OBO table: ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>2</nr>
+      <xloc>208</xloc>
+      <yloc>528</yloc>
+    </entry>
+    <entry>
+      <name>jb_psa_mark_rows_for_deletion-custom</name>
+      <description />
+      <type>JOB</type>
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_psa_mark_rows_for_deletion-custom</jobname>
+      <directory>${Internal.Entry.Current.Directory}</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>Y</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>656</xloc>
+      <yloc>288</yloc>
     </entry>
   </entries>
   <hops>
     <hop>
-      <from>tr_psa_mirrored_table-inject_meta-compare</from>
-      <to>jb_log_error 6</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>jb_log_error 6</from>
-      <to>Abort job</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>jb_log_error 1</from>
-      <to>Abort job</to>
-      <from_nr>1</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>N</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>jb_log_error 1</from>
-      <to>Success 2</to>
-      <from_nr>1</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>START</from>
-      <to>Write To Log: Parameters</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>Write To Log: Parameters</from>
-      <to>Are there columns to compare for this table?</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>tr_psa_mirrored_table-inject_meta-compare</from>
-      <to>Success</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>tr_psa_compare-get_insert_id_from_to</from>
-      <to>Log: "insert_id" "from" &amp; "to" values</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>tr_psa_compare-get_insert_id_from_to</from>
-      <to>jb_log_error 4</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>jb_log_error 4</from>
-      <to>Abort job</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>Log: "insert_id" "from" &amp; "to" values</from>
-      <to>jb_log_error 5</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>jb_log_error 5</from>
-      <to>Abort job</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>Are there columns to compare for this table?</from>
-      <to>jb_log_error 1</to>
-      <from_nr>0</from_nr>
-      <to_nr>1</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>jb_log_error 2</from>
-      <to>Abort job</to>
-      <from_nr>2</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>jb_log_error 2</from>
-      <to>Success 2</to>
-      <from_nr>2</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>N</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>Are there columns to compare for this table?</from>
-      <to>Are there primary key columns configured for this table?</to>
-      <from_nr>0</from_nr>
-      <to_nr>1</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Are there primary key columns configured for this table?</from>
-      <to>jb_log_error 2</to>
-      <from_nr>1</from_nr>
-      <to_nr>2</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>tr_set_inserted_colnames_vrbls</from>
+      <from>tr_psa_mark_rows_for_deletion-inject_meta</from>
       <to>jb_log_error 3</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -1136,8 +823,62 @@ ORDER BY
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>Are there primary key columns configured for this table?</from>
-      <to>tr_set_inserted_colnames_vrbls</to>
+      <from>START</from>
+      <to>Write To Log: Parameters</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>tr_psa_mark_rows_for_deletion-inject_meta</from>
+      <to>Success</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_log_error 1</from>
+      <to>Abort job</to>
+      <from_nr>2</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>Are primary key columns configured for this table?</from>
+      <to>jb_log_error 1</to>
+      <from_nr>1</from_nr>
+      <to_nr>2</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Write To Log: Parameters</from>
+      <to>Use custom algorithm?</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Use custom algorithm?</from>
+      <to>Are primary key columns configured for this table?</to>
+      <from_nr>0</from_nr>
+      <to_nr>1</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Are primary key columns configured for this table?</from>
+      <to>"can_delete_row" column configured for table?</to>
       <from_nr>1</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -1145,8 +886,8 @@ ORDER BY
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>tr_set_inserted_colnames_vrbls</from>
-      <to>tr_psa_compare-get_insert_id_from_to</to>
+      <from>"can_delete_row" column configured for table?</from>
+      <to>tr_psa_mark_rows_for_deletion-inject_meta</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -1154,33 +895,66 @@ ORDER BY
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Log: "insert_id" "from" &amp; "to" values</from>
-      <to>tr_psa_mirrored_table-inject_meta-compare</to>
+      <from>"can_delete_row" column configured for table?</from>
+      <to>jb_log_error 2</to>
+      <from_nr>0</from_nr>
+      <to_nr>2</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_log_error 2</from>
+      <to>Abort job</to>
+      <from_nr>2</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>Use custom algorithm?</from>
+      <to>jb_psa_mark_rows_for_deletion-custom</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>Y</evaluation>
       <unconditional>N</unconditional>
     </hop>
+    <hop>
+      <from>jb_psa_mark_rows_for_deletion-custom</from>
+      <to>Abort job 2</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
   </hops>
   <notepads>
     <notepad>
-      <note>This job "compares" a single mirrored table ia a source database with its corresponding mirror in the target PSA database.
+      <note>This job marks for deletion rows from a single table in a source database that have been archived/mirrored to a target table in the PSA database.
 This job has parameters:
 
-	PARAM_SOURCE_DB_ID					ID the "source" database containing tables will be mirrored to a "target" database
-	PARAM_LAST_LOAD_TIMESTAMP		Timestamp for when the target PSA DB mirror tables were last updated from the source DB
-	PARAM_SOURCE_SCHEMA				Name of schema containing source table to mirror to target table
-	PARAM_SOURCE_TABLE				Name of source table to mirror to target table
-	PARAM_SOURCE_SCHEMA_TABLE		${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
-	PARAM_TARGET_SCHEMA				Name of schema containing target table to update (not currently used)
-	PARAM_TARGET_TABLE					Name of target table to update (not currently used)
-	PARAM_TARGET_SCHEMA_TABLE		${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}
-	PARAM_MAX_NUM_COMPARE_ROWS	Maximum number of rows that will be compared for these tables. 0 means *all* rows.</note>
+	PARAM_SOURCE_DB_ID								ID the "source" database containing tables that are mirrored to a "target" database
+	PARAM_LAST_LOAD_TIMESTAMP					Timestamp for when the target PSA DB mirror tables were last updated from the source DB.
+														Used to ensure that we do not delete rows that are not yet fully archived/mirrored.
+	PARAM_SOURCE_SCHEMA							Name of schema containing source table that is mirrored to target PSA table
+	PARAM_SOURCE_TABLE							Name of source table that is mirrored to target PSA table
+	PARAM_SOURCE_SCHEMA_TABLE					${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
+	PARAM_TARGET_SCHEMA							Name of schema containing target table that is mirrored to target PSA table (not currently used)
+	PARAM_TARGET_TABLE								Name of target table that is mirrored to target PSA table (not currently used)
+	PARAM_TARGET_SCHEMA_TABLE					${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}
+	PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS	Number of seconds after the "row_can_be_deleted_from" timestamp that an archived row can be deleted
+	PARAM_USE_CUSTOM_DELETE_ALGORITHM			"Y" if a custom DELETE algorithm shall be used for this table
+	PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME	Column of source table that acts as a "row_can_be_deleted_from" timestamp column
+	PARAM_CAN_DELETE_ROW_SOURCE_COLNAME		Column of source table that indicates if the row can be deleted immediately
+	PARAM_LAST_UPDATED_ON_SOURCE_COLNAME	Column of source table that acts as a "last_updated_on" timestamp column
+	PARAM_TABLE_META_ID							Primary key of etl.table_meta row for "source" table from which rows will be deleted</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>809</width>
-      <heigth>178</heigth>
+      <width>963</width>
+      <heigth>262</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -1197,13 +971,14 @@ This job has parameters:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>This "Abort" is needed to tell the
-root calling job that execution
-has failed.</note>
-      <xloc>0</xloc>
-      <yloc>608</yloc>
-      <width>200</width>
-      <heigth>52</heigth>
+      <note>This "Abort" is needed
+to tell the root calling
+job that execution has
+failed.</note>
+      <xloc>16</xloc>
+      <yloc>576</yloc>
+      <width>139</width>
+      <heigth>66</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -1220,44 +995,40 @@ has failed.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>This "Success" allows execution to 
-continue without attempting to 
-compare the source and target
-tables for the case where no
-column mapping metdata is
-provided for the table.</note>
-      <xloc>0</xloc>
+      <note>This transformation marks archived/mirrored rows from the source (OBO) 
+table using an "ETL Metadata Injection" step.</note>
+      <xloc>592</xloc>
+      <yloc>624</yloc>
+      <width>444</width>
+      <heigth>38</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>The query in this entry must match the query in step 
+"Source (OBO) primary key column names" in the transformation
+"tr_psa_mark_rows_for_deletion-inject_meta" that is executed below. 
+This is to avoid a PDI runtime error that occurs if an empty stream is sent
+to an "ETL Metadata Injection" step. To avoid this possibility in 
+"tr_psa_mark_rows_for_deletion-inject_meta", we check that metadata is 
+available here before executing that transformation. This should never 
+occur in practice, but we check anyway in order to provide a clear warning
+message, rather than letting PDI choke on this problem.</note>
+      <xloc>592</xloc>
       <yloc>368</yloc>
-      <width>212</width>
-      <heigth>94</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>This transformation compares the source and target tables using an "ETL Metadata Injection" step.
-
-In addition to the parameters passed to the current job, this transformation is *also* passed:
-
-	PARAM_INSERT_ID_FROM			= ${QF_MIRROR_COMPARE_INSERT_ID_FROM}
-	PARAM_INSERT_ID_TO				= ${QF_MIRROR_COMPARE_INSERT_ID_TO}
-	PARAM_INSERT_ID_COLNAME		= ${QF_INSERT_ID_COLNAME}
-	PARAM_INSERTED_ON_COLNAME	= ${QF_INSERTED_ON_COLNAME}
-</note>
-      <xloc>736</xloc>
-      <yloc>912</yloc>
-      <width>585</width>
+      <width>439</width>
       <heigth>136</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -1267,33 +1038,6 @@ In addition to the parameters passed to the current job, this transformation is 
       <fontcolorgreen>0</fontcolorgreen>
       <fontcolorblue>0</fontcolorblue>
       <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>The query here in this step must match the query in the step "Source (OBO) column names to compare"
-in the transformation "tr_psa_mirrored_table-inject_meta-compare" that is executed below. This is 
-because a PDI runtime error occurs if an empty stream is sent to an "ETL Metadata Injection" step. To 
-avoid this possibility in "tr_psa_mirrored_table-inject_meta-compare", we check that metadata is 
-available here before executing that transformation. The only reason why this case should occur is if
-a table is marked for mirroring, but no column mapping metdata is provided - this should never occur,
-but we check in order to provide a warning message, rather than letting PDI choke on this problem.</note>
-      <xloc>736</xloc>
-      <yloc>272</yloc>
-      <width>605</width>
-      <heigth>108</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
       <backgroundcolorgreen>255</backgroundcolorgreen>
       <backgroundcolorblue>0</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
@@ -1302,32 +1046,36 @@ but we check in order to provide a warning message, rather than letting PDI chok
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Given the timestamp when the PSA mirror tables were last loaded (PARAM_LAST_LOAD_TIMESTAMP),
-tr_mirror_compare-get_archive_id_from_to computes the minumum and maximum "insert_id" values 
-to use for selecting rows of the OBO table and the PSA table in order to verify that the two 
-tables "agree". This "insert_id" range is table-specific, of course. These IDs are assigned to the variables:
-
-	QF_MIRROR_COMPARE_INSERT_ID_FROM
-	QF_MIRROR_COMPARE_INSERT_ID_TO
-
-The reason why we must go through all of this trouble is that we need to handle the following
-cases when selecting rows from these two tables to compare:
-
-1.	Rows may have been *removed* from the OBO table that were mirrored earlier to 
-	the PSA. We do not want to include these rows from the PSA table because the comparision 
-	for these rows will definitely "fail" (compared_rows_missing>0 will be reported).
-2.	Rows may have been *added* to the OBO after the last mirror operation updated the 
-	PSA table. We do not want to include these rows in the comparison because we cannot expect 
-	them to be found in the PSA table (compared_rows_extra>0 will be reported).
-
-In addition to the parameters passed to the current job, this transformation is *also* passed:
-
-	PARAM_INSERT_ID_COLNAME		= ${QF_INSERT_ID_COLNAME}
-	PARAM_INSERTED_ON_COLNAME	= ${QF_INSERTED_ON_COLNAME}</note>
-      <xloc>736</xloc>
-      <yloc>576</yloc>
-      <width>615</width>
-      <heigth>318</heigth>
+      <note>This transformation entry must abort this job if  the compare is 
+not successful for every row. Is this the case?</note>
+      <xloc>592</xloc>
+      <yloc>672</yloc>
+      <width>378</width>
+      <heigth>38</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>255</fontcolorred>
+      <fontcolorgreen>255</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>0</backgroundcolorred>
+      <backgroundcolorgreen>0</backgroundcolorgreen>
+      <backgroundcolorblue>0</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>This is to provide a nice error message in the log so that it is clear that a
+"can_delete_row" must be configured for the table. Without this check PDI
+will choke when it tries to reference this column and it will be harder to
+track down the problem.</note>
+      <xloc>592</xloc>
+      <yloc>528</yloc>
+      <width>444</width>
+      <heigth>66</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -1344,40 +1092,13 @@ In addition to the parameters passed to the current job, this transformation is 
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>The query here in this step must match the query in the step "Source (OBO) primary key column names"
-in the transformation "tr_psa_mirrored_table-inject_meta-compare" that is executed below. This is 
-to avoid a PDI runtime error that would occur if no primary key column metadata is availalbe for ETL
-metadata injection. The explanation is the same as that described for the previous step above.</note>
-      <xloc>736</xloc>
-      <yloc>400</yloc>
-      <width>605</width>
-      <heigth>66</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>255</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Set the variables QF_INSERT_ID_COLNAME &amp; QF_INSERTED_ON_COLNAME
-to the names of the columns from the source table that function as 
-"insert_id" &amp; "inserted_on" column. These values are passed as parameters
-to the job entry tr_psa_mirrored_table-inject_meta-compare below.</note>
-      <xloc>736</xloc>
-      <yloc>496</yloc>
-      <width>450</width>
-      <heigth>66</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <note>Generic algorithm:</note>
+      <xloc>368</xloc>
+      <yloc>384</yloc>
+      <width>118</width>
+      <heigth>24</heigth>
+      <fontname />
+      <fontsize>-1</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>

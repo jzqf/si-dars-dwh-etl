@@ -1,27 +1,37 @@
 <transformation>
   <info>
-    <name>tmplt_psa_compare_tables</name>
+    <name>tr_psa_mark_rows_for_deletion-inject_meta</name>
     <description />
     <extended_description />
     <trans_version />
     <trans_type>Normal</trans_type>
     <trans_status>0</trans_status>
-    <directory>/development/jeffreyz/tests</directory>
+    <directory>/psa</directory>
     <parameters>
       <parameter>
-        <name>PARAM_INSERT_ID_FROM</name>
-        <default_value>100</default_value>
-        <description>"from" value for the "archive_id" column of the source OBO table that is being compared to the PSA table</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_INSERT_ID_TO</name>
-        <default_value>110</default_value>
-        <description>"to" value for the "archive_id" column of the source OBO table that is being compared to the PSA table</description>
+        <name>PARAM_CAN_DELETE_ROW_SOURCE_COLNAME</name>
+        <default_value />
+        <description>Column of source table that indicates if the row can be deleted immediately</description>
       </parameter>
       <parameter>
         <name>PARAM_LAST_LOAD_TIMESTAMP</name>
         <default_value>1900.01.01 00:00:00</default_value>
         <description>Timestamp of last successful load from the source database</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_LAST_UPDATED_ON_SOURCE_COLNAME</name>
+        <default_value />
+        <description>Column of source table that acts as a "last_updated_on" timestamp column</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS</name>
+        <default_value>2000000000</default_value>
+        <description>Number of seconds after the "row_can_be_deleted_from" timestamp that an archived row can be deleted</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME</name>
+        <default_value />
+        <description>Column of source table that acts as a "row_can_be_deleted_from" timestamp column</description>
       </parameter>
       <parameter>
         <name>PARAM_SOURCE_DB_ID</name>
@@ -34,14 +44,14 @@
         <description>Name of schema containing source table to mirror to target table</description>
       </parameter>
       <parameter>
-        <name>PARAM_SOURCE_SCHEMA_TABLE</name>
-        <default_value>passage.image</default_value>
-        <description>${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</description>
+        <name>PARAM_SOURCE_TABLE</name>
+        <default_value>passage_status</default_value>
+        <description>Name of source table to mirror to target table</description>
       </parameter>
       <parameter>
-        <name>PARAM_SOURCE_TABLE</name>
-        <default_value>image</default_value>
-        <description>Name of source table to mirror to target table</description>
+        <name>PARAM_TABLE_META_ID</name>
+        <default_value>623</default_value>
+        <description>Primary key of etl.table_meta row for "source" table from which rows will be deleted</description>
       </parameter>
       <parameter>
         <name>PARAM_TARGET_SCHEMA</name>
@@ -49,14 +59,14 @@
         <description>Name of schema containing target table to update (not currently used)</description>
       </parameter>
       <parameter>
-        <name>PARAM_TARGET_SCHEMA_TABLE</name>
-        <default_value>passage.image</default_value>
-        <description>${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</description>
+        <name>PARAM_TARGET_TABLE</name>
+        <default_value>passage_status</default_value>
+        <description>Name of target table to update (not currently used)</description>
       </parameter>
       <parameter>
-        <name>PARAM_TARGET_TABLE</name>
-        <default_value>image</default_value>
-        <description>Name of target table to update (not currently used)</description>
+        <name>PARAM_USE_CUSTOM_DELETE_ALGORITHM</name>
+        <default_value>N</default_value>
+        <description>"Y" if a custom DELETE algorithm shall be used for this table</description>
       </parameter>
     </parameters>
     <log>
@@ -479,55 +489,33 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/06/28 08:57:11.454</modified_date>
+    <modified_date>2017/08/07 09:41:08.191</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>Load the data from both the source (OBO) database table 
-and the target (PSA) database table to which it is mirrored.
-The "ORDER BY" clauses must consist of the tables' primary 
-key column(s). This is needed by the "Merge Rows" step.
-The fields in each stream must be identical and in the same
-order when fed to the "Merge rows" step.</note>
-      <xloc>528</xloc>
-      <yloc>224</yloc>
-      <width>359</width>
-      <heigth>94</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>This transformation verifies that a table from the source (OBO) DB has been correctly mirrored from the target (PSA) DB. This is an ETL metadata 
-injection "template" transformation that can be used to compare *any* tables that are mirrored between these two databases. It has parameters:
+      <note>This transformation uses ETL Metadata injection to delete rows of a source table in a source database that have been archived/mirrored to a target table in a
+target database. This is a generic algorithm that can work with *any* table, as long as the necessary metadata is available to be injected. This transformation
+has parameters:
 
-	PARAM_SOURCE_DB_ID				ID the "source" database containing tables will be mirrored to a "target" database
-	PARAM_LAST_LOAD_TIMESTAMP	Timestamp for when the target PSA DB mirror tables were last updated from the source DB
-	PARAM_INSERT_ID_FROM			"from" value for the "archive_id" column of the source OBO table that is being compared to the PSA table
-	PARAM_INSERT_ID_TO			"to" value for the "archive_id" column of the source OBO table that is being compared to the PSA table
-	PARAM_SOURCE_SCHEMA			Name of schema containing source table to compare to target table
-	PARAM_SOURCE_TABLE			Name of source table to compare to target table
-	PARAM_SOURCE_SCHEMA_TABLE	${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
-	PARAM_TARGET_SCHEMA			Name of schema containing target table to compare with (not currently used)
-	PARAM_TARGET_TABLE				Name of target table to compare with (not currently used)
-	PARAM_TARGET_SCHEMA_TABLE	${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</note>
-      <xloc>16</xloc>
+	PARAM_SOURCE_DB_ID								ID the "source" database containing tables will be mirrored to a "target" database
+	PARAM_LAST_LOAD_TIMESTAMP					Timestamp for when the target PSA DB mirror tables were last updated from the source DB.
+														Used to ensure that we do not delete rows that are not yet fully archived/mirrored.
+	PARAM_SOURCE_SCHEMA							Name of schema containing source table to compare to target table
+	PARAM_SOURCE_TABLE							Name of source table to compare to target table
+	PARAM_TARGET_SCHEMA							Name of schema containing target table to compare with (not currently used)
+	PARAM_TARGET_TABLE								Name of target table to compare with (not currently used)
+	PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS	Number of seconds after the "row_can_be_deleted_from" timestamp that an archived row can be deleted
+	PARAM_USE_CUSTOM_DELETE_ALGORITHM			"Y" if a custom DELETE algorithm shall be used for this table
+	PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME	Column of source table that acts as a "row_can_be_deleted_from" timestamp column
+	PARAM_CAN_DELETE_ROW_SOURCE_COLNAME		Column of source table that indicates if the row can be deleted immediately
+	PARAM_LAST_UPDATED_ON_SOURCE_COLNAME	Column of source table that acts as a "last_updated_on" timestamp column
+	PARAM_TABLE_META_ID							Primary key of etl.table_meta row for "source" table from which rows will be deleted</note>
+      <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>867</width>
-      <heigth>192</heigth>
+      <width>963</width>
+      <heigth>248</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -544,14 +532,14 @@ injection "template" transformation that can be used to compare *any* tables tha
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Update the "table_meta" row for the tables being compared with the comparison statistics:
-
-	compared_rows_equal
-	compared_rows_unequal
-	...</note>
-      <xloc>416</xloc>
-      <yloc>512</yloc>
-      <width>544</width>
+      <note>The query here to provide the source (OBO)
+column names must match the query in 
+"jb_psa_mark_rows_for_deletion-table" from
+where this transformation is executed. See
+the comments in that job for an explanation.</note>
+      <xloc>688</xloc>
+      <yloc>448</yloc>
+      <width>269</width>
       <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -561,61 +549,65 @@ injection "template" transformation that can be used to compare *any* tables tha
       <fontcolorgreen>0</fontcolorgreen>
       <fontcolorblue>0</fontcolorblue>
       <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Compare the two streams row by row and determine whether they are 
-identical, different, "new" or "deleted".</note>
-      <xloc>416</xloc>
-      <yloc>432</yloc>
-      <width>423</width>
-      <heigth>38</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>The fields in each stream must be identical and in the same order
-when fed to the "Merge rows" step. The SELECT statements in the
-"Table input" steps set the field order appropriately, and this step
-here renames the fields from the target (PSA) DB to the field 
-names from the source (OBO) DB.</note>
-      <xloc>528</xloc>
-      <yloc>336</yloc>
-      <width>394</width>
-      <heigth>80</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
+      <backgroundcolorgreen>255</backgroundcolorgreen>
+      <backgroundcolorblue>0</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
       <bordercolorblue>100</bordercolorblue>
       <drawshadow>Y</drawshadow>
     </notepad>
   </notepads>
+  <connection>
+    <name>etl_db</name>
+    <server>${QF_ETL_DB_HOST}</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>${QF_ETL_DB_DATABASE}</database>
+    <port>${QF_ETL_DB_PORT}</port>
+    <username>${QF_ETL_DB_USERNAME}</username>
+    <password>${QF_ETL_DB_PASSWORD}</password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>${QF_ETL_DB_PORT}</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
   <connection>
     <name>logging_db</name>
     <server>${QF_LOGGING_DB_HOST}</server>
@@ -667,394 +659,26 @@ names from the source (OBO) DB.</note>
       </attribute>
     </attributes>
   </connection>
-  <connection>
-    <name>obo_db</name>
-    <server>${QF_OBO_DB_HOST}</server>
-    <type>POSTGRESQL</type>
-    <access>Native</access>
-    <database>${QF_OBO_DB_DATABASE}</database>
-    <port>${QF_OBO_DB_PORT}</port>
-    <username>${QF_OBO_DB_USERNAME}</username>
-    <password>${QF_OBO_DB_PASSWORD}</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
-    <attributes>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>IS_CLUSTERED</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>PORT_NUMBER</code>
-        <attribute>${QF_OBO_DB_PORT}</attribute>
-      </attribute>
-      <attribute>
-        <code>PRESERVE_RESERVED_WORD_CASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>QUOTE_ALL_FIELDS</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>USE_POOLING</code>
-        <attribute>N</attribute>
-      </attribute>
-    </attributes>
-  </connection>
-  <connection>
-    <name>psa_db</name>
-    <server>${QF_PSA_DB_HOST}</server>
-    <type>POSTGRESQL</type>
-    <access>Native</access>
-    <database>${QF_PSA_DB_DATABASE}</database>
-    <port>${QF_PSA_DB_PORT}</port>
-    <username>${QF_PSA_DB_USERNAME}</username>
-    <password>${QF_DWH_DB_PASSWORD}</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
-    <attributes>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>IS_CLUSTERED</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>PORT_NUMBER</code>
-        <attribute>${QF_PSA_DB_PORT}</attribute>
-      </attribute>
-      <attribute>
-        <code>PRESERVE_RESERVED_WORD_CASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>QUOTE_ALL_FIELDS</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>USE_POOLING</code>
-        <attribute>N</attribute>
-      </attribute>
-    </attributes>
-  </connection>
   <order>
     <hop>
-      <from>Get rows from target (PSA) DB table</from>
-      <to>Rename PSA field names -> OBO field names</to>
+      <from>Source (OBO) primary key column names</from>
+      <to>ETL Metadata Injection: tmplt_psa_mark_rows_for_deletion</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Get rows from source (OBO) DB table</from>
-      <to>Set field order</to>
-      <enabled>N</enabled>
-    </hop>
-    <hop>
-      <from>Set field order</from>
-      <to>Merge Rows (diff)</to>
-      <enabled>N</enabled>
-    </hop>
-    <hop>
-      <from>Rename PSA field names -> OBO field names</from>
-      <to>Merge Rows (diff)</to>
+      <from>SELECT statement for source (OBO) DB table</from>
+      <to>ETL Metadata Injection: tmplt_psa_mark_rows_for_deletion</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Merge Rows (diff)</from>
-      <to>tr_mirror_compare-update_table_meta</to>
-      <enabled>N</enabled>
-    </hop>
-    <hop>
-      <from>Get rows from source (OBO) DB table</from>
-      <to>Merge Rows (diff)</to>
+      <from>Source (OBO) "can_delete_row" column metadata</from>
+      <to>ETL Metadata Injection: tmplt_psa_mark_rows_for_deletion</to>
       <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Get rows from target (PSA) DB table</from>
-      <to>Merge Rows (diff)</to>
-      <enabled>N</enabled>
     </hop>
   </order>
   <step>
-    <name>Get rows from source (OBO) DB table</name>
-    <type>TableInput</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <connection>obo_db</connection>
-    <sql>SELECT image_id,file_id,passage_id,image_type_id,camera_id,file_name,image_orientation_id,image_arrival_date,image_date,propertybag,archive_id,archive_date FROM passage.image WHERE archive_id >= 100 AND archive_id &lt;= 110 ORDER BY image_id</sql>
-    <limit>0</limit>
-    <lookup />
-    <execute_each_row>N</execute_each_row>
-    <variables_active>Y</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>112</xloc>
-      <yloc>224</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Get rows from target (PSA) DB table</name>
-    <type>TableInput</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <connection>psa_db</connection>
-    <sql>SELECT image_id,file_id,passage_id,image_type_id,camera_id,file_name,image_orientation_id,image_arrival_date,image_date,propertybag,archive_id,archive_date FROM passage.image WHERE archive_id >= 100 AND archive_id &lt;= 110 ORDER BY image_id</sql>
-    <limit>0</limit>
-    <lookup />
-    <execute_each_row>N</execute_each_row>
-    <variables_active>Y</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>368</xloc>
-      <yloc>224</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Merge Rows (diff)</name>
-    <type>MergeRows</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <keys>
-      <key>image_id</key>
-    </keys>
-    <values>
-      <value>image_id</value>
-      <value>file_id</value>
-      <value>passage_id</value>
-      <value>image_type_id</value>
-      <value>camera_id</value>
-      <value>file_name</value>
-      <value>image_orientation_id</value>
-      <value>image_arrival_date</value>
-      <value>image_date</value>
-      <value>propertybag</value>
-      <value>archive_id</value>
-      <value>archive_date</value>
-    </values>
-    <flag_field>flagfield</flag_field>
-    <reference>Get rows from source (OBO) DB table</reference>
-    <compare>Rename PSA field names -> OBO field names</compare>
-    <compare>
-    </compare>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>240</xloc>
-      <yloc>432</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Rename PSA field names -> OBO field names</name>
-    <type>SelectValues</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <fields>
-      <field>
-        <name>image_id</name>
-        <rename>image_id</rename>
-      </field>
-      <field>
-        <name>file_id</name>
-        <rename>file_id</rename>
-      </field>
-      <field>
-        <name>passage_id</name>
-        <rename>passage_id</rename>
-      </field>
-      <field>
-        <name>image_type_id</name>
-        <rename>image_type_id</rename>
-      </field>
-      <field>
-        <name>camera_id</name>
-        <rename>camera_id</rename>
-      </field>
-      <field>
-        <name>file_name</name>
-        <rename>file_name</rename>
-      </field>
-      <field>
-        <name>image_orientation_id</name>
-        <rename>image_orientation_id</rename>
-      </field>
-      <field>
-        <name>image_arrival_date</name>
-        <rename>image_arrival_date</rename>
-      </field>
-      <field>
-        <name>image_date</name>
-        <rename>image_date</rename>
-      </field>
-      <field>
-        <name>propertybag</name>
-        <rename>propertybag</rename>
-      </field>
-      <field>
-        <name>archive_id</name>
-        <rename>archive_id</rename>
-      </field>
-      <field>
-        <name>archive_date</name>
-        <rename>archive_date</rename>
-      </field>
-      <select_unspecified>N</select_unspecified>
-    </fields>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>368</xloc>
-      <yloc>336</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Set field order</name>
-    <type>SelectValues</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <fields>
-      <field>
-        <name>archive_date</name>
-      </field>
-      <field>
-        <name>archive_id</name>
-      </field>
-      <field>
-        <name>camera_id</name>
-      </field>
-      <field>
-        <name>file_id</name>
-      </field>
-      <field>
-        <name>file_name</name>
-      </field>
-      <field>
-        <name>image_arrival_date</name>
-      </field>
-      <field>
-        <name>image_date</name>
-      </field>
-      <field>
-        <name>image_id</name>
-      </field>
-      <field>
-        <name>image_orientation_id</name>
-      </field>
-      <field>
-        <name>image_type_id</name>
-      </field>
-      <field>
-        <name>passage_id</name>
-      </field>
-      <field>
-        <name>propertybag</name>
-      </field>
-      <select_unspecified>N</select_unspecified>
-    </fields>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>112</xloc>
-      <yloc>336</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>tr_mirror_compare-update_table_meta</name>
-    <type>SimpleMapping</type>
+    <name>ETL Metadata Injection: tmplt_psa_mark_rows_for_deletion</name>
+    <type>MetaInject</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -1065,35 +689,65 @@ names from the source (OBO) DB.</note>
     </partitioning>
     <specification_method>rep_name</specification_method>
     <trans_object_id />
-    <trans_name>tr_mirror_compare-update_table_meta</trans_name>
+    <trans_name>tmplt_psa_mark_rows_for_deletion</trans_name>
     <filename />
-    <directory_path>/dwh/mirror/compare_tables</directory_path>
+    <directory_path>${Internal.Entry.Current.Directory}</directory_path>
+    <source_step />
+    <source_output_fields>    </source_output_fields>
+    <target_file />
+    <no_execution>N</no_execution>
+    <stream_source_step />
+    <stream_target_step />
     <mappings>
-      <input>
-        <mapping>
-          <input_step />
-          <output_step />
-          <main_path>Y</main_path>
-          <rename_on_output>Y</rename_on_output>
-          <description />
-          <connector>
-            <parent>flagfield</parent>
-            <child>flagfield</child>
-          </connector>
-        </mapping>
-      </input>
-      <output>
-        <mapping>
-          <input_step />
-          <output_step />
-          <main_path>Y</main_path>
-          <rename_on_output>N</rename_on_output>
-          <description />
-        </mapping>
-      </output>
-      <parameters>
-        <inherit_all_vars>Y</inherit_all_vars>
-      </parameters>
+      <mapping>
+        <target_step_name>Update: Mark rows for deletion</target_step_name>
+        <target_attribute_key>UPDATE_LOOKUP</target_attribute_key>
+        <target_detail>Y</target_detail>
+        <source_step>Source (OBO) "can_delete_row" column metadata</source_step>
+        <source_field>can_delete_row_col_name</source_field>
+      </mapping>
+      <mapping>
+        <target_step_name>Update: Mark rows for deletion</target_step_name>
+        <target_attribute_key>KEY_CONDITION</target_attribute_key>
+        <target_detail>Y</target_detail>
+        <source_step>Source (OBO) primary key column names</source_step>
+        <source_field>key_field_value_comparator</source_field>
+      </mapping>
+      <mapping>
+        <target_step_name>Update: Mark rows for deletion</target_step_name>
+        <target_attribute_key>UPDATE_STREAM</target_attribute_key>
+        <target_detail>Y</target_detail>
+        <source_step>Source (OBO) "can_delete_row" column metadata</source_step>
+        <source_field>true_field_name</source_field>
+      </mapping>
+      <mapping>
+        <target_step_name>Get primary key column(s) from source (OBO) DB table</target_step_name>
+        <target_attribute_key>SQL</target_attribute_key>
+        <target_detail>N</target_detail>
+        <source_step>SELECT statement for source (OBO) DB table</source_step>
+        <source_field>select_source_rows_sql</source_field>
+      </mapping>
+      <mapping>
+        <target_step_name>Update: Mark rows for deletion</target_step_name>
+        <target_attribute_key>KEY_LOOKUP</target_attribute_key>
+        <target_detail>Y</target_detail>
+        <source_step>Source (OBO) primary key column names</source_step>
+        <source_field>key_col_name</source_field>
+      </mapping>
+      <mapping>
+        <target_step_name>Update: Mark rows for deletion</target_step_name>
+        <target_attribute_key>KEY_STREAM</target_attribute_key>
+        <target_detail>Y</target_detail>
+        <source_step>Source (OBO) primary key column names</source_step>
+        <source_field>key_col_name</source_field>
+      </mapping>
+      <mapping>
+        <target_step_name>Update: Mark rows for deletion</target_step_name>
+        <target_attribute_key>KEY_STREAM2</target_attribute_key>
+        <target_detail>Y</target_detail>
+        <source_step>Source (OBO) primary key column names</source_step>
+        <source_field>no_field</source_field>
+      </mapping>
     </mappings>
     <cluster_schema />
     <remotesteps>
@@ -1103,8 +757,162 @@ names from the source (OBO) DB.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>240</xloc>
-      <yloc>528</yloc>
+      <xloc>160</xloc>
+      <yloc>384</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>SELECT statement for source (OBO) DB table</name>
+    <type>TableInput</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <connection>etl_db</connection>
+    <sql>WITH
+    -- Create table with a string column that contains the primary key column(s) from the 
+    -- source (OBO) table:
+    select_list AS (
+        SELECT 
+            -- POSTGRESQL-SPECIFIC
+            array_to_string(array_agg(source_column_name ORDER BY column_meta_id ASC), ',') AS "str_value"
+        FROM 
+            etl.column_meta 
+        WHERE 
+            table_meta_id = ${PARAM_TABLE_META_ID} AND 
+            is_primary_key_column = true 
+    ),
+    -- Create table with a string column that contains the "ORDER BY" clause. 
+    -- This consists of the column(s) that make up the primary key for the 
+    -- source (OBO) table.
+    orderby_list AS (
+        SELECT 
+           -- POSTGRESQL-SPECIFIC
+            array_to_string(array_agg(source_column_name ORDER BY primary_key_column_order ASC), ',') AS "str_value"
+        FROM 
+            etl.column_meta 
+        WHERE 
+            table_meta_id = ${PARAM_TABLE_META_ID} AND 
+            is_primary_key_column = true
+    )
+SELECT
+    -- Create SELECT statement to select rows from source (OBO) table to delete.
+    -- The WHERE clause includes only rows that should have been archived/mirrored.
+    -- Only select rows with "can_delete_row" column = false because only thoses rows need to have this column updated to true.
+    -- This will greatly reduce the number of rows selected here if the rows with "can_delete_row" are not currently being deleted.
+    'SELECT ' || CAST(select_list.str_value AS VARCHAR) || 
+    ' FROM ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE} ' || 
+    'WHERE ${PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME} + INTERVAL ''${PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS} seconds'' &lt; TIMESTAMP ''${PARAM_LAST_LOAD_TIMESTAMP}'' ' ||
+    ' AND ${PARAM_CAN_DELETE_ROW_SOURCE_COLNAME}=false ' ||
+    'ORDER BY ' || CAST(orderby_list.str_value AS VARCHAR) 
+    AS "select_source_rows_sql" 
+FROM
+    select_list
+CROSS JOIN
+    orderby_list</sql>
+    <limit>0</limit>
+    <lookup />
+    <execute_each_row>N</execute_each_row>
+    <variables_active>Y</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>512</xloc>
+      <yloc>288</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Source (OBO) primary key column names</name>
+    <type>TableInput</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <connection>etl_db</connection>
+    <sql>SELECT
+    source_column_name AS "key_col_name",
+    '=' AS "key_field_value_comparator",
+    -- "Stream field2" is not used in the "Update" step. Nevertheless, we must set 
+    -- it to something or an error is thrown during ETL metadata injection. The
+    -- only solution I have found is to inject an empty string for this field.
+    '' AS "no_field" 
+FROM 
+    etl.column_meta 
+WHERE 
+    table_meta_id = ${PARAM_TABLE_META_ID} AND 
+    is_primary_key_column = true
+ORDER BY 
+    primary_key_column_order</sql>
+    <limit>0</limit>
+    <lookup />
+    <execute_each_row>N</execute_each_row>
+    <variables_active>Y</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>512</xloc>
+      <yloc>480</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Source (OBO) "can_delete_row" column metadata</name>
+    <type>TableInput</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <connection>etl_db</connection>
+    <sql>SELECT
+    source_column_name AS "can_delete_row_col_name",
+    -- This is a "constant" stream that is used to assign "true" to the "can_delete_row" column.
+    'true_field' AS "true_field_name" 
+FROM 
+    etl.column_meta 
+WHERE 
+    table_meta_id = ${PARAM_TABLE_META_ID} AND 
+    is_can_delete_row_column = true</sql>
+    <limit>0</limit>
+    <lookup />
+    <execute_each_row>N</execute_each_row>
+    <variables_active>Y</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>512</xloc>
+      <yloc>384</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
