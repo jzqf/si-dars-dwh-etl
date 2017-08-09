@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/08/08 13:13:37.029</modified_date>
+  <modified_date>2017/08/09 09:07:08.590</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CAN_DELETE_ROW_SOURCE_COLNAME</name>
@@ -513,10 +513,10 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>416</xloc>
-      <yloc>624</yloc>
+      <yloc>720</yloc>
     </entry>
     <entry>
-      <name>jb_log_error 3</name>
+      <name>jb_log_error 4</name>
       <description />
       <type>JOB</type>
       <specification_method>rep_name</specification_method>
@@ -551,8 +551,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>208</xloc>
-      <yloc>624</yloc>
+      <xloc>192</xloc>
+      <yloc>720</yloc>
     </entry>
     <entry>
       <name>Abort job</name>
@@ -562,7 +562,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>80</xloc>
+      <xloc>64</xloc>
       <yloc>528</yloc>
     </entry>
     <entry>
@@ -600,7 +600,7 @@ PARAM_TABLE_META_ID                          = ${PARAM_TABLE_META_ID}</logmessag
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>416</xloc>
-      <yloc>720</yloc>
+      <yloc>816</yloc>
     </entry>
     <entry>
       <name>jb_log_error 1</name>
@@ -638,7 +638,7 @@ PARAM_TABLE_META_ID                          = ${PARAM_TABLE_META_ID}</logmessag
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>2</nr>
-      <xloc>208</xloc>
+      <xloc>192</xloc>
       <yloc>432</yloc>
     </entry>
     <entry>
@@ -765,7 +765,7 @@ ORDER BY
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>2</nr>
-      <xloc>208</xloc>
+      <xloc>192</xloc>
       <yloc>528</yloc>
     </entry>
     <entry>
@@ -802,11 +802,72 @@ ORDER BY
       <xloc>656</xloc>
       <yloc>288</yloc>
     </entry>
+    <entry>
+      <name>"row_can_be_deleted_from" column configured for table?</name>
+      <description />
+      <type>SIMPLE_EVAL</type>
+      <valuetype>variable</valuetype>
+      <fieldname />
+      <variablename>${PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME}</variablename>
+      <fieldtype>string</fieldtype>
+      <mask />
+      <comparevalue />
+      <minvalue />
+      <maxvalue />
+      <successcondition>different</successcondition>
+      <successnumbercondition>equal</successnumbercondition>
+      <successbooleancondition>false</successbooleancondition>
+      <successwhenvarset>N</successwhenvarset>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>416</xloc>
+      <yloc>624</yloc>
+    </entry>
+    <entry>
+      <name>jb_log_error 3</name>
+      <description />
+      <type>JOB</type>
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_log_error</jobname>
+      <directory>/generic</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_ERROR_MESSAGE</name>
+          <stream_name />
+          <value>No "row_can_be_deleted_from" column has been configured for source OBO table: ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>2</nr>
+      <xloc>192</xloc>
+      <yloc>624</yloc>
+    </entry>
   </entries>
   <hops>
     <hop>
       <from>tr_psa_mark_rows_for_deletion-inject_meta</from>
-      <to>jb_log_error 3</to>
+      <to>jb_log_error 4</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -814,7 +875,7 @@ ORDER BY
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>jb_log_error 3</from>
+      <from>jb_log_error 4</from>
       <to>Abort job</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -887,15 +948,6 @@ ORDER BY
     </hop>
     <hop>
       <from>"can_delete_row" column configured for table?</from>
-      <to>tr_psa_mark_rows_for_deletion-inject_meta</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>"can_delete_row" column configured for table?</from>
       <to>jb_log_error 2</to>
       <from_nr>0</from_nr>
       <to_nr>2</to_nr>
@@ -925,6 +977,42 @@ ORDER BY
       <from>jb_psa_mark_rows_for_deletion-custom</from>
       <to>Abort job 2</to>
       <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>"can_delete_row" column configured for table?</from>
+      <to>"row_can_be_deleted_from" column configured for table?</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>"row_can_be_deleted_from" column configured for table?</from>
+      <to>tr_psa_mark_rows_for_deletion-inject_meta</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>"row_can_be_deleted_from" column configured for table?</from>
+      <to>jb_log_error 3</to>
+      <from_nr>0</from_nr>
+      <to_nr>2</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_log_error 3</from>
+      <to>Abort job</to>
+      <from_nr>2</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>N</evaluation>
@@ -975,7 +1063,7 @@ This job has parameters:
 to tell the root calling
 job that execution has
 failed.</note>
-      <xloc>16</xloc>
+      <xloc>0</xloc>
       <yloc>576</yloc>
       <width>139</width>
       <heigth>66</heigth>
@@ -997,8 +1085,8 @@ failed.</note>
     <notepad>
       <note>This transformation marks archived/mirrored rows from the source (OBO) 
 table using an "ETL Metadata Injection" step.</note>
-      <xloc>592</xloc>
-      <yloc>624</yloc>
+      <xloc>608</xloc>
+      <yloc>704</yloc>
       <width>444</width>
       <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
@@ -1026,7 +1114,7 @@ to an "ETL Metadata Injection" step. To avoid this possibility in
 available here before executing that transformation. This should never 
 occur in practice, but we check anyway in order to provide a clear warning
 message, rather than letting PDI choke on this problem.</note>
-      <xloc>592</xloc>
+      <xloc>608</xloc>
       <yloc>368</yloc>
       <width>439</width>
       <heigth>136</heigth>
@@ -1048,8 +1136,8 @@ message, rather than letting PDI choke on this problem.</note>
     <notepad>
       <note>This transformation entry must abort this job if  the compare is 
 not successful for every row. Is this the case?</note>
-      <xloc>592</xloc>
-      <yloc>672</yloc>
+      <xloc>608</xloc>
+      <yloc>752</yloc>
       <width>378</width>
       <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
@@ -1072,7 +1160,7 @@ not successful for every row. Is this the case?</note>
 "can_delete_row" must be configured for the table. Without this check PDI
 will choke when it tries to reference this column and it will be harder to
 track down the problem.</note>
-      <xloc>592</xloc>
+      <xloc>608</xloc>
       <yloc>528</yloc>
       <width>444</width>
       <heigth>66</heigth>
@@ -1097,6 +1185,30 @@ track down the problem.</note>
       <yloc>384</yloc>
       <width>118</width>
       <heigth>24</heigth>
+      <fontname />
+      <fontsize>-1</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>This is to provide a nice error message in the log so that it is clear that a
+"row_can_be_deleted_from" must be configured for the table. Without
+this check PDI will choke when it tries to reference this column and it 
+will be harder to track down the problem.</note>
+      <xloc>608</xloc>
+      <yloc>608</yloc>
+      <width>428</width>
+      <heigth>66</heigth>
       <fontname />
       <fontsize>-1</fontsize>
       <fontbold>N</fontbold>
