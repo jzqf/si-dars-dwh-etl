@@ -449,7 +449,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/08/09 15:11:34.080</modified_date>
+    <modified_date>2017/08/10 14:23:20.742</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -463,8 +463,8 @@ Therefore, this transformation writes one row to the etl.column_meta table for e
 This transformation has parameters:
 
 	PARAM_SOURCE_DB_ID			ID the "source" database containing the table for generating column metadata
-	PARAM_SOURCE_SCHEMA				Name of schema containing source table for generating column meatdata
-	PARAM_SOURCE_TABLE					Name of source table for generating column meatdata
+	PARAM_SOURCE_SCHEMA		Name of schema containing source table for generating column meatdata
+	PARAM_SOURCE_TABLE		Name of source table for generating column meatdata
 	PARAM_TABLE_META_ID		ID of the etl.table_meta row that the new etl.column_meta rows will be linked to</note>
       <xloc>16</xloc>
       <yloc>0</yloc>
@@ -486,11 +486,11 @@ This transformation has parameters:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Append a field to the stream that contains the value of ${PARAM_TABLE_META_ID}. Thi s is the 
+      <note>Append a field to the stream that contains the value of ${PARAM_TABLE_META_ID}. This is the
 value of the foreign key that will link the new column_meta rows to its parent table_meta row.</note>
-      <xloc>336</xloc>
-      <yloc>480</yloc>
-      <width>563</width>
+      <xloc>288</xloc>
+      <yloc>576</yloc>
+      <width>561</width>
       <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -509,7 +509,7 @@ value of the foreign key that will link the new column_meta rows to its parent t
     </notepad>
     <notepad>
       <note>Get names of all columns from the specified table.</note>
-      <xloc>336</xloc>
+      <xloc>288</xloc>
       <yloc>192</yloc>
       <width>305</width>
       <heigth>24</heigth>
@@ -531,7 +531,7 @@ value of the foreign key that will link the new column_meta rows to its parent t
     <notepad>
       <note>Duplicate field "source_column_name" to "target_column_name". This assumes that the column
 names in the target database are identical to the column names in the source database.</note>
-      <xloc>336</xloc>
+      <xloc>288</xloc>
       <yloc>256</yloc>
       <width>565</width>
       <heigth>38</heigth>
@@ -554,8 +554,8 @@ names in the target database are identical to the column names in the source dat
       <note>Add sequence field "column_meta_id_1" to the stream. This sequence starts at 1. Below, we create
 a new field "column_meta_id" by adding MAX(column_meta_id) to these values.  "column_meta_id"
 will hold primary key values for the new etl.column_meta rows to insert.</note>
-      <xloc>336</xloc>
-      <yloc>544</yloc>
+      <xloc>288</xloc>
+      <yloc>640</yloc>
       <width>586</width>
       <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
@@ -574,13 +574,14 @@ will hold primary key values for the new etl.column_meta rows to insert.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Add a constant field to the stream named "max_column_meta_id" that contains that
-value of MAX(column_meta_id). This is so that we can compute column_meta_id 
-values that are not  yet used for new rows to insert into table etl.column_meta.</note>
-      <xloc>624</xloc>
-      <yloc>624</yloc>
-      <width>500</width>
-      <heigth>52</heigth>
+      <note>Add a constant field to the stream named "max_column_meta_id"
+that contains the value MAX(column_meta_id). This is so that we
+can compute column_meta_id values that are not  yet used for
+new rows to insert into table etl.column_meta.</note>
+      <xloc>544</xloc>
+      <yloc>720</yloc>
+      <width>394</width>
+      <heigth>66</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -599,8 +600,8 @@ values that are not  yet used for new rows to insert into table etl.column_meta.
     <notepad>
       <note>Add constant field "column_meta_id" to "column_meta_id_1" to create a new field "column_meta_id"
 to hold primary key values for the new etl.column_meta rows to insert.</note>
-      <xloc>336</xloc>
-      <yloc>704</yloc>
+      <xloc>288</xloc>
+      <yloc>800</yloc>
       <width>598</width>
       <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
@@ -619,11 +620,13 @@ to hold primary key values for the new etl.column_meta rows to insert.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Create a row for "etl_batch_id_insert" column.</note>
-      <xloc>560</xloc>
-      <yloc>352</yloc>
-      <width>279</width>
-      <heigth>24</heigth>
+      <note>Create a *row* with target_column_name="etl_batch_id_insert" column.
+"source_column_name" is set to blank (NULL) here because there is no
+matching column from the source (OBO) DB table.</note>
+      <xloc>480</xloc>
+      <yloc>336</yloc>
+      <width>429</width>
+      <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -640,11 +643,46 @@ to hold primary key values for the new etl.column_meta rows to insert.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>This assumes that all columns will be archived/mirrored.</note>
-      <xloc>336</xloc>
-      <yloc>416</yloc>
-      <width>338</width>
-      <heigth>24</heigth>
+      <note>mirror_column=Y							This assumes that all columns will be archived/mirrored
+											(can be set  to N below, depending on column name)
+compare_column=Y							This assumes that all columns will be compared
+											(can be set  to N below, depending on column name)
+is_updatable_column=N						This assumes that no columns of the table can be updated
+is_last_updated_on_column=N				(can be set  to T below, depending on column name)
+is_insert_id_column=N						(can be set  to T below, depending on column name)
+is_inserted_on_column=N					(can be set  to T below, depending on column name)
+is_row_can_be_deleted_from_column=N		(can be set  to T below, depending on column name)
+is_can_delete_row_column=N				(can be set  to T below, depending on column name)</note>
+      <xloc>288</xloc>
+      <yloc>400</yloc>
+      <width>613</width>
+      <heigth>150</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>For example, if target_column_name="etl_batch_id_insert", then the following adjustments are made:
+
+	mirror_column		= N
+	compare_column	= N
+
+...</note>
+      <xloc>288</xloc>
+      <yloc>896</yloc>
+      <width>603</width>
+      <heigth>94</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -837,13 +875,8 @@ to hold primary key values for the new etl.column_meta rows to insert.</note>
     </hop>
     <hop>
       <from>Create column_meta_id sequence for new rows</from>
-      <to>Remove fields "column_meta_id_1" &amp; "max_column_meta_id"</to>
+      <to>Remove fields no longer needed</to>
       <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Remove fields "column_meta_id_1" &amp; "max_column_meta_id"</from>
-      <to>Insert new etl.column_meta rows</to>
-      <enabled>N</enabled>
     </hop>
     <hop>
       <from>Add row for "etl_batch_id_insert" column</from>
@@ -851,7 +884,7 @@ to hold primary key values for the new etl.column_meta rows to insert.</note>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Add field mirror_column=Y</from>
+      <from>Add fields with constant values</from>
       <to>Get Variables</to>
       <enabled>Y</enabled>
     </hop>
@@ -862,7 +895,7 @@ to hold primary key values for the new etl.column_meta rows to insert.</note>
     </hop>
     <hop>
       <from>Append streams</from>
-      <to>Add field mirror_column=Y</to>
+      <to>Add fields with constant values</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
@@ -870,9 +903,19 @@ to hold primary key values for the new etl.column_meta rows to insert.</note>
       <to>Append streams</to>
       <enabled>Y</enabled>
     </hop>
+    <hop>
+      <from>Remove fields no longer needed</from>
+      <to>Adjust field values based on column name</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Adjust field values based on column name</from>
+      <to>Insert new etl.column_meta rows</to>
+      <enabled>Y</enabled>
+    </hop>
   </order>
   <step>
-    <name>Add field mirror_column=Y</name>
+    <name>Add fields with constant values</name>
     <type>Constant</type>
     <description />
     <distribute>Y</distribute>
@@ -895,6 +938,90 @@ to hold primary key values for the new etl.column_meta rows to insert.</note>
         <precision>-1</precision>
         <set_empty_string>N</set_empty_string>
       </field>
+      <field>
+        <name>compare_column</name>
+        <type>Boolean</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <nullif>Y</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>is_updatable_column</name>
+        <type>Boolean</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <nullif>N</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>is_last_updated_on_column</name>
+        <type>Boolean</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <nullif>N</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>is_insert_id_column</name>
+        <type>Boolean</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <nullif>N</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>is_inserted_on_column</name>
+        <type>Boolean</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <nullif>N</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>is_row_can_be_deleted_from_column</name>
+        <type>Boolean</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <nullif>N</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>is_can_delete_row_column</name>
+        <type>Boolean</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <nullif>N</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
     </fields>
     <cluster_schema />
     <remotesteps>
@@ -904,8 +1031,8 @@ to hold primary key values for the new etl.column_meta rows to insert.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>176</xloc>
-      <yloc>416</yloc>
+      <xloc>128</xloc>
+      <yloc>448</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -943,11 +1070,35 @@ to hold primary key values for the new etl.column_meta rows to insert.</note>
         <precision>-1</precision>
         <set_empty_string>N</set_empty_string>
       </field>
+      <field>
+        <name>is_primary_key_column</name>
+        <type>Boolean</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>primary_key_column_order</name>
+        <type>Integer</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
     </fields>
     <data>
       <line>
         <item />
         <item>etl_batch_id_insert</item>
+        <item>F</item>
+        <item />
       </line>
     </data>
     <cluster_schema />
@@ -958,7 +1109,7 @@ to hold primary key values for the new etl.column_meta rows to insert.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>448</xloc>
+      <xloc>336</xloc>
       <yloc>352</yloc>
       <draw>Y</draw>
     </GUI>
@@ -992,8 +1143,8 @@ to hold primary key values for the new etl.column_meta rows to insert.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>176</xloc>
-      <yloc>560</yloc>
+      <xloc>128</xloc>
+      <yloc>656</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1018,7 +1169,7 @@ to hold primary key values for the new etl.column_meta rows to insert.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>176</xloc>
+      <xloc>128</xloc>
       <yloc>352</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1057,8 +1208,8 @@ to hold primary key values for the new etl.column_meta rows to insert.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>176</xloc>
-      <yloc>704</yloc>
+      <xloc>128</xloc>
+      <yloc>800</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1076,11 +1227,19 @@ to hold primary key values for the new etl.column_meta rows to insert.</note>
     <fields>
       <field>
         <name>source_column_name</name>
-        <rename>source_column_name</rename>
+        <rename />
       </field>
       <field>
         <name>source_column_name</name>
         <rename>target_column_name</rename>
+      </field>
+      <field>
+        <name>is_primary_key_column</name>
+        <rename />
+      </field>
+      <field>
+        <name>primary_key_column_order</name>
+        <rename />
       </field>
       <select_unspecified>N</select_unspecified>
     </fields>
@@ -1092,7 +1251,7 @@ to hold primary key values for the new etl.column_meta rows to insert.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>176</xloc>
+      <xloc>128</xloc>
       <yloc>256</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1127,8 +1286,8 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>448</xloc>
-      <yloc>640</yloc>
+      <xloc>384</xloc>
+      <yloc>736</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1165,8 +1324,8 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>176</xloc>
-      <yloc>480</yloc>
+      <xloc>128</xloc>
+      <yloc>576</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1208,8 +1367,8 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>176</xloc>
-      <yloc>832</yloc>
+      <xloc>128</xloc>
+      <yloc>1008</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1227,7 +1386,7 @@ FROM
     <directory>%%java.io.tmpdir%%</directory>
     <prefix>out</prefix>
     <cache_size>500</cache_size>
-    <main />
+    <main>Add sequence - column_meta_id</main>
     <compare>
       <condition>
         <negated>N</negated>
@@ -1244,13 +1403,13 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>176</xloc>
-      <yloc>640</yloc>
+      <xloc>128</xloc>
+      <yloc>736</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Remove fields "column_meta_id_1" &amp; "max_column_meta_id"</name>
+    <name>Remove fields no longer needed</name>
     <type>SelectValues</type>
     <description />
     <distribute>Y</distribute>
@@ -1277,8 +1436,8 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>176</xloc>
-      <yloc>768</yloc>
+      <xloc>128</xloc>
+      <yloc>864</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1295,18 +1454,27 @@ FROM
     </partitioning>
     <connection>obo_db</connection>
     <sql>SELECT 
---    table_catalog, 
---    table_schema, 
---    table_name, 
-    column_name AS "source_column_name"
---   , ordinal_position 
+    c.column_name                    AS "source_column_name",
+    kcu.ordinal_position IS NOT NULL AS "is_primary_key_column",
+    kcu.ordinal_position             AS "primary_key_column_order"
 FROM 
-    information_schema.columns 
+    information_schema.columns c
+-- These two left outer joins are for determining which column(s) make up the 
+-- primary key for the table.
+LEFT OUTER JOIN
+    information_schema.table_constraints AS tc ON 
+        tc.table_schema    = c.table_schema AND 
+        tc.table_name      = c.table_name   AND
+        tc.constraint_type = 'PRIMARY KEY'
+LEFT OUTER JOIN
+    information_schema.key_column_usage AS kcu ON 
+        kcu.constraint_name = tc.constraint_name AND 
+        kcu.column_name     = c.column_name
 WHERE
-	table_schema = '${PARAM_SOURCE_SCHEMA}' AND 
-    table_name = '${PARAM_SOURCE_TABLE}'
+	c.table_schema = '${PARAM_SOURCE_SCHEMA}' AND 
+    c.table_name = '${PARAM_SOURCE_TABLE}'
 ORDER BY 
-    ordinal_position;</sql>
+    c.ordinal_position</sql>
     <limit>0</limit>
     <lookup />
     <execute_each_row>N</execute_each_row>
@@ -1320,8 +1488,143 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>176</xloc>
+      <xloc>128</xloc>
       <yloc>192</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Adjust field values based on column name</name>
+    <type>ScriptValueMod</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <compatible>N</compatible>
+    <optimizationLevel>9</optimizationLevel>
+    <jsScripts>
+      <jsScript>
+        <jsScript_type>0</jsScript_type>
+        <jsScript_name>Script 1</jsScript_name>
+        <jsScript_script>/*
+  Author:  Jeffrey Zelt
+  Date:    2017.08.10
+  Changes: Initial version
+*/
+
+/*
+  Since all of the fields that are set here have:
+      "Replace value 'Fieldname' or 'Rename to'" = Y
+  below, it is necessary to explicitly set each field here;
+  otherwise, it will be set to &lt;null> even if the field 
+  currently has a non-null value.
+
+  First, we set default values for cases not treated below.
+  These assignments cannot simply be moved to the "else" block
+  because then not all of the fields will get set for the cases
+  explicitly treated here.
+*/
+mirror_column = true;
+compare_column = true;
+is_insert_id_column = false;
+is_inserted_on_column = false;
+is_last_updated_on_column = false;
+is_row_can_be_deleted_from_column = false;
+is_can_delete_row_column = false;
+if(target_column_name == "etl_batch_id_insert") {
+    //Alert("target_column_name = " + target_column_name);
+    mirror_column = false;
+    compare_column = false;
+} else if(target_column_name == "insert_id") {       // We could also test for other names here
+    is_insert_id_column = true;
+} else if(target_column_name == "inserted_on") {     // We could also test for other names here
+    is_inserted_on_column = true;
+} else if(target_column_name == "last_updated_on") { // We could also test for other names here
+    is_last_updated_on_column = true;
+} else if(target_column_name == "row_can_be_deleted_from") { // We could also test for other names here
+    is_row_can_be_deleted_from_column = true;
+} else if(target_column_name == "can_delete_row") { // We could also test for other names here
+    is_can_delete_row_column = true;
+    mirror_column = false;
+    compare_column = false;
+} else { 
+    //Alert("Default case: target_column_name = " + target_column_name);
+}
+</jsScript_script>
+      </jsScript>
+    </jsScripts>
+    <fields>
+      <field>
+        <name>mirror_column</name>
+        <rename>mirror_column</rename>
+        <type>Boolean</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>Y</replace>
+      </field>
+      <field>
+        <name>compare_column</name>
+        <rename>compare_column</rename>
+        <type>Boolean</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>Y</replace>
+      </field>
+      <field>
+        <name>is_insert_id_column</name>
+        <rename>is_insert_id_column</rename>
+        <type>Boolean</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>Y</replace>
+      </field>
+      <field>
+        <name>is_inserted_on_column</name>
+        <rename>is_inserted_on_column</rename>
+        <type>Boolean</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>Y</replace>
+      </field>
+      <field>
+        <name>is_last_updated_on_column</name>
+        <rename>is_last_updated_on_column</rename>
+        <type>Boolean</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>Y</replace>
+      </field>
+      <field>
+        <name>is_row_can_be_deleted_from_column</name>
+        <rename>is_row_can_be_deleted_from_column</rename>
+        <type>Boolean</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>Y</replace>
+      </field>
+      <field>
+        <name>is_can_delete_row_column</name>
+        <rename>is_can_delete_row_column</rename>
+        <type>Boolean</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>Y</replace>
+      </field>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>128</xloc>
+      <yloc>928</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
