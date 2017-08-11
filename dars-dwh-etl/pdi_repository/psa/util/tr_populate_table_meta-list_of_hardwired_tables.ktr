@@ -1,18 +1,13 @@
 <transformation>
   <info>
-    <name>tr_generic_mirrored_updatable_tables-list_of_tables</name>
+    <name>tr_populate_table_meta-list_of_hardwired_tables</name>
     <description />
     <extended_description />
     <trans_version />
     <trans_type>Normal</trans_type>
     <trans_status>0</trans_status>
-    <directory>/generic</directory>
+    <directory>/psa/util</directory>
     <parameters>
-      <parameter>
-        <name>PARAM_SOURCE_DB_ID</name>
-        <default_value>-1</default_value>
-        <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
-      </parameter>
     </parameters>
     <log>
       <trans-log-table>
@@ -46,7 +41,7 @@
           <id>LINES_READ</id>
           <enabled>Y</enabled>
           <name>LINES_READ</name>
-          <subject>Copy rows to result</subject>
+          <subject />
         </field>
         <field>
           <id>LINES_WRITTEN</id>
@@ -434,27 +429,22 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/08/11 15:47:57.779</modified_date>
+    <modified_date>2017/08/11 13:40:53.969</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>This transformation specifies the "insert-only" tables from a "source" database that will be mirrored to a "target" database.
+      <note>This transformation specifies the tables from a "source" database that will be mirrored to corresponding tables of a "target" database.
 The "source" database is specified by PARAM_SOURCE_DB_ID.
 
-The stream from this transformation is copied to the "result" of this transformation. This result set is used in the parent job to 
-execute a sub-job once for each row in this stream. At the same time, the stream values from the row are assigned to parameters
-that are passed to the sub-job. This procedure can be used to mirror each  table in the "source" database  to its matching table in 
-the "target" database.
-
-This transformation has parameter:
-
-	PARAM_SOURCE_DB_ID			ID of the "source" database containing tables will be mirrored to a "target" database</note>
+The stream from this transformation is copied to the "result" of this transformation. This result set is used in the parent job to execute
+a sub-job once for each row in this stream. At the same time, the stream values from the row are assigned to parameters that are 
+passed to the sub-job. This procedure is used to generate table metadata for each  table in the "source" and "target" databases.</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>762</width>
-      <heigth>164</heigth>
+      <width>799</width>
+      <heigth>94</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -471,19 +461,13 @@ This transformation has parameter:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>The stream created by this step consists of the four fields: 
-
-	source_schema
-	source_table
-	target_schema
-	target_table
-
-Each row specifies a table to mirror from the source database,
-as well as the table it will be mirrored to in the target database.</note>
+      <note>Each row of the stream created by this step specifies one table from the 
+source (OBO) DB to be archived/mirrored to a matching table from the 
+target (PSA) DB.</note>
       <xloc>16</xloc>
-      <yloc>272</yloc>
-      <width>383</width>
-      <heigth>136</heigth>
+      <yloc>192</yloc>
+      <width>433</width>
+      <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -500,57 +484,6 @@ as well as the table it will be mirrored to in the target database.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
   </notepads>
-  <connection>
-    <name>etl_db</name>
-    <server>${QF_ETL_DB_HOST}</server>
-    <type>POSTGRESQL</type>
-    <access>Native</access>
-    <database>${QF_ETL_DB_DATABASE}</database>
-    <port>${QF_ETL_DB_PORT}</port>
-    <username>${QF_ETL_DB_USERNAME}</username>
-    <password>${QF_ETL_DB_PASSWORD}</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
-    <attributes>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>IS_CLUSTERED</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>PORT_NUMBER</code>
-        <attribute>${QF_ETL_DB_PORT}</attribute>
-      </attribute>
-      <attribute>
-        <code>PRESERVE_RESERVED_WORD_CASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>QUOTE_ALL_FIELDS</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>USE_POOLING</code>
-        <attribute>N</attribute>
-      </attribute>
-    </attributes>
-  </connection>
   <connection>
     <name>logging_db</name>
     <server>${QF_LOGGING_DB_HOST}</server>
@@ -604,14 +537,14 @@ as well as the table it will be mirrored to in the target database.</note>
   </connection>
   <order>
     <hop>
-      <from>Load list of tables</from>
-      <to>Write to log</to>
+      <from>Data Grid</from>
+      <to>Copy rows to result</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Write to log</from>
+      <from>Data Grid - Backup</from>
       <to>Copy rows to result</to>
-      <enabled>Y</enabled>
+      <enabled>N</enabled>
     </hop>
   </order>
   <step>
@@ -633,14 +566,14 @@ as well as the table it will be mirrored to in the target database.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>656</xloc>
-      <yloc>208</yloc>
+      <xloc>592</xloc>
+      <yloc>128</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Load list of tables</name>
-    <type>TableInput</type>
+    <name>Data Grid</name>
+    <type>DataGrid</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -649,79 +582,52 @@ as well as the table it will be mirrored to in the target database.</note>
       <method>none</method>
       <schema_name />
     </partitioning>
-    <connection>etl_db</connection>
-    <sql>SELECT
-    source_schema_name AS "source_schema",
-    source_table_name  AS "source_table",
-    target_schema_name AS "target_schema",
-    target_table_name  AS "target_table"
-FROM
-    etl.table_meta
-WHERE
-    source_db_id=${PARAM_SOURCE_DB_ID} AND
-    mirror_tables=true AND
-    can_insert_rows=true AND
-    can_update_rows=true AND
-    can_delete_rows=false AND
-	use_custom_mirror_algorithm=false
-ORDER BY
-    source_schema_name, 
-    source_table_name
-</sql>
-    <limit>0</limit>
-    <lookup />
-    <execute_each_row>N</execute_each_row>
-    <variables_active>Y</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>176</xloc>
-      <yloc>208</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Write to log</name>
-    <type>WriteToLog</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <loglevel>log_level_basic</loglevel>
-    <displayHeader>Y</displayHeader>
-    <limitRows>N</limitRows>
-    <limitRowsNumber>0</limitRowsNumber>
-    <logmessage>
-
-
-tr_generic_mirrored_updatable_tables-list_of_tables
- 
- 
- </logmessage>
     <fields>
       <field>
-        <name>source_schema</name>
+        <name>source_schema_name</name>
+        <type>String</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>255</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
       </field>
       <field>
-        <name>source_table</name>
-      </field>
-      <field>
-        <name>target_schema</name>
-      </field>
-      <field>
-        <name>target_table</name>
+        <name>source_table_name</name>
+        <type>String</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>255</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
       </field>
     </fields>
+    <data>
+      <line>
+        <item>passage</item>
+        <item>passage</item>
+      </line>
+      <line>
+        <item>passage</item>
+        <item>image</item>
+      </line>
+      <line>
+        <item>tolldomain</item>
+        <item>charging_point</item>
+      </line>
+      <line>
+        <item>tolldomain</item>
+        <item>charging_point_group</item>
+      </line>
+      <line>
+        <item>tolldomain</item>
+        <item>charging_point_group_group</item>
+      </line>
+    </data>
     <cluster_schema />
     <remotesteps>
       <input>
@@ -730,8 +636,78 @@ tr_generic_mirrored_updatable_tables-list_of_tables
       </output>
     </remotesteps>
     <GUI>
-      <xloc>496</xloc>
-      <yloc>416</yloc>
+      <xloc>192</xloc>
+      <yloc>128</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Data Grid - Backup</name>
+    <type>DataGrid</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <field>
+        <name>source_schema_name</name>
+        <type>String</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>255</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>source_table_name</name>
+        <type>String</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>255</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+    </fields>
+    <data>
+      <line>
+        <item>passage</item>
+        <item>passage</item>
+      </line>
+      <line>
+        <item>passage</item>
+        <item>image</item>
+      </line>
+      <line>
+        <item>tolldomain</item>
+        <item>charging_point</item>
+      </line>
+      <line>
+        <item>tolldomain</item>
+        <item>charging_point_group</item>
+      </line>
+      <line>
+        <item>tolldomain</item>
+        <item>charging_point_group_group</item>
+      </line>
+    </data>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>192</xloc>
+      <yloc>352</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
