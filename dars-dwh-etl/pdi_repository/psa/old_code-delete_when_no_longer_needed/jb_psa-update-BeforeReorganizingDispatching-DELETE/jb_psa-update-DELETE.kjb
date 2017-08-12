@@ -1,14 +1,14 @@
 <job>
-  <name>jb_psa-update</name>
+  <name>jb_psa-update-DELETE</name>
   <description />
   <extended_description />
   <job_version />
   <job_status>1</job_status>
-  <directory>/psa</directory>
+  <directory>/psa/old_code-delete_when_no_longer_needed/jb_psa-update-BeforeReorganizingDispatching-DELETE</directory>
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/08/12 21:41:04.624</modified_date>
+  <modified_date>2017/08/12 21:48:11.293</modified_date>
   <parameters>
     </parameters>
   <connection>
@@ -577,8 +577,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>1088</xloc>
-      <yloc>32</yloc>
+      <xloc>1104</xloc>
+      <yloc>352</yloc>
     </entry>
     <entry>
       <name>jb_custom_mirrored_tables-update_all</name>
@@ -626,8 +626,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>1</nr>
-      <xloc>1088</xloc>
-      <yloc>272</yloc>
+      <xloc>1104</xloc>
+      <yloc>592</yloc>
     </entry>
     <entry>
       <name>DUMMY</name>
@@ -876,8 +876,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>1088</xloc>
-      <yloc>160</yloc>
+      <xloc>1104</xloc>
+      <yloc>480</yloc>
     </entry>
     <entry>
       <name>tr_list_of_tables_to_mirror</name>
@@ -1041,11 +1041,38 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
+      <from>jb_custom_mirrored_tables-update_all</from>
+      <to>tr_cdc_timestamp_load_end</to>
+      <from_nr>1</from_nr>
+      <to_nr>1</to_nr>
+      <enabled>N</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
       <from>jb_psa_init</from>
       <to>DUMMY</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_mirrored_insert_only_tables-inject_meta-update_all</from>
+      <to>DUMMY</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>N</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_custom_mirrored_tables-update_all</from>
+      <to>DUMMY</to>
+      <from_nr>1</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>N</enabled>
       <evaluation>N</evaluation>
       <unconditional>N</unconditional>
     </hop>
@@ -1084,6 +1111,15 @@
       <enabled>Y</enabled>
       <evaluation>N</evaluation>
       <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>tr_cdc_timestamp_load_start</from>
+      <to>jb_mirrored_insert_only_tables-inject_meta-update_all</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>N</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
     </hop>
     <hop>
       <from>tr_cdc_timestamp_load_start</from>
@@ -1140,6 +1176,24 @@
       <unconditional>Y</unconditional>
     </hop>
     <hop>
+      <from>jb_mirrored_insert_only_tables-inject_meta-update_all</from>
+      <to>jb_mirrored_updatable_tables-inject_meta-update_all</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>N</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_mirrored_updatable_tables-inject_meta-update_all</from>
+      <to>jb_custom_mirrored_tables-update_all</to>
+      <from_nr>0</from_nr>
+      <to_nr>1</to_nr>
+      <enabled>N</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
       <from>tr_cdc_timestamp_load_start</from>
       <to>tr_list_of_tables_to_mirror</to>
       <from_nr>0</from_nr>
@@ -1182,6 +1236,15 @@
       <to_nr>1</to_nr>
       <enabled>Y</enabled>
       <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_mirrored_updatable_tables-inject_meta-update_all</from>
+      <to>DUMMY</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>N</enabled>
+      <evaluation>N</evaluation>
       <unconditional>N</unconditional>
     </hop>
   </hops>
@@ -1259,10 +1322,62 @@ should be assigned the batch ID of the root job (not this job). This may vary fr
       <note>This transformation  is passed the parameter:
 
 	PARAM_CDC_TIMESTAMPS_ID = ${QF_OBO_DB_CDC_TIMESTAMPS_ID}</note>
-      <xloc>512</xloc>
+      <xloc>576</xloc>
       <yloc>592</yloc>
       <width>446</width>
       <heigth>52</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Update all target tables that are mirrors of source DB "insert-only" tables that have been configured
+in table etl.table_meta to use the "GENERIC" update algorithm. This sub-job is passed the parameters:
+
+	PARAM_SOURCE_DB_ID 		= ${QF_TABLE_META_SOURCE_DB_ID_OBO}
+	PARAM_CDC_LAST_LOAD		= ${QF_CDC_LAST_LOAD}
+	PARAM_CDC_CURRENT_LOAD	= ${QF_CDC_CURRENT_LOAD}</note>
+      <xloc>1152</xloc>
+      <yloc>320</yloc>
+      <width>604</width>
+      <heigth>94</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Update all target tables that are mirrors of source DB tables that have been configured in table
+etl.table_meta to use a "CUSTOM" update algorithm. This sub-job is passed the parameters:
+
+	PARAM_SOURCE_DB_ID			= ${QF_TABLE_META_SOURCE_DB_ID_OBO}
+	PARAM_CDC_LAST_LOAD		= ${QF_CDC_LAST_LOAD}
+	PARAM_CDC_CURRENT_LOAD	= ${QF_CDC_CURRENT_LOAD}</note>
+      <xloc>1152</xloc>
+      <yloc>560</yloc>
+      <width>569</width>
+      <heigth>94</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -1287,7 +1402,7 @@ and then sets the CDC timestamp variables:
 
 	QF_CDC_LAST_LOAD
 	QF_CDC_CURRENT_LOAD</note>
-      <xloc>512</xloc>
+      <xloc>576</xloc>
       <yloc>176</yloc>
       <width>446</width>
       <heigth>122</heigth>
@@ -1307,10 +1422,37 @@ and then sets the CDC timestamp variables:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
+      <note>Update all target tables that are mirrors of source DB "updatable" tables (INSERTs &amp; UPDATEs 
+allowed, but no DELETEs) that have been configured in table etl.table_meta to use the "GENERIC"
+update algorithm. This sub-job is passed the parameters:
+
+	PARAM_SOURCE_DB_ID 		= ${QF_TABLE_META_SOURCE_DB_ID_OBO}
+	PARAM_CDC_LAST_LOAD		= ${QF_CDC_LAST_LOAD}
+	PARAM_CDC_CURRENT_LOAD	= ${QF_CDC_CURRENT_LOAD}</note>
+      <xloc>1152</xloc>
+      <yloc>432</yloc>
+      <width>578</width>
+      <heigth>108</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
       <note>Create list of tables to update in the "target" DB. This transformation is passed parameter:
 
 PARAM_SOURCE_DB_ID = ${QF_TABLE_META_SOURCE_DB_ID_OBO}</note>
-      <xloc>512</xloc>
+      <xloc>576</xloc>
       <yloc>320</yloc>
       <width>538</width>
       <heigth>52</heigth>
@@ -1341,7 +1483,7 @@ PARAM_SOURCE_DB_ID = ${QF_TABLE_META_SOURCE_DB_ID_OBO}</note>
 			PARAM_SOURCE_DB_ID			= ${QF_TABLE_META_SOURCE_DB_ID_OBO}
 			PARAM_CDC_CURRENT_LOAD	= ${QF_CDC_CURRENT_LOAD}
 			PARAM_CDC_LAST_LOAD		= ${QF_CDC_LAST_LOAD}</note>
-      <xloc>512</xloc>
+      <xloc>576</xloc>
       <yloc>400</yloc>
       <width>529</width>
       <heigth>164</heigth>

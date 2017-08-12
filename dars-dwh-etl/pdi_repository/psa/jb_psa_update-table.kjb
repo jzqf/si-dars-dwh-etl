@@ -1,5 +1,5 @@
 <job>
-  <name>jb_psa-mark_rows_for_deletion</name>
+  <name>jb_psa_update-table</name>
   <description />
   <extended_description />
   <job_version />
@@ -8,9 +8,74 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/08/12 16:42:06.613</modified_date>
+  <modified_date>2017/08/12 21:45:39.110</modified_date>
   <parameters>
-    </parameters>
+    <parameter>
+      <name>PARAM_CDC_CURRENT_LOAD</name>
+      <default_value>2017.06.15 00:00:00</default_value>
+      <description>Timestamp of the current load (no rows after this timestamp will be loaded)</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_CDC_LAST_LOAD</name>
+      <default_value>1900.01.01 00:00:00</default_value>
+      <description>Timestamp of last successful load from the source database</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_SOURCE_DB_ID</name>
+      <default_value>1</default_value>
+      <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_SOURCE_SCHEMA</name>
+      <default_value>passage</default_value>
+      <description>Name of schema containing source table to mirror to target table</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_SOURCE_SCHEMA_DOT_TABLE</name>
+      <default_value>passage.image</default_value>
+      <description>${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_SOURCE_TABLE</name>
+      <default_value>image</default_value>
+      <description>Name of source table to mirror to target table</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_TABLE_META_ID</name>
+      <default_value>0</default_value>
+      <description>Primary key of etl.table_meta row for "source" table from which rows will be deleted</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_TARGET_SCHEMA</name>
+      <default_value>passage</default_value>
+      <description>Name of schema containing target table to update (not currently used)</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_TARGET_SCHEMA_DOT_TABLE</name>
+      <default_value>passage.image</default_value>
+      <description>${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_TARGET_TABLE</name>
+      <default_value>image</default_value>
+      <description>Name of target table to update (not currently used)</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_USE_CUSTOM_MIRROR_ALGORITHM</name>
+      <default_value>N</default_value>
+      <description>"Y" if a custom update algorithm shall be used for this table</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_USE_GENERIC_INSERT_ONLY_TABLE_ALGORITHM</name>
+      <default_value>N</default_value>
+      <description>"Y" if the generic update algorithm for "insert-only" tables should be used for the specified table</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_USE_GENERIC_UPDATEABLE_TABLE_ALGORITHM</name>
+      <default_value>N</default_value>
+      <description>"Y" if the generic update algorithm for "updateable" tables should be used for the specified table</description>
+    </parameter>
+  </parameters>
   <connection>
     <name>logging_db</name>
     <server>${QF_LOGGING_DB_HOST}</server>
@@ -354,135 +419,76 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>32</xloc>
-      <yloc>128</yloc>
+      <xloc>16</xloc>
+      <yloc>336</yloc>
     </entry>
     <entry>
-      <name>jb_psa_init</name>
+      <name>Abort job</name>
+      <description />
+      <type>ABORT</type>
+      <message>Aborting jb_psa_update-table ...</message>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>736</xloc>
+      <yloc>528</yloc>
+    </entry>
+    <entry>
+      <name>Write To Log: Parameters</name>
+      <description />
+      <type>WRITE_TO_LOG</type>
+      <logmessage>jb_psa_update-table:
+PARAM_SOURCE_DB_ID                            = ${PARAM_SOURCE_DB_ID}
+PARAM_CDC_LAST_LOAD                           = ${PARAM_CDC_LAST_LOAD}
+PARAM_CDC_CURRENT_LOAD                        = ${PARAM_CDC_CURRENT_LOAD}
+PARAM_SOURCE_SCHEMA                           = ${PARAM_SOURCE_SCHEMA}
+PARAM_SOURCE_TABLE                            = ${PARAM_SOURCE_TABLE}
+PARAM_SOURCE_SCHEMA_DOT_TABLE                 = ${PARAM_SOURCE_SCHEMA_DOT_TABLE}
+PARAM_TARGET_SCHEMA                           = ${PARAM_TARGET_SCHEMA}
+PARAM_TARGET_TABLE                            = ${PARAM_TARGET_TABLE}
+PARAM_TARGET_SCHEMA_DOT_TABLE                 = ${PARAM_TARGET_SCHEMA_DOT_TABLE}
+PARAM_USE_GENERIC_INSERT_ONLY_TABLE_ALGORITHM = ${PARAM_USE_GENERIC_INSERT_ONLY_TABLE_ALGORITHM}
+PARAM_USE_GENERIC_UPDATEABLE_TABLE_ALGORITHM  = ${PARAM_USE_GENERIC_UPDATEABLE_TABLE_ALGORITHM}
+PARAM_USE_CUSTOM_MIRROR_ALGORITHM             = ${PARAM_USE_CUSTOM_MIRROR_ALGORITHM}
+PARAM_TABLE_META_ID                           = ${PARAM_TABLE_META_ID}</logmessage>
+      <loglevel>Basic</loglevel>
+      <logsubject>Parameters received by jb_psa_update-table</logsubject>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>144</xloc>
+      <yloc>336</yloc>
+    </entry>
+    <entry>
+      <name>Use custom algorithm?</name>
+      <description />
+      <type>SIMPLE_EVAL</type>
+      <valuetype>variable</valuetype>
+      <fieldname />
+      <variablename>${PARAM_USE_CUSTOM_MIRROR_ALGORITHM}</variablename>
+      <fieldtype>boolean</fieldtype>
+      <mask />
+      <comparevalue />
+      <minvalue />
+      <maxvalue />
+      <successcondition>equal</successcondition>
+      <successnumbercondition>equal</successnumbercondition>
+      <successbooleancondition>true</successbooleancondition>
+      <successwhenvarset>N</successwhenvarset>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>144</xloc>
+      <yloc>624</yloc>
+    </entry>
+    <entry>
+      <name>jb_custom_mirrored_table_dispatcher</name>
       <description />
       <type>JOB</type>
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
-      <jobname>jb_psa_init</jobname>
-      <directory>/psa</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Nothing</loglevel>
-      <slave_server_name />
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <expand_remote_job>N</expand_remote_job>
-      <create_parent_folder>N</create_parent_folder>
-      <pass_export>N</pass_export>
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-      </parameters>
-      <set_append_logfile>N</set_append_logfile>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>128</xloc>
-      <yloc>128</yloc>
-    </entry>
-    <entry>
-      <name>tr_get_last_successful_load</name>
-      <description />
-      <type>TRANS</type>
-      <specification_method>rep_name</specification_method>
-      <trans_object_id />
-      <filename />
-      <transname>tr_get_last_successful_load</transname>
-      <directory>/generic/cdc</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <clear_rows>N</clear_rows>
-      <clear_files>N</clear_files>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Basic</loglevel>
-      <cluster>N</cluster>
-      <slave_server_name />
-      <set_append_logfile>N</set_append_logfile>
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <create_parent_folder>N</create_parent_folder>
-      <logging_remote_work>N</logging_remote_work>
-      <run_configuration />
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-        <parameter>
-          <name>PARAM_CDC_TIMESTAMPS_ID</name>
-          <stream_name />
-          <value>${QF_OBO_DB_CDC_TIMESTAMPS_ID}</value>
-        </parameter>
-      </parameters>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>304</xloc>
-      <yloc>224</yloc>
-    </entry>
-    <entry>
-      <name>tr_list_of_tables_to_delete_rows_from</name>
-      <description />
-      <type>TRANS</type>
-      <specification_method>rep_name</specification_method>
-      <trans_object_id />
-      <filename />
-      <transname>tr_list_of_tables_to_delete_rows_from</transname>
-      <directory>/generic</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <clear_rows>Y</clear_rows>
-      <clear_files>N</clear_files>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Basic</loglevel>
-      <cluster>N</cluster>
-      <slave_server_name />
-      <set_append_logfile>N</set_append_logfile>
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <create_parent_folder>N</create_parent_folder>
-      <logging_remote_work>N</logging_remote_work>
-      <run_configuration>Pentaho local</run_configuration>
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-        <parameter>
-          <name>PARAM_SOURCE_DB_ID</name>
-          <stream_name />
-          <value>${QF_TABLE_META_SOURCE_DB_ID_OBO}</value>
-        </parameter>
-      </parameters>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>304</xloc>
-      <yloc>320</yloc>
-    </entry>
-    <entry>
-      <name>jb_psa_mark_rows_for_deletion-table</name>
-      <description />
-      <type>JOB</type>
-      <specification_method>rep_name</specification_method>
-      <job_object_id />
-      <filename />
-      <jobname>jb_psa_mark_rows_for_deletion-table</jobname>
+      <jobname>jb_custom_mirrored_table_dispatcher</jobname>
       <directory>${Internal.Entry.Current.Directory}</directory>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>Y</params_from_previous>
@@ -502,16 +508,6 @@
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
         <parameter>
-          <name>PARAM_SOURCE_DB_ID</name>
-          <stream_name />
-          <value>${QF_TABLE_META_SOURCE_DB_ID_OBO}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_LAST_LOAD_TIMESTAMP</name>
-          <stream_name />
-          <value>${QF_CDC_LAST_LOAD}</value>
-        </parameter>
-        <parameter>
           <name>PARAM_SOURCE_SCHEMA</name>
           <stream_name>source_schema</stream_name>
           <value />
@@ -522,7 +518,7 @@
           <value />
         </parameter>
         <parameter>
-          <name>PARAM_SOURCE_SCHEMA_TABLE</name>
+          <name>PARAM_SOURCE_SCHEMA_DOT_TABLE</name>
           <stream_name>source_schema_dot_table</stream_name>
           <value />
         </parameter>
@@ -537,60 +533,74 @@
           <value />
         </parameter>
         <parameter>
-          <name>PARAM_TARGET_SCHEMA_TABLE</name>
+          <name>PARAM_TARGET_SCHEMA_DOT_TABLE</name>
           <stream_name>target_schema_dot_table</stream_name>
           <value />
         </parameter>
-        <parameter>
-          <name>PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS</name>
-          <stream_name>row_can_be_deleted_from_seconds</stream_name>
-          <value />
-        </parameter>
-        <parameter>
-          <name>PARAM_USE_CUSTOM_DELETE_ALGORITHM</name>
-          <stream_name>use_custom_delete_algorithm</stream_name>
-          <value />
-        </parameter>
-        <parameter>
-          <name>PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME</name>
-          <stream_name>row_can_be_deleted_from_source_colname</stream_name>
-          <value />
-        </parameter>
-        <parameter>
-          <name>PARAM_CAN_DELETE_ROW_SOURCE_COLNAME</name>
-          <stream_name>can_delete_row_source_colname</stream_name>
-          <value />
-        </parameter>
-        <parameter>
-          <name>PARAM_LAST_UPDATED_ON_SOURCE_COLNAME</name>
-          <stream_name>last_updated_on_source_colname</stream_name>
-          <value />
-        </parameter>
-        <parameter>
-          <name>PARAM_TABLE_META_ID</name>
-          <stream_name>table_meta_id</stream_name>
-          <value />
-        </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>304</xloc>
-      <yloc>416</yloc>
+      <xloc>464</xloc>
+      <yloc>624</yloc>
     </entry>
     <entry>
-      <name>jb_send_default_email_job_notification - Success</name>
+      <name>Use generic algorithm for insert-only tables?</name>
+      <description />
+      <type>SIMPLE_EVAL</type>
+      <valuetype>variable</valuetype>
+      <fieldname />
+      <variablename>${PARAM_USE_GENERIC_INSERT_ONLY_TABLE_ALGORITHM}</variablename>
+      <fieldtype>boolean</fieldtype>
+      <mask />
+      <comparevalue />
+      <minvalue />
+      <maxvalue />
+      <successcondition>equal</successcondition>
+      <successnumbercondition>equal</successnumbercondition>
+      <successbooleancondition>true</successbooleancondition>
+      <successwhenvarset>N</successwhenvarset>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>144</xloc>
+      <yloc>432</yloc>
+    </entry>
+    <entry>
+      <name>Use generic algorithm for updateable tables?</name>
+      <description />
+      <type>SIMPLE_EVAL</type>
+      <valuetype>variable</valuetype>
+      <fieldname />
+      <variablename>${PARAM_USE_GENERIC_UPDATEABLE_TABLE_ALGORITHM}</variablename>
+      <fieldtype>boolean</fieldtype>
+      <mask />
+      <comparevalue />
+      <minvalue />
+      <maxvalue />
+      <successcondition>equal</successcondition>
+      <successnumbercondition>equal</successnumbercondition>
+      <successbooleancondition>true</successbooleancondition>
+      <successwhenvarset>N</successwhenvarset>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>144</xloc>
+      <yloc>528</yloc>
+    </entry>
+    <entry>
+      <name>jb_mirrored_insert_only_tables-inject_meta-update_one</name>
       <description />
       <type>JOB</type>
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
-      <jobname>jb_send_default_email_job_notification</jobname>
-      <directory>/generic/email</directory>
+      <jobname>jb_mirrored_insert_only_tables-inject_meta-update_one</jobname>
+      <directory>${Internal.Entry.Current.Directory}</directory>
       <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
+      <params_from_previous>Y</params_from_previous>
+      <exec_per_row>Y</exec_per_row>
       <set_logfile>N</set_logfile>
       <logfile />
       <logext />
@@ -606,40 +616,45 @@
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
         <parameter>
-          <name>PARAM_JOB_BATCH_ID</name>
-          <stream_name />
-          <value>${QF_JOB_BATCH_ID}</value>
+          <name>PARAM_SOURCE_SCHEMA</name>
+          <stream_name>source_schema</stream_name>
+          <value />
         </parameter>
         <parameter>
-          <name>PARAM_JOB_NAME</name>
-          <stream_name />
-          <value>${Internal.Job.Name}</value>
+          <name>PARAM_SOURCE_TABLE</name>
+          <stream_name>source_table</stream_name>
+          <value />
         </parameter>
         <parameter>
-          <name>PARAM_SUCCESS</name>
-          <stream_name />
-          <value>true</value>
+          <name>PARAM_TARGET_SCHEMA</name>
+          <stream_name>target_schema</stream_name>
+          <value />
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_TABLE</name>
+          <stream_name>target_table</stream_name>
+          <value />
         </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>304</xloc>
-      <yloc>560</yloc>
+      <xloc>464</xloc>
+      <yloc>432</yloc>
     </entry>
     <entry>
-      <name>jb_send_default_email_job_notification - Failure</name>
+      <name>jb_mirrored_updatable_tables-inject_meta-update_one</name>
       <description />
       <type>JOB</type>
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
-      <jobname>jb_send_default_email_job_notification</jobname>
-      <directory>/generic/email</directory>
+      <jobname>jb_mirrored_updatable_tables-inject_meta-update_one</jobname>
+      <directory>${Internal.Entry.Current.Directory}</directory>
       <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
+      <params_from_previous>Y</params_from_previous>
+      <exec_per_row>Y</exec_per_row>
       <set_logfile>N</set_logfile>
       <logfile />
       <logext />
@@ -655,51 +670,35 @@
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
         <parameter>
-          <name>PARAM_JOB_BATCH_ID</name>
-          <stream_name />
-          <value>${QF_JOB_BATCH_ID}</value>
+          <name>PARAM_SOURCE_SCHEMA</name>
+          <stream_name>source_schema</stream_name>
+          <value />
         </parameter>
         <parameter>
-          <name>PARAM_JOB_NAME</name>
-          <stream_name />
-          <value>${Internal.Job.Name}</value>
+          <name>PARAM_SOURCE_TABLE</name>
+          <stream_name>source_table</stream_name>
+          <value />
         </parameter>
         <parameter>
-          <name>PARAM_SUCCESS</name>
-          <stream_name />
-          <value>false</value>
+          <name>PARAM_TARGET_SCHEMA</name>
+          <stream_name>target_schema</stream_name>
+          <value />
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_TABLE</name>
+          <stream_name>target_table</stream_name>
+          <value />
         </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>304</xloc>
-      <yloc>624</yloc>
+      <xloc>464</xloc>
+      <yloc>528</yloc>
     </entry>
     <entry>
-      <name>Success</name>
-      <description />
-      <type>SUCCESS</type>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>496</xloc>
-      <yloc>560</yloc>
-    </entry>
-    <entry>
-      <name>Abort job</name>
-      <description />
-      <type>ABORT</type>
-      <message>Job ${Internal.Job.Name} failed. See log and e-mail sent.</message>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>496</xloc>
-      <yloc>624</yloc>
-    </entry>
-    <entry>
-      <name>jb_log_error 1</name>
+      <name>jb_log_error - Untreated case</name>
       <description />
       <type>JOB</type>
       <specification_method>rep_name</specification_method>
@@ -727,81 +726,21 @@
         <parameter>
           <name>PARAM_ERROR_MESSAGE</name>
           <stream_name />
-          <value>Error occurred in tr_get_last_successful_load</value>
+          <value>Untreated case in jb_psa_update-table</value>
         </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>160</xloc>
-      <yloc>224</yloc>
-    </entry>
-    <entry>
-      <name>DUMMY</name>
-      <description />
-      <type>SPECIAL</type>
-      <start>N</start>
-      <dummy>Y</dummy>
-      <repeat>N</repeat>
-      <schedulerType>0</schedulerType>
-      <intervalSeconds>0</intervalSeconds>
-      <intervalMinutes>60</intervalMinutes>
-      <hour>12</hour>
-      <minutes>0</minutes>
-      <weekDay>1</weekDay>
-      <DayOfMonth>1</DayOfMonth>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>32</xloc>
-      <yloc>416</yloc>
-    </entry>
-    <entry>
-      <name>DUMMY 2</name>
-      <description />
-      <type>SPECIAL</type>
-      <start>N</start>
-      <dummy>Y</dummy>
-      <repeat>N</repeat>
-      <schedulerType>0</schedulerType>
-      <intervalSeconds>0</intervalSeconds>
-      <intervalMinutes>60</intervalMinutes>
-      <hour>12</hour>
-      <minutes>0</minutes>
-      <weekDay>1</weekDay>
-      <DayOfMonth>1</DayOfMonth>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>32</xloc>
-      <yloc>624</yloc>
-    </entry>
-    <entry>
-      <name>DUMMY 3</name>
-      <description />
-      <type>SPECIAL</type>
-      <start>N</start>
-      <dummy>Y</dummy>
-      <repeat>N</repeat>
-      <schedulerType>0</schedulerType>
-      <intervalSeconds>0</intervalSeconds>
-      <intervalMinutes>60</intervalMinutes>
-      <hour>12</hour>
-      <minutes>0</minutes>
-      <weekDay>1</weekDay>
-      <DayOfMonth>1</DayOfMonth>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>304</xloc>
-      <yloc>128</yloc>
+      <xloc>144</xloc>
+      <yloc>720</yloc>
     </entry>
   </entries>
   <hops>
     <hop>
       <from>START</from>
-      <to>jb_psa_init</to>
+      <to>Write To Log: Parameters</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -809,8 +748,8 @@
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>tr_get_last_successful_load</from>
-      <to>tr_list_of_tables_to_delete_rows_from</to>
+      <from>Use custom algorithm?</from>
+      <to>jb_custom_mirrored_table_dispatcher</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -818,17 +757,8 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>tr_list_of_tables_to_delete_rows_from</from>
-      <to>jb_psa_mark_rows_for_deletion-table</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>jb_send_default_email_job_notification - Success</from>
-      <to>Success</to>
+      <from>Write To Log: Parameters</from>
+      <to>Use generic algorithm for insert-only tables?</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -836,17 +766,53 @@
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>jb_send_default_email_job_notification - Failure</from>
+      <from>Use generic algorithm for insert-only tables?</from>
+      <to>Use generic algorithm for updateable tables?</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Use generic algorithm for updateable tables?</from>
+      <to>Use custom algorithm?</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Use generic algorithm for insert-only tables?</from>
+      <to>jb_mirrored_insert_only_tables-inject_meta-update_one</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Use generic algorithm for updateable tables?</from>
+      <to>jb_mirrored_updatable_tables-inject_meta-update_one</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_mirrored_insert_only_tables-inject_meta-update_one</from>
       <to>Abort job</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>N</evaluation>
-      <unconditional>Y</unconditional>
+      <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>tr_get_last_successful_load</from>
-      <to>jb_log_error 1</to>
+      <from>jb_mirrored_updatable_tables-inject_meta-update_one</from>
+      <to>Abort job</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -854,17 +820,8 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>jb_psa_mark_rows_for_deletion-table</from>
-      <to>jb_send_default_email_job_notification - Success</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>jb_psa_init</from>
-      <to>DUMMY</to>
+      <from>jb_custom_mirrored_table_dispatcher</from>
+      <to>Abort job</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -872,82 +829,42 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>jb_log_error 1</from>
-      <to>DUMMY</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>tr_list_of_tables_to_delete_rows_from</from>
-      <to>DUMMY</to>
+      <from>Use custom algorithm?</from>
+      <to>jb_log_error - Untreated case</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>N</evaluation>
       <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>jb_psa_mark_rows_for_deletion-table</from>
-      <to>DUMMY</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>DUMMY</from>
-      <to>DUMMY 2</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>DUMMY 2</from>
-      <to>jb_send_default_email_job_notification - Failure</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>jb_psa_init</from>
-      <to>DUMMY 3</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>DUMMY 3</from>
-      <to>tr_get_last_successful_load</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
     </hop>
   </hops>
   <notepads>
     <notepad>
-      <note>This job marks for deletion "source" (OBO) rows that have been archived/mirrored to tables in the "target" (PSA) DB. The selection of tables for which this will 
-be performed, as well as  some aspects of how and when this is performed, are controlled by settings stored in table etl.table_meta &amp; etl.column_meta.
+      <note>This job updates a single table in the target (PSA) database. A dispatch mechansim is used to execute the appropriate update algorithm, which can be one of:
 
-"Pass batch ID?" is selected for this job so that the batch ID is passed to tr_set_job_batch_id_variable via jb_init, which assigns this value to QF_JOB_BATCH_ID.
+	1.	Generic update algorithm for "insert-only" tables
+	2.	Generic update algorithm for "updateable" tables
+	3.	Custom update algorithm
 
-If this job has a parent, the setting "Pass batch ID?" should also be set for the parent *if* it is desired that QF_JOB_BATCH_ID should be assigned
-the batch ID of the root job (not this job). This may vary from case to case.</note>
+This job has parameters:
+
+	PARAM_SOURCE_DB_ID										ID the "source" database containing tables that are mirrored to a "target" database
+	PARAM_CDC_LAST_LOAD									Timestamp for when the target PSA DB mirror tables were last updated from the source DB
+	PARAM_CDC_CURRENT_LOAD								Timestamp of the current load (no rows after this timestamp will be loaded)
+	PARAM_SOURCE_SCHEMA									Name of schema containing source table that is mirrored to target PSA table
+	PARAM_SOURCE_TABLE									Name of source table that is mirrored to target PSA table
+	PARAM_SOURCE_SCHEMA_DOT_TABLE						${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
+	PARAM_TARGET_SCHEMA									Name of schema containing target table that is mirrored to target PSA table (not currently used)
+	PARAM_TARGET_TABLE										Name of target table that is mirrored to target PSA table (not currently used)
+	PARAM_TARGET_SCHEMA_DOT_TABLE						${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}
+	PARAM_USE_GENERIC_INSERT_ONLY_TABLE_ALGORITHM	"Y" if the generic update algorithm for "insert-only" tables should be used for the specified table
+	PARAM_USE_GENERIC_UPDATEABLE_TABLE_ALGORITHM	"Y" if the generic update algorithm for "updateable" tables should be used for the specified table
+	PARAM_USE_CUSTOM_MIRROR_ALGORITHM				"Y" if a custom update algorithm shall be used for this table
+	PARAM_TABLE_META_ID									Primary key of etl.table_meta row for "source" table from which rows will be deleted</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>935</width>
-      <heigth>108</heigth>
+      <width>964</width>
+      <heigth>304</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -964,112 +881,16 @@ the batch ID of the root job (not this job). This may vary from case to case.</n
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Get the "last successful load" timestamp for the source database and assign it to variable
-QF_CDC_LAST_LOAD. This sub-transformation is passed the parameter:
-
-PARAM_CDC_TIMESTAMPS_ID = ${QF_OBO_DB_CDC_TIMESTAMPS_ID}</note>
-      <xloc>448</xloc>
-      <yloc>208</yloc>
-      <width>533</width>
+      <note>This "Abort" is needed
+to tell the root calling
+job that execution has
+failed.</note>
+      <xloc>800</xloc>
+      <yloc>512</yloc>
+      <width>139</width>
       <heigth>66</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Create list of tables to delete rows from. This transformation is passed parameter:
-
-PARAM_SOURCE_DB_ID = ${QF_TABLE_META_SOURCE_DB_ID_OBO}</note>
-      <xloc>448</xloc>
-      <yloc>304</yloc>
-      <width>493</width>
-      <heigth>52</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Mark rows for deletion from each "source" table that is configured for this operation. This sub-job is:
-
-	1.	RUN ONCE FOR EACH TABLE BEING MIRRORED.
-
-	2.	Passed the schema name and table name of the table from which rows will be marked for 
-		deletion that are provided by the previous transformation, as well as additional parameters 
-		associated with each table.
-
-	3.	Passed the additional parameters:
-			PARAM_SOURCE_DB_ID				= ${QF_TABLE_META_SOURCE_DB_ID_OBO}
-			PARAM_LAST_LOAD_TIMESTAMP	= ${QF_CDC_LAST_LOAD}</note>
-      <xloc>448</xloc>
-      <yloc>368</yloc>
-      <width>598</width>
-      <heigth>164</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Notify recipient(s) of SUCCESSFUL job execution.</note>
-      <xloc>560</xloc>
-      <yloc>560</yloc>
-      <width>294</width>
-      <heigth>24</heigth>
-      <fontname />
-      <fontsize>-1</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Notify recipient(s) of FAILED job execution.</note>
-      <xloc>560</xloc>
-      <yloc>624</yloc>
-      <width>260</width>
-      <heigth>24</heigth>
-      <fontname />
-      <fontsize>-1</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
