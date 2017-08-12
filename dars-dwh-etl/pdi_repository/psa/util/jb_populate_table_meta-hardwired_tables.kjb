@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/08/12 12:09:51.021</modified_date>
+  <modified_date>2017/08/12 14:50:00.213</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_SOURCE_DB_ID</name>
@@ -359,8 +359,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>224</xloc>
-      <yloc>160</yloc>
+      <xloc>144</xloc>
+      <yloc>208</yloc>
     </entry>
     <entry>
       <name>tr_populate_table_meta-list_of_hardwired_tables</name>
@@ -396,8 +396,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>224</xloc>
-      <yloc>256</yloc>
+      <xloc>144</xloc>
+      <yloc>304</yloc>
     </entry>
     <entry>
       <name>OBO database specified?</name>
@@ -418,8 +418,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>224</xloc>
-      <yloc>352</yloc>
+      <xloc>144</xloc>
+      <yloc>400</yloc>
     </entry>
     <entry>
       <name>Abort job</name>
@@ -429,8 +429,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>224</xloc>
-      <yloc>448</yloc>
+      <xloc>144</xloc>
+      <yloc>496</yloc>
     </entry>
     <entry>
       <name>jb_populate_table_meta-one_table</name>
@@ -473,8 +473,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>432</xloc>
-      <yloc>352</yloc>
+      <xloc>352</xloc>
+      <yloc>400</yloc>
     </entry>
   </entries>
   <hops>
@@ -521,7 +521,10 @@
 to the table names in the source (OBO) database. The tables to use for generating these rows are specified manually in a "hardwired" Data Grid 
 transformation step.
 
-Therefore, this job writes one row to the etl.table_meta table for every table of the OBO that shall be archived/mirrored to the PSA.
+This job also creates default rows for the etl.column_meta table for each etl.table_meta row created.
+
+Therefore, this job writes one row to the etl.table_meta table as well as a selection of etl.column_meta rows for each "source" table that is specified in
+tr_populate_table_meta-list_of_hardwired_tables.
 
 This job has parameters:
 
@@ -529,7 +532,7 @@ This job has parameters:
       <xloc>0</xloc>
       <yloc>0</yloc>
       <width>892</width>
-      <heigth>136</heigth>
+      <heigth>178</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -548,8 +551,8 @@ This job has parameters:
     <notepad>
       <note>Obtain a hardwired list of tables for which the table metadata will be
 generated, i.e., written to the etl.table_meta table of the ETL DB.</note>
-      <xloc>480</xloc>
-      <yloc>256</yloc>
+      <xloc>400</xloc>
+      <yloc>304</yloc>
       <width>415</width>
       <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
@@ -575,10 +578,10 @@ but this is not possible. Neither can it be injected into that step via ETL meta
 The only way that I can see supporting multiple source databases, i.e., different values of 
 PARAM_SOURCE_DB_ID, is to make several copies of "tr_populate_table_meta-one_table" and
 then use a dispatch mechanismthat consists of a series of cascading "Simple evaluation" job entries
-to select the appropriate job/transformation to execute here based on the value of parameter 
-PARAM_SOURCE_DB_ID, as I have done here in this job.</note>
-      <xloc>320</xloc>
-      <yloc>416</yloc>
+to select the appropriate job/transformation to execute here based on the value
+of parameter PARAM_SOURCE_DB_ID, as I have started doing here in this job. </note>
+      <xloc>240</xloc>
+      <yloc>464</yloc>
       <width>587</width>
       <heigth>136</heigth>
       <fontname>Ubuntu</fontname>
@@ -599,8 +602,8 @@ PARAM_SOURCE_DB_ID, as I have done here in this job.</note>
     <notepad>
       <note>This sub-job is run once for each table that is specified in
 tr_populate_table_meta-list_of_hardwired_tables.</note>
-      <xloc>560</xloc>
-      <yloc>336</yloc>
+      <xloc>480</xloc>
+      <yloc>384</yloc>
       <width>338</width>
       <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
@@ -613,29 +616,6 @@ tr_populate_table_meta-list_of_hardwired_tables.</note>
       <backgroundcolorred>255</backgroundcolorred>
       <backgroundcolorgreen>205</backgroundcolorgreen>
       <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Move this dispatch job entry into
-jb_populate_table_meta-one_table?
-Yes, after I have tested this code.</note>
-      <xloc>0</xloc>
-      <yloc>336</yloc>
-      <width>222</width>
-      <heigth>52</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>255</fontcolorred>
-      <fontcolorgreen>255</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>0</backgroundcolorred>
-      <backgroundcolorgreen>0</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
       <bordercolorblue>100</bordercolorblue>

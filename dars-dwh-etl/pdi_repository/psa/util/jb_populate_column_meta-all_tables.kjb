@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/08/12 12:09:53.563</modified_date>
+  <modified_date>2017/08/12 14:45:43.415</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_SOURCE_DB_ID</name>
@@ -400,58 +400,6 @@
       <yloc>240</yloc>
     </entry>
     <entry>
-      <name>tr_populate_column_meta-one_table</name>
-      <description />
-      <type>TRANS</type>
-      <specification_method>rep_name</specification_method>
-      <trans_object_id />
-      <filename />
-      <transname>tr_populate_column_meta-one_table</transname>
-      <directory>${Internal.Entry.Current.Directory}</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>Y</params_from_previous>
-      <exec_per_row>Y</exec_per_row>
-      <clear_rows>N</clear_rows>
-      <clear_files>N</clear_files>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Basic</loglevel>
-      <cluster>N</cluster>
-      <slave_server_name />
-      <set_append_logfile>N</set_append_logfile>
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <create_parent_folder>N</create_parent_folder>
-      <logging_remote_work>N</logging_remote_work>
-      <run_configuration>Pentaho local</run_configuration>
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-        <parameter>
-          <name>PARAM_SOURCE_SCHEMA</name>
-          <stream_name>source_schema_name</stream_name>
-          <value />
-        </parameter>
-        <parameter>
-          <name>PARAM_SOURCE_TABLE</name>
-          <stream_name>source_table_name</stream_name>
-          <value />
-        </parameter>
-        <parameter>
-          <name>PARAM_TABLE_META_ID</name>
-          <stream_name>table_meta_id</stream_name>
-          <value />
-        </parameter>
-      </parameters>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>320</xloc>
-      <yloc>384</yloc>
-    </entry>
-    <entry>
       <name>OBO database specified?</name>
       <description />
       <type>SIMPLE_EVAL</type>
@@ -471,7 +419,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>112</xloc>
-      <yloc>352</yloc>
+      <yloc>336</yloc>
     </entry>
     <entry>
       <name>Abort job</name>
@@ -482,7 +430,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>112</xloc>
-      <yloc>448</yloc>
+      <yloc>432</yloc>
     </entry>
     <entry>
       <name>jb_populate_column_meta-one_table</name>
@@ -531,7 +479,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>320</xloc>
-      <yloc>320</yloc>
+      <yloc>336</yloc>
     </entry>
   </entries>
   <hops>
@@ -543,15 +491,6 @@
       <enabled>Y</enabled>
       <evaluation>Y</evaluation>
       <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>OBO database specified?</from>
-      <to>tr_populate_column_meta-one_table</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>N</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
     </hop>
     <hop>
       <from>OBO database specified?</from>
@@ -633,27 +572,6 @@ This subtransformation is passed parameter PARAM_SOURCE_DB_ID.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>This sub-transformation is RUN ONCE FOR EACH TABLE IN THE SOURCE DATABASE.</note>
-      <xloc>464</xloc>
-      <yloc>384</yloc>
-      <width>495</width>
-      <heigth>24</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
       <note>^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Ideally, we should set the database connection for the "Table input" step in the
 transformation tr_populate_column_meta-one_table based on the value of
@@ -662,13 +580,13 @@ into that step via ETL metadata injection.
 
 The only way that I can see supporting multiple source databases, i.e., 
 different values of PARAM_SOURCE_DB_ID, is to make several copies of
-"tr_populate_column_meta-one_table" and then use a dispatch mechanism
-that consists of a series of cascading "Simple evaluation" job entries in this 
-job to select the appropriate job/transformation to execute here based on the
-value of parameter PARAM_SOURCE_DB_ID. </note>
+"tr_populate_column_meta-one_table" and then use a dispatch mechanismthat
+consists of a series of cascading "Simple evaluation" job entries to select the
+appropriate job/transformation to execute here based on the value of
+parameter PARAM_SOURCE_DB_ID, as I have started doing here in this job. </note>
       <xloc>192</xloc>
-      <yloc>448</yloc>
-      <width>469</width>
+      <yloc>400</yloc>
+      <width>470</width>
       <heigth>178</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -686,13 +604,12 @@ value of parameter PARAM_SOURCE_DB_ID. </note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>This sub-job was introduced only so that the parameters passed to it can be logged.
-Other than that, it just calls the same sub-transformation whose hop is commented
-out below. This sub-job is RUN ONCE FOR EACH TABLE IN THE SOURCE DATABASE.</note>
+      <note>This sub-job is run once for each table that is specified in 
+tr_populate_column_meta-list_of_tables.</note>
       <xloc>464</xloc>
-      <yloc>304</yloc>
-      <width>500</width>
-      <heigth>52</heigth>
+      <yloc>320</yloc>
+      <width>341</width>
+      <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
