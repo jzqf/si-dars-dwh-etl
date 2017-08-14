@@ -1,6 +1,6 @@
 <transformation>
   <info>
-    <name>tr_populate_column_meta-list_of_tables</name>
+    <name>tr_populate_table_meta-get_table_meta_id</name>
     <description />
     <extended_description />
     <trans_version />
@@ -12,6 +12,16 @@
         <name>PARAM_SOURCE_DB_ID</name>
         <default_value>1</default_value>
         <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_SOURCE_SCHEMA</name>
+        <default_value>passage</default_value>
+        <description>Name of schema containing source table to mirror to target table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_SOURCE_TABLE</name>
+        <default_value>image</default_value>
+        <description>Name of source table to mirror to target table</description>
       </parameter>
     </parameters>
     <log>
@@ -434,26 +444,27 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/08/11 10:18:43.579</modified_date>
+    <modified_date>2017/08/11 12:48:13.052</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>This transformation specifies the tables from a "source" database that will be mirrored to corresponding tables of a "target" database.
-The "source" database is specified by PARAM_SOURCE_DB_ID.
+      <note>This transformation obtains the value of the primary key of a row of the etl.table_meta table that corresponds to
+the values of the parameters passed to this transformation.
 
-The stream from this transformation is copied to the "result" of this transformation. This result set is used in the parent job to execute
-a sub-job once for each row in this stream. At the same time, the stream values from the row are assigned to parameters that are 
-passed to the sub-job. This procedure is used to generate column metadata for each  table in the "source" and "target" databases.
+The stream from this transformation is copied to the "result" of this transformation. This result set can be used in
+the parent job to execute a sub-job once for each row in this stream.
 
-This transformation has parameter:
+This transformation has parameters:
 
-	PARAM_SOURCE_DB_ID			ID the "source" (OBO) database containing tables will be mirrored to a "target" (PSA) database</note>
+	PARAM_SOURCE_DB_ID			ID the "source" database containing the table for retrieving the "table_meta_id" value
+	PARAM_SOURCE_SCHEMA		Name of schema containing source table for retrieving the "table_meta_id" value
+	PARAM_SOURCE_TABLE		Name of source table  for retrieving the "table_meta_id" value</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>799</width>
-      <heigth>150</heigth>
+      <width>726</width>
+      <heigth>164</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -470,18 +481,16 @@ This transformation has parameter:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>The stream created by this step consists of the three fields: 
+      <note>Retrieve the value of the primary key, table_meta_id, of the row
+of the etl.table_meta table that corresponds to the values of
+the parameters passed to this transformation. The stream
+created by this step consists of a single row with a single field:
 
-	table_meta_id 
-	source_schema_name
-	source_table_name 
-
-Each row specifies a table to mirror from the source database,
-as well as the table it will be mirrored to in the target database.</note>
+	table_meta_id</note>
       <xloc>0</xloc>
-      <yloc>256</yloc>
-      <width>383</width>
-      <heigth>122</heigth>
+      <yloc>192</yloc>
+      <width>382</width>
+      <heigth>94</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -498,14 +507,13 @@ as well as the table it will be mirrored to in the target database.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>We can temporarily replace the "Table input" step with this "Data grid"
-step in order to manually specify a selection of tables to process. 
-Each table must have a corresponding row in etl.table_meta because
-we need to specify values for a "table_meta_id" field.</note>
-      <xloc>400</xloc>
-      <yloc>320</yloc>
-      <width>420</width>
-      <heigth>66</heigth>
+      <note>Execution will reach this Abort entry if the parameters passed
+to this transformation do not correspond to an existing 
+etl.table_meta row. This Abort will warn the user of problem.</note>
+      <xloc>224</xloc>
+      <yloc>480</yloc>
+      <width>370</width>
+      <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -514,8 +522,8 @@ we need to specify values for a "table_meta_id" field.</note>
       <fontcolorgreen>0</fontcolorgreen>
       <fontcolorblue>0</fontcolorblue>
       <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>255</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
       <bordercolorblue>100</bordercolorblue>
@@ -626,14 +634,24 @@ we need to specify values for a "table_meta_id" field.</note>
   </connection>
   <order>
     <hop>
-      <from>Table input - Get list of tables</from>
+      <from>Table input - Get table_meta_id</from>
+      <to>Write to log: table_meta_id</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Write to log: table_meta_id</from>
       <to>Copy rows to result</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Manually specified selection of tables</from>
-      <to>Copy rows to result</to>
-      <enabled>N</enabled>
+      <from>Table input - Get table_meta_id</from>
+      <to>Detect empty stream</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Detect empty stream</from>
+      <to>Abort: No etl.table_meta row found</to>
+      <enabled>Y</enabled>
     </hop>
   </order>
   <step>
@@ -655,82 +673,16 @@ we need to specify values for a "table_meta_id" field.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>720</xloc>
-      <yloc>192</yloc>
+      <xloc>624</xloc>
+      <yloc>304</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Manually specified selection of tables</name>
-    <type>DataGrid</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <fields>
-      <field>
-        <name>table_meta_id</name>
-        <type>Integer</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>source_schema_name</name>
-        <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>255</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>source_table_name</name>
-        <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>255</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-    </fields>
-    <data>
-      <line>
-        <item />
-        <item />
-        <item />
-      </line>
-    </data>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>544</xloc>
-      <yloc>256</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Table input - Get list of tables</name>
+    <name>Table input - Get table_meta_id</name>
     <type>TableInput</type>
     <description />
-    <distribute>Y</distribute>
+    <distribute>N</distribute>
     <custom_distribution />
     <copies>1</copies>
     <partitioning>
@@ -739,16 +691,13 @@ we need to specify values for a "table_meta_id" field.</note>
     </partitioning>
     <connection>etl_db</connection>
     <sql>SELECT
-    table_meta_id, 
-    source_schema_name,
-    source_table_name 
+    table_meta_id
 FROM 
     ${QF_ETL_DB_SCHEMA}.table_meta 
 WHERE 
-    source_db_id = ${PARAM_SOURCE_DB_ID} 
-ORDER BY 
-    source_schema_name ASC, 
-    source_table_name ASC
+    source_db_id       =  ${PARAM_SOURCE_DB_ID} AND 
+    source_schema_name = '${PARAM_SOURCE_SCHEMA}' AND 
+    source_table_name  = '${PARAM_SOURCE_TABLE}'
 </sql>
     <limit>0</limit>
     <lookup />
@@ -763,8 +712,97 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>176</xloc>
-      <yloc>192</yloc>
+      <xloc>160</xloc>
+      <yloc>304</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Write to log: table_meta_id</name>
+    <type>WriteToLog</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <loglevel>log_level_basic</loglevel>
+    <displayHeader>Y</displayHeader>
+    <limitRows>N</limitRows>
+    <limitRowsNumber>0</limitRowsNumber>
+    <logmessage>tr_populate_table_meta-get_table_meta_id:
+PARAM_SOURCE_DB_ID  = ${PARAM_SOURCE_DB_ID}
+PARAM_SOURCE_SCHEMA = ${PARAM_SOURCE_SCHEMA}
+PARAM_SOURCE_TABLE  = ${PARAM_SOURCE_TABLE}</logmessage>
+    <fields>
+      <field>
+        <name>table_meta_id</name>
+      </field>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>384</xloc>
+      <yloc>304</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Detect empty stream</name>
+    <type>DetectEmptyStream</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>160</xloc>
+      <yloc>416</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Abort: No etl.table_meta row found</name>
+    <type>Abort</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <row_threshold>0</row_threshold>
+    <message>No etl.table_meta row loaded for table ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</message>
+    <always_log_rows>Y</always_log_rows>
+    <abort_with_error>Y</abort_with_error>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>384</xloc>
+      <yloc>416</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

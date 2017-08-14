@@ -1,16 +1,31 @@
 <job>
-  <name>jb_dwh_tdp_mirrored_tables-compare</name>
+  <name>jb_populate_table_meta-one_table</name>
   <description />
   <extended_description />
   <job_version />
   <job_status>0</job_status>
-  <directory>/dwh/mirror/compare_tables</directory>
+  <directory>/psa/util</directory>
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/08/12 12:39:13.143</modified_date>
+  <modified_date>2017/08/11 15:06:14.274</modified_date>
   <parameters>
-    </parameters>
+    <parameter>
+      <name>PARAM_SOURCE_DB_ID</name>
+      <default_value>1</default_value>
+      <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_SOURCE_SCHEMA</name>
+      <default_value>passage</default_value>
+      <description>Name of schema containing source table to mirror to target table</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_SOURCE_TABLE</name>
+      <default_value>image</default_value>
+      <description>Name of source table to mirror to target table</description>
+    </parameter>
+  </parameters>
   <connection>
     <name>logging_db</name>
     <server>${QF_LOGGING_DB_HOST}</server>
@@ -354,52 +369,18 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>32</xloc>
+      <xloc>128</xloc>
       <yloc>192</yloc>
     </entry>
     <entry>
-      <name>jb_init</name>
-      <description />
-      <type>JOB</type>
-      <specification_method>rep_name</specification_method>
-      <job_object_id />
-      <filename />
-      <jobname>jb_init</jobname>
-      <directory>/generic</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Nothing</loglevel>
-      <slave_server_name />
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <expand_remote_job>N</expand_remote_job>
-      <create_parent_folder>N</create_parent_folder>
-      <pass_export>N</pass_export>
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-      </parameters>
-      <set_append_logfile>N</set_append_logfile>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>144</xloc>
-      <yloc>192</yloc>
-    </entry>
-    <entry>
-      <name>tr_get_last_successful_load</name>
+      <name>tr_populate_table_meta-one_table</name>
       <description />
       <type>TRANS</type>
       <specification_method>rep_name</specification_method>
       <trans_object_id />
       <filename />
-      <transname>tr_get_last_successful_load</transname>
-      <directory>/generic/cdc</directory>
+      <transname>tr_populate_table_meta-one_table</transname>
+      <directory>${Internal.Entry.Current.Directory}</directory>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
@@ -418,34 +399,83 @@
       <follow_abort_remote>N</follow_abort_remote>
       <create_parent_folder>N</create_parent_folder>
       <logging_remote_work>N</logging_remote_work>
-      <run_configuration />
+      <run_configuration>Pentaho local</run_configuration>
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
-        <parameter>
-          <name>PARAM_CDC_TIMESTAMPS_ID</name>
-          <stream_name />
-          <value>${QF_OBO_DB_CDC_TIMESTAMPS_ID}</value>
-        </parameter>
       </parameters>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>144</xloc>
-      <yloc>288</yloc>
+      <xloc>128</xloc>
+      <yloc>368</yloc>
     </entry>
     <entry>
-      <name>tr_list_of_tables_to_compare</name>
+      <name>Write parameters to log</name>
+      <description />
+      <type>WRITE_TO_LOG</type>
+      <logmessage>
+PARAM_SOURCE_DB_ID  = ${PARAM_SOURCE_DB_ID}
+PARAM_SOURCE_SCHEMA = ${PARAM_SOURCE_SCHEMA}
+PARAM_SOURCE_TABLE  = ${PARAM_SOURCE_TABLE}
+ </logmessage>
+      <loglevel>Basic</loglevel>
+      <logsubject>Parameters passed to tr_populate_table_meta-one_table:</logsubject>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>128</xloc>
+      <yloc>272</yloc>
+    </entry>
+    <entry>
+      <name>tr_populate_table_meta-get_table_meta_id</name>
       <description />
       <type>TRANS</type>
       <specification_method>rep_name</specification_method>
       <trans_object_id />
       <filename />
-      <transname>tr_list_of_tables_to_compare</transname>
-      <directory>/generic</directory>
+      <transname>tr_populate_table_meta-get_table_meta_id</transname>
+      <directory>${Internal.Entry.Current.Directory}</directory>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
-      <clear_rows>Y</clear_rows>
+      <clear_rows>N</clear_rows>
+      <clear_files>N</clear_files>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Basic</loglevel>
+      <cluster>N</cluster>
+      <slave_server_name />
+      <set_append_logfile>N</set_append_logfile>
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <create_parent_folder>N</create_parent_folder>
+      <logging_remote_work>N</logging_remote_work>
+      <run_configuration>Pentaho local</run_configuration>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+      </parameters>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>128</xloc>
+      <yloc>464</yloc>
+    </entry>
+    <entry>
+      <name>tr_populate_column_meta-one_table</name>
+      <description />
+      <type>TRANS</type>
+      <specification_method>rep_name</specification_method>
+      <trans_object_id />
+      <filename />
+      <transname>tr_populate_column_meta-one_table</transname>
+      <directory>${Internal.Entry.Current.Directory}</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>Y</params_from_previous>
+      <exec_per_row>Y</exec_per_row>
+      <clear_rows>N</clear_rows>
       <clear_files>N</clear_files>
       <set_logfile>N</set_logfile>
       <logfile />
@@ -464,76 +494,22 @@
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
         <parameter>
-          <name>PARAM_SOURCE_DB_ID</name>
-          <stream_name />
-          <value>${QF_TABLE_META_SOURCE_DB_ID_OBO}</value>
+          <name>PARAM_TABLE_META_ID</name>
+          <stream_name>table_meta_id</stream_name>
+          <value />
         </parameter>
       </parameters>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>144</xloc>
-      <yloc>384</yloc>
-    </entry>
-    <entry>
-      <name>jb_mirror_compare_table_dispatcher</name>
-      <description />
-      <type>JOB</type>
-      <specification_method>rep_name</specification_method>
-      <job_object_id />
-      <filename />
-      <jobname>jb_mirror_compare_table_dispatcher</jobname>
-      <directory>/dwh/mirror/compare_tables</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>Y</params_from_previous>
-      <exec_per_row>Y</exec_per_row>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Nothing</loglevel>
-      <slave_server_name />
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <expand_remote_job>N</expand_remote_job>
-      <create_parent_folder>N</create_parent_folder>
-      <pass_export>N</pass_export>
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-        <parameter>
-          <name>PARAM_SOURCE_SCHEMA</name>
-          <stream_name>source_schema</stream_name>
-          <value />
-        </parameter>
-        <parameter>
-          <name>PARAM_SOURCE_TABLE</name>
-          <stream_name>source_table</stream_name>
-          <value />
-        </parameter>
-        <parameter>
-          <name>PARAM_LAST_LOAD_TIMESTAMP</name>
-          <stream_name />
-          <value>${QF_CDC_LAST_LOAD}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_SOURCE_SCHEMA_TABLE</name>
-          <stream_name>source_schema_dot_table</stream_name>
-          <value />
-        </parameter>
-      </parameters>
-      <set_append_logfile>N</set_append_logfile>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>144</xloc>
-      <yloc>496</yloc>
+      <xloc>128</xloc>
+      <yloc>560</yloc>
     </entry>
   </entries>
   <hops>
     <hop>
       <from>START</from>
-      <to>jb_init</to>
+      <to>Write parameters to log</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -541,8 +517,8 @@
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>jb_init</from>
-      <to>tr_get_last_successful_load</to>
+      <from>Write parameters to log</from>
+      <to>tr_populate_table_meta-one_table</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -550,8 +526,8 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>tr_get_last_successful_load</from>
-      <to>tr_list_of_tables_to_compare</to>
+      <from>tr_populate_table_meta-one_table</from>
+      <to>tr_populate_table_meta-get_table_meta_id</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -559,8 +535,8 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>tr_list_of_tables_to_compare</from>
-      <to>jb_mirror_compare_table_dispatcher</to>
+      <from>tr_populate_table_meta-get_table_meta_id</from>
+      <to>tr_populate_column_meta-one_table</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -570,43 +546,21 @@
   </hops>
   <notepads>
     <notepad>
-      <note>This job compares the content of each mirrored table from the TDP Archive data base with the content of the mirrored tables
-in the DWH. This is dones to verify that the mirroring algorithm (in particular the CDC treatment) is correctly implemented
-for each table.
+      <note>This job writes a single default row to the etl.table_meta table for a specified table from the source database.
+It is assumed that the table name in the target database will be identical to the table name in the source database.
 
-"Pass batch ID?" is selected for this job so that the batch ID is passed to tr_set_job_batch_id_variable via jb_init, which assigns 
-this value to QF_JOB_BATCH_ID.
+This job then creates a set of default etl.column_meta rows for the etl.table_meta row just created, one for each
+row of the table in the source (OBO) DB.
 
-If this job has a parent, the setting "Pass batch ID?" should also be set for the parent *if* it is desired that QF_JOB_BATCH_ID
-should be assigned the batch ID of the root job (not this job). This may vary from case to case.</note>
-      <xloc>16</xloc>
+This transformation has parameters:
+
+	PARAM_SOURCE_DB_ID			ID the "source" database containing the table for generating table metadata
+	PARAM_SOURCE_SCHEMA		Name of schema containing source table for generating table metadata
+	PARAM_SOURCE_TABLE		Name of source table for generating table metatdata</note>
+      <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>864</width>
-      <heigth>163</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>11</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Get the "last successful load" timestamp for the source database and assign it to variable 
-QF_CDC_LAST_LOAD. This sub-transformation is passed the parameter:
-
-PARAM_CDC_TIMESTAMPS_ID = ${QF_OBO_DB_CDC_TIMESTAMPS_ID}</note>
-      <xloc>272</xloc>
-      <yloc>272</yloc>
-      <width>536</width>
-      <heigth>66</heigth>
+      <width>677</width>
+      <heigth>164</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -623,14 +577,35 @@ PARAM_CDC_TIMESTAMPS_ID = ${QF_OBO_DB_CDC_TIMESTAMPS_ID}</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Create list of all mirrored tables, regardless of the mirroring algorithm used. This sub-transformation 
-is passed parameter:
-
-PARAM_SOURCE_DB_ID = ${QF_TABLE_META_SOURCE_DB_ID_OBO}</note>
-      <xloc>272</xloc>
+      <note>Get the value of "table_meta_id" for the new etl.table_meta row just created.
+This is placed in the stream and then copied to the "Result set" so that it can
+be accessed by the next transformation.</note>
+      <xloc>288</xloc>
+      <yloc>464</yloc>
+      <width>461</width>
+      <heigth>52</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Create a new etl.table_meta row using the values of the parameters passed to
+this job.</note>
+      <xloc>288</xloc>
       <yloc>368</yloc>
-      <width>605</width>
-      <heigth>66</heigth>
+      <width>468</width>
+      <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -647,16 +622,12 @@ PARAM_SOURCE_DB_ID = ${QF_TABLE_META_SOURCE_DB_ID_OBO}</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Compute comparision statistics for each source (TDP archive) and destination (DWH) DB table. This sub-job is:
-	1.	RUN ONCE FOR EACH TABLE BEING MIRRORED.
-	2.	Passed the schema name and table name for the two tables to compare that
-		are provided by the previous transformation.
-	3.	Passed the additional parameter:
-			PARAM_LAST_LOAD_TIMESTAMP = ${QF_CDC_LAST_LOAD}</note>
-      <xloc>272</xloc>
-      <yloc>448</yloc>
-      <width>647</width>
-      <heigth>94</heigth>
+      <note>Create a set of default etl.column_meta rows for the etl.table_meta row just created,
+one for each row of the table in the source (OBO) DB.</note>
+      <xloc>288</xloc>
+      <yloc>560</yloc>
+      <width>508</width>
+      <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>

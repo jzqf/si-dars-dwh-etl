@@ -1,6 +1,6 @@
 <transformation>
   <info>
-    <name>tr_populate_column_meta-list_of_tables</name>
+    <name>tr_populate_table_meta-list_of_hardwired_tables</name>
     <description />
     <extended_description />
     <trans_version />
@@ -8,11 +8,6 @@
     <trans_status>0</trans_status>
     <directory>/psa/util</directory>
     <parameters>
-      <parameter>
-        <name>PARAM_SOURCE_DB_ID</name>
-        <default_value>1</default_value>
-        <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
-      </parameter>
     </parameters>
     <log>
       <trans-log-table>
@@ -434,7 +429,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/08/11 10:18:43.579</modified_date>
+    <modified_date>2017/08/11 13:40:53.969</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -445,15 +440,11 @@ The "source" database is specified by PARAM_SOURCE_DB_ID.
 
 The stream from this transformation is copied to the "result" of this transformation. This result set is used in the parent job to execute
 a sub-job once for each row in this stream. At the same time, the stream values from the row are assigned to parameters that are 
-passed to the sub-job. This procedure is used to generate column metadata for each  table in the "source" and "target" databases.
-
-This transformation has parameter:
-
-	PARAM_SOURCE_DB_ID			ID the "source" (OBO) database containing tables will be mirrored to a "target" (PSA) database</note>
+passed to the sub-job. This procedure is used to generate table metadata for each  table in the "source" and "target" databases.</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
       <width>799</width>
-      <heigth>150</heigth>
+      <heigth>94</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -470,18 +461,13 @@ This transformation has parameter:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>The stream created by this step consists of the three fields: 
-
-	table_meta_id 
-	source_schema_name
-	source_table_name 
-
-Each row specifies a table to mirror from the source database,
-as well as the table it will be mirrored to in the target database.</note>
-      <xloc>0</xloc>
-      <yloc>256</yloc>
-      <width>383</width>
-      <heigth>122</heigth>
+      <note>Each row of the stream created by this step specifies one table from the 
+source (OBO) DB to be archived/mirrored to a matching table from the 
+target (PSA) DB.</note>
+      <xloc>16</xloc>
+      <yloc>192</yloc>
+      <width>433</width>
+      <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -492,87 +478,12 @@ as well as the table it will be mirrored to in the target database.</note>
       <backgroundcolorred>255</backgroundcolorred>
       <backgroundcolorgreen>205</backgroundcolorgreen>
       <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>We can temporarily replace the "Table input" step with this "Data grid"
-step in order to manually specify a selection of tables to process. 
-Each table must have a corresponding row in etl.table_meta because
-we need to specify values for a "table_meta_id" field.</note>
-      <xloc>400</xloc>
-      <yloc>320</yloc>
-      <width>420</width>
-      <heigth>66</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>255</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
       <bordercolorblue>100</bordercolorblue>
       <drawshadow>Y</drawshadow>
     </notepad>
   </notepads>
-  <connection>
-    <name>etl_db</name>
-    <server>${QF_ETL_DB_HOST}</server>
-    <type>POSTGRESQL</type>
-    <access>Native</access>
-    <database>${QF_ETL_DB_DATABASE}</database>
-    <port>${QF_ETL_DB_PORT}</port>
-    <username>${QF_ETL_DB_USERNAME}</username>
-    <password>${QF_ETL_DB_PASSWORD}</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
-    <attributes>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>IS_CLUSTERED</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>PORT_NUMBER</code>
-        <attribute>${QF_ETL_DB_PORT}</attribute>
-      </attribute>
-      <attribute>
-        <code>PRESERVE_RESERVED_WORD_CASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>QUOTE_ALL_FIELDS</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>USE_POOLING</code>
-        <attribute>N</attribute>
-      </attribute>
-    </attributes>
-  </connection>
   <connection>
     <name>logging_db</name>
     <server>${QF_LOGGING_DB_HOST}</server>
@@ -626,12 +537,12 @@ we need to specify values for a "table_meta_id" field.</note>
   </connection>
   <order>
     <hop>
-      <from>Table input - Get list of tables</from>
+      <from>Data Grid</from>
       <to>Copy rows to result</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Manually specified selection of tables</from>
+      <from>Data Grid - Backup</from>
       <to>Copy rows to result</to>
       <enabled>N</enabled>
     </hop>
@@ -655,13 +566,13 @@ we need to specify values for a "table_meta_id" field.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>720</xloc>
-      <yloc>192</yloc>
+      <xloc>592</xloc>
+      <yloc>128</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Manually specified selection of tables</name>
+    <name>Data Grid</name>
     <type>DataGrid</type>
     <description />
     <distribute>Y</distribute>
@@ -672,17 +583,6 @@ we need to specify values for a "table_meta_id" field.</note>
       <schema_name />
     </partitioning>
     <fields>
-      <field>
-        <name>table_meta_id</name>
-        <type>Integer</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
       <field>
         <name>source_schema_name</name>
         <type>String</type>
@@ -708,9 +608,24 @@ we need to specify values for a "table_meta_id" field.</note>
     </fields>
     <data>
       <line>
-        <item />
-        <item />
-        <item />
+        <item>passage</item>
+        <item>passage</item>
+      </line>
+      <line>
+        <item>passage</item>
+        <item>image</item>
+      </line>
+      <line>
+        <item>tolldomain</item>
+        <item>charging_point</item>
+      </line>
+      <line>
+        <item>tolldomain</item>
+        <item>charging_point_group</item>
+      </line>
+      <line>
+        <item>tolldomain</item>
+        <item>charging_point_group_group</item>
       </line>
     </data>
     <cluster_schema />
@@ -721,14 +636,14 @@ we need to specify values for a "table_meta_id" field.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>544</xloc>
-      <yloc>256</yloc>
+      <xloc>192</xloc>
+      <yloc>128</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Table input - Get list of tables</name>
-    <type>TableInput</type>
+    <name>Data Grid - Backup</name>
+    <type>DataGrid</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -737,24 +652,52 @@ we need to specify values for a "table_meta_id" field.</note>
       <method>none</method>
       <schema_name />
     </partitioning>
-    <connection>etl_db</connection>
-    <sql>SELECT
-    table_meta_id, 
-    source_schema_name,
-    source_table_name 
-FROM 
-    ${QF_ETL_DB_SCHEMA}.table_meta 
-WHERE 
-    source_db_id = ${PARAM_SOURCE_DB_ID} 
-ORDER BY 
-    source_schema_name ASC, 
-    source_table_name ASC
-</sql>
-    <limit>0</limit>
-    <lookup />
-    <execute_each_row>N</execute_each_row>
-    <variables_active>Y</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
+    <fields>
+      <field>
+        <name>source_schema_name</name>
+        <type>String</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>255</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>source_table_name</name>
+        <type>String</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>255</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+    </fields>
+    <data>
+      <line>
+        <item>passage</item>
+        <item>passage</item>
+      </line>
+      <line>
+        <item>passage</item>
+        <item>image</item>
+      </line>
+      <line>
+        <item>tolldomain</item>
+        <item>charging_point</item>
+      </line>
+      <line>
+        <item>tolldomain</item>
+        <item>charging_point_group</item>
+      </line>
+      <line>
+        <item>tolldomain</item>
+        <item>charging_point_group_group</item>
+      </line>
+    </data>
     <cluster_schema />
     <remotesteps>
       <input>
@@ -763,8 +706,8 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>176</xloc>
-      <yloc>192</yloc>
+      <xloc>192</xloc>
+      <yloc>352</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

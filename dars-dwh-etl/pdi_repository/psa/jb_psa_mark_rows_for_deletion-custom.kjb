@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/08/08 13:41:14.120</modified_date>
+  <modified_date>2017/08/09 12:13:37.503</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CAN_DELETE_ROW_SOURCE_COLNAME</name>
@@ -551,45 +551,6 @@ PARAM_TABLE_META_ID                          = ${PARAM_TABLE_META_ID}</logmessag
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>1</nr>
-      <xloc>1040</xloc>
-      <yloc>480</yloc>
-    </entry>
-    <entry>
-      <name>jb_log_error - 1</name>
-      <description />
-      <type>JOB</type>
-      <specification_method>rep_name</specification_method>
-      <job_object_id />
-      <filename />
-      <jobname>jb_log_error</jobname>
-      <directory>/generic</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Nothing</loglevel>
-      <slave_server_name />
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <expand_remote_job>N</expand_remote_job>
-      <create_parent_folder>N</create_parent_folder>
-      <pass_export>N</pass_export>
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-        <parameter>
-          <name>PARAM_ERROR_MESSAGE</name>
-          <stream_name />
-          <value>!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Simulated error message from a custom table-specific update job!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</value>
-        </parameter>
-      </parameters>
-      <set_append_logfile>N</set_append_logfile>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>1</nr>
       <xloc>928</xloc>
       <yloc>480</yloc>
     </entry>
@@ -684,15 +645,6 @@ PARAM_TABLE_META_ID                          = ${PARAM_TABLE_META_ID}</logmessag
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>jb_log_error - 1</from>
-      <to>Abort job - 1</to>
-      <from_nr>1</from_nr>
-      <to_nr>1</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
       <from>Log dispatched job name - 1</from>
       <to>jb_psa_mark_rows_for_deletion-custom-source_schema.source_table</to>
       <from_nr>0</from_nr>
@@ -703,7 +655,7 @@ PARAM_TABLE_META_ID                          = ${PARAM_TABLE_META_ID}</logmessag
     </hop>
     <hop>
       <from>jb_psa_mark_rows_for_deletion-custom-source_schema.source_table</from>
-      <to>jb_log_error - 1</to>
+      <to>Abort job - 1</to>
       <from_nr>0</from_nr>
       <to_nr>1</to_nr>
       <enabled>Y</enabled>
@@ -753,7 +705,7 @@ job's parameters. This job has parameters:
     <notepad>
       <note>Rename the "jb_psa_mark_rows_for_deletion-custom-source_schema.source_table" job entry appropriately for the
 table that is treated when I write my first table-specific custom "mark for deletion" job, as well as the job itself that is
-executed by this entry. Update also the settings of each job entry ("Log dispatched job name - n", "jb_log_error - n", ...)
+executed by this entry. Update also the settings of each job entry ("Log dispatched job name - n" &amp; "Abort job - n")
 in the current job for the table being treated.
 
 In the event that an error is detected in the job "jb_psa_mark_rows_for_deletion-custom-source_schema.source_table",

@@ -1,5 +1,5 @@
 <job>
-  <name>jb_custom_mirrored_tables-update_all</name>
+  <name>jb_mirrored_updatable_tables-inject_meta-update_all</name>
   <description />
   <extended_description />
   <job_version />
@@ -8,75 +8,24 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/06/27 10:38:46.632</modified_date>
+  <modified_date>2017/08/11 18:54:41.489</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CDC_CURRENT_LOAD</name>
-      <default_value>2017.06.23 00:00:00</default_value>
+      <default_value />
       <description>Timestamp of the current load (no rows after this timestamp will be loaded)</description>
     </parameter>
     <parameter>
       <name>PARAM_CDC_LAST_LOAD</name>
-      <default_value>1900.01.01 00:00:00</default_value>
+      <default_value />
       <description>Timestamp of last successful load from the source database</description>
     </parameter>
     <parameter>
       <name>PARAM_SOURCE_DB_ID</name>
-      <default_value>1</default_value>
+      <default_value />
       <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
     </parameter>
   </parameters>
-  <connection>
-    <name>etl_db</name>
-    <server>${QF_ETL_DB_HOST}</server>
-    <type>POSTGRESQL</type>
-    <access>Native</access>
-    <database>${QF_ETL_DB_DATABASE}</database>
-    <port>${QF_ETL_DB_PORT}</port>
-    <username>${QF_ETL_DB_USERNAME}</username>
-    <password>${QF_ETL_DB_PASSWORD}</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
-    <attributes>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>IS_CLUSTERED</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>PORT_NUMBER</code>
-        <attribute>${QF_ETL_DB_PORT}</attribute>
-      </attribute>
-      <attribute>
-        <code>PRESERVE_RESERVED_WORD_CASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>QUOTE_ALL_FIELDS</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>USE_POOLING</code>
-        <attribute>N</attribute>
-      </attribute>
-    </attributes>
-  </connection>
   <connection>
     <name>logging_db</name>
     <server>${QF_LOGGING_DB_HOST}</server>
@@ -420,22 +369,22 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>144</xloc>
-      <yloc>304</yloc>
+      <xloc>160</xloc>
+      <yloc>128</yloc>
     </entry>
     <entry>
-      <name>tr_custom_mirrored_tables-list_of_tables</name>
+      <name>tr_generic_mirrored_updatable_tables-list_of_tables</name>
       <description />
       <type>TRANS</type>
       <specification_method>rep_name</specification_method>
       <trans_object_id />
       <filename />
-      <transname>tr_custom_mirrored_tables-list_of_tables</transname>
+      <transname>tr_generic_mirrored_updatable_tables-list_of_tables</transname>
       <directory>/generic</directory>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
-      <clear_rows>N</clear_rows>
+      <clear_rows>Y</clear_rows>
       <clear_files>N</clear_files>
       <set_logfile>N</set_logfile>
       <logfile />
@@ -457,17 +406,17 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>144</xloc>
-      <yloc>496</yloc>
+      <xloc>160</xloc>
+      <yloc>224</yloc>
     </entry>
     <entry>
-      <name>jb_custom_mirrored_table_dispatcher</name>
+      <name>jb_mirrored_updatable_tables-inject_meta-update_one</name>
       <description />
       <type>JOB</type>
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
-      <jobname>jb_custom_mirrored_table_dispatcher</jobname>
+      <jobname>jb_mirrored_updatable_tables-inject_meta-update_one</jobname>
       <directory>${Internal.Entry.Current.Directory}</directory>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>Y</params_from_previous>
@@ -497,11 +446,6 @@
           <value />
         </parameter>
         <parameter>
-          <name>PARAM_SOURCE_SCHEMA_DOT_TABLE</name>
-          <stream_name>source_schema_dot_table</stream_name>
-          <value />
-        </parameter>
-        <parameter>
           <name>PARAM_TARGET_SCHEMA</name>
           <stream_name>target_schema</stream_name>
           <value />
@@ -511,91 +455,19 @@
           <stream_name>target_table</stream_name>
           <value />
         </parameter>
-        <parameter>
-          <name>PARAM_TARGET_SCHEMA_DOT_TABLE</name>
-          <stream_name>target_schema_dot_table</stream_name>
-          <value />
-        </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>144</xloc>
-      <yloc>592</yloc>
-    </entry>
-    <entry>
-      <name>Are there any custom mirroring algorithms enabled ?</name>
-      <description />
-      <type>EVAL_TABLE_CONTENT</type>
-      <connection>etl_db</connection>
-      <schemaname />
-      <tablename />
-      <success_condition>rows_count_greater</success_condition>
-      <limit>0</limit>
-      <is_custom_sql>Y</is_custom_sql>
-      <is_usevars>Y</is_usevars>
-      <custom_sql>SELECT
-    source_schema_name AS "source_schema",
-    source_table_name  AS "source_table",
-    source_schema_name || '.' || source_table_name AS "source_schema_dot_table",
-    target_schema_name AS "target_schema",
-    target_table_name  AS "target_table", 
-    target_schema_name || '.' || target_table_name AS "target_schema_dot_table"
-FROM
-    etl.table_meta
-WHERE
-    source_db_id=${PARAM_SOURCE_DB_ID} AND
-    mirror_tables=true AND
-	use_custom_mirror_algorithm=true
-ORDER BY
-	source_schema_name, 
-    source_table_name</custom_sql>
-      <add_rows_result>N</add_rows_result>
-      <clear_result_rows>Y</clear_result_rows>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>144</xloc>
-      <yloc>400</yloc>
-    </entry>
-    <entry>
-      <name>Success</name>
-      <description />
-      <type>SUCCESS</type>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>448</xloc>
-      <yloc>400</yloc>
-    </entry>
-    <entry>
-      <name>Write To Log</name>
-      <description />
-      <type>WRITE_TO_LOG</type>
-      <logmessage>There are no table-specific custom mirroring algorithms enabled</logmessage>
-      <loglevel>Basic</loglevel>
-      <logsubject />
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>352</xloc>
-      <yloc>400</yloc>
+      <xloc>160</xloc>
+      <yloc>336</yloc>
     </entry>
   </entries>
   <hops>
     <hop>
-      <from>tr_custom_mirrored_tables-list_of_tables</from>
-      <to>jb_custom_mirrored_table_dispatcher</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
       <from>START</from>
-      <to>Are there any custom mirroring algorithms enabled ?</to>
+      <to>tr_generic_mirrored_updatable_tables-list_of_tables</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -603,26 +475,8 @@ ORDER BY
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>Are there any custom mirroring algorithms enabled ?</from>
-      <to>tr_custom_mirrored_tables-list_of_tables</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Are there any custom mirroring algorithms enabled ?</from>
-      <to>Write To Log</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Write To Log</from>
-      <to>Success</to>
+      <from>tr_generic_mirrored_updatable_tables-list_of_tables</from>
+      <to>jb_mirrored_updatable_tables-inject_meta-update_one</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -632,29 +486,16 @@ ORDER BY
   </hops>
   <notepads>
     <notepad>
-      <note>This job updates a selection of tables in the target PSA database that are mirrored from a source database using a CUSTOM algorithm, i.e., a
-custom job &amp; transformation is used that is specific to the table being updated. This job has parameters:
+      <note>This job updates a selection of "updatable" tables (INSERTs &amp; UPDATEs allowed, but no DELETEs) in the target PSA database that are mirrored
+from a source database using a GENERIC algorithm. This job has parameters:
 
 	PARAM_SOURCE_DB_ID			ID the "source" database containing tables will be mirrored to a "target" database
-	PARAM_CDC_LAST_LOAD
-	PARAM_CDC_CURRENT_LOAD
-
-These 3 parameters are also passed to the dispatcher sub-job because the setting "Pass parameter values to sub job" is selected for this 
-sub-job entry. 
-
-The dispatcher sub-job is RUN ONCE FOR EACH row returned by "tr_custom_mirrored_tables-list_of_tables". As a result, each time this sub-job 
-is is run it is *also* passed the parameters:
-
-	PARAM_SOURCE_SCHEMA
-	PARAM_SOURCE_TABLE
-	PARAM_SOURCE_SCHEMA_DOT_TABLE
-	PARAM_TARGET_SCHEMA
-	PARAM_TARGET_TABLE
-	PARAM_TARGET_SCHEMA_DOT_TABLE</note>
+	PARAM_CDC_LAST_LOAD		Timestamp for when *all* tables of the PSA were most recently updated successfully
+	PARAM_CDC_CURRENT_LOAD	Used so that a consistent max timestamp is used for all ETL</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>843</width>
-      <heigth>276</heigth>
+      <width>841</width>
+      <heigth>94</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -671,12 +512,13 @@ is is run it is *also* passed the parameters:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Create list of tables to update. This subtransformation 
-is passed parameter PARAM_SOURCE_DB_ID</note>
-      <xloc>288</xloc>
-      <yloc>496</yloc>
-      <width>332</width>
-      <heigth>38</heigth>
+      <note>Create list of tables to update. This sub-transformation is passed parameter:
+
+	PARAM_SOURCE_DB_ID</note>
+      <xloc>352</xloc>
+      <yloc>208</yloc>
+      <width>458</width>
+      <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -693,12 +535,21 @@ is passed parameter PARAM_SOURCE_DB_ID</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Update each mirrored, insert-only table. This 
-sub-job is RUN ONCE FOR EACH TABLE TO UPDATE.</note>
-      <xloc>288</xloc>
-      <yloc>592</yloc>
-      <width>310</width>
-      <heigth>38</heigth>
+      <note>Update each mirrored, "updatable" table. This sub-job is RUN ONCE FOR EACH row returned by
+"tr_generic_mirrored_updatable_tables-list_of_tables", i.e., once for each table to update.
+Each time it is executed, it is passed the parameters:
+
+	PARAM_SOURCE_DB_ID			same		value is passed each time this  job is executed
+	PARAM_CDC_LAST_LOAD		same		value is passed each time this job is executed
+	PARAM_CDC_CURRENT_LOAD	same		value is passed each time this job is executed
+	PARAM_SOURCE_SCHEMA		different	value is passed each time this job is executed
+	PARAM_SOURCE_TABLE		different	value is passed each time this job is executed
+	PARAM_TARGET_SCHEMA		different	value is passed each time this job is executed
+	PARAM_TARGET_TABLE			different	value is passed each time this job is executed</note>
+      <xloc>352</xloc>
+      <yloc>288</yloc>
+      <width>565</width>
+      <heigth>164</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -709,56 +560,6 @@ sub-job is RUN ONCE FOR EACH TABLE TO UPDATE.</note>
       <backgroundcolorred>255</backgroundcolorred>
       <backgroundcolorgreen>205</backgroundcolorgreen>
       <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>The query here must match the query in tr_custom_mirrored_tables-list_of_tables
-that is  the next entry to execute. This is necessary to avoid executing the dispather
-job below for the case where there are no rows in the result set of 
-tr_custom_mirrored_tables-list_of_tables. It seems that if a sub-job  is executed 
-that is configured with the setting"Execute every input row" but the result set is 
-empty, it is still executed, and in addition PDI throws an exception. So the 
-work-around is to detect here when there will be no rows in the result set and to 
-avoid executing the dispatcher sub-job in that case.</note>
-      <xloc>496</xloc>
-      <yloc>336</yloc>
-      <width>492</width>
-      <heigth>122</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>255</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Query use here should be the same as the query in the previous
-step, "Are there any custom mirroring algorithms enabled ?"</note>
-      <xloc>640</xloc>
-      <yloc>496</yloc>
-      <width>377</width>
-      <heigth>38</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>255</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
       <bordercolorblue>100</bordercolorblue>

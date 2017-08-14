@@ -1,6 +1,6 @@
 <transformation>
   <info>
-    <name>tr_populate_column_meta-list_of_tables</name>
+    <name>tr_populate_table_meta-one_table</name>
     <description />
     <extended_description />
     <trans_version />
@@ -12,6 +12,16 @@
         <name>PARAM_SOURCE_DB_ID</name>
         <default_value>1</default_value>
         <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_SOURCE_SCHEMA</name>
+        <default_value>passage</default_value>
+        <description>Name of schema containing source table to mirror to target table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_SOURCE_TABLE</name>
+        <default_value>image</default_value>
+        <description>Name of source table to mirror to target table</description>
       </parameter>
     </parameters>
     <log>
@@ -434,53 +444,23 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/08/11 10:18:43.579</modified_date>
+    <modified_date>2017/08/11 14:58:49.228</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>This transformation specifies the tables from a "source" database that will be mirrored to corresponding tables of a "target" database.
-The "source" database is specified by PARAM_SOURCE_DB_ID.
+      <note>This transformation writes a row to the etl.table_meta table for a single specified table from the source database.
+It is assumed that the table name in the target database is identical to the table name in the source database. 
 
-The stream from this transformation is copied to the "result" of this transformation. This result set is used in the parent job to execute
-a sub-job once for each row in this stream. At the same time, the stream values from the row are assigned to parameters that are 
-passed to the sub-job. This procedure is used to generate column metadata for each  table in the "source" and "target" databases.
+This transformation has parameters:
 
-This transformation has parameter:
-
-	PARAM_SOURCE_DB_ID			ID the "source" (OBO) database containing tables will be mirrored to a "target" (PSA) database</note>
-      <xloc>0</xloc>
+	PARAM_SOURCE_DB_ID			ID the "source" database containing the table for generating table metadata
+	PARAM_SOURCE_SCHEMA		Name of schema containing source table for generating table metadata
+	PARAM_SOURCE_TABLE		Name of source table for generating table metadata</note>
+      <xloc>16</xloc>
       <yloc>0</yloc>
-      <width>799</width>
-      <heigth>150</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>The stream created by this step consists of the three fields: 
-
-	table_meta_id 
-	source_schema_name
-	source_table_name 
-
-Each row specifies a table to mirror from the source database,
-as well as the table it will be mirrored to in the target database.</note>
-      <xloc>0</xloc>
-      <yloc>256</yloc>
-      <width>383</width>
+      <width>677</width>
       <heigth>122</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -498,14 +478,11 @@ as well as the table it will be mirrored to in the target database.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>We can temporarily replace the "Table input" step with this "Data grid"
-step in order to manually specify a selection of tables to process. 
-Each table must have a corresponding row in etl.table_meta because
-we need to specify values for a "table_meta_id" field.</note>
-      <xloc>400</xloc>
-      <yloc>320</yloc>
-      <width>420</width>
-      <heigth>66</heigth>
+      <note>Create a single stream row using the parameter values passed to this transformation.</note>
+      <xloc>288</xloc>
+      <yloc>160</yloc>
+      <width>509</width>
+      <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -514,8 +491,82 @@ we need to specify values for a "table_meta_id" field.</note>
       <fontcolorgreen>0</fontcolorgreen>
       <fontcolorblue>0</fontcolorblue>
       <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>255</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Duplicate fields "source_schema_name" &amp; "source_table_name" to "target_schema_name" &amp; 
+"target_table_name". This assumes that the schema &amp; table names in the target database are
+identical to the schema &amp; table names in the source database.</note>
+      <xloc>288</xloc>
+      <yloc>224</yloc>
+      <width>552</width>
+      <heigth>52</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>mirror_tables=Y					The source table will be archived/mirrored to the target DB
+compare_tables=Y					The source DB table will be compared with the target DB table
+										when a "compare" is performed
+can_insert_rows=Y					The OBO can insert rows into the source table
+can_update_rows=N				The OBO never updates rows of the source table
+can_delete_rows=N					The OBO never deletes rows of the source table
+use_custom_mirror_algorithm=N	Generic archive/mirror algorithm will be used
+use_custom_delete_algorithm=N	Generic delete algorithm will be used for archived/mirrored rows</note>
+      <xloc>288</xloc>
+      <yloc>384</yloc>
+      <width>608</width>
+      <heigth>122</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Add a constant field to the stream named "table_meta_id"
+that contains the value MAX(table_meta_id)+1. This value
+will be used as the primary key for the new row. </note>
+      <xloc>544</xloc>
+      <yloc>304</yloc>
+      <width>351</width>
+      <heigth>52</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
       <bordercolorblue>100</bordercolorblue>
@@ -626,43 +677,34 @@ we need to specify values for a "table_meta_id" field.</note>
   </connection>
   <order>
     <hop>
-      <from>Table input - Get list of tables</from>
-      <to>Copy rows to result</to>
+      <from>Create row from parameters</from>
+      <to>Duplicate schema &amp; table name fields</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Manually specified selection of tables</from>
-      <to>Copy rows to result</to>
-      <enabled>N</enabled>
+      <from>Get MAX(table_meta_id)+1 from etl.table_meta</from>
+      <to>Join Rows (cartesian product)</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Duplicate schema &amp; table name fields</from>
+      <to>Join Rows (cartesian product)</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Join Rows (cartesian product)</from>
+      <to>Add fields with constant values</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Add fields with constant values</from>
+      <to>Insert new etl.table_meta row</to>
+      <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Copy rows to result</name>
-    <type>RowsToResult</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>720</xloc>
-      <yloc>192</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Manually specified selection of tables</name>
-    <type>DataGrid</type>
+    <name>Add fields with constant values</name>
+    <type>Constant</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -673,46 +715,90 @@ we need to specify values for a "table_meta_id" field.</note>
     </partitioning>
     <fields>
       <field>
-        <name>table_meta_id</name>
-        <type>Integer</type>
+        <name>mirror_tables</name>
+        <type>Boolean</type>
         <format />
         <currency />
         <decimal />
         <group />
+        <nullif>Y</nullif>
         <length>-1</length>
         <precision>-1</precision>
         <set_empty_string>N</set_empty_string>
       </field>
       <field>
-        <name>source_schema_name</name>
-        <type>String</type>
+        <name>compare_tables</name>
+        <type>Boolean</type>
         <format />
         <currency />
         <decimal />
         <group />
-        <length>255</length>
+        <nullif>Y</nullif>
+        <length>-1</length>
         <precision>-1</precision>
         <set_empty_string>N</set_empty_string>
       </field>
       <field>
-        <name>source_table_name</name>
-        <type>String</type>
+        <name>can_insert_rows</name>
+        <type>Boolean</type>
         <format />
         <currency />
         <decimal />
         <group />
-        <length>255</length>
+        <nullif>Y</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>can_update_rows</name>
+        <type>Boolean</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <nullif>N</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>can_delete_rows</name>
+        <type>Boolean</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <nullif>N</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>use_custom_mirror_algorithm</name>
+        <type>Boolean</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <nullif>N</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>use_custom_delete_algorithm</name>
+        <type>Boolean</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <nullif>N</nullif>
+        <length>-1</length>
         <precision>-1</precision>
         <set_empty_string>N</set_empty_string>
       </field>
     </fields>
-    <data>
-      <line>
-        <item />
-        <item />
-        <item />
-      </line>
-    </data>
     <cluster_schema />
     <remotesteps>
       <input>
@@ -721,13 +807,119 @@ we need to specify values for a "table_meta_id" field.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>544</xloc>
-      <yloc>256</yloc>
+      <xloc>128</xloc>
+      <yloc>432</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Table input - Get list of tables</name>
+    <name>Create row from parameters</name>
+    <type>GetVariable</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <field>
+        <name>source_db_id</name>
+        <variable>${PARAM_SOURCE_DB_ID}</variable>
+        <type>Integer</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>source_schema_name</name>
+        <variable>${PARAM_SOURCE_SCHEMA}</variable>
+        <type>String</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>255</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>source_table_name</name>
+        <variable>${PARAM_SOURCE_TABLE}</variable>
+        <type>String</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>255</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>128</xloc>
+      <yloc>160</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Duplicate schema &amp; table name fields</name>
+    <type>SelectValues</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <field>
+        <name>source_db_id</name>
+      </field>
+      <field>
+        <name>source_schema_name</name>
+      </field>
+      <field>
+        <name>source_table_name</name>
+      </field>
+      <field>
+        <name>source_schema_name</name>
+        <rename>target_schema_name</rename>
+      </field>
+      <field>
+        <name>source_table_name</name>
+        <rename>target_table_name</rename>
+      </field>
+      <select_unspecified>N</select_unspecified>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>128</xloc>
+      <yloc>224</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Get MAX(table_meta_id)+1 from etl.table_meta</name>
     <type>TableInput</type>
     <description />
     <distribute>Y</distribute>
@@ -738,18 +930,11 @@ we need to specify values for a "table_meta_id" field.</note>
       <schema_name />
     </partitioning>
     <connection>etl_db</connection>
-    <sql>SELECT
-    table_meta_id, 
-    source_schema_name,
-    source_table_name 
+    <sql>SELECT 
+    -- COALESCE used in case the table is empty.
+    COALESCE(MAX(table_meta_id), 0)+1 AS "table_meta_id" 
 FROM 
-    ${QF_ETL_DB_SCHEMA}.table_meta 
-WHERE 
-    source_db_id = ${PARAM_SOURCE_DB_ID} 
-ORDER BY 
-    source_schema_name ASC, 
-    source_table_name ASC
-</sql>
+    etl.table_meta</sql>
     <limit>0</limit>
     <lookup />
     <execute_each_row>N</execute_each_row>
@@ -763,8 +948,87 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>176</xloc>
-      <yloc>192</yloc>
+      <xloc>384</xloc>
+      <yloc>320</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Insert new etl.table_meta row</name>
+    <type>TableOutput</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <connection>etl_db</connection>
+    <schema>${QF_ETL_DB_SCHEMA}</schema>
+    <table>table_meta</table>
+    <commit>1000</commit>
+    <truncate>N</truncate>
+    <ignore_errors>N</ignore_errors>
+    <use_batch>Y</use_batch>
+    <specify_fields>N</specify_fields>
+    <partitioning_enabled>N</partitioning_enabled>
+    <partitioning_field />
+    <partitioning_daily>N</partitioning_daily>
+    <partitioning_monthly>Y</partitioning_monthly>
+    <tablename_in_field>N</tablename_in_field>
+    <tablename_field />
+    <tablename_in_table>Y</tablename_in_table>
+    <return_keys>N</return_keys>
+    <return_field />
+    <fields>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>128</xloc>
+      <yloc>544</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Join Rows (cartesian product)</name>
+    <type>JoinRows</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>out</prefix>
+    <cache_size>500</cache_size>
+    <main>Add sequence - column_meta_id</main>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <leftvalue />
+        <function>=</function>
+        <rightvalue />
+      </condition>
+    </compare>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>128</xloc>
+      <yloc>320</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
