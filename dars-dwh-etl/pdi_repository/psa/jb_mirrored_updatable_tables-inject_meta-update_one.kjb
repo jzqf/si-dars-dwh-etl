@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/08/16 12:45:58.694</modified_date>
+  <modified_date>2017/08/21 13:44:55.508</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CDC_CURRENT_LOAD</name>
@@ -34,6 +34,11 @@
       <name>PARAM_SOURCE_TABLE</name>
       <default_value>passage</default_value>
       <description>Name of source table to mirror to target table</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_TABLE_META_ID</name>
+      <default_value>0</default_value>
+      <description>Primary key of etl.table_meta row for "source" table from which rows will be deleted</description>
     </parameter>
     <parameter>
       <name>PARAM_TARGET_SCHEMA</name>
@@ -441,7 +446,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>608</xloc>
-      <yloc>176</yloc>
+      <yloc>192</yloc>
     </entry>
     <entry>
       <name>tr_mirrored_updatable_table-inject_meta-update</name>
@@ -493,7 +498,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>608</xloc>
-      <yloc>752</yloc>
+      <yloc>768</yloc>
     </entry>
     <entry>
       <name>jb_update_etl_table_meta_mirror_details</name>
@@ -532,7 +537,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>608</xloc>
-      <yloc>848</yloc>
+      <yloc>864</yloc>
     </entry>
     <entry>
       <name>jb_log_error 6</name>
@@ -571,7 +576,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>816</xloc>
-      <yloc>752</yloc>
+      <yloc>768</yloc>
     </entry>
     <entry>
       <name>Abort job</name>
@@ -582,7 +587,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>944</xloc>
-      <yloc>512</yloc>
+      <yloc>528</yloc>
     </entry>
     <entry>
       <name>Is there column mapping metadata for this table?</name>
@@ -596,27 +601,23 @@
       <is_custom_sql>Y</is_custom_sql>
       <is_usevars>Y</is_usevars>
       <custom_sql>SELECT
-    c.source_column_name AS "source_col_name", 
-    c.target_column_name AS "target_col_name" 
+    source_column_name AS "source_col_name", 
+    target_column_name AS "target_col_name" 
 FROM 
-    etl.column_meta c 
-INNER JOIN 
-    etl.table_meta t ON t.table_meta_id = c.table_meta_id 
+    etl.column_meta 
 WHERE 
-    t.source_db_id = ${PARAM_SOURCE_DB_ID} AND 
-    t.source_schema_name = '${PARAM_SOURCE_SCHEMA}' AND 
-    t.source_table_name = '${PARAM_SOURCE_TABLE}'  AND 
-    c.mirror_column = true AND
-    c.source_column_name IS NOT NULL
+    table_meta_id = ${PARAM_TABLE_META_ID} AND 
+    mirror_column = true AND
+    source_column_name IS NOT NULL
 ORDER BY 
-    c.source_column_name ASC</custom_sql>
+    source_column_name ASC</custom_sql>
       <add_rows_result>N</add_rows_result>
       <clear_result_rows>Y</clear_result_rows>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>608</xloc>
-      <yloc>272</yloc>
+      <yloc>288</yloc>
     </entry>
     <entry>
       <name>jb_log_error 1</name>
@@ -655,7 +656,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>1</nr>
       <xloc>816</xloc>
-      <yloc>272</yloc>
+      <yloc>288</yloc>
     </entry>
     <entry>
       <name>Success</name>
@@ -665,7 +666,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>944</xloc>
-      <yloc>272</yloc>
+      <yloc>288</yloc>
     </entry>
     <entry>
       <name>Is there primary key metadata for this table?</name>
@@ -679,30 +680,26 @@ ORDER BY
       <is_custom_sql>Y</is_custom_sql>
       <is_usevars>Y</is_usevars>
       <custom_sql>SELECT
-    c.target_column_name AS "key_col_name", 
+    target_column_name AS "key_col_name", 
     '=' AS "key_field_value_comparator",
     -- "Stream field2" is not used in the "Update" step. Nevertheless, we must set 
     -- it to something or an error is thrown during ETL metadata injection. The
     -- only solution I have found is to inject an empty string for this field.
-    '' AS "no_field"
+    '' AS "no_field" 
 FROM 
-    etl.column_meta c 
-INNER JOIN 
-    etl.table_meta t ON t.table_meta_id = c.table_meta_id 
+    etl.column_meta 
 WHERE 
-    t.source_db_id = ${PARAM_SOURCE_DB_ID} AND 
-    t.target_schema_name = '${PARAM_TARGET_SCHEMA}' AND 
-    t.target_table_name = '${PARAM_TARGET_TABLE}'  AND 
-    c.is_primary_key_column = true
+    table_meta_id = ${PARAM_TABLE_META_ID} AND 
+    is_primary_key_column = true
 ORDER BY 
-    c.primary_key_column_order</custom_sql>
+    primary_key_column_order</custom_sql>
       <add_rows_result>N</add_rows_result>
       <clear_result_rows>Y</clear_result_rows>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>1</nr>
       <xloc>608</xloc>
-      <yloc>368</yloc>
+      <yloc>384</yloc>
     </entry>
     <entry>
       <name>jb_log_error 2</name>
@@ -741,7 +738,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>2</nr>
       <xloc>816</xloc>
-      <yloc>368</yloc>
+      <yloc>384</yloc>
     </entry>
     <entry>
       <name>Is there updatable column metadata for this table?</name>
@@ -755,26 +752,22 @@ ORDER BY
       <is_custom_sql>Y</is_custom_sql>
       <is_usevars>Y</is_usevars>
       <custom_sql>SELECT
-    c.target_column_name AS "target_col_name" 
+    target_column_name AS "target_col_name" 
 FROM 
-    etl.column_meta c 
-INNER JOIN 
-    etl.table_meta t ON t.table_meta_id = c.table_meta_id 
+    etl.column_meta  
 WHERE 
-    t.source_db_id = ${PARAM_SOURCE_DB_ID} AND 
-    t.target_schema_name = '${PARAM_TARGET_SCHEMA}' AND 
-    t.target_table_name = '${PARAM_TARGET_TABLE}'  AND 
-    c.mirror_column = true AND
-    c.is_updatable_column = true
+    table_meta_id = ${PARAM_TABLE_META_ID} AND 
+    mirror_column = true AND
+    is_updatable_column = true 
 ORDER BY 
-    c.target_column_name ASC</custom_sql>
+    target_column_name ASC</custom_sql>
       <add_rows_result>N</add_rows_result>
       <clear_result_rows>Y</clear_result_rows>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>1</nr>
       <xloc>608</xloc>
-      <yloc>464</yloc>
+      <yloc>480</yloc>
     </entry>
     <entry>
       <name>jb_log_error 3</name>
@@ -813,7 +806,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>2</nr>
       <xloc>816</xloc>
-      <yloc>464</yloc>
+      <yloc>480</yloc>
     </entry>
     <entry>
       <name>tr_set_last_updated_on_colname_vrbl</name>
@@ -850,7 +843,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>608</xloc>
-      <yloc>560</yloc>
+      <yloc>576</yloc>
     </entry>
     <entry>
       <name>jb_log_error 4</name>
@@ -889,7 +882,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>816</xloc>
-      <yloc>560</yloc>
+      <yloc>576</yloc>
     </entry>
     <entry>
       <name>tr_set_inserted_colnames_vrbls</name>
@@ -926,7 +919,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>608</xloc>
-      <yloc>656</yloc>
+      <yloc>672</yloc>
     </entry>
     <entry>
       <name>jb_log_error 5</name>
@@ -965,7 +958,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>816</xloc>
-      <yloc>656</yloc>
+      <yloc>672</yloc>
     </entry>
     <entry>
       <name>DUMMY</name>
@@ -985,7 +978,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>816</xloc>
-      <yloc>848</yloc>
+      <yloc>864</yloc>
     </entry>
   </entries>
   <hops>
@@ -1199,11 +1192,12 @@ mirrors a table from a source database. This job has parameters:
 	PARAM_SOURCE_SCHEMA		Name of schema containing source table to mirror to target table
 	PARAM_SOURCE_TABLE		Name of source table to mirror to target table
 	PARAM_TARGET_SCHEMA		Name of schema containing target table to update (not currently used)
-	PARAM_TARGET_TABLE			Name of target table to update (not currently used)</note>
+	PARAM_TARGET_TABLE			Name of target table to update (not currently used)
+	PARAM_TABLE_META_ID		Primary key of etl.table_meta row for "source" table from which rows will be deleted</note>
       <xloc>16</xloc>
       <yloc>0</yloc>
       <width>727</width>
-      <heigth>150</heigth>
+      <heigth>164</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -1224,7 +1218,7 @@ mirrors a table from a source database. This job has parameters:
 current job. This records which mirror algorithm was used, as well as when the 
 mirroring was performed.</note>
       <xloc>16</xloc>
-      <yloc>832</yloc>
+      <yloc>848</yloc>
       <width>467</width>
       <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
@@ -1249,7 +1243,7 @@ execution has failed. It will then direct
 the execution flow to the job that 
 sends out failure e-mails.</note>
       <xloc>992</xloc>
-      <yloc>496</yloc>
+      <yloc>512</yloc>
       <width>232</width>
       <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
@@ -1274,7 +1268,7 @@ the case where no column mapping
 metdata is provided for the table. This
 may not be the best behaviour.</note>
       <xloc>992</xloc>
-      <yloc>256</yloc>
+      <yloc>272</yloc>
       <width>252</width>
       <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
@@ -1300,7 +1294,7 @@ This step  is passed the additional parameters:
 	PARAM_INSERTED_ON_COLNAME
 	PARAM_LAST_UPDATED_ON_COLNAME</note>
       <xloc>16</xloc>
-      <yloc>720</yloc>
+      <yloc>736</yloc>
       <width>429</width>
       <heigth>94</heigth>
       <fontname>Ubuntu</fontname>
@@ -1329,7 +1323,7 @@ occur is if a table is marked for mirroring, but no column mapping
 metadata is provided - this should never occur, but we check in order to 
 provide a warning message, rather than letting PDI choke on this problem.</note>
       <xloc>16</xloc>
-      <yloc>208</yloc>
+      <yloc>224</yloc>
       <width>445</width>
       <heigth>136</heigth>
       <fontname>Ubuntu</fontname>
@@ -1352,7 +1346,7 @@ provide a warning message, rather than letting PDI choke on this problem.</note>
 tr_mirrored_updatable_table-inject_meta-update
 that is executed below (same reason as above).</note>
       <xloc>16</xloc>
-      <yloc>368</yloc>
+      <yloc>384</yloc>
       <width>367</width>
       <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
@@ -1375,7 +1369,7 @@ that is executed below (same reason as above).</note>
 tr_mirrored_updatable_table-inject_meta-update
 that is executed below (same reason as above).</note>
       <xloc>16</xloc>
-      <yloc>464</yloc>
+      <yloc>480</yloc>
       <width>367</width>
       <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
@@ -1399,7 +1393,7 @@ column from the source table that functions as a "last_updated_on"
 column. This value is passed as a parameter to the job entry 
 tr_mirrored_updatable_table-inject_meta-update below.</note>
       <xloc>16</xloc>
-      <yloc>544</yloc>
+      <yloc>560</yloc>
       <width>424</width>
       <heigth>66</heigth>
       <fontname>Ubuntu</fontname>
@@ -1423,7 +1417,7 @@ to the names of the columns from the source table that function as
 "insert_id" &amp; "inserted_on" column. These values are passed as parameters
 to the job entry tr_mirrored_updatable_table-inject_meta-update below.</note>
       <xloc>16</xloc>
-      <yloc>640</yloc>
+      <yloc>656</yloc>
       <width>450</width>
       <heigth>66</heigth>
       <fontname>Ubuntu</fontname>
