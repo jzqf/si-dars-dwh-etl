@@ -474,7 +474,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/07/17 07:01:29.998</modified_date>
+    <modified_date>2017/08/24 09:26:09.572</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -486,7 +486,7 @@ It is important to sort these rows chronologically (by either the "insert_id" or
 fails in the middle somewhere and if this transaction does not run in a single transaction, then next time this transformation is 
 executed, we want to start again where we left off (by computing, e.g., MAX(insert_id) for the PSA table).</note>
       <xloc>272</xloc>
-      <yloc>432</yloc>
+      <yloc>640</yloc>
       <width>765</width>
       <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
@@ -529,7 +529,7 @@ it takes a long time for this transformation to end. During this period the "Pau
 running" top" shows that both "postgres"and "java" processes are actively using a 25-75% of the CPU. When this CPU usage stops, 
 the  "Pause" and "Stop" buttons become disabled, showing that the transformation is finally finished. Strange.</note>
       <xloc>272</xloc>
-      <yloc>656</yloc>
+      <yloc>864</yloc>
       <width>773</width>
       <heigth>332</heigth>
       <fontname>Ubuntu</fontname>
@@ -551,7 +551,7 @@ the  "Pause" and "Stop" buttons become disabled, showing that the transformation
       <note>Get batch ID for current transformation. This will be stored in the PSA table for auditing/logging. This step *must* come after the
 "Map column names" step because the metadata injected into that step does not include this column/field.</note>
       <xloc>272</xloc>
-      <yloc>592</yloc>
+      <yloc>800</yloc>
       <width>764</width>
       <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
@@ -671,7 +671,7 @@ passed to it in the normal fashion because it is a normal transformation (all me
     <notepad>
       <note>Uses "SELECT *" -></note>
       <xloc>0</xloc>
-      <yloc>448</yloc>
+      <yloc>656</yloc>
       <width>117</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -692,7 +692,7 @@ passed to it in the normal fashion because it is a normal transformation (all me
     <notepad>
       <note>Select and possibly map/rename fields (table column names), as appropriate.</note>
       <xloc>272</xloc>
-      <yloc>528</yloc>
+      <yloc>736</yloc>
       <width>462</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -713,7 +713,7 @@ passed to it in the normal fashion because it is a normal transformation (all me
     <notepad>
       <note>Metadata injected -></note>
       <xloc>0</xloc>
-      <yloc>528</yloc>
+      <yloc>736</yloc>
       <width>130</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -734,7 +734,7 @@ passed to it in the normal fashion because it is a normal transformation (all me
     <notepad>
       <note>Metadata injected -></note>
       <xloc>0</xloc>
-      <yloc>880</yloc>
+      <yloc>1088</yloc>
       <width>130</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -752,7 +752,122 @@ passed to it in the normal fashion because it is a normal transformation (all me
       <bordercolorblue>100</bordercolorblue>
       <drawshadow>Y</drawshadow>
     </notepad>
+    <notepad>
+      <note>This step is only for generating the SQL for creating a new table using the "SQL" button of the "Table output" step below. To do this:
+	1.	Create a new copy of this transformation by entering a value for "Optional target file" in the "ETL Metadata Injection" step in
+		/psa/tr_mirrored_updatable_table-inject_meta-update. Run that transformation, supplying the appropriate parameter values,
+		to create the new copy. Steps 2-6  below must be performed with this *new* transformation that has had all metadata injected.
+	2.	Disable the hop from the "Get max "insert_id" for ..." step and enable the hop from the "Set max ID = -1" step.
+	3.	Disable the hop to the "Table output" step below, as well as all following downstream hops.
+	4.	Preview the "Set etl_batch_id_last_update..." step, providing appropriate values for all parameters. Ensure that the expected  
+		rows are displayed.
+	5.	Re-enable the hop to the "Table output" step below.
+	6.	Double-click the "Table output" step and then click the "SQL" button to generate the appropriete SQL to create the table. 
+		The schema and table names that you specified in step 3 above will be used to generate the SQL DDL commands for that table.
+		Before executing the SQL, modify it where appropriate. For example, replace "UNKNOWN" for timestamp columns with 
+		"timestamp without time zone" or "bytea", add declaration for column "etl_batch_id_last_update", primary key constraint, ...</note>
+      <xloc>272</xloc>
+      <yloc>432</yloc>
+      <width>799</width>
+      <heigth>192</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>A primary key 
+constraint or a
+unique constraint
+on primary key
+column(s) is 
+
+
+*required* in 
+order for error 
+handling to be 
+triggered here!</note>
+      <xloc>0</xloc>
+      <yloc>864</yloc>
+      <width>108</width>
+      <heigth>164</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>Y</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>255</backgroundcolorgreen>
+      <backgroundcolorblue>0</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
   </notepads>
+  <connection>
+    <name>dma_db</name>
+    <server>${QF_DMA_DB_HOST}</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>${QF_DMA_DB_DATABASE}</database>
+    <port>${QF_DMA_DB_PORT}</port>
+    <username>${QF_DMA_DB_USERNAME}</username>
+    <password>${QF_DMA_DB_PASSWORD}</password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>${QF_DMA_DB_PORT}</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
   <connection>
     <name>logging_db</name>
     <server>${QF_LOGGING_DB_HOST}</server>
@@ -942,6 +1057,11 @@ passed to it in the normal fashion because it is a normal transformation (all me
       <to>Map column names</to>
       <enabled>Y</enabled>
     </hop>
+    <hop>
+      <from>Set max ID = -1</from>
+      <to>Write to log: parameters, max_id</to>
+      <enabled>N</enabled>
+    </hop>
   </order>
   <step>
     <name>Get max "insert_id" for: PSA.schema.table</name>
@@ -1001,7 +1121,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>528</yloc>
+      <yloc>736</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1031,7 +1151,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>592</yloc>
+      <yloc>800</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1061,7 +1181,40 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>800</yloc>
+      <yloc>1008</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Set max ID = -1</name>
+    <type>TableInput</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <connection>dma_db</connection>
+    <sql>SELECT
+    ${QF_ARCHIVE_ID_LOWER_BOUND} AS max_id
+</sql>
+    <limit>0</limit>
+    <lookup />
+    <execute_each_row>N</execute_each_row>
+    <variables_active>Y</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>208</xloc>
+      <yloc>480</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1084,12 +1237,16 @@ FROM
 WHERE
     (
         ${PARAM_INSERT_ID_COLNAME} > ?                                  -- newly INSERTed rows
-        --${PARAM_INSERTED_ON_COLNAME} >  '${PARAM_CDC_LAST_LOAD}' AND  -- alternate possibility, instead of the previous line
+        --${PARAM_INSERTED_ON_COLNAME} >  '${PARAM_CDC_LAST_LOAD}'      -- alternate possibility, instead of the previous line
         OR ${PARAM_LAST_UPDATED_ON_COLNAME} >= '${PARAM_CDC_LAST_LOAD}' -- updated rows (may include rows updated on previous run that have
                                                                         -- ${PARAM_LAST_UPDATED_ON_COLNAME} = '${PARAM_CDC_LAST_LOAD}' due
                                                                         -- to the finite resolution of timestamp values)
     )
 	AND ${PARAM_INSERTED_ON_COLNAME} &lt;= '${PARAM_CDC_CURRENT_LOAD}'     -- to avoid loading rows that are inserted after the job starts
+	AND (
+	        ${PARAM_LAST_UPDATED_ON_COLNAME} IS NULL OR                       -- rows that have been inserted but not modified
+	        ${PARAM_LAST_UPDATED_ON_COLNAME} &lt;= '${PARAM_CDC_CURRENT_LOAD}'   -- to avoid loading rows that are modified after the job starts
+	    )
 ORDER BY
     ${PARAM_INSERT_ID_COLNAME}</sql>
     <limit>0</limit>
@@ -1106,7 +1263,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>448</yloc>
+      <yloc>656</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1149,7 +1306,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>704</yloc>
+      <yloc>912</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1183,7 +1340,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>880</yloc>
+      <yloc>1088</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1223,7 +1380,7 @@ PARAM_TARGET_TABLE     = ${PARAM_TARGET_TABLE}</logmessage>
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>352</yloc>
+      <yloc>560</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

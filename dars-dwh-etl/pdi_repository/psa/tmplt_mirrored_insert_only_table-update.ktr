@@ -469,7 +469,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/07/05 13:48:18.152</modified_date>
+    <modified_date>2017/08/23 13:35:52.765</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -633,19 +633,19 @@ This transformation has parameters:
       <note>This step is only for generating the SQL for creating a new table using the "SQL" button of the "Table output" step below. To do this:
 	1.	Create a new copy of this transformation by entering a value for "Optional target file" in the "ETL Metadata Injection" step in
 		/psa/tr_mirrored_insert_only_table-inject_meta-update. Run that transformation, supplying the appropriate parameter values,
-		to create this new copy. Steps 2-6  below must be performed with this *new* transformation that has had all metadata injected.
+		to create this new copy. Steps 2-6  below must be performed with the *new* transformation that has had all metadata injected.
 	2.	Disable the hop from the "Get max ID for ..." step and enable the hop from the "Set max ID = -1" step.
 	3.	Disable the hop to the "Table output" step below.
-	4.	Preview the "Get System Info" step, specifying the required schema and table names for the appropriate parameters and the 
-		value '2100.01.01 00:00:00' for the parameter PARAM_CDC_CURRENT_LOAD. Ensure that the expected rows are displayed.
+	4.	Preview the "Set etl_batch_id_insert..." step, providing appropriate values for all parameters. Ensure that the expected rows 
+		are displayed.
 	5.	Re-enable the hop to the "Table output" step below.
 	6.	Double-click the "Table output" step and then click the "SQL" button to generate the appropriete SQL to create the table. 
 		The schema and table names that you specified in step 3 above will be used to generate the SQL DDL commands for that table.
 		Before executing the SQL, modify it where appropriate. For example, replace "UNKNOWN" for timestamp columns with 
-		"timestamp without time zone", ...</note>
+		"timestamp without time zone" or "bytea", primary key constraint, ...</note>
       <xloc>304</xloc>
       <yloc>416</yloc>
-      <width>801</width>
+      <width>799</width>
       <heigth>192</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -1218,12 +1218,14 @@ ORDER BY
     <limitRows>N</limitRows>
     <limitRowsNumber>0</limitRowsNumber>
     <logmessage>tmplt_mirrored_insert_only_table-update:
-PPARAM_CDC_LAST_LOAD    = ${PARAM_CDC_LAST_LOAD}
-PARAM_CDC_CURRENT_LOAD = ${PARAM_CDC_CURRENT_LOAD}
-PARAM_SOURCE_SCHEMA    = ${PARAM_SOURCE_SCHEMA}
-PARAM_SOURCE_TABLE     = ${PARAM_SOURCE_TABLE}
-PARAM_TARGET_SCHEMA    = ${PARAM_TARGET_SCHEMA}
-PARAM_TARGET_TABLE     = ${PARAM_TARGET_TABLE}</logmessage>
+PPARAM_CDC_LAST_LOAD      = ${PARAM_CDC_LAST_LOAD}
+PARAM_CDC_CURRENT_LOAD    = ${PARAM_CDC_CURRENT_LOAD}
+PARAM_INSERTED_ON_COLNAME = ${PARAM_INSERTED_ON_COLNAME}
+PARAM_INSERT_ID_COLNAME   = ${PARAM_INSERT_ID_COLNAME}   
+PARAM_SOURCE_SCHEMA       = ${PARAM_SOURCE_SCHEMA}
+PARAM_SOURCE_TABLE        = ${PARAM_SOURCE_TABLE}
+PARAM_TARGET_SCHEMA       = ${PARAM_TARGET_SCHEMA}
+PARAM_TARGET_TABLE        = ${PARAM_TARGET_TABLE}</logmessage>
     <fields>
       <field>
         <name>max_id</name>

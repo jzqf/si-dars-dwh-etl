@@ -10,7 +10,7 @@
     <parameters>
       <parameter>
         <name>PARAM_SOURCE_DB_ID</name>
-        <default_value>1</default_value>
+        <default_value />
         <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
       </parameter>
       <parameter>
@@ -444,7 +444,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/08/11 12:48:13.052</modified_date>
+    <modified_date>2017/08/17 11:49:04.981</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -655,6 +655,34 @@ etl.table_meta row. This Abort will warn the user of problem.</note>
     </hop>
   </order>
   <step>
+    <name>Abort: No etl.table_meta row found</name>
+    <type>Abort</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <row_threshold>0</row_threshold>
+    <message>No etl.table_meta row loaded for table ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</message>
+    <always_log_rows>Y</always_log_rows>
+    <abort_with_error>Y</abort_with_error>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>384</xloc>
+      <yloc>416</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
     <name>Copy rows to result</name>
     <type>RowsToResult</type>
     <description />
@@ -675,6 +703,30 @@ etl.table_meta row. This Abort will warn the user of problem.</note>
     <GUI>
       <xloc>624</xloc>
       <yloc>304</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Detect empty stream</name>
+    <type>DetectEmptyStream</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>160</xloc>
+      <yloc>416</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -751,58 +803,6 @@ PARAM_SOURCE_TABLE  = ${PARAM_SOURCE_TABLE}</logmessage>
     <GUI>
       <xloc>384</xloc>
       <yloc>304</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Detect empty stream</name>
-    <type>DetectEmptyStream</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>160</xloc>
-      <yloc>416</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Abort: No etl.table_meta row found</name>
-    <type>Abort</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <row_threshold>0</row_threshold>
-    <message>No etl.table_meta row loaded for table ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</message>
-    <always_log_rows>Y</always_log_rows>
-    <abort_with_error>Y</abort_with_error>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>384</xloc>
-      <yloc>416</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
