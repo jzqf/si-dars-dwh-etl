@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/07/17 14:32:23.354</modified_date>
+  <modified_date>2017/08/25 10:25:06.533</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_LAST_LOAD_TIMESTAMP</name>
@@ -39,6 +39,11 @@
       <name>PARAM_SOURCE_TABLE</name>
       <default_value>image</default_value>
       <description>Name of source table to mirror to target table</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_TABLE_META_ID</name>
+      <default_value>0</default_value>
+      <description>Primary key of etl.table_meta row for "source" table from which rows will be deleted</description>
     </parameter>
     <parameter>
       <name>PARAM_TARGET_SCHEMA</name>
@@ -451,7 +456,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>304</xloc>
-      <yloc>208</yloc>
+      <yloc>224</yloc>
     </entry>
     <entry>
       <name>tr_psa_mirrored_table-inject_meta-compare</name>
@@ -508,7 +513,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>544</xloc>
-      <yloc>960</yloc>
+      <yloc>976</yloc>
     </entry>
     <entry>
       <name>jb_log_error 6</name>
@@ -547,7 +552,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>304</xloc>
-      <yloc>960</yloc>
+      <yloc>976</yloc>
     </entry>
     <entry>
       <name>Abort job</name>
@@ -558,7 +563,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>96</xloc>
-      <yloc>560</yloc>
+      <yloc>576</yloc>
     </entry>
     <entry>
       <name>Are there columns to compare for this table?</name>
@@ -572,27 +577,23 @@
       <is_custom_sql>Y</is_custom_sql>
       <is_usevars>Y</is_usevars>
       <custom_sql>SELECT
-    c.source_column_name AS "source_col_name" 
+    source_column_name AS "source_col_name" 
 FROM 
-    etl.column_meta c 
-INNER JOIN 
-    etl.table_meta t ON t.table_meta_id = c.table_meta_id 
+    etl.column_meta 
 WHERE 
-    t.source_db_id = ${PARAM_SOURCE_DB_ID} AND 
-    t.source_schema_name = '${PARAM_SOURCE_SCHEMA}' AND 
-    t.source_table_name = '${PARAM_SOURCE_TABLE}'  AND 
+    table_meta_id = ${PARAM_TABLE_META_ID} AND 
     -- Although the primary key columns don't need to ne compared, they
     -- are needed by the "Merge Rows" step so they are included here.
-    (c.compare_column=true OR c.is_primary_key_column=true)
+    (compare_column=true OR is_primary_key_column=true) 
 ORDER BY 
-    c.column_meta_id ASC  -- must use the same sort order in "Target column names to compare"</custom_sql>
+    column_meta_id ASC  -- must use the same sort order in "Target column names to compare"</custom_sql>
       <add_rows_result>N</add_rows_result>
       <clear_result_rows>Y</clear_result_rows>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>544</xloc>
-      <yloc>320</yloc>
+      <yloc>336</yloc>
     </entry>
     <entry>
       <name>jb_log_error 1</name>
@@ -631,7 +632,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>1</nr>
       <xloc>304</xloc>
-      <yloc>320</yloc>
+      <yloc>336</yloc>
     </entry>
     <entry>
       <name>Success 2</name>
@@ -641,7 +642,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>96</xloc>
-      <yloc>320</yloc>
+      <yloc>336</yloc>
     </entry>
     <entry>
       <name>Write To Log: Parameters</name>
@@ -662,7 +663,7 @@ PARAM_TARGET_SCHEMA_TABLE = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>544</xloc>
-      <yloc>208</yloc>
+      <yloc>224</yloc>
     </entry>
     <entry>
       <name>Success</name>
@@ -672,7 +673,7 @@ PARAM_TARGET_SCHEMA_TABLE = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>544</xloc>
-      <yloc>1056</yloc>
+      <yloc>1072</yloc>
     </entry>
     <entry>
       <name>tr_psa_compare-get_insert_id_from_to</name>
@@ -719,7 +720,7 @@ PARAM_TARGET_SCHEMA_TABLE = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>544</xloc>
-      <yloc>608</yloc>
+      <yloc>624</yloc>
     </entry>
     <entry>
       <name>Log: "insert_id" "from" &amp; "to" values</name>
@@ -735,7 +736,7 @@ QF_MIRROR_COMPARE_INSERT_ID_TO   = ${QF_MIRROR_COMPARE_INSERT_ID_TO}
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>544</xloc>
-      <yloc>704</yloc>
+      <yloc>720</yloc>
     </entry>
     <entry>
       <name>jb_log_error 5</name>
@@ -774,7 +775,7 @@ QF_MIRROR_COMPARE_INSERT_ID_TO   = ${QF_MIRROR_COMPARE_INSERT_ID_TO}
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>304</xloc>
-      <yloc>704</yloc>
+      <yloc>720</yloc>
     </entry>
     <entry>
       <name>jb_log_error 4</name>
@@ -813,7 +814,7 @@ QF_MIRROR_COMPARE_INSERT_ID_TO   = ${QF_MIRROR_COMPARE_INSERT_ID_TO}
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>304</xloc>
-      <yloc>608</yloc>
+      <yloc>624</yloc>
     </entry>
     <entry>
       <name>jb_log_error 2</name>
@@ -852,7 +853,7 @@ QF_MIRROR_COMPARE_INSERT_ID_TO   = ${QF_MIRROR_COMPARE_INSERT_ID_TO}
       <draw>Y</draw>
       <nr>2</nr>
       <xloc>304</xloc>
-      <yloc>416</yloc>
+      <yloc>432</yloc>
     </entry>
     <entry>
       <name>Are there primary key columns configured for this table?</name>
@@ -866,25 +867,21 @@ QF_MIRROR_COMPARE_INSERT_ID_TO   = ${QF_MIRROR_COMPARE_INSERT_ID_TO}
       <is_custom_sql>Y</is_custom_sql>
       <is_usevars>Y</is_usevars>
       <custom_sql>SELECT
-    c.source_column_name AS "key_col_name" 
+    source_column_name AS "key_col_name" 
 FROM 
-    etl.column_meta c 
-INNER JOIN 
-    etl.table_meta t ON t.table_meta_id = c.table_meta_id 
+    etl.column_meta 
 WHERE 
-    t.source_db_id = ${PARAM_SOURCE_DB_ID} AND 
-    t.source_schema_name = '${PARAM_SOURCE_SCHEMA}' AND 
-    t.source_table_name = '${PARAM_SOURCE_TABLE}'  AND 
-    c.is_primary_key_column = true
+    table_meta_id = ${PARAM_TABLE_META_ID} AND 
+    is_primary_key_column = true
 ORDER BY 
-    c.primary_key_column_order</custom_sql>
+    primary_key_column_order</custom_sql>
       <add_rows_result>N</add_rows_result>
       <clear_result_rows>Y</clear_result_rows>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>1</nr>
       <xloc>544</xloc>
-      <yloc>416</yloc>
+      <yloc>432</yloc>
     </entry>
     <entry>
       <name>tr_set_inserted_colnames_vrbls</name>
@@ -921,7 +918,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>544</xloc>
-      <yloc>512</yloc>
+      <yloc>528</yloc>
     </entry>
     <entry>
       <name>jb_log_error 3</name>
@@ -960,7 +957,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>304</xloc>
-      <yloc>512</yloc>
+      <yloc>528</yloc>
     </entry>
   </entries>
   <hops>
@@ -1176,11 +1173,12 @@ This job has parameters:
 	PARAM_TARGET_SCHEMA				Name of schema containing target table to update (not currently used)
 	PARAM_TARGET_TABLE					Name of target table to update (not currently used)
 	PARAM_TARGET_SCHEMA_TABLE		${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}
-	PARAM_MAX_NUM_COMPARE_ROWS	Maximum number of rows that will be compared for these tables. 0 means *all* rows.</note>
+	PARAM_MAX_NUM_COMPARE_ROWS	Maximum number of rows that will be compared for these tables. 0 means *all* rows
+	PARAM_TABLE_META_ID				Primary key of etl.table_meta row for "source" table from which rows will be deleted</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
       <width>809</width>
-      <heigth>178</heigth>
+      <heigth>192</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -1201,7 +1199,7 @@ This job has parameters:
 root calling job that execution
 has failed.</note>
       <xloc>0</xloc>
-      <yloc>608</yloc>
+      <yloc>624</yloc>
       <width>200</width>
       <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
@@ -1227,7 +1225,7 @@ tables for the case where no
 column mapping metdata is
 provided for the table.</note>
       <xloc>0</xloc>
-      <yloc>368</yloc>
+      <yloc>384</yloc>
       <width>212</width>
       <heigth>94</heigth>
       <fontname>Ubuntu</fontname>
@@ -1256,7 +1254,7 @@ In addition to the parameters passed to the current job, this transformation is 
 	PARAM_INSERTED_ON_COLNAME	= ${QF_INSERTED_ON_COLNAME}
 </note>
       <xloc>736</xloc>
-      <yloc>912</yloc>
+      <yloc>928</yloc>
       <width>585</width>
       <heigth>136</heigth>
       <fontname>Ubuntu</fontname>
@@ -1283,7 +1281,7 @@ available here before executing that transformation. The only reason why this ca
 a table is marked for mirroring, but no column mapping metdata is provided - this should never occur,
 but we check in order to provide a warning message, rather than letting PDI choke on this problem.</note>
       <xloc>736</xloc>
-      <yloc>272</yloc>
+      <yloc>288</yloc>
       <width>605</width>
       <heigth>108</heigth>
       <fontname>Ubuntu</fontname>
@@ -1325,7 +1323,7 @@ In addition to the parameters passed to the current job, this transformation is 
 	PARAM_INSERT_ID_COLNAME		= ${QF_INSERT_ID_COLNAME}
 	PARAM_INSERTED_ON_COLNAME	= ${QF_INSERTED_ON_COLNAME}</note>
       <xloc>736</xloc>
-      <yloc>576</yloc>
+      <yloc>592</yloc>
       <width>615</width>
       <heigth>318</heigth>
       <fontname>Ubuntu</fontname>
@@ -1349,7 +1347,7 @@ in the transformation "tr_psa_mirrored_table-inject_meta-compare" that is execut
 to avoid a PDI runtime error that would occur if no primary key column metadata is availalbe for ETL
 metadata injection. The explanation is the same as that described for the previous step above.</note>
       <xloc>736</xloc>
-      <yloc>400</yloc>
+      <yloc>416</yloc>
       <width>605</width>
       <heigth>66</heigth>
       <fontname>Ubuntu</fontname>
@@ -1373,7 +1371,7 @@ to the names of the columns from the source table that function as
 "insert_id" &amp; "inserted_on" column. These values are passed as parameters
 to the job entry tr_psa_mirrored_table-inject_meta-compare below.</note>
       <xloc>736</xloc>
-      <yloc>496</yloc>
+      <yloc>512</yloc>
       <width>450</width>
       <heigth>66</heigth>
       <fontname>Ubuntu</fontname>
