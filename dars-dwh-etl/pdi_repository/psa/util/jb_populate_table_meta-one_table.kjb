@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/08/17 12:00:25.204</modified_date>
+  <modified_date>2017/08/27 14:06:10.007</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_SOURCE_DB_ID</name>
@@ -24,6 +24,11 @@
       <name>PARAM_SOURCE_TABLE</name>
       <default_value>image</default_value>
       <description>Name of source table to mirror to target table</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_TARGET_DB_ID</name>
+      <default_value />
+      <description>ID of the "target" database to which the "source" DB tables will be archived/mirrored</description>
     </parameter>
   </parameters>
   <connection>
@@ -370,7 +375,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>128</xloc>
-      <yloc>192</yloc>
+      <yloc>208</yloc>
     </entry>
     <entry>
       <name>tr_populate_table_meta-one_table</name>
@@ -407,7 +412,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>128</xloc>
-      <yloc>368</yloc>
+      <yloc>384</yloc>
     </entry>
     <entry>
       <name>Write parameters to log</name>
@@ -417,6 +422,7 @@
 PARAM_SOURCE_DB_ID  = ${PARAM_SOURCE_DB_ID}
 PARAM_SOURCE_SCHEMA = ${PARAM_SOURCE_SCHEMA}
 PARAM_SOURCE_TABLE  = ${PARAM_SOURCE_TABLE}
+PARAM_TARGET_DB_ID  = ${PARAM_TARGET_DB_ID}
  </logmessage>
       <loglevel>Basic</loglevel>
       <logsubject>Parameters passed to jb_populate_table_meta-one_table:</logsubject>
@@ -424,7 +430,7 @@ PARAM_SOURCE_TABLE  = ${PARAM_SOURCE_TABLE}
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>128</xloc>
-      <yloc>272</yloc>
+      <yloc>288</yloc>
     </entry>
     <entry>
       <name>tr_populate_table_meta-get_table_meta_id</name>
@@ -461,7 +467,7 @@ PARAM_SOURCE_TABLE  = ${PARAM_SOURCE_TABLE}
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>128</xloc>
-      <yloc>464</yloc>
+      <yloc>480</yloc>
     </entry>
     <entry>
       <name>tr_populate_column_meta-one_table</name>
@@ -503,7 +509,7 @@ PARAM_SOURCE_TABLE  = ${PARAM_SOURCE_TABLE}
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>128</xloc>
-      <yloc>560</yloc>
+      <yloc>576</yloc>
     </entry>
   </entries>
   <hops>
@@ -556,11 +562,12 @@ This transformation has parameters:
 
 	PARAM_SOURCE_DB_ID			ID the "source" database containing the table for generating table metadata
 	PARAM_SOURCE_SCHEMA		Name of schema containing source table for generating table metadata
-	PARAM_SOURCE_TABLE		Name of source table for generating table metatdata</note>
+	PARAM_SOURCE_TABLE		Name of source table for generating table metatdata
+	PARAM_TARGET_DB_ID			ID of the "target" database to which the "source" DB tables will be archived/mirrored</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>677</width>
-      <heigth>164</heigth>
+      <width>723</width>
+      <heigth>178</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -581,7 +588,7 @@ This transformation has parameters:
 This is placed in the stream and then copied to the "Result set" so that it can
 be accessed by the next transformation.</note>
       <xloc>288</xloc>
-      <yloc>464</yloc>
+      <yloc>480</yloc>
       <width>461</width>
       <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
@@ -603,7 +610,7 @@ be accessed by the next transformation.</note>
       <note>Create a new etl.table_meta row using the values of the parameters passed to
 this job.</note>
       <xloc>288</xloc>
-      <yloc>368</yloc>
+      <yloc>384</yloc>
       <width>468</width>
       <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
@@ -625,7 +632,7 @@ this job.</note>
       <note>Create a set of default etl.column_meta rows for the etl.table_meta row just created,
 one for each row of the table in the source (OBO) DB.</note>
       <xloc>288</xloc>
-      <yloc>560</yloc>
+      <yloc>576</yloc>
       <width>508</width>
       <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
