@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/08/27 11:35:05.038</modified_date>
+  <modified_date>2017/08/29 14:38:50.927</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CDC_CURRENT_LOAD</name>
@@ -19,6 +19,31 @@
       <name>PARAM_CDC_LAST_LOAD</name>
       <default_value />
       <description>Timestamp of last successful load from the source database</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_DB_DATABASE</name>
+      <default_value />
+      <description />
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_DB_HOST</name>
+      <default_value />
+      <description />
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_DB_PASSWORD</name>
+      <default_value />
+      <description />
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_DB_PORT</name>
+      <default_value />
+      <description />
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_DB_USERNAME</name>
+      <default_value />
+      <description />
     </parameter>
     <parameter>
       <name>PARAM_SOURCE_DB_ID</name>
@@ -404,8 +429,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>32</xloc>
-      <yloc>352</yloc>
+      <xloc>16</xloc>
+      <yloc>432</yloc>
     </entry>
     <entry>
       <name>Write To Log: Parameters</name>
@@ -426,8 +451,8 @@ PARAM_TARGET_SCHEMA_DOT_TABLE    = ${PARAM_TARGET_SCHEMA_DOT_TABLE}
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>176</xloc>
-      <yloc>352</yloc>
+      <xloc>160</xloc>
+      <yloc>432</yloc>
     </entry>
     <entry>
       <name>Success</name>
@@ -436,8 +461,8 @@ PARAM_TARGET_SCHEMA_DOT_TABLE    = ${PARAM_TARGET_SCHEMA_DOT_TABLE}
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>48</xloc>
-      <yloc>752</yloc>
+      <xloc>32</xloc>
+      <yloc>832</yloc>
     </entry>
     <entry>
       <name>Abort job - Untreated case</name>
@@ -447,8 +472,8 @@ PARAM_TARGET_SCHEMA_DOT_TABLE    = ${PARAM_TARGET_SCHEMA_DOT_TABLE}
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>176</xloc>
-      <yloc>752</yloc>
+      <xloc>160</xloc>
+      <yloc>832</yloc>
     </entry>
     <entry>
       <name>Table = targetschema.targettable ?</name>
@@ -469,8 +494,8 @@ PARAM_TARGET_SCHEMA_DOT_TABLE    = ${PARAM_TARGET_SCHEMA_DOT_TABLE}
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>176</xloc>
-      <yloc>512</yloc>
+      <xloc>160</xloc>
+      <yloc>592</yloc>
     </entry>
     <entry>
       <name>Log dispatched job name - 1</name>
@@ -482,8 +507,8 @@ PARAM_TARGET_SCHEMA_DOT_TABLE    = ${PARAM_TARGET_SCHEMA_DOT_TABLE}
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>384</xloc>
-      <yloc>512</yloc>
+      <xloc>368</xloc>
+      <yloc>592</yloc>
     </entry>
     <entry>
       <name>DUMMY</name>
@@ -502,8 +527,8 @@ PARAM_TARGET_SCHEMA_DOT_TABLE    = ${PARAM_TARGET_SCHEMA_DOT_TABLE}
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>624</xloc>
-      <yloc>512</yloc>
+      <xloc>608</xloc>
+      <yloc>592</yloc>
     </entry>
     <entry>
       <name>jb_log_error 1</name>
@@ -541,8 +566,8 @@ PARAM_TARGET_SCHEMA_DOT_TABLE    = ${PARAM_TARGET_SCHEMA_DOT_TABLE}
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>176</xloc>
-      <yloc>656</yloc>
+      <xloc>160</xloc>
+      <yloc>736</yloc>
     </entry>
     <entry>
       <name>Abort job</name>
@@ -552,8 +577,8 @@ PARAM_TARGET_SCHEMA_DOT_TABLE    = ${PARAM_TARGET_SCHEMA_DOT_TABLE}
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>1</nr>
-      <xloc>912</xloc>
-      <yloc>512</yloc>
+      <xloc>896</xloc>
+      <yloc>592</yloc>
     </entry>
     <entry>
       <name>jb_log_error - Simulated error</name>
@@ -591,8 +616,8 @@ PARAM_TARGET_SCHEMA_DOT_TABLE    = ${PARAM_TARGET_SCHEMA_DOT_TABLE}
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>1</nr>
-      <xloc>768</xloc>
-      <yloc>512</yloc>
+      <xloc>752</xloc>
+      <yloc>592</yloc>
     </entry>
   </entries>
   <hops>
@@ -694,6 +719,11 @@ The parameters PARAM_SOURCE_DB_ID, PARAM_CDC_LAST_LOAD &amp; PARAM_CDC_CURRENT_L
 The sub-job is RUN ONCE FOR EACH row returned by "tr_generic_mirrored_insert_only_tables-list_of_tables". As a result, each time the  sub-job is is run it is
 *also* passed the parameters:
 
+	PARAM_DYN_DB_CONN_DB_HOST			for "dynamic_postgres_db" database connection
+	PARAM_DYN_DB_CONN_DB_PORT			for "dynamic_postgres_db" database connection
+	PARAM_DYN_DB_CONN_DB_DATABASE		for "dynamic_postgres_db" database connection
+	PARAM_DYN_DB_CONN_DB_USERNAME		for "dynamic_postgres_db" database connection
+	PARAM_DYN_DB_CONN_DB_PASSWORD	for "dynamic_postgres_db" database connection
 	PARAM_SOURCE_SCHEMA					May not be needed since the job that will be run will be specific for the specified PSA table 
 	PARAM_SOURCE_TABLE					May not be needed since the job that will be run will be specific for the specified PSA table 
 	PARAM_SOURCE_SCHEMA_DOT_TABLE		May not be needed since the job that will be run will be specific for the specified PSA table 
@@ -706,7 +736,7 @@ This job acts as a "dispatcher" in that it runs the appropriate job/transformati
       <xloc>16</xloc>
       <yloc>0</yloc>
       <width>918</width>
-      <heigth>332</heigth>
+      <heigth>402</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -732,8 +762,8 @@ should also execute:
 
 in order to set a message that will be e-mailed, followed by an 
 "Abort job" entry to ensure further execution is aborted.</note>
-      <xloc>512</xloc>
-      <yloc>352</yloc>
+      <xloc>496</xloc>
+      <yloc>432</yloc>
       <width>415</width>
       <heigth>136</heigth>
       <fontname>Ubuntu</fontname>
@@ -762,8 +792,8 @@ The sub-job must finish by executing "jb_update_etl_table_meta_mirror_details",
 passing an appropriate value for the parameter PARAM_TABLE_MIRROR_TREATMENT_ID,
 which will probably be either QF_MIRROR_ALG_INSERT_ONLY_CUSTOM or 
 QF_MIRROR_ALG_INSERT_OR_UPDATE_CUSTOM.</note>
-      <xloc>480</xloc>
-      <yloc>624</yloc>
+      <xloc>464</xloc>
+      <yloc>704</yloc>
       <width>568</width>
       <heigth>150</heigth>
       <fontname>Ubuntu</fontname>
@@ -785,8 +815,8 @@ QF_MIRROR_ALG_INSERT_OR_UPDATE_CUSTOM.</note>
       <note>See "jb_psa_mark_rows_for_deletion-custom" for ideas
 on how to implement sub-jobs here for custom,
 table-specific archiving/mirroring algorithms.</note>
-      <xloc>480</xloc>
-      <yloc>560</yloc>
+      <xloc>464</xloc>
+      <yloc>640</yloc>
       <width>356</width>
       <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
