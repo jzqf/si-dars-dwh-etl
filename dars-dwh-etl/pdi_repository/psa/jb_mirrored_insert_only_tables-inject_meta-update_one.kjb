@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/08/29 14:40:08.957</modified_date>
+  <modified_date>2017/08/29 15:46:33.742</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CDC_CURRENT_LOAD</name>
@@ -517,7 +517,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>832</xloc>
+      <xloc>880</xloc>
       <yloc>544</yloc>
     </entry>
     <entry>
@@ -556,7 +556,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>832</xloc>
+      <xloc>880</xloc>
       <yloc>640</yloc>
     </entry>
     <entry>
@@ -595,7 +595,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>1040</xloc>
+      <xloc>1088</xloc>
       <yloc>544</yloc>
     </entry>
     <entry>
@@ -606,7 +606,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>1120</xloc>
+      <xloc>1168</xloc>
       <yloc>448</yloc>
     </entry>
     <entry>
@@ -675,7 +675,7 @@ ORDER BY
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>1</nr>
-      <xloc>832</xloc>
+      <xloc>880</xloc>
       <yloc>352</yloc>
     </entry>
     <entry>
@@ -685,7 +685,7 @@ ORDER BY
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>1120</xloc>
+      <xloc>1168</xloc>
       <yloc>352</yloc>
     </entry>
     <entry>
@@ -761,7 +761,7 @@ ORDER BY
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>832</xloc>
+      <xloc>880</xloc>
       <yloc>448</yloc>
     </entry>
     <entry>
@@ -781,30 +781,8 @@ ORDER BY
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>1120</xloc>
+      <xloc>1168</xloc>
       <yloc>640</yloc>
-    </entry>
-    <entry>
-      <name>Source DB = OBO OPR?</name>
-      <description />
-      <type>SIMPLE_EVAL</type>
-      <valuetype>variable</valuetype>
-      <fieldname />
-      <variablename>${PARAM_SOURCE_DB_ID}</variablename>
-      <fieldtype>number</fieldtype>
-      <mask />
-      <comparevalue>${QF_DB_ID_OBO_OPR}</comparevalue>
-      <minvalue />
-      <maxvalue />
-      <successcondition>equal</successcondition>
-      <successnumbercondition>equal</successnumbercondition>
-      <successbooleancondition>true</successbooleancondition>
-      <successwhenvarset>N</successwhenvarset>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>608</xloc>
-      <yloc>544</yloc>
     </entry>
     <entry>
       <name>jb_log_error - Untreated case</name>
@@ -862,8 +840,52 @@ ORDER BY
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>1120</xloc>
+      <xloc>1168</xloc>
       <yloc>784</yloc>
+    </entry>
+    <entry>
+      <name>jb_is_specified_db_type - PostgreSQL?</name>
+      <description />
+      <type>JOB</type>
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_is_specified_db_type</jobname>
+      <directory>/generic/dynamic_db_connections</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_DB_ID</name>
+          <stream_name />
+          <value>${PARAM_SOURCE_DB_ID}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_REQUIRED_DB_TYPE_ID</name>
+          <stream_name />
+          <value>${QF_DB_TYPE_ID_POSTGRESQL}</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>608</xloc>
+      <yloc>544</yloc>
     </entry>
   </entries>
   <hops>
@@ -976,33 +998,6 @@ ORDER BY
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>tr_set_inserted_colnames_vrbls</from>
-      <to>Source DB = OBO OPR?</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Source DB = OBO OPR?</from>
-      <to>tr_mirrored_insert_only_table-inject_meta-update</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Source DB = OBO OPR?</from>
-      <to>jb_log_error - Untreated case</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
       <from>jb_log_error - Untreated case</from>
       <to>DUMMY 2</to>
       <from_nr>0</from_nr>
@@ -1019,6 +1014,33 @@ ORDER BY
       <enabled>Y</enabled>
       <evaluation>Y</evaluation>
       <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>tr_set_inserted_colnames_vrbls</from>
+      <to>jb_is_specified_db_type - PostgreSQL?</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_is_specified_db_type - PostgreSQL?</from>
+      <to>tr_mirrored_insert_only_table-inject_meta-update</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_is_specified_db_type - PostgreSQL?</from>
+      <to>jb_log_error - Untreated case</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
     </hop>
   </hops>
   <notepads>
@@ -1087,7 +1109,7 @@ root calling job will know that
 execution has failed. It will then direct
 the execution flow to the job that 
 sends out failure e-mails.</note>
-      <xloc>1168</xloc>
+      <xloc>1216</xloc>
       <yloc>432</yloc>
       <width>232</width>
       <heigth>80</heigth>
@@ -1112,7 +1134,7 @@ attempting to update a target table for
 the case where no column mapping 
 metdata is provided for the table. This
 may not be the best behaviour.</note>
-      <xloc>1168</xloc>
+      <xloc>1216</xloc>
       <yloc>336</yloc>
       <width>252</width>
       <heigth>80</heigth>
@@ -1210,35 +1232,14 @@ to the job entry tr_mirrored_insert_only_table-inject_meta-update below.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>TODO: In order to treat additional "source" DBs, the dispatcher must 
-execute a different transformation that is identical to 
-
-	/psa/tr_mirrored_insert_only_table-inject_meta-update
-
-Except:
-
-1.	Rename copy to: tr_insert_only_xxxxxxxxxxxx_table-inject_meta-update_psa
-	where "xxxxxxxxxxxx" identifies the source DB, e.g., "odms".
-
-2.	All table input steps read from the "xxxxxxxxxxxx" DB instead of
-	the "obo" DB.
-
-*	This will require duplicating;
-
-		/psa/tmplt_mirrored_insert_only_table-update
-	
-	to create a new ETL template transformaton for the additional
-	"source" DB that we refer to by "xxxxxxxxxxxx". Name it:
-	
-		/psa/tmplt_insert_only_xxxxxxxxxxxx_table-update_psa
-	
-	where all table input steps read from the "xxxxxxxxxxxx" DB 
-	instead of the "obo" DB.
-</note>
-      <xloc>64</xloc>
-      <yloc>688</yloc>
-      <width>485</width>
-      <heigth>360</heigth>
+      <note>TODO: In order to treat additional "source" database types, e.g., "Oracle", we
+must test for that database tpye and then execute similar code as that in
+tr_mirrored_insert_only_table-inject_meta-update, but which uses a dynamic
+database connection for, e.g., Oracle.</note>
+      <xloc>400</xloc>
+      <yloc>704</yloc>
+      <width>460</width>
+      <heigth>66</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
