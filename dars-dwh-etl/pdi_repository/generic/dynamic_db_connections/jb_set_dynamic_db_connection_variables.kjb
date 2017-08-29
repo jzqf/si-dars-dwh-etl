@@ -1,79 +1,19 @@
 <job>
-  <name>jb_psa_update-table</name>
+  <name>jb_set_dynamic_db_connection_variables</name>
   <description />
   <extended_description />
   <job_version />
   <job_status>0</job_status>
-  <directory>/psa</directory>
+  <directory>/generic/dynamic_db_connections</directory>
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/08/29 12:07:23.183</modified_date>
+  <modified_date>2017/08/29 09:09:40.115</modified_date>
   <parameters>
     <parameter>
-      <name>PARAM_CDC_CURRENT_LOAD</name>
-      <default_value>2017.06.15 00:00:00</default_value>
-      <description>Timestamp of the current load (no rows after this timestamp will be loaded)</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_CDC_LAST_LOAD</name>
-      <default_value>1900.01.01 00:00:00</default_value>
-      <description>Timestamp of last successful load from the source database</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_SOURCE_DB_ID</name>
-      <default_value />
-      <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_SOURCE_SCHEMA</name>
-      <default_value>passage</default_value>
-      <description>Name of schema containing source table to mirror to target table</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_SOURCE_SCHEMA_DOT_TABLE</name>
-      <default_value>passage.image</default_value>
-      <description>${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_SOURCE_TABLE</name>
-      <default_value>image</default_value>
-      <description>Name of source table to mirror to target table</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_TABLE_META_ID</name>
-      <default_value>0</default_value>
-      <description>Primary key of etl.table_meta row for "source" table from which rows will be deleted</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_TARGET_SCHEMA</name>
-      <default_value>passage</default_value>
-      <description>Name of schema containing target table to update (not currently used)</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_TARGET_SCHEMA_DOT_TABLE</name>
-      <default_value>passage.image</default_value>
-      <description>${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_TARGET_TABLE</name>
-      <default_value>image</default_value>
-      <description>Name of target table to update (not currently used)</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_USE_CUSTOM_MIRROR_ALGORITHM</name>
-      <default_value>N</default_value>
-      <description>"Y" if a custom update algorithm shall be used for this table</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_USE_GENERIC_INSERT_ONLY_TABLE_ALGORITHM</name>
-      <default_value>N</default_value>
-      <description>"Y" if the generic update algorithm for "insert-only" tables should be used for the specified table</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_USE_GENERIC_UPDATEABLE_TABLE_ALGORITHM</name>
-      <default_value>N</default_value>
-      <description>"Y" if the generic update algorithm for "updateable" tables should be used for the specified table</description>
+      <name>PARAM_DB_ID</name>
+      <default_value>-1</default_value>
+      <description>ID the database for which to set the datanase connection variables</description>
     </parameter>
   </parameters>
   <connection>
@@ -419,56 +359,43 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>16</xloc>
-      <yloc>336</yloc>
+      <xloc>32</xloc>
+      <yloc>192</yloc>
     </entry>
     <entry>
       <name>Abort job</name>
       <description />
       <type>ABORT</type>
-      <message>Aborting jb_psa_update-table</message>
+      <message>Aborting jb_psa_set_dynamic_db_connection_variables</message>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>736</xloc>
-      <yloc>640</yloc>
+      <xloc>688</xloc>
+      <yloc>528</yloc>
     </entry>
     <entry>
       <name>Write To Log: Parameters</name>
       <description />
       <type>WRITE_TO_LOG</type>
-      <logmessage>jb_psa_update-table:
-PARAM_SOURCE_DB_ID                            = ${PARAM_SOURCE_DB_ID}
-PARAM_CDC_LAST_LOAD                           = ${PARAM_CDC_LAST_LOAD}
-PARAM_CDC_CURRENT_LOAD                        = ${PARAM_CDC_CURRENT_LOAD}
-PARAM_SOURCE_SCHEMA                           = ${PARAM_SOURCE_SCHEMA}
-PARAM_SOURCE_TABLE                            = ${PARAM_SOURCE_TABLE}
-PARAM_SOURCE_SCHEMA_DOT_TABLE                 = ${PARAM_SOURCE_SCHEMA_DOT_TABLE}
-PARAM_TARGET_SCHEMA                           = ${PARAM_TARGET_SCHEMA}
-PARAM_TARGET_TABLE                            = ${PARAM_TARGET_TABLE}
-PARAM_TARGET_SCHEMA_DOT_TABLE                 = ${PARAM_TARGET_SCHEMA_DOT_TABLE}
-PARAM_USE_GENERIC_INSERT_ONLY_TABLE_ALGORITHM = ${PARAM_USE_GENERIC_INSERT_ONLY_TABLE_ALGORITHM}
-PARAM_USE_GENERIC_UPDATEABLE_TABLE_ALGORITHM  = ${PARAM_USE_GENERIC_UPDATEABLE_TABLE_ALGORITHM}
-PARAM_USE_CUSTOM_MIRROR_ALGORITHM             = ${PARAM_USE_CUSTOM_MIRROR_ALGORITHM}
-PARAM_TABLE_META_ID                           = ${PARAM_TABLE_META_ID}</logmessage>
+      <logmessage>PARAM_DB_ID = ${PARAM_DB_ID}</logmessage>
       <loglevel>Basic</loglevel>
-      <logsubject>Parameters received by jb_psa_update-table</logsubject>
+      <logsubject>Parameters received by jb_psa_set_dynamic_db_connection_variables</logsubject>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>144</xloc>
-      <yloc>336</yloc>
+      <yloc>192</yloc>
     </entry>
     <entry>
-      <name>Use custom algorithm?</name>
+      <name>PARAM_DB_ID = QF_DB_ID_ODMS ?</name>
       <description />
       <type>SIMPLE_EVAL</type>
       <valuetype>variable</valuetype>
       <fieldname />
-      <variablename>${PARAM_USE_CUSTOM_MIRROR_ALGORITHM}</variablename>
-      <fieldtype>boolean</fieldtype>
+      <variablename>${PARAM_DB_ID}</variablename>
+      <fieldtype>number</fieldtype>
       <mask />
-      <comparevalue />
+      <comparevalue>${QF_DB_ID_ODMS}</comparevalue>
       <minvalue />
       <maxvalue />
       <successcondition>equal</successcondition>
@@ -479,153 +406,7 @@ PARAM_TABLE_META_ID                           = ${PARAM_TABLE_META_ID}</logmessa
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>144</xloc>
-      <yloc>736</yloc>
-    </entry>
-    <entry>
-      <name>jb_custom_mirrored_table_dispatcher</name>
-      <description />
-      <type>JOB</type>
-      <specification_method>rep_name</specification_method>
-      <job_object_id />
-      <filename />
-      <jobname>jb_custom_mirrored_table_dispatcher</jobname>
-      <directory>${Internal.Entry.Current.Directory}</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Nothing</loglevel>
-      <slave_server_name />
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <expand_remote_job>N</expand_remote_job>
-      <create_parent_folder>N</create_parent_folder>
-      <pass_export>N</pass_export>
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-      </parameters>
-      <set_append_logfile>N</set_append_logfile>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>464</xloc>
-      <yloc>736</yloc>
-    </entry>
-    <entry>
-      <name>Use generic algorithm for insert-only tables?</name>
-      <description />
-      <type>SIMPLE_EVAL</type>
-      <valuetype>variable</valuetype>
-      <fieldname />
-      <variablename>${PARAM_USE_GENERIC_INSERT_ONLY_TABLE_ALGORITHM}</variablename>
-      <fieldtype>boolean</fieldtype>
-      <mask />
-      <comparevalue />
-      <minvalue />
-      <maxvalue />
-      <successcondition>equal</successcondition>
-      <successnumbercondition>equal</successnumbercondition>
-      <successbooleancondition>true</successbooleancondition>
-      <successwhenvarset>N</successwhenvarset>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>144</xloc>
-      <yloc>544</yloc>
-    </entry>
-    <entry>
-      <name>Use generic algorithm for updateable tables?</name>
-      <description />
-      <type>SIMPLE_EVAL</type>
-      <valuetype>variable</valuetype>
-      <fieldname />
-      <variablename>${PARAM_USE_GENERIC_UPDATEABLE_TABLE_ALGORITHM}</variablename>
-      <fieldtype>boolean</fieldtype>
-      <mask />
-      <comparevalue />
-      <minvalue />
-      <maxvalue />
-      <successcondition>equal</successcondition>
-      <successnumbercondition>equal</successnumbercondition>
-      <successbooleancondition>true</successbooleancondition>
-      <successwhenvarset>N</successwhenvarset>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>144</xloc>
-      <yloc>640</yloc>
-    </entry>
-    <entry>
-      <name>jb_mirrored_insert_only_tables-inject_meta-update_one</name>
-      <description />
-      <type>JOB</type>
-      <specification_method>rep_name</specification_method>
-      <job_object_id />
-      <filename />
-      <jobname>jb_mirrored_insert_only_tables-inject_meta-update_one</jobname>
-      <directory>${Internal.Entry.Current.Directory}</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Nothing</loglevel>
-      <slave_server_name />
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <expand_remote_job>N</expand_remote_job>
-      <create_parent_folder>N</create_parent_folder>
-      <pass_export>N</pass_export>
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-      </parameters>
-      <set_append_logfile>N</set_append_logfile>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>464</xloc>
-      <yloc>544</yloc>
-    </entry>
-    <entry>
-      <name>jb_mirrored_updatable_tables-inject_meta-update_one</name>
-      <description />
-      <type>JOB</type>
-      <specification_method>rep_name</specification_method>
-      <job_object_id />
-      <filename />
-      <jobname>jb_mirrored_updatable_tables-inject_meta-update_one</jobname>
-      <directory>${Internal.Entry.Current.Directory}</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Nothing</loglevel>
-      <slave_server_name />
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <expand_remote_job>N</expand_remote_job>
-      <create_parent_folder>N</create_parent_folder>
-      <pass_export>N</pass_export>
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-      </parameters>
-      <set_append_logfile>N</set_append_logfile>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>464</xloc>
-      <yloc>640</yloc>
+      <yloc>288</yloc>
     </entry>
     <entry>
       <name>jb_log_error - Untreated case</name>
@@ -656,7 +437,7 @@ PARAM_TABLE_META_ID                           = ${PARAM_TABLE_META_ID}</logmessa
         <parameter>
           <name>PARAM_ERROR_MESSAGE</name>
           <stream_name />
-          <value>Untreated case in jb_psa_update-table</value>
+          <value>Untreated case for PARAM_DB_ID=${PARAM_DB_ID} in jb_psa_set_dynamic_db_connection_variables</value>
         </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
@@ -664,17 +445,119 @@ PARAM_TABLE_META_ID                           = ${PARAM_TABLE_META_ID}</logmessa
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>144</xloc>
-      <yloc>832</yloc>
+      <yloc>528</yloc>
     </entry>
     <entry>
-      <name>jb_set_dynamic_db_connection_variables</name>
+      <name>Set dynamic connection parameters for ODMS DB</name>
+      <description />
+      <type>SET_VARIABLES</type>
+      <replacevars>Y</replacevars>
+      <filename />
+      <file_variable_type>JVM</file_variable_type>
+      <fields>
+        <field>
+          <variable_name>QF_DYN_DB_CONN_DB_HOST</variable_name>
+          <variable_value>${QF_OBO_DB_HOST}</variable_value>
+          <variable_type>ROOT_JOB</variable_type>
+        </field>
+        <field>
+          <variable_name>QF_DYN_DB_CONN_DB_PORT</variable_name>
+          <variable_value>${QF_OBO_DB_PORT}</variable_value>
+          <variable_type>ROOT_JOB</variable_type>
+        </field>
+        <field>
+          <variable_name>QF_DYN_DB_CONN_DB_DATABASE</variable_name>
+          <variable_value>${QF_OBO_DB_DATABASE}</variable_value>
+          <variable_type>ROOT_JOB</variable_type>
+        </field>
+        <field>
+          <variable_name>QF_DYN_DB_CONN_DB_USERNAME</variable_name>
+          <variable_value>${QF_OBO_DB_USERNAME}</variable_value>
+          <variable_type>ROOT_JOB</variable_type>
+        </field>
+        <field>
+          <variable_name>QF_DYN_DB_CONN_DB_PASSWORD</variable_name>
+          <variable_value>${QF_OBO_DB_PASSWORD}</variable_value>
+          <variable_type>ROOT_JOB</variable_type>
+        </field>
+      </fields>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>432</xloc>
+      <yloc>288</yloc>
+    </entry>
+    <entry>
+      <name>PARAM_DB_ID = QF_DB_ID_ETL ?</name>
+      <description />
+      <type>SIMPLE_EVAL</type>
+      <valuetype>variable</valuetype>
+      <fieldname />
+      <variablename>${PARAM_DB_ID}</variablename>
+      <fieldtype>number</fieldtype>
+      <mask />
+      <comparevalue>${QF_DB_ID_ETL}</comparevalue>
+      <minvalue />
+      <maxvalue />
+      <successcondition>equal</successcondition>
+      <successnumbercondition>equal</successnumbercondition>
+      <successbooleancondition>true</successbooleancondition>
+      <successwhenvarset>N</successwhenvarset>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>144</xloc>
+      <yloc>432</yloc>
+    </entry>
+    <entry>
+      <name>Set dynamic connection parameters for ETL DB</name>
+      <description />
+      <type>SET_VARIABLES</type>
+      <replacevars>Y</replacevars>
+      <filename />
+      <file_variable_type>JVM</file_variable_type>
+      <fields>
+        <field>
+          <variable_name>QF_DYN_DB_CONN_DB_HOST</variable_name>
+          <variable_value>${QF_ETL_DB_HOST}</variable_value>
+          <variable_type>ROOT_JOB</variable_type>
+        </field>
+        <field>
+          <variable_name>QF_DYN_DB_CONN_DB_PORT</variable_name>
+          <variable_value>${QF_ETL_DB_PORT}</variable_value>
+          <variable_type>ROOT_JOB</variable_type>
+        </field>
+        <field>
+          <variable_name>QF_DYN_DB_CONN_DB_DATABASE</variable_name>
+          <variable_value>${QF_ETL_DB_DATABASE}</variable_value>
+          <variable_type>ROOT_JOB</variable_type>
+        </field>
+        <field>
+          <variable_name>QF_DYN_DB_CONN_DB_USERNAME</variable_name>
+          <variable_value>${QF_ETL_DB_USERNAME}</variable_value>
+          <variable_type>ROOT_JOB</variable_type>
+        </field>
+        <field>
+          <variable_name>QF_DYN_DB_CONN_DB_PASSWORD</variable_name>
+          <variable_value>${QF_ETL_DB_PASSWORD}</variable_value>
+          <variable_type>ROOT_JOB</variable_type>
+        </field>
+      </fields>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>432</xloc>
+      <yloc>432</yloc>
+    </entry>
+    <entry>
+      <name>jb_log_error - Error setting vrbls</name>
       <description />
       <type>JOB</type>
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
-      <jobname>jb_set_dynamic_db_connection_variables</jobname>
-      <directory>/generic/dynamic_db_connections</directory>
+      <jobname>jb_log_error</jobname>
+      <directory>/generic</directory>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
@@ -693,37 +576,51 @@ PARAM_TABLE_META_ID                           = ${PARAM_TABLE_META_ID}</logmessa
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
         <parameter>
-          <name>PARAM_DB_ID</name>
+          <name>PARAM_ERROR_MESSAGE</name>
           <stream_name />
-          <value>${PARAM_SOURCE_DB_ID}</value>
+          <value>Error setting variables for PARAM_DB_ID=${PARAM_DB_ID} in jb_psa_set_dynamic_db_connection_variables</value>
         </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>144</xloc>
+      <xloc>688</xloc>
       <yloc>432</yloc>
     </entry>
     <entry>
-      <name>DUMMY</name>
+      <name>Write variables to log - ODMS DB</name>
       <description />
-      <type>SPECIAL</type>
-      <start>N</start>
-      <dummy>Y</dummy>
-      <repeat>N</repeat>
-      <schedulerType>0</schedulerType>
-      <intervalSeconds>0</intervalSeconds>
-      <intervalMinutes>60</intervalMinutes>
-      <hour>12</hour>
-      <minutes>0</minutes>
-      <weekDay>1</weekDay>
-      <DayOfMonth>1</DayOfMonth>
+      <type>WRITE_TO_LOG</type>
+      <logmessage>QF_DYN_DB_CONN_DB_HOST     = ${QF_DYN_DB_CONN_DB_HOST}
+QF_DYN_DB_CONN_DB_PORT     = ${QF_DYN_DB_CONN_DB_PORT}
+QF_DYN_DB_CONN_DB_DATABASE = ${QF_DYN_DB_CONN_DB_DATABASE}
+QF_DYN_DB_CONN_DB_USERNAME = ${QF_DYN_DB_CONN_DB_USERNAME}
+QF_DYN_DB_CONN_DB_PASSWORD = ${QF_DYN_DB_CONN_DB_PASSWORD}</logmessage>
+      <loglevel>Basic</loglevel>
+      <logsubject>ODMS DB:</logsubject>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>736</xloc>
-      <yloc>432</yloc>
+      <xloc>432</xloc>
+      <yloc>208</yloc>
+    </entry>
+    <entry>
+      <name>Write variables to log - ETL DB</name>
+      <description />
+      <type>WRITE_TO_LOG</type>
+      <logmessage>QF_DYN_DB_CONN_DB_HOST     = ${QF_DYN_DB_CONN_DB_HOST}
+QF_DYN_DB_CONN_DB_PORT     = ${QF_DYN_DB_CONN_DB_PORT}
+QF_DYN_DB_CONN_DB_DATABASE = ${QF_DYN_DB_CONN_DB_DATABASE}
+QF_DYN_DB_CONN_DB_USERNAME = ${QF_DYN_DB_CONN_DB_USERNAME}
+QF_DYN_DB_CONN_DB_PASSWORD = ${QF_DYN_DB_CONN_DB_PASSWORD}</logmessage>
+      <loglevel>Basic</loglevel>
+      <logsubject>ETL DB:</logsubject>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>432</xloc>
+      <yloc>352</yloc>
     </entry>
   </entries>
   <hops>
@@ -737,8 +634,17 @@ PARAM_TABLE_META_ID                           = ${PARAM_TABLE_META_ID}</logmessa
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>Use custom algorithm?</from>
-      <to>jb_custom_mirrored_table_dispatcher</to>
+      <from>Write To Log: Parameters</from>
+      <to>PARAM_DB_ID = QF_DB_ID_ODMS ?</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>PARAM_DB_ID = QF_DB_ID_ODMS ?</from>
+      <to>Set dynamic connection parameters for ODMS DB</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -746,8 +652,8 @@ PARAM_TABLE_META_ID                           = ${PARAM_TABLE_META_ID}</logmessa
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Use generic algorithm for insert-only tables?</from>
-      <to>Use generic algorithm for updateable tables?</to>
+      <from>PARAM_DB_ID = QF_DB_ID_ODMS ?</from>
+      <to>PARAM_DB_ID = QF_DB_ID_ETL ?</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -755,17 +661,8 @@ PARAM_TABLE_META_ID                           = ${PARAM_TABLE_META_ID}</logmessa
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Use generic algorithm for updateable tables?</from>
-      <to>Use custom algorithm?</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Use generic algorithm for insert-only tables?</from>
-      <to>jb_mirrored_insert_only_tables-inject_meta-update_one</to>
+      <from>PARAM_DB_ID = QF_DB_ID_ETL ?</from>
+      <to>Set dynamic connection parameters for ETL DB</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -773,43 +670,7 @@ PARAM_TABLE_META_ID                           = ${PARAM_TABLE_META_ID}</logmessa
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Use generic algorithm for updateable tables?</from>
-      <to>jb_mirrored_updatable_tables-inject_meta-update_one</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>jb_mirrored_insert_only_tables-inject_meta-update_one</from>
-      <to>Abort job</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>jb_mirrored_updatable_tables-inject_meta-update_one</from>
-      <to>Abort job</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>jb_custom_mirrored_table_dispatcher</from>
-      <to>Abort job</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Use custom algorithm?</from>
+      <from>PARAM_DB_ID = QF_DB_ID_ETL ?</from>
       <to>jb_log_error - Untreated case</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -818,26 +679,8 @@ PARAM_TABLE_META_ID                           = ${PARAM_TABLE_META_ID}</logmessa
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Write To Log: Parameters</from>
-      <to>jb_set_dynamic_db_connection_variables</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>jb_set_dynamic_db_connection_variables</from>
-      <to>Use generic algorithm for insert-only tables?</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>jb_set_dynamic_db_connection_variables</from>
-      <to>DUMMY</to>
+      <from>Set dynamic connection parameters for ODMS DB</from>
+      <to>jb_log_error - Error setting vrbls</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -845,42 +688,68 @@ PARAM_TABLE_META_ID                           = ${PARAM_TABLE_META_ID}</logmessa
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>DUMMY</from>
+      <from>Set dynamic connection parameters for ETL DB</from>
+      <to>jb_log_error - Error setting vrbls</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_log_error - Untreated case</from>
       <to>Abort job</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
+      <evaluation>N</evaluation>
       <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>jb_log_error - Error setting vrbls</from>
+      <to>Abort job</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>Set dynamic connection parameters for ODMS DB</from>
+      <to>Write variables to log - ODMS DB</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Set dynamic connection parameters for ETL DB</from>
+      <to>Write variables to log - ETL DB</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
     </hop>
   </hops>
   <notepads>
     <notepad>
-      <note>This job updates a single table in the target (PSA) database. A dispatch mechansim is used to execute the appropriate update algorithm, which can be one of:
+      <note>This job sets PDI variables that specify a dynamic database connection. These are the variables:
 
-	1.	Generic update algorithm for "insert-only" tables
-	2.	Generic update algorithm for "updateable" tables
-	3.	Custom update algorithm
+	QF_DYN_DB_CONN_DB_HOST
+	QF_DYN_DB_CONN_DB_PORT
+	QF_DYN_DB_CONN_DB_DATABASE
+	QF_DYN_DB_CONN_DB_USERNAME
+	QF_DYN_DB_CONN_DB_PASSWORD
 
 This job has parameters:
 
-	PARAM_SOURCE_DB_ID										ID the "source" database containing tables that are mirrored to a "target" database
-	PARAM_CDC_LAST_LOAD									Timestamp for when the target PSA DB mirror tables were last updated from the source DB
-	PARAM_CDC_CURRENT_LOAD								Timestamp of the current load (no rows after this timestamp will be loaded)
-	PARAM_SOURCE_SCHEMA									Name of schema containing source table that is mirrored to target PSA table
-	PARAM_SOURCE_TABLE									Name of source table that is mirrored to target PSA table
-	PARAM_SOURCE_SCHEMA_DOT_TABLE						${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
-	PARAM_TARGET_SCHEMA									Name of schema containing target table that is mirrored to target PSA table (not currently used)
-	PARAM_TARGET_TABLE										Name of target table that is mirrored to target PSA table (not currently used)
-	PARAM_TARGET_SCHEMA_DOT_TABLE						${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}
-	PARAM_USE_GENERIC_INSERT_ONLY_TABLE_ALGORITHM	"Y" if the generic update algorithm for "insert-only" tables should be used for the specified table
-	PARAM_USE_GENERIC_UPDATEABLE_TABLE_ALGORITHM	"Y" if the generic update algorithm for "updateable" tables should be used for the specified table
-	PARAM_USE_CUSTOM_MIRROR_ALGORITHM				"Y" if a custom update algorithm shall be used for this table
-	PARAM_TABLE_META_ID									Primary key of etl.table_meta row for "source" table from which rows will be deleted</note>
+	PARAM_DB_ID		ID the database for which to set the database connection variables</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>964</width>
-      <heigth>304</heigth>
+      <width>564</width>
+      <heigth>164</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -901,41 +770,10 @@ This job has parameters:
 to tell the root calling
 job that execution has
 failed.</note>
-      <xloc>800</xloc>
-      <yloc>624</yloc>
+      <xloc>736</xloc>
+      <yloc>512</yloc>
       <width>139</width>
       <heigth>66</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>This job sets the PDI variables:
-
-	QF_DYN_DB_CONN_DB_HOST
-	QF_DYN_DB_CONN_DB_PORT
-	QF_DYN_DB_CONN_DB_DATABASE
-	QF_DYN_DB_CONN_DB_USERNAME
-	QF_DYN_DB_CONN_DB_PASSWORD
-
-based on a single parameter:
-
-	PARAM_DB_ID = PARAM_SOURCE_DB_ID</note>
-      <xloc>304</xloc>
-      <yloc>352</yloc>
-      <width>274</width>
-      <heigth>164</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>

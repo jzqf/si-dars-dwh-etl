@@ -1,17 +1,47 @@
 <transformation>
   <info>
-    <name>tr_list_of_tables_to_mirror</name>
+    <name>tr_TEST_DYNAMIC_DB_CONNECTION</name>
     <description />
     <extended_description />
     <trans_version />
     <trans_type>Normal</trans_type>
     <trans_status>0</trans_status>
-    <directory>/generic</directory>
+    <directory>/development/jeffreyz/tests/dynamic_db_connections</directory>
     <parameters>
       <parameter>
-        <name>PARAM_TARGET_DB_ID</name>
+        <name>PARAM_DYN_DB_CONN_DB_DATABASE</name>
         <default_value />
-        <description>ID of the "target" database to which the "source" DB tables will be archived/mirrored</description>
+        <description />
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_DB_HOST</name>
+        <default_value />
+        <description />
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_DB_PASSWORD</name>
+        <default_value />
+        <description />
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_DB_PORT</name>
+        <default_value />
+        <description />
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_DB_USERNAME</name>
+        <default_value />
+        <description />
+      </parameter>
+      <parameter>
+        <name>PARAM_SOURCE_SCHEMA</name>
+        <default_value />
+        <description>Name of schema to select from</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_SOURCE_TABLE</name>
+        <default_value />
+        <description>Name of table to select from</description>
       </parameter>
     </parameters>
     <log>
@@ -46,7 +76,7 @@
           <id>LINES_READ</id>
           <enabled>Y</enabled>
           <name>LINES_READ</name>
-          <subject>Copy rows to result</subject>
+          <subject />
         </field>
         <field>
           <id>LINES_WRITTEN</id>
@@ -434,46 +464,27 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/08/29 12:07:28.771</modified_date>
+    <modified_date>2017/08/28 13:30:14.341</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>This transformation creates a stream that contains details of each table from one or more "source" database(s) that will be archived/mirrored 
-to a table in a "target" database. Each row of the stream corresponds to a single such table pair.
+      <note>This transformation Executes a "SELECT *" from a specified table using a dynaincally specified database connection.
 
-This stream is copied to the "result" of this transformation so that it can be used elsewhere in another job.
+This transformation has parameters:
 
-This transformation has parameter:
-
-	PARAM_TARGET_DB_ID			ID of the "target" database to which the "source" DB tables will be archived/mirrored</note>
+	PARAM_DYN_DB_CONN_DB_HOST		
+	PARAM_DYN_DB_CONN_DB_PORT		
+	PARAM_DYN_DB_CONN_DB_DATABASE	
+	PARAM_DYN_DB_CONN_DB_USERNAME	
+	PARAM_DYN_DB_CONN_DB_PASSWORD	
+	PARAM_SOURCE_SCHEMA					Name of schema containing source table to mirror to target table
+	PARAM_SOURCE_TABLE					Name of source table to mirror to target table</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>840</width>
-      <heigth>122</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Each row of the stream created by this step specifies a table 
-that is mirrored from a source database to a target database.</note>
-      <xloc>16</xloc>
-      <yloc>224</yloc>
-      <width>370</width>
-      <heigth>38</heigth>
+      <width>683</width>
+      <heigth>164</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -491,14 +502,14 @@ that is mirrored from a source database to a target database.</note>
     </notepad>
   </notepads>
   <connection>
-    <name>etl_db</name>
-    <server>${QF_ETL_DB_HOST}</server>
+    <name>dynamic_postgres_db</name>
+    <server>${PARAM_DYN_DB_CONN_DB_HOST}</server>
     <type>POSTGRESQL</type>
     <access>Native</access>
-    <database>${QF_ETL_DB_DATABASE}</database>
-    <port>${QF_ETL_DB_PORT}</port>
-    <username>${QF_ETL_DB_USERNAME}</username>
-    <password>${QF_ETL_DB_PASSWORD}</password>
+    <database>${PARAM_DYN_DB_CONN_DB_DATABASE}</database>
+    <port>${PARAM_DYN_DB_CONN_DB_PORT}</port>
+    <username>${PARAM_DYN_DB_CONN_DB_USERNAME}</username>
+    <password>${PARAM_DYN_DB_CONN_DB_PASSWORD}</password>
     <servername />
     <data_tablespace />
     <index_tablespace />
@@ -517,11 +528,11 @@ that is mirrored from a source database to a target database.</note>
       </attribute>
       <attribute>
         <code>PORT_NUMBER</code>
-        <attribute>${QF_ETL_DB_PORT}</attribute>
+        <attribute>${PARAM_DYN_DB_CONN_DB_PORT}</attribute>
       </attribute>
       <attribute>
         <code>PRESERVE_RESERVED_WORD_CASE</code>
-        <attribute>N</attribute>
+        <attribute>Y</attribute>
       </attribute>
       <attribute>
         <code>QUOTE_ALL_FIELDS</code>
@@ -594,14 +605,14 @@ that is mirrored from a source database to a target database.</note>
   </connection>
   <order>
     <hop>
-      <from>Load list of tables to mirror</from>
-      <to>Copy rows to result</to>
+      <from>SELECT from dynamic db connection</from>
+      <to>Dummy (do nothing)</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Copy rows to result</name>
-    <type>RowsToResult</type>
+    <name>Dummy (do nothing)</name>
+    <type>Dummy</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -618,13 +629,13 @@ that is mirrored from a source database to a target database.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>544</xloc>
-      <yloc>160</yloc>
+      <xloc>272</xloc>
+      <yloc>336</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Load list of tables to mirror</name>
+    <name>SELECT from dynamic db connection</name>
     <type>TableInput</type>
     <description />
     <distribute>Y</distribute>
@@ -634,33 +645,11 @@ that is mirrored from a source database to a target database.</note>
       <method>none</method>
       <schema_name />
     </partitioning>
-    <connection>etl_db</connection>
+    <connection>dynamic_postgres_db</connection>
     <sql>SELECT
-    table_meta_id,
-    source_db_id,
-    source_schema_name AS "source_schema",
-    source_table_name AS "source_table",
-    source_schema_name || '.' || source_table_name AS "source_schema_dot_table",
-    target_schema_name AS "target_schema",
-    target_table_name  AS "target_table",
-    target_schema_name || '.' || target_table_name AS "target_schema_dot_table",
-    can_insert_rows=true AND
-    can_update_rows=false AND
-    can_delete_rows=false AND
-	use_custom_mirror_algorithm=false AS "use_generic_insert_only_table_algorithm",
-    can_insert_rows=true AND
-    can_update_rows=true AND
-    can_delete_rows=false AND
-	use_custom_mirror_algorithm=false AS "use_generic_updateable_table_algorithm",
-    use_custom_mirror_algorithm 
-FROM
-    etl.table_meta 
-WHERE
-    target_db_id=${PARAM_TARGET_DB_ID} AND
-    mirror_tables=true 
-ORDER BY
-    source_schema_name,
-    source_table_name</sql>
+    *
+FROM 
+    ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</sql>
     <limit>0</limit>
     <lookup />
     <execute_each_row>N</execute_each_row>
@@ -674,8 +663,8 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>160</yloc>
+      <xloc>272</xloc>
+      <yloc>208</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
