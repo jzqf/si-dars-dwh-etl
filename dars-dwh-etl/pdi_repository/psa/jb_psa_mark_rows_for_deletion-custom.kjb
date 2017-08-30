@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/08/09 12:13:37.503</modified_date>
+  <modified_date>2017/08/30 12:59:18.290</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CAN_DELETE_ROW_SOURCE_COLNAME</name>
@@ -669,9 +669,10 @@ PARAM_TABLE_META_ID                          = ${PARAM_TABLE_META_ID}</logmessag
 as a "dispatcher" in that it runs an appropriate job/transformation to perform a table-specific CUSTOM treatment for the table that is specified by this 
 job's parameters. This job has parameters:
 
-	PARAM_SOURCE_DB_ID								ID the "source" database containing tables that are mirrored to a "target" database
 	PARAM_LAST_LOAD_TIMESTAMP					Timestamp for when the target PSA DB mirror tables were last updated from the source DB.
 														Can be used to ensure that we do not delete rows that are not yet fully archived/mirrored.
+	PARAM_TABLE_META_ID							Primary key of etl.table_meta row for "source" table from which rows will be deleted
+	PARAM_SOURCE_DB_ID								ID the "source" database containing tables that are mirrored to a "target" database
 	PARAM_SOURCE_SCHEMA							Name of schema containing source table that is mirrored to target PSA table
 	PARAM_SOURCE_TABLE							Name of source table that is mirrored to target PSA table
 	PARAM_SOURCE_SCHEMA_TABLE					${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
@@ -681,8 +682,7 @@ job's parameters. This job has parameters:
 	PARAM_LAST_UPDATED_ON_SOURCE_COLNAME	Column of source table that acts as a "last_updated_on" timestamp column
 	PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS	Number of seconds after the "row_can_be_deleted_from" timestamp that an archived row can be deleted
 	PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME	Column of source table that acts as a "row_can_be_deleted_from" timestamp column
-	PARAM_CAN_DELETE_ROW_SOURCE_COLNAME		Column of source table that indicates if the row can be deleted immediately
-	PARAM_TABLE_META_ID							Primary key of etl.table_meta row for "source" table from which rows will be deleted</note>
+	PARAM_CAN_DELETE_ROW_SOURCE_COLNAME		Column of source table that indicates if the row can be deleted immediately</note>
       <xloc>16</xloc>
       <yloc>0</yloc>
       <width>963</width>
@@ -711,8 +711,8 @@ in the current job for the table being treated.
 In the event that an error is detected in the job "jb_psa_mark_rows_for_deletion-custom-source_schema.source_table",
 it should execute a "jb_log_error" entry that describes the error, followed by an "Abort" job entry so that this job knows
 to also execute an "Abort" job entry. In this is done, the error message will be sent out by e-mail from the root job.</note>
-      <xloc>272</xloc>
-      <yloc>336</yloc>
+      <xloc>320</xloc>
+      <yloc>544</yloc>
       <width>706</width>
       <heigth>122</heigth>
       <fontname>Ubuntu</fontname>
@@ -724,6 +724,27 @@ to also execute an "Abort" job entry. In this is done, the error message will be
       <fontcolorblue>0</fontcolorblue>
       <backgroundcolorred>255</backgroundcolorred>
       <backgroundcolorgreen>255</backgroundcolorgreen>
+      <backgroundcolorblue>0</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Need to also test PARAM_SOURCE_DB_ID in case there are multiple "source" DBs!</note>
+      <xloc>128</xloc>
+      <yloc>448</yloc>
+      <width>487</width>
+      <heigth>24</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>255</fontcolorred>
+      <fontcolorgreen>255</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>0</backgroundcolorred>
+      <backgroundcolorgreen>0</backgroundcolorgreen>
       <backgroundcolorblue>0</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
