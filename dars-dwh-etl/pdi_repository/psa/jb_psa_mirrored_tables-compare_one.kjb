@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/08/26 12:42:14.529</modified_date>
+  <modified_date>2017/08/30 12:18:20.277</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_LAST_LOAD_TIMESTAMP</name>
@@ -455,7 +455,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>304</xloc>
+      <xloc>48</xloc>
       <yloc>224</yloc>
     </entry>
     <entry>
@@ -489,14 +489,29 @@
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
         <parameter>
-          <name>PARAM_INSERT_ID_FROM</name>
+          <name>PARAM_DYN_DB_CONN_DB_HOST</name>
           <stream_name />
-          <value>${QF_MIRROR_COMPARE_INSERT_ID_FROM}</value>
+          <value>${QF_DYN_DB_CONN_DB_HOST}</value>
         </parameter>
         <parameter>
-          <name>PARAM_INSERT_ID_TO</name>
+          <name>PARAM_DYN_DB_CONN_DB_PORT</name>
           <stream_name />
-          <value>${QF_MIRROR_COMPARE_INSERT_ID_TO}</value>
+          <value>${QF_DYN_DB_CONN_DB_PORT}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_DYN_DB_CONN_DB_DATABASE</name>
+          <stream_name />
+          <value>${QF_DYN_DB_CONN_DB_DATABASE}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_DYN_DB_CONN_DB_USERNAME</name>
+          <stream_name />
+          <value>${QF_DYN_DB_CONN_DB_USERNAME}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_DYN_DB_CONN_DB_PASSWORD</name>
+          <stream_name />
+          <value>${QF_DYN_DB_CONN_DB_PASSWORD}</value>
         </parameter>
         <parameter>
           <name>PARAM_INSERT_ID_COLNAME</name>
@@ -508,12 +523,22 @@
           <stream_name />
           <value>${QF_INSERTED_ON_COLNAME}</value>
         </parameter>
+        <parameter>
+          <name>PARAM_INSERT_ID_FROM</name>
+          <stream_name />
+          <value>${QF_MIRROR_COMPARE_INSERT_ID_FROM}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_INSERT_ID_TO</name>
+          <stream_name />
+          <value>${QF_MIRROR_COMPARE_INSERT_ID_TO}</value>
+        </parameter>
       </parameters>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>544</xloc>
-      <yloc>976</yloc>
+      <xloc>416</xloc>
+      <yloc>1040</yloc>
     </entry>
     <entry>
       <name>jb_log_error 6</name>
@@ -551,22 +576,22 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>304</xloc>
-      <yloc>976</yloc>
+      <xloc>208</xloc>
+      <yloc>1040</yloc>
     </entry>
     <entry>
       <name>Abort job</name>
       <description />
       <type>ABORT</type>
-      <message />
+      <message>Aborting jb_psa_mirrored_tables-compare_one</message>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>96</xloc>
-      <yloc>576</yloc>
+      <xloc>48</xloc>
+      <yloc>672</yloc>
     </entry>
     <entry>
-      <name>Are there columns to compare for this table?</name>
+      <name>Are columns to compare configured for this table?</name>
       <description />
       <type>EVAL_TABLE_CONTENT</type>
       <connection>etl_db</connection>
@@ -592,8 +617,8 @@ ORDER BY
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>544</xloc>
-      <yloc>336</yloc>
+      <xloc>416</xloc>
+      <yloc>384</yloc>
     </entry>
     <entry>
       <name>jb_log_error 1</name>
@@ -631,8 +656,8 @@ ORDER BY
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>1</nr>
-      <xloc>304</xloc>
-      <yloc>336</yloc>
+      <xloc>208</xloc>
+      <yloc>384</yloc>
     </entry>
     <entry>
       <name>Success 2</name>
@@ -641,15 +666,14 @@ ORDER BY
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>96</xloc>
-      <yloc>336</yloc>
+      <xloc>48</xloc>
+      <yloc>384</yloc>
     </entry>
     <entry>
       <name>Write To Log: Parameters</name>
       <description />
       <type>WRITE_TO_LOG</type>
-      <logmessage>jb_psa_mirrored_tables-compare_one:
-PARAM_SOURCE_DB_ID        = ${PARAM_SOURCE_DB_ID}
+      <logmessage>PARAM_SOURCE_DB_ID        = ${PARAM_SOURCE_DB_ID}
 PARAM_LAST_LOAD_TIMESTAMP = ${PARAM_LAST_LOAD_TIMESTAMP}
 PARAM_SOURCE_SCHEMA       = ${PARAM_SOURCE_SCHEMA}
 PARAM_SOURCE_TABLE        = ${PARAM_SOURCE_TABLE}
@@ -658,11 +682,11 @@ PARAM_TARGET_SCHEMA       = ${PARAM_TARGET_SCHEMA}
 PARAM_TARGET_TABLE        = ${PARAM_TARGET_TABLE}
 PARAM_TARGET_SCHEMA_TABLE = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
       <loglevel>Basic</loglevel>
-      <logsubject />
+      <logsubject>Parameters received by jb_psa_mirrored_tables-compare_one</logsubject>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>544</xloc>
+      <xloc>208</xloc>
       <yloc>224</yloc>
     </entry>
     <entry>
@@ -672,8 +696,8 @@ PARAM_TARGET_SCHEMA_TABLE = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>544</xloc>
-      <yloc>1072</yloc>
+      <xloc>416</xloc>
+      <yloc>1136</yloc>
     </entry>
     <entry>
       <name>tr_psa_compare-get_insert_id_from_to</name>
@@ -706,6 +730,31 @@ PARAM_TARGET_SCHEMA_TABLE = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
         <parameter>
+          <name>PARAM_DYN_DB_CONN_DB_HOST</name>
+          <stream_name />
+          <value>${QF_DYN_DB_CONN_DB_HOST}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_DYN_DB_CONN_DB_PORT</name>
+          <stream_name />
+          <value>${QF_DYN_DB_CONN_DB_PORT}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_DYN_DB_CONN_DB_DATABASE</name>
+          <stream_name />
+          <value>${QF_DYN_DB_CONN_DB_DATABASE}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_DYN_DB_CONN_DB_USERNAME</name>
+          <stream_name />
+          <value>${QF_DYN_DB_CONN_DB_USERNAME}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_DYN_DB_CONN_DB_PASSWORD</name>
+          <stream_name />
+          <value>${QF_DYN_DB_CONN_DB_PASSWORD}</value>
+        </parameter>
+        <parameter>
           <name>PARAM_INSERT_ID_COLNAME</name>
           <stream_name />
           <value>${QF_INSERT_ID_COLNAME}</value>
@@ -719,24 +768,23 @@ PARAM_TARGET_SCHEMA_TABLE = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>544</xloc>
-      <yloc>624</yloc>
+      <xloc>416</xloc>
+      <yloc>816</yloc>
     </entry>
     <entry>
       <name>Log: "insert_id" "from" &amp; "to" values</name>
       <description />
       <type>WRITE_TO_LOG</type>
-      <logmessage>jb_psa_mirrored_tables-compare_one:
-QF_MIRROR_COMPARE_INSERT_ID_FROM = ${QF_MIRROR_COMPARE_INSERT_ID_FROM}
+      <logmessage>QF_MIRROR_COMPARE_INSERT_ID_FROM = ${QF_MIRROR_COMPARE_INSERT_ID_FROM}
 QF_MIRROR_COMPARE_INSERT_ID_TO   = ${QF_MIRROR_COMPARE_INSERT_ID_TO}
 </logmessage>
       <loglevel>Basic</loglevel>
-      <logsubject />
+      <logsubject>Variables set by tr_psa_compare-get_insert_id_from_to</logsubject>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>544</xloc>
-      <yloc>720</yloc>
+      <xloc>416</xloc>
+      <yloc>912</yloc>
     </entry>
     <entry>
       <name>jb_log_error 5</name>
@@ -774,8 +822,8 @@ QF_MIRROR_COMPARE_INSERT_ID_TO   = ${QF_MIRROR_COMPARE_INSERT_ID_TO}
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>304</xloc>
-      <yloc>720</yloc>
+      <xloc>208</xloc>
+      <yloc>912</yloc>
     </entry>
     <entry>
       <name>jb_log_error 4</name>
@@ -813,8 +861,8 @@ QF_MIRROR_COMPARE_INSERT_ID_TO   = ${QF_MIRROR_COMPARE_INSERT_ID_TO}
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>304</xloc>
-      <yloc>624</yloc>
+      <xloc>208</xloc>
+      <yloc>816</yloc>
     </entry>
     <entry>
       <name>jb_log_error 2</name>
@@ -852,11 +900,11 @@ QF_MIRROR_COMPARE_INSERT_ID_TO   = ${QF_MIRROR_COMPARE_INSERT_ID_TO}
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>2</nr>
-      <xloc>304</xloc>
-      <yloc>432</yloc>
+      <xloc>208</xloc>
+      <yloc>480</yloc>
     </entry>
     <entry>
-      <name>Are there primary key columns configured for this table?</name>
+      <name>Are primary key columns configured for this table?</name>
       <description />
       <type>EVAL_TABLE_CONTENT</type>
       <connection>etl_db</connection>
@@ -880,8 +928,8 @@ ORDER BY
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>1</nr>
-      <xloc>544</xloc>
-      <yloc>432</yloc>
+      <xloc>416</xloc>
+      <yloc>480</yloc>
     </entry>
     <entry>
       <name>tr_set_inserted_colnames_vrbls</name>
@@ -917,8 +965,8 @@ ORDER BY
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>544</xloc>
-      <yloc>528</yloc>
+      <xloc>416</xloc>
+      <yloc>576</yloc>
     </entry>
     <entry>
       <name>jb_log_error 3</name>
@@ -956,8 +1004,113 @@ ORDER BY
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>304</xloc>
-      <yloc>528</yloc>
+      <xloc>208</xloc>
+      <yloc>576</yloc>
+    </entry>
+    <entry>
+      <name>jb_set_dynamic_db_connection_variables</name>
+      <description />
+      <type>JOB</type>
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_set_dynamic_db_connection_variables</jobname>
+      <directory>/generic/dynamic_db_connections</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_DB_ID</name>
+          <stream_name />
+          <value>${PARAM_SOURCE_DB_ID}</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>416</xloc>
+      <yloc>224</yloc>
+    </entry>
+    <entry>
+      <name>Abort job 2</name>
+      <description />
+      <type>ABORT</type>
+      <message>Aborting jb_psa_mirrored_tables-compare_one</message>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>496</xloc>
+      <yloc>304</yloc>
+    </entry>
+    <entry>
+      <name>jb_is_specified_db_type - PostgreSQL?</name>
+      <description />
+      <type>JOB</type>
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_is_specified_db_type</jobname>
+      <directory>/generic/dynamic_db_connections</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_DB_ID</name>
+          <stream_name />
+          <value>${PARAM_SOURCE_DB_ID}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_REQUIRED_DB_TYPE_ID</name>
+          <stream_name />
+          <value>${QF_DB_TYPE_ID_POSTGRESQL}</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>416</xloc>
+      <yloc>672</yloc>
+    </entry>
+    <entry>
+      <name>Abort job 3</name>
+      <description />
+      <type>ABORT</type>
+      <message>Aborting jb_psa_mirrored_tables-compare_one</message>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>608</xloc>
+      <yloc>672</yloc>
     </entry>
   </entries>
   <hops>
@@ -1004,15 +1157,6 @@ ORDER BY
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>Write To Log: Parameters</from>
-      <to>Are there columns to compare for this table?</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
       <unconditional>Y</unconditional>
     </hop>
     <hop>
@@ -1070,7 +1214,7 @@ ORDER BY
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>Are there columns to compare for this table?</from>
+      <from>Are columns to compare configured for this table?</from>
       <to>jb_log_error 1</to>
       <from_nr>0</from_nr>
       <to_nr>1</to_nr>
@@ -1088,17 +1232,8 @@ ORDER BY
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>jb_log_error 2</from>
-      <to>Success 2</to>
-      <from_nr>2</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>N</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>Are there columns to compare for this table?</from>
-      <to>Are there primary key columns configured for this table?</to>
+      <from>Are columns to compare configured for this table?</from>
+      <to>Are primary key columns configured for this table?</to>
       <from_nr>0</from_nr>
       <to_nr>1</to_nr>
       <enabled>Y</enabled>
@@ -1106,7 +1241,7 @@ ORDER BY
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Are there primary key columns configured for this table?</from>
+      <from>Are primary key columns configured for this table?</from>
       <to>jb_log_error 2</to>
       <from_nr>1</from_nr>
       <to_nr>2</to_nr>
@@ -1133,7 +1268,7 @@ ORDER BY
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>Are there primary key columns configured for this table?</from>
+      <from>Are primary key columns configured for this table?</from>
       <to>tr_set_inserted_colnames_vrbls</to>
       <from_nr>1</from_nr>
       <to_nr>0</to_nr>
@@ -1142,8 +1277,17 @@ ORDER BY
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>tr_set_inserted_colnames_vrbls</from>
-      <to>tr_psa_compare-get_insert_id_from_to</to>
+      <from>Write To Log: Parameters</from>
+      <to>jb_set_dynamic_db_connection_variables</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>jb_set_dynamic_db_connection_variables</from>
+      <to>Are columns to compare configured for this table?</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -1151,8 +1295,44 @@ ORDER BY
       <unconditional>N</unconditional>
     </hop>
     <hop>
+      <from>jb_set_dynamic_db_connection_variables</from>
+      <to>Abort job 2</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_is_specified_db_type - PostgreSQL?</from>
+      <to>Abort job 3</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
       <from>Log: "insert_id" "from" &amp; "to" values</from>
       <to>tr_psa_mirrored_table-inject_meta-compare</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>tr_set_inserted_colnames_vrbls</from>
+      <to>jb_is_specified_db_type - PostgreSQL?</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_is_specified_db_type - PostgreSQL?</from>
+      <to>tr_psa_compare-get_insert_id_from_to</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -1195,13 +1375,14 @@ This job has parameters:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>This "Abort" is needed to tell the
-root calling job that execution
-has failed.</note>
+      <note>This "Abort" is needed
+to tell the root calling
+job that execution has
+failed.</note>
       <xloc>0</xloc>
-      <yloc>624</yloc>
-      <width>200</width>
-      <heigth>52</heigth>
+      <yloc>720</yloc>
+      <width>139</width>
+      <heigth>66</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -1218,44 +1399,18 @@ has failed.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>This "Success" allows execution to 
-continue without attempting to 
-compare the source and target
-tables for the case where no
-column mapping metdata is
-provided for the table.</note>
+      <note>This "Success" allows
+execution to continue
+without attempting to
+compare the source
+and target tables for
+the case where no
+column mapping 
+metdata is provided
+for the table.</note>
       <xloc>0</xloc>
-      <yloc>384</yloc>
-      <width>212</width>
-      <heigth>94</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>This transformation compares the source and target tables using an "ETL Metadata Injection" step.
-
-In addition to the parameters passed to the current job, this transformation is *also* passed:
-
-	PARAM_INSERT_ID_FROM			= ${QF_MIRROR_COMPARE_INSERT_ID_FROM}
-	PARAM_INSERT_ID_TO				= ${QF_MIRROR_COMPARE_INSERT_ID_TO}
-	PARAM_INSERT_ID_COLNAME		= ${QF_INSERT_ID_COLNAME}
-	PARAM_INSERTED_ON_COLNAME	= ${QF_INSERTED_ON_COLNAME}
-</note>
-      <xloc>736</xloc>
-      <yloc>928</yloc>
-      <width>585</width>
+      <yloc>432</yloc>
+      <width>140</width>
       <heigth>136</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -1273,17 +1428,45 @@ In addition to the parameters passed to the current job, this transformation is 
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>The query here in this step must match the query in the step "Source (OBO) column names to compare"
-in the transformation "tr_psa_mirrored_table-inject_meta-compare" that is executed below. This is 
-because a PDI runtime error occurs if an empty stream is sent to an "ETL Metadata Injection" step. To 
-avoid this possibility in "tr_psa_mirrored_table-inject_meta-compare", we check that metadata is 
-available here before executing that transformation. The only reason why this case should occur is if
-a table is marked for mirroring, but no column mapping metdata is provided - this should never occur,
-but we check in order to provide a warning message, rather than letting PDI choke on this problem.</note>
-      <xloc>736</xloc>
-      <yloc>288</yloc>
-      <width>605</width>
-      <heigth>108</heigth>
+      <note>"tr_psa_mirrored_table-inject_meta-compare" compares the source and target tables using an "ETL Metadata Injection" step for the case where
+the "source" DB is a PostgreSQL database.
+
+In addition to the parameters passed to the current job, this transformation is *also* passed:
+
+	PARAM_DYN_DB_CONN_DB_*		= ${QF_DYN_DB_CONN_DB_*} 		(* = HOST, PORT, DATABASE, USERNAME, PASSWORD)
+	PARAM_INSERT_ID_FROM			= ${QF_MIRROR_COMPARE_INSERT_ID_FROM}
+	PARAM_INSERT_ID_TO				= ${QF_MIRROR_COMPARE_INSERT_ID_TO}
+	PARAM_INSERT_ID_COLNAME		= ${QF_INSERT_ID_COLNAME}
+	PARAM_INSERTED_ON_COLNAME	= ${QF_INSERTED_ON_COLNAME}</note>
+      <xloc>592</xloc>
+      <yloc>1024</yloc>
+      <width>847</width>
+      <heigth>150</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>The query here in this step must match the query in the step "Source (OBO) column names to compare" in the transformation 
+"tr_psa_mirrored_table-inject_meta-compare" that is executed below. This is because a PDI runtime error occurs if an empty stream is sent to an
+"ETL Metadata Injection" step. To avoid this possibility in "tr_psa_mirrored_table-inject_meta-compare", we check that metadata is available here
+before executing that transformation. The only reason why this case should occur is if a table is marked for mirroring, but no column mapping
+metdata is provided - this should never occur, but we check in order to provide a warning message, rather than letting PDI choke on this problem.</note>
+      <xloc>592</xloc>
+      <yloc>368</yloc>
+      <width>858</width>
+      <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -1300,32 +1483,29 @@ but we check in order to provide a warning message, rather than letting PDI chok
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Given the timestamp when the PSA mirror tables were last loaded (PARAM_LAST_LOAD_TIMESTAMP),
-tr_mirror_compare-get_archive_id_from_to computes the minumum and maximum "insert_id" values 
-to use for selecting rows of the OBO table and the PSA table in order to verify that the two 
-tables "agree". This "insert_id" range is table-specific, of course. These IDs are assigned to the variables:
+      <note>Given the timestamp when the PSA mirror tables were last loaded (PARAM_LAST_LOAD_TIMESTAMP), tr_mirror_compare-get_archive_id_from_to
+computes the minimum and maximum "insert_id" values to use for selecting rows of the source table and the PSA table in order to verify that the
+two tables "agree". This "insert_id" range is table-specific, of course. These IDs are assigned to the variables:
 
 	QF_MIRROR_COMPARE_INSERT_ID_FROM
 	QF_MIRROR_COMPARE_INSERT_ID_TO
 
-The reason why we must go through all of this trouble is that we need to handle the following
-cases when selecting rows from these two tables to compare:
+The reason to go through all of this trouble is to handle the following cases when selecting rows to compare from these two tables:
 
-1.	Rows may have been *removed* from the OBO table that were mirrored earlier to 
-	the PSA. We do not want to include these rows from the PSA table because the comparision 
-	for these rows will definitely "fail" (compared_rows_missing>0 will be reported).
-2.	Rows may have been *added* to the OBO after the last mirror operation updated the 
-	PSA table. We do not want to include these rows in the comparison because we cannot expect 
-	them to be found in the PSA table (compared_rows_extra>0 will be reported).
+1.	Rows may have been *removed* from the OBO table that were mirrored earlier to the PSA. We do not want to include these rows from the PSA
+	table because the comparision for these rows will definitely "fail" (compared_rows_missing>0 will be reported).
+2.	Rows may have been *added* to the OBO after the last mirror operation updated the PSA table. We do not want to include these rows in the
+	comparison because we cannot expect them to be found in the PSA table (compared_rows_extra>0 will be reported).
 
 In addition to the parameters passed to the current job, this transformation is *also* passed:
 
+	PARAM_DYN_DB_CONN_DB_*		= ${QF_DYN_DB_CONN_DB_*} 		(* = HOST, PORT, DATABASE, USERNAME, PASSWORD)
 	PARAM_INSERT_ID_COLNAME		= ${QF_INSERT_ID_COLNAME}
 	PARAM_INSERTED_ON_COLNAME	= ${QF_INSERTED_ON_COLNAME}</note>
-      <xloc>736</xloc>
-      <yloc>592</yloc>
-      <width>615</width>
-      <heigth>318</heigth>
+      <xloc>592</xloc>
+      <yloc>736</yloc>
+      <width>871</width>
+      <heigth>276</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -1342,14 +1522,13 @@ In addition to the parameters passed to the current job, this transformation is 
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>The query here in this step must match the query in the step "Source (OBO) primary key column names"
-in the transformation "tr_psa_mirrored_table-inject_meta-compare" that is executed below. This is 
-to avoid a PDI runtime error that would occur if no primary key column metadata is availalbe for ETL
-metadata injection. The explanation is the same as that described for the previous step above.</note>
-      <xloc>736</xloc>
-      <yloc>416</yloc>
-      <width>605</width>
-      <heigth>66</heigth>
+      <note>The query here in this step must match the query in the step "Source (OBO) primary key column names" in the transformation
+"tr_psa_mirrored_table-inject_meta-compare" that is executed below. This is to avoid a PDI runtime error that would occur if no primary key
+column metadata is availalbe for ETL metadata injection. The explanation is the same as that described for the previous step above.</note>
+      <xloc>592</xloc>
+      <yloc>464</yloc>
+      <width>825</width>
+      <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -1366,14 +1545,12 @@ metadata injection. The explanation is the same as that described for the previo
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Set the variables QF_INSERT_ID_COLNAME &amp; QF_INSERTED_ON_COLNAME
-to the names of the columns from the source table that function as 
-"insert_id" &amp; "inserted_on" column. These values are passed as parameters
-to the job entry tr_psa_mirrored_table-inject_meta-compare below.</note>
-      <xloc>736</xloc>
-      <yloc>512</yloc>
-      <width>450</width>
-      <heigth>66</heigth>
+      <note>Set the variables QF_INSERT_ID_COLNAME &amp; QF_INSERTED_ON_COLNAME to the names of the columns from the source table that function as 
+"insert_id" &amp; "inserted_on" column. These values are passed as parameters to the job entry tr_psa_mirrored_table-inject_meta-compare below.</note>
+      <xloc>592</xloc>
+      <yloc>560</yloc>
+      <width>846</width>
+      <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -1384,6 +1561,79 @@ to the job entry tr_psa_mirrored_table-inject_meta-compare below.</note>
       <backgroundcolorred>255</backgroundcolorred>
       <backgroundcolorgreen>205</backgroundcolorgreen>
       <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>This job sets the PDI variables:
+
+	QF_DYN_DB_CONN_DB_HOST
+	QF_DYN_DB_CONN_DB_PORT
+	QF_DYN_DB_CONN_DB_DATABASE
+	QF_DYN_DB_CONN_DB_USERNAME
+	QF_DYN_DB_CONN_DB_PASSWORD
+
+for use below, based on a single parameter:  PARAM_DB_ID = PARAM_SOURCE_DB_ID</note>
+      <xloc>592</xloc>
+      <yloc>208</yloc>
+      <width>513</width>
+      <heigth>136</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Check here for additional DB types, if ever necessary.</note>
+      <xloc>672</xloc>
+      <yloc>672</yloc>
+      <width>319</width>
+      <heigth>24</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>The transformations below
+should, ideally, contain
+"postgresql" in their names.</note>
+      <xloc>256</xloc>
+      <yloc>752</yloc>
+      <width>147</width>
+      <heigth>46</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>8</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>255</fontcolorred>
+      <fontcolorgreen>255</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>0</backgroundcolorred>
+      <backgroundcolorgreen>0</backgroundcolorgreen>
+      <backgroundcolorblue>0</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
       <bordercolorblue>100</bordercolorblue>

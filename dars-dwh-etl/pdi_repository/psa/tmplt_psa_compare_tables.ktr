@@ -9,14 +9,29 @@
     <directory>/psa</directory>
     <parameters>
       <parameter>
-        <name>PARAM_INSERT_ID_FROM</name>
-        <default_value>-1</default_value>
-        <description>Smallest value of "insert_id" to use for selecting rows to compare</description>
+        <name>PARAM_DYN_DB_CONN_DB_DATABASE</name>
+        <default_value />
+        <description>for "dynamic_postgres_db" database connection</description>
       </parameter>
       <parameter>
-        <name>PARAM_INSERT_ID_TO</name>
-        <default_value>-1</default_value>
-        <description>Largest value of "insert_id" to use for selecting rows to compare</description>
+        <name>PARAM_DYN_DB_CONN_DB_HOST</name>
+        <default_value />
+        <description>for "dynamic_postgres_db" database connection</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_DB_PASSWORD</name>
+        <default_value />
+        <description>for "dynamic_postgres_db" database connection</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_DB_PORT</name>
+        <default_value />
+        <description>for "dynamic_postgres_db" database connection</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_DB_USERNAME</name>
+        <default_value />
+        <description>for "dynamic_postgres_db" database connection</description>
       </parameter>
       <parameter>
         <name>PARAM_INSERTED_ON_COLNAME</name>
@@ -27,6 +42,16 @@
         <name>PARAM_INSERT_ID_COLNAME</name>
         <default_value>insert_id</default_value>
         <description>Name of column acting as "insert_id" column of source table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_INSERT_ID_FROM</name>
+        <default_value>-1</default_value>
+        <description>Smallest value of "insert_id" to use for selecting rows to compare</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_INSERT_ID_TO</name>
+        <default_value>-1</default_value>
+        <description>Largest value of "insert_id" to use for selecting rows to compare</description>
       </parameter>
       <parameter>
         <name>PARAM_SOURCE_DB_ID</name>
@@ -464,7 +489,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/07/03 16:24:31.876</modified_date>
+    <modified_date>2017/08/30 10:59:24.226</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -478,7 +503,7 @@ in each stream must be identical and in the same order when
 fed to the "Merge rows" step. The SELECT statements in these 
 two "Table input" steps set the field order appropriately.</note>
       <xloc>512</xloc>
-      <yloc>240</yloc>
+      <yloc>304</yloc>
       <width>375</width>
       <heigth>108</heigth>
       <fontname>Ubuntu</fontname>
@@ -497,25 +522,30 @@ two "Table input" steps set the field order appropriately.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>This transformation verifies that a table from the source (OBO) DB has been correctly mirrored from the target (PSA) DB. This is an ETL metadata 
-injection "template" transformation that can be used to compare *any* tables that are mirrored between these two databases. It has parameters:
+      <note>This transformation verifies that a table from a "source" DB has been correctly mirrored from the target (PSA) DB. This is an ETL metadata injection
+"template" transformation that can be used to compare *any* tables that are mirrored between these two databases. It has parameters:
 
-	PARAM_SOURCE_DB_ID				ID the "source" database containing tables will be mirrored to a "target" database
-	PARAM_LAST_LOAD_TIMESTAMP	Timestamp for when the target PSA DB mirror tables were last updated from the source DB
-	PARAM_INSERT_ID_FROM			"from" value for the "insert_id" column of the source OBO table that is being compared to the PSA table
-	PARAM_INSERT_ID_TO			"to" value for the "insert_id" column of the source OBO table that is being compared to the PSA table
-	PARAM_INSERT_ID_COLNAME		Name of column acting as "insert_id"  timestamp column of source table
-	PARAM_INSERTED_ON_COLNAME	Name of column acting as "inserted_on" column of source table
-	PARAM_SOURCE_SCHEMA			Name of schema containing source table to compare to target table
-	PARAM_SOURCE_TABLE			Name of source table to compare to target table
-	PARAM_SOURCE_SCHEMA_TABLE	${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
-	PARAM_TARGET_SCHEMA			Name of schema containing target table to compare with (not currently used)
-	PARAM_TARGET_TABLE				Name of target table to compare with (not currently used)
-	PARAM_TARGET_SCHEMA_TABLE	${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</note>
-      <xloc>16</xloc>
+	PARAM_SOURCE_DB_ID						ID the "source" database containing tables will be mirrored to a "target" database
+	PARAM_DYN_DB_CONN_DB_HOST			for "dynamic_postgres_db" database connection
+	PARAM_DYN_DB_CONN_DB_PORT			for "dynamic_postgres_db" database connection
+	PARAM_DYN_DB_CONN_DB_DATABASE		for "dynamic_postgres_db" database connection
+	PARAM_DYN_DB_CONN_DB_USERNAME		for "dynamic_postgres_db" database connection
+	PARAM_DYN_DB_CONN_DB_PASSWORD	for "dynamic_postgres_db" database connection
+	PARAM_LAST_LOAD_TIMESTAMP			Timestamp for when the target PSA DB mirror tables were last updated from the source DB
+	PARAM_INSERT_ID_FROM					"from" value for the "insert_id" column of the source OBO table that is being compared to the PSA table
+	PARAM_INSERT_ID_TO						"to" value for the "insert_id" column of the source OBO table that is being compared to the PSA table
+	PARAM_INSERT_ID_COLNAME				Name of column acting as "insert_id"  timestamp column of source table
+	PARAM_INSERTED_ON_COLNAME			Name of column acting as "inserted_on" column of source table
+	PARAM_SOURCE_SCHEMA					Name of schema containing source table to compare to target table
+	PARAM_SOURCE_TABLE					Name of source table to compare to target table
+	PARAM_SOURCE_SCHEMA_TABLE			${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
+	PARAM_TARGET_SCHEMA					Name of schema containing target table to compare with (not currently used)
+	PARAM_TARGET_TABLE						Name of target table to compare with (not currently used)
+	PARAM_TARGET_SCHEMA_TABLE			${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</note>
+      <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>858</width>
-      <heigth>220</heigth>
+      <width>906</width>
+      <heigth>290</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -546,7 +576,7 @@ etl.table_meta row, it is also passed the parameters:
 	PARAM_SOURCE_SCHEMA
 	PARAM_SOURCE_TABLE</note>
       <xloc>352</xloc>
-      <yloc>544</yloc>
+      <yloc>608</yloc>
       <width>544</width>
       <heigth>192</heigth>
       <fontname>Ubuntu</fontname>
@@ -568,7 +598,7 @@ etl.table_meta row, it is also passed the parameters:
       <note>Compare the two streams row by row and determine whether they are 
 identical, different, "new" or "deleted".</note>
       <xloc>352</xloc>
-      <yloc>480</yloc>
+      <yloc>544</yloc>
       <width>423</width>
       <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
@@ -591,7 +621,7 @@ identical, different, "new" or "deleted".</note>
 field names from the source (OBO) DB. This is required for
 the "Merge rows" step.</note>
       <xloc>512</xloc>
-      <yloc>368</yloc>
+      <yloc>432</yloc>
       <width>348</width>
       <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
@@ -610,6 +640,57 @@ the "Merge rows" step.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
   </notepads>
+  <connection>
+    <name>dynamic_postgres_db</name>
+    <server>${PARAM_DYN_DB_CONN_DB_HOST}</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>${PARAM_DYN_DB_CONN_DB_DATABASE}</database>
+    <port>${PARAM_DYN_DB_CONN_DB_PORT}</port>
+    <username>${PARAM_DYN_DB_CONN_DB_USERNAME}</username>
+    <password>${PARAM_DYN_DB_CONN_DB_PASSWORD}</password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>${PARAM_DYN_DB_CONN_DB_PORT}</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
   <connection>
     <name>logging_db</name>
     <server>${QF_LOGGING_DB_HOST}</server>
@@ -638,57 +719,6 @@ the "Merge rows" step.</note>
       <attribute>
         <code>PORT_NUMBER</code>
         <attribute>${QF_LOGGING_DB_PORT}</attribute>
-      </attribute>
-      <attribute>
-        <code>PRESERVE_RESERVED_WORD_CASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>QUOTE_ALL_FIELDS</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>USE_POOLING</code>
-        <attribute>N</attribute>
-      </attribute>
-    </attributes>
-  </connection>
-  <connection>
-    <name>obo_opr_db</name>
-    <server>${QF_OBO_OPR_DB_HOST}</server>
-    <type>POSTGRESQL</type>
-    <access>Native</access>
-    <database>${QF_OBO_OPR_DB_DATABASE}</database>
-    <port>${QF_OBO_OPR_DB_PORT}</port>
-    <username>${QF_OBO_OPR_DB_USERNAME}</username>
-    <password>${QF_OBO_OPR_DB_PASSWORD}</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
-    <attributes>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>IS_CLUSTERED</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>PORT_NUMBER</code>
-        <attribute>${QF_OBO_OPR_DB_PORT}</attribute>
       </attribute>
       <attribute>
         <code>PRESERVE_RESERVED_WORD_CASE</code>
@@ -796,7 +826,7 @@ the "Merge rows" step.</note>
       <method>none</method>
       <schema_name />
     </partitioning>
-    <connection>obo_opr_db</connection>
+    <connection>dynamic_postgres_db</connection>
     <sql />
     <limit>0</limit>
     <lookup />
@@ -812,7 +842,7 @@ the "Merge rows" step.</note>
     </remotesteps>
     <GUI>
       <xloc>112</xloc>
-      <yloc>256</yloc>
+      <yloc>320</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -843,7 +873,7 @@ the "Merge rows" step.</note>
     </remotesteps>
     <GUI>
       <xloc>352</xloc>
-      <yloc>256</yloc>
+      <yloc>320</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -876,7 +906,7 @@ the "Merge rows" step.</note>
     </remotesteps>
     <GUI>
       <xloc>208</xloc>
-      <yloc>480</yloc>
+      <yloc>544</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -903,7 +933,7 @@ the "Merge rows" step.</note>
     </remotesteps>
     <GUI>
       <xloc>352</xloc>
-      <yloc>384</yloc>
+      <yloc>448</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -959,7 +989,7 @@ the "Merge rows" step.</note>
     </remotesteps>
     <GUI>
       <xloc>208</xloc>
-      <yloc>560</yloc>
+      <yloc>624</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
