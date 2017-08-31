@@ -9,6 +9,31 @@
     <directory>/psa/util</directory>
     <parameters>
       <parameter>
+        <name>PARAM_DYN_DB_CONN_DB_DATABASE</name>
+        <default_value />
+        <description>for "dynamic_postgres_db" database connection</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_DB_HOST</name>
+        <default_value />
+        <description>for "dynamic_postgres_db" database connection</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_DB_PASSWORD</name>
+        <default_value />
+        <description>for "dynamic_postgres_db" database connection</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_DB_PORT</name>
+        <default_value />
+        <description>for "dynamic_postgres_db" database connection</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_DB_USERNAME</name>
+        <default_value />
+        <description>for "dynamic_postgres_db" database connection</description>
+      </parameter>
+      <parameter>
         <name>PARAM_SOURCE_DB_ID</name>
         <default_value />
         <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
@@ -449,7 +474,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/08/23 14:28:03.319</modified_date>
+    <modified_date>2017/08/29 19:57:04.192</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -462,14 +487,19 @@ Therefore, this transformation writes one row to the etl.column_meta table for e
 
 This transformation has parameters:
 
-	PARAM_SOURCE_DB_ID			ID the "source" database containing the table for generating column metadata
-	PARAM_SOURCE_SCHEMA		Name of schema containing source table for generating column metadata
-	PARAM_SOURCE_TABLE		Name of source table for generating column metadata
-	PARAM_TABLE_META_ID		ID of the etl.table_meta row that the new etl.column_meta rows will be linked to</note>
+	PARAM_DYN_DB_CONN_DB_HOST			for "dynamic_postgres_db" database connection
+	PARAM_DYN_DB_CONN_DB_PORT			for "dynamic_postgres_db" database connection
+	PARAM_DYN_DB_CONN_DB_DATABASE		for "dynamic_postgres_db" database connection
+	PARAM_DYN_DB_CONN_DB_USERNAME		for "dynamic_postgres_db" database connection
+	PARAM_DYN_DB_CONN_DB_PASSWORD	for "dynamic_postgres_db" database connection
+	PARAM_SOURCE_DB_ID						ID the "source" database containing the table for generating column metadata
+	PARAM_SOURCE_SCHEMA					Name of schema containing source table for generating column metadata
+	PARAM_SOURCE_TABLE					Name of source table for generating column metadata
+	PARAM_TABLE_META_ID					ID of the etl.table_meta row that the new etl.column_meta rows will be linked to</note>
       <xloc>16</xloc>
       <yloc>0</yloc>
-      <width>731</width>
-      <heigth>164</heigth>
+      <width>770</width>
+      <heigth>234</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -489,7 +519,7 @@ This transformation has parameters:
       <note>Append a field to the stream that contains the value of ${PARAM_TABLE_META_ID}. This is the
 value of the foreign key that will link the new column_meta rows to its parent table_meta row.</note>
       <xloc>288</xloc>
-      <yloc>496</yloc>
+      <yloc>560</yloc>
       <width>561</width>
       <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
@@ -510,7 +540,7 @@ value of the foreign key that will link the new column_meta rows to its parent t
     <notepad>
       <note>Get names of all columns from the specified table.</note>
       <xloc>288</xloc>
-      <yloc>192</yloc>
+      <yloc>256</yloc>
       <width>305</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -532,7 +562,7 @@ value of the foreign key that will link the new column_meta rows to its parent t
       <note>Duplicate field "source_column_name" to "target_column_name". This assumes that the column
 names in the target database are identical to the column names in the source database.</note>
       <xloc>288</xloc>
-      <yloc>256</yloc>
+      <yloc>320</yloc>
       <width>565</width>
       <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
@@ -555,7 +585,7 @@ names in the target database are identical to the column names in the source dat
 a new field "column_meta_id" by adding MAX(column_meta_id) to these values.  "column_meta_id"
 will hold primary key values for the new etl.column_meta rows to insert.</note>
       <xloc>288</xloc>
-      <yloc>560</yloc>
+      <yloc>624</yloc>
       <width>586</width>
       <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
@@ -579,7 +609,7 @@ that contains the value MAX(column_meta_id). This is so that we
 can compute column_meta_id values that are not  yet used for
 new rows to insert into table etl.column_meta.</note>
       <xloc>544</xloc>
-      <yloc>640</yloc>
+      <yloc>704</yloc>
       <width>394</width>
       <heigth>66</heigth>
       <fontname>Ubuntu</fontname>
@@ -601,7 +631,7 @@ new rows to insert into table etl.column_meta.</note>
       <note>Add constant field "column_meta_id" to "column_meta_id_1" to create a new field "column_meta_id"
 to hold primary key values for the new etl.column_meta rows to insert.</note>
       <xloc>288</xloc>
-      <yloc>720</yloc>
+      <yloc>784</yloc>
       <width>598</width>
       <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
@@ -631,7 +661,7 @@ is_inserted_on_column=N					(can be set  to T below, depending on column name)
 is_row_can_be_deleted_from_column=N		(can be set  to T below, depending on column name)
 is_can_delete_row_column=N				(can be set  to T below, depending on column name)</note>
       <xloc>288</xloc>
-      <yloc>320</yloc>
+      <yloc>384</yloc>
       <width>613</width>
       <heigth>150</heigth>
       <fontname>Ubuntu</fontname>
@@ -655,7 +685,7 @@ is_can_delete_row_column=N				(can be set  to T below, depending on column name)
 	is_insert_id_column = Y
 ...</note>
       <xloc>288</xloc>
-      <yloc>832</yloc>
+      <yloc>896</yloc>
       <width>526</width>
       <heigth>66</heigth>
       <fontname>Ubuntu</fontname>
@@ -674,6 +704,57 @@ is_can_delete_row_column=N				(can be set  to T below, depending on column name)
       <drawshadow>Y</drawshadow>
     </notepad>
   </notepads>
+  <connection>
+    <name>dynamic_postgres_db</name>
+    <server>${PARAM_DYN_DB_CONN_DB_HOST}</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>${PARAM_DYN_DB_CONN_DB_DATABASE}</database>
+    <port>${PARAM_DYN_DB_CONN_DB_PORT}</port>
+    <username>${PARAM_DYN_DB_CONN_DB_USERNAME}</username>
+    <password>${PARAM_DYN_DB_CONN_DB_PASSWORD}</password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>${PARAM_DYN_DB_CONN_DB_PORT}</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
   <connection>
     <name>etl_db</name>
     <server>${QF_ETL_DB_HOST}</server>
@@ -753,57 +834,6 @@ is_can_delete_row_column=N				(can be set  to T below, depending on column name)
       <attribute>
         <code>PORT_NUMBER</code>
         <attribute>${QF_LOGGING_DB_PORT}</attribute>
-      </attribute>
-      <attribute>
-        <code>PRESERVE_RESERVED_WORD_CASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>QUOTE_ALL_FIELDS</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>USE_POOLING</code>
-        <attribute>N</attribute>
-      </attribute>
-    </attributes>
-  </connection>
-  <connection>
-    <name>obo_db</name>
-    <server>${QF_OBO_DB_HOST}</server>
-    <type>POSTGRESQL</type>
-    <access>Native</access>
-    <database>${QF_OBO_DB_DATABASE}</database>
-    <port>${QF_OBO_DB_PORT}</port>
-    <username>${QF_OBO_DB_USERNAME}</username>
-    <password>${QF_OBO_DB_PASSWORD}</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
-    <attributes>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>IS_CLUSTERED</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>PORT_NUMBER</code>
-        <attribute>${QF_OBO_DB_PORT}</attribute>
       </attribute>
       <attribute>
         <code>PRESERVE_RESERVED_WORD_CASE</code>
@@ -997,7 +1027,7 @@ is_can_delete_row_column=N				(can be set  to T below, depending on column name)
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>368</yloc>
+      <yloc>432</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1031,7 +1061,7 @@ is_can_delete_row_column=N				(can be set  to T below, depending on column name)
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>576</yloc>
+      <yloc>640</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1163,7 +1193,7 @@ if(target_column_name == "insert_id" || target_column_name == "archive_id") {   
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>848</yloc>
+      <yloc>912</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1202,7 +1232,7 @@ if(target_column_name == "insert_id" || target_column_name == "archive_id") {   
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>720</yloc>
+      <yloc>784</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1242,7 +1272,7 @@ if(target_column_name == "insert_id" || target_column_name == "archive_id") {   
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>256</yloc>
+      <yloc>320</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1277,7 +1307,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>384</xloc>
-      <yloc>656</yloc>
+      <yloc>720</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1315,7 +1345,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>496</yloc>
+      <yloc>560</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1358,7 +1388,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>928</yloc>
+      <yloc>992</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1394,7 +1424,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>656</yloc>
+      <yloc>720</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1427,7 +1457,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>784</yloc>
+      <yloc>848</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1442,7 +1472,7 @@ FROM
       <method>none</method>
       <schema_name />
     </partitioning>
-    <connection>obo_db</connection>
+    <connection>dynamic_postgres_db</connection>
     <sql>SELECT 
     c.column_name                    AS "source_column_name",
     kcu.ordinal_position IS NOT NULL AS "is_primary_key_column",
@@ -1479,7 +1509,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>192</yloc>
+      <yloc>256</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

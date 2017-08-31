@@ -9,9 +9,9 @@
     <directory>/generic</directory>
     <parameters>
       <parameter>
-        <name>PARAM_SOURCE_DB_ID</name>
-        <default_value />
-        <description>ID of database containing the source tables to mirror</description>
+        <name>PARAM_TARGET_DB_ID</name>
+        <default_value>-1</default_value>
+        <description>ID of the "target" database to which the "source" DB tables will be archived/mirrored</description>
       </parameter>
     </parameters>
     <log>
@@ -434,23 +434,23 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/06/27 07:42:24.036</modified_date>
+    <modified_date>2017/08/30 12:37:51.522</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>This transformation creates a stream containing the schema and table name for each table from a source database that will be compared to a
-corresponding table in a target database.
+      <note>This transformation creates a stream that contains details of each table from one or more "source" database(s) that will be compared to a
+corresponding table in a "target" database. Each row of the stream corresponds to a single such table pair.
 
-This stream (containing the schema and table names) is copied to the "result" of this transformation so that it can be used elsewhere in another job.
+This stream is copied to the "result" of this transformation so that it can be used elsewhere in another job.
 
 This transformation has parameter:
 
-	PARAM_SOURCE_DB_ID			ID of database containing the source tables to compare</note>
+	PARAM_TARGET_DB_ID			ID of the "target" database to which the "source" DB tables will be compared</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>867</width>
+      <width>816</width>
       <heigth>122</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -636,16 +636,19 @@ that is mirrored from a source database to a target database.</note>
     </partitioning>
     <connection>etl_db</connection>
     <sql>SELECT
+    table_meta_id,
+    source_db_id,
     source_schema_name AS "source_schema",
     source_table_name AS "source_table",
     source_schema_name || '.' || source_table_name AS "source_schema_dot_table",
+    target_db_id,
     target_schema_name AS "target_schema",
     target_table_name  AS "target_table",
     target_schema_name || '.' || target_table_name AS "target_schema_dot_table"
 FROM
     etl.table_meta
 WHERE
-    source_db_id=${PARAM_SOURCE_DB_ID} AND
+    target_db_id=${PARAM_TARGET_DB_ID} AND
     compare_tables=true
 ORDER BY
     source_schema_name,

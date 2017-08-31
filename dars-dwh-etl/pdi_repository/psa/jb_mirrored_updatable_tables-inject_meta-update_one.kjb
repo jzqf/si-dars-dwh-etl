@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/08/23 12:01:28.214</modified_date>
+  <modified_date>2017/08/29 19:55:11.412</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CDC_CURRENT_LOAD</name>
@@ -21,9 +21,34 @@
       <description>Timestamp of last successful load from the source database</description>
     </parameter>
     <parameter>
-      <name>PARAM_SOURCE_DB_ID</name>
+      <name>PARAM_DYN_DB_CONN_DB_DATABASE</name>
       <default_value />
-      <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
+      <description>for "dynamic" database connection, e.g., "dynamic_postgres_db"</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_DB_HOST</name>
+      <default_value />
+      <description>for "dynamic" database connection, e.g., "dynamic_postgres_db"</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_DB_PASSWORD</name>
+      <default_value />
+      <description>for "dynamic" database connection, e.g., "dynamic_postgres_db"</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_DB_PORT</name>
+      <default_value />
+      <description>for "dynamic" database connection, e.g., "dynamic_postgres_db"</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_DB_USERNAME</name>
+      <default_value />
+      <description>for "dynamic" database connection, e.g., "dynamic_postgres_db"</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_SOURCE_DB_ID</name>
+      <default_value>0</default_value>
+      <description>ID the "source" database containing tables will be archived/mirrored to a "target" database</description>
     </parameter>
     <parameter>
       <name>PARAM_SOURCE_SCHEMA</name>
@@ -446,7 +471,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>608</xloc>
-      <yloc>192</yloc>
+      <yloc>256</yloc>
     </entry>
     <entry>
       <name>tr_mirrored_updatable_table-inject_meta-update</name>
@@ -497,8 +522,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>608</xloc>
-      <yloc>768</yloc>
+      <xloc>880</xloc>
+      <yloc>832</yloc>
     </entry>
     <entry>
       <name>jb_update_etl_table_meta_mirror_details</name>
@@ -536,8 +561,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>608</xloc>
-      <yloc>864</yloc>
+      <xloc>880</xloc>
+      <yloc>928</yloc>
     </entry>
     <entry>
       <name>jb_log_error 6</name>
@@ -575,8 +600,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>816</xloc>
-      <yloc>768</yloc>
+      <xloc>1088</xloc>
+      <yloc>832</yloc>
     </entry>
     <entry>
       <name>Abort job</name>
@@ -586,8 +611,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>944</xloc>
-      <yloc>528</yloc>
+      <xloc>1184</xloc>
+      <yloc>592</yloc>
     </entry>
     <entry>
       <name>Is there column mapping metadata for this table?</name>
@@ -617,7 +642,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>608</xloc>
-      <yloc>288</yloc>
+      <yloc>352</yloc>
     </entry>
     <entry>
       <name>jb_log_error 1</name>
@@ -655,8 +680,8 @@ ORDER BY
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>1</nr>
-      <xloc>816</xloc>
-      <yloc>288</yloc>
+      <xloc>880</xloc>
+      <yloc>352</yloc>
     </entry>
     <entry>
       <name>Success</name>
@@ -665,8 +690,8 @@ ORDER BY
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>944</xloc>
-      <yloc>288</yloc>
+      <xloc>1184</xloc>
+      <yloc>352</yloc>
     </entry>
     <entry>
       <name>Is there primary key metadata for this table?</name>
@@ -699,7 +724,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>1</nr>
       <xloc>608</xloc>
-      <yloc>384</yloc>
+      <yloc>448</yloc>
     </entry>
     <entry>
       <name>jb_log_error 2</name>
@@ -737,8 +762,8 @@ ORDER BY
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>2</nr>
-      <xloc>816</xloc>
-      <yloc>384</yloc>
+      <xloc>880</xloc>
+      <yloc>448</yloc>
     </entry>
     <entry>
       <name>Is there updatable column metadata for this table?</name>
@@ -780,7 +805,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>1</nr>
       <xloc>608</xloc>
-      <yloc>480</yloc>
+      <yloc>544</yloc>
     </entry>
     <entry>
       <name>jb_log_error 3</name>
@@ -818,8 +843,8 @@ ORDER BY
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>2</nr>
-      <xloc>816</xloc>
-      <yloc>480</yloc>
+      <xloc>880</xloc>
+      <yloc>544</yloc>
     </entry>
     <entry>
       <name>tr_set_last_updated_on_colname_vrbl</name>
@@ -856,7 +881,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>608</xloc>
-      <yloc>576</yloc>
+      <yloc>640</yloc>
     </entry>
     <entry>
       <name>jb_log_error 4</name>
@@ -894,8 +919,8 @@ ORDER BY
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>816</xloc>
-      <yloc>576</yloc>
+      <xloc>880</xloc>
+      <yloc>640</yloc>
     </entry>
     <entry>
       <name>tr_set_inserted_colnames_vrbls</name>
@@ -932,7 +957,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>608</xloc>
-      <yloc>672</yloc>
+      <yloc>736</yloc>
     </entry>
     <entry>
       <name>jb_log_error 5</name>
@@ -970,8 +995,8 @@ ORDER BY
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>816</xloc>
-      <yloc>672</yloc>
+      <xloc>880</xloc>
+      <yloc>736</yloc>
     </entry>
     <entry>
       <name>DUMMY</name>
@@ -990,8 +1015,111 @@ ORDER BY
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>816</xloc>
-      <yloc>864</yloc>
+      <xloc>1184</xloc>
+      <yloc>928</yloc>
+    </entry>
+    <entry>
+      <name>jb_log_error - Untreated case</name>
+      <description />
+      <type>JOB</type>
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_log_error</jobname>
+      <directory>/generic</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_ERROR_MESSAGE</name>
+          <stream_name />
+          <value>Untreated case for "source" DB in jb_mirrored_updatable_tables-inject_meta-update_one</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>608</xloc>
+      <yloc>1040</yloc>
+    </entry>
+    <entry>
+      <name>DUMMY 2</name>
+      <description />
+      <type>SPECIAL</type>
+      <start>N</start>
+      <dummy>Y</dummy>
+      <repeat>N</repeat>
+      <schedulerType>0</schedulerType>
+      <intervalSeconds>0</intervalSeconds>
+      <intervalMinutes>60</intervalMinutes>
+      <hour>12</hour>
+      <minutes>0</minutes>
+      <weekDay>1</weekDay>
+      <DayOfMonth>1</DayOfMonth>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>1184</xloc>
+      <yloc>1040</yloc>
+    </entry>
+    <entry>
+      <name>jb_is_specified_db_type - PostgreSQL?</name>
+      <description />
+      <type>JOB</type>
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_is_specified_db_type</jobname>
+      <directory>/generic/dynamic_db_connections</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_DB_ID</name>
+          <stream_name />
+          <value>${PARAM_SOURCE_DB_ID}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_REQUIRED_DB_TYPE_ID</name>
+          <stream_name />
+          <value>${QF_DB_TYPE_ID_POSTGRESQL}</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>608</xloc>
+      <yloc>832</yloc>
     </entry>
   </entries>
   <hops>
@@ -1150,15 +1278,6 @@ ORDER BY
     </hop>
     <hop>
       <from>tr_set_inserted_colnames_vrbls</from>
-      <to>tr_mirrored_updatable_table-inject_meta-update</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>tr_set_inserted_colnames_vrbls</from>
       <to>jb_log_error 5</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -1193,12 +1312,62 @@ ORDER BY
       <evaluation>Y</evaluation>
       <unconditional>Y</unconditional>
     </hop>
+    <hop>
+      <from>jb_log_error - Untreated case</from>
+      <to>DUMMY 2</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>DUMMY 2</from>
+      <to>DUMMY</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>tr_set_inserted_colnames_vrbls</from>
+      <to>jb_is_specified_db_type - PostgreSQL?</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_is_specified_db_type - PostgreSQL?</from>
+      <to>tr_mirrored_updatable_table-inject_meta-update</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_is_specified_db_type - PostgreSQL?</from>
+      <to>jb_log_error - Untreated case</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
   </hops>
   <notepads>
     <notepad>
       <note>This job updates a single "updatable" table (INSERTs &amp; UPDATEs allowed, but no DELETEs) in the target PSA database that 
 mirrors a table from a source database. This job has parameters:
 
+	PARAM_DYN_DB_CONN_DB_HOST			for "dynamic" database connection, e.g., "dynamic_postgres_db"
+	PARAM_DYN_DB_CONN_DB_PORT			for "dynamic" database connection, e.g., "dynamic_postgres_db"
+	PARAM_DYN_DB_CONN_DB_DATABASE		for "dynamic" database connection, e.g., "dynamic_postgres_db"
+	PARAM_DYN_DB_CONN_DB_USERNAME		for "dynamic" database connection, e.g., "dynamic_postgres_db"
+	PARAM_DYN_DB_CONN_DB_PASSWORD	for "dynamic" database connection, e.g., "dynamic_postgres_db"
 	PARAM_SOURCE_DB_ID			ID the "source" database containing tables will be mirrored to a "target" database
 	PARAM_CDC_LAST_LOAD		Timestamp for when *all* tables of the PSA were most recently updated successfully
 	PARAM_CDC_CURRENT_LOAD	Used so that a consistent max timestamp is used for all ETL
@@ -1206,11 +1375,11 @@ mirrors a table from a source database. This job has parameters:
 	PARAM_SOURCE_TABLE		Name of source table to mirror to target table
 	PARAM_TARGET_SCHEMA		Name of schema containing target table to update (not currently used)
 	PARAM_TARGET_TABLE			Name of target table to update (not currently used)
-	PARAM_TABLE_META_ID		Primary key of etl.table_meta row for "source" table from which rows will be deleted</note>
+	PARAM_TABLE_META_ID		Primary key of etl.table_meta row for "source" table archived/mirrored to "target" table</note>
       <xloc>16</xloc>
       <yloc>0</yloc>
-      <width>727</width>
-      <heigth>164</heigth>
+      <width>742</width>
+      <heigth>234</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -1231,7 +1400,7 @@ mirrors a table from a source database. This job has parameters:
 current job. This records which mirror algorithm was used, as well as when the 
 mirroring was performed.</note>
       <xloc>16</xloc>
-      <yloc>848</yloc>
+      <yloc>912</yloc>
       <width>467</width>
       <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
@@ -1255,8 +1424,8 @@ root calling job will know that
 execution has failed. It will then direct
 the execution flow to the job that 
 sends out failure e-mails.</note>
-      <xloc>992</xloc>
-      <yloc>512</yloc>
+      <xloc>1232</xloc>
+      <yloc>576</yloc>
       <width>232</width>
       <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
@@ -1280,8 +1449,8 @@ attempting to update a target table for
 the case where no column mapping 
 metdata is provided for the table. This
 may not be the best behaviour.</note>
-      <xloc>992</xloc>
-      <yloc>272</yloc>
+      <xloc>1232</xloc>
+      <yloc>336</yloc>
       <width>252</width>
       <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
@@ -1300,15 +1469,15 @@ may not be the best behaviour.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>This step updates the target table using an ETL Metadata Injection step.
-This step  is passed the additional parameters:
+      <note>This transformation updates the target table using an ETL Metadata Injection
+step for the "OBO" source DB. This step  is passed the additional parameters:
 
 	PARAM_INSERT_ID_COLNAME
 	PARAM_INSERTED_ON_COLNAME
 	PARAM_LAST_UPDATED_ON_COLNAME</note>
       <xloc>16</xloc>
-      <yloc>736</yloc>
-      <width>429</width>
+      <yloc>800</yloc>
+      <width>460</width>
       <heigth>94</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -1336,7 +1505,7 @@ occur is if a table is marked for mirroring, but no column mapping
 metadata is provided - this should never occur, but we check in order to 
 provide a warning message, rather than letting PDI choke on this problem.</note>
       <xloc>16</xloc>
-      <yloc>224</yloc>
+      <yloc>288</yloc>
       <width>445</width>
       <heigth>136</heigth>
       <fontname>Ubuntu</fontname>
@@ -1359,7 +1528,7 @@ provide a warning message, rather than letting PDI choke on this problem.</note>
 tr_mirrored_updatable_table-inject_meta-update
 that is executed below (same reason as above).</note>
       <xloc>16</xloc>
-      <yloc>384</yloc>
+      <yloc>448</yloc>
       <width>367</width>
       <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
@@ -1382,7 +1551,7 @@ that is executed below (same reason as above).</note>
 tr_mirrored_updatable_table-inject_meta-update
 that is executed below (same reason as above).</note>
       <xloc>16</xloc>
-      <yloc>480</yloc>
+      <yloc>544</yloc>
       <width>367</width>
       <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
@@ -1406,7 +1575,7 @@ column from the source table that functions as a "last_updated_on"
 column. This value is passed as a parameter to the job entry 
 tr_mirrored_updatable_table-inject_meta-update below.</note>
       <xloc>16</xloc>
-      <yloc>560</yloc>
+      <yloc>624</yloc>
       <width>424</width>
       <heigth>66</heigth>
       <fontname>Ubuntu</fontname>
@@ -1430,7 +1599,7 @@ to the names of the columns from the source table that function as
 "insert_id" &amp; "inserted_on" column. These values are passed as parameters
 to the job entry tr_mirrored_updatable_table-inject_meta-update below.</note>
       <xloc>16</xloc>
-      <yloc>656</yloc>
+      <yloc>720</yloc>
       <width>450</width>
       <heigth>66</heigth>
       <fontname>Ubuntu</fontname>
