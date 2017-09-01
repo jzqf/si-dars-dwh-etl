@@ -8,19 +8,9 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/09/01 08:52:37.513</modified_date>
+  <modified_date>2017/09/01 12:22:15.999</modified_date>
   <parameters>
-    <parameter>
-      <name>PARAM_SOURCE_DB_ID</name>
-      <default_value />
-      <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_TARGET_DB_ID</name>
-      <default_value>10</default_value>
-      <description>ID of the "target" database to which the "source" DB tables will be archived/mirrored</description>
-    </parameter>
-  </parameters>
+    </parameters>
   <connection>
     <name>logging_db</name>
     <server>${QF_LOGGING_DB_HOST}</server>
@@ -365,7 +355,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>144</xloc>
-      <yloc>240</yloc>
+      <yloc>128</yloc>
     </entry>
     <entry>
       <name>tr_populate_table_meta-list_of_hardwired_tables</name>
@@ -402,7 +392,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>144</xloc>
-      <yloc>336</yloc>
+      <yloc>224</yloc>
     </entry>
     <entry>
       <name>jb_populate_table_meta-one_table</name>
@@ -431,29 +421,9 @@
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
         <parameter>
-          <name>PARAM_DYN_DB_CONN_DB_HOST</name>
-          <stream_name />
-          <value>${QF_DYN_DB_CONN_DB_HOST}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_DYN_DB_CONN_DB_PORT</name>
-          <stream_name />
-          <value>${QF_DYN_DB_CONN_DB_PORT}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_DYN_DB_CONN_DB_DATABASE</name>
-          <stream_name />
-          <value>${QF_DYN_DB_CONN_DB_DATABASE}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_DYN_DB_CONN_DB_USERNAME</name>
-          <stream_name />
-          <value>${QF_DYN_DB_CONN_DB_USERNAME}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_DYN_DB_CONN_DB_PASSWORD</name>
-          <stream_name />
-          <value>${QF_DYN_DB_CONN_DB_PASSWORD}</value>
+          <name>PARAM_SOURCE_DB_ID</name>
+          <stream_name>source_db_id</stream_name>
+          <value />
         </parameter>
         <parameter>
           <name>PARAM_SOURCE_SCHEMA</name>
@@ -465,13 +435,28 @@
           <stream_name>source_table_name</stream_name>
           <value />
         </parameter>
+        <parameter>
+          <name>PARAM_TARGET_DB_ID</name>
+          <stream_name>target_db_id</stream_name>
+          <value />
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_SCHEMA</name>
+          <stream_name>target_schema_name</stream_name>
+          <value />
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_TABLE</name>
+          <stream_name>target_table_name</stream_name>
+          <value />
+        </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>144</xloc>
-      <yloc>432</yloc>
+      <yloc>320</yloc>
     </entry>
   </entries>
   <hops>
@@ -496,25 +481,16 @@
   </hops>
   <notepads>
     <notepad>
-      <note>This job writes default rows to the etl.table_meta table under the simple assumption that the table names in the target (PSA) database will be identical
-to the table names in the source (OBO) database. The tables to use for generating these rows are specified manually in a "hardwired" Data Grid 
-transformation step.
+      <note>This job writes default rows to the tables:
 
-This job also creates default rows for the etl.column_meta table for each etl.table_meta row created.
+	etl.table_meta table 
+	etl.column_meta table
 
-Therefore, this job writes one row to the etl.table_meta table as well as a selection of etl.column_meta rows for each "source" table that is specified in
-tr_populate_table_meta-list_of_hardwired_tables.
-
-IMPORTANT:	All tables treatedby this job must be from the *same* "source" DB.
-
-This job has parameters:
-
-	PARAM_SOURCE_DB_ID			ID the "source" (OBO) database containing tables will be archived/mirrored to a "target" (PSA) database.
-	PARAM_TARGET_DB_ID			ID of the "target" database to which the "source" DB tables will be archived/mirrored</note>
+using the metadata supplied by the tr_populate_table_meta-list_of_hardwired_tables transformation.</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>892</width>
-      <heigth>220</heigth>
+      <width>607</width>
+      <heigth>94</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -538,7 +514,7 @@ etl.column_meta of the ETL DB.
 This transformation can be modified to use a "CSV file input"
 step to read this data from a file instead of using a "Data grid".</note>
       <xloc>320</xloc>
-      <yloc>304</yloc>
+      <yloc>192</yloc>
       <width>377</width>
       <heigth>94</heigth>
       <fontname>Ubuntu</fontname>
@@ -560,7 +536,7 @@ step to read this data from a file instead of using a "Data grid".</note>
       <note>This sub-job is run once for each table that is specified in
 tr_populate_table_meta-list_of_hardwired_tables.</note>
       <xloc>320</xloc>
-      <yloc>432</yloc>
+      <yloc>320</yloc>
       <width>338</width>
       <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
