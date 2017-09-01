@@ -429,7 +429,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/08/31 08:46:20.109</modified_date>
+    <modified_date>2017/09/01 08:22:42.219</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -461,13 +461,13 @@ passed to the sub-job. This procedure is used to generate table metadata for eac
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Each row of the stream created by this step specifies one table from a "source" DB
-to be archived/mirrored to a matching table from the target (PSA) DB.
+      <note>Each row of the stream created by the "data grid" step specifies one table from a 
+"source" DB to be archived/mirrored to a matching table from the target (PSA) DB.
 
 NOTE:	All tables listed in this step must belong to the same "source" DB.</note>
       <xloc>16</xloc>
-      <yloc>192</yloc>
-      <width>490</width>
+      <yloc>112</yloc>
+      <width>492</width>
       <heigth>66</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -485,17 +485,14 @@ NOTE:	All tables listed in this step must belong to the same "source" DB.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Create a new "Data grid" step for each new set of tables to treat.
-Just disable the hops from "Data grid" steps that have already 
-been used.
-
-Label each "Data grid" with a description of the tables treated, as
-well as possibly with the date (this might be useful for deleting
-old steps).</note>
-      <xloc>368</xloc>
-      <yloc>304</yloc>
-      <width>392</width>
-      <heigth>108</heigth>
+      <note>Create a Data Grid named "All source tables for PSA" that contains *all* tables ever treated for the PSA but comment out the outgoing hop.
+Each time more tables are treated in another Data Grid, copy those rows and then paste them into this "master" Data Grid. Enable the hop
+for this data grid before creating a Debian package for this project so that it is easy to create the necessary etl.table_meta &amp; etl.column_meta
+rows on another server where the package is installed.</note>
+      <xloc>0</xloc>
+      <yloc>368</yloc>
+      <width>836</width>
+      <heigth>66</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -565,12 +562,12 @@ old steps).</note>
   </connection>
   <order>
     <hop>
-      <from>Data Grid</from>
+      <from>MDX OBO Archive DB tables - 2017.08.31</from>
       <to>Copy rows to result</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Data Grid - Backup</from>
+      <from>ODMS OPR DB tables - 2017.08.31</from>
       <to>Copy rows to result</to>
       <enabled>N</enabled>
     </hop>
@@ -595,12 +592,12 @@ old steps).</note>
     </remotesteps>
     <GUI>
       <xloc>672</xloc>
-      <yloc>128</yloc>
+      <yloc>208</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Data Grid</name>
+    <name>MDX OBO Archive DB tables - 2017.08.31</name>
     <type>DataGrid</type>
     <description />
     <distribute>Y</distribute>
@@ -664,13 +661,13 @@ old steps).</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>192</xloc>
-      <yloc>128</yloc>
+      <xloc>128</xloc>
+      <yloc>464</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Data Grid - Backup</name>
+    <name>ODMS OPR DB tables - 2017.08.31</name>
     <type>DataGrid</type>
     <description />
     <distribute>Y</distribute>
@@ -706,23 +703,23 @@ old steps).</note>
     </fields>
     <data>
       <line>
-        <item>passage</item>
+        <item>public</item>
         <item>passage</item>
       </line>
       <line>
-        <item>passage</item>
+        <item>public</item>
         <item>image</item>
       </line>
       <line>
-        <item>tolldomain</item>
+        <item>public</item>
         <item>charging_point</item>
       </line>
       <line>
-        <item>tolldomain</item>
+        <item>public</item>
         <item>charging_point_group</item>
       </line>
       <line>
-        <item>tolldomain</item>
+        <item>public</item>
         <item>charging_point_group_group</item>
       </line>
     </data>
@@ -734,8 +731,8 @@ old steps).</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>192</xloc>
-      <yloc>352</yloc>
+      <xloc>416</xloc>
+      <yloc>208</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
