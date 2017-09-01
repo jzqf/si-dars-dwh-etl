@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/08/31 15:41:12.682</modified_date>
+  <modified_date>2017/09/01 08:52:37.513</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_SOURCE_DB_ID</name>
@@ -471,46 +471,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>144</xloc>
-      <yloc>608</yloc>
-    </entry>
-    <entry>
-      <name>jb_set_dynamic_db_connection_variables</name>
-      <description />
-      <type>JOB</type>
-      <specification_method>rep_name</specification_method>
-      <job_object_id />
-      <filename />
-      <jobname>jb_set_dynamic_db_connection_variables</jobname>
-      <directory>/generic/dynamic_db_connections</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Nothing</loglevel>
-      <slave_server_name />
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <expand_remote_job>N</expand_remote_job>
-      <create_parent_folder>N</create_parent_folder>
-      <pass_export>N</pass_export>
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-        <parameter>
-          <name>PARAM_DB_ID</name>
-          <stream_name />
-          <value>${PARAM_SOURCE_DB_ID}</value>
-        </parameter>
-      </parameters>
-      <set_append_logfile>N</set_append_logfile>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>144</xloc>
-      <yloc>448</yloc>
+      <yloc>432</yloc>
     </entry>
   </entries>
   <hops>
@@ -525,15 +486,6 @@
     </hop>
     <hop>
       <from>tr_populate_table_meta-list_of_hardwired_tables</from>
-      <to>jb_set_dynamic_db_connection_variables</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>jb_set_dynamic_db_connection_variables</from>
       <to>jb_populate_table_meta-one_table</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -579,12 +531,16 @@ This job has parameters:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Obtain a hardwired list of tables for which the table metadata will be
-generated, i.e., written to the etl.table_meta table of the ETL DB.</note>
+      <note>Obtain a hardwired list of tables for which the table metadata
+will be generated, i.e., written to the tables etl.table_meta and
+etl.column_meta of the ETL DB.
+
+This transformation can be modified to use a "CSV file input"
+step to read this data from a file instead of using a "Data grid".</note>
       <xloc>320</xloc>
-      <yloc>336</yloc>
-      <width>415</width>
-      <heigth>38</heigth>
+      <yloc>304</yloc>
+      <width>377</width>
+      <heigth>94</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -602,44 +558,11 @@ generated, i.e., written to the etl.table_meta table of the ETL DB.</note>
     </notepad>
     <notepad>
       <note>This sub-job is run once for each table that is specified in
-tr_populate_table_meta-list_of_hardwired_tables. It 
-consumes *all*of the rows in the result set that is created
-by "tr_populate_table_meta-list_of_hardwired_tables".</note>
+tr_populate_table_meta-list_of_hardwired_tables.</note>
       <xloc>320</xloc>
-      <yloc>592</yloc>
-      <width>345</width>
-      <heigth>66</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>This job sets the PDI variables:
-
-	QF_DYN_DB_CONN_DB_HOST
-	QF_DYN_DB_CONN_DB_PORT
-	QF_DYN_DB_CONN_DB_DATABASE
-	QF_DYN_DB_CONN_DB_USERNAME
-	QF_DYN_DB_CONN_DB_PASSWORD
-
-based on a single parameter:
-
-	PARAM_DB_ID = ${PARAM_SOURCE_DB_ID}</note>
-      <xloc>320</xloc>
-      <yloc>400</yloc>
-      <width>289</width>
-      <heigth>164</heigth>
+      <yloc>432</yloc>
+      <width>338</width>
+      <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
