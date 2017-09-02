@@ -429,7 +429,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/09/01 15:25:27.823</modified_date>
+    <modified_date>2017/09/01 16:16:49.195</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -485,7 +485,7 @@ NOTE:	All tables listed in this step must belong to the same "source" DB.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Create a Data Grid named "All source tables for PSA" that contains *all* tables ever treated for the PSA but comment out the outgoing hop.
+      <note>Create a Data Grid named "All tables for PSA" that contains *all* tables ever treated for the PSA but comment out the outgoing hop.
 Each time more tables are treated in another Data Grid, copy those rows and then paste them into this "master" Data Grid. Enable the hop
 for this data grid before creating a Debian package for this project so that it is easy to create the necessary etl.table_meta &amp; etl.column_meta
 rows on another server where the package is installed.</note>
@@ -564,10 +564,15 @@ rows on another server where the package is installed.</note>
     <hop>
       <from>MDX OBO Archive DB tables - 2017.08.31</from>
       <to>Copy rows to result</to>
+      <enabled>N</enabled>
+    </hop>
+    <hop>
+      <from>ODMS OPR DB tables - 2017.09.01</from>
+      <to>Copy rows to result</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>ODMS OPR DB tables - 2017.08.31</from>
+      <from>All tables for PSA</from>
       <to>Copy rows to result</to>
       <enabled>N</enabled>
     </hop>
@@ -731,7 +736,7 @@ rows on another server where the package is installed.</note>
     </GUI>
   </step>
   <step>
-    <name>ODMS OPR DB tables - 2017.08.31</name>
+    <name>ODMS OPR DB tables - 2017.09.01</name>
     <type>DataGrid</type>
     <description />
     <distribute>Y</distribute>
@@ -742,6 +747,17 @@ rows on another server where the package is installed.</note>
       <schema_name />
     </partitioning>
     <fields>
+      <field>
+        <name>source_db_id</name>
+        <type>Integer</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
       <field>
         <name>source_schema_name</name>
         <type>String</type>
@@ -764,27 +780,48 @@ rows on another server where the package is installed.</note>
         <precision>-1</precision>
         <set_empty_string>N</set_empty_string>
       </field>
+      <field>
+        <name>target_db_id</name>
+        <type>Integer</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>target_schema_name</name>
+        <type>String</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>255</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>target_table_name</name>
+        <type>String</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>255</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
     </fields>
     <data>
       <line>
+        <item>4</item>
         <item>public</item>
-        <item>passage</item>
-      </line>
-      <line>
-        <item>public</item>
-        <item>image</item>
-      </line>
-      <line>
-        <item>public</item>
-        <item>charging_point</item>
-      </line>
-      <line>
-        <item>public</item>
-        <item>charging_point_group</item>
-      </line>
-      <line>
-        <item>public</item>
-        <item>charging_point_group_group</item>
+        <item>country</item>
+        <item>10</item>
+        <item />
+        <item />
       </line>
     </data>
     <cluster_schema />
@@ -795,7 +832,109 @@ rows on another server where the package is installed.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>416</xloc>
+      <xloc>128</xloc>
+      <yloc>304</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>All tables for PSA</name>
+    <type>DataGrid</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <field>
+        <name>source_db_id</name>
+        <type>Integer</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>source_schema_name</name>
+        <type>String</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>255</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>source_table_name</name>
+        <type>String</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>255</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>target_db_id</name>
+        <type>Integer</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>target_schema_name</name>
+        <type>String</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>255</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>target_table_name</name>
+        <type>String</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>255</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+    </fields>
+    <data>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>country</item>
+        <item>10</item>
+        <item />
+        <item />
+      </line>
+    </data>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>128</xloc>
       <yloc>208</yloc>
       <draw>Y</draw>
     </GUI>
