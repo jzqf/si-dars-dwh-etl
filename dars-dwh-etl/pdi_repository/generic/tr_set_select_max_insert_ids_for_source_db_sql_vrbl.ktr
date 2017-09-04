@@ -1,13 +1,23 @@
 <transformation>
   <info>
-    <name>tr_populate_table_meta-list_of_hardwired_tables</name>
+    <name>tr_set_select_max_insert_ids_for_source_db_sql_vrbl</name>
     <description />
     <extended_description />
     <trans_version />
     <trans_type>Normal</trans_type>
     <trans_status>0</trans_status>
-    <directory>/psa/util</directory>
+    <directory>/generic</directory>
     <parameters>
+      <parameter>
+        <name>PARAM_SOURCE_DB_ID</name>
+        <default_value>-1</default_value>
+        <description>ID the "source" database containing tables that will be mirrored to a "target" database</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_DB_ID</name>
+        <default_value>-1</default_value>
+        <description>ID of the "target" database to which the "source" DB tables will be archived/mirrored</description>
+      </parameter>
     </parameters>
     <log>
       <trans-log-table>
@@ -429,22 +439,27 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/09/03 18:16:16.427</modified_date>
+    <modified_date>2017/09/04 14:06:39.777</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>This transformation specifies the tables from a "source" database that will be mirrored to corresponding tables of a "target" database.
-The "source" database is specified by PARAM_SOURCE_DB_ID.
+      <note>This transformation sets the variable:
 
-The stream from this transformation is copied to the "result" of this transformation. This result set is used in the parent job to execute
-a sub-job once for each row in this stream. At the same time, the stream values from the row are assigned to parameters that are 
-passed to the sub-job. This procedure is used to generate table metadata for each  table in the "source" and "target" databases.</note>
+	QF_SQL_SELECT_MAX_INSERT_IDS_FOR_SOURCE_DB
+
+to the SQL required to select the maximum value of the "insert_id" colum of each table in the specifed "source" DB
+that is archived/mirrored to the specified "target" DB.
+
+This transformation has parameters:
+
+	PARAM_SOURCE_DB_ID		ID the "source" DB containing tables to archive/mirror to the "target" DB
+	PARAM_TARGET_DB_ID		ID of the "target" DB to which the "source" DB tables will be archived/mirrored</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>799</width>
-      <heigth>94</heigth>
+      <width>676</width>
+      <heigth>164</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -461,14 +476,15 @@ passed to the sub-job. This procedure is used to generate table metadata for eac
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Each row of the stream created by the "data grid" step specifies one table from a 
-"source" DB to be archived/mirrored to a matching table from the target (PSA) DB.
-
-NOTE:	All tables listed in this step must belong to the same "source" DB.</note>
-      <xloc>16</xloc>
-      <yloc>112</yloc>
-      <width>492</width>
-      <heigth>66</heigth>
+      <note>Abort if an "insert_id" column is not defined for any
+table in the source DB. This Abort step must have the
+option "Abort with error" selected in order that this
+situation will be propagated back up to the main job
+as a failure so that a failure email will be sent.</note>
+      <xloc>368</xloc>
+      <yloc>416</yloc>
+      <width>319</width>
+      <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -479,36 +495,63 @@ NOTE:	All tables listed in this step must belong to the same "source" DB.</note>
       <backgroundcolorred>255</backgroundcolorred>
       <backgroundcolorgreen>205</backgroundcolorgreen>
       <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Create a Data Grid named "All tables for PSA" that contains *all* tables ever treated for the PSA but comment out the outgoing hop.
-Each time more tables are treated in another Data Grid, copy those rows and then paste them into this "master" Data Grid. Enable the hop
-for this data grid before creating a Debian package for this project so that it is easy to create the necessary etl.table_meta &amp; etl.column_meta
-rows on another server where the package is installed.</note>
-      <xloc>0</xloc>
-      <yloc>368</yloc>
-      <width>836</width>
-      <heigth>66</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>255</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
       <bordercolorblue>100</bordercolorblue>
       <drawshadow>Y</drawshadow>
     </notepad>
   </notepads>
+  <connection>
+    <name>etl_db</name>
+    <server>${QF_ETL_DB_HOST}</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>${QF_ETL_DB_DATABASE}</database>
+    <port>${QF_ETL_DB_PORT}</port>
+    <username>${QF_ETL_DB_USERNAME}</username>
+    <password>${QF_ETL_DB_PASSWORD}</password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>${QF_ETL_DB_PORT}</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
   <connection>
     <name>logging_db</name>
     <server>${QF_LOGGING_DB_HOST}</server>
@@ -562,24 +605,139 @@ rows on another server where the package is installed.</note>
   </connection>
   <order>
     <hop>
-      <from>MDX OBO Archive DB tables - 2017.08.31</from>
-      <to>Copy rows to result</to>
+      <from>Generate SQL to fetch MAX(archive_ID) for each source table</from>
+      <to>Write "select_sql_for_source_db" to log</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>ODMS OPR DB tables - 2017.09.01</from>
-      <to>Copy rows to result</to>
-      <enabled>N</enabled>
+      <from>Validate "select_sql_for_source_db"</from>
+      <to>Set QF_SQL_SELECT_MAX_INSERT_IDS_FOR_SOURCE_DB</to>
+      <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>All tables for PSA</from>
-      <to>Copy rows to result</to>
-      <enabled>N</enabled>
+      <from>Write "select_sql_for_source_db" to log</from>
+      <to>Detect empty stream</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Write "select_sql_for_source_db" to log</from>
+      <to>Validate "select_sql_for_source_db"</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Detect empty stream</from>
+      <to>Abort - No "insert_id" columns define for DB</to>
+      <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>All tables for PSA</name>
-    <type>DataGrid</type>
+    <name>Abort - No "insert_id" columns define for DB</name>
+    <type>Abort</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <row_threshold>0</row_threshold>
+    <message>tr_set_select_max_insert_ids_for_source_db_sql_vrbl: No "insert_id" columns defined for source DB with ID ${PARAM_SOURCE_DB_ID}</message>
+    <always_log_rows>Y</always_log_rows>
+    <abort_with_error>Y</abort_with_error>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>512</xloc>
+      <yloc>352</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Detect empty stream</name>
+    <type>DetectEmptyStream</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>512</xloc>
+      <yloc>272</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Generate SQL to fetch MAX(archive_ID) for each source table</name>
+    <type>TableInput</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <connection>etl_db</connection>
+    <sql>WITH
+    select_text AS (
+        SELECT
+            'SELECT ' || t.table_meta_id || ' AS "table_meta_id", MAX(' || c.source_column_name || ') AS "max_insert_id" FROM ' || t.source_schema_name || '.' || t.source_table_name AS "select_sql_for_one_table"
+        FROM 
+            etl.table_meta t
+        INNER JOIN
+            etl.column_meta c ON c.table_meta_id = t.table_meta_id 
+        WHERE
+            t.source_db_id = ${PARAM_SOURCE_DB_ID} AND
+            t.target_db_id = ${PARAM_TARGET_DB_ID} AND
+            c.is_insert_id_column = true
+    )
+SELECT
+--    'START TRANSACTION;' ||  chr(10) || 
+--    'START TRANSACTION ISOLATION LEVEL REPEATABLE READ;' ||  chr(10) || 
+--    'SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;' ||  chr(10) || 
+--    'SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;' ||  chr(10) || 
+    array_to_string(array_agg(select_sql_for_one_table), chr(10) || ' UNION ') || ';'
+--    ||  chr(10) || 'COMMIT;' 
+AS "select_sql_for_source_db"
+FROM
+    select_text</sql>
+    <limit>0</limit>
+    <lookup />
+    <execute_each_row>N</execute_each_row>
+    <variables_active>Y</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>176</xloc>
+      <yloc>192</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Set QF_SQL_SELECT_MAX_INSERT_IDS_FOR_SOURCE_DB</name>
+    <type>SetVariable</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -590,82 +748,13 @@ rows on another server where the package is installed.</note>
     </partitioning>
     <fields>
       <field>
-        <name>source_db_id</name>
-        <type>Integer</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>source_schema_name</name>
-        <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>255</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>source_table_name</name>
-        <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>255</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>target_db_id</name>
-        <type>Integer</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>target_schema_name</name>
-        <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>255</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>target_table_name</name>
-        <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>255</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
+        <field_name>select_sql_for_source_db</field_name>
+        <variable_name>QF_SQL_SELECT_MAX_INSERT_IDS_FOR_SOURCE_DB</variable_name>
+        <variable_type>ROOT_JOB</variable_type>
+        <default_value />
       </field>
     </fields>
-    <data>
-      <line>
-        <item>4</item>
-        <item>public</item>
-        <item>country</item>
-        <item>10</item>
-        <item />
-        <item />
-      </line>
-    </data>
+    <use_formatting>Y</use_formatting>
     <cluster_schema />
     <remotesteps>
       <input>
@@ -674,14 +763,14 @@ rows on another server where the package is installed.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>128</xloc>
-      <yloc>208</yloc>
+      <xloc>176</xloc>
+      <yloc>480</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Copy rows to result</name>
-    <type>RowsToResult</type>
+    <name>Validate "select_sql_for_source_db"</name>
+    <type>Validator</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -690,6 +779,37 @@ rows on another server where the package is installed.</note>
       <method>none</method>
       <schema_name />
     </partitioning>
+    <validate_all>N</validate_all>
+    <concat_errors>N</concat_errors>
+    <concat_separator>|</concat_separator>
+    <validator_field>
+      <name>select_sql_for_source_db</name>
+      <validation_name>select_sql_for_source_db NOT NULL or blank</validation_name>
+      <max_length />
+      <min_length>1</min_length>
+      <null_allowed>N</null_allowed>
+      <only_null_allowed>N</only_null_allowed>
+      <only_numeric_allowed>N</only_numeric_allowed>
+      <data_type>String</data_type>
+      <data_type_verified>Y</data_type_verified>
+      <conversion_mask />
+      <decimal_symbol />
+      <grouping_symbol />
+      <max_value />
+      <min_value />
+      <start_string />
+      <end_string />
+      <start_string_not_allowed />
+      <end_string_not_allowed />
+      <regular_expression />
+      <regular_expression_not_allowed />
+      <error_code />
+      <error_description>select_sql_for_source_db cannot be NULL or blank</error_description>
+      <is_sourcing_values>N</is_sourcing_values>
+      <sourcing_step />
+      <sourcing_field />
+      <allowed_value />
+    </validator_field>
     <cluster_schema />
     <remotesteps>
       <input>
@@ -698,132 +818,32 @@ rows on another server where the package is installed.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>672</xloc>
-      <yloc>208</yloc>
+      <xloc>176</xloc>
+      <yloc>400</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>MDX OBO Archive DB tables - 2017.08.31</name>
-    <type>DataGrid</type>
+    <name>Write "select_sql_for_source_db" to log</name>
+    <type>WriteToLog</type>
     <description />
-    <distribute>Y</distribute>
+    <distribute>N</distribute>
     <custom_distribution />
     <copies>1</copies>
     <partitioning>
       <method>none</method>
       <schema_name />
     </partitioning>
+    <loglevel>log_level_basic</loglevel>
+    <displayHeader>Y</displayHeader>
+    <limitRows>N</limitRows>
+    <limitRowsNumber>0</limitRowsNumber>
+    <logmessage />
     <fields>
       <field>
-        <name>source_db_id</name>
-        <type>Integer</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>source_schema_name</name>
-        <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>255</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>source_table_name</name>
-        <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>255</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>target_db_id</name>
-        <type>Integer</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>target_schema_name</name>
-        <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>255</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>target_table_name</name>
-        <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>255</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
+        <name>select_sql_for_source_db</name>
       </field>
     </fields>
-    <data>
-      <line>
-        <item>2</item>
-        <item>passage</item>
-        <item>passage</item>
-        <item>10</item>
-        <item />
-        <item />
-      </line>
-      <line>
-        <item>2</item>
-        <item>passage</item>
-        <item>image</item>
-        <item>10</item>
-        <item />
-        <item />
-      </line>
-      <line>
-        <item>2</item>
-        <item>tolldomain</item>
-        <item>charging_point</item>
-        <item>10</item>
-        <item />
-        <item />
-      </line>
-      <line>
-        <item>2</item>
-        <item>tolldomain</item>
-        <item>charging_point_group</item>
-        <item>10</item>
-        <item />
-        <item />
-      </line>
-      <line>
-        <item>2</item>
-        <item>tolldomain</item>
-        <item>charging_point_group_group</item>
-        <item>10</item>
-        <item />
-        <item />
-      </line>
-    </data>
     <cluster_schema />
     <remotesteps>
       <input>
@@ -832,110 +852,8 @@ rows on another server where the package is installed.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>128</xloc>
-      <yloc>464</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>ODMS OPR DB tables - 2017.09.01</name>
-    <type>DataGrid</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <fields>
-      <field>
-        <name>source_db_id</name>
-        <type>Integer</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>source_schema_name</name>
-        <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>255</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>source_table_name</name>
-        <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>255</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>target_db_id</name>
-        <type>Integer</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>target_schema_name</name>
-        <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>255</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>target_table_name</name>
-        <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>255</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-    </fields>
-    <data>
-      <line>
-        <item>4</item>
-        <item>public</item>
-        <item>country</item>
-        <item>10</item>
-        <item />
-        <item />
-      </line>
-    </data>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>128</xloc>
-      <yloc>304</yloc>
+      <xloc>176</xloc>
+      <yloc>272</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
