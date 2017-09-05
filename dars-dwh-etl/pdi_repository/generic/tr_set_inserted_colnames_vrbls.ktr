@@ -459,7 +459,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/09/03 19:05:01.354</modified_date>
+    <modified_date>2017/09/05 09:34:13.311</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -571,7 +571,7 @@ failure so that a failure email will be sent.</note>
       <note>Set PDI variable:
 
 	QF_INSERTED_ON_COLNAME</note>
-      <xloc>672</xloc>
+      <xloc>656</xloc>
       <yloc>576</yloc>
       <width>207</width>
       <heigth>52</heigth>
@@ -597,7 +597,7 @@ source table. This Abort step must have the option
 will be propagated back up to the main job as a 
 failure so that a failure email will be sent.</note>
       <xloc>880</xloc>
-      <yloc>448</yloc>
+      <yloc>576</yloc>
       <width>327</width>
       <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
@@ -610,6 +610,30 @@ failure so that a failure email will be sent.</note>
       <backgroundcolorred>255</backgroundcolorred>
       <backgroundcolorgreen>205</backgroundcolorgreen>
       <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>No error is raised if there is no
+"inserted_on" column because
+the ETL code has been modified
+to no longer require this column.</note>
+      <xloc>1072</xloc>
+      <yloc>464</yloc>
+      <width>201</width>
+      <heigth>66</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>255</backgroundcolorgreen>
+      <backgroundcolorblue>0</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
       <bordercolorblue>100</bordercolorblue>
@@ -766,8 +790,13 @@ failure so that a failure email will be sent.</note>
     </hop>
     <hop>
       <from>Detect empty stream 2</from>
-      <to>Abort - No "inserted_on" column name</to>
+      <to>Set QF_INSERTED_ON_COLNAME to blank</to>
       <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Set QF_INSERTED_ON_COLNAME to blank</from>
+      <to>Abort - No "inserted_on" column name</to>
+      <enabled>N</enabled>
     </hop>
   </order>
   <step>
@@ -822,7 +851,7 @@ failure so that a failure email will be sent.</note>
     </remotesteps>
     <GUI>
       <xloc>1024</xloc>
-      <yloc>384</yloc>
+      <yloc>512</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1193,6 +1222,39 @@ ORDER BY
     <GUI>
       <xloc>752</xloc>
       <yloc>304</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Set QF_INSERTED_ON_COLNAME to blank</name>
+    <type>SetVariable</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <field>
+        <field_name>inserted_on_col_name</field_name>
+        <variable_name>QF_INSERTED_ON_COLNAME</variable_name>
+        <variable_type>ROOT_JOB</variable_type>
+        <default_value />
+      </field>
+    </fields>
+    <use_formatting>Y</use_formatting>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1024</xloc>
+      <yloc>384</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
