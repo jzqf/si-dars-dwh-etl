@@ -6,7 +6,7 @@
     <trans_version />
     <trans_type>Normal</trans_type>
     <trans_status>0</trans_status>
-    <directory>/generic</directory>
+    <directory>/generic/store_insert_ids</directory>
     <parameters>
       <parameter>
         <name>PARAM_DYN_DB_CONN_DB_DATABASE</name>
@@ -459,7 +459,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/09/04 16:23:40.766</modified_date>
+    <modified_date>2017/09/05 12:23:01.882</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -728,6 +728,34 @@ as a failure so that a failure email will be sent.</note>
     </hop>
   </order>
   <step>
+    <name>Abort - Error updating etl.table_meta rows</name>
+    <type>Abort</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <row_threshold>0</row_threshold>
+    <message>tr_store_max_insert_ids_for_source_db_postgresql: Error encountered updating "max_insert_id" column of etl.table_meta</message>
+    <always_log_rows>Y</always_log_rows>
+    <abort_with_error>Y</abort_with_error>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>496</xloc>
+      <yloc>464</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
     <name>Abort - No "insert_id" columns define for DB</name>
     <type>Abort</type>
     <description />
@@ -811,43 +839,6 @@ as a failure so that a failure email will be sent.</note>
     </GUI>
   </step>
   <step>
-    <name>Write "select_sql_for_source_db" to log</name>
-    <type>WriteToLog</type>
-    <description />
-    <distribute>N</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <loglevel>log_level_basic</loglevel>
-    <displayHeader>Y</displayHeader>
-    <limitRows>N</limitRows>
-    <limitRowsNumber>0</limitRowsNumber>
-    <logmessage />
-    <fields>
-      <field>
-        <name>table_meta_id</name>
-      </field>
-      <field>
-        <name>max_insert_id</name>
-      </field>
-    </fields>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>160</xloc>
-      <yloc>304</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
     <name>Update "max_insert_id" for etl.table_meta rows</name>
     <type>Update</type>
     <description />
@@ -892,20 +883,29 @@ as a failure so that a failure email will be sent.</note>
     </GUI>
   </step>
   <step>
-    <name>Abort - Error updating etl.table_meta rows</name>
-    <type>Abort</type>
+    <name>Write "select_sql_for_source_db" to log</name>
+    <type>WriteToLog</type>
     <description />
-    <distribute>Y</distribute>
+    <distribute>N</distribute>
     <custom_distribution />
     <copies>1</copies>
     <partitioning>
       <method>none</method>
       <schema_name />
     </partitioning>
-    <row_threshold>0</row_threshold>
-    <message>tr_store_max_insert_ids_for_source_db_postgresql: Error encountered updating "max_insert_id" column of etl.table_meta</message>
-    <always_log_rows>Y</always_log_rows>
-    <abort_with_error>Y</abort_with_error>
+    <loglevel>log_level_basic</loglevel>
+    <displayHeader>Y</displayHeader>
+    <limitRows>N</limitRows>
+    <limitRowsNumber>0</limitRowsNumber>
+    <logmessage />
+    <fields>
+      <field>
+        <name>table_meta_id</name>
+      </field>
+      <field>
+        <name>max_insert_id</name>
+      </field>
+    </fields>
     <cluster_schema />
     <remotesteps>
       <input>
@@ -914,8 +914,8 @@ as a failure so that a failure email will be sent.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>496</xloc>
-      <yloc>464</yloc>
+      <xloc>160</xloc>
+      <yloc>304</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
