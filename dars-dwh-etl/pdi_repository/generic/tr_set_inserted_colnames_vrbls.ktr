@@ -459,7 +459,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/09/05 09:34:13.311</modified_date>
+    <modified_date>2017/09/05 13:03:18.693</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -468,7 +468,9 @@
       <note>This transformation sets the variables:
 
 	QF_INSERT_ID_COLNAME
+	QF_TARGET_INSERT_ID_COLNAME
 	QF_INSERTED_ON_COLNAME
+	QF_TARGET_INSERTED_ON_COLNAME
 
 to the names of the columns from the source table that functions as "insert_id" &amp; "inserted_on" columns. This transformation has parameters:
 
@@ -481,7 +483,7 @@ to the names of the columns from the source table that functions as "insert_id" 
       <xloc>0</xloc>
       <yloc>0</yloc>
       <width>833</width>
-      <heigth>192</heigth>
+      <heigth>220</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -501,7 +503,7 @@ to the names of the columns from the source table that functions as "insert_id" 
       <note>&lt;- TODO: I should abort if MORE THAN ONE
      column name is placed in the stream here -></note>
       <xloc>304</xloc>
-      <yloc>224</yloc>
+      <yloc>240</yloc>
       <width>280</width>
       <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
@@ -520,13 +522,14 @@ to the names of the columns from the source table that functions as "insert_id" 
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Set PDI variable:
+      <note>Set PDI variables:
 
-	QF_INSERT_ID_COLNAME</note>
+	QF_INSERT_ID_COLNAME
+	QF_TARGET_INSERT_ID_COLNAME</note>
       <xloc>48</xloc>
-      <yloc>576</yloc>
-      <width>185</width>
-      <heigth>52</heigth>
+      <yloc>592</yloc>
+      <width>237</width>
+      <heigth>66</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -549,7 +552,7 @@ source table. This Abort step must have the option
 will be propagated back up to the main job as a 
 failure so that a failure email will be sent.</note>
       <xloc>240</xloc>
-      <yloc>448</yloc>
+      <yloc>464</yloc>
       <width>322</width>
       <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
@@ -572,7 +575,7 @@ failure so that a failure email will be sent.</note>
 
 	QF_INSERTED_ON_COLNAME</note>
       <xloc>656</xloc>
-      <yloc>576</yloc>
+      <yloc>592</yloc>
       <width>207</width>
       <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
@@ -597,7 +600,7 @@ source table. This Abort step must have the option
 will be propagated back up to the main job as a 
 failure so that a failure email will be sent.</note>
       <xloc>880</xloc>
-      <yloc>576</yloc>
+      <yloc>592</yloc>
       <width>327</width>
       <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
@@ -621,7 +624,7 @@ failure so that a failure email will be sent.</note>
 the ETL code has been modified
 to no longer require this column.</note>
       <xloc>1072</xloc>
-      <yloc>464</yloc>
+      <yloc>480</yloc>
       <width>201</width>
       <heigth>66</heigth>
       <fontname>Ubuntu</fontname>
@@ -745,21 +748,21 @@ to no longer require this column.</note>
   <order>
     <hop>
       <from>Get "insert_id" column name for source table</from>
-      <to>Write "insert_id_col_name" to log</to>
+      <to>Write "*_insert_id_col_name" to log</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
       <from>Validate "insert_id_col_name"</from>
-      <to>Set QF_INSERT_ID_COLNAME</to>
+      <to>Set QF_*_INSERT_ID_COLNAME vrbls</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Write "insert_id_col_name" to log</from>
+      <from>Write "*_insert_id_col_name" to log</from>
       <to>Detect empty stream</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Write "insert_id_col_name" to log</from>
+      <from>Write "*_insert_id_col_name" to log</from>
       <to>Validate "insert_id_col_name"</to>
       <enabled>Y</enabled>
     </hop>
@@ -769,34 +772,29 @@ to no longer require this column.</note>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Validate "inserted_on_col_name"</from>
-      <to>Set QF_INSERTED_ON_COLNAME</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>Get "inserted_on" column name for source table</from>
-      <to>Write "inserted_on_col_name" to log</to>
+      <to>Write "*_inserted_on_col_name" to log</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Write "inserted_on_col_name" to log</from>
-      <to>Validate "inserted_on_col_name"</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Write "inserted_on_col_name" to log</from>
+      <from>Write "*_inserted_on_col_name" to log</from>
       <to>Detect empty stream 2</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
       <from>Detect empty stream 2</from>
-      <to>Set QF_INSERTED_ON_COLNAME to blank</to>
+      <to>Set QF_*_INSERTED_ON_COLNAME vrbls to blank</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Set QF_INSERTED_ON_COLNAME to blank</from>
+      <from>Set QF_*_INSERTED_ON_COLNAME vrbls to blank</from>
       <to>Abort - No "inserted_on" column name</to>
       <enabled>N</enabled>
+    </hop>
+    <hop>
+      <from>Write "*_inserted_on_col_name" to log</from>
+      <to>Set QF_*_INSERTED_ON_COLNAME vrbls</to>
+      <enabled>Y</enabled>
     </hop>
   </order>
   <step>
@@ -823,7 +821,7 @@ to no longer require this column.</note>
     </remotesteps>
     <GUI>
       <xloc>384</xloc>
-      <yloc>384</yloc>
+      <yloc>400</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -851,7 +849,7 @@ to no longer require this column.</note>
     </remotesteps>
     <GUI>
       <xloc>1024</xloc>
-      <yloc>512</yloc>
+      <yloc>528</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -875,7 +873,7 @@ to no longer require this column.</note>
     </remotesteps>
     <GUI>
       <xloc>384</xloc>
-      <yloc>304</yloc>
+      <yloc>320</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -899,7 +897,7 @@ to no longer require this column.</note>
     </remotesteps>
     <GUI>
       <xloc>1024</xloc>
-      <yloc>304</yloc>
+      <yloc>320</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -916,7 +914,8 @@ to no longer require this column.</note>
     </partitioning>
     <connection>etl_db</connection>
     <sql>SELECT
-    source_column_name AS "insert_id_col_name"
+    source_column_name AS "insert_id_col_name",
+    target_column_name AS "target_insert_id_col_name"
 FROM 
     etl.column_meta c 
 WHERE 
@@ -938,7 +937,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>224</yloc>
+      <yloc>240</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -955,7 +954,8 @@ ORDER BY
     </partitioning>
     <connection>etl_db</connection>
     <sql>SELECT
-    source_column_name AS "inserted_on_col_name"
+    source_column_name AS "inserted_on_col_name",
+    target_column_name AS "target_inserted_on_col_name"
 FROM 
     etl.column_meta c 
 WHERE 
@@ -977,12 +977,12 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>752</xloc>
-      <yloc>224</yloc>
+      <yloc>240</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Set QF_INSERTED_ON_COLNAME</name>
+    <name>Set QF_*_INSERTED_ON_COLNAME vrbls</name>
     <type>SetVariable</type>
     <description />
     <distribute>Y</distribute>
@@ -999,6 +999,12 @@ ORDER BY
         <variable_type>ROOT_JOB</variable_type>
         <default_value />
       </field>
+      <field>
+        <field_name>target_inserted_on_col_name</field_name>
+        <variable_name>QF_TARGET_INSERTED_ON_COLNAME</variable_name>
+        <variable_type>ROOT_JOB</variable_type>
+        <default_value />
+      </field>
     </fields>
     <use_formatting>Y</use_formatting>
     <cluster_schema />
@@ -1010,12 +1016,51 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>752</xloc>
-      <yloc>512</yloc>
+      <yloc>528</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Set QF_INSERT_ID_COLNAME</name>
+    <name>Set QF_*_INSERTED_ON_COLNAME vrbls to blank</name>
+    <type>SetVariable</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <field>
+        <field_name>inserted_on_col_name</field_name>
+        <variable_name>QF_INSERTED_ON_COLNAME</variable_name>
+        <variable_type>ROOT_JOB</variable_type>
+        <default_value />
+      </field>
+      <field>
+        <field_name>target_inserted_on_col_name</field_name>
+        <variable_name>QF_TARGET_INSERTED_ON_COLNAME</variable_name>
+        <variable_type>ROOT_JOB</variable_type>
+        <default_value />
+      </field>
+    </fields>
+    <use_formatting>Y</use_formatting>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1024</xloc>
+      <yloc>400</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Set QF_*_INSERT_ID_COLNAME vrbls</name>
     <type>SetVariable</type>
     <description />
     <distribute>Y</distribute>
@@ -1032,6 +1077,12 @@ ORDER BY
         <variable_type>ROOT_JOB</variable_type>
         <default_value />
       </field>
+      <field>
+        <field_name>target_insert_id_col_name</field_name>
+        <variable_name>QF_TARGET_INSERT_ID_COLNAME</variable_name>
+        <variable_type>ROOT_JOB</variable_type>
+        <default_value />
+      </field>
     </fields>
     <use_formatting>Y</use_formatting>
     <cluster_schema />
@@ -1043,7 +1094,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>512</yloc>
+      <yloc>528</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1089,36 +1140,9 @@ ORDER BY
       <sourcing_field />
       <allowed_value />
     </validator_field>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>128</xloc>
-      <yloc>432</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Validate "inserted_on_col_name"</name>
-    <type>Validator</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <validate_all>N</validate_all>
-    <concat_errors>N</concat_errors>
-    <concat_separator>|</concat_separator>
     <validator_field>
-      <name>inserted_on_col_name</name>
-      <validation_name>inserted_on_col_name NOT NULL or blank</validation_name>
+      <name>target_insert_id_col_name</name>
+      <validation_name>target_insert_id_col_name NOT NULL or blank</validation_name>
       <max_length />
       <min_length>1</min_length>
       <null_allowed>N</null_allowed>
@@ -1138,7 +1162,7 @@ ORDER BY
       <regular_expression />
       <regular_expression_not_allowed />
       <error_code />
-      <error_description>inserted_on_col_name cannot be NULL or blank</error_description>
+      <error_description>target_insert_id_col_name cannot be NULL or blank</error_description>
       <is_sourcing_values>N</is_sourcing_values>
       <sourcing_step />
       <sourcing_field />
@@ -1152,13 +1176,13 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>752</xloc>
-      <yloc>432</yloc>
+      <xloc>128</xloc>
+      <yloc>448</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Write "insert_id_col_name" to log</name>
+    <name>Write "*_insert_id_col_name" to log</name>
     <type>WriteToLog</type>
     <description />
     <distribute>N</distribute>
@@ -1177,6 +1201,9 @@ ORDER BY
       <field>
         <name>insert_id_col_name</name>
       </field>
+      <field>
+        <name>target_insert_id_col_name</name>
+      </field>
     </fields>
     <cluster_schema />
     <remotesteps>
@@ -1187,12 +1214,12 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>304</yloc>
+      <yloc>320</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Write "inserted_on_col_name" to log</name>
+    <name>Write "*_inserted_on_col_name" to log</name>
     <type>WriteToLog</type>
     <description />
     <distribute>N</distribute>
@@ -1211,6 +1238,9 @@ ORDER BY
       <field>
         <name>inserted_on_col_name</name>
       </field>
+      <field>
+        <name>target_inserted_on_col_name</name>
+      </field>
     </fields>
     <cluster_schema />
     <remotesteps>
@@ -1221,40 +1251,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>752</xloc>
-      <yloc>304</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Set QF_INSERTED_ON_COLNAME to blank</name>
-    <type>SetVariable</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <fields>
-      <field>
-        <field_name>inserted_on_col_name</field_name>
-        <variable_name>QF_INSERTED_ON_COLNAME</variable_name>
-        <variable_type>ROOT_JOB</variable_type>
-        <default_value />
-      </field>
-    </fields>
-    <use_formatting>Y</use_formatting>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>1024</xloc>
-      <yloc>384</yloc>
+      <yloc>320</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

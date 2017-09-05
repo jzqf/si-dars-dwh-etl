@@ -36,12 +36,12 @@
       <parameter>
         <name>PARAM_INSERTED_ON_COLNAME</name>
         <default_value>inserted_on</default_value>
-        <description>Name of column acting as "inserted_on" timestamp column of source table</description>
+        <description>Name of source column acting as "inserted_on" timestamp column of source table</description>
       </parameter>
       <parameter>
         <name>PARAM_INSERT_ID_COLNAME</name>
         <default_value>insert_id</default_value>
-        <description>Name of column acting as "insert_id" column of source table</description>
+        <description>Name of source column acting as "insert_id" column of source table</description>
       </parameter>
       <parameter>
         <name>PARAM_LAST_LOAD_TIMESTAMP</name>
@@ -62,6 +62,16 @@
         <name>PARAM_SOURCE_TABLE</name>
         <default_value>passage</default_value>
         <description>Name of source (OBO) table to compare</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_INSERTED_ON_COLNAME</name>
+        <default_value>inserted_on</default_value>
+        <description>Name of target column acting as "inserted_on" timestamp column of source table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_INSERT_ID_COLNAME</name>
+        <default_value>insert_id</default_value>
+        <description>Name of target column acting as "insert_id" column of source table</description>
       </parameter>
       <parameter>
         <name>PARAM_TARGET_SCHEMA</name>
@@ -494,7 +504,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/09/05 12:00:27.002</modified_date>
+    <modified_date>2017/09/05 13:18:56.818</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -522,15 +532,17 @@ This transformation has parameters:
 	PARAM_DYN_DB_CONN_DB_PASSWORD	for "dynamic_postgres_db" database connection
 	PARAM_SOURCE_SCHEMA					Schema of source (OBO) table to compare
 	PARAM_SOURCE_TABLE					Name of source (OBO) table to compare
+	PARAM_INSERT_ID_COLNAME				Name of source column acting as "insert_id"  timestamp column of source table
+	PARAM_INSERTED_ON_COLNAME			Name of source column acting as "inserted_on" column of source table
 	PARAM_TARGET_SCHEMA					Name of schema containing target (PSA) table to compare to
 	PARAM_TARGET_TABLE						Name of target (PSA) table to compare to
-	PARAM_MAX_NUM_COMPARE_ROWS		Maximum number of rows that will be compared for these tables. 0 means *all* rows.
-	PARAM_INSERT_ID_COLNAME				Name of column acting as "insert_id"  timestamp column of source table
-	PARAM_INSERTED_ON_COLNAME			Name of column acting as "inserted_on" column of source table</note>
+	PARAM_TARGET_INSERT_ID_COLNAME		Name of target column acting as "insert_id" column of source table
+	PARAM_TARGET_INSERTED_ON_COLNAME	Name of target column acting as "inserted_on" timestamp column of source table
+	PARAM_MAX_NUM_COMPARE_ROWS		Maximum number of rows that will be compared for these tables. 0 means *all* rows.</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
       <width>833</width>
-      <heigth>388</heigth>
+      <heigth>416</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -553,7 +565,7 @@ rows will be compared. In this step, the field "insert_id_from" is configured wi
 
 	Replace value = Y</note>
       <xloc>416</xloc>
-      <yloc>544</yloc>
+      <yloc>560</yloc>
       <width>511</width>
       <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
@@ -818,7 +830,7 @@ if(max_num_rows > 0) {
     </remotesteps>
     <GUI>
       <xloc>272</xloc>
-      <yloc>560</yloc>
+      <yloc>576</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -852,7 +864,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>96</xloc>
-      <yloc>416</yloc>
+      <yloc>432</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -869,7 +881,7 @@ FROM
     </partitioning>
     <connection>psa_db</connection>
     <sql>SELECT
-    COALESCE(MAX(${PARAM_INSERT_ID_COLNAME}), ${QF_ARCHIVE_ID_LOWER_BOUND}) AS "insert_id_to"
+    COALESCE(MAX(${PARAM_TARGET_INSERT_ID_COLNAME}), ${QF_ARCHIVE_ID_LOWER_BOUND}) AS "insert_id_to"
 FROM
     ${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</sql>
     <limit>0</limit>
@@ -886,7 +898,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>448</xloc>
-      <yloc>416</yloc>
+      <yloc>432</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -922,7 +934,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>272</xloc>
-      <yloc>480</yloc>
+      <yloc>496</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -959,7 +971,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>272</xloc>
-      <yloc>640</yloc>
+      <yloc>656</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -998,7 +1010,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>272</xloc>
-      <yloc>720</yloc>
+      <yloc>736</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
