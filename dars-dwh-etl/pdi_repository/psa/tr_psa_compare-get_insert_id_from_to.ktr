@@ -34,12 +34,12 @@
         <description>for "dynamic_postgres_db" database connection</description>
       </parameter>
       <parameter>
-        <name>PARAM_INSERTED_ON_COLNAME</name>
+        <name>PARAM_SOURCE_INSERTED_ON_COLNAME</name>
         <default_value>inserted_on</default_value>
         <description>Name of source column acting as "inserted_on" timestamp column of source table</description>
       </parameter>
       <parameter>
-        <name>PARAM_INSERT_ID_COLNAME</name>
+        <name>PARAM_SOURCE_INSERT_ID_COLNAME</name>
         <default_value>insert_id</default_value>
         <description>Name of source column acting as "insert_id" column of source table</description>
       </parameter>
@@ -532,8 +532,8 @@ This transformation has parameters:
 	PARAM_DYN_DB_CONN_DB_PASSWORD	for "dynamic_postgres_db" database connection
 	PARAM_SOURCE_SCHEMA					Schema of source (OBO) table to compare
 	PARAM_SOURCE_TABLE					Name of source (OBO) table to compare
-	PARAM_INSERT_ID_COLNAME				Name of source column acting as "insert_id"  timestamp column of source table
-	PARAM_INSERTED_ON_COLNAME			Name of source column acting as "inserted_on" column of source table
+	PARAM_SOURCE_INSERT_ID_COLNAME				Name of source column acting as "insert_id"  timestamp column of source table
+	PARAM_SOURCE_INSERTED_ON_COLNAME			Name of source column acting as "inserted_on" column of source table
 	PARAM_TARGET_SCHEMA					Name of schema containing target (PSA) table to compare to
 	PARAM_TARGET_TABLE						Name of target (PSA) table to compare to
 	PARAM_TARGET_INSERT_ID_COLNAME		Name of target column acting as "insert_id" column of source table
@@ -847,7 +847,7 @@ if(max_num_rows > 0) {
     </partitioning>
     <connection>dynamic_postgres_db</connection>
     <sql>SELECT
-    COALESCE(MIN(${PARAM_INSERT_ID_COLNAME}), ${QF_ARCHIVE_ID_LOWER_BOUND}) AS "insert_id_from"
+    COALESCE(MIN(${PARAM_SOURCE_INSERT_ID_COLNAME}), ${QF_ARCHIVE_ID_LOWER_BOUND}) AS "insert_id_from"
 FROM
     ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</sql>
     <limit>0</limit>

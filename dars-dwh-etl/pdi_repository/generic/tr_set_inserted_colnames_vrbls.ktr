@@ -467,9 +467,9 @@
     <notepad>
       <note>This transformation sets the variables:
 
-	QF_INSERT_ID_COLNAME
+	QF_SOURCE_INSERT_ID_COLNAME
 	QF_TARGET_INSERT_ID_COLNAME
-	QF_INSERTED_ON_COLNAME
+	QF_SOURCE_INSERTED_ON_COLNAME
 	QF_TARGET_INSERTED_ON_COLNAME
 
 to the names of the columns from the source table that functions as "insert_id" &amp; "inserted_on" columns. This transformation has parameters:
@@ -524,7 +524,7 @@ to the names of the columns from the source table that functions as "insert_id" 
     <notepad>
       <note>Set PDI variables:
 
-	QF_INSERT_ID_COLNAME
+	QF_SOURCE_INSERT_ID_COLNAME
 	QF_TARGET_INSERT_ID_COLNAME</note>
       <xloc>48</xloc>
       <yloc>592</yloc>
@@ -573,7 +573,7 @@ failure so that a failure email will be sent.</note>
     <notepad>
       <note>Set PDI variable:
 
-	QF_INSERTED_ON_COLNAME</note>
+	QF_SOURCE_INSERTED_ON_COLNAME</note>
       <xloc>656</xloc>
       <yloc>592</yloc>
       <width>207</width>
@@ -752,7 +752,7 @@ to no longer require this column.</note>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Validate "insert_id_col_name"</from>
+      <from>Validate "source_insert_id_col_name"</from>
       <to>Set QF_*_INSERT_ID_COLNAME vrbls</to>
       <enabled>Y</enabled>
     </hop>
@@ -763,7 +763,7 @@ to no longer require this column.</note>
     </hop>
     <hop>
       <from>Write "*_insert_id_col_name" to log</from>
-      <to>Validate "insert_id_col_name"</to>
+      <to>Validate "source_insert_id_col_name"</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
@@ -914,7 +914,7 @@ to no longer require this column.</note>
     </partitioning>
     <connection>etl_db</connection>
     <sql>SELECT
-    source_column_name AS "insert_id_col_name",
+    source_column_name AS "source_insert_id_col_name",
     target_column_name AS "target_insert_id_col_name"
 FROM 
     etl.column_meta c 
@@ -954,7 +954,7 @@ ORDER BY
     </partitioning>
     <connection>etl_db</connection>
     <sql>SELECT
-    source_column_name AS "inserted_on_col_name",
+    source_column_name AS "source_inserted_on_col_name",
     target_column_name AS "target_inserted_on_col_name"
 FROM 
     etl.column_meta c 
@@ -994,8 +994,8 @@ ORDER BY
     </partitioning>
     <fields>
       <field>
-        <field_name>inserted_on_col_name</field_name>
-        <variable_name>QF_INSERTED_ON_COLNAME</variable_name>
+        <field_name>source_inserted_on_col_name</field_name>
+        <variable_name>QF_SOURCE_INSERTED_ON_COLNAME</variable_name>
         <variable_type>ROOT_JOB</variable_type>
         <default_value />
       </field>
@@ -1033,8 +1033,8 @@ ORDER BY
     </partitioning>
     <fields>
       <field>
-        <field_name>inserted_on_col_name</field_name>
-        <variable_name>QF_INSERTED_ON_COLNAME</variable_name>
+        <field_name>source_inserted_on_col_name</field_name>
+        <variable_name>QF_SOURCE_INSERTED_ON_COLNAME</variable_name>
         <variable_type>ROOT_JOB</variable_type>
         <default_value />
       </field>
@@ -1072,8 +1072,8 @@ ORDER BY
     </partitioning>
     <fields>
       <field>
-        <field_name>insert_id_col_name</field_name>
-        <variable_name>QF_INSERT_ID_COLNAME</variable_name>
+        <field_name>source_insert_id_col_name</field_name>
+        <variable_name>QF_SOURCE_INSERT_ID_COLNAME</variable_name>
         <variable_type>ROOT_JOB</variable_type>
         <default_value />
       </field>
@@ -1099,7 +1099,7 @@ ORDER BY
     </GUI>
   </step>
   <step>
-    <name>Validate "insert_id_col_name"</name>
+    <name>Validate "source_insert_id_col_name"</name>
     <type>Validator</type>
     <description />
     <distribute>Y</distribute>
@@ -1113,8 +1113,8 @@ ORDER BY
     <concat_errors>N</concat_errors>
     <concat_separator>|</concat_separator>
     <validator_field>
-      <name>insert_id_col_name</name>
-      <validation_name>insert_id_col_name NOT NULL or blank</validation_name>
+      <name>source_insert_id_col_name</name>
+      <validation_name>source_insert_id_col_name NOT NULL or blank</validation_name>
       <max_length />
       <min_length>1</min_length>
       <null_allowed>N</null_allowed>
@@ -1134,7 +1134,7 @@ ORDER BY
       <regular_expression />
       <regular_expression_not_allowed />
       <error_code />
-      <error_description>insert_id_col_name cannot be NULL or blank</error_description>
+      <error_description>source_insert_id_col_name cannot be NULL or blank</error_description>
       <is_sourcing_values>N</is_sourcing_values>
       <sourcing_step />
       <sourcing_field />
@@ -1199,7 +1199,7 @@ ORDER BY
     <logmessage />
     <fields>
       <field>
-        <name>insert_id_col_name</name>
+        <name>source_insert_id_col_name</name>
       </field>
       <field>
         <name>target_insert_id_col_name</name>
@@ -1236,7 +1236,7 @@ ORDER BY
     <logmessage />
     <fields>
       <field>
-        <name>inserted_on_col_name</name>
+        <name>source_inserted_on_col_name</name>
       </field>
       <field>
         <name>target_inserted_on_col_name</name>
