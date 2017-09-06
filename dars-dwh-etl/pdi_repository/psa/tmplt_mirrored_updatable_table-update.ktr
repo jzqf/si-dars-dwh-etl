@@ -44,16 +44,6 @@
         <description />
       </parameter>
       <parameter>
-        <name>PARAM_SOURCE_INSERTED_ON_COLNAME</name>
-        <default_value>inserted_on</default_value>
-        <description>Name of column acting as "inserted_on" timestamp column of source table</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_SOURCE_INSERT_ID_COLNAME</name>
-        <default_value>insert_id</default_value>
-        <description>Name of column acting as "insert_id" column of source table</description>
-      </parameter>
-      <parameter>
         <name>PARAM_LAST_UPDATED_ON_COLNAME</name>
         <default_value>last_updated_on</default_value>
         <description>Name of "last_updated_on" timestamp column of source table</description>
@@ -62,6 +52,16 @@
         <name>PARAM_MAX_INSERT_ID</name>
         <default_value>0</default_value>
         <description>Maximum value of the "insert_id" column for rows to load from the source DB table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_SOURCE_INSERTED_ON_COLNAME</name>
+        <default_value>inserted_on</default_value>
+        <description>Name of column acting as "inserted_on" timestamp column of source table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_SOURCE_INSERT_ID_COLNAME</name>
+        <default_value>insert_id</default_value>
+        <description>Name of column acting as "insert_id" column of source table</description>
       </parameter>
       <parameter>
         <name>PARAM_SOURCE_SCHEMA</name>
@@ -134,7 +134,7 @@
           <id>LINES_INPUT</id>
           <enabled>Y</enabled>
           <name>LINES_INPUT</name>
-          <subject>Table input -  OBO.schema.table</subject>
+          <subject>Table input -  source_db.schema.table</subject>
         </field>
         <field>
           <id>LINES_OUTPUT</id>
@@ -504,13 +504,13 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/09/05 11:48:21.509</modified_date>
+    <modified_date>2017/09/06 09:14:48.595</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>Load the data from the source (OBO) table that will be moved to the target (PSA) table.
+      <note>Load the data from the source, e.g., OBO DB, table that will be moved to the target (PSA) table.
 
 It is important to sort these rows chronologically (by either the "insert_id" or "inserted_on" columns) so that if this transformation
 fails in the middle somewhere and if this transaction does not run in a single transaction, then next time this transformation is 
@@ -549,10 +549,10 @@ See:
 
 	/development/jeffreyz/tests/cdc_timestamps/tr_TEST_mirror_update-passage.passage-table_output
 
-for tests  benchmark results I obtained to test the speed of varrious INSERT/UPDATE algorithms. Using a "Table output" step with 
+for tests  benchmark results I obtained testing the speed of various INSERT/UPDATE algorithms. Using a "Table output" step with 
 an error handling hop to an "Update" step provides an approximately 2x speedup over an "Insert/Update" step for inserts *and* 
 it does not exhibit (for inserts only) the behaviour where a "java"and "postgres" process continue to run with a high CPU load long 
-after the transformation is finished.
+after the transformation is finished. Hence, it should be favoured.
 
 An odd behaviour is observed when the error handling sends rows to the "Update" step. After processing a large number of rows, 
 it takes a long time for this transformation to end. During this period the "Pause" and "Stop" buttons remain enabled. Furthermore,
@@ -1065,7 +1065,7 @@ triggered here!</note>
     </hop>
     <hop>
       <from>Write to log: parameters, max_id</from>
-      <to>Table input -  OBO.schema.table</to>
+      <to>Table input -  source_db.schema.table</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
@@ -1089,7 +1089,7 @@ triggered here!</note>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Table input -  OBO.schema.table</from>
+      <from>Table input -  source_db.schema.table</from>
       <to>Map column names</to>
       <enabled>Y</enabled>
     </hop>
@@ -1255,7 +1255,7 @@ FROM
     </GUI>
   </step>
   <step>
-    <name>Table input -  OBO.schema.table</name>
+    <name>Table input -  source_db.schema.table</name>
     <type>TableInput</type>
     <description />
     <distribute>Y</distribute>
