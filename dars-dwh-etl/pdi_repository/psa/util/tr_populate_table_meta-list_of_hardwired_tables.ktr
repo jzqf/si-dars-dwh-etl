@@ -429,7 +429,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/09/06 14:27:26.023</modified_date>
+    <modified_date>2017/09/07 15:20:22.710</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -479,30 +479,6 @@ NOTE:	All tables listed in this step must belong to the same "source" DB.</note>
       <backgroundcolorred>255</backgroundcolorred>
       <backgroundcolorgreen>205</backgroundcolorgreen>
       <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Create a Data Grid named "All tables for PSA" that contains *all* tables ever treated for the PSA but comment out the outgoing hop.
-Each time more tables are treated in another Data Grid, copy those rows and then paste them into this "master" Data Grid. Enable the hop
-for this data grid before creating a Debian package for this project so that it is easy to create the necessary etl.table_meta &amp; etl.column_meta
-rows on another server where the package is installed.</note>
-      <xloc>0</xloc>
-      <yloc>368</yloc>
-      <width>836</width>
-      <heigth>66</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>255</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
       <bordercolorblue>100</bordercolorblue>
@@ -567,18 +543,18 @@ rows on another server where the package is installed.</note>
       <enabled>N</enabled>
     </hop>
     <hop>
-      <from>ODMS OPR DB tables - 2017.09.01</from>
+      <from>Source tables to generate metadata for</from>
       <to>Copy rows to result</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>All tables for PSA</from>
+      <from>All source tables for PSA</from>
       <to>Copy rows to result</to>
       <enabled>N</enabled>
     </hop>
   </order>
   <step>
-    <name>All tables for PSA</name>
+    <name>All source tables for PSA</name>
     <type>DataGrid</type>
     <description />
     <distribute>Y</distribute>
@@ -662,7 +638,7 @@ rows on another server where the package is installed.</note>
         <item>public</item>
         <item>country</item>
         <item>10</item>
-        <item />
+        <item>odms</item>
         <item />
       </line>
     </data>
@@ -675,7 +651,7 @@ rows on another server where the package is installed.</note>
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>208</yloc>
+      <yloc>288</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -838,7 +814,7 @@ rows on another server where the package is installed.</note>
     </GUI>
   </step>
   <step>
-    <name>ODMS OPR DB tables - 2017.09.01</name>
+    <name>Source tables to generate metadata for</name>
     <type>DataGrid</type>
     <description />
     <distribute>Y</distribute>
@@ -920,9 +896,289 @@ rows on another server where the package is installed.</note>
       <line>
         <item>4</item>
         <item>public</item>
-        <item>country</item>
+        <item>cso_reference_type</item>
         <item>10</item>
+        <item>odms</item>
         <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>database_patch_log</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>datamodel_type</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>datamodel_version_tracking</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>datamodels</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>engineering_data</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>engineering_data_links</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>engineering_data_type</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>history_datamodel_version_tracking</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>history_event_type</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>history_managed_process_versions</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>managed_process_control</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>managed_process_register</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>managed_process_versions</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>mex_event_category</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>odms_api_request_tracking</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>odms_api_request_type</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>odms_personalisation_data</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>odms_personalisation_register</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>odms_qpertino_event_tracking</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>odms_rest_response_error_details</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>odms_rest_response_subcode</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>odms_session_completion_type</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>odms_session_status</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>odms_session_tracking</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>odms_session_type</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>process_state</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>property_collection_data</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>property_collection_links</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>property_collections</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>qpertino_event_type</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>security_authentication_type</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>security_realms</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>security_roles</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>sid_register</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>sid_roles</item>
+        <item>10</item>
+        <item>odms</item>
         <item />
       </line>
     </data>
@@ -935,7 +1191,7 @@ rows on another server where the package is installed.</note>
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>304</yloc>
+      <yloc>208</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
