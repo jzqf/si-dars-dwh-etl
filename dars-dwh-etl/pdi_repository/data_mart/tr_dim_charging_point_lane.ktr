@@ -179,7 +179,7 @@
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>By setting max_id&#x3d;-1, this will force &#x2a;all&#x2a; charging point lane data to be loaded&#xa;and considered for updating dim_charging_point_lane.</note>
+      <note>By setting max_target_insert_id&#x3d;-1, this will force &#x2a;all&#x2a; charging point lane data to be loaded&#xa;and considered for updating dim_charging_point_lane.</note>
       <xloc>544</xloc>
       <yloc>144</yloc>
       <width>482</width>
@@ -504,9 +504,9 @@
     </attributes>
   </connection>
   <order>
-  <hop> <from>Get max ID for CDC</from><to>Write to log&#x3a; max_id</to><enabled>N</enabled> </hop>
-  <hop> <from>Write to log&#x3a; max_id</from><to>Table input -  Read source data</to><enabled>Y</enabled> </hop>
-  <hop> <from>Set max ID &#x3d; -1</from><to>Write to log&#x3a; max_id</to><enabled>Y</enabled> </hop>
+  <hop> <from>Get max ID for CDC</from><to>Write to log&#x3a; max_target_insert_id</to><enabled>N</enabled> </hop>
+  <hop> <from>Write to log&#x3a; max_target_insert_id</from><to>Table input -  Read source data</to><enabled>Y</enabled> </hop>
+  <hop> <from>Set max ID &#x3d; -1</from><to>Write to log&#x3a; max_target_insert_id</to><enabled>Y</enabled> </hop>
   <hop> <from>Get System Info - transformation batch ID</from><to>Set field order and adjust metadata</to><enabled>Y</enabled> </hop>
   <hop> <from>Set field order and adjust metadata</from><to>Update dim_charging_point_lane</to><enabled>Y</enabled> </hop>
   <hop> <from>Compute &#x22;last_updated_on&#x22; for SCD2 &#x22;valid_from&#x22;</from><to>Get System Info - transformation batch ID</to><enabled>Y</enabled> </hop>
@@ -592,7 +592,7 @@
            <schema_name/>
            </partitioning>
     <connection>dma_db</connection>
-    <sql>SELECT&#xa;    COALESCE&#x28;MAX&#x28;charging_point_lane_archive_id&#x29;, &#x24;&#x7b;QF_ARCHIVE_ID_LOWER_BOUND&#x7d;&#x29; AS max_id&#xa;FROM&#xa;    &#x24;&#x7b;QF_DMA_DB_SCHEMA&#x7d;.&#x24;&#x7b;QF_DMA_DB_TABLE_DIM_CHARGING_POINT_LANE&#x7d;</sql>
+    <sql>SELECT&#xa;    COALESCE&#x28;MAX&#x28;charging_point_lane_archive_id&#x29;, &#x24;&#x7b;QF_INSERT_ID_LOWER_BOUND&#x7d;&#x29; AS max_target_insert_id&#xa;FROM&#xa;    &#x24;&#x7b;QF_DMA_DB_SCHEMA&#x7d;.&#x24;&#x7b;QF_DMA_DB_TABLE_DIM_CHARGING_POINT_LANE&#x7d;</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
@@ -897,7 +897,7 @@
            <schema_name/>
            </partitioning>
     <connection>dma_db</connection>
-    <sql>SELECT&#xa;    &#x24;&#x7b;QF_ARCHIVE_ID_LOWER_BOUND&#x7d; AS max_id&#xa;</sql>
+    <sql>SELECT&#xa;    &#x24;&#x7b;QF_INSERT_ID_LOWER_BOUND&#x7d; AS max_target_insert_id&#xa;</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
@@ -1095,7 +1095,7 @@
     <connection>dma_source_db</connection>
     <sql>SELECT&#xa;	l.lane_id         charging_point_lane_id&#xa;,	l.abbreviation    charging_point_lane_abbreviation&#xa;,	l.description     charging_point_lane_description&#xa;,	l.last_updated_on charging_point_lane_last_updated_on&#xa;,	l.archive_id      charging_point_lane_archive_id&#xa;,	cp.charging_point_id&#xa;,	cp.abbreviation    charging_point_abbreviation&#xa;,	cp.description     charging_point_description&#xa;,	cp.last_updated_on charging_point_last_updated_on&#xa;--,	cp.archive_id charging_point_archive_id -- &#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#xa;FROM&#xa;	tolldomain.lane l&#xa;INNER JOIN&#xa;	tolldomain.charging_point cp ON cp.charging_point_id&#x3d;l.charging_point_id&#xa;WHERE&#xa;    l.archive_id &#x3e; &#x3f;&#xa;ORDER BY&#xa;    l.archive_id</sql>
     <limit>0</limit>
-    <lookup>Write to log&#x3a; max_id</lookup>
+    <lookup>Write to log&#x3a; max_target_insert_id</lookup>
     <execute_each_row>N</execute_each_row>
     <variables_active>N</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
@@ -1197,7 +1197,7 @@
     </step>
 
   <step>
-    <name>Write to log&#x3a; max_id</name>
+    <name>Write to log&#x3a; max_target_insert_id</name>
     <type>WriteToLog</type>
     <description/>
     <distribute>Y</distribute>
@@ -1214,7 +1214,7 @@
       <logmessage/>
     <fields>
       <field>
-        <name>max_id</name>
+        <name>max_target_insert_id</name>
         </field>
       </fields>
      <cluster_schema/>

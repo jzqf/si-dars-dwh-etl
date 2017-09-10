@@ -179,7 +179,7 @@
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>By setting max_id&#x3d;-1, this will force &#x2a;all&#x2a; charging point group data to be loaded&#xa;and considered for updating dim_charging_point_group.</note>
+      <note>By setting max_target_insert_id&#x3d;-1, this will force &#x2a;all&#x2a; charging point group data to be loaded&#xa;and considered for updating dim_charging_point_group.</note>
       <xloc>544</xloc>
       <yloc>144</yloc>
       <width>493</width>
@@ -273,9 +273,9 @@
     </attributes>
   </connection>
   <order>
-  <hop> <from>Get max ID for CDC</from><to>Write to log&#x3a; max_id</to><enabled>N</enabled> </hop>
-  <hop> <from>Write to log&#x3a; max_id</from><to>Table input -  Read source data</to><enabled>Y</enabled> </hop>
-  <hop> <from>Set max ID &#x3d; -1</from><to>Write to log&#x3a; max_id</to><enabled>Y</enabled> </hop>
+  <hop> <from>Get max ID for CDC</from><to>Write to log&#x3a; max_target_insert_id</to><enabled>N</enabled> </hop>
+  <hop> <from>Write to log&#x3a; max_target_insert_id</from><to>Table input -  Read source data</to><enabled>Y</enabled> </hop>
+  <hop> <from>Set max ID &#x3d; -1</from><to>Write to log&#x3a; max_target_insert_id</to><enabled>Y</enabled> </hop>
   <hop> <from>Get System Info - transformation batch ID</from><to>Set field order and adjust metadata</to><enabled>Y</enabled> </hop>
   <hop> <from>Set field order and adjust metadata</from><to>Update dim_charging_point_group</to><enabled>Y</enabled> </hop>
   <hop> <from>Table input -  Read source data</from><to>Get System Info - transformation batch ID</to><enabled>Y</enabled> </hop>
@@ -317,7 +317,7 @@
            <schema_name/>
            </partitioning>
     <connection>dma_db</connection>
-    <sql>SELECT&#xa;    COALESCE&#x28;MAX&#x28;charging_point_group_archive_id&#x29;, &#x24;&#x7b;QF_ARCHIVE_ID_LOWER_BOUND&#x7d;&#x29; AS max_id&#xa;FROM&#xa;    &#x24;&#x7b;QF_DMA_DB_SCHEMA&#x7d;.&#x24;&#x7b;QF_DMA_DB_TABLE_DIM_CHARGING_POINT_GROUP&#x7d;</sql>
+    <sql>SELECT&#xa;    COALESCE&#x28;MAX&#x28;charging_point_group_archive_id&#x29;, &#x24;&#x7b;QF_INSERT_ID_LOWER_BOUND&#x7d;&#x29; AS max_target_insert_id&#xa;FROM&#xa;    &#x24;&#x7b;QF_DMA_DB_SCHEMA&#x7d;.&#x24;&#x7b;QF_DMA_DB_TABLE_DIM_CHARGING_POINT_GROUP&#x7d;</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
@@ -371,7 +371,7 @@
            <schema_name/>
            </partitioning>
     <connection>dma_db</connection>
-    <sql>SELECT&#xa;    &#x24;&#x7b;QF_ARCHIVE_ID_LOWER_BOUND&#x7d; AS max_id&#xa;</sql>
+    <sql>SELECT&#xa;    &#x24;&#x7b;QF_INSERT_ID_LOWER_BOUND&#x7d; AS max_target_insert_id&#xa;</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
@@ -399,7 +399,7 @@
     <connection>dma_source_db</connection>
     <sql>SELECT&#xa;	cpg.charging_point_group_id charging_point_group_id&#xa;,	cpg.abbreviation charging_point_group_abbreviation&#xa;,	cpg.description  charging_point_group_description&#xa;,	cpg.archive_id   charging_point_group_archive_id&#xa;,	cpgt.charging_point_group_type_id charging_point_group_type_id&#xa;,	cpgt.abbreviation     charging_point_group_type_abbreviation&#xa;,	cpgt.description      charging_point_group_type_description&#xa;--,	cpgt.archive_id charging_point_group_type_archive_id -- &#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#x3f;&#xa;FROM&#xa;	tolldomain.charging_point_group cpg&#xa;INNER JOIN&#xa;	tolldomain.charging_point_group_type cpgt ON cpgt.charging_point_group_type_id&#x3d;cpg.charging_point_group_type_id&#xa;WHERE&#xa;    cpg.archive_id &#x3e; &#x3f;&#xa;ORDER BY&#xa;    cpg.archive_id</sql>
     <limit>0</limit>
-    <lookup>Write to log&#x3a; max_id</lookup>
+    <lookup>Write to log&#x3a; max_target_insert_id</lookup>
     <execute_each_row>N</execute_each_row>
     <variables_active>N</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
@@ -497,7 +497,7 @@
     </step>
 
   <step>
-    <name>Write to log&#x3a; max_id</name>
+    <name>Write to log&#x3a; max_target_insert_id</name>
     <type>WriteToLog</type>
     <description/>
     <distribute>Y</distribute>
@@ -514,7 +514,7 @@
       <logmessage/>
     <fields>
       <field>
-        <name>max_id</name>
+        <name>max_target_insert_id</name>
         </field>
       </fields>
      <cluster_schema/>

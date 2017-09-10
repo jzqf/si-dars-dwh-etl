@@ -847,7 +847,7 @@ if(max_num_rows > 0) {
     </partitioning>
     <connection>dynamic_postgres_db</connection>
     <sql>SELECT
-    COALESCE(MIN(${PARAM_SOURCE_INSERT_ID_COLNAME}), ${QF_ARCHIVE_ID_LOWER_BOUND}) AS "insert_id_from"
+    COALESCE(MIN(${PARAM_SOURCE_INSERT_ID_COLNAME}), ${QF_INSERT_ID_LOWER_BOUND}) AS "insert_id_from"
 FROM
     ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</sql>
     <limit>0</limit>
@@ -881,7 +881,7 @@ FROM
     </partitioning>
     <connection>psa_db</connection>
     <sql>SELECT
-    COALESCE(MAX(${PARAM_TARGET_INSERT_ID_COLNAME}), ${QF_ARCHIVE_ID_LOWER_BOUND}) AS "insert_id_to"
+    COALESCE(MAX(${PARAM_TARGET_INSERT_ID_COLNAME}), ${QF_INSERT_ID_LOWER_BOUND}) AS "insert_id_to"
 FROM
     ${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</sql>
     <limit>0</limit>

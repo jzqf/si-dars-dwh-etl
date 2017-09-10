@@ -116,7 +116,7 @@
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>The value of the field &#x22;max_id&#x22; will be used twice in the SQL query of the Table Input step. Since &#xa;the &#x22;&#x3f;&#x22; replacement characters in the SQL query are replaced by fields in the order that they &#xa;appear, we need two copies.</note>
+      <note>The value of the field &#x22;max_target_insert_id&#x22; will be used twice in the SQL query of the Table Input step. Since &#xa;the &#x22;&#x3f;&#x22; replacement characters in the SQL query are replaced by fields in the order that they &#xa;appear, we need two copies.</note>
       <xloc>416</xloc>
       <yloc>160</yloc>
       <width>641</width>
@@ -158,7 +158,7 @@
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Write max_id value to the log so it will be obvious which value was used.</note>
+      <note>Write max_target_insert_id value to the log so it will be obvious which value was used.</note>
       <xloc>416</xloc>
       <yloc>96</yloc>
       <width>486</width>
@@ -274,15 +274,15 @@
   </connection>
   <order>
   <hop> <from>Select values</from><to>PostgreSQL Bulk Loader -DWH</to><enabled>Y</enabled> </hop>
-  <hop> <from>Create copy of max_id</from><to>Table input -  Source DB&#x3a; reporting.job</to><enabled>Y</enabled> </hop>
-  <hop> <from>Table input - DWH DB&#x3a; Get max ID for CDC</from><to>Write to log&#x3a; max_id</to><enabled>Y</enabled> </hop>
-  <hop> <from>Write to log&#x3a; max_id</from><to>Create copy of max_id</to><enabled>Y</enabled> </hop>
+  <hop> <from>Create copy of max_target_insert_id</from><to>Table input -  Source DB&#x3a; reporting.job</to><enabled>Y</enabled> </hop>
+  <hop> <from>Table input - DWH DB&#x3a; Get max ID for CDC</from><to>Write to log&#x3a; max_target_insert_id</to><enabled>Y</enabled> </hop>
+  <hop> <from>Write to log&#x3a; max_target_insert_id</from><to>Create copy of max_target_insert_id</to><enabled>Y</enabled> </hop>
   <hop> <from>Table input -  Source DB&#x3a; reporting.job</from><to>Get System Info - transformation batch ID</to><enabled>Y</enabled> </hop>
   <hop> <from>Get System Info - transformation batch ID</from><to>Table output - DWH</to><enabled>Y</enabled> </hop>
   <hop> <from>Get System Info - transformation batch ID</from><to>Select values</to><enabled>N</enabled> </hop>
   </order>
   <step>
-    <name>Create copy of max_id</name>
+    <name>Create copy of max_target_insert_id</name>
     <type>Calculator</type>
     <description/>
     <distribute>Y</distribute>
@@ -294,7 +294,7 @@
            </partitioning>
        <calculation><field_name>max_id_copy</field_name>
 <calc_type>COPY_FIELD</calc_type>
-<field_a>max_id</field_a>
+<field_a>max_target_insert_id</field_a>
 <field_b/>
 <field_c/>
 <value_type>Integer</value_type>
@@ -561,7 +561,7 @@
     <connection>obo_opr_db</connection>
     <sql>SELECT&#xa;  job_id&#xa;, created_on&#xa;, document&#xa;, email_address&#xa;, encoded&#xa;, file_name&#xa;, job_status_remarks&#xa;, job_status_set_at&#xa;, report_emailed_at&#xa;, report_ran_at&#xa;, url&#xa;, document_format_id&#xa;, job_status_id&#xa;, report_version_id&#xa;, role_id&#xa;, subscription_id&#xa;FROM&#xa;    reporting.job&#xa;WHERE&#xa;    job_id &#x3e; &#x3f; OR &#x3f; IS NULL</sql>
     <limit>0</limit>
-    <lookup>Create copy of max_id</lookup>
+    <lookup>Create copy of max_target_insert_id</lookup>
     <execute_each_row>N</execute_each_row>
     <variables_active>Y</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
@@ -585,7 +585,7 @@
            <schema_name/>
            </partitioning>
     <connection>dwh_db</connection>
-    <sql>SELECT&#xa;    MAX&#x28;job_id&#x29; AS max_id&#xa;FROM&#xa;    reporting.job</sql>
+    <sql>SELECT&#xa;    MAX&#x28;job_id&#x29; AS max_target_insert_id&#xa;FROM&#xa;    reporting.job</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
@@ -706,7 +706,7 @@
     </step>
 
   <step>
-    <name>Write to log&#x3a; max_id</name>
+    <name>Write to log&#x3a; max_target_insert_id</name>
     <type>WriteToLog</type>
     <description/>
     <distribute>Y</distribute>
@@ -723,7 +723,7 @@
       <logmessage/>
     <fields>
       <field>
-        <name>max_id</name>
+        <name>max_target_insert_id</name>
         </field>
       </fields>
      <cluster_schema/>

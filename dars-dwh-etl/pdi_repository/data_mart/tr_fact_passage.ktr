@@ -315,9 +315,9 @@
     </attributes>
   </connection>
   <order>
-  <hop> <from>Get max ID for CDC&#x3a; DWH.dma.fact_passage</from><to>Write to log&#x3a; max_id</to><enabled>Y</enabled> </hop>
-  <hop> <from>Write to log&#x3a; max_id</from><to>Table input -  passage.passage</to><enabled>Y</enabled> </hop>
-  <hop> <from>Set max ID for testing</from><to>Write to log&#x3a; max_id</to><enabled>N</enabled> </hop>
+  <hop> <from>Get max ID for CDC&#x3a; DWH.dma.fact_passage</from><to>Write to log&#x3a; max_target_insert_id</to><enabled>Y</enabled> </hop>
+  <hop> <from>Write to log&#x3a; max_target_insert_id</from><to>Table input -  passage.passage</to><enabled>Y</enabled> </hop>
+  <hop> <from>Set max ID for testing</from><to>Write to log&#x3a; max_target_insert_id</to><enabled>N</enabled> </hop>
   <hop> <from>Create date and time foreign key fields</from><to>Create date and time foreign key String values</to><enabled>Y</enabled> </hop>
   <hop> <from>Create date and time foreign key String values</from><to>Create date and time foreign key Integer values</to><enabled>Y</enabled> </hop>
   <hop> <from>Table input -  passage.passage</from><to>Create date and time foreign key fields</to><enabled>Y</enabled> </hop>
@@ -749,7 +749,7 @@
            <schema_name/>
            </partitioning>
     <connection>dma_db</connection>
-    <sql>SELECT&#xa;    COALESCE&#x28;MAX&#x28;archive_id&#x29;, &#x24;&#x7b;QF_ARCHIVE_ID_LOWER_BOUND&#x7d;&#x29; AS max_id&#xa;FROM&#xa;    &#x24;&#x7b;QF_DMA_DB_SCHEMA&#x7d;.&#x24;&#x7b;QF_DMA_DB_TABLE_FACT_PASSAGE&#x7d;&#xa;</sql>
+    <sql>SELECT&#xa;    COALESCE&#x28;MAX&#x28;archive_id&#x29;, &#x24;&#x7b;QF_INSERT_ID_LOWER_BOUND&#x7d;&#x29; AS max_target_insert_id&#xa;FROM&#xa;    &#x24;&#x7b;QF_DMA_DB_SCHEMA&#x7d;.&#x24;&#x7b;QF_DMA_DB_TABLE_FACT_PASSAGE&#x7d;&#xa;</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
@@ -990,7 +990,7 @@
            <schema_name/>
            </partitioning>
     <connection>dma_db</connection>
-    <sql>SELECT&#xa;    1000 AS max_id&#xa;</sql>
+    <sql>SELECT&#xa;    1000 AS max_target_insert_id&#xa;</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
@@ -1018,7 +1018,7 @@
     <connection>dma_source_db</connection>
     <sql>SELECT&#xa;  passage_id&#xa;--, passage_status_id&#xa;--, component_id&#xa;, passage_date&#xa;, arrival_date&#xa;, finished_date&#xa;, sent_date&#xa;--, service_provider_id&#xa;, charging_point_id&#xa;, lane_id charging_point_lane_id&#xa;--, vehicle_direction_id&#xa;--, pcs_rate&#xa;--, avc_class_id&#xa;--, passage_priority&#xa;--, passage_type_id&#xa;--, external_passage_id&#xa;--, passage_group_id&#xa;--, propertybag&#xa;, archive_id&#xa;--, archive_date&#xa;--, etl_batch_id_insert&#xa;--, completion_category_id&#xa;--, completion_sub_category_id&#xa;--, wf_version_id&#xa;FROM&#xa;    passage.passage&#xa;WHERE&#xa;    archive_id &#x3e; &#x3f;&#xa;ORDER BY&#xa;    archive_id</sql>
     <limit>0</limit>
-    <lookup>Write to log&#x3a; max_id</lookup>
+    <lookup>Write to log&#x3a; max_target_insert_id</lookup>
     <execute_each_row>N</execute_each_row>
     <variables_active>N</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
@@ -1137,7 +1137,7 @@
     </step>
 
   <step>
-    <name>Write to log&#x3a; max_id</name>
+    <name>Write to log&#x3a; max_target_insert_id</name>
     <type>WriteToLog</type>
     <description/>
     <distribute>Y</distribute>
@@ -1154,7 +1154,7 @@
       <logmessage/>
     <fields>
       <field>
-        <name>max_id</name>
+        <name>max_target_insert_id</name>
         </field>
       </fields>
      <cluster_schema/>

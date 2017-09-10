@@ -147,7 +147,7 @@
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Write parameters and max_id value to the log so it will be obvious which values &#xa;were used.</note>
+      <note>Write parameters and max_target_insert_id value to the log so it will be obvious which values &#xa;were used.</note>
       <xloc>352</xloc>
       <yloc>240</yloc>
       <width>538</width>
@@ -328,8 +328,8 @@
   <hop> <from>Select values</from><to>PostgreSQL Bulk Loader - DWH.eip.passage_result</to><enabled>Y</enabled> </hop>
   <hop> <from>Table input -  TDP.eip.passage_result</from><to>Get System Info - transformation batch ID</to><enabled>Y</enabled> </hop>
   <hop> <from>Get System Info - transformation batch ID</from><to>Select values</to><enabled>Y</enabled> </hop>
-  <hop> <from>Get max ID for CDC&#x3a; DWH.eip.passage_result</from><to>Write to log&#x3a; parameters, max_id</to><enabled>Y</enabled> </hop>
-  <hop> <from>Write to log&#x3a; parameters, max_id</from><to>Table input -  TDP.eip.passage_result</to><enabled>Y</enabled> </hop>
+  <hop> <from>Get max ID for CDC&#x3a; DWH.eip.passage_result</from><to>Write to log&#x3a; parameters, max_target_insert_id</to><enabled>Y</enabled> </hop>
+  <hop> <from>Write to log&#x3a; parameters, max_target_insert_id</from><to>Table input -  TDP.eip.passage_result</to><enabled>Y</enabled> </hop>
   </order>
   <step>
     <name>Get System Info - transformation batch ID</name>
@@ -368,7 +368,7 @@
            <schema_name/>
            </partitioning>
     <connection>dwh_db</connection>
-    <sql>SELECT&#xa;    COALESCE&#x28;MAX&#x28;archive_id&#x29;, &#x24;&#x7b;QF_ARCHIVE_ID_LOWER_BOUND&#x7d;&#x29; AS max_id&#xa;FROM&#xa;    eip.passage_result&#xa;</sql>
+    <sql>SELECT&#xa;    COALESCE&#x28;MAX&#x28;archive_id&#x29;, &#x24;&#x7b;QF_INSERT_ID_LOWER_BOUND&#x7d;&#x29; AS max_target_insert_id&#xa;FROM&#xa;    eip.passage_result&#xa;</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
@@ -659,7 +659,7 @@
     <connection>obo_opr_db</connection>
     <sql>SELECT&#xa;    &#x2a;&#xa;FROM&#xa;    eip.passage_result&#xa;WHERE&#xa;    archive_id &#x3e; &#x3f; AND&#xa;    --archive_date &#x3e;  &#x27;&#x24;&#x7b;PARAM_CDC_LAST_LOAD&#x7d;&#x27; AND &#xa;	archive_date &#x3c;&#x3d; &#x27;&#x24;&#x7b;PARAM_CDC_CURRENT_LOAD&#x7d;&#x27;&#xa;ORDER BY&#xa;    archive_id&#xa;</sql>
     <limit>0</limit>
-    <lookup>Write to log&#x3a; parameters, max_id</lookup>
+    <lookup>Write to log&#x3a; parameters, max_target_insert_id</lookup>
     <execute_each_row>N</execute_each_row>
     <variables_active>Y</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
@@ -672,7 +672,7 @@
     </step>
 
   <step>
-    <name>Write to log&#x3a; parameters, max_id</name>
+    <name>Write to log&#x3a; parameters, max_target_insert_id</name>
     <type>WriteToLog</type>
     <description/>
     <distribute>Y</distribute>
@@ -689,7 +689,7 @@
       <logmessage>PARAM_CDC_LAST_LOAD	&#x3d; &#x24;&#x7b;PARAM_CDC_LAST_LOAD&#x7d;&#xa;PARAM_CDC_CURRENT_LOAD	&#x3d; &#x24;&#x7b;PARAM_CDC_CURRENT_LOAD&#x7d;</logmessage>
     <fields>
       <field>
-        <name>max_id</name>
+        <name>max_target_insert_id</name>
         </field>
       </fields>
      <cluster_schema/>

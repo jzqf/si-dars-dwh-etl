@@ -504,7 +504,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/09/06 09:14:48.595</modified_date>
+    <modified_date>2017/09/10 16:38:46.733</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -854,57 +854,6 @@ triggered here!</note>
     </notepad>
   </notepads>
   <connection>
-    <name>dma_db</name>
-    <server>${QF_DMA_DB_HOST}</server>
-    <type>POSTGRESQL</type>
-    <access>Native</access>
-    <database>${QF_DMA_DB_DATABASE}</database>
-    <port>${QF_DMA_DB_PORT}</port>
-    <username>${QF_DMA_DB_USERNAME}</username>
-    <password>${QF_DMA_DB_PASSWORD}</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
-    <attributes>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>IS_CLUSTERED</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>PORT_NUMBER</code>
-        <attribute>${QF_DMA_DB_PORT}</attribute>
-      </attribute>
-      <attribute>
-        <code>PRESERVE_RESERVED_WORD_CASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>QUOTE_ALL_FIELDS</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>USE_POOLING</code>
-        <attribute>N</attribute>
-      </attribute>
-    </attributes>
-  </connection>
-  <connection>
     <name>dynamic_postgres_db</name>
     <server>${PARAM_DYN_DB_CONN_DB_HOST}</server>
     <type>POSTGRESQL</type>
@@ -936,6 +885,57 @@ triggered here!</note>
       <attribute>
         <code>PRESERVE_RESERVED_WORD_CASE</code>
         <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
+  <connection>
+    <name>etl_db</name>
+    <server>${QF_ETL_DB_HOST}</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>${QF_ETL_DB_DATABASE}</database>
+    <port>${QF_ETL_DB_PORT}</port>
+    <username>${QF_ETL_DB_USERNAME}</username>
+    <password>${QF_ETL_DB_PASSWORD}</password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>${QF_ETL_DB_PORT}</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>N</attribute>
       </attribute>
       <attribute>
         <code>QUOTE_ALL_FIELDS</code>
@@ -1059,12 +1059,12 @@ triggered here!</note>
   </connection>
   <order>
     <hop>
-      <from>Get max "insert_id" for: PSA.schema.table</from>
-      <to>Write to log: parameters, max_id</to>
+      <from>Get max id &amp; date for: PSA.schema.table</from>
+      <to>Write to log: parameters, max id &amp; date</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Write to log: parameters, max_id</from>
+      <from>Write to log: parameters, max id &amp; date</from>
       <to>Table input -  source_db.schema.table</to>
       <enabled>Y</enabled>
     </hop>
@@ -1094,13 +1094,13 @@ triggered here!</note>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Set max ID = -1</from>
-      <to>Write to log: parameters, max_id</to>
+      <from>Set max id &amp; date</from>
+      <to>Write to log: parameters, max id &amp; date</to>
       <enabled>N</enabled>
     </hop>
   </order>
   <step>
-    <name>Get max "insert_id" for: PSA.schema.table</name>
+    <name>Get max id &amp; date for: PSA.schema.table</name>
     <type>TableInput</type>
     <description />
     <distribute>Y</distribute>
@@ -1112,7 +1112,8 @@ triggered here!</note>
     </partitioning>
     <connection>psa_db</connection>
     <sql>SELECT
-    COALESCE(MAX(${PARAM_SOURCE_INSERT_ID_COLNAME}), ${QF_ARCHIVE_ID_LOWER_BOUND}) AS max_id
+    COALESCE(MAX(${PARAM_SOURCE_INSERT_ID_COLNAME}), ${QF_INSERT_ID_LOWER_BOUND})       AS max_target_insert_id,
+    COALESCE(MAX(${PARAM_LAST_UPDATED_ON_COLNAME}) , '${QF_LAST_UPDATED_ON_LOWER_BOUND}') AS max_target_last_updated_on
 FROM
     ${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}
 </sql>
@@ -1222,7 +1223,7 @@ FROM
     </GUI>
   </step>
   <step>
-    <name>Set max ID = -1</name>
+    <name>Set max id &amp; date</name>
     <type>TableInput</type>
     <description />
     <distribute>Y</distribute>
@@ -1232,9 +1233,10 @@ FROM
       <method>none</method>
       <schema_name />
     </partitioning>
-    <connection>dma_db</connection>
+    <connection>etl_db</connection>
     <sql>SELECT
-    ${QF_ARCHIVE_ID_LOWER_BOUND} AS max_id
+    ${QF_INSERT_ID_LOWER_BOUND} AS max_target_insert_id,
+    '${QF_LAST_UPDATED_ON_LOWER_BOUND}' AS max_target_last_updated_on
 </sql>
     <limit>0</limit>
     <lookup />
@@ -1272,14 +1274,26 @@ FROM
     ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
 WHERE
     (
-        ${PARAM_SOURCE_INSERT_ID_COLNAME} > ?                                        -- newly INSERTed rows
-      --${PARAM_SOURCE_INSERTED_ON_COLNAME} > '${PARAM_CDC_LAST_LOAD}'               -- alternate condition, instead of the previous line
-        OR ${PARAM_LAST_UPDATED_ON_COLNAME} >= '${PARAM_CDC_LAST_LOAD}'       -- updated rows (may include rows updated on previous run that have
-                                                                              -- ${PARAM_LAST_UPDATED_ON_COLNAME} = '${PARAM_CDC_LAST_LOAD}' due
-                                                                              -- to the finite resolution of timestamp values)
+        ${PARAM_SOURCE_INSERT_ID_COLNAME} > ?                                 -- newly INSERTed rows, since the last run
+      --${PARAM_SOURCE_INSERTED_ON_COLNAME} > '${PARAM_CDC_LAST_LOAD}'        -- alternate condition, instead of the previous line
+        OR ${PARAM_LAST_UPDATED_ON_COLNAME} >= ?                              -- UPDATEd rows, since the last run. This is needed to be able to select rows that
+                                                                              -- are modified during a period when the table is being treated as an insert-only
+                                                                              -- table (not a likely scenario, but it is a possibility).
+                                                                              -- Because ">=" is used here, not ">", this will include a least one row that was
+                                                                              -- updated on the previous run (assuming that there was at least one row updated).
+                                                                              -- This/these rows will have ${PARAM_LAST_UPDATED_ON_COLNAME} = ?. The reason why
+                                                                              -- ">=" is used is in case there were one or more rows that were *not* updated on the
+                                                                              -- previous run, but which have ${PARAM_LAST_UPDATED_ON_COLNAME} = ?. This can occur
+                                                                              -- because of the finite resolution of timestamp values. As a result, more than one
+                                                                              -- row can have the *same* value of ${PARAM_LAST_UPDATED_ON_COLNAME}, but not all of
+                                                                              -- them were loaded and treated on the previous run, i.e., the cutoff imposed by
+                                                                              -- the condition ${PARAM_SOURCE_INSERT_ID_COLNAME} &lt;= ${PARAM_MAX_INSERT_ID} or
+                                                                              -- ${PARAM_LAST_UPDATED_ON_COLNAME} &lt;= '${PARAM_CDC_CURRENT_LOAD}' loaded some,
+                                                                              -- but not all, of the rows with this value of ${PARAM_LAST_UPDATED_ON_COLNAME}.
+      --OR ${PARAM_LAST_UPDATED_ON_COLNAME} >= '${PARAM_CDC_LAST_LOAD}'       -- alternate condition, instead of the previous line
     )
-    AND ${PARAM_SOURCE_INSERT_ID_COLNAME}   &lt;= ${PARAM_MAX_INSERT_ID}                -- to avoid loading rows that are *inserted* after the job starts
-  --AND ${PARAM_SOURCE_INSERTED_ON_COLNAME} &lt;= '${PARAM_CDC_CURRENT_LOAD}'           -- alternate condition, instead of the previous line 
+    AND ${PARAM_SOURCE_INSERT_ID_COLNAME}   &lt;= ${PARAM_MAX_INSERT_ID}         -- to avoid loading rows that are *inserted* after the job starts
+  --AND ${PARAM_SOURCE_INSERTED_ON_COLNAME} &lt;= '${PARAM_CDC_CURRENT_LOAD}'    -- alternate condition, instead of the previous line 
 	AND (
 	        ${PARAM_LAST_UPDATED_ON_COLNAME} IS NULL OR                       -- rows that have been inserted but not modified
 	        ${PARAM_LAST_UPDATED_ON_COLNAME} &lt;= '${PARAM_CDC_CURRENT_LOAD}'   -- to avoid loading rows that are *modified* after the job starts
@@ -1287,7 +1301,7 @@ WHERE
 ORDER BY
     ${PARAM_SOURCE_INSERT_ID_COLNAME}</sql>
     <limit>0</limit>
-    <lookup>Write to log: parameters, max_id</lookup>
+    <lookup>Write to log: parameters, max id &amp; date</lookup>
     <execute_each_row>N</execute_each_row>
     <variables_active>Y</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
@@ -1382,7 +1396,7 @@ ORDER BY
     </GUI>
   </step>
   <step>
-    <name>Write to log: parameters, max_id</name>
+    <name>Write to log: parameters, max id &amp; date</name>
     <type>WriteToLog</type>
     <description />
     <distribute>Y</distribute>
@@ -1414,7 +1428,10 @@ PARAM_TARGET_SCHEMA           = ${PARAM_TARGET_SCHEMA}
 PARAM_TARGET_TABLE            = ${PARAM_TARGET_TABLE}</logmessage>
     <fields>
       <field>
-        <name>max_id</name>
+        <name>max_target_insert_id</name>
+      </field>
+      <field>
+        <name>max_target_last_updated_on</name>
       </field>
     </fields>
     <cluster_schema />
