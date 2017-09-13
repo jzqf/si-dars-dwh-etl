@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/08/30 11:58:22.281</modified_date>
+  <modified_date>2017/09/05 10:06:37.959</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CDC_CURRENT_LOAD</name>
@@ -44,6 +44,11 @@
       <name>PARAM_DYN_DB_CONN_DB_USERNAME</name>
       <default_value />
       <description>for "dynamic" database connection, e.g., "dynamic_postgres_db"</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_MAX_INSERT_ID</name>
+      <default_value />
+      <description>Maximum value of the "insert_id" column for rows to load from the source DB table</description>
     </parameter>
     <parameter>
       <name>PARAM_SOURCE_DB_ID</name>
@@ -471,7 +476,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>608</xloc>
-      <yloc>256</yloc>
+      <yloc>272</yloc>
     </entry>
     <entry>
       <name>tr_mirrored_insert_only_table-inject_meta-update</name>
@@ -504,21 +509,21 @@
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
         <parameter>
-          <name>PARAM_INSERT_ID_COLNAME</name>
+          <name>PARAM_SOURCE_INSERT_ID_COLNAME</name>
           <stream_name />
-          <value>${QF_INSERT_ID_COLNAME}</value>
+          <value>${QF_SOURCE_INSERT_ID_COLNAME}</value>
         </parameter>
         <parameter>
-          <name>PARAM_INSERTED_ON_COLNAME</name>
+          <name>PARAM_SOURCE_INSERTED_ON_COLNAME</name>
           <stream_name />
-          <value>${QF_INSERTED_ON_COLNAME}</value>
+          <value>${QF_SOURCE_INSERTED_ON_COLNAME}</value>
         </parameter>
       </parameters>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>880</xloc>
-      <yloc>544</yloc>
+      <yloc>560</yloc>
     </entry>
     <entry>
       <name>jb_update_etl_table_meta_mirror_details</name>
@@ -557,7 +562,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>880</xloc>
-      <yloc>640</yloc>
+      <yloc>656</yloc>
     </entry>
     <entry>
       <name>jb_log_error 3</name>
@@ -596,7 +601,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>1088</xloc>
-      <yloc>544</yloc>
+      <yloc>560</yloc>
     </entry>
     <entry>
       <name>Abort job</name>
@@ -607,7 +612,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>1168</xloc>
-      <yloc>448</yloc>
+      <yloc>464</yloc>
     </entry>
     <entry>
       <name>Is there column mapping metadata for this table?</name>
@@ -637,7 +642,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>608</xloc>
-      <yloc>352</yloc>
+      <yloc>368</yloc>
     </entry>
     <entry>
       <name>jb_log_error 1</name>
@@ -676,7 +681,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>1</nr>
       <xloc>880</xloc>
-      <yloc>352</yloc>
+      <yloc>368</yloc>
     </entry>
     <entry>
       <name>Success</name>
@@ -686,7 +691,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>1168</xloc>
-      <yloc>352</yloc>
+      <yloc>368</yloc>
     </entry>
     <entry>
       <name>tr_set_inserted_colnames_vrbls</name>
@@ -723,7 +728,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>608</xloc>
-      <yloc>448</yloc>
+      <yloc>464</yloc>
     </entry>
     <entry>
       <name>jb_log_error 2</name>
@@ -762,7 +767,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>880</xloc>
-      <yloc>448</yloc>
+      <yloc>464</yloc>
     </entry>
     <entry>
       <name>DUMMY</name>
@@ -782,7 +787,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>1168</xloc>
-      <yloc>640</yloc>
+      <yloc>656</yloc>
     </entry>
     <entry>
       <name>jb_log_error - Untreated case</name>
@@ -821,7 +826,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>608</xloc>
-      <yloc>784</yloc>
+      <yloc>800</yloc>
     </entry>
     <entry>
       <name>DUMMY 2</name>
@@ -841,7 +846,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>1168</xloc>
-      <yloc>784</yloc>
+      <yloc>800</yloc>
     </entry>
     <entry>
       <name>jb_is_specified_db_type - PostgreSQL?</name>
@@ -885,7 +890,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>608</xloc>
-      <yloc>544</yloc>
+      <yloc>560</yloc>
     </entry>
   </entries>
   <hops>
@@ -1057,6 +1062,7 @@ This job has parameters:
 	PARAM_TABLE_META_ID					Primary key of etl.table_meta row for "source" table archived/mirrored to "target" table
 	PARAM_CDC_LAST_LOAD					Timestamp for when *all* tables of the PSA were most recently updated successfully
 	PARAM_CDC_CURRENT_LOAD				Used so that a consistent max timestamp is used for all ETL
+	PARAM_MAX_INSERT_ID					Maximum value of the "insert_id" column for rows to load from the source DB table
 	PARAM_SOURCE_SCHEMA					Name of schema containing source table to mirror to target table
 	PARAM_SOURCE_TABLE					Name of source table to mirror to target table
 	PARAM_TARGET_SCHEMA					Name of schema containing target table to update (not currently used)
@@ -1064,7 +1070,7 @@ This job has parameters:
       <xloc>16</xloc>
       <yloc>0</yloc>
       <width>814</width>
-      <heigth>234</heigth>
+      <heigth>248</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -1085,7 +1091,7 @@ This job has parameters:
 current job. This records which mirror algorithm was used, as well as when the 
 mirroring was performed.</note>
       <xloc>16</xloc>
-      <yloc>624</yloc>
+      <yloc>640</yloc>
       <width>467</width>
       <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
@@ -1110,7 +1116,7 @@ execution has failed. It will then direct
 the execution flow to the job that 
 sends out failure e-mails.</note>
       <xloc>1216</xloc>
-      <yloc>432</yloc>
+      <yloc>448</yloc>
       <width>232</width>
       <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
@@ -1135,7 +1141,7 @@ the case where no column mapping
 metdata is provided for the table. This
 may not be the best behaviour.</note>
       <xloc>1216</xloc>
-      <yloc>336</yloc>
+      <yloc>352</yloc>
       <width>252</width>
       <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
@@ -1157,10 +1163,10 @@ may not be the best behaviour.</note>
       <note>Update the target table using an ETL Metadata Injection step for a PostgreSQL
 "source" DB. The transformation is passed the additional parameters:
 
-	PARAM_INSERT_ID_COLNAME
-	PARAM_INSERTED_ON_COLNAME</note>
+	PARAM_SOURCE_INSERT_ID_COLNAME
+	PARAM_SOURCE_INSERTED_ON_COLNAME</note>
       <xloc>16</xloc>
-      <yloc>512</yloc>
+      <yloc>528</yloc>
       <width>472</width>
       <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
@@ -1189,7 +1195,7 @@ occur is if a table is marked for mirroring, but no column mapping
 metadata is provided - this should never occur, but we check in order to 
 provide a warning message, rather than letting PDI choke on this problem.</note>
       <xloc>16</xloc>
-      <yloc>288</yloc>
+      <yloc>304</yloc>
       <width>445</width>
       <heigth>136</heigth>
       <fontname>Ubuntu</fontname>
@@ -1208,12 +1214,12 @@ provide a warning message, rather than letting PDI choke on this problem.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Set the variables QF_INSERT_ID_COLNAME &amp; QF_INSERTED_ON_COLNAME
+      <note>Set the variables QF_SOURCE_INSERT_ID_COLNAME &amp; QF_SOURCE_INSERTED_ON_COLNAME
 to the names of the columns from the source table that function as 
 "insert_id" &amp; "inserted_on" column. These values are passed as parameters
 to the job entry tr_mirrored_insert_only_table-inject_meta-update below.</note>
       <xloc>16</xloc>
-      <yloc>432</yloc>
+      <yloc>448</yloc>
       <width>450</width>
       <heigth>66</heigth>
       <fontname>Ubuntu</fontname>
@@ -1238,7 +1244,7 @@ tr_mirrored_insert_only_table-inject_meta-update, but which uses a dynamic
 database connection for, e.g., Oracle. Use the same names for jobs/transformations
 but insert "oracle" somewhere in the names.</note>
       <xloc>400</xloc>
-      <yloc>688</yloc>
+      <yloc>704</yloc>
       <width>498</width>
       <heigth>80</heigth>
       <fontname>Ubuntu</fontname>

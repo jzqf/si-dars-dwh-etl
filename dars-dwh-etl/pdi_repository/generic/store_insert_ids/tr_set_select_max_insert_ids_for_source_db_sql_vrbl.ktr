@@ -1,102 +1,22 @@
 <transformation>
   <info>
-    <name>tr_psa_mirrored_table-inject_meta-compare</name>
+    <name>tr_set_select_max_insert_ids_for_source_db_sql_vrbl</name>
     <description />
     <extended_description />
     <trans_version />
     <trans_type>Normal</trans_type>
     <trans_status>0</trans_status>
-    <directory>/psa</directory>
+    <directory>/generic/store_insert_ids</directory>
     <parameters>
       <parameter>
-        <name>PARAM_DYN_DB_CONN_DB_DATABASE</name>
-        <default_value />
-        <description>for "dynamic_postgres_db" database connection</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_DYN_DB_CONN_DB_HOST</name>
-        <default_value />
-        <description>for "dynamic_postgres_db" database connection</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_DYN_DB_CONN_DB_PASSWORD</name>
-        <default_value />
-        <description>for "dynamic_postgres_db" database connection</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_DYN_DB_CONN_DB_PORT</name>
-        <default_value />
-        <description>for "dynamic_postgres_db" database connection</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_DYN_DB_CONN_DB_USERNAME</name>
-        <default_value />
-        <description>for "dynamic_postgres_db" database connection</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_SOURCE_INSERTED_ON_COLNAME</name>
-        <default_value>inserted_on</default_value>
-        <description>Name of column acting as "inserted_on" timestamp column of source table</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_SOURCE_INSERT_ID_COLNAME</name>
-        <default_value>insert_id</default_value>
-        <description>Name of column acting as "insert_id" column of source table</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_INSERT_ID_FROM</name>
-        <default_value>100</default_value>
-        <description>"from" value for the "insert_id" column of the source OBO table that is being compared to the PSA table</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_INSERT_ID_TO</name>
-        <default_value>110</default_value>
-        <description>"to" value for the "insert_id" column of the source OBO table that is being compared to the PSA table</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_LAST_LOAD_TIMESTAMP</name>
-        <default_value>1900.01.01 00:00:00</default_value>
-        <description>Timestamp of last successful load from the source database</description>
-      </parameter>
-      <parameter>
         <name>PARAM_SOURCE_DB_ID</name>
-        <default_value>0</default_value>
-        <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
+        <default_value>-1</default_value>
+        <description>ID the "source" database containing tables that will be mirrored to a "target" database</description>
       </parameter>
       <parameter>
-        <name>PARAM_SOURCE_SCHEMA</name>
-        <default_value>passage</default_value>
-        <description>Name of schema containing source table to mirror to target table</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_SOURCE_SCHEMA_TABLE</name>
-        <default_value>passage.passage</default_value>
-        <description>${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_SOURCE_TABLE</name>
-        <default_value>passage</default_value>
-        <description>Name of source table to mirror to target table</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_TABLE_META_ID</name>
-        <default_value>0</default_value>
-        <description>Primary key of etl.table_meta row for "source" table from which rows will be deleted</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_TARGET_SCHEMA</name>
-        <default_value>passage</default_value>
-        <description>Name of schema containing target table to update (not currently used)</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_TARGET_SCHEMA_TABLE</name>
-        <default_value>passage.passage</default_value>
-        <description>${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_TARGET_TABLE</name>
-        <default_value>passage</default_value>
-        <description>Name of target table to update (not currently used)</description>
+        <name>PARAM_TARGET_DB_ID</name>
+        <default_value>-1</default_value>
+        <description>ID of the "target" database to which the "source" DB tables will be archived/mirrored</description>
       </parameter>
     </parameters>
     <log>
@@ -519,38 +439,27 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/08/30 13:33:07.531</modified_date>
+    <modified_date>2017/09/06 08:30:02.072</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>This transformation uses ETL Metadata injection to control how columns of a source table in a source database are compared to columns 
-of a target table in a target database. This is a generic algorithm that can work with *any* table, as long as the necessary metadata is
-available to be injected. This transformation has parameters:
+      <note>This transformation sets the variable:
 
-	PARAM_LAST_LOAD_TIMESTAMP			Timestamp for when the target PSA DB mirror tables were last updated from the source DB
-	PARAM_SOURCE_DB_ID						ID the "source" database containing tables will be mirrored to a "target" database
-	PARAM_DYN_DB_CONN_DB_HOST			for "dynamic_postgres_db" database connection
-	PARAM_DYN_DB_CONN_DB_PORT			for "dynamic_postgres_db" database connection
-	PARAM_DYN_DB_CONN_DB_DATABASE		for "dynamic_postgres_db" database connection
-	PARAM_DYN_DB_CONN_DB_USERNAME		for "dynamic_postgres_db" database connection
-	PARAM_DYN_DB_CONN_DB_PASSWORD	for "dynamic_postgres_db" database connection
-	PARAM_TABLE_META_ID					Primary key of etl.table_meta row for "source" table from which rows will be deleted
-	PARAM_INSERT_ID_FROM					"from" value for the "insert_id" column of the source OBO table that is being compared to the PSA table
-	PARAM_INSERT_ID_TO						"to" value for the "insert_id" column of the source OBO table that is being compared to the PSA table
-	PARAM_SOURCE_INSERT_ID_COLNAME				Name of column acting as "insert_id"  timestamp column of source table
-	PARAM_SOURCE_INSERTED_ON_COLNAME			Name of column acting as "inserted_on" column of source table
-	PARAM_SOURCE_SCHEMA					Name of schema containing source table to compare to target table
-	PARAM_SOURCE_TABLE					Name of source table to compare to target table
-	PARAM_SOURCE_SCHEMA_TABLE			${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
-	PARAM_TARGET_SCHEMA					Name of schema containing target table to compare with (not currently used)
-	PARAM_TARGET_TABLE						Name of target table to compare with (not currently used)
-	PARAM_TARGET_SCHEMA_TABLE			${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</note>
+	QF_SQL_SELECT_MAX_INSERT_IDS_FOR_SOURCE_DB
+
+to the SQL required to select the maximum value of the "insert_id" colum of each table in the specifed "source" DB
+that is archived/mirrored to the specified "target" DB.
+
+This transformation has parameters:
+
+	PARAM_SOURCE_DB_ID		ID the "source" DB containing tables to archive/mirror to the "target" DB
+	PARAM_TARGET_DB_ID		ID of the "target" DB to which the "source" DB tables will be archived/mirrored</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>906</width>
-      <heigth>318</heigth>
+      <width>676</width>
+      <heigth>164</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -567,14 +476,14 @@ available to be injected. This transformation has parameters:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>The query here to provide the source (OBO)
-column names must match the query in 
-"jb_psa_mirrored_tables-compare_one" from
-where this transformation is executed. See the 
-comments in that job for an explanation.</note>
-      <xloc>16</xloc>
-      <yloc>512</yloc>
-      <width>283</width>
+      <note>Abort if an "insert_id" column is not defined for any
+table in the source DB. This Abort step must have the
+option "Abort with error" selected in order that this
+situation will be propagated back up to the main job
+as a failure so that a failure email will be sent.</note>
+      <xloc>368</xloc>
+      <yloc>416</yloc>
+      <width>319</width>
       <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -584,33 +493,8 @@ comments in that job for an explanation.</note>
       <fontcolorgreen>0</fontcolorgreen>
       <fontcolorblue>0</fontcolorblue>
       <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>255</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>The query here to provide the source (OBO)
-column names must match the query in 
-"jb_psa_mirrored_tables-compare_one" from
-where this transformation is executed. See the 
-comments in that job for an explanation.</note>
-      <xloc>304</xloc>
-      <yloc>624</yloc>
-      <width>283</width>
-      <heigth>80</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>255</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
       <bordercolorblue>100</bordercolorblue>
@@ -721,34 +605,34 @@ comments in that job for an explanation.</note>
   </connection>
   <order>
     <hop>
-      <from>SELECT statement for target (PSA) DB</from>
-      <to>ETL Metadata Injection: tmplt_psa_compare_tables</to>
+      <from>Generate SQL to fetch MAX(archive_ID) for each source table</from>
+      <to>Write "select_sql_for_source_db" to log</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Target (PSA) column names to compare</from>
-      <to>ETL Metadata Injection: tmplt_psa_compare_tables</to>
+      <from>Validate "select_sql_for_source_db"</from>
+      <to>Set QF_SQL_SELECT_MAX_INSERT_IDS_FOR_SOURCE_DB</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Source (OBO) primary key column names</from>
-      <to>ETL Metadata Injection: tmplt_psa_compare_tables</to>
+      <from>Write "select_sql_for_source_db" to log</from>
+      <to>Detect empty stream</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Source (OBO) column names to compare</from>
-      <to>ETL Metadata Injection: tmplt_psa_compare_tables</to>
+      <from>Write "select_sql_for_source_db" to log</from>
+      <to>Validate "select_sql_for_source_db"</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>SELECT statement for source (OBO) DB</from>
-      <to>ETL Metadata Injection: tmplt_psa_compare_tables</to>
+      <from>Detect empty stream</from>
+      <to>Abort - No "insert_id" columns define for DB</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>ETL Metadata Injection: tmplt_psa_compare_tables</name>
-    <type>MetaInject</type>
+    <name>Abort - No "insert_id" columns define for DB</name>
+    <type>Abort</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -757,61 +641,10 @@ comments in that job for an explanation.</note>
       <method>none</method>
       <schema_name />
     </partitioning>
-    <specification_method>rep_name</specification_method>
-    <trans_object_id />
-    <trans_name>tmplt_psa_compare_tables</trans_name>
-    <filename />
-    <directory_path>${Internal.Entry.Current.Directory}</directory_path>
-    <source_step />
-    <source_output_fields>    </source_output_fields>
-    <target_file />
-    <no_execution>N</no_execution>
-    <stream_source_step />
-    <stream_target_step />
-    <mappings>
-      <mapping>
-        <target_step_name>Get rows from source (OBO) DB table</target_step_name>
-        <target_attribute_key>SQL</target_attribute_key>
-        <target_detail>N</target_detail>
-        <source_step>SELECT statement for source (OBO) DB</source_step>
-        <source_field>select_source_rows_sql</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Rename PSA field names -> OBO field names</target_step_name>
-        <target_attribute_key>FIELD_RENAME</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Source (OBO) column names to compare</source_step>
-        <source_field>source_col_name</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Merge Rows (diff)</target_step_name>
-        <target_attribute_key>KEY_FIELDS</target_attribute_key>
-        <target_detail>N</target_detail>
-        <source_step>Source (OBO) primary key column names</source_step>
-        <source_field>key_col_name</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Merge Rows (diff)</target_step_name>
-        <target_attribute_key>VALUE_FIELDS</target_attribute_key>
-        <target_detail>N</target_detail>
-        <source_step>Source (OBO) column names to compare</source_step>
-        <source_field>source_col_name</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Get rows from target (PSA) DB table</target_step_name>
-        <target_attribute_key>SQL</target_attribute_key>
-        <target_detail>N</target_detail>
-        <source_step>SELECT statement for target (PSA) DB</source_step>
-        <source_field>select_target_rows_sql</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Rename PSA field names -> OBO field names</target_step_name>
-        <target_attribute_key>FIELD_NAME</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Target (PSA) column names to compare</source_step>
-        <source_field>target_col_name</source_field>
-      </mapping>
-    </mappings>
+    <row_threshold>0</row_threshold>
+    <message>tr_set_select_max_insert_ids_for_source_db_sql_vrbl: No "insert_id" columns defined for source DB with ID ${PARAM_SOURCE_DB_ID}</message>
+    <always_log_rows>Y</always_log_rows>
+    <abort_with_error>Y</abort_with_error>
     <cluster_schema />
     <remotesteps>
       <input>
@@ -820,13 +653,37 @@ comments in that job for an explanation.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>416</xloc>
-      <yloc>448</yloc>
+      <xloc>512</xloc>
+      <yloc>352</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>SELECT statement for source (OBO) DB</name>
+    <name>Detect empty stream</name>
+    <type>DetectEmptyStream</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>512</xloc>
+      <yloc>272</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Generate SQL to fetch MAX(archive_ID) for each source table</name>
     <type>TableInput</type>
     <description />
     <distribute>Y</distribute>
@@ -838,50 +695,30 @@ comments in that job for an explanation.</note>
     </partitioning>
     <connection>etl_db</connection>
     <sql>WITH
-    -- Create table with a string column that contains the columns from the 
-    -- source (OBO) table to compare with corresponding columns from the 
-    -- target (PSA) table:
-    select_list AS (
-        SELECT 
-            -- POSTGRESQL-SPECIFIC
-            array_to_string(array_agg(source_column_name ORDER BY column_meta_id ASC), ',') AS "str_value"
+    select_text AS (
+        SELECT
+            -- COALESCE used in case the table is empty.
+            'SELECT ' || t.table_meta_id || ' AS "table_meta_id", ' ||
+            'COALESCE(MAX(' || c.source_column_name || '), ${QF_INSERT_ID_LOWER_BOUND}) AS "max_insert_id" ' ||
+            'FROM ' || t.source_schema_name || '.' || t.source_table_name AS "select_sql_for_one_table"
         FROM 
-            etl.column_meta 
+            etl.table_meta t
+        INNER JOIN
+            etl.column_meta c ON c.table_meta_id = t.table_meta_id 
         WHERE
-            table_meta_id = ${PARAM_TABLE_META_ID} AND 
-            -- This selects the columns from the source (OBO) table that will be 
-            -- compared with corresponding columns from the target (PSA) table.
-            -- Although the primary key columns don't need to ne compared, they
-            -- are needed by the "Merge Rows" step so they are included here.
-            (compare_column=true OR is_primary_key_column=true)
-    ),
-    -- Create table with a string column that contains the "ORDER BY" clause. 
-    -- This consists of the columns that make up the primary key for the 
-    -- source (OBO) table. This is needed by the "Merge Rows" step in the 
-    -- template transformation.
-    orderby_list AS (
-        SELECT 
-           -- POSTGRESQL-SPECIFIC
-            array_to_string(array_agg(source_column_name ORDER BY primary_key_column_order ASC), ',') AS "str_value"
-        FROM 
-            etl.column_meta 
-        WHERE
-            table_meta_id = ${PARAM_TABLE_META_ID} AND 
-            -- This selects the columns that make up the primary key for the
-            -- source (OBO) table.
-            is_primary_key_column=true
+            t.source_db_id = ${PARAM_SOURCE_DB_ID} AND
+            t.target_db_id = ${PARAM_TARGET_DB_ID} AND
+            c.is_insert_id_column = true
     )
 SELECT
-    -- Create SELECT statement:
-    'SELECT ' || CAST(select_list.str_value AS VARCHAR) || 
-    ' FROM ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE} ' || 
-    'WHERE ${PARAM_SOURCE_INSERT_ID_COLNAME} >= ${PARAM_INSERT_ID_FROM} AND ${PARAM_SOURCE_INSERT_ID_COLNAME} &lt;= ${PARAM_INSERT_ID_TO} ' ||
-    'ORDER BY ' || CAST(orderby_list.str_value AS VARCHAR) 
-    AS "select_source_rows_sql" 
+--    'START TRANSACTION;' ||  chr(10) || 
+--    'START TRANSACTION ISOLATION LEVEL REPEATABLE READ;' ||  chr(10) || 
+--    'SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;' ||  chr(10) || 
+    array_to_string(array_agg(select_sql_for_one_table), chr(10) || ' UNION ALL ') || ';'  -- UNION ALL is faster than UNION
+--    ||  chr(10) || 'COMMIT;' 
+AS "select_sql_for_source_db"
 FROM
-    select_list
-CROSS JOIN
-    orderby_list</sql>
+    select_text</sql>
     <limit>0</limit>
     <lookup />
     <execute_each_row>N</execute_each_row>
@@ -895,14 +732,14 @@ CROSS JOIN
       </output>
     </remotesteps>
     <GUI>
-      <xloc>272</xloc>
-      <yloc>352</yloc>
+      <xloc>176</xloc>
+      <yloc>192</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>SELECT statement for target (PSA) DB</name>
-    <type>TableInput</type>
+    <name>Set QF_SQL_SELECT_MAX_INSERT_IDS_FOR_SOURCE_DB</name>
+    <type>SetVariable</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -911,57 +748,15 @@ CROSS JOIN
       <method>none</method>
       <schema_name />
     </partitioning>
-    <connection>etl_db</connection>
-    <sql>WITH
-    -- Create table with a string column that contains the columns from the 
-    -- target (PSA) table to compare with corresponding columns from the 
-    -- source (OBO) table:
-    select_list AS (
-        SELECT 
-           -- POSTGRESQL-SPECIFIC
-            array_to_string(array_agg(target_column_name ORDER BY column_meta_id ASC), ',') AS "str_value"
-        FROM 
-            etl.column_meta 
-        WHERE
-            table_meta_id = ${PARAM_TABLE_META_ID} AND 
-            -- This selects the columns from the target (PSA) table that will be 
-            -- compared with corresponding columns from the source (OBO) table.
-            -- Although the primary key columns don't need to ne compared, they
-            -- are needed by the "Merge Rows" step so they are included here.
-            (compare_column=true OR is_primary_key_column=true)
-    ),
-    -- Create table with a string column that contains the "ORDER BY" clause. 
-    -- This consists of the columns that make up the primary key for the 
-    -- target (PSA) table. This is needed by the "Merge Rows" step in the 
-    -- template transformation.
-    orderby_list AS (
-        SELECT 
-           -- POSTGRESQL-SPECIFIC
-            array_to_string(array_agg(target_column_name ORDER BY primary_key_column_order ASC), ',') AS "str_value"
-        FROM 
-            etl.column_meta 
-        WHERE
-            table_meta_id = ${PARAM_TABLE_META_ID} AND 
-            -- This selects the columns that make up the primary key for the
-            -- target (PSA) table.
-            is_primary_key_column=true
-    )
-SELECT
-    -- Create SELECT statement:
-    'SELECT ' || CAST(select_list.str_value AS VARCHAR) || 
-    ' FROM ${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE} ' || 
-    'WHERE ${PARAM_SOURCE_INSERT_ID_COLNAME} >= ${PARAM_INSERT_ID_FROM} AND ${PARAM_SOURCE_INSERT_ID_COLNAME} &lt;= ${PARAM_INSERT_ID_TO} ' ||
-    'ORDER BY ' || CAST(orderby_list.str_value AS VARCHAR) 
-    AS "select_target_rows_sql" 
-FROM
-    select_list
-CROSS JOIN
-    orderby_list</sql>
-    <limit>0</limit>
-    <lookup />
-    <execute_each_row>N</execute_each_row>
-    <variables_active>Y</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
+    <fields>
+      <field>
+        <field_name>select_sql_for_source_db</field_name>
+        <variable_name>QF_SQL_SELECT_MAX_INSERT_IDS_FOR_SOURCE_DB</variable_name>
+        <variable_type>ROOT_JOB</variable_type>
+        <default_value />
+      </field>
+    </fields>
+    <use_formatting>Y</use_formatting>
     <cluster_schema />
     <remotesteps>
       <input>
@@ -970,14 +765,14 @@ CROSS JOIN
       </output>
     </remotesteps>
     <GUI>
-      <xloc>608</xloc>
-      <yloc>352</yloc>
+      <xloc>176</xloc>
+      <yloc>480</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Source (OBO) column names to compare</name>
-    <type>TableInput</type>
+    <name>Validate "select_sql_for_source_db"</name>
+    <type>Validator</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -986,23 +781,37 @@ CROSS JOIN
       <method>none</method>
       <schema_name />
     </partitioning>
-    <connection>etl_db</connection>
-    <sql>SELECT
-    source_column_name AS "source_col_name" 
-FROM 
-    etl.column_meta 
-WHERE 
-    table_meta_id = ${PARAM_TABLE_META_ID} AND 
-    -- Although the primary key columns don't need to ne compared, they
-    -- are needed by the "Merge Rows" step so they are included here.
-    (compare_column=true OR is_primary_key_column=true) 
-ORDER BY 
-    column_meta_id ASC  -- must use the same sort order in "Target column names to compare"</sql>
-    <limit>0</limit>
-    <lookup />
-    <execute_each_row>N</execute_each_row>
-    <variables_active>Y</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
+    <validate_all>N</validate_all>
+    <concat_errors>N</concat_errors>
+    <concat_separator>|</concat_separator>
+    <validator_field>
+      <name>select_sql_for_source_db</name>
+      <validation_name>select_sql_for_source_db NOT NULL or blank</validation_name>
+      <max_length />
+      <min_length>1</min_length>
+      <null_allowed>N</null_allowed>
+      <only_null_allowed>N</only_null_allowed>
+      <only_numeric_allowed>N</only_numeric_allowed>
+      <data_type>String</data_type>
+      <data_type_verified>Y</data_type_verified>
+      <conversion_mask />
+      <decimal_symbol />
+      <grouping_symbol />
+      <max_value />
+      <min_value />
+      <start_string />
+      <end_string />
+      <start_string_not_allowed />
+      <end_string_not_allowed />
+      <regular_expression />
+      <regular_expression_not_allowed />
+      <error_code />
+      <error_description>select_sql_for_source_db cannot be NULL or blank</error_description>
+      <is_sourcing_values>N</is_sourcing_values>
+      <sourcing_step />
+      <sourcing_field />
+      <allowed_value />
+    </validator_field>
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1011,37 +820,32 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>112</xloc>
-      <yloc>448</yloc>
+      <xloc>176</xloc>
+      <yloc>400</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Source (OBO) primary key column names</name>
-    <type>TableInput</type>
+    <name>Write "select_sql_for_source_db" to log</name>
+    <type>WriteToLog</type>
     <description />
-    <distribute>Y</distribute>
+    <distribute>N</distribute>
     <custom_distribution />
     <copies>1</copies>
     <partitioning>
       <method>none</method>
       <schema_name />
     </partitioning>
-    <connection>etl_db</connection>
-    <sql>SELECT
-    source_column_name AS "key_col_name" 
-FROM 
-    etl.column_meta 
-WHERE 
-    table_meta_id = ${PARAM_TABLE_META_ID} AND 
-    is_primary_key_column = true
-ORDER BY 
-    primary_key_column_order</sql>
-    <limit>0</limit>
-    <lookup />
-    <execute_each_row>N</execute_each_row>
-    <variables_active>Y</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
+    <loglevel>log_level_basic</loglevel>
+    <displayHeader>Y</displayHeader>
+    <limitRows>N</limitRows>
+    <limitRowsNumber>0</limitRowsNumber>
+    <logmessage />
+    <fields>
+      <field>
+        <name>select_sql_for_source_db</name>
+      </field>
+    </fields>
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1050,49 +854,8 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>416</xloc>
-      <yloc>560</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Target (PSA) column names to compare</name>
-    <type>TableInput</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <connection>etl_db</connection>
-    <sql>SELECT
-    target_column_name AS "target_col_name" 
-FROM 
-    etl.column_meta 
-WHERE 
-    table_meta_id = ${PARAM_TABLE_META_ID} AND 
-    -- Although the primary key columns don't need to ne compared, they
-    -- are needed by the "Merge Rows" step so they are included here.
-    (compare_column=true OR is_primary_key_column=true)
-ORDER BY 
-    column_meta_id ASC  -- must use the same sort order in "Source (OBO) column names to compare"</sql>
-    <limit>0</limit>
-    <lookup />
-    <execute_each_row>N</execute_each_row>
-    <variables_active>Y</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>720</xloc>
-      <yloc>448</yloc>
+      <xloc>176</xloc>
+      <yloc>272</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

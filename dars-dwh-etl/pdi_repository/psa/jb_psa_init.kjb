@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/06/29 09:37:46.435</modified_date>
+  <modified_date>2017/09/07 16:05:27.844</modified_date>
   <parameters>
     </parameters>
   <connection>
@@ -145,6 +145,57 @@
       <attribute>
         <code>PRESERVE_RESERVED_WORD_CASE</code>
         <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
+  <connection>
+    <name>odms_opr_db</name>
+    <server>${QF_ODMS_OPR_DB_HOST}</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>${QF_ODMS_OPR_DB_DATABASE}</database>
+    <port>${QF_ODMS_OPR_DB_PORT}</port>
+    <username>${QF_ODMS_OPR_DB_USERNAME}</username>
+    <password>${QF_ODMS_OPR_DB_PASSWORD}</password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>${QF_ODMS_OPR_DB_PORT}</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>Y</attribute>
       </attribute>
       <attribute>
         <code>QUOTE_ALL_FIELDS</code>
@@ -640,7 +691,7 @@
       <yloc>416</yloc>
     </entry>
     <entry>
-      <name>Check OBO DB connection</name>
+      <name>Check OBO OPR DB connection</name>
       <description />
       <type>CHECK_DB_CONNECTIONS</type>
       <connections>
@@ -685,7 +736,7 @@
         <parameter>
           <name>PARAM_ERROR_MESSAGE</name>
           <stream_name />
-          <value>Connection to OBO DB is not available.</value>
+          <value>Connection to OBO OPR DB is not available.</value>
         </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
@@ -710,10 +761,10 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>336</xloc>
-      <yloc>608</yloc>
+      <yloc>704</yloc>
     </entry>
     <entry>
-      <name>jb_log_error 5</name>
+      <name>jb_log_error 6</name>
       <description />
       <type>JOB</type>
       <specification_method>rep_name</specification_method>
@@ -749,7 +800,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>160</xloc>
-      <yloc>608</yloc>
+      <yloc>704</yloc>
     </entry>
     <entry>
       <name>Check Logging DB connection</name>
@@ -818,6 +869,62 @@
       <xloc>16</xloc>
       <yloc>464</yloc>
     </entry>
+    <entry>
+      <name>Check ODMS OPR DB connection</name>
+      <description />
+      <type>CHECK_DB_CONNECTIONS</type>
+      <connections>
+        <connection>
+          <name>odms_opr_db</name>
+          <waitfor>0</waitfor>
+          <waittime>millisecond</waittime>
+        </connection>
+      </connections>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>336</xloc>
+      <yloc>608</yloc>
+    </entry>
+    <entry>
+      <name>jb_log_error 5</name>
+      <description />
+      <type>JOB</type>
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_log_error</jobname>
+      <directory>/generic</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_ERROR_MESSAGE</name>
+          <stream_name />
+          <value>Connection toODMS OPR DB is not available.</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>160</xloc>
+      <yloc>608</yloc>
+    </entry>
   </entries>
   <hops>
     <hop>
@@ -848,16 +955,7 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Check OBO DB connection</from>
-      <to>Check PSA DB connection</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Check OBO DB connection</from>
+      <from>Check OBO OPR DB connection</from>
       <to>jb_log_error 4</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -867,7 +965,7 @@
     </hop>
     <hop>
       <from>Check PSA DB connection</from>
-      <to>jb_log_error 5</to>
+      <to>jb_log_error 6</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -938,7 +1036,7 @@
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>jb_log_error 5</from>
+      <from>jb_log_error 6</from>
       <to>Abort job</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -948,12 +1046,48 @@
     </hop>
     <hop>
       <from>Check ETL DB connection</from>
-      <to>Check OBO DB connection</to>
+      <to>Check OBO OPR DB connection</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>Y</evaluation>
       <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Check OBO OPR DB connection</from>
+      <to>Check ODMS OPR DB connection</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Check ODMS OPR DB connection</from>
+      <to>Check PSA DB connection</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Check ODMS OPR DB connection</from>
+      <to>jb_log_error 5</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_log_error 5</from>
+      <to>Abort job</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
     </hop>
   </hops>
   <notepads>

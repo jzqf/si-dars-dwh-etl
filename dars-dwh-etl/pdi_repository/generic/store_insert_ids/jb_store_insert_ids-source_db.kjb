@@ -1,16 +1,26 @@
 <job>
-  <name>jb_psa-update</name>
+  <name>jb_store_insert_ids-source_db</name>
   <description />
   <extended_description />
   <job_version />
-  <job_status>1</job_status>
-  <directory>/psa</directory>
+  <job_status>0</job_status>
+  <directory>/generic/store_insert_ids</directory>
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/09/06 10:05:14.485</modified_date>
+  <modified_date>2017/09/05 12:23:31.109</modified_date>
   <parameters>
-    </parameters>
+    <parameter>
+      <name>PARAM_SOURCE_DB_ID</name>
+      <default_value>-1</default_value>
+      <description>ID the "source" database containing tables that will be mirrored to a "target" database</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_TARGET_DB_ID</name>
+      <default_value>-1</default_value>
+      <description>ID of the "target" database to which the "source" DB tables will be archived/mirrored</description>
+    </parameter>
+  </parameters>
   <connection>
     <name>logging_db</name>
     <server>${QF_LOGGING_DB_HOST}</server>
@@ -354,288 +364,11 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>32</xloc>
-      <yloc>128</yloc>
+      <xloc>368</xloc>
+      <yloc>112</yloc>
     </entry>
     <entry>
-      <name>jb_psa_init</name>
-      <description />
-      <type>JOB</type>
-      <specification_method>rep_name</specification_method>
-      <job_object_id />
-      <filename />
-      <jobname>jb_psa_init</jobname>
-      <directory>/psa</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Nothing</loglevel>
-      <slave_server_name />
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <expand_remote_job>N</expand_remote_job>
-      <create_parent_folder>N</create_parent_folder>
-      <pass_export>N</pass_export>
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-      </parameters>
-      <set_append_logfile>N</set_append_logfile>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>128</xloc>
-      <yloc>128</yloc>
-    </entry>
-    <entry>
-      <name>jb_send_default_email_job_notification - Success</name>
-      <description />
-      <type>JOB</type>
-      <specification_method>rep_name</specification_method>
-      <job_object_id />
-      <filename />
-      <jobname>jb_send_default_email_job_notification</jobname>
-      <directory>/generic/email</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Nothing</loglevel>
-      <slave_server_name />
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <expand_remote_job>N</expand_remote_job>
-      <create_parent_folder>N</create_parent_folder>
-      <pass_export>N</pass_export>
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-        <parameter>
-          <name>PARAM_JOB_BATCH_ID</name>
-          <stream_name />
-          <value>${QF_JOB_BATCH_ID}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_JOB_NAME</name>
-          <stream_name />
-          <value>${Internal.Job.Name}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_SUCCESS</name>
-          <stream_name />
-          <value>true</value>
-        </parameter>
-      </parameters>
-      <set_append_logfile>N</set_append_logfile>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>384</xloc>
-      <yloc>768</yloc>
-    </entry>
-    <entry>
-      <name>jb_send_default_email_job_notification - Failure</name>
-      <description />
-      <type>JOB</type>
-      <specification_method>rep_name</specification_method>
-      <job_object_id />
-      <filename />
-      <jobname>jb_send_default_email_job_notification</jobname>
-      <directory>/generic/email</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Nothing</loglevel>
-      <slave_server_name />
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <expand_remote_job>N</expand_remote_job>
-      <create_parent_folder>N</create_parent_folder>
-      <pass_export>N</pass_export>
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-        <parameter>
-          <name>PARAM_JOB_BATCH_ID</name>
-          <stream_name />
-          <value>${QF_JOB_BATCH_ID}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_JOB_NAME</name>
-          <stream_name />
-          <value>${Internal.Job.Name}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_SUCCESS</name>
-          <stream_name />
-          <value>false</value>
-        </parameter>
-      </parameters>
-      <set_append_logfile>N</set_append_logfile>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>384</xloc>
-      <yloc>832</yloc>
-    </entry>
-    <entry>
-      <name>tr_cdc_timestamp_load_end</name>
-      <description />
-      <type>TRANS</type>
-      <specification_method>rep_name</specification_method>
-      <trans_object_id />
-      <filename />
-      <transname>tr_cdc_timestamp_load_end</transname>
-      <directory>/generic/cdc</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <clear_rows>N</clear_rows>
-      <clear_files>N</clear_files>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Basic</loglevel>
-      <cluster>N</cluster>
-      <slave_server_name />
-      <set_append_logfile>N</set_append_logfile>
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <create_parent_folder>N</create_parent_folder>
-      <logging_remote_work>N</logging_remote_work>
-      <run_configuration />
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-        <parameter>
-          <name>PARAM_CDC_TIMESTAMPS_ID</name>
-          <stream_name />
-          <value>${QF_CDC_TIMESTAMPS_ID_PSA}</value>
-        </parameter>
-      </parameters>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>1</nr>
-      <xloc>384</xloc>
-      <yloc>672</yloc>
-    </entry>
-    <entry>
-      <name>DUMMY</name>
-      <description />
-      <type>SPECIAL</type>
-      <start>N</start>
-      <dummy>Y</dummy>
-      <repeat>N</repeat>
-      <schedulerType>0</schedulerType>
-      <intervalSeconds>0</intervalSeconds>
-      <intervalMinutes>60</intervalMinutes>
-      <hour>12</hour>
-      <minutes>0</minutes>
-      <weekDay>1</weekDay>
-      <DayOfMonth>1</DayOfMonth>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>32</xloc>
-      <yloc>544</yloc>
-    </entry>
-    <entry>
-      <name>DUMMY 2</name>
-      <description />
-      <type>SPECIAL</type>
-      <start>N</start>
-      <dummy>Y</dummy>
-      <repeat>N</repeat>
-      <schedulerType>0</schedulerType>
-      <intervalSeconds>0</intervalSeconds>
-      <intervalMinutes>60</intervalMinutes>
-      <hour>12</hour>
-      <minutes>0</minutes>
-      <weekDay>1</weekDay>
-      <DayOfMonth>1</DayOfMonth>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>32</xloc>
-      <yloc>832</yloc>
-    </entry>
-    <entry>
-      <name>Success</name>
-      <description />
-      <type>SUCCESS</type>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>576</xloc>
-      <yloc>768</yloc>
-    </entry>
-    <entry>
-      <name>Abort job</name>
-      <description />
-      <type>ABORT</type>
-      <message>Job ${Internal.Job.Name} failed. See log and e-mail sent.</message>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>576</xloc>
-      <yloc>832</yloc>
-    </entry>
-    <entry>
-      <name>tr_cdc_timestamp_load_start</name>
-      <description />
-      <type>TRANS</type>
-      <specification_method>rep_name</specification_method>
-      <trans_object_id />
-      <filename />
-      <transname>tr_cdc_timestamp_load_start</transname>
-      <directory>/generic/cdc</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <clear_rows>N</clear_rows>
-      <clear_files>N</clear_files>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Basic</loglevel>
-      <cluster>N</cluster>
-      <slave_server_name />
-      <set_append_logfile>N</set_append_logfile>
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <create_parent_folder>N</create_parent_folder>
-      <logging_remote_work>N</logging_remote_work>
-      <run_configuration />
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-        <parameter>
-          <name>PARAM_CDC_TIMESTAMPS_ID</name>
-          <stream_name />
-          <value>${QF_CDC_TIMESTAMPS_ID_PSA}</value>
-        </parameter>
-      </parameters>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>384</xloc>
-      <yloc>224</yloc>
-    </entry>
-    <entry>
-      <name>jb_log_error 1</name>
+      <name>jb_log_error</name>
       <description />
       <type>JOB</type>
       <specification_method>rep_name</specification_method>
@@ -663,15 +396,202 @@
         <parameter>
           <name>PARAM_ERROR_MESSAGE</name>
           <stream_name />
-          <value>Error occurred in tr_cdc_timestamp_load_start</value>
+          <value>Error  caught in jb_psa-store_insert_ids-source_db while executing "tr_store_max_insert_ids_for_source_db_postgresql" for source DB: ${PARAM_SOURCE_DB_ID}</value>
         </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>208</xloc>
-      <yloc>224</yloc>
+      <xloc>416</xloc>
+      <yloc>688</yloc>
+    </entry>
+    <entry>
+      <name>Abort job</name>
+      <description />
+      <type>ABORT</type>
+      <message>Aborting jb_psa-store_insert_ids-source_db</message>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>576</xloc>
+      <yloc>768</yloc>
+    </entry>
+    <entry>
+      <name>Write To Log: Parameters</name>
+      <description />
+      <type>WRITE_TO_LOG</type>
+      <logmessage>PARAM_SOURCE_DB_ID  = ${PARAM_SOURCE_DB_ID}
+PARAM_TARGET_DB_ID  = ${PARAM_TARGET_DB_ID}
+</logmessage>
+      <loglevel>Basic</loglevel>
+      <logsubject>Parameters passed to jb_psa-store_insert_ids-source_db</logsubject>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>368</xloc>
+      <yloc>192</yloc>
+    </entry>
+    <entry>
+      <name>Success</name>
+      <description />
+      <type>SUCCESS</type>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>320</xloc>
+      <yloc>688</yloc>
+    </entry>
+    <entry>
+      <name>jb_set_dynamic_db_connection_variables</name>
+      <description />
+      <type>JOB</type>
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_set_dynamic_db_connection_variables</jobname>
+      <directory>/generic/dynamic_db_connections</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_DB_ID</name>
+          <stream_name />
+          <value>${PARAM_SOURCE_DB_ID}</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>368</xloc>
+      <yloc>272</yloc>
+    </entry>
+    <entry>
+      <name>jb_is_specified_db_type - PostgreSQL?</name>
+      <description />
+      <type>JOB</type>
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_is_specified_db_type</jobname>
+      <directory>/generic/dynamic_db_connections</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_DB_ID</name>
+          <stream_name />
+          <value>${PARAM_SOURCE_DB_ID}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_REQUIRED_DB_TYPE_ID</name>
+          <stream_name />
+          <value>${QF_DB_TYPE_ID_POSTGRESQL}</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>368</xloc>
+      <yloc>496</yloc>
+    </entry>
+    <entry>
+      <name>DUMMY 2</name>
+      <description />
+      <type>SPECIAL</type>
+      <start>N</start>
+      <dummy>Y</dummy>
+      <repeat>N</repeat>
+      <schedulerType>0</schedulerType>
+      <intervalSeconds>0</intervalSeconds>
+      <intervalMinutes>60</intervalMinutes>
+      <hour>12</hour>
+      <minutes>0</minutes>
+      <weekDay>1</weekDay>
+      <DayOfMonth>1</DayOfMonth>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>576</xloc>
+      <yloc>496</yloc>
+    </entry>
+    <entry>
+      <name>Abort job 2</name>
+      <description />
+      <type>ABORT</type>
+      <message>Aborting job jb_psa-store_insert_ids-source_db</message>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>1</nr>
+      <xloc>96</xloc>
+      <yloc>272</yloc>
+    </entry>
+    <entry>
+      <name>tr_set_select_max_insert_ids_for_source_db_sql_vrbl</name>
+      <description />
+      <type>TRANS</type>
+      <specification_method>rep_name</specification_method>
+      <trans_object_id />
+      <filename />
+      <transname>tr_set_select_max_insert_ids_for_source_db_sql_vrbl</transname>
+      <directory>/generic/store_insert_ids</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <clear_rows>N</clear_rows>
+      <clear_files>N</clear_files>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Basic</loglevel>
+      <cluster>N</cluster>
+      <slave_server_name />
+      <set_append_logfile>N</set_append_logfile>
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <create_parent_folder>N</create_parent_folder>
+      <logging_remote_work>N</logging_remote_work>
+      <run_configuration>Pentaho local</run_configuration>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+      </parameters>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>368</xloc>
+      <yloc>400</yloc>
     </entry>
     <entry>
       <name>jb_log_error 2</name>
@@ -702,49 +622,29 @@
         <parameter>
           <name>PARAM_ERROR_MESSAGE</name>
           <stream_name />
-          <value>Error occurred in tr_cdc_timestamp_load_end after the PSA was updated</value>
+          <value>Error executing tr_set_select_max_insert_ids_for_source_db_sql_vrbl from jb_psa-store_insert_ids-source_db for source DB: ${PARAM_SOURCE_DB_ID}.</value>
         </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>208</xloc>
-      <yloc>672</yloc>
+      <xloc>96</xloc>
+      <yloc>400</yloc>
     </entry>
     <entry>
-      <name>DUMMY 3</name>
-      <description />
-      <type>SPECIAL</type>
-      <start>N</start>
-      <dummy>Y</dummy>
-      <repeat>N</repeat>
-      <schedulerType>0</schedulerType>
-      <intervalSeconds>0</intervalSeconds>
-      <intervalMinutes>60</intervalMinutes>
-      <hour>12</hour>
-      <minutes>0</minutes>
-      <weekDay>1</weekDay>
-      <DayOfMonth>1</DayOfMonth>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>384</xloc>
-      <yloc>128</yloc>
-    </entry>
-    <entry>
-      <name>tr_list_of_tables_to_mirror</name>
+      <name>tr_store_max_insert_ids_for_source_db_postgresql</name>
       <description />
       <type>TRANS</type>
       <specification_method>rep_name</specification_method>
       <trans_object_id />
       <filename />
-      <transname>tr_list_of_tables_to_mirror</transname>
-      <directory>/generic</directory>
+      <transname>tr_store_max_insert_ids_for_source_db_postgresql</transname>
+      <directory>/generic/store_insert_ids</directory>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
-      <clear_rows>Y</clear_rows>
+      <clear_rows>N</clear_rows>
       <clear_files>N</clear_files>
       <set_logfile>N</set_logfile>
       <logfile />
@@ -763,218 +663,46 @@
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
         <parameter>
-          <name>PARAM_TARGET_DB_ID</name>
+          <name>PARAM_DYN_DB_CONN_DB_HOST</name>
           <stream_name />
-          <value>${QF_DB_ID_PSA}</value>
+          <value>${QF_DYN_DB_CONN_DB_HOST}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_DYN_DB_CONN_DB_PORT</name>
+          <stream_name />
+          <value>${QF_DYN_DB_CONN_DB_PORT}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_DYN_DB_CONN_DB_DATABASE</name>
+          <stream_name />
+          <value>${QF_DYN_DB_CONN_DB_DATABASE}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_DYN_DB_CONN_DB_USERNAME</name>
+          <stream_name />
+          <value>${QF_DYN_DB_CONN_DB_USERNAME}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_DYN_DB_CONN_DB_PASSWORD</name>
+          <stream_name />
+          <value>${QF_DYN_DB_CONN_DB_PASSWORD}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_SQL_SELECT_MAX_INSERT_IDS_FOR_SOURCE_DB</name>
+          <stream_name />
+          <value>${QF_SQL_SELECT_MAX_INSERT_IDS_FOR_SOURCE_DB}</value>
         </parameter>
       </parameters>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>384</xloc>
-      <yloc>416</yloc>
-    </entry>
-    <entry>
-      <name>jb_psa_update-table</name>
-      <description />
-      <type>JOB</type>
-      <specification_method>rep_name</specification_method>
-      <job_object_id />
-      <filename />
-      <jobname>jb_psa_update-table</jobname>
-      <directory>/psa</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>Y</params_from_previous>
-      <exec_per_row>Y</exec_per_row>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Nothing</loglevel>
-      <slave_server_name />
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <expand_remote_job>N</expand_remote_job>
-      <create_parent_folder>N</create_parent_folder>
-      <pass_export>N</pass_export>
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-        <parameter>
-          <name>PARAM_CDC_LAST_LOAD</name>
-          <stream_name />
-          <value>${QF_CDC_LAST_LOAD}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_CDC_CURRENT_LOAD</name>
-          <stream_name />
-          <value>${QF_CDC_CURRENT_LOAD}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_MAX_INSERT_ID</name>
-          <stream_name>max_insert_id</stream_name>
-          <value />
-        </parameter>
-        <parameter>
-          <name>PARAM_SOURCE_DB_ID</name>
-          <stream_name>source_db_id</stream_name>
-          <value />
-        </parameter>
-        <parameter>
-          <name>PARAM_SOURCE_SCHEMA</name>
-          <stream_name>source_schema</stream_name>
-          <value />
-        </parameter>
-        <parameter>
-          <name>PARAM_SOURCE_TABLE</name>
-          <stream_name>source_table</stream_name>
-          <value />
-        </parameter>
-        <parameter>
-          <name>PARAM_SOURCE_SCHEMA_DOT_TABLE</name>
-          <stream_name>source_schema_dot_table</stream_name>
-          <value />
-        </parameter>
-        <parameter>
-          <name>PARAM_TARGET_SCHEMA</name>
-          <stream_name>target_schema</stream_name>
-          <value />
-        </parameter>
-        <parameter>
-          <name>PARAM_TARGET_TABLE</name>
-          <stream_name>target_table</stream_name>
-          <value />
-        </parameter>
-        <parameter>
-          <name>PARAM_TARGET_SCHEMA_DOT_TABLE</name>
-          <stream_name>target_schema_dot_table</stream_name>
-          <value />
-        </parameter>
-        <parameter>
-          <name>PARAM_USE_GENERIC_INSERT_ONLY_TABLE_ALGORITHM</name>
-          <stream_name>use_generic_insert_only_table_algorithm</stream_name>
-          <value />
-        </parameter>
-        <parameter>
-          <name>PARAM_USE_GENERIC_UPDATEABLE_TABLE_ALGORITHM</name>
-          <stream_name>use_generic_updateable_table_algorithm</stream_name>
-          <value />
-        </parameter>
-        <parameter>
-          <name>PARAM_USE_CUSTOM_MIRROR_ALGORITHM</name>
-          <stream_name>use_custom_mirror_algorithm</stream_name>
-          <value />
-        </parameter>
-        <parameter>
-          <name>PARAM_TABLE_META_ID</name>
-          <stream_name>table_meta_id</stream_name>
-          <value />
-        </parameter>
-      </parameters>
-      <set_append_logfile>N</set_append_logfile>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>384</xloc>
-      <yloc>544</yloc>
-    </entry>
-    <entry>
-      <name>jb_store_insert_ids</name>
-      <description />
-      <type>JOB</type>
-      <specification_method>rep_name</specification_method>
-      <job_object_id />
-      <filename />
-      <jobname>jb_store_insert_ids</jobname>
-      <directory>/generic/store_insert_ids</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Nothing</loglevel>
-      <slave_server_name />
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <expand_remote_job>N</expand_remote_job>
-      <create_parent_folder>N</create_parent_folder>
-      <pass_export>N</pass_export>
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-        <parameter>
-          <name>PARAM_TARGET_DB_ID</name>
-          <stream_name />
-          <value>${QF_DB_ID_PSA}</value>
-        </parameter>
-      </parameters>
-      <set_append_logfile>N</set_append_logfile>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>384</xloc>
-      <yloc>320</yloc>
+      <xloc>368</xloc>
+      <yloc>592</yloc>
     </entry>
   </entries>
   <hops>
     <hop>
-      <from>START</from>
-      <to>jb_psa_init</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>tr_cdc_timestamp_load_end</from>
-      <to>jb_send_default_email_job_notification - Success</to>
-      <from_nr>1</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>jb_psa_init</from>
-      <to>DUMMY</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>DUMMY</from>
-      <to>DUMMY 2</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>DUMMY 2</from>
-      <to>jb_send_default_email_job_notification - Failure</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>jb_send_default_email_job_notification - Success</from>
-      <to>Success</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>jb_send_default_email_job_notification - Failure</from>
+      <from>jb_log_error</from>
       <to>Abort job</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -983,8 +711,26 @@
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>tr_cdc_timestamp_load_start</from>
-      <to>jb_log_error 1</to>
+      <from>START</from>
+      <to>Write To Log: Parameters</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>Write To Log: Parameters</from>
+      <to>jb_set_dynamic_db_connection_variables</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>jb_is_specified_db_type - PostgreSQL?</from>
+      <to>DUMMY 2</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -992,9 +738,36 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>tr_cdc_timestamp_load_end</from>
+      <from>DUMMY 2</from>
+      <to>Abort job</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>jb_set_dynamic_db_connection_variables</from>
+      <to>Abort job 2</to>
+      <from_nr>0</from_nr>
+      <to_nr>1</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_set_dynamic_db_connection_variables</from>
+      <to>tr_set_select_max_insert_ids_for_source_db_sql_vrbl</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>tr_set_select_max_insert_ids_for_source_db_sql_vrbl</from>
       <to>jb_log_error 2</to>
-      <from_nr>1</from_nr>
+      <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>N</evaluation>
@@ -1002,79 +775,16 @@
     </hop>
     <hop>
       <from>jb_log_error 2</from>
-      <to>DUMMY</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>jb_log_error 1</from>
-      <to>DUMMY</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>jb_psa_init</from>
-      <to>DUMMY 3</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>DUMMY 3</from>
-      <to>tr_cdc_timestamp_load_start</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>tr_list_of_tables_to_mirror</from>
-      <to>DUMMY</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>tr_list_of_tables_to_mirror</from>
-      <to>jb_psa_update-table</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>jb_psa_update-table</from>
-      <to>DUMMY</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>jb_psa_update-table</from>
-      <to>tr_cdc_timestamp_load_end</to>
+      <to>Abort job 2</to>
       <from_nr>0</from_nr>
       <to_nr>1</to_nr>
       <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>tr_cdc_timestamp_load_start</from>
-      <to>jb_store_insert_ids</to>
+      <from>tr_set_select_max_insert_ids_for_source_db_sql_vrbl</from>
+      <to>jb_is_specified_db_type - PostgreSQL?</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -1082,8 +792,8 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>jb_store_insert_ids</from>
-      <to>tr_list_of_tables_to_mirror</to>
+      <from>jb_is_specified_db_type - PostgreSQL?</from>
+      <to>tr_store_max_insert_ids_for_source_db_postgresql</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -1091,8 +801,17 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>jb_store_insert_ids</from>
-      <to>DUMMY</to>
+      <from>tr_store_max_insert_ids_for_source_db_postgresql</from>
+      <to>Success</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>tr_store_max_insert_ids_for_source_db_postgresql</from>
+      <to>jb_log_error</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -1102,16 +821,118 @@
   </hops>
   <notepads>
     <notepad>
-      <note>This is a top-level job that updates the PSA database.
+      <note>This job retrieves and stores the maximum value for the "insert_id" column for all tables of a specified "source" DB.
 
-"Pass batch ID?" is selected for this job so that the batch ID is passed to tr_set_job_batch_id_variable via jb_init, which assigns 
-this value to QF_JOB_BATCH_ID.
+This job has parameters:
 
-If this job has a parent, the setting "Pass batch ID?" should also be set for the parent *if* it is desired that QF_JOB_BATCH_ID
-should be assigned the batch ID of the root job (not this job). This may vary from case to case.</note>
+	PARAM_SOURCE_DB_ID		ID the "source" DB containing tables to archive/mirror to the "target" DB
+	PARAM_TARGET_DB_ID		ID of the "target" DB to which the "source" DB tables will be archived/mirrored</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>744</width>
+      <width>680</width>
+      <heigth>94</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>This "Abort" is needed to
+tell the root calling job 
+that execution has failed.</note>
+      <xloc>624</xloc>
+      <yloc>752</yloc>
+      <width>157</width>
+      <heigth>52</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>This job sets the PDI variables:
+
+	QF_DYN_DB_CONN_DB_HOST
+	QF_DYN_DB_CONN_DB_PORT
+	QF_DYN_DB_CONN_DB_DATABASE
+	QF_DYN_DB_CONN_DB_USERNAME
+	QF_DYN_DB_CONN_DB_PASSWORD
+
+for use below. It takes a single parameter:
+
+	PARAM_DB_ID = ${PARAM_SOURCE_DB_ID}</note>
+      <xloc>544</xloc>
+      <yloc>192</yloc>
+      <width>289</width>
+      <heigth>164</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Check here for additional DB types, 
+e.g., Oracle, if ever necessary.</note>
+      <xloc>624</xloc>
+      <yloc>496</yloc>
+      <width>219</width>
+      <heigth>38</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>This transformation sets the variable:
+
+	QF_SQL_SELECT_MAX_INSERT_IDS_FOR_SOURCE_DB
+
+to the SQL required to select the maximum value of the
+"insert_id" colum of each table in the specifed "source" DB
+that is archived/mirrored to the specified "target" DB.</note>
+      <xloc>544</xloc>
+      <yloc>368</yloc>
+      <width>349</width>
       <heigth>108</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -1129,160 +950,16 @@ should be assigned the batch ID of the root job (not this job). This may vary fr
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Notify recipient(s) of SUCCESSFUL job execution.</note>
-      <xloc>640</xloc>
-      <yloc>768</yloc>
-      <width>294</width>
-      <heigth>24</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Notify recipient(s) of FAILED job execution.</note>
-      <xloc>640</xloc>
-      <yloc>832</yloc>
-      <width>260</width>
-      <heigth>24</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>This transformation  is passed the parameter:
-
-	PARAM_CDC_TIMESTAMPS_ID = ${QF_CDC_TIMESTAMPS_ID_PSA}</note>
-      <xloc>512</xloc>
-      <yloc>656</yloc>
-      <width>446</width>
-      <heigth>52</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>This transformation is passed the parameter:
-
-	PARAM_CDC_TIMESTAMPS_ID = ${QF_CDC_TIMESTAMPS_ID_PSA}
-
-and then sets the CDC timestamp variables:
-
-	QF_CDC_LAST_LOAD
-	QF_CDC_CURRENT_LOAD</note>
-      <xloc>512</xloc>
-      <yloc>160</yloc>
-      <width>446</width>
-      <heigth>122</heigth>
-      <fontname />
-      <fontsize>-1</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Create list of tables to update in the "target" DB. This transformation is passed parameter:
-
-PARAM_TARGET_DB_ID = ${QF_DB_ID_PSA}</note>
-      <xloc>512</xloc>
-      <yloc>400</yloc>
-      <width>538</width>
-      <heigth>52</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Update table in the "target" DB from the . This sub-job is:
-
-	1.	RUN ONCE FOR EACH TABLE BEING ARCHIVED/MIRRORED.
-
-	2.	Passed the ID of the "source" DB, the schema name and table name of the "source"
-		table and the "target" table that will be updated, as well as additional parameters.
-
-	3.	Passed the CDC parameters:
-			PARAM_CDC_CURRENT_LOAD	= ${QF_CDC_CURRENT_LOAD}
-			PARAM_CDC_LAST_LOAD		= ${QF_CDC_LAST_LOAD}</note>
-      <xloc>512</xloc>
-      <yloc>480</yloc>
-      <width>542</width>
-      <heigth>150</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Store MAX(insert_id) for all "source" tables that are archived/mirrored to the
-"target" (PSA) DB. This transformation is passed parameter:
-
-PARAM_TARGET_DB_ID = ${QF_DB_ID_PSA}</note>
-      <xloc>512</xloc>
-      <yloc>304</yloc>
-      <width>459</width>
-      <heigth>66</heigth>
+      <note>Store the MAX(insert_id) values
+for each table in a column of 
+etl.table_meta. Here, "insert_id"
+refers to the column of the
+table that acts as the "insert_id"
+column (its name may differ).</note>
+      <xloc>16</xloc>
+      <yloc>576</yloc>
+      <width>196</width>
+      <heigth>94</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>

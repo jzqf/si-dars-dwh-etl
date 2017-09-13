@@ -8,33 +8,8 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/08/29 19:54:01.134</modified_date>
+  <modified_date>2017/09/06 14:51:52.735</modified_date>
   <parameters>
-    <parameter>
-      <name>PARAM_DYN_DB_CONN_DB_DATABASE</name>
-      <default_value />
-      <description>for "dynamic" database connection, e.g., "dynamic_postgres_db"</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_DYN_DB_CONN_DB_HOST</name>
-      <default_value />
-      <description>for "dynamic" database connection, e.g., "dynamic_postgres_db"</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_DYN_DB_CONN_DB_PASSWORD</name>
-      <default_value />
-      <description>for "dynamic" database connection, e.g., "dynamic_postgres_db"</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_DYN_DB_CONN_DB_PORT</name>
-      <default_value />
-      <description>for "dynamic" database connection, e.g., "dynamic_postgres_db"</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_DYN_DB_CONN_DB_USERNAME</name>
-      <default_value />
-      <description>for "dynamic" database connection, e.g., "dynamic_postgres_db"</description>
-    </parameter>
     <parameter>
       <name>PARAM_SOURCE_DB_ID</name>
       <default_value />
@@ -54,6 +29,16 @@
       <name>PARAM_TARGET_DB_ID</name>
       <default_value />
       <description>ID of the "target" database to which the "source" DB tables will be archived/mirrored</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_TARGET_SCHEMA</name>
+      <default_value />
+      <description>Name of schema cin the "target" DB ontaining the target table </description>
+    </parameter>
+    <parameter>
+      <name>PARAM_TARGET_TABLE</name>
+      <default_value />
+      <description>Name of the table in the "target" DB that the "source" table will be archived/mirrored to</description>
     </parameter>
   </parameters>
   <connection>
@@ -399,8 +384,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>128</xloc>
-      <yloc>272</yloc>
+      <xloc>96</xloc>
+      <yloc>256</yloc>
     </entry>
     <entry>
       <name>tr_populate_table_meta-one_table</name>
@@ -432,35 +417,42 @@
       <run_configuration>Pentaho local</run_configuration>
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_TARGET_SCHEMA</name>
+          <stream_name />
+          <value>${PARAM_TARGET_SCHEMA}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_TABLE</name>
+          <stream_name />
+          <value>${PARAM_TARGET_TABLE}</value>
+        </parameter>
       </parameters>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>128</xloc>
-      <yloc>448</yloc>
+      <xloc>320</xloc>
+      <yloc>688</yloc>
     </entry>
     <entry>
       <name>Write parameters to log</name>
       <description />
       <type>WRITE_TO_LOG</type>
       <logmessage>
-PARAM_DYN_DB_CONN_DB_HOST     = ${PARAM_DYN_DB_CONN_DB_HOST}
-PARAM_DYN_DB_CONN_DB_PORT     = ${PARAM_DYN_DB_CONN_DB_PORT}
-PARAM_DYN_DB_CONN_DB_DATABASE = ${PARAM_DYN_DB_CONN_DB_DATABASE}
-PARAM_DYN_DB_CONN_DB_USERNAME = ${PARAM_DYN_DB_CONN_DB_USERNAME}
-PARAM_DYN_DB_CONN_DB_PASSWORD = ${PARAM_DYN_DB_CONN_DB_PASSWORD}
-PARAM_SOURCE_DB_ID            = ${PARAM_SOURCE_DB_ID}
-PARAM_SOURCE_SCHEMA           = ${PARAM_SOURCE_SCHEMA}
-PARAM_SOURCE_TABLE            = ${PARAM_SOURCE_TABLE}
-PARAM_TARGET_DB_ID            = ${PARAM_TARGET_DB_ID}
+PARAM_SOURCE_DB_ID  = ${PARAM_SOURCE_DB_ID}
+PARAM_SOURCE_SCHEMA = ${PARAM_SOURCE_SCHEMA}
+PARAM_SOURCE_TABLE  = ${PARAM_SOURCE_TABLE}
+PARAM_TARGET_DB_ID  = ${PARAM_TARGET_DB_ID}
+PARAM_TARGET_SCHEMA = ${PARAM_TARGET_SCHEMA}
+PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}
  </logmessage>
       <loglevel>Basic</loglevel>
       <logsubject>Parameters passed to jb_populate_table_meta-one_table:</logsubject>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>128</xloc>
-      <yloc>352</yloc>
+      <xloc>320</xloc>
+      <yloc>256</yloc>
     </entry>
     <entry>
       <name>tr_populate_table_meta-get_table_meta_id</name>
@@ -496,8 +488,8 @@ PARAM_TARGET_DB_ID            = ${PARAM_TARGET_DB_ID}
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>128</xloc>
-      <yloc>544</yloc>
+      <xloc>320</xloc>
+      <yloc>848</yloc>
     </entry>
     <entry>
       <name>tr_populate_column_meta-one_table</name>
@@ -530,6 +522,31 @@ PARAM_TARGET_DB_ID            = ${PARAM_TARGET_DB_ID}
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
         <parameter>
+          <name>PARAM_DYN_DB_CONN_DB_HOST</name>
+          <stream_name />
+          <value>${QF_DYN_DB_CONN_DB_HOST}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_DYN_DB_CONN_DB_PORT</name>
+          <stream_name />
+          <value>${QF_DYN_DB_CONN_DB_PORT}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_DYN_DB_CONN_DB_DATABASE</name>
+          <stream_name />
+          <value>${QF_DYN_DB_CONN_DB_DATABASE}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_DYN_DB_CONN_DB_USERNAME</name>
+          <stream_name />
+          <value>${QF_DYN_DB_CONN_DB_USERNAME}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_DYN_DB_CONN_DB_PASSWORD</name>
+          <stream_name />
+          <value>${QF_DYN_DB_CONN_DB_PASSWORD}</value>
+        </parameter>
+        <parameter>
           <name>PARAM_TABLE_META_ID</name>
           <stream_name>table_meta_id</stream_name>
           <value />
@@ -538,8 +555,8 @@ PARAM_TARGET_DB_ID            = ${PARAM_TARGET_DB_ID}
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>368</xloc>
-      <yloc>640</yloc>
+      <xloc>560</xloc>
+      <yloc>944</yloc>
     </entry>
     <entry>
       <name>jb_is_specified_db_type - PostgreSQL?</name>
@@ -582,8 +599,8 @@ PARAM_TARGET_DB_ID            = ${PARAM_TARGET_DB_ID}
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>128</xloc>
-      <yloc>640</yloc>
+      <xloc>320</xloc>
+      <yloc>944</yloc>
     </entry>
     <entry>
       <name>jb_log_error - Untreated case</name>
@@ -621,19 +638,142 @@ PARAM_TARGET_DB_ID            = ${PARAM_TARGET_DB_ID}
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>128</xloc>
-      <yloc>784</yloc>
+      <xloc>96</xloc>
+      <yloc>944</yloc>
     </entry>
     <entry>
       <name>Abort job</name>
       <description />
       <type>ABORT</type>
-      <message>Aborting jb_populate_table_meta-one_table: PARAM_SOURCE_DB_ID = ${PARAM_SOURCE_DB_ID}</message>
+      <message>Aborting jb_populate_table_meta-one_table</message>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>368</xloc>
-      <yloc>784</yloc>
+      <xloc>96</xloc>
+      <yloc>688</yloc>
+    </entry>
+    <entry>
+      <name>jb_set_dynamic_db_connection_variables</name>
+      <description />
+      <type>JOB</type>
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_set_dynamic_db_connection_variables</jobname>
+      <directory>/generic/dynamic_db_connections</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_DB_ID</name>
+          <stream_name />
+          <value>${PARAM_SOURCE_DB_ID}</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>320</xloc>
+      <yloc>576</yloc>
+    </entry>
+    <entry>
+      <name>Set PARAM_TARGET_SCHEMA = PARAM_SOURCE_SCHEMA</name>
+      <description />
+      <type>SET_VARIABLES</type>
+      <replacevars>Y</replacevars>
+      <filename />
+      <file_variable_type>JVM</file_variable_type>
+      <fields>
+        <field>
+          <variable_name>PARAM_TARGET_SCHEMA</variable_name>
+          <variable_value>${PARAM_SOURCE_SCHEMA}</variable_value>
+          <variable_type>CURRENT_JOB</variable_type>
+        </field>
+      </fields>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>624</xloc>
+      <yloc>336</yloc>
+    </entry>
+    <entry>
+      <name>PARAM_TARGET_SCHEMA has value ?</name>
+      <description />
+      <type>SIMPLE_EVAL</type>
+      <valuetype>variable</valuetype>
+      <fieldname />
+      <variablename>${PARAM_TARGET_SCHEMA}</variablename>
+      <fieldtype>string</fieldtype>
+      <mask />
+      <comparevalue />
+      <minvalue />
+      <maxvalue />
+      <successcondition>different</successcondition>
+      <successnumbercondition>equal</successnumbercondition>
+      <successbooleancondition>false</successbooleancondition>
+      <successwhenvarset>N</successwhenvarset>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>320</xloc>
+      <yloc>336</yloc>
+    </entry>
+    <entry>
+      <name>Set PARAM_TARGET_TABLE = PARAM_SOURCE_TABLE</name>
+      <description />
+      <type>SET_VARIABLES</type>
+      <replacevars>Y</replacevars>
+      <filename />
+      <file_variable_type>JVM</file_variable_type>
+      <fields>
+        <field>
+          <variable_name>PARAM_TARGET_TABLE</variable_name>
+          <variable_value>${PARAM_SOURCE_TABLE}</variable_value>
+          <variable_type>CURRENT_JOB</variable_type>
+        </field>
+      </fields>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>624</xloc>
+      <yloc>432</yloc>
+    </entry>
+    <entry>
+      <name>PARAM_TARGET_TABLE has value ?</name>
+      <description />
+      <type>SIMPLE_EVAL</type>
+      <valuetype>variable</valuetype>
+      <fieldname />
+      <variablename>${PARAM_TARGET_TABLE}</variablename>
+      <fieldtype>string</fieldtype>
+      <mask />
+      <comparevalue />
+      <minvalue />
+      <maxvalue />
+      <successcondition>different</successcondition>
+      <successnumbercondition>equal</successnumbercondition>
+      <successbooleancondition>false</successbooleancondition>
+      <successwhenvarset>N</successwhenvarset>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>320</xloc>
+      <yloc>432</yloc>
     </entry>
   </entries>
   <hops>
@@ -645,15 +785,6 @@ PARAM_TARGET_DB_ID            = ${PARAM_TARGET_DB_ID}
       <enabled>Y</enabled>
       <evaluation>Y</evaluation>
       <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>Write parameters to log</from>
-      <to>tr_populate_table_meta-one_table</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
     </hop>
     <hop>
       <from>tr_populate_table_meta-one_table</from>
@@ -700,30 +831,128 @@ PARAM_TARGET_DB_ID            = ${PARAM_TARGET_DB_ID}
       <evaluation>N</evaluation>
       <unconditional>Y</unconditional>
     </hop>
+    <hop>
+      <from>jb_set_dynamic_db_connection_variables</from>
+      <to>Abort job</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>tr_populate_table_meta-one_table</from>
+      <to>Abort job</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>tr_populate_table_meta-get_table_meta_id</from>
+      <to>Abort job</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Write parameters to log</from>
+      <to>PARAM_TARGET_SCHEMA has value ?</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>PARAM_TARGET_SCHEMA has value ?</from>
+      <to>Set PARAM_TARGET_SCHEMA = PARAM_SOURCE_SCHEMA</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>PARAM_TARGET_SCHEMA has value ?</from>
+      <to>PARAM_TARGET_TABLE has value ?</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>PARAM_TARGET_TABLE has value ?</from>
+      <to>Set PARAM_TARGET_TABLE = PARAM_SOURCE_TABLE</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Set PARAM_TARGET_TABLE = PARAM_SOURCE_TABLE</from>
+      <to>jb_set_dynamic_db_connection_variables</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>PARAM_TARGET_TABLE has value ?</from>
+      <to>jb_set_dynamic_db_connection_variables</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Set PARAM_TARGET_SCHEMA = PARAM_SOURCE_SCHEMA</from>
+      <to>PARAM_TARGET_TABLE has value ?</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_set_dynamic_db_connection_variables</from>
+      <to>tr_populate_table_meta-one_table</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
   </hops>
   <notepads>
     <notepad>
-      <note>This job writes a single default row to the etl.table_meta table for a specified table from the source database.
-It is assumed that the table name in the target database will be identical to the table name in the source database.
+      <note>This job writes a single default row to the etl.table_meta tablefor a table pair (one from a "source" DB and one from a 
+"target" DB) that is specified by parameters passed to this job.
 
-This job then creates a set of default etl.column_meta rows for the etl.table_meta row just created, one for each
-row of the table in the source (OBO) DB.
+This job also creates a set of default etl.column_meta rows for the etl.table_meta row just created, one for each
+row of the table in the source DB.
 
 This transformation has parameters:
 
-	PARAM_DYN_DB_CONN_DB_HOST			for "dynamic" database connection, e.g., "dynamic_postgres_db"
-	PARAM_DYN_DB_CONN_DB_PORT			for "dynamic" database connection, e.g., "dynamic_postgres_db"
-	PARAM_DYN_DB_CONN_DB_DATABASE		for "dynamic" database connection, e.g., "dynamic_postgres_db"
-	PARAM_DYN_DB_CONN_DB_USERNAME		for "dynamic" database connection, e.g., "dynamic_postgres_db"
-	PARAM_DYN_DB_CONN_DB_PASSWORD	for "dynamic" database connection, e.g., "dynamic_postgres_db"
-	PARAM_SOURCE_DB_ID						ID the "source" database containing the table for generating table metadata
-	PARAM_SOURCE_SCHEMA					Name of schema containing source table for generating table metadata
-	PARAM_SOURCE_TABLE					Name of source table for generating table metatdata
-	PARAM_TARGET_DB_ID						ID of the "target" database to which the "source" DB tables will be archived/mirrored</note>
+	PARAM_SOURCE_DB_ID			ID the "source" database containing the table for generating table metadata
+	PARAM_SOURCE_SCHEMA		Name of schema containing source table for generating table metadata
+	PARAM_SOURCE_TABLE		Name of source table for generating table metatdata
+	PARAM_TARGET_DB_ID			ID of the "target" database to which the "source" DB tables will be archived/mirrored
+	PARAM_TARGET_SCHEMA		Name of schema in the "target" DB ontaining the target table.
+									If blank, PARAM_SOURCE_SCHEMA will be used instead.
+	PARAM_TARGET_TABLE			Name of the table in the "target" DB that the "source" table will be archived/mirrored to
+									If blank, PARAM_SOURCE_TABLE will be used instead.</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>795</width>
-      <heigth>248</heigth>
+      <width>740</width>
+      <heigth>234</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -743,8 +972,8 @@ This transformation has parameters:
       <note>Get the value of "table_meta_id" for the new etl.table_meta row just created.
 This is placed in the stream and then copied to the "Result set" so that it can
 be accessed by the next transformation.</note>
-      <xloc>288</xloc>
-      <yloc>544</yloc>
+      <xloc>480</xloc>
+      <yloc>848</yloc>
       <width>461</width>
       <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
@@ -764,11 +993,19 @@ be accessed by the next transformation.</note>
     </notepad>
     <notepad>
       <note>Create a new etl.table_meta row using the values of the parameters passed to
-this job.</note>
-      <xloc>288</xloc>
-      <yloc>448</yloc>
-      <width>468</width>
-      <heigth>38</heigth>
+this job. Even though the option "Pass parameter values to sub transformation"
+is selected for this job entry, two of the parameters are explicitly passed as:
+
+	PARAM_TARGET_SCHEMA	= ${PARAM_TARGET_SCHEMA}
+	PARAM_TARGET_TABLE		= ${PARAM_TARGET_TABLE}
+
+This is because the values for these variables are modified in this job if they are passed
+to this job as "". If this is done, it seems that their *original* blank values are passed to 
+sub-transformation here unless we explicitly pass the parameters as shown.</note>
+      <xloc>480</xloc>
+      <yloc>672</yloc>
+      <width>516</width>
+      <heigth>150</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -785,12 +1022,13 @@ this job.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Create a set of default etl.column_meta rows for the etl.table_meta
-row just created, one for each row of the table in the source (OBO) DB.</note>
-      <xloc>528</xloc>
-      <yloc>640</yloc>
-      <width>421</width>
-      <heigth>38</heigth>
+      <note>Create a set of default etl.column_meta rows
+for the etl.table_meta row just created, one
+for each row of the table in the source DB.</note>
+      <xloc>704</xloc>
+      <yloc>928</yloc>
+      <width>275</width>
+      <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -808,11 +1046,11 @@ row just created, one for each row of the table in the source (OBO) DB.</note>
     </notepad>
     <notepad>
       <note>This transformation is for PostgreSQL DBs only. Execution must be 
-dispatched to a different transsformation based on this one in order
+dispatched to a different transformation based on this one in order
 to treat another database type, e.g., Oracle.</note>
-      <xloc>272</xloc>
-      <yloc>688</yloc>
-      <width>409</width>
+      <xloc>464</xloc>
+      <yloc>992</yloc>
+      <width>403</width>
       <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -824,6 +1062,37 @@ to treat another database type, e.g., Oracle.</note>
       <backgroundcolorred>0</backgroundcolorred>
       <backgroundcolorgreen>0</backgroundcolorgreen>
       <backgroundcolorblue>0</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>This job sets the PDI variables:
+
+	QF_DYN_DB_CONN_DB_HOST
+	QF_DYN_DB_CONN_DB_PORT
+	QF_DYN_DB_CONN_DB_DATABASE
+	QF_DYN_DB_CONN_DB_USERNAME
+	QF_DYN_DB_CONN_DB_PASSWORD
+
+based on a single parameter:
+
+	PARAM_DB_ID = ${PARAM_SOURCE_DB_ID}</note>
+      <xloc>480</xloc>
+      <yloc>496</yloc>
+      <width>289</width>
+      <heigth>164</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
       <bordercolorblue>100</bordercolorblue>
