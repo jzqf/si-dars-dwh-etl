@@ -37,13 +37,13 @@ case "$1" in
 		fi
 
 		# Install cron-job for user [[app.user]]. The name of the file is set to
-		# [[artifactId]], which should be relatively unique.
+		# [[app.name]], which should be relatively unique.
 		DATE=`date +%Y-%m-%d:%H:%M:%S`
-		if [ ! -e /etc/cron.d/[[artifactId]] ]; then
+		if [ ! -e /etc/cron.d/[[app.name]] ]; then
 			cp  ${APP_DIR}/templates/[[app.name]].cron /etc/cron.d/[[app.name]]
-			echo "$DATE - INFO: Created [[artifactId]] execution cron job: /etc/cron.d/[[artifactId]]" >> $INST_LOG
+			echo "$DATE - INFO: Created [[app.name]] execution cron job: /etc/cron.d/[[app.name]]" >> $INST_LOG
 		else
-			echo "$DATE - SKIPPED: creation of [[artifactId]] execution cron job: /etc/cron.d/[[artifactId]], ALREADY EXISTS" >> $INST_LOG
+			echo "$DATE - SKIPPED: creation of [[app.name]] execution cron job: /etc/cron.d/[[app.name]], ALREADY EXISTS" >> $INST_LOG
 		fi
 
 		# Ensure that the appropriate environment variables get set for the 
