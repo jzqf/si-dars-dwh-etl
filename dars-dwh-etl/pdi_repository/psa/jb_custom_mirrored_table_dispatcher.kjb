@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/09/05 10:01:16.574</modified_date>
+  <modified_date>2017/09/19 08:53:07.428</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CDC_CURRENT_LOAD</name>
@@ -523,26 +523,6 @@ PARAM_TARGET_SCHEMA_DOT_TABLE    = ${PARAM_TARGET_SCHEMA_DOT_TABLE}
       <yloc>496</yloc>
     </entry>
     <entry>
-      <name>DUMMY</name>
-      <description />
-      <type>SPECIAL</type>
-      <start>N</start>
-      <dummy>Y</dummy>
-      <repeat>N</repeat>
-      <schedulerType>0</schedulerType>
-      <intervalSeconds>0</intervalSeconds>
-      <intervalMinutes>60</intervalMinutes>
-      <hour>12</hour>
-      <minutes>0</minutes>
-      <weekDay>1</weekDay>
-      <DayOfMonth>1</DayOfMonth>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>608</xloc>
-      <yloc>496</yloc>
-    </entry>
-    <entry>
       <name>jb_log_error 1</name>
       <description />
       <type>JOB</type>
@@ -593,14 +573,14 @@ PARAM_TARGET_SCHEMA_DOT_TABLE    = ${PARAM_TARGET_SCHEMA_DOT_TABLE}
       <yloc>496</yloc>
     </entry>
     <entry>
-      <name>jb_log_error - Simulated error</name>
+      <name>jb_psa_mark_rows_for_deletion-custom-source_schema.source_table</name>
       <description />
       <type>JOB</type>
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
-      <jobname>jb_log_error</jobname>
-      <directory>/generic</directory>
+      <jobname>jb_psa_mark_rows_for_deletion-custom-source_schema.source_table</jobname>
+      <directory>${Internal.Entry.Current.Directory}</directory>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
@@ -618,17 +598,12 @@ PARAM_TARGET_SCHEMA_DOT_TABLE    = ${PARAM_TARGET_SCHEMA_DOT_TABLE}
       <pass_export>N</pass_export>
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
-        <parameter>
-          <name>PARAM_ERROR_MESSAGE</name>
-          <stream_name />
-          <value>!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Simulated error message from a custom table-specific update job!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</value>
-        </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
       <parallel>N</parallel>
       <draw>Y</draw>
-      <nr>1</nr>
-      <xloc>752</xloc>
+      <nr>0</nr>
+      <xloc>656</xloc>
       <yloc>496</yloc>
     </entry>
   </entries>
@@ -654,15 +629,6 @@ PARAM_TARGET_SCHEMA_DOT_TABLE    = ${PARAM_TARGET_SCHEMA_DOT_TABLE}
     <hop>
       <from>Table = targetschema.targettable ?</from>
       <to>Log dispatched job name - 1</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Log dispatched job name - 1</from>
-      <to>DUMMY</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -697,20 +663,20 @@ PARAM_TARGET_SCHEMA_DOT_TABLE    = ${PARAM_TARGET_SCHEMA_DOT_TABLE}
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>DUMMY</from>
-      <to>jb_log_error - Simulated error</to>
+      <from>Log dispatched job name - 1</from>
+      <to>jb_psa_mark_rows_for_deletion-custom-source_schema.source_table</to>
       <from_nr>0</from_nr>
-      <to_nr>1</to_nr>
-      <enabled>N</enabled>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
       <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
+      <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>jb_log_error - Simulated error</from>
+      <from>jb_psa_mark_rows_for_deletion-custom-source_schema.source_table</from>
       <to>Abort job</to>
-      <from_nr>1</from_nr>
+      <from_nr>0</from_nr>
       <to_nr>1</to_nr>
-      <enabled>N</enabled>
+      <enabled>Y</enabled>
       <evaluation>N</evaluation>
       <unconditional>N</unconditional>
     </hop>
@@ -758,52 +724,38 @@ This job acts as a "dispatcher" in that it runs the appropriate job/transformati
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>All "jb_custom_update-&lt;schema>.&lt;table>" sub-jobs below should be 
-passed parameters via the job entry setting "Pass parameter values 
-to sub job". In case of an error that is explicitly caught, these sub-jobs
-should also execute:
+      <note>Rename the "jb_psa_mark_rows_for_deletion-custom-source_schema.source_table" job entry appropriately for the
+table that is treated when I write my first table-specific custom "mark for deletion" job, as well as the job itself that is
+executed by this entry. Update also the settings of each job entry ("Log dispatched job name - n" &amp; "Abort job - n")
+in the current job for the table being treated.
 
-	/generic/jb_log_error
+In the event that an error is detected in the job "jb_psa_mark_rows_for_deletion-custom-source_schema.source_table",
+it should execute a "jb_log_error" entry that describes the error, followed by an "Abort" job entry so that this job knows
+to also execute an "Abort" job entry. In this is done, the error message will be sent out by e-mail from the root job.
 
-in order to set a message that will be e-mailed, followed by an 
-"Abort job" entry to ensure further execution is aborted.</note>
-      <xloc>496</xloc>
-      <yloc>336</yloc>
-      <width>415</width>
-      <heigth>136</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>DUMMY is a place-holder for sub-job "jb_custom_update-targetschema.targettable"
+DUMMY is a place-holder for sub-job "jb_custom_update-targetschema.targettable"
 Replace with a real job after I write my first table-specific custom update job. 
-
-The "jb_log_error" &amp; "Abort job" entries after the "DUMMY" entry should be placed 
-in the sub-job (but executed only in case of a detected error, of course).
 
 The sub-job must finish by executing "jb_update_etl_table_meta_mirror_details",
 passing an appropriate value for the parameter PARAM_TABLE_MIRROR_TREATMENT_ID,
-which will probably be either QF_MIRROR_ALG_INSERT_ONLY_CUSTOM or 
-QF_MIRROR_ALG_INSERT_OR_UPDATE_CUSTOM.</note>
-      <xloc>464</xloc>
-      <yloc>608</yloc>
-      <width>568</width>
-      <heigth>150</heigth>
+which will probably be either:
+
+	QF_MIRROR_ALG_INSERT_ONLY_CUSTOM or
+	QF_MIRROR_ALG_INSERT_OR_UPDATE_CUSTOM .
+
+Should I eliminate this variables and replace them by a single variable:
+
+	QF_MIRROR_ALG_CUSTOM ?
+
+Is it important to know if the custom algorithm treats the table as an "insert-only" or
+as an "updateable" table?</note>
+      <xloc>304</xloc>
+      <yloc>560</yloc>
+      <width>706</width>
+      <heigth>360</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
-      <fontbold>Y</fontbold>
+      <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
       <fontcolorgreen>0</fontcolorgreen>
@@ -817,16 +769,18 @@ QF_MIRROR_ALG_INSERT_OR_UPDATE_CUSTOM.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>See "jb_psa_mark_rows_for_deletion-custom" for ideas
-on how to implement sub-jobs here for custom,
-table-specific archiving/mirroring algorithms.</note>
-      <xloc>464</xloc>
-      <yloc>544</yloc>
-      <width>356</width>
-      <heigth>52</heigth>
+      <note>&lt;- Need to test PARAM_SOURCE_DB_ID in case there are multiple "source" DBs!
+
+Should I check for source database "type", or just set the appropriate generic database connection for whichever 
+database type we need to use? Even so, should I name the custom jobs &amp; transformations with the database type, 
+e.g., "_postgres" so I know whoch database type has been assumed?</note>
+      <xloc>192</xloc>
+      <yloc>384</yloc>
+      <width>634</width>
+      <heigth>75</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>Y</fontbold>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>255</fontcolorred>
       <fontcolorgreen>255</fontcolorgreen>
