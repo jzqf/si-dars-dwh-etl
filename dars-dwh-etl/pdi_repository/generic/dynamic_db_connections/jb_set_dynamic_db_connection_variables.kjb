@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/08/29 13:42:27.277</modified_date>
+  <modified_date>2017/09/19 12:31:31.710</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_DB_ID</name>
@@ -371,7 +371,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>752</xloc>
-      <yloc>816</yloc>
+      <yloc>976</yloc>
     </entry>
     <entry>
       <name>Write To Log: Parameters</name>
@@ -445,7 +445,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>144</xloc>
-      <yloc>816</yloc>
+      <yloc>976</yloc>
     </entry>
     <entry>
       <name>Set dynamic connection parameters for OBO OPR DB</name>
@@ -586,7 +586,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>752</xloc>
-      <yloc>432</yloc>
+      <yloc>576</yloc>
     </entry>
     <entry>
       <name>Write variables to log - OBO OPR DB</name>
@@ -780,6 +780,85 @@ QF_DYN_DB_CONN_DB_PASSWORD = ${QF_DYN_DB_CONN_DB_PASSWORD}</logmessage>
       <xloc>480</xloc>
       <yloc>352</yloc>
     </entry>
+    <entry>
+      <name>PARAM_DB_ID = -1 (not set)</name>
+      <description />
+      <type>SIMPLE_EVAL</type>
+      <valuetype>variable</valuetype>
+      <fieldname />
+      <variablename>${PARAM_DB_ID}</variablename>
+      <fieldtype>number</fieldtype>
+      <mask />
+      <comparevalue>-1</comparevalue>
+      <minvalue />
+      <maxvalue />
+      <successcondition>equal</successcondition>
+      <successnumbercondition>equal</successnumbercondition>
+      <successbooleancondition>true</successbooleancondition>
+      <successwhenvarset>N</successwhenvarset>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>144</xloc>
+      <yloc>864</yloc>
+    </entry>
+    <entry>
+      <name>Set dynamic connection parameters for *no* DB</name>
+      <description />
+      <type>SET_VARIABLES</type>
+      <replacevars>Y</replacevars>
+      <filename />
+      <file_variable_type>JVM</file_variable_type>
+      <fields>
+        <field>
+          <variable_name>QF_DYN_DB_CONN_DB_HOST</variable_name>
+          <variable_value />
+          <variable_type>ROOT_JOB</variable_type>
+        </field>
+        <field>
+          <variable_name>QF_DYN_DB_CONN_DB_PORT</variable_name>
+          <variable_value />
+          <variable_type>ROOT_JOB</variable_type>
+        </field>
+        <field>
+          <variable_name>QF_DYN_DB_CONN_DB_DATABASE</variable_name>
+          <variable_value />
+          <variable_type>ROOT_JOB</variable_type>
+        </field>
+        <field>
+          <variable_name>QF_DYN_DB_CONN_DB_USERNAME</variable_name>
+          <variable_value />
+          <variable_type>ROOT_JOB</variable_type>
+        </field>
+        <field>
+          <variable_name>QF_DYN_DB_CONN_DB_PASSWORD</variable_name>
+          <variable_value />
+          <variable_type>ROOT_JOB</variable_type>
+        </field>
+      </fields>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>480</xloc>
+      <yloc>864</yloc>
+    </entry>
+    <entry>
+      <name>Write variables to log - *no* DB</name>
+      <description />
+      <type>WRITE_TO_LOG</type>
+      <logmessage>QF_DYN_DB_CONN_DB_HOST     = ${QF_DYN_DB_CONN_DB_HOST}
+QF_DYN_DB_CONN_DB_PORT     = ${QF_DYN_DB_CONN_DB_PORT}
+QF_DYN_DB_CONN_DB_DATABASE = ${QF_DYN_DB_CONN_DB_DATABASE}
+QF_DYN_DB_CONN_DB_USERNAME = ${QF_DYN_DB_CONN_DB_USERNAME}
+QF_DYN_DB_CONN_DB_PASSWORD = ${QF_DYN_DB_CONN_DB_PASSWORD}</logmessage>
+      <loglevel>Basic</loglevel>
+      <logsubject>ETL DB:</logsubject>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>480</xloc>
+      <yloc>784</yloc>
+    </entry>
   </entries>
   <hops>
     <hop>
@@ -816,15 +895,6 @@ QF_DYN_DB_CONN_DB_PASSWORD = ${QF_DYN_DB_CONN_DB_PASSWORD}</logmessage>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>PARAM_DB_ID = QF_DB_ID_ETL ?</from>
-      <to>jb_log_error - Untreated case</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
       <unconditional>N</unconditional>
     </hop>
     <hop>
@@ -962,6 +1032,51 @@ QF_DYN_DB_CONN_DB_PASSWORD = ${QF_DYN_DB_CONN_DB_PASSWORD}</logmessage>
       <evaluation>N</evaluation>
       <unconditional>N</unconditional>
     </hop>
+    <hop>
+      <from>PARAM_DB_ID = QF_DB_ID_ETL ?</from>
+      <to>PARAM_DB_ID = -1 (not set)</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>PARAM_DB_ID = -1 (not set)</from>
+      <to>jb_log_error - Untreated case</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>PARAM_DB_ID = -1 (not set)</from>
+      <to>Set dynamic connection parameters for *no* DB</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Set dynamic connection parameters for *no* DB</from>
+      <to>Write variables to log - *no* DB</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Set dynamic connection parameters for *no* DB</from>
+      <to>jb_log_error - Error setting vrbls</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
   </hops>
   <notepads>
     <notepad>
@@ -1001,7 +1116,7 @@ to tell the root calling
 job that execution has
 failed.</note>
       <xloc>800</xloc>
-      <yloc>800</yloc>
+      <yloc>960</yloc>
       <width>139</width>
       <heigth>66</heigth>
       <fontname>Ubuntu</fontname>
