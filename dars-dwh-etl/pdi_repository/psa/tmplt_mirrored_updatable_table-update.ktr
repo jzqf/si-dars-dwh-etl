@@ -44,11 +44,6 @@
         <description />
       </parameter>
       <parameter>
-        <name>PARAM_LAST_UPDATED_ON_COLNAME</name>
-        <default_value>last_updated_on</default_value>
-        <description>Name of "last_updated_on" timestamp column of source table</description>
-      </parameter>
-      <parameter>
         <name>PARAM_MAX_INSERT_ID</name>
         <default_value>0</default_value>
         <description>Maximum value of the "insert_id" column for rows to load from the source DB table</description>
@@ -64,6 +59,11 @@
         <description>Name of column acting as "insert_id" column of source table</description>
       </parameter>
       <parameter>
+        <name>PARAM_SOURCE_LAST_UPDATED_ON_COLNAME</name>
+        <default_value>last_updated_on</default_value>
+        <description>Name of "last_updated_on" timestamp column of source table</description>
+      </parameter>
+      <parameter>
         <name>PARAM_SOURCE_SCHEMA</name>
         <default_value>passage</default_value>
         <description>Name of schema containing source table to mirror to target table</description>
@@ -72,6 +72,21 @@
         <name>PARAM_SOURCE_TABLE</name>
         <default_value>passage</default_value>
         <description>Name of source table to mirror to target table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_INSERTED_ON_COLNAME</name>
+        <default_value>inserted_on</default_value>
+        <description>Name of column acting as "inserted_on" timestamp column of target table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_INSERT_ID_COLNAME</name>
+        <default_value>insert_id</default_value>
+        <description>Name of column acting as "insert_id" column of target table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_LAST_UPDATED_ON_COLNAME</name>
+        <default_value>last_updated_on</default_value>
+        <description>Name of "last_updated_on" timestamp column of target table</description>
       </parameter>
       <parameter>
         <name>PARAM_TARGET_SCHEMA</name>
@@ -504,7 +519,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/09/10 16:38:46.733</modified_date>
+    <modified_date>2017/09/20 14:40:58.389</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -516,7 +531,7 @@ It is important to sort these rows chronologically (by either the "insert_id" or
 fails in the middle somewhere and if this transaction does not run in a single transaction, then next time this transformation is 
 executed, we want to start again where we left off (by computing, e.g., MAX(insert_id) for the PSA table).</note>
       <xloc>272</xloc>
-      <yloc>720</yloc>
+      <yloc>768</yloc>
       <width>765</width>
       <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
@@ -559,7 +574,7 @@ it takes a long time for this transformation to end. During this period the "Pau
 running" top" shows that both "postgres"and "java" processes are actively using a 25-75% of the CPU. When this CPU usage stops, 
 the  "Pause" and "Stop" buttons become disabled, showing that the transformation is finally finished. Strange.</note>
       <xloc>272</xloc>
-      <yloc>944</yloc>
+      <yloc>992</yloc>
       <width>773</width>
       <heigth>332</heigth>
       <fontname>Ubuntu</fontname>
@@ -581,7 +596,7 @@ the  "Pause" and "Stop" buttons become disabled, showing that the transformation
       <note>Get batch ID for current transformation. This will be stored in the PSA table for auditing/logging. This step *must* come after the
 "Map column names" step because the metadata injected into that step does not include this column/field.</note>
       <xloc>272</xloc>
-      <yloc>880</yloc>
+      <yloc>928</yloc>
       <width>764</width>
       <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
@@ -609,20 +624,23 @@ algorithm that can work with *any* table,  as long as rows cannot be deleted fro
 	PARAM_DYN_DB_CONN_DB_DATABASE		for "dynamic_postgres_db" database connection
 	PARAM_DYN_DB_CONN_DB_USERNAME		for "dynamic_postgres_db" database connection
 	PARAM_DYN_DB_CONN_DB_PASSWORD	for "dynamic_postgres_db" database connection
-	PARAM_CDC_LAST_LOAD				Timestamp for when *all* tables of the PSA were most recently updated successfully
-	PARAM_CDC_CURRENT_LOAD			Used so that a consistent max timestamp is used for all ETL
-	PARAM_MAX_INSERT_ID				Maximum value of the "insert_id" column for rows to load from the source DB table
-	PARAM_SOURCE_SCHEMA				Schema of mirrored table
-	PARAM_SOURCE_TABLE				Name of mirrored table to update
-	PARAM_TARGET_SCHEMA				Name of schema containing target table to update (not currently used)
-	PARAM_TARGET_TABLE					Name of target table to update (not currently used)
-	PARAM_SOURCE_INSERT_ID_COLNAME			Name of column acting as "insert_id"  timestamp column of source table
-	PARAM_SOURCE_INSERTED_ON_COLNAME		Name of column acting as "inserted_on" column of source table
-	PARAM_LAST_UPDATED_ON_COLNAME	Name of "last_updated_on" timestamp column of source table</note>
+	PARAM_CDC_LAST_LOAD					Timestamp for when *all* tables of the PSA were most recently updated successfully
+	PARAM_CDC_CURRENT_LOAD				Used so that a consistent max timestamp is used for all ETL
+	PARAM_MAX_INSERT_ID					Maximum value of the "insert_id" column for rows to load from the source DB table
+	PARAM_SOURCE_SCHEMA					Schema of mirrored table
+	PARAM_SOURCE_TABLE					Name of mirrored table to update
+	PARAM_TARGET_SCHEMA					Name of schema containing target table to update (not currently used)
+	PARAM_TARGET_TABLE						Name of target table to update (not currently used)
+	PARAM_SOURCE_INSERT_ID_COLNAME				Name of column acting as "insert_id"  timestamp column of source table
+	PARAM_SOURCE_INSERTED_ON_COLNAME			Name of column acting as "inserted_on" column of source table
+	PARAM_SOURCE_LAST_UPDATED_ON_COLNAME	Name of "last_updated_on" timestamp column of source table
+	PARAM_TARGET_INSERT_ID_COLNAME				Name of column acting as "insert_id"  timestamp column of target table
+	PARAM_TARGET_INSERTED_ON_COLNAME			Name of column acting as "inserted_on" column of target table
+	PARAM_TARGET_LAST_UPDATED_ON_COLNAME	Name of "last_updated_on" timestamp column of target table</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
       <width>795</width>
-      <heigth>276</heigth>
+      <heigth>318</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -654,7 +672,7 @@ Alternatively, we could eliminate this step entirely and load source (OBO) rows 
 but this will not be as efficient for the case when we need to re-start the mirroring process after it fails for some reason. In that
 case we would re-process all of the rows that were successfully mirrored during the previous run.</note>
       <xloc>272</xloc>
-      <yloc>288</yloc>
+      <yloc>336</yloc>
       <width>766</width>
       <heigth>206</heigth>
       <fontname>Ubuntu</fontname>
@@ -707,7 +725,7 @@ passed to it in the normal fashion because it is a normal transformation (all me
     <notepad>
       <note>Uses "SELECT *" -></note>
       <xloc>16</xloc>
-      <yloc>736</yloc>
+      <yloc>784</yloc>
       <width>117</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -728,7 +746,7 @@ passed to it in the normal fashion because it is a normal transformation (all me
     <notepad>
       <note>Select and possibly map/rename fields (table column names), as appropriate.</note>
       <xloc>272</xloc>
-      <yloc>816</yloc>
+      <yloc>864</yloc>
       <width>462</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -749,7 +767,7 @@ passed to it in the normal fashion because it is a normal transformation (all me
     <notepad>
       <note>Metadata injected -></note>
       <xloc>16</xloc>
-      <yloc>816</yloc>
+      <yloc>864</yloc>
       <width>130</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -770,7 +788,7 @@ passed to it in the normal fashion because it is a normal transformation (all me
     <notepad>
       <note>Metadata injected -></note>
       <xloc>16</xloc>
-      <yloc>1168</yloc>
+      <yloc>1216</yloc>
       <width>130</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -803,7 +821,7 @@ passed to it in the normal fashion because it is a normal transformation (all me
 		Before executing the SQL, modify it where appropriate. For example, replace "UNKNOWN" for timestamp columns with 
 		"timestamp without time zone" or "bytea", add declaration for column "etl_batch_id_last_update", primary key constraint, ...</note>
       <xloc>272</xloc>
-      <yloc>512</yloc>
+      <yloc>560</yloc>
       <width>799</width>
       <heigth>192</heigth>
       <fontname>Ubuntu</fontname>
@@ -834,7 +852,7 @@ order for error
 handling to be 
 triggered here!</note>
       <xloc>16</xloc>
-      <yloc>944</yloc>
+      <yloc>992</yloc>
       <width>108</width>
       <heigth>164</heigth>
       <fontname>Ubuntu</fontname>
@@ -1112,8 +1130,8 @@ triggered here!</note>
     </partitioning>
     <connection>psa_db</connection>
     <sql>SELECT
-    COALESCE(MAX(${PARAM_SOURCE_INSERT_ID_COLNAME}), ${QF_INSERT_ID_LOWER_BOUND})       AS max_target_insert_id,
-    COALESCE(MAX(${PARAM_LAST_UPDATED_ON_COLNAME}) , '${QF_LAST_UPDATED_ON_LOWER_BOUND}') AS max_target_last_updated_on
+    COALESCE(MAX(${PARAM_TARGET_INSERT_ID_COLNAME}), ${QF_INSERT_ID_LOWER_BOUND})       AS max_target_insert_id,
+    COALESCE(MAX(${PARAM_TARGET_LAST_UPDATED_ON_COLNAME}) , '${QF_LAST_UPDATED_ON_LOWER_BOUND}') AS max_target_last_updated_on
 FROM
     ${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}
 </sql>
@@ -1131,7 +1149,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>352</yloc>
+      <yloc>400</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1158,7 +1176,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>816</yloc>
+      <yloc>864</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1188,7 +1206,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>880</yloc>
+      <yloc>928</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1218,7 +1236,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>1088</yloc>
+      <yloc>1136</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1252,7 +1270,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>208</xloc>
-      <yloc>560</yloc>
+      <yloc>608</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1276,27 +1294,27 @@ WHERE
     (
         ${PARAM_SOURCE_INSERT_ID_COLNAME} > ?                                 -- newly INSERTed rows, since the last run
       --${PARAM_SOURCE_INSERTED_ON_COLNAME} > '${PARAM_CDC_LAST_LOAD}'        -- alternate condition, instead of the previous line
-        OR ${PARAM_LAST_UPDATED_ON_COLNAME} >= ?                              -- UPDATEd rows, since the last run. This is needed to be able to select rows that
+        OR ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} >= ?                              -- UPDATEd rows, since the last run. This is needed to be able to select rows that
                                                                               -- are modified during a period when the table is being treated as an insert-only
                                                                               -- table (not a likely scenario, but it is a possibility).
                                                                               -- Because ">=" is used here, not ">", this will include a least one row that was
                                                                               -- updated on the previous run (assuming that there was at least one row updated).
-                                                                              -- This/these rows will have ${PARAM_LAST_UPDATED_ON_COLNAME} = ?. The reason why
+                                                                              -- This/these rows will have ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} = ?. The reason why
                                                                               -- ">=" is used is in case there were one or more rows that were *not* updated on the
-                                                                              -- previous run, but which have ${PARAM_LAST_UPDATED_ON_COLNAME} = ?. This can occur
+                                                                              -- previous run, but which have ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} = ?. This can occur
                                                                               -- because of the finite resolution of timestamp values. As a result, more than one
-                                                                              -- row can have the *same* value of ${PARAM_LAST_UPDATED_ON_COLNAME}, but not all of
+                                                                              -- row can have the *same* value of ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME}, but not all of
                                                                               -- them were loaded and treated on the previous run, i.e., the cutoff imposed by
                                                                               -- the condition ${PARAM_SOURCE_INSERT_ID_COLNAME} &lt;= ${PARAM_MAX_INSERT_ID} or
-                                                                              -- ${PARAM_LAST_UPDATED_ON_COLNAME} &lt;= '${PARAM_CDC_CURRENT_LOAD}' loaded some,
-                                                                              -- but not all, of the rows with this value of ${PARAM_LAST_UPDATED_ON_COLNAME}.
-      --OR ${PARAM_LAST_UPDATED_ON_COLNAME} >= '${PARAM_CDC_LAST_LOAD}'       -- alternate condition, instead of the previous line
+                                                                              -- ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} &lt;= '${PARAM_CDC_CURRENT_LOAD}' loaded some,
+                                                                              -- but not all, of the rows with this value of ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME}.
+      --OR ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} >= '${PARAM_CDC_LAST_LOAD}'       -- alternate condition, instead of the previous line
     )
     AND ${PARAM_SOURCE_INSERT_ID_COLNAME}   &lt;= ${PARAM_MAX_INSERT_ID}         -- to avoid loading rows that are *inserted* after the job starts
   --AND ${PARAM_SOURCE_INSERTED_ON_COLNAME} &lt;= '${PARAM_CDC_CURRENT_LOAD}'    -- alternate condition, instead of the previous line 
 	AND (
-	        ${PARAM_LAST_UPDATED_ON_COLNAME} IS NULL OR                       -- rows that have been inserted but not modified
-	        ${PARAM_LAST_UPDATED_ON_COLNAME} &lt;= '${PARAM_CDC_CURRENT_LOAD}'   -- to avoid loading rows that are *modified* after the job starts
+	        ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} IS NULL OR                       -- rows that have been inserted but not modified
+	        ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} &lt;= '${PARAM_CDC_CURRENT_LOAD}'   -- to avoid loading rows that are *modified* after the job starts
 	    )
 ORDER BY
     ${PARAM_SOURCE_INSERT_ID_COLNAME}</sql>
@@ -1314,7 +1332,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>736</yloc>
+      <yloc>784</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1357,7 +1375,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>992</yloc>
+      <yloc>1040</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1391,7 +1409,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>1168</yloc>
+      <yloc>1216</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1411,21 +1429,24 @@ ORDER BY
     <limitRows>N</limitRows>
     <limitRowsNumber>0</limitRowsNumber>
     <logmessage>tmplt_mirrored_updatable_table-update:
-PARAM_DYN_DB_CONN_DB_HOST     = ${PARAM_DYN_DB_CONN_DB_HOST}
-PARAM_DYN_DB_CONN_DB_PORT     = ${PARAM_DYN_DB_CONN_DB_PORT}
-PARAM_DYN_DB_CONN_DB_DATABASE = ${PARAM_DYN_DB_CONN_DB_DATABASE}
-PARAM_DYN_DB_CONN_DB_USERNAME = ${PARAM_DYN_DB_CONN_DB_USERNAME}
-PARAM_DYN_DB_CONN_DB_PASSWORD = ${PARAM_DYN_DB_CONN_DB_PASSWORD}
-PARAM_CDC_LAST_LOAD           = ${PARAM_CDC_LAST_LOAD}
-PARAM_CDC_CURRENT_LOAD        = ${PARAM_CDC_CURRENT_LOAD}
-PARAM_MAX_INSERT_ID           = ${PARAM_MAX_INSERT_ID}
+PARAM_DYN_DB_CONN_DB_HOST            = ${PARAM_DYN_DB_CONN_DB_HOST}
+PARAM_DYN_DB_CONN_DB_PORT            = ${PARAM_DYN_DB_CONN_DB_PORT}
+PARAM_DYN_DB_CONN_DB_DATABASE        = ${PARAM_DYN_DB_CONN_DB_DATABASE}
+PARAM_DYN_DB_CONN_DB_USERNAME        = ${PARAM_DYN_DB_CONN_DB_USERNAME}
+PARAM_DYN_DB_CONN_DB_PASSWORD        = ${PARAM_DYN_DB_CONN_DB_PASSWORD}
+PARAM_CDC_LAST_LOAD                  = ${PARAM_CDC_LAST_LOAD}
+PARAM_CDC_CURRENT_LOAD               = ${PARAM_CDC_CURRENT_LOAD}
+PARAM_MAX_INSERT_ID                  = ${PARAM_MAX_INSERT_ID}
+PARAM_SOURCE_SCHEMA                  = ${PARAM_SOURCE_SCHEMA}
+PARAM_SOURCE_TABLE                   = ${PARAM_SOURCE_TABLE}
 PARAM_SOURCE_INSERTED_ON_COLNAME     = ${PARAM_SOURCE_INSERTED_ON_COLNAME}
 PARAM_SOURCE_INSERT_ID_COLNAME       = ${PARAM_SOURCE_INSERT_ID_COLNAME}   
-PARAM_LAST_UPDATED_ON_COLNAME = ${PARAM_LAST_UPDATED_ON_COLNAME}
-PARAM_SOURCE_SCHEMA           = ${PARAM_SOURCE_SCHEMA}
-PARAM_SOURCE_TABLE            = ${PARAM_SOURCE_TABLE}
-PARAM_TARGET_SCHEMA           = ${PARAM_TARGET_SCHEMA}
-PARAM_TARGET_TABLE            = ${PARAM_TARGET_TABLE}</logmessage>
+PARAM_SOURCE_LAST_UPDATED_ON_COLNAME = ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME}
+PARAM_TARGET_SCHEMA                  = ${PARAM_TARGET_SCHEMA}
+PARAM_TARGET_TABLE                   = ${PARAM_TARGET_TABLE}
+PARAM_TARGET_INSERTED_ON_COLNAME     = ${PARAM_TARGET_INSERTED_ON_COLNAME}
+PARAM_TARGET_INSERT_ID_COLNAME       = ${PARAM_TARGET_INSERT_ID_COLNAME}   
+PARAM_TARGET_LAST_UPDATED_ON_COLNAME = ${PARAM_TARGET_LAST_UPDATED_ON_COLNAME}</logmessage>
     <fields>
       <field>
         <name>max_target_insert_id</name>
@@ -1443,7 +1464,7 @@ PARAM_TARGET_TABLE            = ${PARAM_TARGET_TABLE}</logmessage>
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>640</yloc>
+      <yloc>688</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

@@ -1168,27 +1168,27 @@ WHERE
     (
         ${PARAM_SOURCE_INSERT_ID_COLNAME} > ?                                 -- newly INSERTed rows, since the last run
       --${PARAM_SOURCE_INSERTED_ON_COLNAME} > '${PARAM_CDC_LAST_LOAD}'        -- alternate condition, instead of the previous line
-        OR ${PARAM_LAST_UPDATED_ON_COLNAME} >= ?                              -- UPDATEd rows, since the last run. This is needed to be able to select rows that
+        OR ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} >= ?                              -- UPDATEd rows, since the last run. This is needed to be able to select rows that
                                                                               -- are modified during a period when the table is being treated as an insert-only
                                                                               -- table (not a likely scenario, but it is a possibility).
                                                                               -- Because ">=" is used here, not ">", this will include a least one row that was
                                                                               -- updated on the previous run (assuming that there was at least one row updated).
-                                                                              -- This/these rows will have ${PARAM_LAST_UPDATED_ON_COLNAME} = ?. The reason why
+                                                                              -- This/these rows will have ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} = ?. The reason why
                                                                               -- ">=" is used is in case there were one or more rows that were *not* updated on the
-                                                                              -- previous run, but which have ${PARAM_LAST_UPDATED_ON_COLNAME} = ?. This can occur
+                                                                              -- previous run, but which have ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} = ?. This can occur
                                                                               -- because of the finite resolution of timestamp values. As a result, more than one
-                                                                              -- row can have the *same* value of ${PARAM_LAST_UPDATED_ON_COLNAME}, but not all of
+                                                                              -- row can have the *same* value of ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME}, but not all of
                                                                               -- them were loaded and treated on the previous run, i.e., the cutoff imposed by
                                                                               -- the condition ${PARAM_SOURCE_INSERT_ID_COLNAME} &lt;= ${PARAM_MAX_INSERT_ID} or
-                                                                              -- ${PARAM_LAST_UPDATED_ON_COLNAME} &lt;= '${PARAM_CDC_CURRENT_LOAD}' loaded some,
-                                                                              -- but not all, of the rows with this value of ${PARAM_LAST_UPDATED_ON_COLNAME}.
-      --OR ${PARAM_LAST_UPDATED_ON_COLNAME} >= '${PARAM_CDC_LAST_LOAD}'       -- alternate condition, instead of the previous line
+                                                                              -- ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} &lt;= '${PARAM_CDC_CURRENT_LOAD}' loaded some,
+                                                                              -- but not all, of the rows with this value of ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME}.
+      --OR ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} >= '${PARAM_CDC_LAST_LOAD}'       -- alternate condition, instead of the previous line
     )
     AND ${PARAM_SOURCE_INSERT_ID_COLNAME}   &lt;= ${PARAM_MAX_INSERT_ID}         -- to avoid loading rows that are *inserted* after the job starts
   --AND ${PARAM_SOURCE_INSERTED_ON_COLNAME} &lt;= '${PARAM_CDC_CURRENT_LOAD}'    -- alternate condition, instead of the previous line 
 	AND (
-	        ${PARAM_LAST_UPDATED_ON_COLNAME} IS NULL OR                       -- rows that have been inserted but not modified
-	        ${PARAM_LAST_UPDATED_ON_COLNAME} &lt;= '${PARAM_CDC_CURRENT_LOAD}'   -- to avoid loading rows that are *modified* after the job starts
+	        ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} IS NULL OR                       -- rows that have been inserted but not modified
+	        ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} &lt;= '${PARAM_CDC_CURRENT_LOAD}'   -- to avoid loading rows that are *modified* after the job starts
 	    )
 ORDER BY
     ${PARAM_SOURCE_INSERT_ID_COLNAME}</sql>
