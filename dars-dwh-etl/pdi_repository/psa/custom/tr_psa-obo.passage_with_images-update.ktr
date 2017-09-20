@@ -444,19 +444,19 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/09/20 09:45:41.956</modified_date>
+    <modified_date>2017/09/20 13:07:39.332</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>Load the data from the source, e.g., OBO DB, table that will be moved to the target (PSA) table.
+      <note>Load the data from the source tables that will be moved to the target PSA table.
 
 It is important to sort these rows chronologically (by either the "insert_id" or "inserted_on" columns) so that if this transformation
 fails in the middle somewhere and if this transaction does not run in a single transaction, then next time this transformation is 
-executed, we want to start again where we left off (by computing, e.g., MAX(insert_id) for the PSA table).</note>
-      <xloc>288</xloc>
-      <yloc>448</yloc>
+executed, we can start again where we left off (by computing, e.g., by making use of MAX(insert_id) for the PSA table).</note>
+      <xloc>304</xloc>
+      <yloc>512</yloc>
       <width>765</width>
       <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
@@ -498,8 +498,8 @@ An odd behaviour is observed when the error handling sends rows to the "Update" 
 it takes a long time for this transformation to end. During this period the "Pause" and "Stop" buttons remain enabled. Furthermore,
 running" top" shows that both "postgres"and "java" processes are actively using a 25-75% of the CPU. When this CPU usage stops, 
 the  "Pause" and "Stop" buttons become disabled, showing that the transformation is finally finished. Strange.</note>
-      <xloc>288</xloc>
-      <yloc>672</yloc>
+      <xloc>304</xloc>
+      <yloc>736</yloc>
       <width>773</width>
       <heigth>332</heigth>
       <fontname>Ubuntu</fontname>
@@ -520,8 +520,8 @@ the  "Pause" and "Stop" buttons become disabled, showing that the transformation
     <notepad>
       <note>Get batch ID for current transformation. This will be stored in the PSA table for auditing/logging. This step *must* come after the
 "Map column names" step because the metadata injected into that step does not include this column/field.</note>
-      <xloc>288</xloc>
-      <yloc>608</yloc>
+      <xloc>304</xloc>
+      <yloc>672</yloc>
       <width>764</width>
       <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
@@ -542,7 +542,12 @@ the  "Pause" and "Stop" buttons become disabled, showing that the transformation
     <notepad>
       <note>This transformation implements a custom algorithm to update the PSA table:
 
-	obo.passage_with_images.
+	obo.passage_with_images .
+
+This is only a test implementation for try out ideas for creating a custom archive/mirror algorithm. It makes the follwoing assumptions:
+
+	"insert_id" column:				passage.passage_id
+	"last_updated_on" column:		passasge.sent_date  (this column does not actually behave like a "last_updated_on" column)
 
 This transformation has parameters:
 
@@ -551,8 +556,8 @@ This transformation has parameters:
 	PARAM_MAX_INSERT_ID				Maximum value of the "insert_id" column for rows to load from the source DB table</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>770</width>
-      <heigth>136</heigth>
+      <width>796</width>
+      <heigth>206</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -569,12 +574,13 @@ This transformation has parameters:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Get the maximum value stored in the "insert_id"column of the target obo.passage_with_images table that will be updated by this
-transformation. This will be used to the select data from the source passage.passage table that was inserted since the last update.</note>
-      <xloc>288</xloc>
-      <yloc>160</yloc>
-      <width>772</width>
-      <heigth>38</heigth>
+      <note>Get the maximum values stored in the "insert_id" &amp; "last_upated_on" columns of the target obo.passage_with_images table that will
+be updated by this transformation. This will be used to the select data from the source passage.passage table that was inserted or
+modified since the last update to the PSA DB.</note>
+      <xloc>304</xloc>
+      <yloc>224</yloc>
+      <width>783</width>
+      <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -593,7 +599,7 @@ transformation. This will be used to the select data from the source passage.pas
     <notepad>
       <note>Uses "SELECT *" -></note>
       <xloc>16</xloc>
-      <yloc>464</yloc>
+      <yloc>528</yloc>
       <width>117</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -613,8 +619,8 @@ transformation. This will be used to the select data from the source passage.pas
     </notepad>
     <notepad>
       <note>Select and possibly map/rename fields (table column names), as appropriate.</note>
-      <xloc>288</xloc>
-      <yloc>544</yloc>
+      <xloc>304</xloc>
+      <yloc>608</yloc>
       <width>462</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -635,7 +641,7 @@ transformation. This will be used to the select data from the source passage.pas
     <notepad>
       <note>Metadata injected -></note>
       <xloc>16</xloc>
-      <yloc>544</yloc>
+      <yloc>608</yloc>
       <width>130</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -656,7 +662,7 @@ transformation. This will be used to the select data from the source passage.pas
     <notepad>
       <note>Metadata injected -></note>
       <xloc>16</xloc>
-      <yloc>896</yloc>
+      <yloc>960</yloc>
       <width>130</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -686,8 +692,8 @@ transformation. This will be used to the select data from the source passage.pas
 		Before executing the SQL, modify it where appropriate. For example, replace "UNKNOWN" for timestamp columns with 
 		"timestamp without time zone" or "bytea", add declaration for column "etl_batch_id_last_update", primary key constraint, ...
 	6.	Re-enable the hop from the "Get max "insert_id" step and disable the hop from the "Set max ID &amp; ..." step.</note>
-      <xloc>288</xloc>
-      <yloc>240</yloc>
+      <xloc>304</xloc>
+      <yloc>304</yloc>
       <width>799</width>
       <heigth>164</heigth>
       <fontname>Ubuntu</fontname>
@@ -718,7 +724,7 @@ order for error
 handling to be 
 triggered here!</note>
       <xloc>16</xloc>
-      <yloc>672</yloc>
+      <yloc>736</yloc>
       <width>108</width>
       <heigth>164</heigth>
       <fontname>Ubuntu</fontname>
@@ -737,57 +743,6 @@ triggered here!</note>
       <drawshadow>Y</drawshadow>
     </notepad>
   </notepads>
-  <connection>
-    <name>dynamic_postgres_db</name>
-    <server>${PARAM_DYN_DB_CONN_DB_HOST}</server>
-    <type>POSTGRESQL</type>
-    <access>Native</access>
-    <database>${PARAM_DYN_DB_CONN_DB_DATABASE}</database>
-    <port>${PARAM_DYN_DB_CONN_DB_PORT}</port>
-    <username>${PARAM_DYN_DB_CONN_DB_USERNAME}</username>
-    <password>${PARAM_DYN_DB_CONN_DB_PASSWORD}</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
-    <attributes>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>IS_CLUSTERED</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>PORT_NUMBER</code>
-        <attribute>${PARAM_DYN_DB_CONN_DB_PORT}</attribute>
-      </attribute>
-      <attribute>
-        <code>PRESERVE_RESERVED_WORD_CASE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>QUOTE_ALL_FIELDS</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>USE_POOLING</code>
-        <attribute>N</attribute>
-      </attribute>
-    </attributes>
-  </connection>
   <connection>
     <name>etl_db</name>
     <server>${QF_ETL_DB_HOST}</server>
@@ -867,6 +822,57 @@ triggered here!</note>
       <attribute>
         <code>PORT_NUMBER</code>
         <attribute>${QF_LOGGING_DB_PORT}</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
+  <connection>
+    <name>obo_opr_db</name>
+    <server>${QF_OBO_OPR_DB_HOST}</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>${QF_OBO_OPR_DB_DATABASE}</database>
+    <port>${QF_OBO_OPR_DB_PORT}</port>
+    <username>${QF_OBO_OPR_DB_USERNAME}</username>
+    <password>${QF_OBO_OPR_DB_PASSWORD}</password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>${QF_OBO_OPR_DB_PORT}</attribute>
       </attribute>
       <attribute>
         <code>PRESERVE_RESERVED_WORD_CASE</code>
@@ -996,10 +1002,10 @@ triggered here!</note>
     </partitioning>
     <connection>psa_db</connection>
     <sql>SELECT
-    COALESCE(MAX(passage_with_images_id), ${QF_INSERT_ID_LOWER_BOUND})       AS max_target_insert_id,
-    -- I am simulating a "last_updated_on" column with "finished_date". It does not actually behave
+    COALESCE(MAX(passage_with_images_id), ${QF_INSERT_ID_LOWER_BOUND}) AS max_target_insert_id,
+    -- I am simulating a "last_updated_on" column with "sent_date". It does not actually behave
     -- like a "last_updated_on" column, but it allows me to show how I would treat such a column.
-    COALESCE(MAX(finished_date) , '${QF_LAST_UPDATED_ON_LOWER_BOUND}') AS max_target_last_updated_on
+    COALESCE(MAX(sent_date) , '${QF_LAST_UPDATED_ON_LOWER_BOUND}')     AS max_target_last_updated_on
 FROM
     obo.passage_with_images
 </sql>
@@ -1017,7 +1023,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>176</yloc>
+      <yloc>240</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1044,7 +1050,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>544</yloc>
+      <yloc>608</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1074,7 +1080,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>608</yloc>
+      <yloc>672</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1104,7 +1110,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>816</yloc>
+      <yloc>880</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1138,7 +1144,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>224</xloc>
-      <yloc>288</yloc>
+      <yloc>352</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1153,7 +1159,7 @@ FROM
       <method>none</method>
       <schema_name />
     </partitioning>
-    <connection>dynamic_postgres_db</connection>
+    <connection>obo_opr_db</connection>
     <sql>SELECT
     *
 FROM
@@ -1200,7 +1206,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>464</yloc>
+      <yloc>528</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1243,7 +1249,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>720</yloc>
+      <yloc>784</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1277,7 +1283,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>896</yloc>
+      <yloc>960</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1317,7 +1323,7 @@ PARAM_MAX_INSERT_ID           = ${PARAM_MAX_INSERT_ID}</logmessage>
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>368</yloc>
+      <yloc>432</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
