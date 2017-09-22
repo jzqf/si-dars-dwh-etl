@@ -9,12 +9,12 @@
     <directory>&#x2f;development&#x2f;jeffreyz&#x2f;tests&#x2f;cdc_timestamps</directory>
     <parameters>
         <parameter>
-            <name>PARAM_CDC_CURRENT_LOAD</name>
+            <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
             <default_value/>
             <description>Timestamp of the current load &#x28;no rows after this timestamp will be loaded&#x29;</description>
         </parameter>
         <parameter>
-            <name>PARAM_CDC_LAST_LOAD</name>
+            <name>PARAM_CDC_LAST_LOAD_UTC</name>
             <default_value/>
             <description>Timestamp of last successful load from the source database</description>
         </parameter>
@@ -105,7 +105,7 @@
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Load the data from the source database table that will be moved to the DWH table.&#xa;&#xa;It is important here to select &#x22;replace variables in script&#x3f;&#x22;so that the references &#x22;&#x3f;&#x22;,&#xa;&#x24;&#x7b;PARAM_CDC_LAST_LOAD&#x7d; and &#x24;&#x7b;PARAM_CDC_CURRENT_LOAD&#x7d; will be evaluated.&#xa;&#xa;It is also necessary to specify the step from which fields will  be used to supply values &#xa;for the &#x22;&#x3f;&#x22; replacement characters.  In this case, the previous step is specified.</note>
+      <note>Load the data from the source database table that will be moved to the DWH table.&#xa;&#xa;It is important here to select &#x22;replace variables in script&#x3f;&#x22;so that the references &#x22;&#x3f;&#x22;,&#xa;&#x24;&#x7b;PARAM_CDC_LAST_LOAD_UTC&#x7d; and &#x24;&#x7b;PARAM_CDC_CURRENT_LOAD_UTC&#x7d; will be evaluated.&#xa;&#xa;It is also necessary to specify the step from which fields will  be used to supply values &#xa;for the &#x22;&#x3f;&#x22; replacement characters.  In this case, the previous step is specified.</note>
       <xloc>304</xloc>
       <yloc>384</yloc>
       <width>576</width>
@@ -210,7 +210,7 @@
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>This transformation updates the DWH mirror of the &#x22;dynamic&#x22; table passage.passage from the TDP archive database.&#xa;This transformation has parameters&#x3a;&#xa;&#xa;	PARAM_CDC_LAST_LOAD		&#x3c;- not used in this transformation - MAX&#x28;archive_id&#x29; is used instead&#xa;	PARAM_CDC_CURRENT_LOAD&#xa;&#xa;It is not necessary to declare these parameters in the transformation settings, although this can be useful for testing&#xa;purposes. Even if they are &#x2a;not&#x2a; explicitely declared, they can be passed via a &#x22;Transformation&#x22; job entry that has the &#xa;option &#x22;Pass all parameter values down to the sub-transformation&#x22; selected.</note>
+      <note>This transformation updates the DWH mirror of the &#x22;dynamic&#x22; table passage.passage from the TDP archive database.&#xa;This transformation has parameters&#x3a;&#xa;&#xa;	PARAM_CDC_LAST_LOAD_UTC		&#x3c;- not used in this transformation - MAX&#x28;archive_id&#x29; is used instead&#xa;	PARAM_CDC_CURRENT_LOAD_UTC&#xa;&#xa;It is not necessary to declare these parameters in the transformation settings, although this can be useful for testing&#xa;purposes. Even if they are &#x2a;not&#x2a; explicitely declared, they can be passed via a &#x22;Transformation&#x22; job entry that has the &#xa;option &#x22;Pass all parameter values down to the sub-transformation&#x22; selected.</note>
       <xloc>16</xloc>
       <yloc>0</yloc>
       <width>793</width>
@@ -231,7 +231,7 @@
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>We &#x2a;cannot&#x2a; use &#x24;&#x7b;PARAM_CDC_LAST_LOAD&#x7d; instead of MAX&#x28;archive_date&#x29; in the &#xa;&#x22;Table input&#x22; query in this transformation for loading rows from the TDP archive DB.&#xa;&#xa;This is because we would need to be able to handle the processing of rows from the TDP&#xa;archive DB that have already been loaded into the DWH. This will occur if a load fails for&#xa;some reason after successfully loading some records. In this case, the column&#xa;cdc_timestamps.last_successful_load will not be updated&#x3b; hence, the next load will use&#xa;the same value for cdc_timestamps.last_successful_load, which will load rows that were&#xa;successfully processed during the previous load.&#xa;&#xa;However, the Bulk Loader step cannot be used to treat this situation, as far as I know.</note>
+      <note>We &#x2a;cannot&#x2a; use &#x24;&#x7b;PARAM_CDC_LAST_LOAD_UTC&#x7d; instead of MAX&#x28;archive_date&#x29; in the &#xa;&#x22;Table input&#x22; query in this transformation for loading rows from the TDP archive DB.&#xa;&#xa;This is because we would need to be able to handle the processing of rows from the TDP&#xa;archive DB that have already been loaded into the DWH. This will occur if a load fails for&#xa;some reason after successfully loading some records. In this case, the column&#xa;cdc_timestamps.last_successful_load will not be updated&#x3b; hence, the next load will use&#xa;the same value for cdc_timestamps.last_successful_load, which will load rows that were&#xa;successfully processed during the previous load.&#xa;&#xa;However, the Bulk Loader step cannot be used to treat this situation, as far as I know.</note>
       <xloc>864</xloc>
       <yloc>0</yloc>
       <width>596</width>
@@ -642,7 +642,7 @@
            <schema_name/>
            </partitioning>
     <connection>obo_opr_db</connection>
-    <sql>SELECT&#xa;    &#x2a;&#xa;FROM&#xa;    passage.passage&#xa;WHERE&#xa;    archive_id &#x3e; &#x3f; AND&#xa;    --archive_date &#x3e;  &#x27;&#x24;&#x7b;PARAM_CDC_LAST_LOAD&#x7d;&#x27; AND &#xa;	archive_date &#x3c;&#x3d; &#x27;&#x24;&#x7b;PARAM_CDC_CURRENT_LOAD&#x7d;&#x27;&#xa;ORDER BY&#xa;    archive_id&#xa;--LIMIT 5000</sql>
+    <sql>SELECT&#xa;    &#x2a;&#xa;FROM&#xa;    passage.passage&#xa;WHERE&#xa;    archive_id &#x3e; &#x3f; AND&#xa;    --archive_date &#x3e;  &#x27;&#x24;&#x7b;PARAM_CDC_LAST_LOAD_UTC&#x7d;&#x27; AND &#xa;	archive_date &#x3c;&#x3d; &#x27;&#x24;&#x7b;PARAM_CDC_CURRENT_LOAD_UTC&#x7d;&#x27;&#xa;ORDER BY&#xa;    archive_id&#xa;--LIMIT 5000</sql>
     <limit>0</limit>
     <lookup>Write to log&#x3a; parameters, max_target_insert_id</lookup>
     <execute_each_row>N</execute_each_row>
@@ -671,7 +671,7 @@
       <displayHeader>Y</displayHeader>
       <limitRows>N</limitRows>
       <limitRowsNumber>0</limitRowsNumber>
-      <logmessage>PARAM_CDC_LAST_LOAD	&#x3d; &#x24;&#x7b;PARAM_CDC_LAST_LOAD&#x7d;&#xa;PARAM_CDC_CURRENT_LOAD	&#x3d; &#x24;&#x7b;PARAM_CDC_CURRENT_LOAD&#x7d;</logmessage>
+      <logmessage>PARAM_CDC_LAST_LOAD_UTC	&#x3d; &#x24;&#x7b;PARAM_CDC_LAST_LOAD_UTC&#x7d;&#xa;PARAM_CDC_CURRENT_LOAD_UTC	&#x3d; &#x24;&#x7b;PARAM_CDC_CURRENT_LOAD_UTC&#x7d;</logmessage>
     <fields>
       <field>
         <name>max_target_insert_id</name>

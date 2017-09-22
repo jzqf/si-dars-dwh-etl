@@ -9,12 +9,12 @@
     <directory>/development/jeffreyz/tests/cdc_timestamps</directory>
     <parameters>
       <parameter>
-        <name>PARAM_CDC_CURRENT_LOAD</name>
+        <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
         <default_value>1900.01.01 00:00:00</default_value>
         <description>Timestamp of the current load (no rows after this timestamp will be loaded)</description>
       </parameter>
       <parameter>
-        <name>PARAM_CDC_LAST_LOAD</name>
+        <name>PARAM_CDC_LAST_LOAD_UTC</name>
         <default_value>1900.01.01 00:00:00</default_value>
         <description>Timestamp of last successful load from the source database</description>
       </parameter>
@@ -448,7 +448,7 @@
       <note>Load the data from the source database table that will be moved to the DWH table.
 
 It is important here to select "replace variables in script?"so that the references "?",
-${PARAM_CDC_LAST_LOAD} and ${PARAM_CDC_CURRENT_LOAD} will be evaluated.
+${PARAM_CDC_LAST_LOAD_UTC} and ${PARAM_CDC_CURRENT_LOAD_UTC} will be evaluated.
 
 It is also necessary to specify the step from which fields will  be used to supply values 
 for the "?" replacement characters.  In this case, the previous step is specified.</note>
@@ -527,8 +527,8 @@ But this approach is definitely faster than using only an Insert/Update step.</n
       <note>This transformation updates the DWH mirror of the "dynamic" table passage.passage from the TDP archive database.
 This transformation has parameters:
 
-	PARAM_CDC_LAST_LOAD		&lt;- Not used in this transformation - MAX(archive_id) is used instead
-	PARAM_CDC_CURRENT_LOAD</note>
+	PARAM_CDC_LAST_LOAD_UTC		&lt;- Not used in this transformation - MAX(archive_id) is used instead
+	PARAM_CDC_CURRENT_LOAD_UTC</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
       <width>695</width>
@@ -766,7 +766,7 @@ IMPORTANT:	We *cannot* use MAX(archive_date) for this purpose because the
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>If we use ${PARAM_CDC_LAST_LOAD} instead of MAX(archive_date) in the "Table input" 
+      <note>If we use ${PARAM_CDC_LAST_LOAD_UTC} instead of MAX(archive_date) in the "Table input" 
 query for loading rows from the TDP archive DB, then we need to replace the "Table output"
 step without error handling that is currently used with *either* the "Insert/Update" step 
 *or* the "Table output" step _with_ error handling.
@@ -1290,8 +1290,8 @@ FROM
     passage.passage
 WHERE
     archive_id > ? AND
-    --archive_date >  '${PARAM_CDC_LAST_LOAD}' AND 
-	archive_date &lt;= '${PARAM_CDC_CURRENT_LOAD}'
+    --archive_date >  '${PARAM_CDC_LAST_LOAD_UTC}' AND 
+	archive_date &lt;= '${PARAM_CDC_CURRENT_LOAD_UTC}'
 ORDER BY
     archive_id
 --LIMIT 5000</sql>
@@ -1538,8 +1538,8 @@ ORDER BY
     <displayHeader>Y</displayHeader>
     <limitRows>N</limitRows>
     <limitRowsNumber>0</limitRowsNumber>
-    <logmessage>PARAM_CDC_LAST_LOAD	= ${PARAM_CDC_LAST_LOAD}
-PARAM_CDC_CURRENT_LOAD	= ${PARAM_CDC_CURRENT_LOAD}</logmessage>
+    <logmessage>PARAM_CDC_LAST_LOAD_UTC	= ${PARAM_CDC_LAST_LOAD_UTC}
+PARAM_CDC_CURRENT_LOAD_UTC	= ${PARAM_CDC_CURRENT_LOAD_UTC}</logmessage>
     <fields>
       <field>
         <name>max_target_insert_id</name>

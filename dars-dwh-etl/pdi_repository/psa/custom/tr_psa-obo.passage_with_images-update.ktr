@@ -1,16 +1,16 @@
 <transformation>
   <info>
-    <name>tmplt_mirrored_insert_only_table-update</name>
+    <name>tr_psa-obo.passage_with_images-update</name>
     <description />
     <extended_description />
     <trans_version />
     <trans_type>Normal</trans_type>
     <trans_status>0</trans_status>
-    <directory>/psa</directory>
+    <directory>/psa/custom</directory>
     <parameters>
       <parameter>
         <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
-        <default_value>1900.01.01 00:00:00</default_value>
+        <default_value>2100.01.01 00:00:00</default_value>
         <description>Timestamp of the current load (no rows after this timestamp will be loaded)</description>
       </parameter>
       <parameter>
@@ -19,73 +19,28 @@
         <description>Timestamp of last successful load from the source database</description>
       </parameter>
       <parameter>
-        <name>PARAM_DYN_DB_CONN_DB_DATABASE</name>
-        <default_value />
-        <description />
-      </parameter>
-      <parameter>
-        <name>PARAM_DYN_DB_CONN_DB_HOST</name>
-        <default_value />
-        <description />
-      </parameter>
-      <parameter>
-        <name>PARAM_DYN_DB_CONN_DB_PASSWORD</name>
-        <default_value />
-        <description />
-      </parameter>
-      <parameter>
-        <name>PARAM_DYN_DB_CONN_DB_PORT</name>
-        <default_value />
-        <description />
-      </parameter>
-      <parameter>
-        <name>PARAM_DYN_DB_CONN_DB_USERNAME</name>
-        <default_value />
-        <description />
-      </parameter>
-      <parameter>
         <name>PARAM_MAX_INSERT_ID</name>
-        <default_value>0</default_value>
+        <default_value>10</default_value>
         <description>Maximum value of the "insert_id" column for rows to load from the source DB table</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_SOURCE_INSERTED_ON_COLNAME</name>
-        <default_value>inserted_on</default_value>
-        <description>Name of column acting as "inserted_on" timestamp column of source table</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_SOURCE_INSERT_ID_COLNAME</name>
-        <default_value>insert_id</default_value>
-        <description>Name of column acting as "insert_id" column of source table</description>
       </parameter>
       <parameter>
         <name>PARAM_SOURCE_SCHEMA</name>
         <default_value>passage</default_value>
-        <description>Name of schema containing source table to mirror to target table</description>
+        <description>Name of schema containing the "main" source table to mirror to target table</description>
       </parameter>
       <parameter>
         <name>PARAM_SOURCE_TABLE</name>
-        <default_value>image</default_value>
-        <description>Name of source table to mirror to target table</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_TARGET_INSERTED_ON_COLNAME</name>
-        <default_value>inserted_on</default_value>
-        <description>Name of column acting as "inserted_on" timestamp column of target table</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_TARGET_INSERT_ID_COLNAME</name>
-        <default_value>insert_id</default_value>
-        <description>Name of column acting as "insert_id" column of target table</description>
+        <default_value>passage</default_value>
+        <description>Name of the "main" source table to mirror to target table</description>
       </parameter>
       <parameter>
         <name>PARAM_TARGET_SCHEMA</name>
-        <default_value>passage</default_value>
+        <default_value>obo</default_value>
         <description>Name of schema containing target table to update</description>
       </parameter>
       <parameter>
         <name>PARAM_TARGET_TABLE</name>
-        <default_value>image</default_value>
+        <default_value>passage_with_images</default_value>
         <description>Name of target table to update</description>
       </parameter>
     </parameters>
@@ -139,7 +94,7 @@
           <id>LINES_INPUT</id>
           <enabled>Y</enabled>
           <name>LINES_INPUT</name>
-          <subject>Table input -  source_db.schema.table</subject>
+          <subject>Table input - Source DB: obo_opr</subject>
         </field>
         <field>
           <id>LINES_OUTPUT</id>
@@ -509,19 +464,19 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/09/20 14:45:08.925</modified_date>
+    <modified_date>2017/09/21 15:37:59.736</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>Load the data from the source, e.g., OBO DB, table that will be moved to the target (PSA) table.
+      <note>Load the data from the source tables that will be moved to the target PSA table.
 
 It is important to sort these rows chronologically (by either the "insert_id" or "inserted_on" columns) so that if this transformation
 fails in the middle somewhere and if this transaction does not run in a single transaction, then next time this transformation is 
-executed, we want to start again where we left off (by computing, e.g., MAX(insert_id) for the PSA table).</note>
+executed, we can start again where we left off (by computing, e.g., by making use of MAX(insert_id) for the PSA table).</note>
       <xloc>304</xloc>
-      <yloc>800</yloc>
+      <yloc>560</yloc>
       <width>765</width>
       <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
@@ -540,10 +495,53 @@ executed, we want to start again where we left off (by computing, e.g., MAX(inse
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Insert the new rows into the target PSA database.</note>
+      <note>Insert new rows into the DWH using a "Table output" step. Error handing is enabled for this step so that if a rows already exists,
+the rows are passed to an "Update" step.
+
+IMPORTANT:	A primary key constraint (or at least a "unique" constraint on the primary key column(s)) for the target table is 
+				*required*; otherwise, error handling will not be triggered when attempting to insert a row with a duplicate key.
+
+PDI does not fully support error handling when using "batch processing" with the PostgreSQL JDBC driver (a message to this 
+effect is displayed when accepting the transformation settings dialog), so make sure "Use batch update for inserts" is *not* 
+selected here!
+
+See:
+
+	/development/jeffreyz/tests/cdc_timestamps/tr_TEST_mirror_update-passage.passage-table_output
+
+for tests  benchmark results I obtained testing the speed of various INSERT/UPDATE algorithms. Using a "Table output" step with 
+an error handling hop to an "Update" step provides an approximately 2x speedup over an "Insert/Update" step for inserts *and* 
+it does not exhibit (for inserts only) the behaviour where a "java"and "postgres" process continue to run with a high CPU load long 
+after the transformation is finished. Hence, it should be favoured.
+
+An odd behaviour is observed when the error handling sends rows to the "Update" step. After processing a large number of rows, 
+it takes a long time for this transformation to end. During this period the "Pause" and "Stop" buttons remain enabled. Furthermore,
+running" top" shows that both "postgres"and "java" processes are actively using a 25-75% of the CPU. When this CPU usage stops, 
+the  "Pause" and "Stop" buttons become disabled, showing that the transformation is finally finished. Strange.</note>
       <xloc>304</xloc>
-      <yloc>1024</yloc>
-      <width>301</width>
+      <yloc>864</yloc>
+      <width>773</width>
+      <heigth>332</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Get batch ID for current transformation. This will be stored in the PSA table for auditing/logging.</note>
+      <xloc>304</xloc>
+      <yloc>800</yloc>
+      <width>576</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -561,107 +559,72 @@ executed, we want to start again where we left off (by computing, e.g., MAX(inse
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Write parameters and max_target_insert_id value to the log so it will be obvious which values were used.</note>
-      <xloc>304</xloc>
-      <yloc>736</yloc>
-      <width>624</width>
-      <heigth>24</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Get batch ID for current transformation. This will be stored in the PSA table for auditing/logging. This step *must* come after the 
-"Map column names" step because the metadata injected into that step does not include this column/field.</note>
-      <xloc>304</xloc>
-      <yloc>960</yloc>
-      <width>767</width>
-      <heigth>38</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Get the maximum value stored in the "insert_id"column of the target (PSA) DB table that will be updated by this transformation. 
-This will be used to the select data from the source (OBO) DB table that was inserted since the last update. 
+      <note>This transformation implements a custom algorithm to update the PSA table:
 
-We could, instead, treat this by getting the maximum value the "inserted_on" column and then loading all rows from the source
-table whose value of "inserted_on" is >= to this timestamp. We need to include "=" here because of the finite resolutiuon of 
-timestamp values. If we used only ">", we could miss rows that were inserted *after* the last update if they received exactly the
-same value as MAX(inserted_on) that was obtained here. However, this approach may process a small number of rows from 
-the source table that were migrated to the target table during the last successful update (again, because timestamp values are 
-not unique), but that is OK here because the algorithm used in this transformation can handle attempts to insert rows that already
-exist in the target table.
+	obo.passage_with_images .
 
-Alternatively, we could eliminate this step entirely and load source (OBO) rows for: inserted_on >= PARAM_CDC_LAST_LOAD_UTC,
-but this will not be as efficient for the case when we need to re-start the mirroring process after it fails for some reason. In that
-case we would re-process all of the rows that were successfully mirrored during the previous run.</note>
-      <xloc>304</xloc>
-      <yloc>304</yloc>
-      <width>766</width>
-      <heigth>206</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>This transformation updates the PSA mirror of an "insert-only" table from the source database. This is a generic algorithm
-that can work with *any* table,  as long as it is insert-only and it has the necessary  "insert_id" &amp; "inserted_on" columns. 
+This is only a TEST implementation for try out ideas for creating a custom archive/mirror algorithm. It makes the follwoing assumptions:
+
+	"insert_id" column:				passage.passage_id
+	"last_updated_on" column:		passasge.sent_date  (this column does not actually behave like a "last_updated_on" column)
+
 This transformation has parameters:
 
-	PARAM_DYN_DB_CONN_DB_HOST			for "dynamic_postgres_db" database connection
-	PARAM_DYN_DB_CONN_DB_PORT			for "dynamic_postgres_db" database connection
-	PARAM_DYN_DB_CONN_DB_DATABASE		for "dynamic_postgres_db" database connection
-	PARAM_DYN_DB_CONN_DB_USERNAME		for "dynamic_postgres_db" database connection
-	PARAM_DYN_DB_CONN_DB_PASSWORD	for "dynamic_postgres_db" database connection
-	PARAM_CDC_LAST_LOAD_UTC					Timestamp for when *all* tables of the PSA were most recently updated successfully
-	PARAM_CDC_CURRENT_LOAD_UTC				Used so that a consistent max timestamp is used for all ETL
-	PARAM_MAX_INSERT_ID					Maximum value of the "insert_id" column for rows to load from the source DB table
-	PARAM_SOURCE_SCHEMA					Schema of mirrored table
-	PARAM_SOURCE_TABLE					Name of mirrored table to update
-	PARAM_TARGET_SCHEMA					Name of schema containing target table to update (not currently used)
-	PARAM_TARGET_TABLE						Name of target table to update (not currently used)
-	PARAM_SOURCE_INSERT_ID_COLNAME		Name of column acting as "insert_id"  timestamp column of source table
-	PARAM_SOURCE_INSERTED_ON_COLNAME	Name of column acting as "inserted_on" column of source table
-	PARAM_TARGET_INSERT_ID_COLNAME		Name of column acting as "insert_id"  timestamp column of target table
-	PARAM_TARGET_INSERTED_ON_COLNAME	Name of column acting as "inserted_on" column of target table</note>
+	PARAM_CDC_LAST_LOAD_UTC			Timestamp for when *all* tables of the PSA were most recently updated successfully
+	PARAM_CDC_CURRENT_LOAD_UTC		Used so that a consistent max timestamp is used for all ETL
+	PARAM_MAX_INSERT_ID			Maximum value of the "insert_id" column for rows to load from the source DB table
+	PARAM_SOURCE_SCHEMA			Name of schema containing the "main" source table to archive/mirror to target table
+	PARAM_SOURCE_TABLE			Name of the "main" source table to archive/mirror to target table
+	PARAM_TARGET_SCHEMA			Name of schema containing target table to update
+	PARAM_TARGET_TABLE				Name of target table to update</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>794</width>
-      <heigth>290</heigth>
+      <width>801</width>
+      <heigth>262</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Get the maximum values stored in the "insert_id" &amp; "last_upated_on" columns of the target obo.passage_with_images table that will
+be updated by this transformation. This will be used to the select data from the source passage.passage table that was inserted or
+modified since the last update to the PSA DB.</note>
+      <xloc>304</xloc>
+      <yloc>288</yloc>
+      <width>783</width>
+      <heigth>52</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Select, delete and map/rename fields (table column names), as appropriate.</note>
+      <xloc>304</xloc>
+      <yloc>672</yloc>
+      <width>454</width>
+      <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -679,22 +642,20 @@ This transformation has parameters:
     </notepad>
     <notepad>
       <note>This step is only for generating the SQL for creating a new table using the "SQL" button of the "Table output" step below. To do this:
-	1.	Create a new copy of this transformation by entering a value for "Optional target file" in the "ETL Metadata Injection" step in
-		/psa/tr_mirrored_insert_only_table-inject_meta-update. Run that transformation, supplying the appropriate parameter values,
-		to create this new copy. Steps 2-6  below must be performed with the *new* transformation that has had all metadata injected.
-	2.	Disable the hop from the "Get max ID for ..." step and enable the hop from the "Set max ID = -1" step.
-	3.	Disable the hop to the "Table output" step below.
-	4.	Preview the "Set etl_batch_id_insert..." step, providing appropriate values for all parameters. Ensure that the expected rows 
-		are displayed.
-	5.	Re-enable the hop to the "Table output" step below.
-	6.	Double-click the "Table output" step and then click the "SQL" button to generate the appropriete SQL to create the table. 
+	1.	Disable the hop from the "Get max "insert_id" &amp; ..." step and enable the hop from the "Set max ID &amp; ..." step.
+	2.	Disable the hop to the "Table output" step below, as well as all following downstream hops.
+	3.	Preview the "Set etl_batch_id_last_update..." step, providing appropriate values for all parameters. Ensure that the expected  
+		rows are displayed.
+	4.	Re-enable the hop to the "Table output" step below.
+	5.	Double-click the "Table output" step and then click the "SQL" button to generate the appropriete SQL to create the table. 
 		The schema and table names that you specified in step 3 above will be used to generate the SQL DDL commands for that table.
 		Before executing the SQL, modify it where appropriate. For example, replace "UNKNOWN" for timestamp columns with 
-		"timestamp without time zone" or "bytea", primary key constraint, ...</note>
+		"timestamp without time zone" or "bytea", add declaration for column "etl_batch_id_last_update", primary key constraint, ...
+	6.	Re-enable the hop from the "Get max "insert_id" step and disable the hop from the "Set max ID &amp; ..." step.</note>
       <xloc>304</xloc>
-      <yloc>528</yloc>
+      <yloc>368</yloc>
       <width>799</width>
-      <heigth>192</heigth>
+      <heigth>164</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -711,85 +672,42 @@ This transformation has parameters:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Select and possibly rename fields (table column names), as appropriate.</note>
-      <xloc>304</xloc>
-      <yloc>896</yloc>
-      <width>431</width>
-      <heigth>24</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Metadata injected -></note>
-      <xloc>16</xloc>
-      <yloc>896</yloc>
-      <width>130</width>
-      <heigth>24</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>255</fontcolorred>
-      <fontcolorgreen>255</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>0</backgroundcolorred>
-      <backgroundcolorgreen>0</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>N</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Uses "SELECT *" -></note>
-      <xloc>16</xloc>
-      <yloc>832</yloc>
-      <width>117</width>
-      <heigth>24</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>255</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Although this transformation has parameters whose values are used in its steps, these parameters are not passed values from
-the parent transformation in the usual way this is normally done in PDI. This is because the "ETL Metadata Injection" step (which
-is responsible for executing this template transformation) does not support parameter passing. Nevertheless, it appears
-that the parameters that are defined for this template transformation can be used as expected. The explanation for this
-behaviour *MAY* be that the references to these parameters, e.g., ${PARAM_SOURCE_TABLE}, in this transformation are
-simply using the values defined for these variables in the parent transformation that contains the "ETL Metadata Injection" 
-step that references this template transformation. Fortunately, all of the parameters that are used by this transformation
-are defined with the correct values in the parent transformation. I have tested this by removing the parameters entirely. The 
-result was that the transformation ran as expected, even though it made use of the parameters that were removed.
+      <note>A primary key 
+constraint or a
+unique constraint
+on primary key
+column(s) is 
 
-Note that if a target file is created by the "ETL metadata Ijection" step, then that transformation *can* have its parameters 
-passed to it in the normal fashion because it is a normal transformation (all metadata has been injected into it).</note>
-      <xloc>800</xloc>
-      <yloc>0</yloc>
-      <width>749</width>
-      <heigth>178</heigth>
+
+*required* in 
+order for error 
+handling to be 
+triggered here!</note>
+      <xloc>16</xloc>
+      <yloc>864</yloc>
+      <width>108</width>
+      <heigth>164</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>Y</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>255</backgroundcolorgreen>
+      <backgroundcolorblue>0</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Denormalize the stream data by introducing new passage columns to hold details for up to 4 images linked to each passage.</note>
+      <xloc>304</xloc>
+      <yloc>736</yloc>
+      <width>737</width>
+      <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -798,65 +716,14 @@ passed to it in the normal fashion because it is a normal transformation (all me
       <fontcolorgreen>0</fontcolorgreen>
       <fontcolorblue>0</fontcolorblue>
       <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>255</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
       <bordercolorblue>100</bordercolorblue>
       <drawshadow>Y</drawshadow>
     </notepad>
   </notepads>
-  <connection>
-    <name>dynamic_postgres_db</name>
-    <server>${PARAM_DYN_DB_CONN_DB_HOST}</server>
-    <type>POSTGRESQL</type>
-    <access>Native</access>
-    <database>${PARAM_DYN_DB_CONN_DB_DATABASE}</database>
-    <port>${PARAM_DYN_DB_CONN_DB_PORT}</port>
-    <username>${PARAM_DYN_DB_CONN_DB_USERNAME}</username>
-    <password>${PARAM_DYN_DB_CONN_DB_PASSWORD}</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
-    <attributes>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>IS_CLUSTERED</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>PORT_NUMBER</code>
-        <attribute>${PARAM_DYN_DB_CONN_DB_PORT}</attribute>
-      </attribute>
-      <attribute>
-        <code>PRESERVE_RESERVED_WORD_CASE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>QUOTE_ALL_FIELDS</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>USE_POOLING</code>
-        <attribute>N</attribute>
-      </attribute>
-    </attributes>
-  </connection>
   <connection>
     <name>etl_db</name>
     <server>${QF_ETL_DB_HOST}</server>
@@ -960,6 +827,57 @@ passed to it in the normal fashion because it is a normal transformation (all me
     </attributes>
   </connection>
   <connection>
+    <name>obo_opr_db</name>
+    <server>${QF_OBO_OPR_DB_HOST}</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>${QF_OBO_OPR_DB_DATABASE}</database>
+    <port>${QF_OBO_OPR_DB_PORT}</port>
+    <username>${QF_OBO_OPR_DB_USERNAME}</username>
+    <password>${QF_OBO_OPR_DB_PASSWORD}</password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>${QF_OBO_OPR_DB_PORT}</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
+  <connection>
     <name>psa_db</name>
     <server>${QF_PSA_DB_HOST}</server>
     <type>POSTGRESQL</type>
@@ -1012,23 +930,23 @@ passed to it in the normal fashion because it is a normal transformation (all me
   </connection>
   <order>
     <hop>
-      <from>Get max ID for CDC: PSA.schema.table</from>
-      <to>Write to log: parameters, max_target_insert_id</to>
+      <from>Get max id &amp; date for: PSA.obo.passage_with_images</from>
+      <to>Write to log: parameters, max id &amp; date</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Write to log: parameters, max_target_insert_id</from>
-      <to>Table input -  source_db.schema.table</to>
+      <from>Write to log: parameters, max id &amp; date</from>
+      <to>Table input - Source DB: obo_opr</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Set max ID = -1</from>
-      <to>Write to log: parameters, max_target_insert_id</to>
-      <enabled>N</enabled>
+      <from>Table output - PSA.schema.table</from>
+      <to>Set etl_batch_id_last_update = Xform batch ID</to>
+      <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Map column names</from>
-      <to>Set etl_batch_id_insert = Xform batch ID</to>
+      <from>Set etl_batch_id_last_update = Xform batch ID</from>
+      <to>Update - PSA.schema.table</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
@@ -1037,13 +955,28 @@ passed to it in the normal fashion because it is a normal transformation (all me
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Table input -  source_db.schema.table</from>
+      <from>Table input - Source DB: obo_opr</from>
       <to>Map column names</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Set max id &amp; date</from>
+      <to>Write to log: parameters, max id &amp; date</to>
+      <enabled>N</enabled>
+    </hop>
+    <hop>
+      <from>Map column names</from>
+      <to>Row denormaliser</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Row denormaliser</from>
+      <to>Set etl_batch_id_insert = Xform batch ID</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Get max ID for CDC: PSA.schema.table</name>
+    <name>Get max id &amp; date for: PSA.obo.passage_with_images</name>
     <type>TableInput</type>
     <description />
     <distribute>Y</distribute>
@@ -1055,9 +988,26 @@ passed to it in the normal fashion because it is a normal transformation (all me
     </partitioning>
     <connection>psa_db</connection>
     <sql>SELECT
-    COALESCE(MAX(${PARAM_TARGET_INSERT_ID_COLNAME}), ${QF_INSERT_ID_LOWER_BOUND}) AS max_target_insert_id
+    COALESCE(MAX(passage_with_images_id), ${QF_INSERT_ID_LOWER_BOUND}) AS max_target_insert_id, 
+    -- I am simulating a "last_updated_on" column with "sent_date". It does not actually behave
+    -- like a "last_updated_on" column, but it allows me to show how I would treat such a column.
+    COALESCE(MAX(sent_date) , '${QF_LAST_UPDATED_ON_LOWER_BOUND}')     AS max_target_last_updated_on, 
+    -- Get the largest value in any of the columns: image_1_id, image_2_id, image_3_id, image_4_id:
+    GREATEST(
+        COALESCE(MAX(image_1_id) , ${QF_INSERT_ID_LOWER_BOUND}),
+        COALESCE(MAX(image_2_id) , ${QF_INSERT_ID_LOWER_BOUND}),
+        COALESCE(MAX(image_3_id) , ${QF_INSERT_ID_LOWER_BOUND}),
+        COALESCE(MAX(image_4_id) , ${QF_INSERT_ID_LOWER_BOUND})
+    ) AS max_target_image_id, 
+    -- Get the largest value in any of the columns: image_1_date, image_2_date, image_3_date, image_4_date:
+    GREATEST(
+        COALESCE(MAX(image_1_date) , '${QF_LAST_UPDATED_ON_LOWER_BOUND}'),
+        COALESCE(MAX(image_2_date) , '${QF_LAST_UPDATED_ON_LOWER_BOUND}'),
+        COALESCE(MAX(image_3_date) , '${QF_LAST_UPDATED_ON_LOWER_BOUND}'),
+        COALESCE(MAX(image_4_date) , '${QF_LAST_UPDATED_ON_LOWER_BOUND}')
+    ) AS max_target_image_date 
 FROM
-    ${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}
+    ${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}  -- obo.passage_with_images
 </sql>
     <limit>0</limit>
     <lookup />
@@ -1072,8 +1022,8 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>128</xloc>
-      <yloc>336</yloc>
+      <xloc>144</xloc>
+      <yloc>304</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1090,6 +1040,23 @@ FROM
     </partitioning>
     <fields>
       <select_unspecified>N</select_unspecified>
+      <meta>
+        <name>passage_id</name>
+        <rename>passage_with_images_id</rename>
+        <type>None</type>
+        <length>-2</length>
+        <precision>-2</precision>
+        <conversion_mask />
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale />
+        <date_format_timezone />
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding />
+        <decimal_symbol />
+        <grouping_symbol />
+        <currency_symbol />
+        <storage_type />
+      </meta>
     </fields>
     <cluster_schema />
     <remotesteps>
@@ -1099,8 +1066,8 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>128</xloc>
-      <yloc>896</yloc>
+      <xloc>144</xloc>
+      <yloc>672</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1129,13 +1096,43 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>128</xloc>
-      <yloc>960</yloc>
+      <xloc>144</xloc>
+      <yloc>800</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Set max ID = -1</name>
+    <name>Set etl_batch_id_last_update = Xform batch ID</name>
+    <type>SystemInfo</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <field>
+        <name>etl_batch_id_last_update</name>
+        <type>batch ID</type>
+      </field>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>144</xloc>
+      <yloc>1008</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Set max id &amp; date</name>
     <type>TableInput</type>
     <description />
     <distribute>Y</distribute>
@@ -1147,7 +1144,10 @@ FROM
     </partitioning>
     <connection>etl_db</connection>
     <sql>SELECT
-    ${QF_INSERT_ID_LOWER_BOUND} AS max_target_insert_id
+          ${QF_INSERT_ID_LOWER_BOUND}                      AS max_target_insert_id,
+    CAST('${QF_LAST_UPDATED_ON_LOWER_BOUND}' AS timestamp) AS max_target_last_updated_on,
+          ${QF_INSERT_ID_LOWER_BOUND}                      AS max_target_image_id, 
+    CAST('${QF_LAST_UPDATED_ON_LOWER_BOUND}' AS timestamp) AS max_target_image_date 
 </sql>
     <limit>0</limit>
     <lookup />
@@ -1162,13 +1162,13 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>240</xloc>
-      <yloc>576</yloc>
+      <xloc>224</xloc>
+      <yloc>416</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Table input -  source_db.schema.table</name>
+    <name>Table input - Source DB: obo_opr</name>
     <type>TableInput</type>
     <description />
     <distribute>Y</distribute>
@@ -1178,20 +1178,53 @@ FROM
       <method>none</method>
       <schema_name />
     </partitioning>
-    <connection>dynamic_postgres_db</connection>
+    <connection>obo_opr_db</connection>
     <sql>SELECT
-    *
-FROM
-    ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
+    p.passage_id, 
+    p.passage_date,
+    --p.arrival_date,
+    p.finished_date,
+    p.sent_date,
+    p.charging_point_id,
+    i.image_id, 
+    i.image_date, 
+    i.camera_id,
+    i.file_id, 
+    -- This numbers the images for each passage: 1, 2, 3, ...
+    -- It resets to 1 when the value of p.passage_id changes.
+    row_number() OVER (PARTITION by p.passage_id ORDER BY i.image_id) as "image_index_for_passage" 
+FROM 
+    ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE} p  -- passage.passage
+INNER JOIN 
+    passage.image i ON i.passage_id = p.passage_id 
 WHERE
-    ${PARAM_SOURCE_INSERT_ID_COLNAME} > ? AND                            -- newly INSERTed rows
-  --${PARAM_SOURCE_INSERTED_ON_COLNAME} >  '${PARAM_CDC_LAST_LOAD_UTC}' AND  -- alternate condition, instead of the previous line
-    ${PARAM_SOURCE_INSERT_ID_COLNAME}   &lt;=  ${PARAM_MAX_INSERT_ID}       -- to avoid loading rows that are inserted after the job starts
-  --${PARAM_SOURCE_INSERTED_ON_COLNAME} &lt;= '${PARAM_CDC_CURRENT_LOAD_UTC}'   -- alternate condition, instead of the previous line 
-ORDER BY
-    ${PARAM_SOURCE_INSERT_ID_COLNAME}</sql>
+    ( 
+        p.passage_id > ?                                 -- Newly INSERTed passages, since the last run.
+        OR p.sent_date > ?                               -- UPDATEd passages, since the last run.
+        OR i.image_id > ?                                -- passages that have new images linked to them. This will correctly
+                                                         -- include such passages even if the "last_updated_on" column for
+                                                         -- the passage table (in this case "sent_date") is *not* updated when 
+                                                         -- this occurs. If the "last_updated_on" column *is* updated when this
+                                                         -- happens, then this test here is not necessary.
+        OR i.image_date > ?                              -- images that have had "image_date" updated since the last run.
+                                                         -- This treats the "image_date" column as a "last_updated-on" column
+                                                         -- for the "image" table. If the "image" table is never updated, then
+                                                         -- this test is not necessary. This will correctly include such passages 
+                                                         -- even if the "last_updated_on" column for the passage table (in this 
+                                                         -- case "sent_date") is *not* updated when this occurs. If the 
+                                                         -- "last_updated_on" column *is* updated when this happens, then this 
+                                                         -- test here is not necessary.
+    )
+    AND p.passage_id &lt;= ${PARAM_MAX_INSERT_ID}           -- To avoid loading rows that are *inserted* after the job starts.
+    AND (
+            p.sent_date IS NULL OR                       -- Rows that have been inserted but not modified.
+            p.sent_date &lt;= '${PARAM_CDC_CURRENT_LOAD_UTC}'   -- To avoid loading rows that are *modified* after the job starts.
+        ) 
+ORDER BY 
+    p.passage_id, 
+    i.image_id</sql>
     <limit>0</limit>
-    <lookup>Write to log: parameters, max_target_insert_id</lookup>
+    <lookup>Write to log: parameters, max id &amp; date</lookup>
     <execute_each_row>N</execute_each_row>
     <variables_active>Y</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
@@ -1203,8 +1236,8 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>128</xloc>
-      <yloc>832</yloc>
+      <xloc>144</xloc>
+      <yloc>592</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1225,7 +1258,7 @@ ORDER BY
     <commit>1000</commit>
     <truncate>N</truncate>
     <ignore_errors>N</ignore_errors>
-    <use_batch>Y</use_batch>
+    <use_batch>N</use_batch>
     <specify_fields>N</specify_fields>
     <partitioning_enabled>N</partitioning_enabled>
     <partitioning_field />
@@ -1246,13 +1279,137 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>128</xloc>
-      <yloc>1024</yloc>
+      <xloc>144</xloc>
+      <yloc>912</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Write to log: parameters, max_target_insert_id</name>
+    <name>Update - PSA.schema.table</name>
+    <type>Update</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <connection>psa_db</connection>
+    <skip_lookup>N</skip_lookup>
+    <commit>100</commit>
+    <use_batch>N</use_batch>
+    <error_ignored>N</error_ignored>
+    <ignore_flag_field />
+    <lookup>
+      <schema>${PARAM_TARGET_SCHEMA}</schema>
+      <table>${PARAM_TARGET_TABLE}</table>
+      <key>
+        <name>passage_with_images_id</name>
+        <field>passage_with_images_id</field>
+        <condition>=</condition>
+        <name2 />
+      </key>
+      <value>
+        <name>passage_date</name>
+        <rename>passage_date</rename>
+      </value>
+      <value>
+        <name>finished_date</name>
+        <rename>finished_date</rename>
+      </value>
+      <value>
+        <name>sent_date</name>
+        <rename>sent_date</rename>
+      </value>
+      <value>
+        <name>charging_point_id</name>
+        <rename>charging_point_id</rename>
+      </value>
+      <value>
+        <name>image_1_id</name>
+        <rename>image_1_id</rename>
+      </value>
+      <value>
+        <name>image_1_date</name>
+        <rename>image_1_date</rename>
+      </value>
+      <value>
+        <name>image_1_camera_id</name>
+        <rename>image_1_camera_id</rename>
+      </value>
+      <value>
+        <name>image_1_file_id</name>
+        <rename>image_1_file_id</rename>
+      </value>
+      <value>
+        <name>image_2_id</name>
+        <rename>image_2_id</rename>
+      </value>
+      <value>
+        <name>image_2_date</name>
+        <rename>image_2_date</rename>
+      </value>
+      <value>
+        <name>image_2_camera_id</name>
+        <rename>image_2_camera_id</rename>
+      </value>
+      <value>
+        <name>image_2_file_id</name>
+        <rename>image_2_file_id</rename>
+      </value>
+      <value>
+        <name>image_3_id</name>
+        <rename>image_3_id</rename>
+      </value>
+      <value>
+        <name>image_3_date</name>
+        <rename>image_3_date</rename>
+      </value>
+      <value>
+        <name>image_3_camera_id</name>
+        <rename>image_3_camera_id</rename>
+      </value>
+      <value>
+        <name>image_3_file_id</name>
+        <rename>image_3_file_id</rename>
+      </value>
+      <value>
+        <name>image_4_id</name>
+        <rename>image_4_id</rename>
+      </value>
+      <value>
+        <name>image_4_date</name>
+        <rename>image_4_date</rename>
+      </value>
+      <value>
+        <name>image_4_camera_id</name>
+        <rename>image_4_camera_id</rename>
+      </value>
+      <value>
+        <name>image_4_file_id</name>
+        <rename>image_4_file_id</rename>
+      </value>
+      <value>
+        <name>etl_batch_id_last_update</name>
+        <rename>etl_batch_id_last_update</rename>
+      </value>
+    </lookup>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>144</xloc>
+      <yloc>1088</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Write to log: parameters, max id &amp; date</name>
     <type>WriteToLog</type>
     <description />
     <distribute>Y</distribute>
@@ -1266,26 +1423,22 @@ ORDER BY
     <displayHeader>Y</displayHeader>
     <limitRows>N</limitRows>
     <limitRowsNumber>0</limitRowsNumber>
-    <logmessage>tmplt_mirrored_insert_only_table-update:
-PARAM_DYN_DB_CONN_DB_HOST        = ${PARAM_DYN_DB_CONN_DB_HOST}
-PARAM_DYN_DB_CONN_DB_PORT        = ${PARAM_DYN_DB_CONN_DB_PORT}
-PARAM_DYN_DB_CONN_DB_DATABASE    = ${PARAM_DYN_DB_CONN_DB_DATABASE}
-PARAM_DYN_DB_CONN_DB_USERNAME    = ${PARAM_DYN_DB_CONN_DB_USERNAME}
-PARAM_DYN_DB_CONN_DB_PASSWORD    = ${PARAM_DYN_DB_CONN_DB_PASSWORD}
-PARAM_CDC_LAST_LOAD_UTC              = ${PARAM_CDC_LAST_LOAD_UTC}
-PARAM_CDC_CURRENT_LOAD_UTC           = ${PARAM_CDC_CURRENT_LOAD_UTC}
-PARAM_MAX_INSERT_ID              = ${PARAM_MAX_INSERT_ID}
-PARAM_SOURCE_SCHEMA              = ${PARAM_SOURCE_SCHEMA}
-PARAM_SOURCE_TABLE               = ${PARAM_SOURCE_TABLE}
-PARAM_SOURCE_INSERTED_ON_COLNAME = ${PARAM_SOURCE_INSERTED_ON_COLNAME}
-PARAM_SOURCE_INSERT_ID_COLNAME   = ${PARAM_SOURCE_INSERT_ID_COLNAME}   
-PARAM_TARGET_SCHEMA              = ${PARAM_TARGET_SCHEMA}
-PARAM_TARGET_TABLE               = ${PARAM_TARGET_TABLE}
-PARAM_TARGET_INSERTED_ON_COLNAME = ${PARAM_TARGET_INSERTED_ON_COLNAME}
-PARAM_TARGET_INSERT_ID_COLNAME   = ${PARAM_TARGET_INSERT_ID_COLNAME}   </logmessage>
+    <logmessage>tr_psa-obo.passage_with_images-update:
+PARAM_CDC_LAST_LOAD_UTC           = ${PARAM_CDC_LAST_LOAD_UTC}
+PARAM_CDC_CURRENT_LOAD_UTC        = ${PARAM_CDC_CURRENT_LOAD_UTC}
+PARAM_MAX_INSERT_ID           = ${PARAM_MAX_INSERT_ID}</logmessage>
     <fields>
       <field>
         <name>max_target_insert_id</name>
+      </field>
+      <field>
+        <name>max_target_last_updated_on</name>
+      </field>
+      <field>
+        <name>max_target_image_id</name>
+      </field>
+      <field>
+        <name>max_target_image_date</name>
       </field>
     </fields>
     <cluster_schema />
@@ -1296,12 +1449,280 @@ PARAM_TARGET_INSERT_ID_COLNAME   = ${PARAM_TARGET_INSERT_ID_COLNAME}   </logmess
       </output>
     </remotesteps>
     <GUI>
-      <xloc>128</xloc>
+      <xloc>144</xloc>
+      <yloc>496</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Row denormaliser</name>
+    <type>Denormaliser</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <key_field>image_index_for_passage</key_field>
+    <group>
+      <field>
+        <name>passage_with_images_id</name>
+      </field>
+    </group>
+    <fields>
+      <field>
+        <field_name>image_id</field_name>
+        <key_value>1</key_value>
+        <target_name>image_1_id</target_name>
+        <target_type>Integer</target_type>
+        <target_format />
+        <target_length>15</target_length>
+        <target_precision>0</target_precision>
+        <target_decimal_symbol />
+        <target_grouping_symbol />
+        <target_currency_symbol />
+        <target_null_string />
+        <target_aggregation_type>-</target_aggregation_type>
+      </field>
+      <field>
+        <field_name>image_date</field_name>
+        <key_value>1</key_value>
+        <target_name>image_1_date</target_name>
+        <target_type>Timestamp</target_type>
+        <target_format />
+        <target_length>6</target_length>
+        <target_precision>-1</target_precision>
+        <target_decimal_symbol />
+        <target_grouping_symbol />
+        <target_currency_symbol />
+        <target_null_string />
+        <target_aggregation_type>-</target_aggregation_type>
+      </field>
+      <field>
+        <field_name>camera_id</field_name>
+        <key_value>1</key_value>
+        <target_name>image_1_camera_id</target_name>
+        <target_type>Integer</target_type>
+        <target_format />
+        <target_length>4</target_length>
+        <target_precision>0</target_precision>
+        <target_decimal_symbol />
+        <target_grouping_symbol />
+        <target_currency_symbol />
+        <target_null_string />
+        <target_aggregation_type>-</target_aggregation_type>
+      </field>
+      <field>
+        <field_name>file_id</field_name>
+        <key_value>1</key_value>
+        <target_name>image_1_file_id</target_name>
+        <target_type>Integer</target_type>
+        <target_format />
+        <target_length>15</target_length>
+        <target_precision>0</target_precision>
+        <target_decimal_symbol />
+        <target_grouping_symbol />
+        <target_currency_symbol />
+        <target_null_string />
+        <target_aggregation_type>-</target_aggregation_type>
+      </field>
+      <field>
+        <field_name>image_id</field_name>
+        <key_value>2</key_value>
+        <target_name>image_2_id</target_name>
+        <target_type>Integer</target_type>
+        <target_format />
+        <target_length>15</target_length>
+        <target_precision>0</target_precision>
+        <target_decimal_symbol />
+        <target_grouping_symbol />
+        <target_currency_symbol />
+        <target_null_string />
+        <target_aggregation_type>-</target_aggregation_type>
+      </field>
+      <field>
+        <field_name>image_date</field_name>
+        <key_value>2</key_value>
+        <target_name>image_2_date</target_name>
+        <target_type>Timestamp</target_type>
+        <target_format />
+        <target_length>6</target_length>
+        <target_precision>-1</target_precision>
+        <target_decimal_symbol />
+        <target_grouping_symbol />
+        <target_currency_symbol />
+        <target_null_string />
+        <target_aggregation_type>-</target_aggregation_type>
+      </field>
+      <field>
+        <field_name>camera_id</field_name>
+        <key_value>2</key_value>
+        <target_name>image_2_camera_id</target_name>
+        <target_type>Integer</target_type>
+        <target_format />
+        <target_length>4</target_length>
+        <target_precision>0</target_precision>
+        <target_decimal_symbol />
+        <target_grouping_symbol />
+        <target_currency_symbol />
+        <target_null_string />
+        <target_aggregation_type>-</target_aggregation_type>
+      </field>
+      <field>
+        <field_name>file_id</field_name>
+        <key_value>2</key_value>
+        <target_name>image_2_file_id</target_name>
+        <target_type>Integer</target_type>
+        <target_format />
+        <target_length>15</target_length>
+        <target_precision>0</target_precision>
+        <target_decimal_symbol />
+        <target_grouping_symbol />
+        <target_currency_symbol />
+        <target_null_string />
+        <target_aggregation_type>-</target_aggregation_type>
+      </field>
+      <field>
+        <field_name>image_id</field_name>
+        <key_value>3</key_value>
+        <target_name>image_3_id</target_name>
+        <target_type>Integer</target_type>
+        <target_format />
+        <target_length>15</target_length>
+        <target_precision>0</target_precision>
+        <target_decimal_symbol />
+        <target_grouping_symbol />
+        <target_currency_symbol />
+        <target_null_string />
+        <target_aggregation_type>-</target_aggregation_type>
+      </field>
+      <field>
+        <field_name>image_date</field_name>
+        <key_value>3</key_value>
+        <target_name>image_3_date</target_name>
+        <target_type>Timestamp</target_type>
+        <target_format />
+        <target_length>6</target_length>
+        <target_precision>-1</target_precision>
+        <target_decimal_symbol />
+        <target_grouping_symbol />
+        <target_currency_symbol />
+        <target_null_string />
+        <target_aggregation_type>-</target_aggregation_type>
+      </field>
+      <field>
+        <field_name>camera_id</field_name>
+        <key_value>3</key_value>
+        <target_name>image_3_camera_id</target_name>
+        <target_type>Integer</target_type>
+        <target_format />
+        <target_length>4</target_length>
+        <target_precision>0</target_precision>
+        <target_decimal_symbol />
+        <target_grouping_symbol />
+        <target_currency_symbol />
+        <target_null_string />
+        <target_aggregation_type>-</target_aggregation_type>
+      </field>
+      <field>
+        <field_name>file_id</field_name>
+        <key_value>3</key_value>
+        <target_name>image_3_file_id</target_name>
+        <target_type>Integer</target_type>
+        <target_format />
+        <target_length>15</target_length>
+        <target_precision>0</target_precision>
+        <target_decimal_symbol />
+        <target_grouping_symbol />
+        <target_currency_symbol />
+        <target_null_string />
+        <target_aggregation_type>-</target_aggregation_type>
+      </field>
+      <field>
+        <field_name>image_id</field_name>
+        <key_value>4</key_value>
+        <target_name>image_4_id</target_name>
+        <target_type>Integer</target_type>
+        <target_format />
+        <target_length>15</target_length>
+        <target_precision>0</target_precision>
+        <target_decimal_symbol />
+        <target_grouping_symbol />
+        <target_currency_symbol />
+        <target_null_string />
+        <target_aggregation_type>-</target_aggregation_type>
+      </field>
+      <field>
+        <field_name>image_date</field_name>
+        <key_value>4</key_value>
+        <target_name>image_4_date</target_name>
+        <target_type>Timestamp</target_type>
+        <target_format />
+        <target_length>6</target_length>
+        <target_precision>-1</target_precision>
+        <target_decimal_symbol />
+        <target_grouping_symbol />
+        <target_currency_symbol />
+        <target_null_string />
+        <target_aggregation_type>-</target_aggregation_type>
+      </field>
+      <field>
+        <field_name>camera_id</field_name>
+        <key_value>4</key_value>
+        <target_name>image_4_camera_id</target_name>
+        <target_type>Integer</target_type>
+        <target_format />
+        <target_length>4</target_length>
+        <target_precision>0</target_precision>
+        <target_decimal_symbol />
+        <target_grouping_symbol />
+        <target_currency_symbol />
+        <target_null_string />
+        <target_aggregation_type>-</target_aggregation_type>
+      </field>
+      <field>
+        <field_name>file_id</field_name>
+        <key_value>4</key_value>
+        <target_name>image_4_file_id</target_name>
+        <target_type>Integer</target_type>
+        <target_format />
+        <target_length>15</target_length>
+        <target_precision>0</target_precision>
+        <target_decimal_symbol />
+        <target_grouping_symbol />
+        <target_currency_symbol />
+        <target_null_string />
+        <target_aggregation_type>-</target_aggregation_type>
+      </field>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>144</xloc>
       <yloc>736</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step_error_handling>
+    <error>
+      <source_step>Table output - PSA.schema.table</source_step>
+      <target_step>Set etl_batch_id_last_update = Xform batch ID</target_step>
+      <is_enabled>Y</is_enabled>
+      <nr_valuename />
+      <descriptions_valuename />
+      <fields_valuename />
+      <codes_valuename />
+      <max_errors />
+      <max_pct_errors />
+      <min_pct_rows />
+    </error>
   </step_error_handling>
   <slave-step-copy-partition-distribution>
   </slave-step-copy-partition-distribution>

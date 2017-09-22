@@ -9,12 +9,12 @@
     <directory>&#x2f;dwh&#x2f;mirror&#x2f;bulk_loading</directory>
     <parameters>
         <parameter>
-            <name>PARAM_CDC_CURRENT_LOAD</name>
+            <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
             <default_value>1900.01.01 00&#x3a;00&#x3a;00</default_value>
             <description>Timestamp of the current load &#x28;no rows after this timestamp will be loaded&#x29;</description>
         </parameter>
         <parameter>
-            <name>PARAM_CDC_LAST_LOAD</name>
+            <name>PARAM_CDC_LAST_LOAD_UTC</name>
             <default_value>1900.01.01 00&#x3a;00&#x3a;00</default_value>
             <description>Timestamp of last successful load from the source database</description>
         </parameter>
@@ -105,7 +105,7 @@
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Load the data from the source database table that will be moved to the DWH table.&#xa;&#xa;It is important here to select &#x22;replace variables in script&#x3f;&#x22;so that the references &#x22;&#x3f;&#x22;,&#xa;&#x24;&#x7b;PARAM_CDC_LAST_LOAD&#x7d; and &#x24;&#x7b;PARAM_CDC_CURRENT_LOAD&#x7d; will be evaluated.&#xa;&#xa;It is also necessary to specify the step from which fields will  be used to supply values &#xa;for the &#x22;&#x3f;&#x22; replacement characters.  In this case, the previous step is specified.</note>
+      <note>Load the data from the source database table that will be moved to the DWH table.&#xa;&#xa;It is important here to select &#x22;replace variables in script&#x3f;&#x22;so that the references &#x22;&#x3f;&#x22;,&#xa;&#x24;&#x7b;PARAM_CDC_LAST_LOAD_UTC&#x7d; and &#x24;&#x7b;PARAM_CDC_CURRENT_LOAD_UTC&#x7d; will be evaluated.&#xa;&#xa;It is also necessary to specify the step from which fields will  be used to supply values &#xa;for the &#x22;&#x3f;&#x22; replacement characters.  In this case, the previous step is specified.</note>
       <xloc>336</xloc>
       <yloc>304</yloc>
       <width>576</width>
@@ -210,7 +210,7 @@
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>This transformation updates the DWH mirror of the &#x22;dynamic&#x22; table passage.flag from the TDP archive database.&#xa;This transformation has parameters&#x3a;&#xa;&#xa;	PARAM_CDC_LAST_LOAD		&#x3c;- not used in this transformation - MAX&#x28;archive_id&#x29; is used instead&#xa;	PARAM_CDC_CURRENT_LOAD</note>
+      <note>This transformation updates the DWH mirror of the &#x22;dynamic&#x22; table passage.flag from the TDP archive database.&#xa;This transformation has parameters&#x3a;&#xa;&#xa;	PARAM_CDC_LAST_LOAD_UTC		&#x3c;- not used in this transformation - MAX&#x28;archive_id&#x29; is used instead&#xa;	PARAM_CDC_CURRENT_LOAD_UTC</note>
       <xloc>16</xloc>
       <yloc>0</yloc>
       <width>764</width>
@@ -516,7 +516,7 @@
            <schema_name/>
            </partitioning>
     <connection>obo_opr_db</connection>
-    <sql>SELECT&#xa;    &#x2a;&#xa;FROM&#xa;    passage.flag&#xa;WHERE&#xa;    archive_id &#x3e; &#x3f; AND&#xa;    --archive_date &#x3e;  &#x27;&#x24;&#x7b;PARAM_CDC_LAST_LOAD&#x7d;&#x27; AND &#xa;	archive_date &#x3c;&#x3d; &#x27;&#x24;&#x7b;PARAM_CDC_CURRENT_LOAD&#x7d;&#x27;&#xa;ORDER BY&#xa;    archive_id&#xa;--LIMIT 10</sql>
+    <sql>SELECT&#xa;    &#x2a;&#xa;FROM&#xa;    passage.flag&#xa;WHERE&#xa;    archive_id &#x3e; &#x3f; AND&#xa;    --archive_date &#x3e;  &#x27;&#x24;&#x7b;PARAM_CDC_LAST_LOAD_UTC&#x7d;&#x27; AND &#xa;	archive_date &#x3c;&#x3d; &#x27;&#x24;&#x7b;PARAM_CDC_CURRENT_LOAD_UTC&#x7d;&#x27;&#xa;ORDER BY&#xa;    archive_id&#xa;--LIMIT 10</sql>
     <limit>0</limit>
     <lookup>Write to log&#x3a; parameters, max_target_insert_id</lookup>
     <execute_each_row>N</execute_each_row>
@@ -545,7 +545,7 @@
       <displayHeader>Y</displayHeader>
       <limitRows>N</limitRows>
       <limitRowsNumber>0</limitRowsNumber>
-      <logmessage>PARAM_CDC_LAST_LOAD	&#x3d; &#x24;&#x7b;PARAM_CDC_LAST_LOAD&#x7d;&#xa;PARAM_CDC_CURRENT_LOAD	&#x3d; &#x24;&#x7b;PARAM_CDC_CURRENT_LOAD&#x7d;</logmessage>
+      <logmessage>PARAM_CDC_LAST_LOAD_UTC	&#x3d; &#x24;&#x7b;PARAM_CDC_LAST_LOAD_UTC&#x7d;&#xa;PARAM_CDC_CURRENT_LOAD_UTC	&#x3d; &#x24;&#x7b;PARAM_CDC_CURRENT_LOAD_UTC&#x7d;</logmessage>
     <fields>
       <field>
         <name>max_target_insert_id</name>

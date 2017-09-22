@@ -8,15 +8,15 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/09/05 10:06:37.959</modified_date>
+  <modified_date>2017/09/20 14:41:02.362</modified_date>
   <parameters>
     <parameter>
-      <name>PARAM_CDC_CURRENT_LOAD</name>
+      <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
       <default_value>2017.06.15 00:00:00</default_value>
       <description>Timestamp of the current load (no rows after this timestamp will be loaded)</description>
     </parameter>
     <parameter>
-      <name>PARAM_CDC_LAST_LOAD</name>
+      <name>PARAM_CDC_LAST_LOAD_UTC</name>
       <default_value>1900.01.01 00:00:00</default_value>
       <description>Timestamp of last successful load from the source database</description>
     </parameter>
@@ -514,9 +514,19 @@
           <value>${QF_SOURCE_INSERT_ID_COLNAME}</value>
         </parameter>
         <parameter>
+          <name>PARAM_TARGET_INSERT_ID_COLNAME</name>
+          <stream_name />
+          <value>${QF_TARGET_INSERT_ID_COLNAME}</value>
+        </parameter>
+        <parameter>
           <name>PARAM_SOURCE_INSERTED_ON_COLNAME</name>
           <stream_name />
           <value>${QF_SOURCE_INSERTED_ON_COLNAME}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_INSERTED_ON_COLNAME</name>
+          <stream_name />
+          <value>${QF_TARGET_INSERTED_ON_COLNAME}</value>
         </parameter>
       </parameters>
       <parallel>N</parallel>
@@ -1060,8 +1070,8 @@ This job has parameters:
 	PARAM_DYN_DB_CONN_DB_PASSWORD	for "dynamic" database connection, e.g., "dynamic_postgres_db"
 	PARAM_SOURCE_DB_ID						ID the "source" database containing tables will be mirrored to a "target" database
 	PARAM_TABLE_META_ID					Primary key of etl.table_meta row for "source" table archived/mirrored to "target" table
-	PARAM_CDC_LAST_LOAD					Timestamp for when *all* tables of the PSA were most recently updated successfully
-	PARAM_CDC_CURRENT_LOAD				Used so that a consistent max timestamp is used for all ETL
+	PARAM_CDC_LAST_LOAD_UTC					Timestamp for when *all* tables of the PSA were most recently updated successfully
+	PARAM_CDC_CURRENT_LOAD_UTC				Used so that a consistent max timestamp is used for all ETL
 	PARAM_MAX_INSERT_ID					Maximum value of the "insert_id" column for rows to load from the source DB table
 	PARAM_SOURCE_SCHEMA					Name of schema containing source table to mirror to target table
 	PARAM_SOURCE_TABLE					Name of source table to mirror to target table
@@ -1220,7 +1230,7 @@ to the names of the columns from the source table that function as
 to the job entry tr_mirrored_insert_only_table-inject_meta-update below.</note>
       <xloc>16</xloc>
       <yloc>448</yloc>
-      <width>450</width>
+      <width>560</width>
       <heigth>66</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>

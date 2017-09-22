@@ -84,6 +84,16 @@
         <description>Primary key of etl.table_meta row for the table pair being compared</description>
       </parameter>
       <parameter>
+        <name>PARAM_TARGET_INSERTED_ON_COLNAME</name>
+        <default_value>inserted_on</default_value>
+        <description>Name of column acting as "inserted_on" timestamp column of target table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_INSERT_ID_COLNAME</name>
+        <default_value>insert_id</default_value>
+        <description>Name of column acting as "insert_id" column of target table</description>
+      </parameter>
+      <parameter>
         <name>PARAM_TARGET_SCHEMA</name>
         <default_value>passage</default_value>
         <description>Name of schema containing target table to update (not currently used)</description>
@@ -519,7 +529,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/09/13 15:54:29.993</modified_date>
+    <modified_date>2017/09/20 15:11:35.697</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -539,18 +549,20 @@ available to be injected. This transformation has parameters:
 	PARAM_TABLE_META_ID					Primary key of etl.table_meta row for the table pair being compared
 	PARAM_INSERT_ID_FROM					"from" value for the "insert_id" column of the source OBO table that is being compared to the PSA table
 	PARAM_INSERT_ID_TO						"to" value for the "insert_id" column of the source OBO table that is being compared to the PSA table
-	PARAM_SOURCE_INSERT_ID_COLNAME				Name of column acting as "insert_id"  timestamp column of source table
-	PARAM_SOURCE_INSERTED_ON_COLNAME			Name of column acting as "inserted_on" column of source table
 	PARAM_SOURCE_SCHEMA					Name of schema containing source table to compare to target table
 	PARAM_SOURCE_TABLE					Name of source table to compare to target table
 	PARAM_SOURCE_SCHEMA_TABLE			${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
 	PARAM_TARGET_SCHEMA					Name of schema containing target table to compare with (not currently used)
 	PARAM_TARGET_TABLE						Name of target table to compare with (not currently used)
-	PARAM_TARGET_SCHEMA_TABLE			${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</note>
+	PARAM_TARGET_SCHEMA_TABLE			${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}
+	PARAM_SOURCE_INSERT_ID_COLNAME		Name of column acting as "insert_id"  timestamp column of source table
+	PARAM_SOURCE_INSERTED_ON_COLNAME	Name of column acting as "inserted_on" column of source table
+	PARAM_TARGET_INSERT_ID_COLNAME		Name of column acting as "insert_id"  timestamp column of target table
+	PARAM_TARGET_INSERTED_ON_COLNAME	Name of column acting as "inserted_on" column of target table</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
       <width>906</width>
-      <heigth>318</heigth>
+      <heigth>346</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -573,7 +585,7 @@ column names must match the query in
 where this transformation is executed. See the 
 comments in that job for an explanation.</note>
       <xloc>16</xloc>
-      <yloc>512</yloc>
+      <yloc>544</yloc>
       <width>283</width>
       <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
@@ -598,7 +610,7 @@ column names must match the query in
 where this transformation is executed. See the 
 comments in that job for an explanation.</note>
       <xloc>304</xloc>
-      <yloc>624</yloc>
+      <yloc>656</yloc>
       <width>283</width>
       <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
@@ -788,7 +800,7 @@ comments in that job for an explanation.</note>
         <target_attribute_key>KEY_FIELDS</target_attribute_key>
         <target_detail>N</target_detail>
         <source_step>Source (OBO) primary key column names</source_step>
-        <source_field>key_col_name</source_field>
+        <source_field>source_key_col_name</source_field>
       </mapping>
       <mapping>
         <target_step_name>Merge Rows (diff)</target_step_name>
@@ -821,7 +833,7 @@ comments in that job for an explanation.</note>
     </remotesteps>
     <GUI>
       <xloc>416</xloc>
-      <yloc>448</yloc>
+      <yloc>480</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -896,7 +908,7 @@ CROSS JOIN
     </remotesteps>
     <GUI>
       <xloc>272</xloc>
-      <yloc>352</yloc>
+      <yloc>384</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -950,7 +962,7 @@ SELECT
     -- Create SELECT statement:
     'SELECT ' || CAST(select_list.str_value AS VARCHAR) || 
     ' FROM ${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE} ' || 
-    'WHERE ${PARAM_SOURCE_INSERT_ID_COLNAME} >= ${PARAM_INSERT_ID_FROM} AND ${PARAM_SOURCE_INSERT_ID_COLNAME} &lt;= ${PARAM_INSERT_ID_TO} ' ||
+    'WHERE ${PARAM_TARGET_INSERT_ID_COLNAME} >= ${PARAM_INSERT_ID_FROM} AND ${PARAM_TARGET_INSERT_ID_COLNAME} &lt;= ${PARAM_INSERT_ID_TO} ' ||
     'ORDER BY ' || CAST(orderby_list.str_value AS VARCHAR) 
     AS "select_target_rows_sql" 
 FROM
@@ -971,7 +983,7 @@ CROSS JOIN
     </remotesteps>
     <GUI>
       <xloc>608</xloc>
-      <yloc>352</yloc>
+      <yloc>384</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1012,7 +1024,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>112</xloc>
-      <yloc>448</yloc>
+      <yloc>480</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1029,7 +1041,7 @@ ORDER BY
     </partitioning>
     <connection>etl_db</connection>
     <sql>SELECT
-    source_column_name AS "key_col_name" 
+    source_column_name AS "source_key_col_name" 
 FROM 
     etl.column_meta 
 WHERE 
@@ -1051,7 +1063,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>416</xloc>
-      <yloc>560</yloc>
+      <yloc>592</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1092,7 +1104,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>720</xloc>
-      <yloc>448</yloc>
+      <yloc>480</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
