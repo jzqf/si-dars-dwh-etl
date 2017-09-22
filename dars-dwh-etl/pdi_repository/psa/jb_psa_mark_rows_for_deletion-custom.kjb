@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/09/18 15:28:30.263</modified_date>
+  <modified_date>2017/09/22 13:55:42.975</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CAN_DELETE_ROW_SOURCE_COLNAME</name>
@@ -16,7 +16,7 @@
       <description>Column of source table that indicates if the row can be deleted immediately</description>
     </parameter>
     <parameter>
-      <name>PARAM_LAST_LOAD_TIMESTAMP</name>
+      <name>PARAM_CDC_LAST_LOAD_UTC</name>
       <default_value>1900.01.01 00:00:00</default_value>
       <description>Timestamp of last successful load from the source database</description>
     </parameter>
@@ -419,16 +419,16 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>112</xloc>
+      <xloc>32</xloc>
       <yloc>288</yloc>
     </entry>
     <entry>
       <name>Write To Log: Parameters</name>
       <description />
       <type>WRITE_TO_LOG</type>
-      <logmessage>jb_psa_mark_rows_for_deletion-custom:
+      <logmessage>PARAM_CDC_LAST_LOAD_UTC                    = ${PARAM_CDC_LAST_LOAD_UTC}
+PARAM_TABLE_META_ID                          = ${PARAM_TABLE_META_ID}
 PARAM_SOURCE_DB_ID                           = ${PARAM_SOURCE_DB_ID}
-PARAM_LAST_LOAD_TIMESTAMP                    = ${PARAM_LAST_LOAD_TIMESTAMP}
 PARAM_SOURCE_SCHEMA                          = ${PARAM_SOURCE_SCHEMA}
 PARAM_SOURCE_TABLE                           = ${PARAM_SOURCE_TABLE}
 PARAM_SOURCE_SCHEMA_TABLE                    = ${PARAM_SOURCE_SCHEMA_TABLE}
@@ -438,25 +438,14 @@ PARAM_TARGET_SCHEMA_TABLE                    = ${PARAM_TARGET_SCHEMA_TABLE}
 PARAM_LAST_UPDATED_ON_SOURCE_COLNAME         = ${PARAM_LAST_UPDATED_ON_SOURCE_COLNAME}
 PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS        = ${PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS}
 PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME = ${PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME}
-PARAM_CAN_DELETE_ROW_SOURCE_COLNAME          = ${PARAM_CAN_DELETE_ROW_SOURCE_COLNAME}
-PARAM_TABLE_META_ID                          = ${PARAM_TABLE_META_ID}</logmessage>
+PARAM_CAN_DELETE_ROW_SOURCE_COLNAME          = ${PARAM_CAN_DELETE_ROW_SOURCE_COLNAME}</logmessage>
       <loglevel>Basic</loglevel>
-      <logsubject />
+      <logsubject>Parameters received by jb_psa_mark_rows_for_deletion-custom</logsubject>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>112</xloc>
-      <yloc>384</yloc>
-    </entry>
-    <entry>
-      <name>Success</name>
-      <description />
-      <type>SUCCESS</type>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>240</xloc>
-      <yloc>624</yloc>
+      <xloc>160</xloc>
+      <yloc>288</yloc>
     </entry>
     <entry>
       <name>Abort job - Untreated case</name>
@@ -466,8 +455,8 @@ PARAM_TABLE_META_ID                          = ${PARAM_TABLE_META_ID}</logmessag
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>112</xloc>
-      <yloc>720</yloc>
+      <xloc>160</xloc>
+      <yloc>768</yloc>
     </entry>
     <entry>
       <name>Table = source_schema.source_table ?</name>
@@ -488,21 +477,8 @@ PARAM_TABLE_META_ID                          = ${PARAM_TABLE_META_ID}</logmessag
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>112</xloc>
-      <yloc>480</yloc>
-    </entry>
-    <entry>
-      <name>Log dispatched job name - 1</name>
-      <description />
-      <type>WRITE_TO_LOG</type>
-      <logmessage>jb_psa_mark_rows_for_deletion-custom dispatching to job: jb_psa_mark_rows_for_deletion-source_schema.source_table</logmessage>
-      <loglevel>Basic</loglevel>
-      <logsubject />
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>336</xloc>
-      <yloc>480</yloc>
+      <xloc>160</xloc>
+      <yloc>400</yloc>
     </entry>
     <entry>
       <name>jb_log_error - Untreated case</name>
@@ -540,8 +516,8 @@ PARAM_TABLE_META_ID                          = ${PARAM_TABLE_META_ID}</logmessag
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>112</xloc>
-      <yloc>624</yloc>
+      <xloc>160</xloc>
+      <yloc>672</yloc>
     </entry>
     <entry>
       <name>Abort job - 1</name>
@@ -551,8 +527,8 @@ PARAM_TABLE_META_ID                          = ${PARAM_TABLE_META_ID}</logmessag
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>1</nr>
-      <xloc>928</xloc>
-      <yloc>480</yloc>
+      <xloc>816</xloc>
+      <yloc>400</yloc>
     </entry>
     <entry>
       <name>jb_psa_mark_rows_for_deletion-custom-source_schema.source_table</name>
@@ -585,8 +561,8 @@ PARAM_TABLE_META_ID                          = ${PARAM_TABLE_META_ID}</logmessag
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>656</xloc>
-      <yloc>480</yloc>
+      <xloc>544</xloc>
+      <yloc>400</yloc>
     </entry>
   </entries>
   <hops>
@@ -598,24 +574,6 @@ PARAM_TABLE_META_ID                          = ${PARAM_TABLE_META_ID}</logmessag
       <enabled>Y</enabled>
       <evaluation>Y</evaluation>
       <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>Table = source_schema.source_table ?</from>
-      <to>Success</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>N</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Table = source_schema.source_table ?</from>
-      <to>Log dispatched job name - 1</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
     </hop>
     <hop>
       <from>Table = source_schema.source_table ?</from>
@@ -645,21 +603,21 @@ PARAM_TABLE_META_ID                          = ${PARAM_TABLE_META_ID}</logmessag
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Log dispatched job name - 1</from>
-      <to>jb_psa_mark_rows_for_deletion-custom-source_schema.source_table</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
       <from>jb_psa_mark_rows_for_deletion-custom-source_schema.source_table</from>
       <to>Abort job - 1</to>
       <from_nr>0</from_nr>
       <to_nr>1</to_nr>
       <enabled>Y</enabled>
       <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Table = source_schema.source_table ?</from>
+      <to>jb_psa_mark_rows_for_deletion-custom-source_schema.source_table</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
       <unconditional>N</unconditional>
     </hop>
   </hops>
@@ -669,7 +627,7 @@ PARAM_TABLE_META_ID                          = ${PARAM_TABLE_META_ID}</logmessag
 as a "dispatcher" in that it runs an appropriate job/transformation to perform a table-specific CUSTOM treatment for the table that is specified by this 
 job's parameters. This job has parameters:
 
-	PARAM_LAST_LOAD_TIMESTAMP					Timestamp for when the target PSA DB mirror tables were last updated from the source DB.
+	PARAM_CDC_LAST_LOAD_UTC					Timestamp for when the target PSA DB mirror tables were last updated from the source DB.
 														Can be used to ensure that we do not delete rows that are not yet fully archived/mirrored.
 	PARAM_TABLE_META_ID							Primary key of etl.table_meta row for "source" table from which rows will be deleted
 	PARAM_SOURCE_DB_ID								ID the "source" database containing tables that are mirrored to a "target" database
@@ -683,7 +641,7 @@ job's parameters. This job has parameters:
 	PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS	Number of seconds after the "row_can_be_deleted_from" timestamp that an archived row can be deleted
 	PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME	Column of source table that acts as a "row_can_be_deleted_from" timestamp column
 	PARAM_CAN_DELETE_ROW_SOURCE_COLNAME		Column of source table that indicates if the row can be deleted immediately</note>
-      <xloc>16</xloc>
+      <xloc>0</xloc>
       <yloc>0</yloc>
       <width>963</width>
       <heigth>262</heigth>
@@ -711,8 +669,8 @@ in the current job for the table being treated.
 In the event that an error is detected in the job "jb_psa_mark_rows_for_deletion-custom-source_schema.source_table",
 it should execute a "jb_log_error" entry that describes the error, followed by an "Abort" job entry so that this job knows
 to also execute an "Abort" job entry. In this is done, the error message will be sent out by e-mail from the root job.</note>
-      <xloc>320</xloc>
-      <yloc>544</yloc>
+      <xloc>368</xloc>
+      <yloc>464</yloc>
       <width>706</width>
       <heigth>122</heigth>
       <fontname>Ubuntu</fontname>
@@ -724,27 +682,6 @@ to also execute an "Abort" job entry. In this is done, the error message will be
       <fontcolorblue>0</fontcolorblue>
       <backgroundcolorred>255</backgroundcolorred>
       <backgroundcolorgreen>255</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>&lt;- Need to test PARAM_SOURCE_DB_ID in case there are multiple "source" DBs!</note>
-      <xloc>128</xloc>
-      <yloc>448</yloc>
-      <width>473</width>
-      <heigth>24</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>255</fontcolorred>
-      <fontcolorgreen>255</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>0</backgroundcolorred>
-      <backgroundcolorgreen>0</backgroundcolorgreen>
       <backgroundcolorblue>0</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>

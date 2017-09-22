@@ -39,7 +39,7 @@
         <description>for "dynamic_postgres_db" database connection</description>
       </parameter>
       <parameter>
-        <name>PARAM_LAST_LOAD_TIMESTAMP</name>
+        <name>PARAM_CDC_LAST_LOAD_UTC</name>
         <default_value>1900.01.01 00:00:00</default_value>
         <description>Timestamp of last successful load from the source database</description>
       </parameter>
@@ -524,7 +524,7 @@
 target database. This is a generic algorithm that can work with *any* table, as long as the necessary metadata is available to be injected. This transformation
 has parameters:
 
-	PARAM_LAST_LOAD_TIMESTAMP					Timestamp for when the target PSA DB mirror tables were last updated from the source DB.
+	PARAM_CDC_LAST_LOAD_UTC					Timestamp for when the target PSA DB mirror tables were last updated from the source DB.
 														Used to ensure that we do not delete rows that are not yet fully archived/mirrored.
 	PARAM_SOURCE_DB_ID								ID the "source" database containing tables will be mirrored to a "target" database
 	PARAM_DYN_DB_CONN_DB_HOST					for "dynamic_postgres_db" database connection
@@ -837,7 +837,7 @@ SELECT
     -- This will greatly reduce the number of rows selected here if the rows with "can_delete_row" are not currently being deleted.
     'SELECT ' || CAST(select_list.str_value AS VARCHAR) || 
     ' FROM ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE} ' || 
-    'WHERE ${PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME} + INTERVAL ''${PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS} seconds'' &lt; TIMESTAMP ''${PARAM_LAST_LOAD_TIMESTAMP}'' ' ||
+    'WHERE ${PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME} + INTERVAL ''${PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS} seconds'' &lt; TIMESTAMP ''${PARAM_CDC_LAST_LOAD_UTC}'' ' ||
     ' AND ${PARAM_CAN_DELETE_ROW_SOURCE_COLNAME}=false ' ||
     'ORDER BY ' || CAST(orderby_list.str_value AS VARCHAR) 
     AS "select_source_rows_sql" 

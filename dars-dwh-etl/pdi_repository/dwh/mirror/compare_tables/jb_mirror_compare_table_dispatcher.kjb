@@ -11,7 +11,7 @@
   <modified_date>2017/06/27 12:52:39.194</modified_date>
   <parameters>
     <parameter>
-      <name>PARAM_LAST_LOAD_TIMESTAMP</name>
+      <name>PARAM_CDC_LAST_LOAD_UTC</name>
       <default_value />
       <description>Timestamp of last successful load of the DWH "mirror" tables</description>
     </parameter>
@@ -381,7 +381,7 @@
       <name>Write To Log: Parameters</name>
       <description />
       <type>WRITE_TO_LOG</type>
-      <logmessage>PARAM_LAST_LOAD_TIMESTAMP = ${PARAM_LAST_LOAD_TIMESTAMP}
+      <logmessage>PARAM_CDC_LAST_LOAD_UTC = ${PARAM_CDC_LAST_LOAD_UTC}
 PARAM_SOURCE_SCHEMA              = ${PARAM_SOURCE_SCHEMA}
 PARAM_SOURCE_TABLE               = ${PARAM_SOURCE_TABLE}
 PARAM_SOURCE_SCHEMA_TABLE        = ${PARAM_SOURCE_SCHEMA_TABLE}</logmessage>
@@ -1676,7 +1676,7 @@ QF_MIRROR_COMPARE_INSERT_ID_TO   = ${QF_MIRROR_COMPARE_INSERT_ID_TO}
     <notepad>
       <note>This job compares the content of a single table from the TDP archive database with its corresponding "mirror" table in the DWH. This job has parameters:
 
-	PARAM_LAST_LOAD_TIMESTAMP	Timestamp of last successful load of the DWH "mirror" tables
+	PARAM_CDC_LAST_LOAD_UTC	Timestamp of last successful load of the DWH "mirror" tables
 	PARAM_SOURCE_SCHEMA						Schema of mirrored table to compare
 	PARAM_SOURCE_TABLE						Name of mirrored table to compare
 	PARAM_SOURCE_SCHEMA_TABLE				Schema and table name separated with a "."
@@ -1702,7 +1702,7 @@ This job acts as a "dispatcher" in that it runs the appropriate transformation f
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Given the timestamp when the DWH mirror tables were last loaded (PARAM_LAST_LOAD_TIMESTAMP), 
+      <note>Given the timestamp when the DWH mirror tables were last loaded (PARAM_CDC_LAST_LOAD_UTC), 
 tr_mirror_compare-get_archive_id_from_to computes the minumum and maximum "archive_id" values to 
 use for selecting rows of the TDP archive table and the DWH table in order to verify that the two tables 
 "agree". This archive_id range is table-specific, of course. These IDs are assigned to the variables:

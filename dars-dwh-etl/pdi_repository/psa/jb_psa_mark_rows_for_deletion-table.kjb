@@ -16,7 +16,7 @@
       <description>Column of source table that indicates if the row can be deleted immediately</description>
     </parameter>
     <parameter>
-      <name>PARAM_LAST_LOAD_TIMESTAMP</name>
+      <name>PARAM_CDC_LAST_LOAD_UTC</name>
       <default_value>1900.01.01 00:00:00</default_value>
       <description>Timestamp of last successful load from the source database</description>
     </parameter>
@@ -596,7 +596,7 @@
       <type>WRITE_TO_LOG</type>
       <logmessage>jb_psa_mark_rows_for_deletion-table:
 PARAM_SOURCE_DB_ID                           = ${PARAM_SOURCE_DB_ID}
-PARAM_LAST_LOAD_TIMESTAMP                    = ${PARAM_LAST_LOAD_TIMESTAMP}
+PARAM_CDC_LAST_LOAD_UTC                    = ${PARAM_CDC_LAST_LOAD_UTC}
 PARAM_SOURCE_SCHEMA                          = ${PARAM_SOURCE_SCHEMA}
 PARAM_SOURCE_TABLE                           = ${PARAM_SOURCE_TABLE}
 PARAM_SOURCE_SCHEMA_TABLE                    = ${PARAM_SOURCE_SCHEMA_TABLE}
@@ -1208,7 +1208,7 @@ ORDER BY
       <note>This job marks for deletion rows from a single table in a source database that have been archived/mirrored to a target table in the PSA database.
 This job has parameters:
 
-	PARAM_LAST_LOAD_TIMESTAMP					Timestamp for when the target PSA DB mirror tables were last updated from the source DB.
+	PARAM_CDC_LAST_LOAD_UTC					Timestamp for when the target PSA DB mirror tables were last updated from the source DB.
 														Used to ensure that we do not delete rows that are not yet fully archived/mirrored.
 	PARAM_TABLE_META_ID							Primary key of etl.table_meta row for "source" table from which rows will be deleted
 	PARAM_SOURCE_DB_ID								ID the "source" database containing tables that are mirrored to a "target" database

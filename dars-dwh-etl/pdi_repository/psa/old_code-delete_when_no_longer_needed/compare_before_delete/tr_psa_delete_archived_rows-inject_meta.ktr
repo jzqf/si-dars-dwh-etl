@@ -19,7 +19,7 @@
         <description>"Y" if rows to be deleted shall first be compared to rows in target PSA table</description>
       </parameter>
       <parameter>
-        <name>PARAM_LAST_LOAD_TIMESTAMP</name>
+        <name>PARAM_CDC_LAST_LOAD_UTC</name>
         <default_value>1900.01.01 00:00:00</default_value>
         <description>Timestamp of last successful load from the source database</description>
       </parameter>
@@ -505,7 +505,7 @@ target database. This is a generic algorithm that can work with *any* table, as 
 has parameters:
 
 	PARAM_SOURCE_DB_ID								ID the "source" database containing tables will be mirrored to a "target" database
-	PARAM_LAST_LOAD_TIMESTAMP					Timestamp for when the target PSA DB mirror tables were last updated from the source DB.
+	PARAM_CDC_LAST_LOAD_UTC					Timestamp for when the target PSA DB mirror tables were last updated from the source DB.
 														Used to ensure that we do not delete rows that are not yet fully archived/mirrored.
 	PARAM_SOURCE_SCHEMA							Name of schema containing source table to compare to target table
 	PARAM_SOURCE_TABLE							Name of source table to compare to target table
@@ -871,7 +871,7 @@ SELECT
     -- Only select rows with "can_delete_row" column = false because only thoses rows need to have this column updated to true.
     'SELECT ' || CAST(select_list.str_value AS VARCHAR) || 
     ' FROM ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE} ' || 
-    'WHERE ${PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME} + INTERVAL ''${PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS} seconds'' &lt; TIMESTAMP ''${PARAM_LAST_LOAD_TIMESTAMP}'' ' ||
+    'WHERE ${PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME} + INTERVAL ''${PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS} seconds'' &lt; TIMESTAMP ''${PARAM_CDC_LAST_LOAD_UTC}'' ' ||
     ' AND ${PARAM_CAN_DELETE_ROW_SOURCE_COLNAME}=false ' ||
     'ORDER BY ' || CAST(orderby_list.str_value AS VARCHAR) 
     AS "select_source_rows_sql" 
@@ -950,7 +950,7 @@ SELECT
     -- Only select rows with "can_delete_row" column = false because only thoses rows need to have this column updated to true.
     'SELECT ' || CAST(select_list.str_value AS VARCHAR) || 
     ' FROM ${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE} ' || 
-    'WHERE ${PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME} + INTERVAL ''${PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS} seconds'' &lt; TIMESTAMP ''${PARAM_LAST_LOAD_TIMESTAMP}'' ' ||
+    'WHERE ${PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME} + INTERVAL ''${PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS} seconds'' &lt; TIMESTAMP ''${PARAM_CDC_LAST_LOAD_UTC}'' ' ||
     ' AND ${PARAM_CAN_DELETE_ROW_SOURCE_COLNAME}=false ' ||
     'ORDER BY ' || CAST(orderby_list.str_value AS VARCHAR) 
     AS "select_target_rows_sql" 
