@@ -11,12 +11,12 @@
   <modified_date>2017/08/12 12:40:18.840</modified_date>
   <parameters>
     <parameter>
-      <name>PARAM_CDC_CURRENT_LOAD</name>
+      <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
       <default_value />
       <description>Timestamp of the current load (no rows after this timestamp will be loaded)</description>
     </parameter>
     <parameter>
-      <name>PARAM_CDC_LAST_LOAD</name>
+      <name>PARAM_CDC_LAST_LOAD_UTC</name>
       <default_value />
       <description>Timestamp of last successful load from the source database</description>
     </parameter>
@@ -489,10 +489,10 @@
       <note>This job updates a selection of "insert-only" tables in the DWH that are mirrored from the TDP archive database. This job has parameters:
 
 	PARAM_SOURCE_DB_ID			ID the "source" database containing tables will be mirrored to a "target" database
-	PARAM_CDC_LAST_LOAD
-	PARAM_CDC_CURRENT_LOAD
+	PARAM_CDC_LAST_LOAD_UTC
+	PARAM_CDC_CURRENT_LOAD_UTC
 
-The parameters PARAM_CDC_LAST_LOAD &amp; PARAM_CDC_CURRENT_LOAD are passed to "jb_mirrored_insert_only_tables-update_one"
+The parameters PARAM_CDC_LAST_LOAD_UTC &amp; PARAM_CDC_CURRENT_LOAD_UTC are passed to "jb_mirrored_insert_only_tables-update_one"
 because of the settings "Pass all parameter values down to the sub-job" that are selected for their respective job entries. 
 
 The sub-job is RUN ONCE FOR EACH table specified by the first transformation. Each time the  sub-job is is run, it is *also* passed the 

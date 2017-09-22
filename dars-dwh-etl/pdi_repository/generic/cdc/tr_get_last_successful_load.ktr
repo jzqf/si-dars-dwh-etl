@@ -440,7 +440,7 @@
   </info>
   <notepads>
     <notepad>
-      <note>This job sets variable QF_CDC_LAST_LOAD to the timestamp of the last time that the target DB mirror tables were updated from the source DB.
+      <note>This job sets variable QF_CDC_LAST_LOAD_UTC to the timestamp of the last time that the target DB mirror tables were updated from the source DB.
 This transformation has parameters:
 
     PARAM_CDC_TIMESTAMPS_ID		Primary key of cdc_timestamps row to use (particuar to the target DB)</note>
@@ -569,7 +569,7 @@ This transformation has parameters:
   <order>
     <hop>
       <from>Get "last_successful_load" timestamp</from>
-      <to>Set QF_CDC_LAST_LOAD</to>
+      <to>Set QF_CDC_LAST_LOAD_UTC</to>
       <enabled>Y</enabled>
     </hop>
   </order>
@@ -610,7 +610,7 @@ WHERE
     </GUI>
   </step>
   <step>
-    <name>Set QF_CDC_LAST_LOAD</name>
+    <name>Set QF_CDC_LAST_LOAD_UTC</name>
     <type>SetVariable</type>
     <description />
     <distribute>Y</distribute>
@@ -623,7 +623,7 @@ WHERE
     <fields>
       <field>
         <field_name>last_successful_load</field_name>
-        <variable_name>QF_CDC_LAST_LOAD</variable_name>
+        <variable_name>QF_CDC_LAST_LOAD_UTC</variable_name>
         <variable_type>ROOT_JOB</variable_type>
         <default_value />
       </field>

@@ -9,12 +9,12 @@
     <directory>/psa/custom</directory>
     <parameters>
       <parameter>
-        <name>PARAM_CDC_CURRENT_LOAD</name>
+        <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
         <default_value>2100.01.01 00:00:00</default_value>
         <description>Timestamp of the current load (no rows after this timestamp will be loaded)</description>
       </parameter>
       <parameter>
-        <name>PARAM_CDC_LAST_LOAD</name>
+        <name>PARAM_CDC_LAST_LOAD_UTC</name>
         <default_value>1900.01.01 00:00:00</default_value>
         <description>Timestamp of last successful load from the source database</description>
       </parameter>
@@ -570,8 +570,8 @@ This is only a TEST implementation for try out ideas for creating a custom archi
 
 This transformation has parameters:
 
-	PARAM_CDC_LAST_LOAD			Timestamp for when *all* tables of the PSA were most recently updated successfully
-	PARAM_CDC_CURRENT_LOAD		Used so that a consistent max timestamp is used for all ETL
+	PARAM_CDC_LAST_LOAD_UTC			Timestamp for when *all* tables of the PSA were most recently updated successfully
+	PARAM_CDC_CURRENT_LOAD_UTC		Used so that a consistent max timestamp is used for all ETL
 	PARAM_MAX_INSERT_ID			Maximum value of the "insert_id" column for rows to load from the source DB table
 	PARAM_SOURCE_SCHEMA			Name of schema containing the "main" source table to archive/mirror to target table
 	PARAM_SOURCE_TABLE			Name of the "main" source table to archive/mirror to target table
@@ -1218,7 +1218,7 @@ WHERE
     AND p.passage_id &lt;= ${PARAM_MAX_INSERT_ID}           -- To avoid loading rows that are *inserted* after the job starts.
     AND (
             p.sent_date IS NULL OR                       -- Rows that have been inserted but not modified.
-            p.sent_date &lt;= '${PARAM_CDC_CURRENT_LOAD}'   -- To avoid loading rows that are *modified* after the job starts.
+            p.sent_date &lt;= '${PARAM_CDC_CURRENT_LOAD_UTC}'   -- To avoid loading rows that are *modified* after the job starts.
         ) 
 ORDER BY 
     p.passage_id, 
@@ -1424,8 +1424,8 @@ ORDER BY
     <limitRows>N</limitRows>
     <limitRowsNumber>0</limitRowsNumber>
     <logmessage>tr_psa-obo.passage_with_images-update:
-PARAM_CDC_LAST_LOAD           = ${PARAM_CDC_LAST_LOAD}
-PARAM_CDC_CURRENT_LOAD        = ${PARAM_CDC_CURRENT_LOAD}
+PARAM_CDC_LAST_LOAD_UTC           = ${PARAM_CDC_LAST_LOAD_UTC}
+PARAM_CDC_CURRENT_LOAD_UTC        = ${PARAM_CDC_CURRENT_LOAD_UTC}
 PARAM_MAX_INSERT_ID           = ${PARAM_MAX_INSERT_ID}</logmessage>
     <fields>
       <field>

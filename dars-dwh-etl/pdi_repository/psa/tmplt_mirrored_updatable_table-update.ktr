@@ -9,12 +9,12 @@
     <directory>/psa</directory>
     <parameters>
       <parameter>
-        <name>PARAM_CDC_CURRENT_LOAD</name>
+        <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
         <default_value>1900.01.01 00:00:00</default_value>
         <description>Timestamp of the current load (no rows after this timestamp will be loaded)</description>
       </parameter>
       <parameter>
-        <name>PARAM_CDC_LAST_LOAD</name>
+        <name>PARAM_CDC_LAST_LOAD_UTC</name>
         <default_value>1900.01.01 00:00:00</default_value>
         <description>Timestamp of last successful load from the source database</description>
       </parameter>
@@ -624,8 +624,8 @@ algorithm that can work with *any* table,  as long as rows cannot be deleted fro
 	PARAM_DYN_DB_CONN_DB_DATABASE		for "dynamic_postgres_db" database connection
 	PARAM_DYN_DB_CONN_DB_USERNAME		for "dynamic_postgres_db" database connection
 	PARAM_DYN_DB_CONN_DB_PASSWORD	for "dynamic_postgres_db" database connection
-	PARAM_CDC_LAST_LOAD					Timestamp for when *all* tables of the PSA were most recently updated successfully
-	PARAM_CDC_CURRENT_LOAD				Used so that a consistent max timestamp is used for all ETL
+	PARAM_CDC_LAST_LOAD_UTC					Timestamp for when *all* tables of the PSA were most recently updated successfully
+	PARAM_CDC_CURRENT_LOAD_UTC				Used so that a consistent max timestamp is used for all ETL
 	PARAM_MAX_INSERT_ID					Maximum value of the "insert_id" column for rows to load from the source DB table
 	PARAM_SOURCE_SCHEMA					Schema of mirrored table
 	PARAM_SOURCE_TABLE					Name of mirrored table to update
@@ -668,7 +668,7 @@ the source table that were migrated to the target table during the last successf
 not unique), but that is OK here because the algorithm used in this transformation can handle attempts to insert rows that already
 exist in the target table.
 
-Alternatively, we could eliminate this step entirely and load source (OBO) rows for: inserted_on >= PARAM_CDC_LAST_LOAD,
+Alternatively, we could eliminate this step entirely and load source (OBO) rows for: inserted_on >= PARAM_CDC_LAST_LOAD_UTC,
 but this will not be as efficient for the case when we need to re-start the mirroring process after it fails for some reason. In that
 case we would re-process all of the rows that were successfully mirrored during the previous run.</note>
       <xloc>272</xloc>
@@ -1292,7 +1292,7 @@ FROM
 WHERE
     (
         ${PARAM_SOURCE_INSERT_ID_COLNAME} > ?                                 -- newly INSERTed rows, since the last run
-      --${PARAM_SOURCE_INSERTED_ON_COLNAME} > '${PARAM_CDC_LAST_LOAD}'        -- alternate condition, instead of the previous line
+      --${PARAM_SOURCE_INSERTED_ON_COLNAME} > '${PARAM_CDC_LAST_LOAD_UTC}'        -- alternate condition, instead of the previous line
      OR ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} >= ?                          -- UPDATEd rows, since the last run. This is needed to be able to select rows that
                                                                               -- are modified during a period when the table is being treated as an insert-only
                                                                               -- table (not a likely scenario, but it is a possibility).
@@ -1305,15 +1305,15 @@ WHERE
                                                                               -- row can have the *same* value of ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME}, but not all of
                                                                               -- them were loaded and treated on the previous run, i.e., the cutoff imposed by
                                                                               -- the condition ${PARAM_SOURCE_INSERT_ID_COLNAME} &lt;= ${PARAM_MAX_INSERT_ID} or
-                                                                              -- ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} &lt;= '${PARAM_CDC_CURRENT_LOAD}' loaded some,
+                                                                              -- ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} &lt;= '${PARAM_CDC_CURRENT_LOAD_UTC}' loaded some,
                                                                               -- but not all, of the rows with this value of ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME}.
-      --OR ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} >= '${PARAM_CDC_LAST_LOAD}'       -- alternate condition, instead of the previous line
+      --OR ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} >= '${PARAM_CDC_LAST_LOAD_UTC}'       -- alternate condition, instead of the previous line
     )
     AND ${PARAM_SOURCE_INSERT_ID_COLNAME}   &lt;= ${PARAM_MAX_INSERT_ID}         -- to avoid loading rows that are *inserted* after the job starts
-  --AND ${PARAM_SOURCE_INSERTED_ON_COLNAME} &lt;= '${PARAM_CDC_CURRENT_LOAD}'    -- alternate condition, instead of the previous line 
+  --AND ${PARAM_SOURCE_INSERTED_ON_COLNAME} &lt;= '${PARAM_CDC_CURRENT_LOAD_UTC}'    -- alternate condition, instead of the previous line 
 	AND (
 	        ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} IS NULL OR                       -- rows that have been inserted but not modified
-	        ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} &lt;= '${PARAM_CDC_CURRENT_LOAD}'   -- to avoid loading rows that are *modified* after the job starts
+	        ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} &lt;= '${PARAM_CDC_CURRENT_LOAD_UTC}'   -- to avoid loading rows that are *modified* after the job starts
 	    )
 ORDER BY
     ${PARAM_SOURCE_INSERT_ID_COLNAME}</sql>
@@ -1433,8 +1433,8 @@ PARAM_DYN_DB_CONN_DB_PORT            = ${PARAM_DYN_DB_CONN_DB_PORT}
 PARAM_DYN_DB_CONN_DB_DATABASE        = ${PARAM_DYN_DB_CONN_DB_DATABASE}
 PARAM_DYN_DB_CONN_DB_USERNAME        = ${PARAM_DYN_DB_CONN_DB_USERNAME}
 PARAM_DYN_DB_CONN_DB_PASSWORD        = ${PARAM_DYN_DB_CONN_DB_PASSWORD}
-PARAM_CDC_LAST_LOAD                  = ${PARAM_CDC_LAST_LOAD}
-PARAM_CDC_CURRENT_LOAD               = ${PARAM_CDC_CURRENT_LOAD}
+PARAM_CDC_LAST_LOAD_UTC                  = ${PARAM_CDC_LAST_LOAD_UTC}
+PARAM_CDC_CURRENT_LOAD_UTC               = ${PARAM_CDC_CURRENT_LOAD_UTC}
 PARAM_MAX_INSERT_ID                  = ${PARAM_MAX_INSERT_ID}
 PARAM_SOURCE_SCHEMA                  = ${PARAM_SOURCE_SCHEMA}
 PARAM_SOURCE_TABLE                   = ${PARAM_SOURCE_TABLE}

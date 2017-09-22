@@ -9,12 +9,12 @@
     <directory>/dwh/mirror</directory>
     <parameters>
       <parameter>
-        <name>PARAM_CDC_CURRENT_LOAD</name>
+        <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
         <default_value>1900.01.01 00:00:00</default_value>
         <description>Timestamp of the current load (no rows after this timestamp will be loaded)</description>
       </parameter>
       <parameter>
-        <name>PARAM_CDC_LAST_LOAD</name>
+        <name>PARAM_CDC_LAST_LOAD_UTC</name>
         <default_value>1900.01.01 00:00:00</default_value>
         <description>Timestamp of last successful load from the source database</description>
       </parameter>
@@ -457,8 +457,8 @@
     <notepad>
       <note>Load the data from the source database table that will be moved to the DWH table.
 
-It is important here to select "replace variables in script?"so that the references "?", ${PARAM_CDC_LAST_LOAD} and 
-${PARAM_CDC_CURRENT_LOAD} will be evaluated.
+It is important here to select "replace variables in script?"so that the references "?", ${PARAM_CDC_LAST_LOAD_UTC} and 
+${PARAM_CDC_CURRENT_LOAD_UTC} will be evaluated.
 
 It is also necessary to specify the step from which fields will  be used to supply values for the "?" replacement characters. 
 In this case, the previous step is specified.</note>
@@ -574,8 +574,8 @@ IMPORTANT:	We *cannot* use MAX(archive_date) for this purpose because the "archi
 can work with *any* table, as long as it is insert-only and it has the necessary "archive_id" &amp; "archive_date" columns.
 This transformation has parameters:
 
-	PARAM_CDC_LAST_LOAD		&lt;- not used in this transformation - MAX(archive_id) is used instead
-	PARAM_CDC_CURRENT_LOAD
+	PARAM_CDC_LAST_LOAD_UTC		&lt;- not used in this transformation - MAX(archive_id) is used instead
+	PARAM_CDC_CURRENT_LOAD_UTC
 	PARAM_SOURCE_SCHEMA					Schema of mirrored table
 	PARAM_SOURCE_TABLE					Name of mirrored table to update</note>
       <xloc>16</xloc>
@@ -602,7 +602,7 @@ This transformation has parameters:
 	1.	Disable the hop from the "Get max ID for ..." step and enable the hop from the "Set max ID = -1" step.
 	2.	Disable the hop to the "Table output" step below.
 	3.	Preview the "Get System Info" step, specifying the required schema and table names for the appropriate parameters and the 
-		value '2100.01.01 00:00:00' for the parameter PARAM_CDC_CURRENT_LOAD. Ensure that the expected rows are displayed.
+		value '2100.01.01 00:00:00' for the parameter PARAM_CDC_CURRENT_LOAD_UTC. Ensure that the expected rows are displayed.
 	4.	Re-enable the hop to the "Table output" step below.
 	5.	Double-click the "Table output" step and then click the "SQL" button to generate the appropriete SQL to create the table. 
 		The schema and table names that you specified in step 3 above will be used to generate the SQL DDL commands for that table.
@@ -976,8 +976,8 @@ FROM
     ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
 WHERE
     archive_id > ? AND
-    --archive_date >  '${PARAM_CDC_LAST_LOAD}' AND 
-	archive_date &lt;= '${PARAM_CDC_CURRENT_LOAD}'
+    --archive_date >  '${PARAM_CDC_LAST_LOAD_UTC}' AND 
+	archive_date &lt;= '${PARAM_CDC_CURRENT_LOAD_UTC}'
 ORDER BY
     archive_id</sql>
     <limit>0</limit>
@@ -1056,8 +1056,8 @@ ORDER BY
     <displayHeader>Y</displayHeader>
     <limitRows>N</limitRows>
     <limitRowsNumber>0</limitRowsNumber>
-    <logmessage>PARAM_CDC_LAST_LOAD    = ${PARAM_CDC_LAST_LOAD}
-PARAM_CDC_CURRENT_LOAD = ${PARAM_CDC_CURRENT_LOAD}
+    <logmessage>PARAM_CDC_LAST_LOAD_UTC    = ${PARAM_CDC_LAST_LOAD_UTC}
+PARAM_CDC_CURRENT_LOAD_UTC = ${PARAM_CDC_CURRENT_LOAD_UTC}
 PARAM_SOURCE_SCHEMA           = ${PARAM_SOURCE_SCHEMA}
 PARAM_SOURCE_TABLE            = ${PARAM_SOURCE_TABLE}</logmessage>
     <fields>
