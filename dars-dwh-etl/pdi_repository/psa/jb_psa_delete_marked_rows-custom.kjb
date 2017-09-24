@@ -1,5 +1,5 @@
 <job>
-  <name>jb_psa_mark_rows_for_deletion-custom</name>
+  <name>jb_psa_delete_marked_rows-custom</name>
   <description />
   <extended_description />
   <job_version />
@@ -8,36 +8,16 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/09/24 13:17:56.569</modified_date>
+  <modified_date>2017/09/24 20:04:47.647</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CAN_DELETE_ROW_SOURCE_COLNAME</name>
-      <default_value />
+      <default_value>can_delete_row</default_value>
       <description>Column of source table that indicates if the row can be deleted immediately</description>
     </parameter>
     <parameter>
-      <name>PARAM_CDC_LAST_LOAD_UTC</name>
-      <default_value>1900.01.01 00:00:00</default_value>
-      <description>Timestamp of last successful load from the source database</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_LAST_UPDATED_ON_SOURCE_COLNAME</name>
-      <default_value />
-      <description>Column of source table that acts as a "last_updated_on" timestamp column</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS</name>
-      <default_value>2000000000</default_value>
-      <description>Number of seconds after the "row_can_be_deleted_from" timestamp that an archived row can be deleted</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME</name>
-      <default_value />
-      <description>Column of source table that acts as a "row_can_be_deleted_from" timestamp column</description>
-    </parameter>
-    <parameter>
       <name>PARAM_SOURCE_DB_ID</name>
-      <default_value />
+      <default_value>2</default_value>
       <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
     </parameter>
     <parameter>
@@ -47,12 +27,12 @@
     </parameter>
     <parameter>
       <name>PARAM_SOURCE_SCHEMA_TABLE</name>
-      <default_value>passage.image</default_value>
+      <default_value>passage.passage</default_value>
       <description>${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</description>
     </parameter>
     <parameter>
       <name>PARAM_SOURCE_TABLE</name>
-      <default_value>image</default_value>
+      <default_value>passage</default_value>
       <description>Name of source table to mirror to target table</description>
     </parameter>
     <parameter>
@@ -62,17 +42,17 @@
     </parameter>
     <parameter>
       <name>PARAM_TARGET_SCHEMA</name>
-      <default_value>passage</default_value>
+      <default_value>obo</default_value>
       <description>Name of schema containing target table to update (not currently used)</description>
     </parameter>
     <parameter>
       <name>PARAM_TARGET_SCHEMA_TABLE</name>
-      <default_value>passage.image</default_value>
+      <default_value>obo.passage_with_images</default_value>
       <description>${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</description>
     </parameter>
     <parameter>
       <name>PARAM_TARGET_TABLE</name>
-      <default_value>image</default_value>
+      <default_value>passage_with_images</default_value>
       <description>Name of target table to update (not currently used)</description>
     </parameter>
   </parameters>
@@ -420,32 +400,28 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>32</xloc>
-      <yloc>288</yloc>
+      <yloc>224</yloc>
     </entry>
     <entry>
       <name>Write To Log: Parameters</name>
       <description />
       <type>WRITE_TO_LOG</type>
-      <logmessage>PARAM_CDC_LAST_LOAD_UTC                    = ${PARAM_CDC_LAST_LOAD_UTC}
-PARAM_TABLE_META_ID                          = ${PARAM_TABLE_META_ID}
-PARAM_SOURCE_DB_ID                           = ${PARAM_SOURCE_DB_ID}
-PARAM_SOURCE_SCHEMA                          = ${PARAM_SOURCE_SCHEMA}
-PARAM_SOURCE_TABLE                           = ${PARAM_SOURCE_TABLE}
-PARAM_SOURCE_SCHEMA_TABLE                    = ${PARAM_SOURCE_SCHEMA_TABLE}
-PARAM_TARGET_SCHEMA                          = ${PARAM_TARGET_SCHEMA}
-PARAM_TARGET_TABLE                           = ${PARAM_TARGET_TABLE}
-PARAM_TARGET_SCHEMA_TABLE                    = ${PARAM_TARGET_SCHEMA_TABLE}
-PARAM_LAST_UPDATED_ON_SOURCE_COLNAME         = ${PARAM_LAST_UPDATED_ON_SOURCE_COLNAME}
-PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS        = ${PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS}
-PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME = ${PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME}
-PARAM_CAN_DELETE_ROW_SOURCE_COLNAME          = ${PARAM_CAN_DELETE_ROW_SOURCE_COLNAME}</logmessage>
+      <logmessage>PARAM_TABLE_META_ID                 = ${PARAM_TABLE_META_ID}
+PARAM_SOURCE_DB_ID                  = ${PARAM_SOURCE_DB_ID}
+PARAM_SOURCE_SCHEMA                 = ${PARAM_SOURCE_SCHEMA}
+PARAM_SOURCE_TABLE                  = ${PARAM_SOURCE_TABLE}
+PARAM_SOURCE_SCHEMA_TABLE           = ${PARAM_SOURCE_SCHEMA_TABLE}
+PARAM_CAN_DELETE_ROW_SOURCE_COLNAME = ${PARAM_CAN_DELETE_ROW_SOURCE_COLNAME}
+PARAM_TARGET_SCHEMA                 = ${PARAM_TARGET_SCHEMA}
+PARAM_TARGET_TABLE                  = ${PARAM_TARGET_TABLE}
+PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
       <loglevel>Basic</loglevel>
-      <logsubject>Parameters received by jb_psa_mark_rows_for_deletion-custom</logsubject>
+      <logsubject>Parameters received by jb_psa_delete_marked_rows-custom</logsubject>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>160</xloc>
-      <yloc>288</yloc>
+      <yloc>224</yloc>
     </entry>
     <entry>
       <name>Abort job - Untreated case</name>
@@ -456,7 +432,7 @@ PARAM_CAN_DELETE_ROW_SOURCE_COLNAME          = ${PARAM_CAN_DELETE_ROW_SOURCE_COL
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>160</xloc>
-      <yloc>768</yloc>
+      <yloc>704</yloc>
     </entry>
     <entry>
       <name>jb_log_error - Untreated case</name>
@@ -495,27 +471,49 @@ PARAM_CAN_DELETE_ROW_SOURCE_COLNAME          = ${PARAM_CAN_DELETE_ROW_SOURCE_COL
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>160</xloc>
-      <yloc>672</yloc>
+      <yloc>608</yloc>
     </entry>
     <entry>
       <name>Abort job - 1</name>
       <description />
       <type>ABORT</type>
-      <message>Aborting jb_psa_mark_rows_for_deletion-custom after job entry jb_psa-obo.passage_with_images-mark_rows_for_deletion</message>
+      <message>Aborting jb_psa_delete_marked_rows-custom after job entry jb_psa-obo.passage_with_images-delete_marked_rows</message>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>1</nr>
-      <xloc>784</xloc>
-      <yloc>400</yloc>
+      <xloc>752</xloc>
+      <yloc>336</yloc>
     </entry>
     <entry>
-      <name>jb_psa-obo.passage_with_images-mark_rows_for_deletion</name>
+      <name>Target table = obo.passage_with_images ?</name>
+      <description />
+      <type>SIMPLE_EVAL</type>
+      <valuetype>variable</valuetype>
+      <fieldname />
+      <variablename>${PARAM_TARGET_SCHEMA_TABLE}</variablename>
+      <fieldtype>string</fieldtype>
+      <mask />
+      <comparevalue>obo.passage_with_images</comparevalue>
+      <minvalue />
+      <maxvalue />
+      <successcondition>equal</successcondition>
+      <successnumbercondition>equal</successnumbercondition>
+      <successbooleancondition>false</successbooleancondition>
+      <successwhenvarset>N</successwhenvarset>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>160</xloc>
+      <yloc>336</yloc>
+    </entry>
+    <entry>
+      <name>jb_psa-obo.passage_with_images-delete_marked_rows</name>
       <description />
       <type>JOB</type>
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
-      <jobname>jb_psa-obo.passage_with_images-mark_rows_for_deletion</jobname>
+      <jobname>jb_psa-obo.passage_with_images-delete_marked_rows</jobname>
       <directory>${Internal.Entry.Current.Directory}/custom</directory>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -539,30 +537,8 @@ PARAM_CAN_DELETE_ROW_SOURCE_COLNAME          = ${PARAM_CAN_DELETE_ROW_SOURCE_COL
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>512</xloc>
-      <yloc>400</yloc>
-    </entry>
-    <entry>
-      <name>Target table = obo.passage_with_images ?</name>
-      <description />
-      <type>SIMPLE_EVAL</type>
-      <valuetype>variable</valuetype>
-      <fieldname />
-      <variablename>${PARAM_TARGET_SCHEMA_TABLE}</variablename>
-      <fieldtype>string</fieldtype>
-      <mask />
-      <comparevalue>obo.passage_with_images</comparevalue>
-      <minvalue />
-      <maxvalue />
-      <successcondition>equal</successcondition>
-      <successnumbercondition>equal</successnumbercondition>
-      <successbooleancondition>false</successbooleancondition>
-      <successwhenvarset>N</successwhenvarset>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>160</xloc>
-      <yloc>400</yloc>
+      <xloc>480</xloc>
+      <yloc>336</yloc>
     </entry>
   </entries>
   <hops>
@@ -585,15 +561,6 @@ PARAM_CAN_DELETE_ROW_SOURCE_COLNAME          = ${PARAM_CAN_DELETE_ROW_SOURCE_COL
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>jb_psa-obo.passage_with_images-mark_rows_for_deletion</from>
-      <to>Abort job - 1</to>
-      <from_nr>0</from_nr>
-      <to_nr>1</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
       <from>Write To Log: Parameters</from>
       <to>Target table = obo.passage_with_images ?</to>
       <from_nr>0</from_nr>
@@ -613,22 +580,29 @@ PARAM_CAN_DELETE_ROW_SOURCE_COLNAME          = ${PARAM_CAN_DELETE_ROW_SOURCE_COL
     </hop>
     <hop>
       <from>Target table = obo.passage_with_images ?</from>
-      <to>jb_psa-obo.passage_with_images-mark_rows_for_deletion</to>
+      <to>jb_psa-obo.passage_with_images-delete_marked_rows</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>Y</evaluation>
       <unconditional>N</unconditional>
     </hop>
+    <hop>
+      <from>jb_psa-obo.passage_with_images-delete_marked_rows</from>
+      <to>Abort job - 1</to>
+      <from_nr>0</from_nr>
+      <to_nr>1</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
   </hops>
   <notepads>
     <notepad>
-      <note>This job marks rows for deletion from a table in the source (OBO) database that have been archived/mirrored to a target (PSA) database. This job acts 
-as a "dispatcher" in that it runs an appropriate job/transformation to perform a table-specific CUSTOM treatment for the table that is specified by this 
-job's parameters. This job has parameters:
+      <note>This job deletes "source" DB rows from a specified table in the source DB that have been "marked for deletion".  This job acts as a "dispatcher" in that 
+it runs an appropriate job/transformation to perform a table-specific CUSTOM treatment for the table that is specified by this job's parameters. This 
+job has parameters:
 
-	PARAM_CDC_LAST_LOAD_UTC						Timestamp for when the target PSA DB mirror tables were last updated from the source DB.
-														Can be used to ensure that we do not delete rows that are not yet fully archived/mirrored.
 	PARAM_TABLE_META_ID							Primary key of etl.table_meta row for "source" table from which rows will be deleted
 	PARAM_SOURCE_DB_ID								ID the "source" database containing tables that are mirrored to a "target" database
 	PARAM_SOURCE_SCHEMA							Name of schema containing source table that is mirrored to target PSA table
@@ -637,14 +611,11 @@ job's parameters. This job has parameters:
 	PARAM_TARGET_SCHEMA							Name of schema containing target table that is mirrored to target PSA table (not currently used)
 	PARAM_TARGET_TABLE								Name of target table that is mirrored to target PSA table (not currently used)
 	PARAM_TARGET_SCHEMA_TABLE					${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}
-	PARAM_LAST_UPDATED_ON_SOURCE_COLNAME	Column of source table that acts as a "last_updated_on" timestamp column
-	PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS	Number of seconds after the "row_can_be_deleted_from" timestamp that an archived row can be deleted
-	PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME	Column of source table that acts as a "row_can_be_deleted_from" timestamp column
 	PARAM_CAN_DELETE_ROW_SOURCE_COLNAME		Column of source table that indicates if the row can be deleted immediately</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>963</width>
-      <heigth>262</heigth>
+      <width>909</width>
+      <heigth>192</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -661,4 +632,20 @@ job's parameters. This job has parameters:
       <drawshadow>Y</drawshadow>
     </notepad>
   </notepads>
+  <attributes>
+    <group>
+      <name>METASTORE.pentaho</name>
+      <attribute>
+        <key>Default Run Configuration</key>
+        <value>{"namespace":"pentaho","id":"Default Run Configuration","name":"Default Run Configuration","description":"Defines a default run configuration","metaStoreName":null}</value>
+      </attribute>
+    </group>
+    <group>
+      <name>{"_":"Embedded MetaStore Elements","namespace":"pentaho","type":"Default Run Configuration"}</name>
+      <attribute>
+        <key>Pentaho local</key>
+        <value>{"children":[{"children":[],"id":"server","value":null},{"children":[],"id":"clustered","value":"N"},{"children":[],"id":"name","value":"Pentaho local"},{"children":[],"id":"description","value":null},{"children":[],"id":"readOnly","value":"Y"},{"children":[],"id":"sendResources","value":"N"},{"children":[],"id":"logRemoteExecutionLocally","value":"N"},{"children":[],"id":"remote","value":"N"},{"children":[],"id":"local","value":"Y"},{"children":[],"id":"showTransformations","value":"N"}],"id":"Pentaho local","value":null,"name":"Pentaho local","owner":null,"ownerPermissionsList":[]}</value>
+      </attribute>
+    </group>
+  </attributes>
 </job>
