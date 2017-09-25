@@ -1,13 +1,18 @@
 <transformation>
   <info>
-    <name>tr_populate_table_meta-list_of_hardwired_tables</name>
+    <name>tr_list_of_tables_to_delete_marked_rows_from</name>
     <description />
     <extended_description />
     <trans_version />
     <trans_type>Normal</trans_type>
     <trans_status>0</trans_status>
-    <directory>/psa/util</directory>
+    <directory>/generic</directory>
     <parameters>
+      <parameter>
+        <name>PARAM_TARGET_DB_ID</name>
+        <default_value>-1</default_value>
+        <description>ID of the "target" database to which the "source" DB tables have been archived/mirrored</description>
+      </parameter>
     </parameters>
     <log>
       <trans-log-table>
@@ -41,7 +46,7 @@
           <id>LINES_READ</id>
           <enabled>Y</enabled>
           <name>LINES_READ</name>
-          <subject />
+          <subject>Copy rows to result</subject>
         </field>
         <field>
           <id>LINES_WRITTEN</id>
@@ -429,21 +434,21 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/09/25 08:52:39.965</modified_date>
+    <modified_date>2017/09/25 08:37:46.490</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>This transformation specifies the tables from a "source" database that will be mirrored to corresponding tables of a "target" database.
-The "source" database is specified by PARAM_SOURCE_DB_ID.
+      <note>This transformation creates a stream that contains details of each table from one or more "source" database(s) that will have "marked rows" deleted.
+Each row of the stream corresponds to a single table. This stream is copied to the "result" of this transformation so that it can be used elsewhere in another job.
 
-The stream from this transformation is copied to the "result" of this transformation. This result set is used in the parent job to execute
-a sub-job once for each row in this stream. At the same time, the stream values from the row are assigned to parameters that are 
-passed to the sub-job. This procedure is used to generate table metadata for each  table in the "source" and "target" databases.</note>
+This transformation has parameter:
+
+	PARAM_TARGET_DB_ID			ID of the "target" database to which the "source" DB tables have been archived/mirrored</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>799</width>
+      <width>942</width>
       <heigth>94</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -461,14 +466,12 @@ passed to the sub-job. This procedure is used to generate table metadata for eac
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Each row of the stream created by the "data grid" step specifies one table from a 
-"source" DB to be archived/mirrored to a matching table from the target (PSA) DB.
-
-NOTE:	All tables listed in this step must belong to the same "source" DB.</note>
+      <note>Each row of the stream created by this step specifies a table
+from a "source" database that will have "marked rows" deleted.</note>
       <xloc>16</xloc>
-      <yloc>112</yloc>
-      <width>492</width>
-      <heigth>66</heigth>
+      <yloc>192</yloc>
+      <width>383</width>
+      <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -485,6 +488,57 @@ NOTE:	All tables listed in this step must belong to the same "source" DB.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
   </notepads>
+  <connection>
+    <name>etl_db</name>
+    <server>${QF_ETL_DB_HOST}</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>${QF_ETL_DB_DATABASE}</database>
+    <port>${QF_ETL_DB_PORT}</port>
+    <username>${QF_ETL_DB_USERNAME}</username>
+    <password>${QF_ETL_DB_PASSWORD}</password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>${QF_ETL_DB_PORT}</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
   <connection>
     <name>logging_db</name>
     <server>${QF_LOGGING_DB_HOST}</server>
@@ -538,411 +592,11 @@ NOTE:	All tables listed in this step must belong to the same "source" DB.</note>
   </connection>
   <order>
     <hop>
-      <from>MDX OBO Archive DB tables - 2017.08.31</from>
-      <to>Copy rows to result</to>
-      <enabled>N</enabled>
-    </hop>
-    <hop>
-      <from>Source tables to generate metadata for</from>
-      <to>Copy rows to result</to>
-      <enabled>N</enabled>
-    </hop>
-    <hop>
-      <from>All source tables for PSA</from>
+      <from>Load list of tables to delete marked rows from</from>
       <to>Copy rows to result</to>
       <enabled>Y</enabled>
     </hop>
   </order>
-  <step>
-    <name>All source tables for PSA</name>
-    <type>DataGrid</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <fields>
-      <field>
-        <name>source_db_id</name>
-        <type>Integer</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>source_schema_name</name>
-        <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>255</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>source_table_name</name>
-        <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>255</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>target_db_id</name>
-        <type>Integer</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>target_schema_name</name>
-        <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>255</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>target_table_name</name>
-        <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>255</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-    </fields>
-    <data>
-      <line>
-        <item>4</item>
-        <item>public</item>
-        <item>country</item>
-        <item>10</item>
-        <item>odms</item>
-        <item />
-      </line>
-      <line>
-        <item>4</item>
-        <item>public</item>
-        <item>cso_reference_type</item>
-        <item>10</item>
-        <item>odms</item>
-        <item />
-      </line>
-      <line>
-        <item>4</item>
-        <item>public</item>
-        <item>database_patch_log</item>
-        <item>10</item>
-        <item>odms</item>
-        <item />
-      </line>
-      <line>
-        <item>4</item>
-        <item>public</item>
-        <item>datamodel_type</item>
-        <item>10</item>
-        <item>odms</item>
-        <item />
-      </line>
-      <line>
-        <item>4</item>
-        <item>public</item>
-        <item>datamodel_version_tracking</item>
-        <item>10</item>
-        <item>odms</item>
-        <item />
-      </line>
-      <line>
-        <item>4</item>
-        <item>public</item>
-        <item>datamodels</item>
-        <item>10</item>
-        <item>odms</item>
-        <item />
-      </line>
-      <line>
-        <item>4</item>
-        <item>public</item>
-        <item>engineering_data</item>
-        <item>10</item>
-        <item>odms</item>
-        <item />
-      </line>
-      <line>
-        <item>4</item>
-        <item>public</item>
-        <item>engineering_data_links</item>
-        <item>10</item>
-        <item>odms</item>
-        <item />
-      </line>
-      <line>
-        <item>4</item>
-        <item>public</item>
-        <item>engineering_data_type</item>
-        <item>10</item>
-        <item>odms</item>
-        <item />
-      </line>
-      <line>
-        <item>4</item>
-        <item>public</item>
-        <item>history_datamodel_version_tracking</item>
-        <item>10</item>
-        <item>odms</item>
-        <item />
-      </line>
-      <line>
-        <item>4</item>
-        <item>public</item>
-        <item>history_event_type</item>
-        <item>10</item>
-        <item>odms</item>
-        <item />
-      </line>
-      <line>
-        <item>4</item>
-        <item>public</item>
-        <item>history_managed_process_versions</item>
-        <item>10</item>
-        <item>odms</item>
-        <item />
-      </line>
-      <line>
-        <item>4</item>
-        <item>public</item>
-        <item>managed_process_control</item>
-        <item>10</item>
-        <item>odms</item>
-        <item />
-      </line>
-      <line>
-        <item>4</item>
-        <item>public</item>
-        <item>managed_process_register</item>
-        <item>10</item>
-        <item>odms</item>
-        <item />
-      </line>
-      <line>
-        <item>4</item>
-        <item>public</item>
-        <item>managed_process_versions</item>
-        <item>10</item>
-        <item>odms</item>
-        <item />
-      </line>
-      <line>
-        <item>4</item>
-        <item>public</item>
-        <item>mex_event_category</item>
-        <item>10</item>
-        <item>odms</item>
-        <item />
-      </line>
-      <line>
-        <item>4</item>
-        <item>public</item>
-        <item>odms_api_request_tracking</item>
-        <item>10</item>
-        <item>odms</item>
-        <item />
-      </line>
-      <line>
-        <item>4</item>
-        <item>public</item>
-        <item>odms_api_request_type</item>
-        <item>10</item>
-        <item>odms</item>
-        <item />
-      </line>
-      <line>
-        <item>4</item>
-        <item>public</item>
-        <item>odms_personalisation_data</item>
-        <item>10</item>
-        <item>odms</item>
-        <item />
-      </line>
-      <line>
-        <item>4</item>
-        <item>public</item>
-        <item>odms_personalisation_register</item>
-        <item>10</item>
-        <item>odms</item>
-        <item />
-      </line>
-      <line>
-        <item>4</item>
-        <item>public</item>
-        <item>odms_qpertino_event_tracking</item>
-        <item>10</item>
-        <item>odms</item>
-        <item />
-      </line>
-      <line>
-        <item>4</item>
-        <item>public</item>
-        <item>odms_rest_response_error_details</item>
-        <item>10</item>
-        <item>odms</item>
-        <item />
-      </line>
-      <line>
-        <item>4</item>
-        <item>public</item>
-        <item>odms_rest_response_subcode</item>
-        <item>10</item>
-        <item>odms</item>
-        <item />
-      </line>
-      <line>
-        <item>4</item>
-        <item>public</item>
-        <item>odms_session_completion_type</item>
-        <item>10</item>
-        <item>odms</item>
-        <item />
-      </line>
-      <line>
-        <item>4</item>
-        <item>public</item>
-        <item>odms_session_status</item>
-        <item>10</item>
-        <item>odms</item>
-        <item />
-      </line>
-      <line>
-        <item>4</item>
-        <item>public</item>
-        <item>odms_session_tracking</item>
-        <item>10</item>
-        <item>odms</item>
-        <item />
-      </line>
-      <line>
-        <item>4</item>
-        <item>public</item>
-        <item>odms_session_type</item>
-        <item>10</item>
-        <item>odms</item>
-        <item />
-      </line>
-      <line>
-        <item>4</item>
-        <item>public</item>
-        <item>process_state</item>
-        <item>10</item>
-        <item>odms</item>
-        <item />
-      </line>
-      <line>
-        <item>4</item>
-        <item>public</item>
-        <item>property_collection_data</item>
-        <item>10</item>
-        <item>odms</item>
-        <item />
-      </line>
-      <line>
-        <item>4</item>
-        <item>public</item>
-        <item>property_collection_links</item>
-        <item>10</item>
-        <item>odms</item>
-        <item />
-      </line>
-      <line>
-        <item>4</item>
-        <item>public</item>
-        <item>property_collections</item>
-        <item>10</item>
-        <item>odms</item>
-        <item />
-      </line>
-      <line>
-        <item>4</item>
-        <item>public</item>
-        <item>qpertino_event_type</item>
-        <item>10</item>
-        <item>odms</item>
-        <item />
-      </line>
-      <line>
-        <item>4</item>
-        <item>public</item>
-        <item>security_authentication_type</item>
-        <item>10</item>
-        <item>odms</item>
-        <item />
-      </line>
-      <line>
-        <item>4</item>
-        <item>public</item>
-        <item>security_realms</item>
-        <item>10</item>
-        <item>odms</item>
-        <item />
-      </line>
-      <line>
-        <item>4</item>
-        <item>public</item>
-        <item>security_roles</item>
-        <item>10</item>
-        <item>odms</item>
-        <item />
-      </line>
-      <line>
-        <item>4</item>
-        <item>public</item>
-        <item>sid_register</item>
-        <item>10</item>
-        <item>odms</item>
-        <item />
-      </line>
-      <line>
-        <item>4</item>
-        <item>public</item>
-        <item>sid_roles</item>
-        <item>10</item>
-        <item>odms</item>
-        <item />
-      </line>
-    </data>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>128</xloc>
-      <yloc>288</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
   <step>
     <name>Copy rows to result</name>
     <type>RowsToResult</type>
@@ -962,14 +616,14 @@ NOTE:	All tables listed in this step must belong to the same "source" DB.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>672</xloc>
-      <yloc>208</yloc>
+      <xloc>544</xloc>
+      <yloc>128</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>MDX OBO Archive DB tables - 2017.08.31</name>
-    <type>DataGrid</type>
+    <name>Load list of tables to delete marked rows from</name>
+    <type>TableInput</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -978,116 +632,52 @@ NOTE:	All tables listed in this step must belong to the same "source" DB.</note>
       <method>none</method>
       <schema_name />
     </partitioning>
-    <fields>
-      <field>
-        <name>source_db_id</name>
-        <type>Integer</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>source_schema_name</name>
-        <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>255</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>source_table_name</name>
-        <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>255</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>target_db_id</name>
-        <type>Integer</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>target_schema_name</name>
-        <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>255</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>target_table_name</name>
-        <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>255</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-    </fields>
-    <data>
-      <line>
-        <item>2</item>
-        <item>passage</item>
-        <item>passage</item>
-        <item>10</item>
-        <item />
-        <item />
-      </line>
-      <line>
-        <item>2</item>
-        <item>passage</item>
-        <item>image</item>
-        <item>10</item>
-        <item />
-        <item />
-      </line>
-      <line>
-        <item>2</item>
-        <item>tolldomain</item>
-        <item>charging_point</item>
-        <item>10</item>
-        <item />
-        <item />
-      </line>
-      <line>
-        <item>2</item>
-        <item>tolldomain</item>
-        <item>charging_point_group</item>
-        <item>10</item>
-        <item />
-        <item />
-      </line>
-      <line>
-        <item>2</item>
-        <item>tolldomain</item>
-        <item>charging_point_group_group</item>
-        <item>10</item>
-        <item />
-        <item />
-      </line>
-    </data>
+    <connection>etl_db</connection>
+    <sql>SELECT
+    t.table_meta_id,
+    t.source_db_id,
+    t.source_schema_name AS "source_schema",
+    t.source_table_name AS "source_table",
+    t.source_schema_name || '.' || t.source_table_name AS "source_schema_dot_table",
+    t.target_db_id,
+    t.target_schema_name AS "target_schema",
+    t.target_table_name  AS "target_table",
+    t.target_schema_name || '.' || t.target_table_name AS "target_schema_dot_table",
+    t.row_can_be_deleted_from_seconds AS "row_can_be_deleted_from_seconds",
+    t.use_custom_delete_marked_rows_algorithm,
+    (SELECT
+        c.source_column_name 
+     FROM
+         etl.column_meta c
+     WHERE
+         c.table_meta_id=t.table_meta_id AND c.is_row_can_be_deleted_from_column=true
+    ) AS "row_can_be_deleted_from_source_colname",
+    (SELECT
+        c.source_column_name 
+     FROM
+        etl.column_meta c
+     WHERE
+        c.table_meta_id=t.table_meta_id AND c.is_can_delete_row_column=true
+    ) AS "can_delete_row_source_colname",
+    (SELECT
+        c.source_column_name 
+     FROM
+        etl.column_meta c
+     WHERE
+        c.table_meta_id=t.table_meta_id AND c.is_last_updated_on_column=true
+    ) AS "last_updated_on_source_colname"
+FROM
+    etl.table_meta t
+WHERE
+    t.target_db_id=${PARAM_TARGET_DB_ID} AND
+    t.delete_marked_rows=true 
+ORDER BY
+    t.table_meta_id</sql>
+    <limit>0</limit>
+    <lookup />
+    <execute_each_row>N</execute_each_row>
+    <variables_active>Y</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1096,110 +686,8 @@ NOTE:	All tables listed in this step must belong to the same "source" DB.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>128</xloc>
-      <yloc>464</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Source tables to generate metadata for</name>
-    <type>DataGrid</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <fields>
-      <field>
-        <name>source_db_id</name>
-        <type>Integer</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>source_schema_name</name>
-        <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>255</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>source_table_name</name>
-        <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>255</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>target_db_id</name>
-        <type>Integer</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>target_schema_name</name>
-        <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>255</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>target_table_name</name>
-        <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>255</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-    </fields>
-    <data>
-      <line>
-        <item />
-        <item />
-        <item />
-        <item />
-        <item />
-        <item />
-      </line>
-    </data>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>128</xloc>
-      <yloc>208</yloc>
+      <xloc>144</xloc>
+      <yloc>128</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

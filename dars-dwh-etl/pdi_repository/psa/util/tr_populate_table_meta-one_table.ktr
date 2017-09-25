@@ -459,7 +459,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/09/13 11:49:52.148</modified_date>
+    <modified_date>2017/09/25 08:49:53.987</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -541,18 +541,21 @@ identical to the schema &amp; table names in the source database.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>mirror_tables=N					The source table will *not* be archived/mirrored to the target DB (must enable manually)
-compare_tables=N					The source DB table will *not* be compared with the target DB table
-										when a "compare" is performed (must enable manually)
-can_insert_rows=Y					The OBO can insert rows into the source table
-can_update_rows=N				The OBO never updates rows of the source table
-can_delete_rows=N					The OBO never deletes rows of the source table
-use_custom_mirror_algorithm=N	Generic archive/mirror algorithm will be used
-use_custom_delete_algorithm=N	Generic delete algorithm will be used for archived/mirrored rows</note>
+      <note>mirror_tables=N									The source table will *not* be archived/mirrored to the target DB
+mark_rows_for_deletion=N							The source table will not have rows "marked for deletion"
+delete_marked_rows=N								The source table will *not*have "marked rows deleted from it
+compare_tables=N									The source DB table will *not* be compared with the target DB table
+													when a "compare" is performed (must enable manually)
+can_insert_rows=Y									The OBO can insert rows into the source table
+can_update_rows=N								The OBO never updates rows of the source table
+can_delete_rows=N									The OBO never deletes rows of the source table
+use_custom_mirror_algorithm=N					Generic archive/mirror algorithm will be used
+use_custom_mark_rows_for_deletion_algorithm=N	Generic "mark rows for deletion" algorithm will be used
+use_custom_delete_marked_rows_algorithm=N		Generic "delete marked rows" algorithm will be used</note>
       <xloc>272</xloc>
       <yloc>416</yloc>
-      <width>747</width>
-      <heigth>122</heigth>
+      <width>723</width>
+      <heigth>164</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -595,7 +598,7 @@ will be used as the primary key for the new row. </note>
       <note>Table "table_state" contains state information for each source/target table pair. It has a one-to-one relation
 to the table_meta table.</note>
       <xloc>272</xloc>
-      <yloc>672</yloc>
+      <yloc>704</yloc>
       <width>638</width>
       <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
@@ -617,7 +620,7 @@ to the table_meta table.</note>
       <note>Table "table_meta" contains metadata for each source/target table pair. It has a one-to-one relation
 to the table_state table.</note>
       <xloc>272</xloc>
-      <yloc>576</yloc>
+      <yloc>608</yloc>
       <width>593</width>
       <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
@@ -800,6 +803,30 @@ to the table_state table.</note>
         <set_empty_string>N</set_empty_string>
       </field>
       <field>
+        <name>mark_rows_for_deletion</name>
+        <type>Boolean</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <nullif>N</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>delete_marked_rows</name>
+        <type>Boolean</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <nullif>N</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
         <name>compare_tables</name>
         <type>Boolean</type>
         <format />
@@ -860,7 +887,19 @@ to the table_state table.</note>
         <set_empty_string>N</set_empty_string>
       </field>
       <field>
-        <name>use_custom_delete_algorithm</name>
+        <name>use_custom_mark_rows_for_deletion_algorithm</name>
+        <type>Boolean</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <nullif>N</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>use_custom_delete_marked_rows_algorithm</name>
         <type>Boolean</type>
         <format />
         <currency />
@@ -1104,43 +1143,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>576</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Join Rows (cartesian product)</name>
-    <type>JoinRows</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <directory>%%java.io.tmpdir%%</directory>
-    <prefix>out</prefix>
-    <cache_size>500</cache_size>
-    <main>Add sequence - column_meta_id</main>
-    <compare>
-      <condition>
-        <negated>N</negated>
-        <leftvalue />
-        <function>=</function>
-        <rightvalue />
-      </condition>
-    </compare>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>128</xloc>
-      <yloc>352</yloc>
+      <yloc>608</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1187,7 +1190,43 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>672</yloc>
+      <yloc>704</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Join Rows (cartesian product)</name>
+    <type>JoinRows</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>out</prefix>
+    <cache_size>500</cache_size>
+    <main>Add sequence - column_meta_id</main>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <leftvalue />
+        <function>=</function>
+        <rightvalue />
+      </condition>
+    </compare>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>128</xloc>
+      <yloc>352</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

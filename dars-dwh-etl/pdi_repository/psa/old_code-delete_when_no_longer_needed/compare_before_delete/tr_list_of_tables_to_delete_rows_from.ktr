@@ -644,7 +644,7 @@ from a "source" database that will have rows deleted from it.</note>
     t.target_table_name  AS "target_table",
     t.target_schema_name || '.' || t.target_table_name AS "target_schema_dot_table",
     t.row_can_be_deleted_from_seconds AS "row_can_be_deleted_from_seconds",
-    t.use_custom_delete_algorithm,
+    t.use_custom_mark_rows_for_deletion_algorithm,
     t.compare_before_delete,
     (SELECT
         c.source_column_name 
@@ -672,9 +672,9 @@ FROM
 WHERE
     t.source_db_id=${PARAM_SOURCE_DB_ID} AND
     (
-        (t.use_custom_delete_algorithm=false AND
+        (t.use_custom_mark_rows_for_deletion_algorithm=false AND
          t.row_can_be_deleted_from_seconds IS NOT NULL)  -- "Generic" delete algorithm will be used
-        OR t.use_custom_delete_algorithm=true            -- "Custom"  delete algorithm will be used
+        OR t.use_custom_mark_rows_for_deletion_algorithm=true            -- "Custom"  delete algorithm will be used
     )
 ORDER BY
     t.source_schema_name,
