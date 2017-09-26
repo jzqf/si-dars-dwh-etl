@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/08/30 13:18:09.664</modified_date>
+  <modified_date>2017/09/25 08:33:54.934</modified_date>
   <parameters>
     </parameters>
   <connection>
@@ -434,13 +434,13 @@
       <yloc>224</yloc>
     </entry>
     <entry>
-      <name>tr_list_of_tables_to_delete_rows_from</name>
+      <name>tr_list_of_tables_to_mark_rows_for_deletion</name>
       <description />
       <type>TRANS</type>
       <specification_method>rep_name</specification_method>
       <trans_object_id />
       <filename />
-      <transname>tr_list_of_tables_to_delete_rows_from</transname>
+      <transname>tr_list_of_tables_to_mark_rows_for_deletion</transname>
       <directory>/generic</directory>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -502,7 +502,7 @@
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
         <parameter>
-          <name>PARAM_LAST_LOAD_TIMESTAMP</name>
+          <name>PARAM_CDC_LAST_LOAD_UTC</name>
           <stream_name />
           <value>${QF_CDC_LAST_LOAD_UTC}</value>
         </parameter>
@@ -553,7 +553,7 @@
         </parameter>
         <parameter>
           <name>PARAM_USE_CUSTOM_DELETE_ALGORITHM</name>
-          <stream_name>use_custom_delete_algorithm</stream_name>
+          <stream_name>use_custom_mark_rows_for_deletion_algorithm</stream_name>
           <value />
         </parameter>
         <parameter>
@@ -810,7 +810,7 @@
     </hop>
     <hop>
       <from>tr_get_last_successful_load</from>
-      <to>tr_list_of_tables_to_delete_rows_from</to>
+      <to>tr_list_of_tables_to_mark_rows_for_deletion</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -818,7 +818,7 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>tr_list_of_tables_to_delete_rows_from</from>
+      <from>tr_list_of_tables_to_mark_rows_for_deletion</from>
       <to>jb_psa_mark_rows_for_deletion-table</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -881,7 +881,7 @@
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>tr_list_of_tables_to_delete_rows_from</from>
+      <from>tr_list_of_tables_to_mark_rows_for_deletion</from>
       <to>DUMMY</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -968,7 +968,7 @@ the batch ID of the root job (not this job). This may vary from case to case.</n
 QF_CDC_LAST_LOAD_UTC. This sub-transformation is passed the parameter:
 
 PARAM_CDC_TIMESTAMPS_ID = ${QF_CDC_TIMESTAMPS_ID_PSA}</note>
-      <xloc>448</xloc>
+      <xloc>464</xloc>
       <yloc>208</yloc>
       <width>533</width>
       <heigth>66</heigth>
@@ -991,7 +991,7 @@ PARAM_CDC_TIMESTAMPS_ID = ${QF_CDC_TIMESTAMPS_ID_PSA}</note>
       <note>Create list of tables to delete rows from. This transformation is passed parameter:
 
 PARAM_TARGET_DB_ID = ${QF_DB_ID_PSA}</note>
-      <xloc>448</xloc>
+      <xloc>464</xloc>
       <yloc>304</yloc>
       <width>493</width>
       <heigth>52</heigth>
@@ -1020,8 +1020,8 @@ PARAM_TARGET_DB_ID = ${QF_DB_ID_PSA}</note>
 	as additional parameters associated with each table.
 
 	3.	Passed the additional parameters:
-			PARAM_LAST_LOAD_TIMESTAMP	= ${QF_CDC_LAST_LOAD_UTC}</note>
-      <xloc>448</xloc>
+			PARAM_CDC_LAST_LOAD_UTC	= ${QF_CDC_LAST_LOAD_UTC}</note>
+      <xloc>464</xloc>
       <yloc>368</yloc>
       <width>600</width>
       <heigth>150</heigth>

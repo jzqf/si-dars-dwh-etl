@@ -9,7 +9,7 @@
     <directory>/dwh/mirror/compare_tables</directory>
     <parameters>
       <parameter>
-        <name>PARAM_LAST_LOAD_TIMESTAMP</name>
+        <name>PARAM_CDC_LAST_LOAD_UTC</name>
         <default_value>1900-01-01 00:00:00</default_value>
         <description>Timestamp of last successful load of the TDP "mirror" tables in the DWH</description>
       </parameter>
@@ -459,7 +459,7 @@ the TDP archive table is being mirrored correctly. These values are assigned to 
 
 This transformation has parameters:
 
-	PARAM_LAST_LOAD_TIMESTAMP	Timestamp when the DWH mirror tables were updated from TDP archive DB
+	PARAM_CDC_LAST_LOAD_UTC	Timestamp when the DWH mirror tables were updated from TDP archive DB
 	PARAM_SOURCE_SCHEMA						Schema of mirrored table to compare
 	PARAM_SOURCE_TABLE						Name of mirrored table to compare</note>
       <xloc>0</xloc>
@@ -698,7 +698,7 @@ FROM
 FROM
     ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
 --WHERE
---    archive_date &lt;= TIMESTAMP '${PARAM_LAST_LOAD_TIMESTAMP}'  &lt;-- I don't think that this is necessary</sql>
+--    archive_date &lt;= TIMESTAMP '${PARAM_CDC_LAST_LOAD_UTC}'  &lt;-- I don't think that this is necessary</sql>
     <limit>0</limit>
     <lookup />
     <execute_each_row>N</execute_each_row>

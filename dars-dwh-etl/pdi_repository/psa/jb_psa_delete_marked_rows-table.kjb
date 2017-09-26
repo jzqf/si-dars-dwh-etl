@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/08/30 15:00:52.042</modified_date>
+  <modified_date>2017/09/24 13:31:14.307</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CAN_DELETE_ROW_SOURCE_COLNAME</name>
@@ -17,23 +17,43 @@
     </parameter>
     <parameter>
       <name>PARAM_SOURCE_DB_ID</name>
-      <default_value />
+      <default_value>2</default_value>
       <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
     </parameter>
     <parameter>
       <name>PARAM_SOURCE_SCHEMA</name>
-      <default_value />
+      <default_value>passage</default_value>
       <description>Name of schema containing source table to mirror to target table</description>
     </parameter>
     <parameter>
       <name>PARAM_SOURCE_SCHEMA_TABLE</name>
-      <default_value />
+      <default_value>passage.passage</default_value>
       <description>${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</description>
     </parameter>
     <parameter>
       <name>PARAM_SOURCE_TABLE</name>
-      <default_value />
+      <default_value>image</default_value>
       <description>Name of source table to mirror to target table</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_TABLE_META_ID</name>
+      <default_value>0</default_value>
+      <description>Primary key of etl.table_meta row for "source" table from which rows will be deleted</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_TARGET_SCHEMA</name>
+      <default_value>passage</default_value>
+      <description>Name of schema containing target table to update (not currently used)</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_TARGET_SCHEMA_TABLE</name>
+      <default_value>passage.passage</default_value>
+      <description>${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_TARGET_TABLE</name>
+      <default_value>image</default_value>
+      <description>Name of target table to update (not currently used)</description>
     </parameter>
     <parameter>
       <name>PARAM_USE_CUSTOM_DELETE_ALGORITHM</name>
@@ -435,8 +455,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>160</xloc>
-      <yloc>144</yloc>
+      <xloc>32</xloc>
+      <yloc>224</yloc>
     </entry>
     <entry>
       <name>jb_log_error</name>
@@ -475,7 +495,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>368</xloc>
-      <yloc>752</yloc>
+      <yloc>784</yloc>
     </entry>
     <entry>
       <name>Abort job</name>
@@ -486,17 +506,21 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>528</xloc>
-      <yloc>752</yloc>
+      <yloc>784</yloc>
     </entry>
     <entry>
       <name>Write To Log: Parameters</name>
       <description />
       <type>WRITE_TO_LOG</type>
-      <logmessage>PARAM_SOURCE_DB_ID                  = ${PARAM_SOURCE_DB_ID}
+      <logmessage>PARAM_TABLE_META_ID                 = ${PARAM_TABLE_META_ID}
+PARAM_SOURCE_DB_ID                  = ${PARAM_SOURCE_DB_ID}
 PARAM_SOURCE_SCHEMA                 = ${PARAM_SOURCE_SCHEMA}
 PARAM_SOURCE_TABLE                  = ${PARAM_SOURCE_TABLE}
 PARAM_SOURCE_SCHEMA_TABLE           = ${PARAM_SOURCE_SCHEMA_TABLE}
 PARAM_CAN_DELETE_ROW_SOURCE_COLNAME = ${PARAM_CAN_DELETE_ROW_SOURCE_COLNAME}
+PARAM_TARGET_SCHEMA                 = ${PARAM_TARGET_SCHEMA}
+PARAM_TARGET_TABLE                  = ${PARAM_TARGET_TABLE}
+PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}
 PARAM_USE_CUSTOM_DELETE_ALGORITHM   = ${PARAM_USE_CUSTOM_DELETE_ALGORITHM}</logmessage>
       <loglevel>Basic</loglevel>
       <logsubject>Parameters passed to jb_psa_delete_marked_rows-table</logsubject>
@@ -514,7 +538,7 @@ PARAM_USE_CUSTOM_DELETE_ALGORITHM   = ${PARAM_USE_CUSTOM_DELETE_ALGORITHM}</logm
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>160</xloc>
-      <yloc>848</yloc>
+      <yloc>880</yloc>
     </entry>
     <entry>
       <name>Delete marked rows from specified table - PostgreSQL</name>
@@ -533,7 +557,7 @@ WHERE
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>160</xloc>
-      <yloc>752</yloc>
+      <yloc>784</yloc>
     </entry>
     <entry>
       <name>Use custom delete algorithm?</name>
@@ -555,27 +579,7 @@ WHERE
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>160</xloc>
-      <yloc>560</yloc>
-    </entry>
-    <entry>
-      <name>DUMMY</name>
-      <description />
-      <type>SPECIAL</type>
-      <start>N</start>
-      <dummy>Y</dummy>
-      <repeat>N</repeat>
-      <schedulerType>0</schedulerType>
-      <intervalSeconds>0</intervalSeconds>
-      <intervalMinutes>60</intervalMinutes>
-      <hour>12</hour>
-      <minutes>0</minutes>
-      <weekDay>1</weekDay>
-      <DayOfMonth>1</DayOfMonth>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>368</xloc>
-      <yloc>560</yloc>
+      <yloc>320</yloc>
     </entry>
     <entry>
       <name>jb_set_dynamic_db_connection_variables</name>
@@ -614,7 +618,7 @@ WHERE
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>160</xloc>
-      <yloc>304</yloc>
+      <yloc>448</yloc>
     </entry>
     <entry>
       <name>jb_is_specified_db_type - PostgreSQL?</name>
@@ -658,38 +662,7 @@ WHERE
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>160</xloc>
-      <yloc>656</yloc>
-    </entry>
-    <entry>
-      <name>DUMMY 2</name>
-      <description />
-      <type>SPECIAL</type>
-      <start>N</start>
-      <dummy>Y</dummy>
-      <repeat>N</repeat>
-      <schedulerType>0</schedulerType>
-      <intervalSeconds>0</intervalSeconds>
-      <intervalMinutes>60</intervalMinutes>
-      <hour>12</hour>
-      <minutes>0</minutes>
-      <weekDay>1</weekDay>
-      <DayOfMonth>1</DayOfMonth>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>368</xloc>
-      <yloc>656</yloc>
-    </entry>
-    <entry>
-      <name>Abort job 2</name>
-      <description />
-      <type>ABORT</type>
-      <message>Aborting job jb_psa_delete_marked_rows-table</message>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>1</nr>
-      <xloc>368</xloc>
-      <yloc>368</yloc>
+      <yloc>688</yloc>
     </entry>
     <entry>
       <name>Set PARAM_DYN_DB_CONN_DB_* variables</name>
@@ -729,7 +702,112 @@ WHERE
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>160</xloc>
+      <yloc>592</yloc>
+    </entry>
+    <entry>
+      <name>DUMMY</name>
+      <description />
+      <type>SPECIAL</type>
+      <start>N</start>
+      <dummy>Y</dummy>
+      <repeat>N</repeat>
+      <schedulerType>0</schedulerType>
+      <intervalSeconds>0</intervalSeconds>
+      <intervalMinutes>60</intervalMinutes>
+      <hour>12</hour>
+      <minutes>0</minutes>
+      <weekDay>1</weekDay>
+      <DayOfMonth>1</DayOfMonth>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>368</xloc>
+      <yloc>592</yloc>
+    </entry>
+    <entry>
+      <name>DUMMY</name>
+      <description />
+      <type>SPECIAL</type>
+      <start>N</start>
+      <dummy>Y</dummy>
+      <repeat>N</repeat>
+      <schedulerType>0</schedulerType>
+      <intervalSeconds>0</intervalSeconds>
+      <intervalMinutes>60</intervalMinutes>
+      <hour>12</hour>
+      <minutes>0</minutes>
+      <weekDay>1</weekDay>
+      <DayOfMonth>1</DayOfMonth>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>1</nr>
+      <xloc>368</xloc>
       <yloc>448</yloc>
+    </entry>
+    <entry>
+      <name>DUMMY</name>
+      <description />
+      <type>SPECIAL</type>
+      <start>N</start>
+      <dummy>Y</dummy>
+      <repeat>N</repeat>
+      <schedulerType>0</schedulerType>
+      <intervalSeconds>0</intervalSeconds>
+      <intervalMinutes>60</intervalMinutes>
+      <hour>12</hour>
+      <minutes>0</minutes>
+      <weekDay>1</weekDay>
+      <DayOfMonth>1</DayOfMonth>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>2</nr>
+      <xloc>368</xloc>
+      <yloc>688</yloc>
+    </entry>
+    <entry>
+      <name>jb_psa_delete_marked_rows-custom</name>
+      <description />
+      <type>JOB</type>
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_psa_delete_marked_rows-custom</jobname>
+      <directory>${Internal.Entry.Current.Directory}</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>384</xloc>
+      <yloc>320</yloc>
+    </entry>
+    <entry>
+      <name>Abort job 2</name>
+      <description />
+      <type>ABORT</type>
+      <message>Aborting jb_psa_delete_marked_rows-table: Error thrown in jb_psa_delete_marked_rows-custom</message>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>560</xloc>
+      <yloc>320</yloc>
     </entry>
   </entries>
   <hops>
@@ -770,75 +848,12 @@ WHERE
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Use custom delete algorithm?</from>
-      <to>DUMMY</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Write To Log: Parameters</from>
-      <to>jb_set_dynamic_db_connection_variables</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>DUMMY</from>
-      <to>Abort job</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>Use custom delete algorithm?</from>
-      <to>jb_is_specified_db_type - PostgreSQL?</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
       <from>jb_is_specified_db_type - PostgreSQL?</from>
       <to>Delete marked rows from specified table - PostgreSQL</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>jb_is_specified_db_type - PostgreSQL?</from>
-      <to>DUMMY 2</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>DUMMY 2</from>
-      <to>Abort job</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>jb_set_dynamic_db_connection_variables</from>
-      <to>Abort job 2</to>
-      <from_nr>0</from_nr>
-      <to_nr>1</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
       <unconditional>N</unconditional>
     </hop>
     <hop>
@@ -852,15 +867,15 @@ WHERE
     </hop>
     <hop>
       <from>Set PARAM_DYN_DB_CONN_DB_* variables</from>
-      <to>Abort job 2</to>
+      <to>jb_is_specified_db_type - PostgreSQL?</to>
       <from_nr>0</from_nr>
-      <to_nr>1</to_nr>
+      <to_nr>0</to_nr>
       <enabled>Y</enabled>
-      <evaluation>N</evaluation>
+      <evaluation>Y</evaluation>
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Set PARAM_DYN_DB_CONN_DB_* variables</from>
+      <from>Write To Log: Parameters</from>
       <to>Use custom delete algorithm?</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -868,21 +883,106 @@ WHERE
       <evaluation>Y</evaluation>
       <unconditional>N</unconditional>
     </hop>
+    <hop>
+      <from>Use custom delete algorithm?</from>
+      <to>jb_set_dynamic_db_connection_variables</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_is_specified_db_type - PostgreSQL?</from>
+      <to>DUMMY</to>
+      <from_nr>0</from_nr>
+      <to_nr>2</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Set PARAM_DYN_DB_CONN_DB_* variables</from>
+      <to>DUMMY</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_set_dynamic_db_connection_variables</from>
+      <to>DUMMY</to>
+      <from_nr>0</from_nr>
+      <to_nr>1</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>DUMMY</from>
+      <to>Abort job</to>
+      <from_nr>2</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>DUMMY</from>
+      <to>Abort job</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>DUMMY</from>
+      <to>Abort job</to>
+      <from_nr>1</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>Use custom delete algorithm?</from>
+      <to>jb_psa_delete_marked_rows-custom</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_psa_delete_marked_rows-custom</from>
+      <to>Abort job 2</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
   </hops>
   <notepads>
     <notepad>
-      <note>This job deletes "source" (OBO) rows from a specified table in the source (OBO) DB that have been "marked for deletion". This job has parameters:
+      <note>This job deletes "source" DB rows from a specified table in the source DB that have been "marked for deletion". This job has parameters:
 
+	PARAM_TABLE_META_ID							Primary key of etl.table_meta row for "source" table from which rows will be deleted
 	PARAM_SOURCE_DB_ID								ID the "source" database containing tables that are mirrored to a "target" database
 	PARAM_SOURCE_SCHEMA							Name of schema containing source table that is mirrored to target PSA table
 	PARAM_SOURCE_TABLE							Name of source table that is mirrored to target PSA table
 	PARAM_SOURCE_SCHEMA_TABLE					${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
-	PARAM_CAN_DELETE_ROW_SOURCE_COLNAME		Column of source table that indicates if the row can be deleted immediately
-	PARAM_USE_CUSTOM_DELETE_ALGORITHM			"Y" if a custom DELETE algorithm shall be used for this table</note>
+	PARAM_TARGET_SCHEMA							Name of schema containing target table that is mirrored to target PSA table (not currently used)
+	PARAM_TARGET_TABLE								Name of target table that is mirrored to target PSA table (not currently used)
+	PARAM_TARGET_SCHEMA_TABLE					${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}
+	PARAM_USE_CUSTOM_DELETE_ALGORITHM			"Y" if a custom DELETE algorithm shall be used for this table
+	PARAM_CAN_DELETE_ROW_SOURCE_COLNAME		Column of source table that indicates if the row can be deleted immediately</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>862</width>
-      <heigth>122</heigth>
+      <width>909</width>
+      <heigth>178</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -903,33 +1003,9 @@ WHERE
 tell the root calling job 
 that execution has failed.</note>
       <xloc>464</xloc>
-      <yloc>816</yloc>
+      <yloc>848</yloc>
       <width>157</width>
       <heigth>52</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>If necessary, replace this Dummy entry here with code to delete
-rows using custom code. Hopefully, this will not be necessary, 
-but it should not be difficult to implement this functionality, if 
-necessary.</note>
-      <xloc>464</xloc>
-      <yloc>544</yloc>
-      <width>379</width>
-      <heigth>66</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -957,8 +1033,8 @@ necessary.</note>
 for use below. It takes a single parameter:
 
 	PARAM_DB_ID = ${PARAM_SOURCE_DB_ID}</note>
-      <xloc>464</xloc>
-      <yloc>224</yloc>
+      <xloc>576</xloc>
+      <yloc>384</yloc>
       <width>289</width>
       <heigth>164</heigth>
       <fontname>Ubuntu</fontname>
@@ -978,8 +1054,8 @@ for use below. It takes a single parameter:
     </notepad>
     <notepad>
       <note>Check here for additional DB types, e.g., Oracle, if ever necessary.</note>
-      <xloc>464</xloc>
-      <yloc>656</yloc>
+      <xloc>576</xloc>
+      <yloc>688</yloc>
       <width>391</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -1005,8 +1081,8 @@ PARAM_DYN_DB_CONN_DB_* to be defined, where
 
 not the variables QF_DYN_DB_CONN_DB_* that were set above. Therefore, we define all of the
 PARAM_DYN_DB_CONN_DB_* variables here for use below.</note>
-      <xloc>464</xloc>
-      <yloc>416</yloc>
+      <xloc>576</xloc>
+      <yloc>560</yloc>
       <width>577</width>
       <heigth>108</heigth>
       <fontname>Ubuntu</fontname>
