@@ -9,7 +9,7 @@
     <directory>/generic/cdc</directory>
     <parameters>
       <parameter>
-        <name>PARAM_CDC_TIMESTAMPS_ID</name>
+        <name>PARAM_TARGET_DB_ID</name>
         <default_value />
         <description>Primary key of cdc_timestamps row to use</description>
       </parameter>
@@ -444,7 +444,7 @@
 "current_load" timestamp for a specified "cdc_timestamps" row. This transformation should only
 be called if no errors occurred. The "cdc_timestamps" row to use is specified by the parameter:
 
-    PARAM_CDC_TIMESTAMPS_ID</note>
+    PARAM_TARGET_DB_ID</note>
       <xloc>16</xloc>
       <yloc>16</yloc>
       <width>574</width>
@@ -490,7 +490,7 @@ variable substitution to be used with the
     </notepad>
     <notepad>
       <note>The parameter 
-PARAM_CDC_TIMESTAMPS_ID
+PARAM_TARGET_DB_ID
 must be set for this transformation.</note>
       <xloc>0</xloc>
       <yloc>384</yloc>
@@ -639,17 +639,17 @@ log.</note>
   </connection>
   <order>
     <hop>
-      <from>PARAM_CDC_TIMESTAMPS_ID is not null?</from>
+      <from>PARAM_TARGET_DB_ID is not null?</from>
       <to>Abort</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
       <from>Get Variables</from>
-      <to>PARAM_CDC_TIMESTAMPS_ID is not null?</to>
+      <to>PARAM_TARGET_DB_ID is not null?</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>PARAM_CDC_TIMESTAMPS_ID is not null?</from>
+      <from>PARAM_TARGET_DB_ID is not null?</from>
       <to>Write to log - cdc_timestamps_id</to>
       <enabled>Y</enabled>
     </hop>
@@ -691,7 +691,7 @@ log.</note>
       <schema_name />
     </partitioning>
     <row_threshold>0</row_threshold>
-    <message>Parameter PARAM_CDC_TIMESTAMPS_ID was not specified for tr_cdc_timestamp_load_end</message>
+    <message>Parameter PARAM_TARGET_DB_ID was not specified for tr_cdc_timestamp_load_end</message>
     <always_log_rows>Y</always_log_rows>
     <abort_with_error>Y</abort_with_error>
     <cluster_schema />
@@ -721,7 +721,7 @@ log.</note>
     <fields>
       <field>
         <name>cdc_timestamps_id</name>
-        <variable>${PARAM_CDC_TIMESTAMPS_ID}</variable>
+        <variable>${PARAM_TARGET_DB_ID}</variable>
         <type>Integer</type>
         <format />
         <currency />
@@ -799,7 +799,7 @@ log.</note>
     </GUI>
   </step>
   <step>
-    <name>PARAM_CDC_TIMESTAMPS_ID is not null?</name>
+    <name>PARAM_TARGET_DB_ID is not null?</name>
     <type>FilterRows</type>
     <description />
     <distribute>Y</distribute>

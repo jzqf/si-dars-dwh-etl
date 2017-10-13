@@ -9,7 +9,7 @@
     <directory>/generic/cdc</directory>
     <parameters>
       <parameter>
-        <name>PARAM_CDC_TIMESTAMPS_ID</name>
+        <name>PARAM_TARGET_DB_ID</name>
         <default_value />
         <description>Primary key of cdc_timestamps row to use</description>
       </parameter>
@@ -443,7 +443,7 @@
       <note>This transformation initializes the "current_load" timestamp for a specified "cdc_timestamps" row. The "cdc_timestamps" 
 row to use is specified by the parameter:
 
-    PARAM_CDC_TIMESTAMPS_ID		Primary key of cdc_timestamps row to use
+    PARAM_TARGET_DB_ID		Primary key of cdc_timestamps row to use
 
 This timestamp as well as the "last_successful_load" timestamp are assigned to variables that can be used in the parent job.</note>
       <xloc>0</xloc>
@@ -467,7 +467,7 @@ This timestamp as well as the "last_successful_load" timestamp are assigned to v
     </notepad>
     <notepad>
       <note>The parameter 
-PARAM_CDC_TIMESTAMPS_ID
+PARAM_TARGET_DB_ID
 must be set for this transformation.</note>
       <xloc>16</xloc>
       <yloc>448</yloc>
@@ -644,12 +644,12 @@ job.</note>
   </connection>
   <order>
     <hop>
-      <from>PARAM_CDC_TIMESTAMPS_ID is not null?</from>
+      <from>PARAM_TARGET_DB_ID is not null?</from>
       <to>Get system date</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>PARAM_CDC_TIMESTAMPS_ID is not null?</from>
+      <from>PARAM_TARGET_DB_ID is not null?</from>
       <to>Abort</to>
       <enabled>Y</enabled>
     </hop>
@@ -674,13 +674,13 @@ job.</note>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Get PARAM_CDC_TIMESTAMPS_ID</from>
-      <to>Log PARAM_CDC_TIMESTAMPS_ID</to>
+      <from>Get PARAM_TARGET_DB_ID</from>
+      <to>Log PARAM_TARGET_DB_ID</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Log PARAM_CDC_TIMESTAMPS_ID</from>
-      <to>PARAM_CDC_TIMESTAMPS_ID is not null?</to>
+      <from>Log PARAM_TARGET_DB_ID</from>
+      <to>PARAM_TARGET_DB_ID is not null?</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
@@ -706,7 +706,7 @@ job.</note>
       <schema_name />
     </partitioning>
     <row_threshold>0</row_threshold>
-    <message>A value for  PARAM_CDC_TIMESTAMPS_ID was not passed to tr_cdc_timestamp_load_start</message>
+    <message>A value for  PARAM_TARGET_DB_ID was not passed to tr_cdc_timestamp_load_start</message>
     <always_log_rows>Y</always_log_rows>
     <abort_with_error>Y</abort_with_error>
     <cluster_schema />
@@ -723,7 +723,7 @@ job.</note>
     </GUI>
   </step>
   <step>
-    <name>Get PARAM_CDC_TIMESTAMPS_ID</name>
+    <name>Get PARAM_TARGET_DB_ID</name>
     <type>GetVariable</type>
     <description />
     <distribute>Y</distribute>
@@ -736,7 +736,7 @@ job.</note>
     <fields>
       <field>
         <name>cdc_timestamps_id</name>
-        <variable>${PARAM_CDC_TIMESTAMPS_ID}</variable>
+        <variable>${PARAM_TARGET_DB_ID}</variable>
         <type>Integer</type>
         <format />
         <currency />
@@ -844,7 +844,7 @@ job.</note>
     </GUI>
   </step>
   <step>
-    <name>Log PARAM_CDC_TIMESTAMPS_ID</name>
+    <name>Log PARAM_TARGET_DB_ID</name>
     <type>WriteToLog</type>
     <description />
     <distribute>Y</distribute>
@@ -858,7 +858,7 @@ job.</note>
     <displayHeader>Y</displayHeader>
     <limitRows>N</limitRows>
     <limitRowsNumber>0</limitRowsNumber>
-    <logmessage>PARAM_CDC_TIMESTAMPS_ID = ${PARAM_CDC_TIMESTAMPS_ID}</logmessage>
+    <logmessage>PARAM_TARGET_DB_ID = ${PARAM_TARGET_DB_ID}</logmessage>
     <fields>
       <field>
         <name>cdc_timestamps_id</name>
@@ -878,7 +878,7 @@ job.</note>
     </GUI>
   </step>
   <step>
-    <name>PARAM_CDC_TIMESTAMPS_ID is not null?</name>
+    <name>PARAM_TARGET_DB_ID is not null?</name>
     <type>FilterRows</type>
     <description />
     <distribute>Y</distribute>
