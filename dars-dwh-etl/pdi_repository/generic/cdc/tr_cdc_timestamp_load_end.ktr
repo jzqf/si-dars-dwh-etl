@@ -650,11 +650,11 @@ log.</note>
     </hop>
     <hop>
       <from>PARAM_TARGET_DB_ID is not null?</from>
-      <to>Write to log - cdc_timestamps_id</to>
+      <to>Write to log - target_db_id</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Write to log - cdc_timestamps_id</from>
+      <from>Write to log - target_db_id</from>
       <to>Update last_successful_load timestamp</to>
       <enabled>Y</enabled>
     </hop>
@@ -720,7 +720,7 @@ log.</note>
     </partitioning>
     <fields>
       <field>
-        <name>cdc_timestamps_id</name>
+        <name>target_db_id</name>
         <variable>${PARAM_TARGET_DB_ID}</variable>
         <type>Integer</type>
         <format />
@@ -767,8 +767,8 @@ log.</note>
       <fail_on_multiple>N</fail_on_multiple>
       <eat_row_on_failure>N</eat_row_on_failure>
       <key>
-        <name>cdc_timestamps_id</name>
-        <field>cdc_timestamps_id</field>
+        <name>target_db_id</name>
+        <field>target_db_id</field>
         <condition>=</condition>
         <name2 />
       </key>
@@ -809,12 +809,12 @@ log.</note>
       <method>none</method>
       <schema_name />
     </partitioning>
-    <send_true_to>Write to log - cdc_timestamps_id</send_true_to>
+    <send_true_to>Write to log - target_db_id</send_true_to>
     <send_false_to>Abort</send_false_to>
     <compare>
       <condition>
         <negated>N</negated>
-        <leftvalue>cdc_timestamps_id</leftvalue>
+        <leftvalue>target_db_id</leftvalue>
         <function>IS NOT NULL</function>
         <rightvalue />
       </condition>
@@ -924,7 +924,7 @@ log.</note>
 SET
     last_successful_load = current_load
 WHERE
-    cdc_timestamps_id = ?;</sql>
+    target_db_id = ?;</sql>
     <set_params>N</set_params>
     <insert_field />
     <update_field>update_stats</update_field>
@@ -932,7 +932,7 @@ WHERE
     <read_field />
     <arguments>
       <argument>
-        <name>cdc_timestamps_id</name>
+        <name>target_db_id</name>
       </argument>
     </arguments>
     <cluster_schema />
@@ -949,7 +949,7 @@ WHERE
     </GUI>
   </step>
   <step>
-    <name>Write to log - cdc_timestamps_id</name>
+    <name>Write to log - target_db_id</name>
     <type>WriteToLog</type>
     <description />
     <distribute>Y</distribute>
@@ -966,7 +966,7 @@ WHERE
     <logmessage>tr_cdc_timestamp_load_end:</logmessage>
     <fields>
       <field>
-        <name>cdc_timestamps_id</name>
+        <name>target_db_id</name>
       </field>
     </fields>
     <cluster_schema />
@@ -1000,7 +1000,7 @@ WHERE
     <logmessage>tr_cdc_timestamp_load_end:</logmessage>
     <fields>
       <field>
-        <name>cdc_timestamps_id</name>
+        <name>target_db_id</name>
       </field>
       <field>
         <name>last_successful_load</name>
