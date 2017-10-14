@@ -8,12 +8,12 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/10/14 15:56:16.058</modified_date>
+  <modified_date>2017/10/14 19:54:46.037</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_TARGET_DB_ID</name>
       <default_value>10</default_value>
-      <description>ID of the "target" database to which the "source" DB tables will be archived/mirrored</description>
+      <description>ID of the "target" database to which "source" DB tables will be archived/mirrored</description>
     </parameter>
   </parameters>
   <connection>
@@ -443,7 +443,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>384</xloc>
-      <yloc>800</yloc>
+      <yloc>912</yloc>
     </entry>
     <entry>
       <name>jb_send_default_email_job_notification - Failure</name>
@@ -492,7 +492,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>384</xloc>
-      <yloc>864</yloc>
+      <yloc>976</yloc>
     </entry>
     <entry>
       <name>tr_cdc_timestamp_load_end</name>
@@ -529,7 +529,7 @@
       <draw>Y</draw>
       <nr>1</nr>
       <xloc>384</xloc>
-      <yloc>704</yloc>
+      <yloc>816</yloc>
     </entry>
     <entry>
       <name>DUMMY</name>
@@ -569,7 +569,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>32</xloc>
-      <yloc>864</yloc>
+      <yloc>976</yloc>
     </entry>
     <entry>
       <name>Success</name>
@@ -579,7 +579,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>576</xloc>
-      <yloc>800</yloc>
+      <yloc>912</yloc>
     </entry>
     <entry>
       <name>Abort job</name>
@@ -590,7 +590,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>576</xloc>
-      <yloc>864</yloc>
+      <yloc>976</yloc>
     </entry>
     <entry>
       <name>tr_cdc_timestamp_load_start</name>
@@ -705,7 +705,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>208</xloc>
-      <yloc>704</yloc>
+      <yloc>816</yloc>
     </entry>
     <entry>
       <name>DUMMY 3</name>
@@ -762,7 +762,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>384</xloc>
-      <yloc>480</yloc>
+      <yloc>592</yloc>
     </entry>
     <entry>
       <name>jb_psa_update-table</name>
@@ -866,7 +866,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>384</xloc>
-      <yloc>592</yloc>
+      <yloc>704</yloc>
     </entry>
     <entry>
       <name>jb_store_insert_ids</name>
@@ -901,6 +901,40 @@
       <nr>0</nr>
       <xloc>384</xloc>
       <yloc>384</yloc>
+    </entry>
+    <entry>
+      <name>jb_set_dynamic_target_db_connection_variables</name>
+      <description />
+      <type>JOB</type>
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_set_dynamic_target_db_connection_variables</jobname>
+      <directory>/generic/dynamic_db_connections</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>384</xloc>
+      <yloc>480</yloc>
     </entry>
   </entries>
   <hops>
@@ -1068,6 +1102,24 @@
     </hop>
     <hop>
       <from>jb_store_insert_ids</from>
+      <to>DUMMY</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_store_insert_ids</from>
+      <to>jb_set_dynamic_target_db_connection_variables</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_set_dynamic_target_db_connection_variables</from>
       <to>tr_list_of_tables_to_mirror</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -1076,7 +1128,7 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>jb_store_insert_ids</from>
+      <from>jb_set_dynamic_target_db_connection_variables</from>
       <to>DUMMY</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -1120,7 +1172,7 @@ This transformation has parameter:
     <notepad>
       <note>Notify recipient(s) of SUCCESSFUL job execution.</note>
       <xloc>640</xloc>
-      <yloc>800</yloc>
+      <yloc>912</yloc>
       <width>294</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -1141,7 +1193,7 @@ This transformation has parameter:
     <notepad>
       <note>Notify recipient(s) of FAILED job execution.</note>
       <xloc>640</xloc>
-      <yloc>864</yloc>
+      <yloc>976</yloc>
       <width>260</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -1162,8 +1214,8 @@ This transformation has parameter:
     <notepad>
       <note>This transformation  updates the "last_successful_load" timestamp with the current value of the
 "current_load" timestamp for the specified "target" DB.</note>
-      <xloc>512</xloc>
-      <yloc>704</yloc>
+      <xloc>544</xloc>
+      <yloc>816</yloc>
       <width>569</width>
       <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
@@ -1188,7 +1240,7 @@ This transformation has parameter:
 	QF_CDC_CURRENT_LOAD_UTC
 
 for the specified "target" DB.</note>
-      <xloc>512</xloc>
+      <xloc>544</xloc>
       <yloc>256</yloc>
       <width>328</width>
       <heigth>94</heigth>
@@ -1209,8 +1261,8 @@ for the specified "target" DB.</note>
     </notepad>
     <notepad>
       <note>Create list of tables to synchronize with the specified "target" DB.</note>
-      <xloc>512</xloc>
-      <yloc>480</yloc>
+      <xloc>544</xloc>
+      <yloc>592</yloc>
       <width>392</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -1239,8 +1291,8 @@ for the specified "target" DB.</note>
 	3.	Passed the CDC parameters:
 			PARAM_CDC_CURRENT_LOAD_UTC	= ${QF_CDC_CURRENT_LOAD_UTC}
 			PARAM_CDC_LAST_LOAD_UTC		= ${QF_CDC_LAST_LOAD_UTC}</note>
-      <xloc>512</xloc>
-      <yloc>528</yloc>
+      <xloc>544</xloc>
+      <yloc>640</yloc>
       <width>542</width>
       <heigth>150</heigth>
       <fontname>Ubuntu</fontname>
@@ -1260,10 +1312,39 @@ for the specified "target" DB.</note>
     </notepad>
     <notepad>
       <note>Store MAX(insert_id) for all "source" tables that are archived/mirrored to the specified "target" DB.</note>
-      <xloc>512</xloc>
+      <xloc>544</xloc>
       <yloc>384</yloc>
       <width>588</width>
       <heigth>24</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>This job sets the PDI variables:
+
+	QF_DYN_DB_CONN_TARGET_DB_HOST
+	QF_DYN_DB_CONN_TARGET_DB_PORT
+	QF_DYN_DB_CONN_TARGET_DB_DATABASE
+	QF_DYN_DB_CON_TARGETN_DB_USERNAME
+	QF_DYN_DB_CONN_TARGET_DB_PASSWORD
+
+based on a single parameter:  PARAM_TARGET_DB_ID</note>
+      <xloc>544</xloc>
+      <yloc>432</yloc>
+      <width>324</width>
+      <heigth>136</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
