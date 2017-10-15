@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/10/14 19:54:46.037</modified_date>
+  <modified_date>2017/10/15 12:26:21.495</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_TARGET_DB_ID</name>
@@ -393,7 +393,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>128</xloc>
+      <xloc>224</xloc>
       <yloc>192</yloc>
     </entry>
     <entry>
@@ -443,7 +443,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>384</xloc>
-      <yloc>912</yloc>
+      <yloc>960</yloc>
     </entry>
     <entry>
       <name>jb_send_default_email_job_notification - Failure</name>
@@ -492,7 +492,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>384</xloc>
-      <yloc>976</yloc>
+      <yloc>1024</yloc>
     </entry>
     <entry>
       <name>tr_cdc_timestamp_load_end</name>
@@ -529,7 +529,7 @@
       <draw>Y</draw>
       <nr>1</nr>
       <xloc>384</xloc>
-      <yloc>816</yloc>
+      <yloc>864</yloc>
     </entry>
     <entry>
       <name>DUMMY</name>
@@ -569,7 +569,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>32</xloc>
-      <yloc>976</yloc>
+      <yloc>1024</yloc>
     </entry>
     <entry>
       <name>Success</name>
@@ -579,7 +579,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>576</xloc>
-      <yloc>912</yloc>
+      <yloc>960</yloc>
     </entry>
     <entry>
       <name>Abort job</name>
@@ -590,7 +590,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>576</xloc>
-      <yloc>976</yloc>
+      <yloc>1024</yloc>
     </entry>
     <entry>
       <name>tr_cdc_timestamp_load_start</name>
@@ -665,7 +665,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>208</xloc>
+      <xloc>240</xloc>
       <yloc>288</yloc>
     </entry>
     <entry>
@@ -705,7 +705,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>208</xloc>
-      <yloc>816</yloc>
+      <yloc>864</yloc>
     </entry>
     <entry>
       <name>DUMMY 3</name>
@@ -765,14 +765,14 @@
       <yloc>592</yloc>
     </entry>
     <entry>
-      <name>jb_psa_update-table</name>
+      <name>jb_target-update_table</name>
       <description />
       <type>JOB</type>
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
-      <jobname>jb_psa_update-table</jobname>
-      <directory>/psa</directory>
+      <jobname>jb_target-update_table</jobname>
+      <directory>${Internal.Entry.Current.Directory}</directory>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>Y</params_from_previous>
       <exec_per_row>Y</exec_per_row>
@@ -799,6 +799,31 @@
           <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
           <stream_name />
           <value>${QF_CDC_CURRENT_LOAD_UTC}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_DYN_DB_CONN_TARGET_DB_HOST</name>
+          <stream_name />
+          <value>${QF_DYN_DB_CONN_TARGET_DB_HOST}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_DYN_DB_CONN_TARGET_DB_PORT</name>
+          <stream_name />
+          <value>${QF_DYN_DB_CONN_TARGET_DB_PORT}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_DYN_DB_CONN_TARGET_DB_DATABASE</name>
+          <stream_name />
+          <value>${QF_DYN_DB_CONN_TARGET_DB_DATABASE}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_DYN_DB_CONN_TARGET_DB_USERNAME</name>
+          <stream_name />
+          <value>${QF_DYN_DB_CONN_TARGET_DB_USERNAME}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD</name>
+          <stream_name />
+          <value>${QF_DYN_DB_CONN_TARGET_DB_PASSWORD}</value>
         </parameter>
         <parameter>
           <name>PARAM_MAX_INSERT_ID</name>
@@ -866,7 +891,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>384</xloc>
-      <yloc>704</yloc>
+      <yloc>720</yloc>
     </entry>
     <entry>
       <name>jb_store_insert_ids</name>
@@ -936,17 +961,21 @@
       <xloc>384</xloc>
       <yloc>480</yloc>
     </entry>
+    <entry>
+      <name>Log parameters</name>
+      <description />
+      <type>WRITE_TO_LOG</type>
+      <logmessage>PARAM_TARGET_DB_ID = ${PARAM_TARGET_DB_ID}</logmessage>
+      <loglevel>Basic</loglevel>
+      <logsubject>Parameters received by jb_target-update</logsubject>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>112</xloc>
+      <yloc>192</yloc>
+    </entry>
   </entries>
   <hops>
-    <hop>
-      <from>START</from>
-      <to>jb_target_init</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
     <hop>
       <from>tr_cdc_timestamp_load_end</from>
       <to>jb_send_default_email_job_notification - Success</to>
@@ -1066,7 +1095,7 @@
     </hop>
     <hop>
       <from>tr_list_of_tables_to_mirror</from>
-      <to>jb_psa_update-table</to>
+      <to>jb_target-update_table</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -1074,7 +1103,7 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>jb_psa_update-table</from>
+      <from>jb_target-update_table</from>
       <to>DUMMY</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -1083,7 +1112,7 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>jb_psa_update-table</from>
+      <from>jb_target-update_table</from>
       <to>tr_cdc_timestamp_load_end</to>
       <from_nr>0</from_nr>
       <to_nr>1</to_nr>
@@ -1136,6 +1165,24 @@
       <evaluation>N</evaluation>
       <unconditional>N</unconditional>
     </hop>
+    <hop>
+      <from>START</from>
+      <to>Log parameters</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>Log parameters</from>
+      <to>jb_target_init</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
   </hops>
   <notepads>
     <notepad>
@@ -1172,7 +1219,7 @@ This transformation has parameter:
     <notepad>
       <note>Notify recipient(s) of SUCCESSFUL job execution.</note>
       <xloc>640</xloc>
-      <yloc>912</yloc>
+      <yloc>960</yloc>
       <width>294</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -1193,7 +1240,7 @@ This transformation has parameter:
     <notepad>
       <note>Notify recipient(s) of FAILED job execution.</note>
       <xloc>640</xloc>
-      <yloc>976</yloc>
+      <yloc>1024</yloc>
       <width>260</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -1215,7 +1262,7 @@ This transformation has parameter:
       <note>This transformation  updates the "last_successful_load" timestamp with the current value of the
 "current_load" timestamp for the specified "target" DB.</note>
       <xloc>544</xloc>
-      <yloc>816</yloc>
+      <yloc>864</yloc>
       <width>569</width>
       <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
@@ -1285,16 +1332,20 @@ for the specified "target" DB.</note>
 
 	1.	***** RUN ONCE FOR EACH TABLE BEING ARCHIVED/MIRRORED. *****
 
-	2.	Passed the ID of the "source" DB, the schema name and table name of the "source"
-		table and the "target" table that will be updated, as well as additional parameters.
+	2.	Passed the ID of the "source" DB, the schema name and table name of the "source" table
+		and the "target" table that will be updated, as well as additional table-specific parameters.
 
 	3.	Passed the CDC parameters:
 			PARAM_CDC_CURRENT_LOAD_UTC	= ${QF_CDC_CURRENT_LOAD_UTC}
-			PARAM_CDC_LAST_LOAD_UTC		= ${QF_CDC_LAST_LOAD_UTC}</note>
+			PARAM_CDC_LAST_LOAD_UTC		= ${QF_CDC_LAST_LOAD_UTC}
+
+	4. Target database connection parameters:
+
+			PARAM_DYN_DB_CONN_TARGET_DB_* = ${QF_DYN_DB_CONN_TARGET_DB_*}</note>
       <xloc>544</xloc>
       <yloc>640</yloc>
-      <width>542</width>
-      <heigth>150</heigth>
+      <width>590</width>
+      <heigth>206</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
