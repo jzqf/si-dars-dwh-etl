@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/10/15 15:05:10.051</modified_date>
+  <modified_date>2017/10/15 16:23:06.643</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
@@ -509,14 +509,14 @@
       <yloc>352</yloc>
     </entry>
     <entry>
-      <name>tr_mirrored_updatable_table-inject_meta-update</name>
+      <name>tr_target-update_table-updatable_table</name>
       <description />
       <type>TRANS</type>
       <specification_method>rep_name</specification_method>
       <trans_object_id />
       <filename />
-      <transname>tr_mirrored_updatable_table-inject_meta-update</transname>
-      <directory>/psa</directory>
+      <transname>tr_target-update_table-updatable_table</transname>
+      <directory>${Internal.Entry.Current.Directory}</directory>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
@@ -1174,7 +1174,7 @@ ORDER BY
   </entries>
   <hops>
     <hop>
-      <from>tr_mirrored_updatable_table-inject_meta-update</from>
+      <from>tr_target-update_table-updatable_table</from>
       <to>jb_update_etl_table_meta_mirror_details</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -1183,7 +1183,7 @@ ORDER BY
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>tr_mirrored_updatable_table-inject_meta-update</from>
+      <from>tr_target-update_table-updatable_table</from>
       <to>jb_log_error 6</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -1391,7 +1391,7 @@ ORDER BY
     </hop>
     <hop>
       <from>jb_is_specified_db_type - PostgreSQL?</from>
-      <to>tr_mirrored_updatable_table-inject_meta-update</to>
+      <to>tr_target-update_table-updatable_table</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -1410,10 +1410,10 @@ ORDER BY
   </hops>
   <notepads>
     <notepad>
-      <note>This job updates a single "updatable" table (INSERTs &amp; UPDATEs allowed, but no DELETEs) in the target PSA database that 
-mirrors a table from a source database. This job has parameters:
+      <note>This job updates a single "updatable" table (INSERTs &amp; UPDATEs allowed, but no DELETEs) in the target database that mirrors a table from a source database.
+This job has parameters:
 
-	PARAM_CDC_LAST_LOAD_UTC						Timestamp for when *all* tables of the PSA were most recently updated successfully
+	PARAM_CDC_LAST_LOAD_UTC						Timestamp for when *all* tables of the target DB were most recently updated successfully
 	PARAM_CDC_CURRENT_LOAD_UTC					Used so that a consistent max timestamp is used for all ETL
 	PARAM_DYN_DB_CONN_TARGET_DB_HOST			for "dynamic" target database connection, e.g., "dynamic_postgres_target_db"
 	PARAM_DYN_DB_CONN_TARGET_DB_PORT			for "dynamic" target database connection, e.g., "dynamic_postgres_target_db"
@@ -1435,7 +1435,7 @@ mirrors a table from a source database. This job has parameters:
 	PARAM_TABLE_META_ID							Primary key of etl.table_meta row for "source" table archived/mirrored to "target" table</note>
       <xloc>16</xloc>
       <yloc>0</yloc>
-      <width>862</width>
+      <width>932</width>
       <heigth>332</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -1553,7 +1553,7 @@ step for the "OBO" source DB. This step  is passed the additional parameters:
     </notepad>
     <notepad>
       <note>The query in this step must match the corresponding query in 
-tr_mirrored_updatable_table-inject_meta-update
+tr_target-update_table-updatable_table
 that is executed below. This is because a PDI runtime error occurs if an 
 empty stream is sent to an ETL Metadata Injection step. To avoid this 
 from happening, we check that metadata is available here before 
@@ -1582,7 +1582,7 @@ provide a warning message, rather than letting PDI choke on this problem.</note>
     </notepad>
     <notepad>
       <note>The query in this step must match the corresponding query in 
-tr_mirrored_updatable_table-inject_meta-update
+tr_target-update_table-updatable_table
 that is executed below (same reason as above).</note>
       <xloc>16</xloc>
       <yloc>544</yloc>
@@ -1605,7 +1605,7 @@ that is executed below (same reason as above).</note>
     </notepad>
     <notepad>
       <note>The query in this step must match the corresponding query in 
-tr_mirrored_updatable_table-inject_meta-update
+tr_target-update_table-updatable_table
 that is executed below (same reason as above).</note>
       <xloc>16</xloc>
       <yloc>640</yloc>
@@ -1654,7 +1654,7 @@ tr_mirrored_updatable_table-inject_meta-update below.</note>
       <note>Set the variables QF_SOURCE_INSERT_ID_COLNAME &amp; QF_SOURCE_INSERTED_ON_COLNAME
 to the names of the columns from the source table that function as 
 "insert_id" &amp; "inserted_on" column. These values are passed as parameters
-to the job entry tr_mirrored_updatable_table-inject_meta-update below.</note>
+to the job entry tr_target-update_table-updatable_table below.</note>
       <xloc>16</xloc>
       <yloc>816</yloc>
       <width>560</width>
