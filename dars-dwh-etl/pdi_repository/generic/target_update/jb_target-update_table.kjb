@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/10/15 12:20:33.400</modified_date>
+  <modified_date>2017/10/15 15:05:16.018</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
@@ -74,6 +74,11 @@
       <name>PARAM_TABLE_META_ID</name>
       <default_value>0</default_value>
       <description>Primary key of etl.table_meta row for "source" table archived/mirrored to "target" table</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_TARGET_DB_ID</name>
+      <default_value>-1</default_value>
+      <description>ID of the "target" database to which "source" DB tables will be archived/mirrored</description>
     </parameter>
     <parameter>
       <name>PARAM_TARGET_SCHEMA</name>
@@ -450,7 +455,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>16</xloc>
-      <yloc>416</yloc>
+      <yloc>432</yloc>
     </entry>
     <entry>
       <name>Abort job</name>
@@ -461,7 +466,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>736</xloc>
-      <yloc>720</yloc>
+      <yloc>736</yloc>
     </entry>
     <entry>
       <name>Write To Log: Parameters</name>
@@ -480,6 +485,7 @@ PARAM_SOURCE_DB_ID                            = ${PARAM_SOURCE_DB_ID}
 PARAM_SOURCE_SCHEMA                           = ${PARAM_SOURCE_SCHEMA}
 PARAM_SOURCE_TABLE                            = ${PARAM_SOURCE_TABLE}
 PARAM_SOURCE_SCHEMA_DOT_TABLE                 = ${PARAM_SOURCE_SCHEMA_DOT_TABLE}
+PARAM_TARGET_DB_ID                            = ${PARAM_TARGET_DB_ID}
 PARAM_TARGET_SCHEMA                           = ${PARAM_TARGET_SCHEMA}
 PARAM_TARGET_TABLE                            = ${PARAM_TARGET_TABLE}
 PARAM_TARGET_SCHEMA_DOT_TABLE                 = ${PARAM_TARGET_SCHEMA_DOT_TABLE}
@@ -492,7 +498,7 @@ PARAM_USE_CUSTOM_MIRROR_ALGORITHM             = ${PARAM_USE_CUSTOM_MIRROR_ALGORI
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>144</xloc>
-      <yloc>416</yloc>
+      <yloc>432</yloc>
     </entry>
     <entry>
       <name>Use custom algorithm?</name>
@@ -514,17 +520,17 @@ PARAM_USE_CUSTOM_MIRROR_ALGORITHM             = ${PARAM_USE_CUSTOM_MIRROR_ALGORI
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>144</xloc>
-      <yloc>816</yloc>
+      <yloc>832</yloc>
     </entry>
     <entry>
-      <name>jb_custom_mirrored_table_dispatcher</name>
+      <name>jb_target-update_table-custom_algorithm_dispatcher</name>
       <description />
       <type>JOB</type>
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
-      <jobname>jb_custom_mirrored_table_dispatcher</jobname>
-      <directory>/psa</directory>
+      <jobname>jb_target-update_table-custom_algorithm_dispatcher</jobname>
+      <directory>${Internal.Entry.Current.Directory}</directory>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
@@ -548,7 +554,7 @@ PARAM_USE_CUSTOM_MIRROR_ALGORITHM             = ${PARAM_USE_CUSTOM_MIRROR_ALGORI
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>464</xloc>
-      <yloc>816</yloc>
+      <yloc>832</yloc>
     </entry>
     <entry>
       <name>Use generic algorithm for insert-only tables?</name>
@@ -570,7 +576,7 @@ PARAM_USE_CUSTOM_MIRROR_ALGORITHM             = ${PARAM_USE_CUSTOM_MIRROR_ALGORI
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>144</xloc>
-      <yloc>624</yloc>
+      <yloc>640</yloc>
     </entry>
     <entry>
       <name>Use generic algorithm for updateable tables?</name>
@@ -592,17 +598,17 @@ PARAM_USE_CUSTOM_MIRROR_ALGORITHM             = ${PARAM_USE_CUSTOM_MIRROR_ALGORI
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>144</xloc>
-      <yloc>720</yloc>
+      <yloc>736</yloc>
     </entry>
     <entry>
-      <name>jb_mirrored_insert_only_tables-inject_meta-update_one</name>
+      <name>jb_target-update_table-insert_only_table</name>
       <description />
       <type>JOB</type>
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
-      <jobname>jb_mirrored_insert_only_tables-inject_meta-update_one</jobname>
-      <directory>/psa</directory>
+      <jobname>jb_target-update_table-insert_only_table</jobname>
+      <directory>${Internal.Entry.Current.Directory}</directory>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
@@ -651,17 +657,17 @@ PARAM_USE_CUSTOM_MIRROR_ALGORITHM             = ${PARAM_USE_CUSTOM_MIRROR_ALGORI
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>464</xloc>
-      <yloc>624</yloc>
+      <yloc>640</yloc>
     </entry>
     <entry>
-      <name>jb_mirrored_updatable_tables-inject_meta-update_one</name>
+      <name>jb_target-update_table-updatable_table</name>
       <description />
       <type>JOB</type>
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
-      <jobname>jb_mirrored_updatable_tables-inject_meta-update_one</jobname>
-      <directory>/psa</directory>
+      <jobname>jb_target-update_table-updatable_table</jobname>
+      <directory>${Internal.Entry.Current.Directory}</directory>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
@@ -710,7 +716,7 @@ PARAM_USE_CUSTOM_MIRROR_ALGORITHM             = ${PARAM_USE_CUSTOM_MIRROR_ALGORI
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>464</xloc>
-      <yloc>720</yloc>
+      <yloc>736</yloc>
     </entry>
     <entry>
       <name>jb_log_error - Untreated case</name>
@@ -749,7 +755,7 @@ PARAM_USE_CUSTOM_MIRROR_ALGORITHM             = ${PARAM_USE_CUSTOM_MIRROR_ALGORI
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>144</xloc>
-      <yloc>912</yloc>
+      <yloc>928</yloc>
     </entry>
     <entry>
       <name>jb_set_dynamic_db_connection_variables</name>
@@ -788,7 +794,7 @@ PARAM_USE_CUSTOM_MIRROR_ALGORITHM             = ${PARAM_USE_CUSTOM_MIRROR_ALGORI
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>144</xloc>
-      <yloc>512</yloc>
+      <yloc>528</yloc>
     </entry>
     <entry>
       <name>DUMMY</name>
@@ -808,7 +814,7 @@ PARAM_USE_CUSTOM_MIRROR_ALGORITHM             = ${PARAM_USE_CUSTOM_MIRROR_ALGORI
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>736</xloc>
-      <yloc>512</yloc>
+      <yloc>528</yloc>
     </entry>
     <entry>
       <name>DUMMY 2</name>
@@ -828,7 +834,7 @@ PARAM_USE_CUSTOM_MIRROR_ALGORITHM             = ${PARAM_USE_CUSTOM_MIRROR_ALGORI
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>736</xloc>
-      <yloc>912</yloc>
+      <yloc>928</yloc>
     </entry>
   </entries>
   <hops>
@@ -843,7 +849,7 @@ PARAM_USE_CUSTOM_MIRROR_ALGORITHM             = ${PARAM_USE_CUSTOM_MIRROR_ALGORI
     </hop>
     <hop>
       <from>Use custom algorithm?</from>
-      <to>jb_custom_mirrored_table_dispatcher</to>
+      <to>jb_target-update_table-custom_algorithm_dispatcher</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -870,7 +876,7 @@ PARAM_USE_CUSTOM_MIRROR_ALGORITHM             = ${PARAM_USE_CUSTOM_MIRROR_ALGORI
     </hop>
     <hop>
       <from>Use generic algorithm for insert-only tables?</from>
-      <to>jb_mirrored_insert_only_tables-inject_meta-update_one</to>
+      <to>jb_target-update_table-insert_only_table</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -879,7 +885,7 @@ PARAM_USE_CUSTOM_MIRROR_ALGORITHM             = ${PARAM_USE_CUSTOM_MIRROR_ALGORI
     </hop>
     <hop>
       <from>Use generic algorithm for updateable tables?</from>
-      <to>jb_mirrored_updatable_tables-inject_meta-update_one</to>
+      <to>jb_target-update_table-updatable_table</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -887,7 +893,7 @@ PARAM_USE_CUSTOM_MIRROR_ALGORITHM             = ${PARAM_USE_CUSTOM_MIRROR_ALGORI
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>jb_mirrored_insert_only_tables-inject_meta-update_one</from>
+      <from>jb_target-update_table-insert_only_table</from>
       <to>Abort job</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -896,7 +902,7 @@ PARAM_USE_CUSTOM_MIRROR_ALGORITHM             = ${PARAM_USE_CUSTOM_MIRROR_ALGORI
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>jb_mirrored_updatable_tables-inject_meta-update_one</from>
+      <from>jb_target-update_table-updatable_table</from>
       <to>Abort job</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -905,7 +911,7 @@ PARAM_USE_CUSTOM_MIRROR_ALGORITHM             = ${PARAM_USE_CUSTOM_MIRROR_ALGORI
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>jb_custom_mirrored_table_dispatcher</from>
+      <from>jb_target-update_table-custom_algorithm_dispatcher</from>
       <to>Abort job</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -999,6 +1005,7 @@ This job has parameters:
 	PARAM_SOURCE_SCHEMA									Name of schema containing source table that is mirrored to target table
 	PARAM_SOURCE_TABLE									Name of source table that is mirrored to target table
 	PARAM_SOURCE_SCHEMA_DOT_TABLE						${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
+	PARAM_TARGET_DB_ID										ID of the "target" database to which the "source" DB tables will be archived/mirrored
 	PARAM_TARGET_SCHEMA									Name of schema containing target table that is mirrored to target table (not currently used)
 	PARAM_TARGET_TABLE										Name of target table that is mirrored to target table (not currently used)
 	PARAM_TARGET_SCHEMA_DOT_TABLE						${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}
@@ -1009,7 +1016,7 @@ This job has parameters:
       <xloc>0</xloc>
       <yloc>0</yloc>
       <width>964</width>
-      <heigth>388</heigth>
+      <heigth>402</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -1062,7 +1069,7 @@ based on a single parameter:
 
 	PARAM_DB_ID = PARAM_SOURCE_DB_ID</note>
       <xloc>304</xloc>
-      <yloc>432</yloc>
+      <yloc>448</yloc>
       <width>274</width>
       <heigth>164</heigth>
       <fontname>Ubuntu</fontname>
