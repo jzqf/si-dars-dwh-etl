@@ -559,7 +559,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/10/15 16:24:51.086</modified_date>
+    <modified_date>2017/10/16 10:20:04.836</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -570,6 +570,8 @@ of a target table in a target database. This is a generic algorithm that can wor
 (INSERTs &amp; UPDATEs allowed, but no DELETEs) and it has the necessary "insert_id", "inserted_on" &amp; "last_updated_on" columns. 
 This transformation has parameters:
 
+	PARAM_CDC_LAST_LOAD_UTC						Timestamp for when the target DB was most recently updated successfully
+	PARAM_CDC_CURRENT_LOAD_UTC					Used so that a consistent max timestamp is used for all ETL
 	PARAM_DYN_DB_CONN_TARGET_DB_HOST			for "dynamic" target database connection, e.g., "dynamic_postgres_target_db"
 	PARAM_DYN_DB_CONN_TARGET_DB_PORT			for "dynamic" target database connection, e.g., "dynamic_postgres_target_db"
 	PARAM_DYN_DB_CONN_TARGET_DB_DATABASE		for "dynamic" target database connection, e.g., "dynamic_postgres_target_db"
@@ -580,8 +582,6 @@ This transformation has parameters:
 	PARAM_DYN_DB_CONN_DB_DATABASE				for "dynamic_postgres_db" database connection
 	PARAM_DYN_DB_CONN_DB_USERNAME				for "dynamic_postgres_db" database connection
 	PARAM_DYN_DB_CONN_DB_PASSWORD			for "dynamic_postgres_db" database connection
-	PARAM_CDC_LAST_LOAD_UTC						Timestamp for when *all* tables of the PSA were most recently updated successfully
-	PARAM_CDC_CURRENT_LOAD_UTC					Used so that a consistent max timestamp is used for all ETL
 	PARAM_MAX_INSERT_ID							Maximum value of the "insert_id" column for rows to load from the source DB table
 	PARAM_TABLE_META_ID							Primary key of etl.table_meta row for "source" table archived/mirrored to "target" table
 	PARAM_SOURCE_DB_ID								ID the "source" database containing tables will be mirrored to a "target" database
@@ -620,7 +620,7 @@ This transformation has parameters:
 jb_target-update_table-updatable_table
 where this transformation is executed. See the 
 comments in that job for an explanation.</note>
-      <xloc>512</xloc>
+      <xloc>560</xloc>
       <yloc>464</yloc>
       <width>283</width>
       <heigth>66</heigth>
@@ -644,7 +644,7 @@ comments in that job for an explanation.</note>
 jb_target-update_table-updatable_table
 where this transformation is executed. See the 
 comments in that job for an explanation.</note>
-      <xloc>512</xloc>
+      <xloc>560</xloc>
       <yloc>576</yloc>
       <width>283</width>
       <heigth>66</heigth>
@@ -668,7 +668,7 @@ comments in that job for an explanation.</note>
 jb_target-update_table-updatable_table
 where this transformation is executed. See the 
 comments in that job for an explanation.</note>
-      <xloc>512</xloc>
+      <xloc>560</xloc>
       <yloc>688</yloc>
       <width>283</width>
       <heigth>66</heigth>
@@ -793,17 +793,17 @@ comments in that job for an explanation.</note>
   <order>
     <hop>
       <from>Source/target column mapping metadata</from>
-      <to>tmplt_mirrored_updatable_table-update</to>
+      <to>tmplt_target-update_table-updatable_table</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Target (PSA) primary key columns</from>
-      <to>tmplt_mirrored_updatable_table-update</to>
+      <from>Target DB table primary key columns</from>
+      <to>tmplt_target-update_table-updatable_table</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Target (PSA) updatable column metadata</from>
-      <to>tmplt_mirrored_updatable_table-update</to>
+      <from>Target DB table updatable column metadata</from>
+      <to>tmplt_target-update_table-updatable_table</to>
       <enabled>Y</enabled>
     </hop>
   </order>
@@ -845,13 +845,13 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>368</xloc>
+      <xloc>416</xloc>
       <yloc>480</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Target (PSA) primary key columns</name>
+    <name>Target DB table primary key columns</name>
     <type>TableInput</type>
     <description />
     <distribute>Y</distribute>
@@ -889,13 +889,13 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>368</xloc>
+      <xloc>416</xloc>
       <yloc>592</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Target (PSA) updatable column metadata</name>
+    <name>Target DB table updatable column metadata</name>
     <type>TableInput</type>
     <description />
     <distribute>Y</distribute>
@@ -942,13 +942,13 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>368</xloc>
+      <xloc>416</xloc>
       <yloc>704</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>tmplt_mirrored_updatable_table-update</name>
+    <name>tmplt_target-update_table-updatable_table</name>
     <type>MetaInject</type>
     <description />
     <distribute>Y</distribute>
@@ -960,9 +960,9 @@ ORDER BY
     </partitioning>
     <specification_method>rep_name</specification_method>
     <trans_object_id />
-    <trans_name>tmplt_mirrored_updatable_table-update</trans_name>
+    <trans_name>tmplt_target-update_table-updatable_table</trans_name>
     <filename />
-    <directory_path>/psa</directory_path>
+    <directory_path>${Internal.Entry.Current.Directory}</directory_path>
     <source_step />
     <source_output_fields>    </source_output_fields>
     <target_file />
@@ -971,32 +971,11 @@ ORDER BY
     <stream_target_step />
     <mappings>
       <mapping>
-        <target_step_name>Update - PSA.schema.table</target_step_name>
-        <target_attribute_key>KEY_STREAM</target_attribute_key>
+        <target_step_name>Update - target_db.schema.table</target_step_name>
+        <target_attribute_key>UPDATE_LOOKUP</target_attribute_key>
         <target_detail>Y</target_detail>
-        <source_step>Target (PSA) primary key columns</source_step>
-        <source_field>target_key_col_name</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Update - PSA.schema.table</target_step_name>
-        <target_attribute_key>KEY_LOOKUP</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Target (PSA) primary key columns</source_step>
-        <source_field>target_key_col_name</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Update - PSA.schema.table</target_step_name>
-        <target_attribute_key>KEY_STREAM2</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Target (PSA) primary key columns</source_step>
-        <source_field>no_field</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Update - PSA.schema.table</target_step_name>
-        <target_attribute_key>KEY_CONDITION</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Target (PSA) primary key columns</source_step>
-        <source_field>key_field_value_comparator</source_field>
+        <source_step>Target DB table updatable column metadata</source_step>
+        <source_field>target_col_name</source_field>
       </mapping>
       <mapping>
         <target_step_name>Map column names</target_step_name>
@@ -1006,18 +985,11 @@ ORDER BY
         <source_field>source_col_name</source_field>
       </mapping>
       <mapping>
-        <target_step_name>Update - PSA.schema.table</target_step_name>
-        <target_attribute_key>UPDATE_STREAM</target_attribute_key>
+        <target_step_name>Update - target_db.schema.table</target_step_name>
+        <target_attribute_key>KEY_CONDITION</target_attribute_key>
         <target_detail>Y</target_detail>
-        <source_step>Target (PSA) updatable column metadata</source_step>
-        <source_field>target_col_name</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Update - PSA.schema.table</target_step_name>
-        <target_attribute_key>UPDATE_LOOKUP</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Target (PSA) updatable column metadata</source_step>
-        <source_field>target_col_name</source_field>
+        <source_step>Target DB table primary key columns</source_step>
+        <source_field>key_field_value_comparator</source_field>
       </mapping>
       <mapping>
         <target_step_name>Map column names</target_step_name>
@@ -1025,6 +997,34 @@ ORDER BY
         <target_detail>Y</target_detail>
         <source_step>Source/target column mapping metadata</source_step>
         <source_field>target_col_name</source_field>
+      </mapping>
+      <mapping>
+        <target_step_name>Update - target_db.schema.table</target_step_name>
+        <target_attribute_key>UPDATE_STREAM</target_attribute_key>
+        <target_detail>Y</target_detail>
+        <source_step>Target DB table updatable column metadata</source_step>
+        <source_field>target_col_name</source_field>
+      </mapping>
+      <mapping>
+        <target_step_name>Update - target_db.schema.table</target_step_name>
+        <target_attribute_key>KEY_STREAM</target_attribute_key>
+        <target_detail>Y</target_detail>
+        <source_step>Target DB table primary key columns</source_step>
+        <source_field>target_key_col_name</source_field>
+      </mapping>
+      <mapping>
+        <target_step_name>Update - target_db.schema.table</target_step_name>
+        <target_attribute_key>KEY_LOOKUP</target_attribute_key>
+        <target_detail>Y</target_detail>
+        <source_step>Target DB table primary key columns</source_step>
+        <source_field>target_key_col_name</source_field>
+      </mapping>
+      <mapping>
+        <target_step_name>Update - target_db.schema.table</target_step_name>
+        <target_attribute_key>KEY_STREAM2</target_attribute_key>
+        <target_detail>Y</target_detail>
+        <source_step>Target DB table primary key columns</source_step>
+        <source_field>no_field</source_field>
       </mapping>
     </mappings>
     <cluster_schema />
@@ -1035,7 +1035,7 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>112</xloc>
+      <xloc>128</xloc>
       <yloc>592</yloc>
       <draw>Y</draw>
     </GUI>
