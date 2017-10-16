@@ -1,26 +1,167 @@
 <job>
-  <name>jb_store_insert_ids-source_db</name>
+  <name>jb_target-update_table-insert_only_table</name>
   <description />
   <extended_description />
   <job_version />
   <job_status>0</job_status>
-  <directory>/generic/store_insert_ids</directory>
+  <directory>/generic/target_update</directory>
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/10/14 16:06:31.165</modified_date>
+  <modified_date>2017/10/16 10:46:25.723</modified_date>
   <parameters>
     <parameter>
+      <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
+      <default_value>2017.06.15 00:00:00</default_value>
+      <description>Timestamp of the current load (no rows after this timestamp will be loaded)</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_CDC_LAST_LOAD_UTC</name>
+      <default_value>1900.01.01 00:00:00</default_value>
+      <description>Timestamp of last successful load from the source database</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_DB_DATABASE</name>
+      <default_value />
+      <description>for "dynamic" database connection, e.g., "dynamic_postgres_db"</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_DB_HOST</name>
+      <default_value />
+      <description>for "dynamic" database connection, e.g., "dynamic_postgres_db"</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_DB_PASSWORD</name>
+      <default_value />
+      <description>for "dynamic" database connection, e.g., "dynamic_postgres_db"</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_DB_PORT</name>
+      <default_value />
+      <description>for "dynamic" database connection, e.g., "dynamic_postgres_db"</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_DB_USERNAME</name>
+      <default_value />
+      <description>for "dynamic" database connection, e.g., "dynamic_postgres_db"</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_TARGET_DB_DATABASE</name>
+      <default_value />
+      <description>for "dynamic" target database connection, e.g., "dynamic_postgres_target_db"</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_TARGET_DB_HOST</name>
+      <default_value />
+      <description>for "dynamic" target database connection, e.g., "dynamic_postgres_target_db"</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD</name>
+      <default_value />
+      <description>for "dynamic" target database connection, e.g., "dynamic_postgres_target_db"</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_TARGET_DB_PORT</name>
+      <default_value />
+      <description>for "dynamic" target database connection, e.g., "dynamic_postgres_target_db"</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_TARGET_DB_USERNAME</name>
+      <default_value />
+      <description>for "dynamic" target database connection, e.g., "dynamic_postgres_target_db"</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_MAX_INSERT_ID</name>
+      <default_value />
+      <description>Maximum value of the "insert_id" column for rows to load from the source DB table</description>
+    </parameter>
+    <parameter>
       <name>PARAM_SOURCE_DB_ID</name>
-      <default_value>-1</default_value>
-      <description>ID the "source" database containing tables that will be mirrored to a "target" database</description>
+      <default_value>0</default_value>
+      <description>ID the "source" database containing tables will be archived/mirrored to a "target" database</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_SOURCE_SCHEMA</name>
+      <default_value>passage</default_value>
+      <description>Name of schema containing source table to mirror to target table</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_SOURCE_TABLE</name>
+      <default_value>passage</default_value>
+      <description>Name of source table to mirror to target table</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_TABLE_META_ID</name>
+      <default_value>0</default_value>
+      <description>Primary key of etl.table_meta row for "source" table archived/mirrored to "target" table</description>
     </parameter>
     <parameter>
       <name>PARAM_TARGET_DB_ID</name>
       <default_value>-1</default_value>
-      <description>ID of the "target" database to which the "source" DB tables will be archived/mirrored</description>
+      <description>ID of the "target" database to which "source" DB tables will be archived/mirrored</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_TARGET_SCHEMA</name>
+      <default_value>passage</default_value>
+      <description>Name of schema containing target table to update (not currently used)</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_TARGET_TABLE</name>
+      <default_value>passage</default_value>
+      <description>Name of target table to update (not currently used)</description>
     </parameter>
   </parameters>
+  <connection>
+    <name>etl_db</name>
+    <server>${QF_ETL_DB_HOST}</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>${QF_ETL_DB_DATABASE}</database>
+    <port>${QF_ETL_DB_PORT}</port>
+    <username>${QF_ETL_DB_USERNAME}</username>
+    <password>${QF_ETL_DB_PASSWORD}</password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>${QF_ETL_DB_PORT}</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
   <connection>
     <name>logging_db</name>
     <server>${QF_LOGGING_DB_HOST}</server>
@@ -364,11 +505,107 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>368</xloc>
-      <yloc>112</yloc>
+      <xloc>608</xloc>
+      <yloc>336</yloc>
     </entry>
     <entry>
-      <name>jb_log_error</name>
+      <name>tr_target-update_table-insert_only_table</name>
+      <description />
+      <type>TRANS</type>
+      <specification_method>rep_name</specification_method>
+      <trans_object_id />
+      <filename />
+      <transname>tr_target-update_table-insert_only_table</transname>
+      <directory>${Internal.Entry.Current.Directory}</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <clear_rows>N</clear_rows>
+      <clear_files>N</clear_files>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Basic</loglevel>
+      <cluster>N</cluster>
+      <slave_server_name />
+      <set_append_logfile>N</set_append_logfile>
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <create_parent_folder>N</create_parent_folder>
+      <logging_remote_work>N</logging_remote_work>
+      <run_configuration>Pentaho local</run_configuration>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_SOURCE_INSERT_ID_COLNAME</name>
+          <stream_name />
+          <value>${QF_SOURCE_INSERT_ID_COLNAME}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_INSERT_ID_COLNAME</name>
+          <stream_name />
+          <value>${QF_TARGET_INSERT_ID_COLNAME}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_SOURCE_INSERTED_ON_COLNAME</name>
+          <stream_name />
+          <value>${QF_SOURCE_INSERTED_ON_COLNAME}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_INSERTED_ON_COLNAME</name>
+          <stream_name />
+          <value>${QF_TARGET_INSERTED_ON_COLNAME}</value>
+        </parameter>
+      </parameters>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>880</xloc>
+      <yloc>624</yloc>
+    </entry>
+    <entry>
+      <name>jb_update_etl_table_meta_mirror_details</name>
+      <description />
+      <type>JOB</type>
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_update_etl_table_meta_mirror_details</jobname>
+      <directory>/generic</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_TABLE_MIRROR_TREATMENT_ID</name>
+          <stream_name />
+          <value>${QF_MIRROR_ALG_INSERT_ONLY_GENERIC}</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>880</xloc>
+      <yloc>720</yloc>
+    </entry>
+    <entry>
+      <name>jb_log_error 3</name>
       <description />
       <type>JOB</type>
       <specification_method>rep_name</specification_method>
@@ -396,61 +633,66 @@
         <parameter>
           <name>PARAM_ERROR_MESSAGE</name>
           <stream_name />
-          <value>Error  caught in jb_store_insert_ids-source_db while executing "tr_store_max_insert_ids_for_source_db_postgresql" for source DB: ${PARAM_SOURCE_DB_ID}</value>
+          <value>Error updating DWH mirror table: ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE} by tr_target-update_table-insert_only_table</value>
         </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>416</xloc>
-      <yloc>688</yloc>
+      <xloc>1088</xloc>
+      <yloc>624</yloc>
     </entry>
     <entry>
       <name>Abort job</name>
       <description />
       <type>ABORT</type>
-      <message>Aborting jb_store_insert_ids-source_db</message>
+      <message>Aborting jb_target-update_table-insert_only_table</message>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>576</xloc>
-      <yloc>768</yloc>
+      <xloc>1168</xloc>
+      <yloc>528</yloc>
     </entry>
     <entry>
-      <name>Write To Log: Parameters</name>
+      <name>Is there column mapping metadata for this table?</name>
       <description />
-      <type>WRITE_TO_LOG</type>
-      <logmessage>PARAM_SOURCE_DB_ID  = ${PARAM_SOURCE_DB_ID}
-PARAM_TARGET_DB_ID  = ${PARAM_TARGET_DB_ID}
-</logmessage>
-      <loglevel>Basic</loglevel>
-      <logsubject>jb_store_insert_ids-source_db</logsubject>
+      <type>EVAL_TABLE_CONTENT</type>
+      <connection>etl_db</connection>
+      <schemaname />
+      <tablename />
+      <success_condition>rows_count_greater</success_condition>
+      <limit>0</limit>
+      <is_custom_sql>Y</is_custom_sql>
+      <is_usevars>Y</is_usevars>
+      <custom_sql>SELECT
+    source_column_name AS "source_col_name", 
+    target_column_name AS "target_col_name" 
+FROM 
+    etl.column_meta 
+WHERE 
+    table_meta_id = ${PARAM_TABLE_META_ID} AND 
+    mirror_column = true AND
+    source_column_name IS NOT NULL 
+ORDER BY 
+    source_column_name ASC</custom_sql>
+      <add_rows_result>N</add_rows_result>
+      <clear_result_rows>Y</clear_result_rows>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>368</xloc>
-      <yloc>192</yloc>
+      <xloc>608</xloc>
+      <yloc>432</yloc>
     </entry>
     <entry>
-      <name>Success</name>
-      <description />
-      <type>SUCCESS</type>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>320</xloc>
-      <yloc>688</yloc>
-    </entry>
-    <entry>
-      <name>jb_set_dynamic_db_connection_variables</name>
+      <name>jb_log_error 1</name>
       <description />
       <type>JOB</type>
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
-      <jobname>jb_set_dynamic_db_connection_variables</jobname>
-      <directory>/generic/dynamic_db_connections</directory>
+      <jobname>jb_log_error</jobname>
+      <directory>/generic</directory>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
@@ -469,20 +711,185 @@ PARAM_TARGET_DB_ID  = ${PARAM_TARGET_DB_ID}
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
         <parameter>
-          <name>PARAM_DB_ID</name>
+          <name>PARAM_ERROR_MESSAGE</name>
           <stream_name />
-          <value>${PARAM_SOURCE_DB_ID}</value>
+          <value>No column metadata has been configured for source table: ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>1</nr>
+      <xloc>880</xloc>
+      <yloc>432</yloc>
+    </entry>
+    <entry>
+      <name>Success</name>
+      <description />
+      <type>SUCCESS</type>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>1168</xloc>
+      <yloc>432</yloc>
+    </entry>
+    <entry>
+      <name>tr_set_inserted_colnames_vrbls</name>
+      <description />
+      <type>TRANS</type>
+      <specification_method>rep_name</specification_method>
+      <trans_object_id />
+      <filename />
+      <transname>tr_set_inserted_colnames_vrbls</transname>
+      <directory>/generic</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <clear_rows>N</clear_rows>
+      <clear_files>N</clear_files>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Basic</loglevel>
+      <cluster>N</cluster>
+      <slave_server_name />
+      <set_append_logfile>N</set_append_logfile>
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <create_parent_folder>N</create_parent_folder>
+      <logging_remote_work>N</logging_remote_work>
+      <run_configuration>Pentaho local</run_configuration>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+      </parameters>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>608</xloc>
+      <yloc>528</yloc>
+    </entry>
+    <entry>
+      <name>jb_log_error 2</name>
+      <description />
+      <type>JOB</type>
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_log_error</jobname>
+      <directory>/generic</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_ERROR_MESSAGE</name>
+          <stream_name />
+          <value>Error setting "INSERT_ID"/"INSERTED_ON" column name variables in tr_set_inserted_colnames_vrbls for source table: ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</value>
         </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>368</xloc>
-      <yloc>272</yloc>
+      <xloc>880</xloc>
+      <yloc>528</yloc>
     </entry>
     <entry>
-      <name>jb_is_specified_db_type - PostgreSQL?</name>
+      <name>DUMMY</name>
+      <description />
+      <type>SPECIAL</type>
+      <start>N</start>
+      <dummy>Y</dummy>
+      <repeat>N</repeat>
+      <schedulerType>0</schedulerType>
+      <intervalSeconds>0</intervalSeconds>
+      <intervalMinutes>60</intervalMinutes>
+      <hour>12</hour>
+      <minutes>0</minutes>
+      <weekDay>1</weekDay>
+      <DayOfMonth>1</DayOfMonth>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>1168</xloc>
+      <yloc>720</yloc>
+    </entry>
+    <entry>
+      <name>jb_log_error - Untreated case</name>
+      <description />
+      <type>JOB</type>
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_log_error</jobname>
+      <directory>/generic</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_ERROR_MESSAGE</name>
+          <stream_name />
+          <value>Untreated case for source DB "type" in jb_target-update_table-insert_only_table: PARAM_SOURCE_DB_ID = ${PARAM_SOURCE_DB_ID}</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>608</xloc>
+      <yloc>864</yloc>
+    </entry>
+    <entry>
+      <name>DUMMY 2</name>
+      <description />
+      <type>SPECIAL</type>
+      <start>N</start>
+      <dummy>Y</dummy>
+      <repeat>N</repeat>
+      <schedulerType>0</schedulerType>
+      <intervalSeconds>0</intervalSeconds>
+      <intervalMinutes>60</intervalMinutes>
+      <hour>12</hour>
+      <minutes>0</minutes>
+      <weekDay>1</weekDay>
+      <DayOfMonth>1</DayOfMonth>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>1168</xloc>
+      <yloc>864</yloc>
+    </entry>
+    <entry>
+      <name>Source DB is of type PostgreSQL?</name>
       <description />
       <type>JOB</type>
       <specification_method>rep_name</specification_method>
@@ -522,187 +929,22 @@ PARAM_TARGET_DB_ID  = ${PARAM_TARGET_DB_ID}
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>368</xloc>
-      <yloc>496</yloc>
-    </entry>
-    <entry>
-      <name>DUMMY 2</name>
-      <description />
-      <type>SPECIAL</type>
-      <start>N</start>
-      <dummy>Y</dummy>
-      <repeat>N</repeat>
-      <schedulerType>0</schedulerType>
-      <intervalSeconds>0</intervalSeconds>
-      <intervalMinutes>60</intervalMinutes>
-      <hour>12</hour>
-      <minutes>0</minutes>
-      <weekDay>1</weekDay>
-      <DayOfMonth>1</DayOfMonth>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>576</xloc>
-      <yloc>496</yloc>
-    </entry>
-    <entry>
-      <name>Abort job 2</name>
-      <description />
-      <type>ABORT</type>
-      <message>Aborting job jb_store_insert_ids-source_db</message>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>1</nr>
-      <xloc>96</xloc>
-      <yloc>272</yloc>
-    </entry>
-    <entry>
-      <name>tr_set_select_max_insert_ids_for_source_db_sql_vrbl</name>
-      <description />
-      <type>TRANS</type>
-      <specification_method>rep_name</specification_method>
-      <trans_object_id />
-      <filename />
-      <transname>tr_set_select_max_insert_ids_for_source_db_sql_vrbl</transname>
-      <directory>/generic/store_insert_ids</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <clear_rows>N</clear_rows>
-      <clear_files>N</clear_files>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Basic</loglevel>
-      <cluster>N</cluster>
-      <slave_server_name />
-      <set_append_logfile>N</set_append_logfile>
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <create_parent_folder>N</create_parent_folder>
-      <logging_remote_work>N</logging_remote_work>
-      <run_configuration>Pentaho local</run_configuration>
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-      </parameters>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>368</xloc>
-      <yloc>400</yloc>
-    </entry>
-    <entry>
-      <name>jb_log_error 2</name>
-      <description />
-      <type>JOB</type>
-      <specification_method>rep_name</specification_method>
-      <job_object_id />
-      <filename />
-      <jobname>jb_log_error</jobname>
-      <directory>/generic</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Nothing</loglevel>
-      <slave_server_name />
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <expand_remote_job>N</expand_remote_job>
-      <create_parent_folder>N</create_parent_folder>
-      <pass_export>N</pass_export>
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-        <parameter>
-          <name>PARAM_ERROR_MESSAGE</name>
-          <stream_name />
-          <value>Error executing tr_set_select_max_insert_ids_for_source_db_sql_vrbl from jb_store_insert_ids-source_db for source DB: ${PARAM_SOURCE_DB_ID}.</value>
-        </parameter>
-      </parameters>
-      <set_append_logfile>N</set_append_logfile>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>96</xloc>
-      <yloc>400</yloc>
-    </entry>
-    <entry>
-      <name>tr_store_max_insert_ids_for_source_db_postgresql</name>
-      <description />
-      <type>TRANS</type>
-      <specification_method>rep_name</specification_method>
-      <trans_object_id />
-      <filename />
-      <transname>tr_store_max_insert_ids_for_source_db_postgresql</transname>
-      <directory>/generic/store_insert_ids</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <clear_rows>N</clear_rows>
-      <clear_files>N</clear_files>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Basic</loglevel>
-      <cluster>N</cluster>
-      <slave_server_name />
-      <set_append_logfile>N</set_append_logfile>
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <create_parent_folder>N</create_parent_folder>
-      <logging_remote_work>N</logging_remote_work>
-      <run_configuration>Pentaho local</run_configuration>
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-        <parameter>
-          <name>PARAM_DYN_DB_CONN_DB_HOST</name>
-          <stream_name />
-          <value>${QF_DYN_DB_CONN_DB_HOST}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_DYN_DB_CONN_DB_PORT</name>
-          <stream_name />
-          <value>${QF_DYN_DB_CONN_DB_PORT}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_DYN_DB_CONN_DB_DATABASE</name>
-          <stream_name />
-          <value>${QF_DYN_DB_CONN_DB_DATABASE}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_DYN_DB_CONN_DB_USERNAME</name>
-          <stream_name />
-          <value>${QF_DYN_DB_CONN_DB_USERNAME}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_DYN_DB_CONN_DB_PASSWORD</name>
-          <stream_name />
-          <value>${QF_DYN_DB_CONN_DB_PASSWORD}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_SQL_SELECT_MAX_INSERT_IDS_FOR_SOURCE_DB</name>
-          <stream_name />
-          <value>${QF_SQL_SELECT_MAX_INSERT_IDS_FOR_SOURCE_DB}</value>
-        </parameter>
-      </parameters>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>368</xloc>
-      <yloc>592</yloc>
+      <xloc>608</xloc>
+      <yloc>624</yloc>
     </entry>
   </entries>
   <hops>
     <hop>
-      <from>jb_log_error</from>
+      <from>tr_target-update_table-insert_only_table</from>
+      <to>jb_log_error 3</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_log_error 3</from>
       <to>Abort job</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -712,7 +954,7 @@ PARAM_TARGET_DB_ID  = ${PARAM_TARGET_DB_ID}
     </hop>
     <hop>
       <from>START</from>
-      <to>Write To Log: Parameters</to>
+      <to>Is there column mapping metadata for this table?</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -720,35 +962,8 @@ PARAM_TARGET_DB_ID  = ${PARAM_TARGET_DB_ID}
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>Write To Log: Parameters</from>
-      <to>jb_set_dynamic_db_connection_variables</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>jb_is_specified_db_type - PostgreSQL?</from>
-      <to>DUMMY 2</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>DUMMY 2</from>
-      <to>Abort job</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>jb_set_dynamic_db_connection_variables</from>
-      <to>Abort job 2</to>
+      <from>Is there column mapping metadata for this table?</from>
+      <to>jb_log_error 1</to>
       <from_nr>0</from_nr>
       <to_nr>1</to_nr>
       <enabled>Y</enabled>
@@ -756,16 +971,25 @@ PARAM_TARGET_DB_ID  = ${PARAM_TARGET_DB_ID}
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>jb_set_dynamic_db_connection_variables</from>
-      <to>tr_set_select_max_insert_ids_for_source_db_sql_vrbl</to>
-      <from_nr>0</from_nr>
+      <from>jb_log_error 1</from>
+      <to>Abort job</to>
+      <from_nr>1</from_nr>
       <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
+      <enabled>N</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>tr_set_select_max_insert_ids_for_source_db_sql_vrbl</from>
+      <from>jb_log_error 1</from>
+      <to>Success</to>
+      <from_nr>1</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>tr_set_inserted_colnames_vrbls</from>
       <to>jb_log_error 2</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -775,16 +999,16 @@ PARAM_TARGET_DB_ID  = ${PARAM_TARGET_DB_ID}
     </hop>
     <hop>
       <from>jb_log_error 2</from>
-      <to>Abort job 2</to>
+      <to>Abort job</to>
       <from_nr>0</from_nr>
-      <to_nr>1</to_nr>
+      <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>N</evaluation>
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>tr_set_select_max_insert_ids_for_source_db_sql_vrbl</from>
-      <to>jb_is_specified_db_type - PostgreSQL?</to>
+      <from>Is there column mapping metadata for this table?</from>
+      <to>tr_set_inserted_colnames_vrbls</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -792,8 +1016,8 @@ PARAM_TARGET_DB_ID  = ${PARAM_TARGET_DB_ID}
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>jb_is_specified_db_type - PostgreSQL?</from>
-      <to>tr_store_max_insert_ids_for_source_db_postgresql</to>
+      <from>tr_target-update_table-insert_only_table</from>
+      <to>jb_update_etl_table_meta_mirror_details</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -801,8 +1025,44 @@ PARAM_TARGET_DB_ID  = ${PARAM_TARGET_DB_ID}
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>tr_store_max_insert_ids_for_source_db_postgresql</from>
-      <to>Success</to>
+      <from>jb_update_etl_table_meta_mirror_details</from>
+      <to>DUMMY</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>DUMMY</from>
+      <to>Abort job</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>jb_log_error - Untreated case</from>
+      <to>DUMMY 2</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>DUMMY 2</from>
+      <to>DUMMY</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>tr_set_inserted_colnames_vrbls</from>
+      <to>Source DB is of type PostgreSQL?</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -810,8 +1070,17 @@ PARAM_TARGET_DB_ID  = ${PARAM_TARGET_DB_ID}
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>tr_store_max_insert_ids_for_source_db_postgresql</from>
-      <to>jb_log_error</to>
+      <from>Source DB is of type PostgreSQL?</from>
+      <to>tr_target-update_table-insert_only_table</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Source DB is of type PostgreSQL?</from>
+      <to>jb_log_error - Untreated case</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -821,16 +1090,32 @@ PARAM_TARGET_DB_ID  = ${PARAM_TARGET_DB_ID}
   </hops>
   <notepads>
     <notepad>
-      <note>This job retrieves and stores the maximum value for the "insert_id" column for all tables of a specified "source" DB.
+      <note>This job updates a single "insert-only" table in the target database that mirrors a table from a source database. This job has parameters:
 
-This job has parameters:
-
-	PARAM_SOURCE_DB_ID		ID the "source" DB containing tables to archive/mirror to the "target" DB
-	PARAM_TARGET_DB_ID		ID of the "target" DB to which the "source" DB tables will be archived/mirrored</note>
-      <xloc>0</xloc>
+	PARAM_CDC_LAST_LOAD_UTC						Timestamp for when the target DB was most recently updated successfully
+	PARAM_CDC_CURRENT_LOAD_UTC					Used so that a consistent max timestamp is used for all ETL
+	PARAM_DYN_DB_CONN_TARGET_DB_HOST			for "dynamic" target database connection, e.g., "dynamic_postgres_target_db"
+	PARAM_DYN_DB_CONN_TARGET_DB_PORT			for "dynamic" target database connection, e.g., "dynamic_postgres_target_db"
+	PARAM_DYN_DB_CONN_TARGET_DB_DATABASE		for "dynamic" target database connection, e.g., "dynamic_postgres_target_db"
+	PARAM_DYN_DB_CONN_TARGET_DB_USERNAME	for "dynamic" target database connection, e.g., "dynamic_postgres_target_db"
+	PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD	for "dynamic" target database connection, e.g., "dynamic_postgres_target_db"
+	PARAM_DYN_DB_CONN_DB_HOST					for "dynamic" database connection, e.g., "dynamic_postgres_db"
+	PARAM_DYN_DB_CONN_DB_PORT					for "dynamic" database connection, e.g., "dynamic_postgres_db"
+	PARAM_DYN_DB_CONN_DB_DATABASE				for "dynamic" database connection, e.g., "dynamic_postgres_db"
+	PARAM_DYN_DB_CONN_DB_USERNAME				for "dynamic" database connection, e.g., "dynamic_postgres_db"
+	PARAM_DYN_DB_CONN_DB_PASSWORD			for "dynamic" database connection, e.g., "dynamic_postgres_db"
+	PARAM_SOURCE_DB_ID								ID the "source" database containing tables will be mirrored to a "target" database
+	PARAM_TABLE_META_ID							Primary key of etl.table_meta row for "source" table archived/mirrored to "target" table
+	PARAM_MAX_INSERT_ID							Maximum value of the "insert_id" column for rows to load from the source DB table
+	PARAM_SOURCE_SCHEMA							Name of schema containing source table to mirror to target table
+	PARAM_SOURCE_TABLE							Name of source table to mirror to target table
+	PARAM_TARGET_DB_ID								ID of the "target" database to which the "source" DB tables will be archived/mirrored
+	PARAM_TARGET_SCHEMA							Name of schema containing target table to update (not currently used)
+	PARAM_TARGET_TABLE								Name of target table to update (not currently used)</note>
+      <xloc>16</xloc>
       <yloc>0</yloc>
-      <width>680</width>
-      <heigth>94</heigth>
+      <width>862</width>
+      <heigth>318</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -847,12 +1132,12 @@ This job has parameters:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>This "Abort" is needed to
-tell the root calling job 
-that execution has failed.</note>
-      <xloc>624</xloc>
-      <yloc>752</yloc>
-      <width>157</width>
+      <note>Update the etl.table_meta row that corresponds to the table treated in the 
+current job. This records which mirror algorithm was used, as well as when the 
+mirroring was performed.</note>
+      <xloc>16</xloc>
+      <yloc>704</yloc>
+      <width>467</width>
       <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -870,21 +1155,15 @@ that execution has failed.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>This job sets the PDI variables:
-
-	QF_DYN_DB_CONN_DB_HOST
-	QF_DYN_DB_CONN_DB_PORT
-	QF_DYN_DB_CONN_DB_DATABASE
-	QF_DYN_DB_CONN_DB_USERNAME
-	QF_DYN_DB_CONN_DB_PASSWORD
-
-for use below. It takes a single parameter:
-
-	PARAM_DB_ID = ${PARAM_SOURCE_DB_ID}</note>
-      <xloc>544</xloc>
-      <yloc>192</yloc>
-      <width>289</width>
-      <heigth>164</heigth>
+      <note>This "Abort" is needed so that the the 
+root calling job will know that 
+execution has failed. It will then direct
+the execution flow to the job that 
+sends out failure e-mails.</note>
+      <xloc>1216</xloc>
+      <yloc>512</yloc>
+      <width>232</width>
+      <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -901,12 +1180,15 @@ for use below. It takes a single parameter:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Check here for additional DB types, 
-e.g., Oracle, if ever necessary.</note>
-      <xloc>624</xloc>
-      <yloc>496</yloc>
-      <width>219</width>
-      <heigth>38</heigth>
+      <note>This allows execution to continue without
+attempting to update a target table for 
+the case where no column mapping 
+metdata is provided for the table. This
+may not be the best behaviour.</note>
+      <xloc>1216</xloc>
+      <yloc>416</yloc>
+      <width>252</width>
+      <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -923,43 +1205,15 @@ e.g., Oracle, if ever necessary.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>This transformation sets the variable:
+      <note>Update the target table using an ETL Metadata Injection step for a PostgreSQL
+"source" DB. The transformation is passed the additional parameters:
 
-	QF_SQL_SELECT_MAX_INSERT_IDS_FOR_SOURCE_DB
-
-to the SQL required to select the maximum value of the
-"insert_id" colum of each table in the specifed "source" DB
-that is archived/mirrored to the specified "target" DB.</note>
-      <xloc>544</xloc>
-      <yloc>368</yloc>
-      <width>349</width>
-      <heigth>108</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Store the MAX(insert_id) values
-for each table in a column of 
-etl.table_meta. Here, "insert_id"
-refers to the column of the
-table that acts as the "insert_id"
-column (its name may differ).</note>
+	PARAM_SOURCE_INSERT_ID_COLNAME
+	PARAM_SOURCE_INSERTED_ON_COLNAME</note>
       <xloc>16</xloc>
-      <yloc>576</yloc>
-      <width>196</width>
-      <heigth>94</heigth>
+      <yloc>592</yloc>
+      <width>472</width>
+      <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -970,6 +1224,84 @@ column (its name may differ).</note>
       <backgroundcolorred>255</backgroundcolorred>
       <backgroundcolorgreen>205</backgroundcolorgreen>
       <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>The query in this step must match the query in 
+tr_target-update_table-insert_only_table
+that is executed below. This is because a PDI runtime error occurs if an 
+empty stream is sent to an ETL Metadata Injection step. To avoid this 
+from happening, we check that metadata is available here before 
+executing that transformation. The only reason why this case should 
+occur is if a table is marked for mirroring, but no column mapping 
+metadata is provided - this should never occur, but we check in order to 
+provide a warning message, rather than letting PDI choke on this problem.</note>
+      <xloc>16</xloc>
+      <yloc>368</yloc>
+      <width>445</width>
+      <heigth>136</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>255</backgroundcolorgreen>
+      <backgroundcolorblue>0</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Set the variables QF_SOURCE_INSERT_ID_COLNAME &amp; QF_SOURCE_INSERTED_ON_COLNAME
+to the names of the columns from the source table that function as 
+"insert_id" &amp; "inserted_on" column. These values are passed as parameters
+to the job entry tr_target-update_table-insert_only_table below.</note>
+      <xloc>16</xloc>
+      <yloc>512</yloc>
+      <width>560</width>
+      <heigth>66</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>TODO: In order to treat additional source database "types", e.g., "Oracle", we
+must test for that database type here and then execute similar code as that in
+tr_target-update_table-insert_only_table, but which uses a dynamic database
+connection for that database type, e.g., Oracle. Use the same names for
+jobs/transformations but insert "oracle" somewhere in the names.</note>
+      <xloc>400</xloc>
+      <yloc>768</yloc>
+      <width>462</width>
+      <heigth>80</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>255</fontcolorred>
+      <fontcolorgreen>255</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>0</backgroundcolorred>
+      <backgroundcolorgreen>0</backgroundcolorgreen>
+      <backgroundcolorblue>0</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
       <bordercolorblue>100</bordercolorblue>

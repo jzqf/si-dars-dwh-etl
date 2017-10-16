@@ -1,19 +1,74 @@
 <job>
-  <name>jb_store_insert_ids</name>
+  <name>jb_target-update_table-custom_algorithm_dispatcher</name>
   <description />
   <extended_description />
   <job_version />
-  <job_status>1</job_status>
-  <directory>/generic/store_insert_ids</directory>
+  <job_status>0</job_status>
+  <directory>/generic/target_update</directory>
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/10/14 16:07:57.892</modified_date>
+  <modified_date>2017/10/16 09:55:03.623</modified_date>
   <parameters>
     <parameter>
+      <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
+      <default_value />
+      <description>Timestamp of the current load (no rows after this timestamp will be loaded)</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_CDC_LAST_LOAD_UTC</name>
+      <default_value />
+      <description>Timestamp of last successful load from the source database</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_MAX_INSERT_ID</name>
+      <default_value />
+      <description>Maximum value of the "insert_id" column for rows to load from the source DB table</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_SOURCE_DB_ID</name>
+      <default_value>0</default_value>
+      <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_SOURCE_SCHEMA</name>
+      <default_value />
+      <description />
+    </parameter>
+    <parameter>
+      <name>PARAM_SOURCE_SCHEMA_DOT_TABLE</name>
+      <default_value />
+      <description />
+    </parameter>
+    <parameter>
+      <name>PARAM_SOURCE_TABLE</name>
+      <default_value />
+      <description />
+    </parameter>
+    <parameter>
+      <name>PARAM_TABLE_META_ID</name>
+      <default_value>0</default_value>
+      <description>Primary key of etl.table_meta row for "source" table archived/mirrored to "target" table</description>
+    </parameter>
+    <parameter>
       <name>PARAM_TARGET_DB_ID</name>
-      <default_value>10</default_value>
-      <description>ID of the "target" database to which the "source" DB tables will be archived/mirrored</description>
+      <default_value>-1</default_value>
+      <description>ID of the "target" database to which "source" DB tables will be archived/mirrored</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_TARGET_SCHEMA</name>
+      <default_value />
+      <description />
+    </parameter>
+    <parameter>
+      <name>PARAM_TARGET_SCHEMA_DOT_TABLE</name>
+      <default_value />
+      <description />
+    </parameter>
+    <parameter>
+      <name>PARAM_TARGET_TABLE</name>
+      <default_value />
+      <description />
     </parameter>
   </parameters>
   <connection>
@@ -359,58 +414,78 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>208</xloc>
-      <yloc>208</yloc>
+      <xloc>32</xloc>
+      <yloc>272</yloc>
     </entry>
     <entry>
-      <name>tr_list_of_source dbs_to_mirror</name>
+      <name>Write To Log: Parameters</name>
       <description />
-      <type>TRANS</type>
-      <specification_method>rep_name</specification_method>
-      <trans_object_id />
-      <filename />
-      <transname>tr_list_of_source dbs_to_mirror</transname>
-      <directory>/generic/store_insert_ids</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <clear_rows>Y</clear_rows>
-      <clear_files>N</clear_files>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
+      <type>WRITE_TO_LOG</type>
+      <logmessage>PARAM_CDC_LAST_LOAD_UTC       = ${PARAM_CDC_LAST_LOAD_UTC}
+PARAM_CDC_CURRENT_LOAD_UTC    = ${PARAM_CDC_CURRENT_LOAD_UTC}
+PARAM_TABLE_META_ID           = ${PARAM_TABLE_META_ID}
+PARAM_SOURCE_DB_ID            = ${PARAM_SOURCE_DB_ID}
+PARAM_MAX_INSERT_ID           = ${PARAM_MAX_INSERT_ID}
+PARAM_SOURCE_SCHEMA           = ${PARAM_SOURCE_SCHEMA}
+PARAM_SOURCE_TABLE            = ${PARAM_SOURCE_TABLE}
+PARAM_SOURCE_SCHEMA_DOT_TABLE = ${PARAM_SOURCE_SCHEMA_DOT_TABLE}
+PARAM_TARGET_DB_ID            = ${PARAM_TARGET_DB_ID}
+PARAM_TARGET_SCHEMA           = ${PARAM_TARGET_SCHEMA}
+PARAM_TARGET_TABLE            = ${PARAM_TARGET_TABLE}
+PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
       <loglevel>Basic</loglevel>
-      <cluster>N</cluster>
-      <slave_server_name />
-      <set_append_logfile>N</set_append_logfile>
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <create_parent_folder>N</create_parent_folder>
-      <logging_remote_work>N</logging_remote_work>
-      <run_configuration>Pentaho local</run_configuration>
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-      </parameters>
+      <logsubject>Parameters received by jb_target-update_table-custom_algorithm_dispatcher</logsubject>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>208</xloc>
-      <yloc>304</yloc>
+      <xloc>160</xloc>
+      <yloc>272</yloc>
     </entry>
     <entry>
-      <name>jb_store_insert_ids-source_db</name>
+      <name>Abort job - Untreated case</name>
+      <description />
+      <type>ABORT</type>
+      <message>Aborting from jb_custom_mirrored_table_dispatcher. Untreated case in:  schema.table = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</message>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>160</xloc>
+      <yloc>736</yloc>
+    </entry>
+    <entry>
+      <name>Target table = obo.passage_with_images ?</name>
+      <description />
+      <type>SIMPLE_EVAL</type>
+      <valuetype>variable</valuetype>
+      <fieldname />
+      <variablename>${PARAM_TARGET_SCHEMA_DOT_TABLE}</variablename>
+      <fieldtype>string</fieldtype>
+      <mask />
+      <comparevalue>obo.passage_with_images</comparevalue>
+      <minvalue />
+      <maxvalue />
+      <successcondition>equal</successcondition>
+      <successnumbercondition>equal</successnumbercondition>
+      <successbooleancondition>false</successbooleancondition>
+      <successwhenvarset>N</successwhenvarset>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>160</xloc>
+      <yloc>384</yloc>
+    </entry>
+    <entry>
+      <name>jb_log_error - Untreated case</name>
       <description />
       <type>JOB</type>
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
-      <jobname>jb_store_insert_ids-source_db</jobname>
-      <directory>/generic/store_insert_ids</directory>
+      <jobname>jb_log_error</jobname>
+      <directory>/generic</directory>
       <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>Y</params_from_previous>
-      <exec_per_row>Y</exec_per_row>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
       <set_logfile>N</set_logfile>
       <logfile />
       <logext />
@@ -426,47 +501,71 @@
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
         <parameter>
-          <name>PARAM_SOURCE_DB_ID</name>
-          <stream_name>source_db_id</stream_name>
-          <value />
+          <name>PARAM_ERROR_MESSAGE</name>
+          <stream_name />
+          <value>Untreated case in jb_custom_mirrored_table_dispatcher:  schema.table = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</value>
         </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>208</xloc>
-      <yloc>448</yloc>
+      <xloc>160</xloc>
+      <yloc>640</yloc>
     </entry>
     <entry>
       <name>Abort job</name>
       <description />
       <type>ABORT</type>
-      <message>Aborting jb_store_insert_ids</message>
+      <message>Aborting jb_custom_mirrored_table_dispatcher after job entry jb_psa-obo.passage_with_images-update</message>
       <parallel>N</parallel>
       <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>32</xloc>
-      <yloc>448</yloc>
+      <nr>1</nr>
+      <xloc>736</xloc>
+      <yloc>416</yloc>
     </entry>
     <entry>
-      <name>Success</name>
-      <description />
-      <type>SUCCESS</type>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>208</xloc>
-      <yloc>640</yloc>
-    </entry>
-    <entry>
-      <name>jb_log_error</name>
+      <name>jb_psa-obo.passage_with_images-update</name>
       <description />
       <type>JOB</type>
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
-      <jobname>jb_log_error</jobname>
+      <jobname>jb_psa-obo.passage_with_images-update</jobname>
+      <directory>/psa/custom</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>480</xloc>
+      <yloc>384</yloc>
+    </entry>
+    <entry>
+      <name>jb_update_etl_table_meta_mirror_details</name>
+      <description />
+      <type>JOB</type>
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_update_etl_table_meta_mirror_details</jobname>
       <directory>/generic</directory>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -486,83 +585,23 @@
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
         <parameter>
-          <name>PARAM_ERROR_MESSAGE</name>
+          <name>PARAM_TABLE_MIRROR_TREATMENT_ID</name>
           <stream_name />
-          <value>Error  caught in jb_store_insert_ids while executing "tr_list_of_source dbs_to_mirror" for target DB: ${PARAM_TARGET_DB_ID}</value>
+          <value>${QF_MIRROR_ALG_CUSTOM}</value>
         </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>32</xloc>
-      <yloc>304</yloc>
-    </entry>
-    <entry>
-      <name>Wait for active Xactions to commit</name>
-      <description />
-      <type>DELAY</type>
-      <maximumTimeout>${QF_SOURCE_DB_WAIT_FOR_TRANSACTIONS_TO_COMMIT_SECONDS}</maximumTimeout>
-      <scaletime>0</scaletime>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>208</xloc>
-      <yloc>544</yloc>
-    </entry>
-    <entry>
-      <name>jb_log_error 2</name>
-      <description />
-      <type>JOB</type>
-      <specification_method>rep_name</specification_method>
-      <job_object_id />
-      <filename />
-      <jobname>jb_log_error</jobname>
-      <directory>/generic</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Nothing</loglevel>
-      <slave_server_name />
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <expand_remote_job>N</expand_remote_job>
-      <create_parent_folder>N</create_parent_folder>
-      <pass_export>N</pass_export>
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-        <parameter>
-          <name>PARAM_ERROR_MESSAGE</name>
-          <stream_name />
-          <value>Error  caught in jb_store_insert_ids while executing "Wait for active Xactions to commit" for target DB: ${PARAM_TARGET_DB_ID}</value>
-        </parameter>
-      </parameters>
-      <set_append_logfile>N</set_append_logfile>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>32</xloc>
-      <yloc>544</yloc>
+      <xloc>736</xloc>
+      <yloc>352</yloc>
     </entry>
   </entries>
   <hops>
     <hop>
-      <from>tr_list_of_source dbs_to_mirror</from>
-      <to>jb_store_insert_ids-source_db</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
       <from>START</from>
-      <to>tr_list_of_source dbs_to_mirror</to>
+      <to>Write To Log: Parameters</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -570,8 +609,8 @@
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>jb_store_insert_ids-source_db</from>
-      <to>Abort job</to>
+      <from>Target table = obo.passage_with_images ?</from>
+      <to>jb_log_error - Untreated case</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -579,26 +618,17 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>tr_list_of_source dbs_to_mirror</from>
-      <to>jb_log_error</to>
+      <from>jb_log_error - Untreated case</from>
+      <to>Abort job - Untreated case</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>jb_log_error</from>
-      <to>Abort job</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
+      <evaluation>Y</evaluation>
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>jb_store_insert_ids-source_db</from>
-      <to>Wait for active Xactions to commit</to>
+      <from>Write To Log: Parameters</from>
+      <to>Target table = obo.passage_with_images ?</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -606,8 +636,17 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Wait for active Xactions to commit</from>
-      <to>Success</to>
+      <from>jb_psa-obo.passage_with_images-update</from>
+      <to>Abort job</to>
+      <from_nr>0</from_nr>
+      <to_nr>1</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_psa-obo.passage_with_images-update</from>
+      <to>jb_update_etl_table_meta_mirror_details</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -615,116 +654,38 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Wait for active Xactions to commit</from>
-      <to>jb_log_error 2</to>
+      <from>Target table = obo.passage_with_images ?</from>
+      <to>jb_psa-obo.passage_with_images-update</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
-      <evaluation>N</evaluation>
+      <evaluation>Y</evaluation>
       <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>jb_log_error 2</from>
-      <to>Abort job</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>Y</unconditional>
     </hop>
   </hops>
   <notepads>
     <notepad>
-      <note>This job retrieves and stores the maximum value for the "insert_id" column for all tables that are archived/mirrored to a
-specified "target" DB. This may include tables from more than one "source" DB.
+      <note>This job updates a table in the target DB that is mirrored from a source database using a table-specific CUSTOM algorithm, i.e., a custom 
+job &amp; transformation is used that is specific to the table being updated in the target DB. This job has parameters:
 
-"Pass batch ID?" is selected for this job so that the batch ID is passed to tr_set_job_batch_id_variable via jb_init, which assigns 
-this value to QF_JOB_BATCH_ID.
+	PARAM_CDC_LAST_LOAD_UTC				Timestamp for when the target DB was most recently updated successfully
+	PARAM_CDC_CURRENT_LOAD_UTC			Timestamp of the current load (no rows after this timestamp will be loaded)
+	PARAM_TABLE_META_ID					Primary key of etl.table_meta row for "source" table archived/mirrored to "target" table
+	PARAM_SOURCE_DB_ID						ID the "source" database containing tables will be mirrored to a "target" database
+	PARAM_MAX_INSERT_ID					Maximum value of the "insert_id" column for rows to load from the source DB table
+	PARAM_SOURCE_SCHEMA					Not really needed since the job that will be run will be specific for the specified target DB table 
+	PARAM_SOURCE_TABLE					Not really needed since the job that will be run will be specific for the specified target DB table 
+	PARAM_SOURCE_SCHEMA_DOT_TABLE		Not really needed since the job that will be run will be specific for the specified target DB table 
+	PARAM_TARGET_DB_ID						ID of the "target" database to which the "source" DB tables will be archived/mirrored
+	PARAM_TARGET_SCHEMA
+	PARAM_TARGET_TABLE
+	PARAM_TARGET_SCHEMA_DOT_TABLE
 
-If this job has a parent, the setting "Pass batch ID?" should also be set for the parent *if* it is desired that QF_JOB_BATCH_ID
-should be assigned the batch ID of the root job (not this job). This may vary from case to case.
-
-This transformation has a single parameter:
-
-	PARAM_TARGET_DB_ID			ID of the "target" database to which the "source" DB tables will be archived/mirrored</note>
+This job acts as a "dispatcher" in that it runs the appropriate job for the table that is specified by this job's parameters.</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>744</width>
-      <heigth>178</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Create list of "source" DBs that are archived/mirrored to the specified "target" DB. 
-
-This transformation takes a single parameter:
-
-	PARAM_TARGET_DB_ID</note>
-      <xloc>336</xloc>
-      <yloc>288</yloc>
-      <width>493</width>
-      <heigth>80</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Update "etl.table_state.max_insert_id foreach table that is being archived/mirrored from the 
-specified "source" DB. This sub-job is:
-
-	1.	RUN ONCE FOR EACH "SOURCE" DB BEING ARCHIVED/MIRRORED.
-
-	2.	Passed the IDs of the "source" DB and "target" DB.</note>
-      <xloc>336</xloc>
-      <yloc>400</yloc>
-      <width>556</width>
-      <heigth>94</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Wait a little to try to avoid gaps in the "insert_id" column due to long running transactions
-that were started earlier and that will insert a row of a table with an "insert_id" column, but
-which are not yet committed.</note>
-      <xloc>336</xloc>
-      <yloc>528</yloc>
-      <width>541</width>
-      <heigth>52</heigth>
+      <width>855</width>
+      <heigth>248</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -741,20 +702,4 @@ which are not yet committed.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
   </notepads>
-  <attributes>
-    <group>
-      <name>METASTORE.pentaho</name>
-      <attribute>
-        <key>Default Run Configuration</key>
-        <value>{"namespace":"pentaho","id":"Default Run Configuration","name":"Default Run Configuration","description":"Defines a default run configuration","metaStoreName":null}</value>
-      </attribute>
-    </group>
-    <group>
-      <name>{"_":"Embedded MetaStore Elements","namespace":"pentaho","type":"Default Run Configuration"}</name>
-      <attribute>
-        <key>Pentaho local</key>
-        <value>{"children":[{"children":[],"id":"server","value":null},{"children":[],"id":"clustered","value":"N"},{"children":[],"id":"name","value":"Pentaho local"},{"children":[],"id":"description","value":null},{"children":[],"id":"readOnly","value":"Y"},{"children":[],"id":"sendResources","value":"N"},{"children":[],"id":"logRemoteExecutionLocally","value":"N"},{"children":[],"id":"remote","value":"N"},{"children":[],"id":"local","value":"Y"},{"children":[],"id":"showTransformations","value":"N"}],"id":"Pentaho local","value":null,"name":"Pentaho local","owner":null,"ownerPermissionsList":[]}</value>
-      </attribute>
-    </group>
-  </attributes>
 </job>

@@ -1,12 +1,12 @@
 <transformation>
   <info>
-    <name>tr_mirrored_insert_only_table-inject_meta-update</name>
+    <name>tr_target-update_table-insert_only_table</name>
     <description />
     <extended_description />
     <trans_version />
     <trans_type>Normal</trans_type>
     <trans_status>0</trans_status>
-    <directory>/psa</directory>
+    <directory>/generic/target_update</directory>
     <parameters>
       <parameter>
         <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
@@ -44,6 +44,31 @@
         <description>for "dynamic_postgres_db" database connection</description>
       </parameter>
       <parameter>
+        <name>PARAM_DYN_DB_CONN_TARGET_DB_DATABASE</name>
+        <default_value />
+        <description>for "dynamic" target database connection, e.g., "dynamic_postgres_target_db"</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_TARGET_DB_HOST</name>
+        <default_value />
+        <description>for "dynamic" target database connection, e.g., "dynamic_postgres_target_db"</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD</name>
+        <default_value />
+        <description>for "dynamic" target database connection, e.g., "dynamic_postgres_target_db"</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_TARGET_DB_PORT</name>
+        <default_value />
+        <description>for "dynamic" target database connection, e.g., "dynamic_postgres_target_db"</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_TARGET_DB_USERNAME</name>
+        <default_value />
+        <description>for "dynamic" target database connection, e.g., "dynamic_postgres_target_db"</description>
+      </parameter>
+      <parameter>
         <name>PARAM_MAX_INSERT_ID</name>
         <default_value>1000</default_value>
         <description>Maximum value of the "insert_id" column for rows to load from the source DB table</description>
@@ -77,6 +102,11 @@
         <name>PARAM_TABLE_META_ID</name>
         <default_value>37</default_value>
         <description>Primary key of etl.table_meta row for "source" table from which rows will be deleted</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_DB_ID</name>
+        <default_value>-1</default_value>
+        <description>ID of the "target" database to which "source" DB tables will be archived/mirrored</description>
       </parameter>
       <parameter>
         <name>PARAM_TARGET_INSERTED_ON_COLNAME</name>
@@ -519,7 +549,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/10/15 15:47:23.191</modified_date>
+    <modified_date>2017/10/16 08:45:49.930</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -529,28 +559,34 @@
 of a target table in a target database. This is a generic algorithm that can work with *any* table, as long as it is "insert-only" and it 
 has the necessary  "insert_id" &amp; "inserted_on" columns. This transformation has parameters:
 
+	PARAM_CDC_LAST_LOAD_UTC						Timestamp for when the target DB was most recently updated successfully
+	PARAM_CDC_CURRENT_LOAD_UTC					Used so that a consistent max timestamp is used for all ETL
+	PARAM_TABLE_META_ID							Primary key of etl.table_meta row for "source" table from which rows will be deleted
+	PARAM_DYN_DB_CONN_TARGET_DB_HOST			for "dynamic" target database connection, e.g., "dynamic_postgres_target_db"
+	PARAM_DYN_DB_CONN_TARGET_DB_PORT			for "dynamic" target database connection, e.g., "dynamic_postgres_target_db"
+	PARAM_DYN_DB_CONN_TARGET_DB_DATABASE		for "dynamic" target database connection, e.g., "dynamic_postgres_target_db"
+	PARAM_DYN_DB_CONN_TARGET_DB_USERNAME	for "dynamic" target database connection, e.g., "dynamic_postgres_target_db"
+	PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD	for "dynamic" target database connection, e.g., "dynamic_postgres_target_db"
 	PARAM_DYN_DB_CONN_DB_HOST					for "dynamic_postgres_db" database connection
 	PARAM_DYN_DB_CONN_DB_PORT					for "dynamic_postgres_db" database connection
 	PARAM_DYN_DB_CONN_DB_DATABASE				for "dynamic_postgres_db" database connection
 	PARAM_DYN_DB_CONN_DB_USERNAME				for "dynamic_postgres_db" database connection
 	PARAM_DYN_DB_CONN_DB_PASSWORD			for "dynamic_postgres_db" database connection
-	PARAM_CDC_LAST_LOAD_UTC						Timestamp for when *all* tables of the PSA were most recently updated successfully
-	PARAM_CDC_CURRENT_LOAD_UTC					Used so that a consistent max timestamp is used for all ETL
 	PARAM_MAX_INSERT_ID							Maximum value of the "insert_id" column for rows to load from the source DB table
-	PARAM_SOURCE_DB_ID								ID the "source" database containing tables will be mirrored to a "target" database	TODO: Delete (not used)
-	PARAM_SOURCE_SCHEMA							Name of schema containing source table to mirror to target table
-	PARAM_SOURCE_TABLE							Name of source table to mirror to target table
+	PARAM_SOURCE_DB_ID								ID the "source" database containing tables will be mirrored to a "target" database
+	PARAM_SOURCE_SCHEMA							Name of schema containing source table to mirror/archive
+	PARAM_SOURCE_TABLE							Name of source table to mirror/archive
 	PARAM_SOURCE_INSERT_ID_COLNAME				Name of column acting as "insert_id"  timestamp column of source table
 	PARAM_SOURCE_INSERTED_ON_COLNAME			Name of column acting as "inserted_on" column of source table
+	PARAM_TARGET_DB_ID								ID of the "target" database to which the "source" DB tables will be archived/mirrored
 	PARAM_TARGET_SCHEMA							Name of schema containing target table to update (not currently used)
 	PARAM_TARGET_TABLE								Name of target table to update (not currently used)
-	PARAM_TABLE_META_ID							Primary key of etl.table_meta row for "source" table from which rows will be deleted
 	PARAM_TARGET_INSERT_ID_COLNAME				Name of column acting as "insert_id"  timestamp column of target table
 	PARAM_TARGET_INSERTED_ON_COLNAME			Name of column acting as "inserted_on" column of target table</note>
-      <xloc>0</xloc>
+      <xloc>16</xloc>
       <yloc>0</yloc>
-      <width>993</width>
-      <heigth>318</heigth>
+      <width>843</width>
+      <heigth>402</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -568,7 +604,7 @@ has the necessary  "insert_id" &amp; "inserted_on" columns. This transformation 
     </notepad>
     <notepad>
       <note>Either of these 2 steps can be used to inject metadata to specify the fields to stream to the
-target PSA database table via the template transformation. They also enable the specified
+target database table via the template transformation. They also enable the specified
 fields to be renamed to match column names in the target table.
 
 Only *one* of these steps should have an enabled hop to the ETL Metadata Injection step!
@@ -577,8 +613,8 @@ The Data Grid step is only used for testing this transformation by running it in
 manually supplied parameter values (or default values set for the parameters). When you 
 disable a hop to the ETL Metadata Injection step, all configuration settings may be cleared,
 so do not do this unless you are prepared to reconfigure this step.</note>
-      <xloc>816</xloc>
-      <yloc>336</yloc>
+      <xloc>784</xloc>
+      <yloc>432</yloc>
       <width>541</width>
       <heigth>150</heigth>
       <fontname>Ubuntu</fontname>
@@ -598,12 +634,12 @@ so do not do this unless you are prepared to reconfigure this step.</note>
     </notepad>
     <notepad>
       <note>The query here must match the query in 
-jb_mirrored_insert_only_tables-inject_meta-update_one 
+jb_target-update_table-insert_only_table
 where this transformation is executed. See the 
 comments in that job for an explanation.</note>
-      <xloc>0</xloc>
-      <yloc>336</yloc>
-      <width>340</width>
+      <xloc>16</xloc>
+      <yloc>432</yloc>
+      <width>283</width>
       <heigth>66</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -726,12 +762,12 @@ comments in that job for an explanation.</note>
   <order>
     <hop>
       <from>Data Grid - Column mapping metadata</from>
-      <to>ETL Metadata Injection - tmplt_mirrored_insert_only_table-update</to>
+      <to>Inject metadata - tmplt_target-update_table-insert_only_table</to>
       <enabled>N</enabled>
     </hop>
     <hop>
       <from>Column mapping metadata</from>
-      <to>ETL Metadata Injection - tmplt_mirrored_insert_only_table-update</to>
+      <to>Inject metadata - tmplt_target-update_table-insert_only_table</to>
       <enabled>Y</enabled>
     </hop>
   </order>
@@ -773,8 +809,8 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>416</xloc>
-      <yloc>352</yloc>
+      <xloc>384</xloc>
+      <yloc>448</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -855,13 +891,13 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>688</xloc>
-      <yloc>352</yloc>
+      <xloc>656</xloc>
+      <yloc>448</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>ETL Metadata Injection - tmplt_mirrored_insert_only_table-update</name>
+    <name>Inject metadata - tmplt_target-update_table-insert_only_table</name>
     <type>MetaInject</type>
     <description />
     <distribute>Y</distribute>
@@ -873,7 +909,7 @@ ORDER BY
     </partitioning>
     <specification_method>rep_name</specification_method>
     <trans_object_id />
-    <trans_name>tmplt_mirrored_insert_only_table-update</trans_name>
+    <trans_name>tmplt_target-update_table-insert_only_table</trans_name>
     <filename />
     <directory_path>${Internal.Entry.Current.Directory}</directory_path>
     <source_step />
@@ -906,8 +942,8 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>416</xloc>
-      <yloc>464</yloc>
+      <xloc>384</xloc>
+      <yloc>560</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
