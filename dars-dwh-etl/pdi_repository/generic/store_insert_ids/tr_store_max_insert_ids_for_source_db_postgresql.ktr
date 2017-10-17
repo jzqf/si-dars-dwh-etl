@@ -11,27 +11,37 @@
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE</name>
         <default_value />
-        <description>for "dynamic_postgres_source_db" database connection</description>
+        <description>for dynamic database connection</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER</name>
+        <default_value />
+        <description>for dynamic database connection</description>
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_HOST</name>
         <default_value />
-        <description>for "dynamic_postgres_source_db" database connection</description>
+        <description>for dynamic database connection</description>
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD</name>
         <default_value />
-        <description>for "dynamic_postgres_source_db" database connection</description>
+        <description>for dynamic database connection</description>
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_PORT</name>
         <default_value />
-        <description>for "dynamic_postgres_source_db" database connection</description>
+        <description>for dynamic database connection</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_URL</name>
+        <default_value />
+        <description>for dynamic database connection</description>
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME</name>
         <default_value />
-        <description>for "dynamic_postgres_source_db" database connection</description>
+        <description>for dynamic database connection</description>
       </parameter>
       <parameter>
         <name>PARAM_SQL_SELECT_MAX_INSERT_IDS_FOR_SOURCE_DB</name>
@@ -459,7 +469,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/09/13 15:06:25.736</modified_date>
+    <modified_date>2017/10/17 15:17:40.457</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -470,18 +480,20 @@ and then stores these values in a column of the etl.table_state table.
 
 This transformation has parameters:
 
-	PARAM_DYN_DB_CONN_SOURCE_DB_HOST							for "dynamic_postgres_source_db" database connection
-	PARAM_DYN_DB_CONN_SOURCE_DB_PORT							for "dynamic_postgres_source_db" database connection
-	PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE						for "dynamic_postgres_source_db" database connection
-	PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME						for "dynamic_postgres_source_db" database connection
-	PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD					for "dynamic_postgres_source_db" database connection
+	PARAM_DYN_DB_CONN_SOURCE_DB_HOST					for dynamic database connection
+	PARAM_DYN_DB_CONN_SOURCE_DB_PORT					for dynamic database connection
+	PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE			for dynamic database connection
+	PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME			for dynamic database connection
+	PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD			for dynamic database connection
+	PARAM_DYN_DB_CONN_SOURCE_DB_URL					for dynamic database connection
+	PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER				for dynamic database connection
 	PARAM_SQL_SELECT_MAX_INSERT_IDS_FOR_SOURCE_DB	Contains the SQL statement that must be executed in order
 																to retrieve the maximum value of the "insert_id" column for
 																each table of a PostgreSQL "source" DB</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
       <width>741</width>
-      <heigth>192</heigth>
+      <heigth>220</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -504,7 +516,7 @@ option "Abort with error" selected in order that this
 situation will be propagated back up to the main job
 as a failure so that a failure email will be sent.</note>
       <xloc>656</xloc>
-      <yloc>352</yloc>
+      <yloc>368</yloc>
       <width>319</width>
       <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
@@ -560,7 +572,7 @@ violating foreign key constraints in the target DB.</note>
       <note>This is the step that needs transaction isolation level
 "REPEATABLE READ" (or better).</note>
       <xloc>336</xloc>
-      <yloc>224</yloc>
+      <yloc>240</yloc>
       <width>316</width>
       <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
@@ -579,57 +591,6 @@ violating foreign key constraints in the target DB.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
   </notepads>
-  <connection>
-    <name>dynamic_postgres_source_db</name>
-    <server>${PARAM_DYN_DB_CONN_SOURCE_DB_HOST}</server>
-    <type>POSTGRESQL</type>
-    <access>Native</access>
-    <database>${PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE}</database>
-    <port>${PARAM_DYN_DB_CONN_SOURCE_DB_PORT}</port>
-    <username>${PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME}</username>
-    <password>${PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD}</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
-    <attributes>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>IS_CLUSTERED</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>PORT_NUMBER</code>
-        <attribute>${PARAM_DYN_DB_CONN_SOURCE_DB_PORT}</attribute>
-      </attribute>
-      <attribute>
-        <code>PRESERVE_RESERVED_WORD_CASE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>QUOTE_ALL_FIELDS</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>USE_POOLING</code>
-        <attribute>N</attribute>
-      </attribute>
-    </attributes>
-  </connection>
   <connection>
     <name>etl_db</name>
     <server>${QF_ETL_DB_HOST}</server>
@@ -662,6 +623,65 @@ violating foreign key constraints in the target DB.</note>
       <attribute>
         <code>PRESERVE_RESERVED_WORD_CASE</code>
         <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
+  <connection>
+    <name>generic_source_db</name>
+    <server />
+    <type>GENERIC</type>
+    <access>Native</access>
+    <database />
+    <port>-1</port>
+    <username>${PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME}</username>
+    <password>${PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD}</password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>CUSTOM_DRIVER_CLASS</code>
+        <attribute>${PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER}</attribute>
+      </attribute>
+      <attribute>
+        <code>CUSTOM_URL</code>
+        <attribute>${PARAM_DYN_DB_CONN_SOURCE_DB_URL}</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>-1</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>Y</attribute>
       </attribute>
       <attribute>
         <code>QUOTE_ALL_FIELDS</code>
@@ -783,7 +803,7 @@ violating foreign key constraints in the target DB.</note>
     </remotesteps>
     <GUI>
       <xloc>496</xloc>
-      <yloc>464</yloc>
+      <yloc>480</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -811,7 +831,7 @@ violating foreign key constraints in the target DB.</note>
     </remotesteps>
     <GUI>
       <xloc>496</xloc>
-      <yloc>384</yloc>
+      <yloc>400</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -835,7 +855,7 @@ violating foreign key constraints in the target DB.</note>
     </remotesteps>
     <GUI>
       <xloc>496</xloc>
-      <yloc>304</yloc>
+      <yloc>320</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -850,7 +870,7 @@ violating foreign key constraints in the target DB.</note>
       <method>none</method>
       <schema_name />
     </partitioning>
-    <connection>dynamic_postgres_source_db</connection>
+    <connection>generic_source_db</connection>
     <sql>${PARAM_SQL_SELECT_MAX_INSERT_IDS_FOR_SOURCE_DB}</sql>
     <limit>0</limit>
     <lookup />
@@ -866,7 +886,7 @@ violating foreign key constraints in the target DB.</note>
     </remotesteps>
     <GUI>
       <xloc>160</xloc>
-      <yloc>224</yloc>
+      <yloc>240</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -910,7 +930,7 @@ violating foreign key constraints in the target DB.</note>
     </remotesteps>
     <GUI>
       <xloc>160</xloc>
-      <yloc>464</yloc>
+      <yloc>480</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -947,7 +967,7 @@ violating foreign key constraints in the target DB.</note>
     </remotesteps>
     <GUI>
       <xloc>160</xloc>
-      <yloc>304</yloc>
+      <yloc>320</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
