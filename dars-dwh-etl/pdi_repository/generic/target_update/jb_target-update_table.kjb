@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/10/17 09:35:07.706</modified_date>
+  <modified_date>2017/10/17 14:06:20.792</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
@@ -26,6 +26,11 @@
       <description>for "dynamic" target database connection, e.g., "dynamic_postgres_target_db"</description>
     </parameter>
     <parameter>
+      <name>PARAM_DYN_DB_CONN_TARGET_DB_DRIVER</name>
+      <default_value />
+      <description>for generic target database connection "generic_target_db"</description>
+    </parameter>
+    <parameter>
       <name>PARAM_DYN_DB_CONN_TARGET_DB_HOST</name>
       <default_value />
       <description>for "dynamic" target database connection, e.g., "dynamic_postgres_target_db"</description>
@@ -39,6 +44,11 @@
       <name>PARAM_DYN_DB_CONN_TARGET_DB_PORT</name>
       <default_value />
       <description>for "dynamic" target database connection, e.g., "dynamic_postgres_target_db"</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_TARGET_DB_URL</name>
+      <default_value />
+      <description>for generic target database connection "generic_target_db"</description>
     </parameter>
     <parameter>
       <name>PARAM_DYN_DB_CONN_TARGET_DB_USERNAME</name>
@@ -455,7 +465,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>16</xloc>
-      <yloc>432</yloc>
+      <yloc>448</yloc>
     </entry>
     <entry>
       <name>Abort job</name>
@@ -466,7 +476,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>736</xloc>
-      <yloc>736</yloc>
+      <yloc>752</yloc>
     </entry>
     <entry>
       <name>Write To Log: Parameters</name>
@@ -479,6 +489,8 @@ PARAM_DYN_DB_CONN_TARGET_DB_PORT              = ${PARAM_DYN_DB_CONN_TARGET_DB_PO
 PARAM_DYN_DB_CONN_TARGET_DB_DATABASE          = ${PARAM_DYN_DB_CONN_TARGET_DB_DATABASE}
 PARAM_DYN_DB_CONN_TARGET_DB_USERNAME          = ${PARAM_DYN_DB_CONN_TARGET_DB_USERNAME}
 PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD          = ${PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD}
+PARAM_DYN_DB_CONN_TARGET_DB_URL               = ${PARAM_DYN_DB_CONN_TARGET_DB_URL}
+PARAM_DYN_DB_CONN_TARGET_DB_DRIVER            = ${PARAM_DYN_DB_CONN_TARGET_DB_DRIVER}
 PARAM_MAX_INSERT_ID                           = ${PARAM_MAX_INSERT_ID}
 PARAM_TABLE_META_ID                           = ${PARAM_TABLE_META_ID}
 PARAM_SOURCE_DB_ID                            = ${PARAM_SOURCE_DB_ID}
@@ -498,7 +510,7 @@ PARAM_USE_CUSTOM_MIRROR_ALGORITHM             = ${PARAM_USE_CUSTOM_MIRROR_ALGORI
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>144</xloc>
-      <yloc>432</yloc>
+      <yloc>448</yloc>
     </entry>
     <entry>
       <name>Use custom algorithm?</name>
@@ -520,7 +532,7 @@ PARAM_USE_CUSTOM_MIRROR_ALGORITHM             = ${PARAM_USE_CUSTOM_MIRROR_ALGORI
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>144</xloc>
-      <yloc>832</yloc>
+      <yloc>848</yloc>
     </entry>
     <entry>
       <name>jb_target-update_table-custom_algorithm_dispatcher</name>
@@ -554,7 +566,7 @@ PARAM_USE_CUSTOM_MIRROR_ALGORITHM             = ${PARAM_USE_CUSTOM_MIRROR_ALGORI
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>464</xloc>
-      <yloc>832</yloc>
+      <yloc>848</yloc>
     </entry>
     <entry>
       <name>Use generic algorithm for insert-only tables?</name>
@@ -576,7 +588,7 @@ PARAM_USE_CUSTOM_MIRROR_ALGORITHM             = ${PARAM_USE_CUSTOM_MIRROR_ALGORI
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>144</xloc>
-      <yloc>640</yloc>
+      <yloc>656</yloc>
     </entry>
     <entry>
       <name>Use generic algorithm for updateable tables?</name>
@@ -598,7 +610,7 @@ PARAM_USE_CUSTOM_MIRROR_ALGORITHM             = ${PARAM_USE_CUSTOM_MIRROR_ALGORI
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>144</xloc>
-      <yloc>736</yloc>
+      <yloc>752</yloc>
     </entry>
     <entry>
       <name>jb_target-update_table-insert_only_table</name>
@@ -657,7 +669,7 @@ PARAM_USE_CUSTOM_MIRROR_ALGORITHM             = ${PARAM_USE_CUSTOM_MIRROR_ALGORI
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>464</xloc>
-      <yloc>640</yloc>
+      <yloc>656</yloc>
     </entry>
     <entry>
       <name>jb_target-update_table-updatable_table</name>
@@ -716,7 +728,7 @@ PARAM_USE_CUSTOM_MIRROR_ALGORITHM             = ${PARAM_USE_CUSTOM_MIRROR_ALGORI
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>464</xloc>
-      <yloc>736</yloc>
+      <yloc>752</yloc>
     </entry>
     <entry>
       <name>jb_log_error - Untreated case</name>
@@ -755,7 +767,7 @@ PARAM_USE_CUSTOM_MIRROR_ALGORITHM             = ${PARAM_USE_CUSTOM_MIRROR_ALGORI
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>144</xloc>
-      <yloc>928</yloc>
+      <yloc>944</yloc>
     </entry>
     <entry>
       <name>jb_set_dynamic_db_connection_variables</name>
@@ -794,7 +806,7 @@ PARAM_USE_CUSTOM_MIRROR_ALGORITHM             = ${PARAM_USE_CUSTOM_MIRROR_ALGORI
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>144</xloc>
-      <yloc>528</yloc>
+      <yloc>544</yloc>
     </entry>
     <entry>
       <name>DUMMY</name>
@@ -814,7 +826,7 @@ PARAM_USE_CUSTOM_MIRROR_ALGORITHM             = ${PARAM_USE_CUSTOM_MIRROR_ALGORI
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>736</xloc>
-      <yloc>528</yloc>
+      <yloc>544</yloc>
     </entry>
     <entry>
       <name>DUMMY 2</name>
@@ -834,7 +846,7 @@ PARAM_USE_CUSTOM_MIRROR_ALGORITHM             = ${PARAM_USE_CUSTOM_MIRROR_ALGORI
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>736</xloc>
-      <yloc>928</yloc>
+      <yloc>944</yloc>
     </entry>
   </entries>
   <hops>
@@ -929,15 +941,6 @@ PARAM_USE_CUSTOM_MIRROR_ALGORITHM             = ${PARAM_USE_CUSTOM_MIRROR_ALGORI
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Write To Log: Parameters</from>
-      <to>jb_set_dynamic_db_connection_variables</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
       <from>jb_set_dynamic_db_connection_variables</from>
       <to>Use generic algorithm for insert-only tables?</to>
       <from_nr>0</from_nr>
@@ -982,6 +985,15 @@ PARAM_USE_CUSTOM_MIRROR_ALGORITHM             = ${PARAM_USE_CUSTOM_MIRROR_ALGORI
       <evaluation>Y</evaluation>
       <unconditional>Y</unconditional>
     </hop>
+    <hop>
+      <from>Write To Log: Parameters</from>
+      <to>jb_set_dynamic_db_connection_variables</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
   </hops>
   <notepads>
     <notepad>
@@ -1001,6 +1013,8 @@ This job has parameters:
 	PARAM_DYN_DB_CONN_TARGET_DB_DATABASE				for "dynamic" target database connection, e.g., "dynamic_postgres_target_db"
 	PARAM_DYN_DB_CONN_TARGET_DB_USERNAME			for "dynamic" target database connection, e.g., "dynamic_postgres_target_db"
 	PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD			for "dynamic" target database connection, e.g., "dynamic_postgres_target_db"
+	PARAM_DYN_DB_CONN_TARGET_DB_DRIVER				for generic target database connection "generic_target_db"
+	PARAM_DYN_DB_CONN_TARGET_DB_URL					for generic target database connection "generic_target_db"
 	PARAM_MAX_INSERT_ID									Maximum value of the "insert_id" column for rows to load from the source DB table
 	PARAM_SOURCE_DB_ID										ID the "source" database containing tables that are mirrored to a "target" database
 	PARAM_SOURCE_SCHEMA									Name of schema containing source table that is mirrored to target table
@@ -1016,7 +1030,7 @@ This job has parameters:
       <xloc>0</xloc>
       <yloc>0</yloc>
       <width>964</width>
-      <heigth>402</heigth>
+      <heigth>430</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -1038,7 +1052,7 @@ to tell the root calling
 job that execution has
 failed.</note>
       <xloc>800</xloc>
-      <yloc>704</yloc>
+      <yloc>720</yloc>
       <width>139</width>
       <heigth>66</heigth>
       <fontname>Ubuntu</fontname>
@@ -1065,7 +1079,7 @@ based on a single parameter:
 
 	PARAM_DB_ID = PARAM_SOURCE_DB_ID</note>
       <xloc>288</xloc>
-      <yloc>480</yloc>
+      <yloc>496</yloc>
       <width>274</width>
       <heigth>108</heigth>
       <fontname>Ubuntu</fontname>
