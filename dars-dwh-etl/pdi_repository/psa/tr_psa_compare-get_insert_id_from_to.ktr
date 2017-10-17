@@ -9,29 +9,29 @@
     <directory>/psa</directory>
     <parameters>
       <parameter>
-        <name>PARAM_DYN_DB_CONN_DB_DATABASE</name>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE</name>
         <default_value />
-        <description>for "dynamic_postgres_db" database connection</description>
+        <description>for "dynamic_postgres_source_db" database connection</description>
       </parameter>
       <parameter>
-        <name>PARAM_DYN_DB_CONN_DB_HOST</name>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_HOST</name>
         <default_value />
-        <description>for "dynamic_postgres_db" database connection</description>
+        <description>for "dynamic_postgres_source_db" database connection</description>
       </parameter>
       <parameter>
-        <name>PARAM_DYN_DB_CONN_DB_PASSWORD</name>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD</name>
         <default_value />
-        <description>for "dynamic_postgres_db" database connection</description>
+        <description>for "dynamic_postgres_source_db" database connection</description>
       </parameter>
       <parameter>
-        <name>PARAM_DYN_DB_CONN_DB_PORT</name>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_PORT</name>
         <default_value />
-        <description>for "dynamic_postgres_db" database connection</description>
+        <description>for "dynamic_postgres_source_db" database connection</description>
       </parameter>
       <parameter>
-        <name>PARAM_DYN_DB_CONN_DB_USERNAME</name>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME</name>
         <default_value />
-        <description>for "dynamic_postgres_db" database connection</description>
+        <description>for "dynamic_postgres_source_db" database connection</description>
       </parameter>
       <parameter>
         <name>PARAM_CDC_LAST_LOAD_UTC</name>
@@ -524,11 +524,11 @@ Note 1:	The "from" value is computed from the source (OBO) table, while the "to"
 
 This transformation has parameters:
 
-	PARAM_DYN_DB_CONN_DB_HOST			for "dynamic_postgres_db" database connection
-	PARAM_DYN_DB_CONN_DB_PORT			for "dynamic_postgres_db" database connection
-	PARAM_DYN_DB_CONN_DB_DATABASE		for "dynamic_postgres_db" database connection
-	PARAM_DYN_DB_CONN_DB_USERNAME		for "dynamic_postgres_db" database connection
-	PARAM_DYN_DB_CONN_DB_PASSWORD	for "dynamic_postgres_db" database connection
+	PARAM_DYN_DB_CONN_SOURCE_DB_HOST			for "dynamic_postgres_source_db" database connection
+	PARAM_DYN_DB_CONN_SOURCE_DB_PORT			for "dynamic_postgres_source_db" database connection
+	PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE		for "dynamic_postgres_source_db" database connection
+	PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME		for "dynamic_postgres_source_db" database connection
+	PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD	for "dynamic_postgres_source_db" database connection
 	PARAM_CDC_LAST_LOAD_UTC			Timestamp for when the target PSA DB mirror tables were last updated from the source DB
 	PARAM_SOURCE_SCHEMA					Schema of source (OBO) table to compare
 	PARAM_SOURCE_TABLE					Name of source (OBO) table to compare
@@ -585,14 +585,14 @@ rows will be compared. In this step, the field "insert_id_from" is configured wi
     </notepad>
   </notepads>
   <connection>
-    <name>dynamic_postgres_db</name>
-    <server>${PARAM_DYN_DB_CONN_DB_HOST}</server>
+    <name>dynamic_postgres_source_db</name>
+    <server>${PARAM_DYN_DB_CONN_SOURCE_DB_HOST}</server>
     <type>POSTGRESQL</type>
     <access>Native</access>
-    <database>${PARAM_DYN_DB_CONN_DB_DATABASE}</database>
-    <port>${PARAM_DYN_DB_CONN_DB_PORT}</port>
-    <username>${PARAM_DYN_DB_CONN_DB_USERNAME}</username>
-    <password>${PARAM_DYN_DB_CONN_DB_PASSWORD}</password>
+    <database>${PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE}</database>
+    <port>${PARAM_DYN_DB_CONN_SOURCE_DB_PORT}</port>
+    <username>${PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME}</username>
+    <password>${PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD}</password>
     <servername />
     <data_tablespace />
     <index_tablespace />
@@ -611,7 +611,7 @@ rows will be compared. In this step, the field "insert_id_from" is configured wi
       </attribute>
       <attribute>
         <code>PORT_NUMBER</code>
-        <attribute>${PARAM_DYN_DB_CONN_DB_PORT}</attribute>
+        <attribute>${PARAM_DYN_DB_CONN_SOURCE_DB_PORT}</attribute>
       </attribute>
       <attribute>
         <code>PRESERVE_RESERVED_WORD_CASE</code>
@@ -845,7 +845,7 @@ if(max_num_rows > 0) {
       <method>none</method>
       <schema_name />
     </partitioning>
-    <connection>dynamic_postgres_db</connection>
+    <connection>dynamic_postgres_source_db</connection>
     <sql>SELECT
     COALESCE(MIN(${PARAM_SOURCE_INSERT_ID_COLNAME}), ${QF_INSERT_ID_LOWER_BOUND}) AS "insert_id_from"
 FROM

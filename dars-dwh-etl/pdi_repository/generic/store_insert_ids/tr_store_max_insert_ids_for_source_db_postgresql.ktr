@@ -9,29 +9,29 @@
     <directory>/generic/store_insert_ids</directory>
     <parameters>
       <parameter>
-        <name>PARAM_DYN_DB_CONN_DB_DATABASE</name>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE</name>
         <default_value />
-        <description>for "dynamic_postgres_db" database connection</description>
+        <description>for "dynamic_postgres_source_db" database connection</description>
       </parameter>
       <parameter>
-        <name>PARAM_DYN_DB_CONN_DB_HOST</name>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_HOST</name>
         <default_value />
-        <description>for "dynamic_postgres_db" database connection</description>
+        <description>for "dynamic_postgres_source_db" database connection</description>
       </parameter>
       <parameter>
-        <name>PARAM_DYN_DB_CONN_DB_PASSWORD</name>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD</name>
         <default_value />
-        <description>for "dynamic_postgres_db" database connection</description>
+        <description>for "dynamic_postgres_source_db" database connection</description>
       </parameter>
       <parameter>
-        <name>PARAM_DYN_DB_CONN_DB_PORT</name>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_PORT</name>
         <default_value />
-        <description>for "dynamic_postgres_db" database connection</description>
+        <description>for "dynamic_postgres_source_db" database connection</description>
       </parameter>
       <parameter>
-        <name>PARAM_DYN_DB_CONN_DB_USERNAME</name>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME</name>
         <default_value />
-        <description>for "dynamic_postgres_db" database connection</description>
+        <description>for "dynamic_postgres_source_db" database connection</description>
       </parameter>
       <parameter>
         <name>PARAM_SQL_SELECT_MAX_INSERT_IDS_FOR_SOURCE_DB</name>
@@ -470,11 +470,11 @@ and then stores these values in a column of the etl.table_state table.
 
 This transformation has parameters:
 
-	PARAM_DYN_DB_CONN_DB_HOST							for "dynamic_postgres_db" database connection
-	PARAM_DYN_DB_CONN_DB_PORT							for "dynamic_postgres_db" database connection
-	PARAM_DYN_DB_CONN_DB_DATABASE						for "dynamic_postgres_db" database connection
-	PARAM_DYN_DB_CONN_DB_USERNAME						for "dynamic_postgres_db" database connection
-	PARAM_DYN_DB_CONN_DB_PASSWORD					for "dynamic_postgres_db" database connection
+	PARAM_DYN_DB_CONN_SOURCE_DB_HOST							for "dynamic_postgres_source_db" database connection
+	PARAM_DYN_DB_CONN_SOURCE_DB_PORT							for "dynamic_postgres_source_db" database connection
+	PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE						for "dynamic_postgres_source_db" database connection
+	PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME						for "dynamic_postgres_source_db" database connection
+	PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD					for "dynamic_postgres_source_db" database connection
 	PARAM_SQL_SELECT_MAX_INSERT_IDS_FOR_SOURCE_DB	Contains the SQL statement that must be executed in order
 																to retrieve the maximum value of the "insert_id" column for
 																each table of a PostgreSQL "source" DB</note>
@@ -580,14 +580,14 @@ violating foreign key constraints in the target DB.</note>
     </notepad>
   </notepads>
   <connection>
-    <name>dynamic_postgres_db</name>
-    <server>${PARAM_DYN_DB_CONN_DB_HOST}</server>
+    <name>dynamic_postgres_source_db</name>
+    <server>${PARAM_DYN_DB_CONN_SOURCE_DB_HOST}</server>
     <type>POSTGRESQL</type>
     <access>Native</access>
-    <database>${PARAM_DYN_DB_CONN_DB_DATABASE}</database>
-    <port>${PARAM_DYN_DB_CONN_DB_PORT}</port>
-    <username>${PARAM_DYN_DB_CONN_DB_USERNAME}</username>
-    <password>${PARAM_DYN_DB_CONN_DB_PASSWORD}</password>
+    <database>${PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE}</database>
+    <port>${PARAM_DYN_DB_CONN_SOURCE_DB_PORT}</port>
+    <username>${PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME}</username>
+    <password>${PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD}</password>
     <servername />
     <data_tablespace />
     <index_tablespace />
@@ -606,7 +606,7 @@ violating foreign key constraints in the target DB.</note>
       </attribute>
       <attribute>
         <code>PORT_NUMBER</code>
-        <attribute>${PARAM_DYN_DB_CONN_DB_PORT}</attribute>
+        <attribute>${PARAM_DYN_DB_CONN_SOURCE_DB_PORT}</attribute>
       </attribute>
       <attribute>
         <code>PRESERVE_RESERVED_WORD_CASE</code>
@@ -850,7 +850,7 @@ violating foreign key constraints in the target DB.</note>
       <method>none</method>
       <schema_name />
     </partitioning>
-    <connection>dynamic_postgres_db</connection>
+    <connection>dynamic_postgres_source_db</connection>
     <sql>${PARAM_SQL_SELECT_MAX_INSERT_IDS_FOR_SOURCE_DB}</sql>
     <limit>0</limit>
     <lookup />

@@ -19,27 +19,27 @@
         <description>Timestamp of last successful load from the source database</description>
       </parameter>
       <parameter>
-        <name>PARAM_DYN_DB_CONN_DB_DATABASE</name>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE</name>
         <default_value />
         <description />
       </parameter>
       <parameter>
-        <name>PARAM_DYN_DB_CONN_DB_HOST</name>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_HOST</name>
         <default_value />
         <description />
       </parameter>
       <parameter>
-        <name>PARAM_DYN_DB_CONN_DB_PASSWORD</name>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD</name>
         <default_value />
         <description />
       </parameter>
       <parameter>
-        <name>PARAM_DYN_DB_CONN_DB_PORT</name>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_PORT</name>
         <default_value />
         <description />
       </parameter>
       <parameter>
-        <name>PARAM_DYN_DB_CONN_DB_USERNAME</name>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME</name>
         <default_value />
         <description />
       </parameter>
@@ -642,11 +642,11 @@ case we would re-process all of the rows that were successfully mirrored during 
 that can work with *any* table,  as long as it is insert-only and it has the necessary  "insert_id" &amp; "inserted_on" columns. 
 This transformation has parameters:
 
-	PARAM_DYN_DB_CONN_DB_HOST			for "dynamic_postgres_db" database connection
-	PARAM_DYN_DB_CONN_DB_PORT			for "dynamic_postgres_db" database connection
-	PARAM_DYN_DB_CONN_DB_DATABASE		for "dynamic_postgres_db" database connection
-	PARAM_DYN_DB_CONN_DB_USERNAME		for "dynamic_postgres_db" database connection
-	PARAM_DYN_DB_CONN_DB_PASSWORD	for "dynamic_postgres_db" database connection
+	PARAM_DYN_DB_CONN_SOURCE_DB_HOST			for "dynamic_postgres_source_db" database connection
+	PARAM_DYN_DB_CONN_SOURCE_DB_PORT			for "dynamic_postgres_source_db" database connection
+	PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE		for "dynamic_postgres_source_db" database connection
+	PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME		for "dynamic_postgres_source_db" database connection
+	PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD	for "dynamic_postgres_source_db" database connection
 	PARAM_CDC_LAST_LOAD_UTC					Timestamp for when *all* tables of the PSA were most recently updated successfully
 	PARAM_CDC_CURRENT_LOAD_UTC				Used so that a consistent max timestamp is used for all ETL
 	PARAM_MAX_INSERT_ID					Maximum value of the "insert_id" column for rows to load from the source DB table
@@ -807,14 +807,14 @@ passed to it in the normal fashion because it is a normal transformation (all me
     </notepad>
   </notepads>
   <connection>
-    <name>dynamic_postgres_db</name>
-    <server>${PARAM_DYN_DB_CONN_DB_HOST}</server>
+    <name>dynamic_postgres_source_db</name>
+    <server>${PARAM_DYN_DB_CONN_SOURCE_DB_HOST}</server>
     <type>POSTGRESQL</type>
     <access>Native</access>
-    <database>${PARAM_DYN_DB_CONN_DB_DATABASE}</database>
-    <port>${PARAM_DYN_DB_CONN_DB_PORT}</port>
-    <username>${PARAM_DYN_DB_CONN_DB_USERNAME}</username>
-    <password>${PARAM_DYN_DB_CONN_DB_PASSWORD}</password>
+    <database>${PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE}</database>
+    <port>${PARAM_DYN_DB_CONN_SOURCE_DB_PORT}</port>
+    <username>${PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME}</username>
+    <password>${PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD}</password>
     <servername />
     <data_tablespace />
     <index_tablespace />
@@ -833,7 +833,7 @@ passed to it in the normal fashion because it is a normal transformation (all me
       </attribute>
       <attribute>
         <code>PORT_NUMBER</code>
-        <attribute>${PARAM_DYN_DB_CONN_DB_PORT}</attribute>
+        <attribute>${PARAM_DYN_DB_CONN_SOURCE_DB_PORT}</attribute>
       </attribute>
       <attribute>
         <code>PRESERVE_RESERVED_WORD_CASE</code>
@@ -1178,7 +1178,7 @@ FROM
       <method>none</method>
       <schema_name />
     </partitioning>
-    <connection>dynamic_postgres_db</connection>
+    <connection>dynamic_postgres_source_db</connection>
     <sql>SELECT
     *
 FROM
@@ -1267,11 +1267,11 @@ ORDER BY
     <limitRows>N</limitRows>
     <limitRowsNumber>0</limitRowsNumber>
     <logmessage>tmplt_mirrored_insert_only_table-update:
-PARAM_DYN_DB_CONN_DB_HOST        = ${PARAM_DYN_DB_CONN_DB_HOST}
-PARAM_DYN_DB_CONN_DB_PORT        = ${PARAM_DYN_DB_CONN_DB_PORT}
-PARAM_DYN_DB_CONN_DB_DATABASE    = ${PARAM_DYN_DB_CONN_DB_DATABASE}
-PARAM_DYN_DB_CONN_DB_USERNAME    = ${PARAM_DYN_DB_CONN_DB_USERNAME}
-PARAM_DYN_DB_CONN_DB_PASSWORD    = ${PARAM_DYN_DB_CONN_DB_PASSWORD}
+PARAM_DYN_DB_CONN_SOURCE_DB_HOST        = ${PARAM_DYN_DB_CONN_SOURCE_DB_HOST}
+PARAM_DYN_DB_CONN_SOURCE_DB_PORT        = ${PARAM_DYN_DB_CONN_SOURCE_DB_PORT}
+PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE    = ${PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE}
+PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME    = ${PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME}
+PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD    = ${PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD}
 PARAM_CDC_LAST_LOAD_UTC              = ${PARAM_CDC_LAST_LOAD_UTC}
 PARAM_CDC_CURRENT_LOAD_UTC           = ${PARAM_CDC_CURRENT_LOAD_UTC}
 PARAM_MAX_INSERT_ID              = ${PARAM_MAX_INSERT_ID}

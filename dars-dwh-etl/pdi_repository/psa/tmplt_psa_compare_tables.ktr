@@ -9,29 +9,29 @@
     <directory>/psa</directory>
     <parameters>
       <parameter>
-        <name>PARAM_DYN_DB_CONN_DB_DATABASE</name>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE</name>
         <default_value />
-        <description>for "dynamic_postgres_db" database connection</description>
+        <description>for "dynamic_postgres_source_db" database connection</description>
       </parameter>
       <parameter>
-        <name>PARAM_DYN_DB_CONN_DB_HOST</name>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_HOST</name>
         <default_value />
-        <description>for "dynamic_postgres_db" database connection</description>
+        <description>for "dynamic_postgres_source_db" database connection</description>
       </parameter>
       <parameter>
-        <name>PARAM_DYN_DB_CONN_DB_PASSWORD</name>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD</name>
         <default_value />
-        <description>for "dynamic_postgres_db" database connection</description>
+        <description>for "dynamic_postgres_source_db" database connection</description>
       </parameter>
       <parameter>
-        <name>PARAM_DYN_DB_CONN_DB_PORT</name>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_PORT</name>
         <default_value />
-        <description>for "dynamic_postgres_db" database connection</description>
+        <description>for "dynamic_postgres_source_db" database connection</description>
       </parameter>
       <parameter>
-        <name>PARAM_DYN_DB_CONN_DB_USERNAME</name>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME</name>
         <default_value />
-        <description>for "dynamic_postgres_db" database connection</description>
+        <description>for "dynamic_postgres_source_db" database connection</description>
       </parameter>
       <parameter>
         <name>PARAM_INSERT_ID_FROM</name>
@@ -542,11 +542,11 @@ two "Table input" steps set the field order appropriately.</note>
 
 	PARAM_CDC_LAST_LOAD_UTC			Timestamp for when the target PSA DB mirror tables were last updated from the source DB
 	PARAM_SOURCE_DB_ID						ID the "source" database containing tables will be mirrored to a "target" database
-	PARAM_DYN_DB_CONN_DB_HOST			for "dynamic_postgres_db" database connection
-	PARAM_DYN_DB_CONN_DB_PORT			for "dynamic_postgres_db" database connection
-	PARAM_DYN_DB_CONN_DB_DATABASE		for "dynamic_postgres_db" database connection
-	PARAM_DYN_DB_CONN_DB_USERNAME		for "dynamic_postgres_db" database connection
-	PARAM_DYN_DB_CONN_DB_PASSWORD	for "dynamic_postgres_db" database connection
+	PARAM_DYN_DB_CONN_SOURCE_DB_HOST			for "dynamic_postgres_source_db" database connection
+	PARAM_DYN_DB_CONN_SOURCE_DB_PORT			for "dynamic_postgres_source_db" database connection
+	PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE		for "dynamic_postgres_source_db" database connection
+	PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME		for "dynamic_postgres_source_db" database connection
+	PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD	for "dynamic_postgres_source_db" database connection
 	PARAM_INSERT_ID_FROM					"from" value for the "insert_id" column of the source OBO table that is being compared to the PSA table
 	PARAM_INSERT_ID_TO						"to" value for the "insert_id" column of the source OBO table that is being compared to the PSA table
 	PARAM_TABLE_META_ID					Primary key of etl.table_meta row for the table pair being compared
@@ -659,14 +659,14 @@ the "Merge rows" step.</note>
     </notepad>
   </notepads>
   <connection>
-    <name>dynamic_postgres_db</name>
-    <server>${PARAM_DYN_DB_CONN_DB_HOST}</server>
+    <name>dynamic_postgres_source_db</name>
+    <server>${PARAM_DYN_DB_CONN_SOURCE_DB_HOST}</server>
     <type>POSTGRESQL</type>
     <access>Native</access>
-    <database>${PARAM_DYN_DB_CONN_DB_DATABASE}</database>
-    <port>${PARAM_DYN_DB_CONN_DB_PORT}</port>
-    <username>${PARAM_DYN_DB_CONN_DB_USERNAME}</username>
-    <password>${PARAM_DYN_DB_CONN_DB_PASSWORD}</password>
+    <database>${PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE}</database>
+    <port>${PARAM_DYN_DB_CONN_SOURCE_DB_PORT}</port>
+    <username>${PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME}</username>
+    <password>${PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD}</password>
     <servername />
     <data_tablespace />
     <index_tablespace />
@@ -685,7 +685,7 @@ the "Merge rows" step.</note>
       </attribute>
       <attribute>
         <code>PORT_NUMBER</code>
-        <attribute>${PARAM_DYN_DB_CONN_DB_PORT}</attribute>
+        <attribute>${PARAM_DYN_DB_CONN_SOURCE_DB_PORT}</attribute>
       </attribute>
       <attribute>
         <code>PRESERVE_RESERVED_WORD_CASE</code>
@@ -844,7 +844,7 @@ the "Merge rows" step.</note>
       <method>none</method>
       <schema_name />
     </partitioning>
-    <connection>dynamic_postgres_db</connection>
+    <connection>dynamic_postgres_source_db</connection>
     <sql />
     <limit>0</limit>
     <lookup />

@@ -9,29 +9,29 @@
     <directory>/psa/util</directory>
     <parameters>
       <parameter>
-        <name>PARAM_DYN_DB_CONN_DB_DATABASE</name>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE</name>
         <default_value />
-        <description>for "dynamic_postgres_db" database connection</description>
+        <description>for "dynamic_postgres_source_db" database connection</description>
       </parameter>
       <parameter>
-        <name>PARAM_DYN_DB_CONN_DB_HOST</name>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_HOST</name>
         <default_value />
-        <description>for "dynamic_postgres_db" database connection</description>
+        <description>for "dynamic_postgres_source_db" database connection</description>
       </parameter>
       <parameter>
-        <name>PARAM_DYN_DB_CONN_DB_PASSWORD</name>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD</name>
         <default_value />
-        <description>for "dynamic_postgres_db" database connection</description>
+        <description>for "dynamic_postgres_source_db" database connection</description>
       </parameter>
       <parameter>
-        <name>PARAM_DYN_DB_CONN_DB_PORT</name>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_PORT</name>
         <default_value />
-        <description>for "dynamic_postgres_db" database connection</description>
+        <description>for "dynamic_postgres_source_db" database connection</description>
       </parameter>
       <parameter>
-        <name>PARAM_DYN_DB_CONN_DB_USERNAME</name>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME</name>
         <default_value />
-        <description>for "dynamic_postgres_db" database connection</description>
+        <description>for "dynamic_postgres_source_db" database connection</description>
       </parameter>
       <parameter>
         <name>PARAM_SOURCE_DB_ID</name>
@@ -487,11 +487,11 @@ Therefore, this transformation writes one row to the etl.column_meta table for e
 
 This transformation has parameters:
 
-	PARAM_DYN_DB_CONN_DB_HOST			for "dynamic_postgres_db" database connection
-	PARAM_DYN_DB_CONN_DB_PORT			for "dynamic_postgres_db" database connection
-	PARAM_DYN_DB_CONN_DB_DATABASE		for "dynamic_postgres_db" database connection
-	PARAM_DYN_DB_CONN_DB_USERNAME		for "dynamic_postgres_db" database connection
-	PARAM_DYN_DB_CONN_DB_PASSWORD	for "dynamic_postgres_db" database connection
+	PARAM_DYN_DB_CONN_SOURCE_DB_HOST			for "dynamic_postgres_source_db" database connection
+	PARAM_DYN_DB_CONN_SOURCE_DB_PORT			for "dynamic_postgres_source_db" database connection
+	PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE		for "dynamic_postgres_source_db" database connection
+	PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME		for "dynamic_postgres_source_db" database connection
+	PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD	for "dynamic_postgres_source_db" database connection
 	PARAM_SOURCE_DB_ID						ID the "source" database containing the table for generating column metadata
 	PARAM_SOURCE_SCHEMA					Name of schema containing source table for generating column metadata
 	PARAM_SOURCE_TABLE					Name of source table for generating column metadata
@@ -705,14 +705,14 @@ is_can_delete_row_column=N				(can be set  to T below, depending on column name)
     </notepad>
   </notepads>
   <connection>
-    <name>dynamic_postgres_db</name>
-    <server>${PARAM_DYN_DB_CONN_DB_HOST}</server>
+    <name>dynamic_postgres_source_db</name>
+    <server>${PARAM_DYN_DB_CONN_SOURCE_DB_HOST}</server>
     <type>POSTGRESQL</type>
     <access>Native</access>
-    <database>${PARAM_DYN_DB_CONN_DB_DATABASE}</database>
-    <port>${PARAM_DYN_DB_CONN_DB_PORT}</port>
-    <username>${PARAM_DYN_DB_CONN_DB_USERNAME}</username>
-    <password>${PARAM_DYN_DB_CONN_DB_PASSWORD}</password>
+    <database>${PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE}</database>
+    <port>${PARAM_DYN_DB_CONN_SOURCE_DB_PORT}</port>
+    <username>${PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME}</username>
+    <password>${PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD}</password>
     <servername />
     <data_tablespace />
     <index_tablespace />
@@ -731,7 +731,7 @@ is_can_delete_row_column=N				(can be set  to T below, depending on column name)
       </attribute>
       <attribute>
         <code>PORT_NUMBER</code>
-        <attribute>${PARAM_DYN_DB_CONN_DB_PORT}</attribute>
+        <attribute>${PARAM_DYN_DB_CONN_SOURCE_DB_PORT}</attribute>
       </attribute>
       <attribute>
         <code>PRESERVE_RESERVED_WORD_CASE</code>
@@ -1487,7 +1487,7 @@ FROM
       <method>none</method>
       <schema_name />
     </partitioning>
-    <connection>dynamic_postgres_db</connection>
+    <connection>dynamic_postgres_source_db</connection>
     <sql>SELECT 
     c.column_name                    AS "source_column_name",
     kcu.ordinal_position IS NOT NULL AS "is_primary_key_column",

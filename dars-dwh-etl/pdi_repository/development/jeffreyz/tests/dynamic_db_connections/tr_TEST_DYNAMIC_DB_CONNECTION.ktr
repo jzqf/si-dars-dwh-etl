@@ -9,27 +9,27 @@
     <directory>/development/jeffreyz/tests/dynamic_db_connections</directory>
     <parameters>
       <parameter>
-        <name>PARAM_DYN_DB_CONN_DB_DATABASE</name>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE</name>
         <default_value />
         <description />
       </parameter>
       <parameter>
-        <name>PARAM_DYN_DB_CONN_DB_HOST</name>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_HOST</name>
         <default_value />
         <description />
       </parameter>
       <parameter>
-        <name>PARAM_DYN_DB_CONN_DB_PASSWORD</name>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD</name>
         <default_value />
         <description />
       </parameter>
       <parameter>
-        <name>PARAM_DYN_DB_CONN_DB_PORT</name>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_PORT</name>
         <default_value />
         <description />
       </parameter>
       <parameter>
-        <name>PARAM_DYN_DB_CONN_DB_USERNAME</name>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME</name>
         <default_value />
         <description />
       </parameter>
@@ -474,11 +474,11 @@
 
 This transformation has parameters:
 
-	PARAM_DYN_DB_CONN_DB_HOST		
-	PARAM_DYN_DB_CONN_DB_PORT		
-	PARAM_DYN_DB_CONN_DB_DATABASE	
-	PARAM_DYN_DB_CONN_DB_USERNAME	
-	PARAM_DYN_DB_CONN_DB_PASSWORD	
+	PARAM_DYN_DB_CONN_SOURCE_DB_HOST		
+	PARAM_DYN_DB_CONN_SOURCE_DB_PORT		
+	PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE	
+	PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME	
+	PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD	
 	PARAM_SOURCE_SCHEMA					Name of schema containing source table to mirror to target table
 	PARAM_SOURCE_TABLE					Name of source table to mirror to target table</note>
       <xloc>0</xloc>
@@ -502,14 +502,14 @@ This transformation has parameters:
     </notepad>
   </notepads>
   <connection>
-    <name>dynamic_postgres_db</name>
-    <server>${PARAM_DYN_DB_CONN_DB_HOST}</server>
+    <name>dynamic_postgres_source_db</name>
+    <server>${PARAM_DYN_DB_CONN_SOURCE_DB_HOST}</server>
     <type>POSTGRESQL</type>
     <access>Native</access>
-    <database>${PARAM_DYN_DB_CONN_DB_DATABASE}</database>
-    <port>${PARAM_DYN_DB_CONN_DB_PORT}</port>
-    <username>${PARAM_DYN_DB_CONN_DB_USERNAME}</username>
-    <password>${PARAM_DYN_DB_CONN_DB_PASSWORD}</password>
+    <database>${PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE}</database>
+    <port>${PARAM_DYN_DB_CONN_SOURCE_DB_PORT}</port>
+    <username>${PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME}</username>
+    <password>${PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD}</password>
     <servername />
     <data_tablespace />
     <index_tablespace />
@@ -528,7 +528,7 @@ This transformation has parameters:
       </attribute>
       <attribute>
         <code>PORT_NUMBER</code>
-        <attribute>${PARAM_DYN_DB_CONN_DB_PORT}</attribute>
+        <attribute>${PARAM_DYN_DB_CONN_SOURCE_DB_PORT}</attribute>
       </attribute>
       <attribute>
         <code>PRESERVE_RESERVED_WORD_CASE</code>
@@ -645,7 +645,7 @@ This transformation has parameters:
       <method>none</method>
       <schema_name />
     </partitioning>
-    <connection>dynamic_postgres_db</connection>
+    <connection>dynamic_postgres_source_db</connection>
     <sql>SELECT
     *
 FROM 
