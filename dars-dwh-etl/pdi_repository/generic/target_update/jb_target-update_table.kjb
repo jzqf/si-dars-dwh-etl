@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/10/15 15:05:16.018</modified_date>
+  <modified_date>2017/10/17 09:35:07.706</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
@@ -995,6 +995,7 @@ This job has parameters:
 
 	PARAM_CDC_LAST_LOAD_UTC								Timestamp for when the target DB mirror tables were last updated from the source DB
 	PARAM_CDC_CURRENT_LOAD_UTC							Timestamp of the current load (no rows after this timestamp will be loaded)
+	PARAM_TABLE_META_ID									Primary key of etl.table_meta row for "source" table archived/mirrored to "target" table
 	PARAM_DYN_DB_CONN_TARGET_DB_HOST					for "dynamic" target database connection, e.g., "dynamic_postgres_target_db"
 	PARAM_DYN_DB_CONN_TARGET_DB_PORT					for "dynamic" target database connection, e.g., "dynamic_postgres_target_db"
 	PARAM_DYN_DB_CONN_TARGET_DB_DATABASE				for "dynamic" target database connection, e.g., "dynamic_postgres_target_db"
@@ -1011,8 +1012,7 @@ This job has parameters:
 	PARAM_TARGET_SCHEMA_DOT_TABLE						${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}
 	PARAM_USE_GENERIC_INSERT_ONLY_TABLE_ALGORITHM	"Y" if the generic update algorithm for "insert-only" tables should be used for the specified table
 	PARAM_USE_GENERIC_UPDATEABLE_TABLE_ALGORITHM	"Y" if the generic update algorithm for "updateable" tables should be used for the specified table
-	PARAM_USE_CUSTOM_MIRROR_ALGORITHM				"Y" if a custom update algorithm shall be used for this table
-	PARAM_TABLE_META_ID									Primary key of etl.table_meta row for "source" table archived/mirrored to "target" table</note>
+	PARAM_USE_CUSTOM_MIRROR_ALGORITHM				"Y" if a custom update algorithm shall be used for this table</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
       <width>964</width>
@@ -1059,19 +1059,15 @@ failed.</note>
     <notepad>
       <note>This job sets the PDI variables:
 
-	QF_DYN_DB_CONN_DB_HOST
-	QF_DYN_DB_CONN_DB_PORT
-	QF_DYN_DB_CONN_DB_DATABASE
-	QF_DYN_DB_CONN_DB_USERNAME
-	QF_DYN_DB_CONN_DB_PASSWORD
+	QF_DYN_DB_CONN_DB_{HOST, PORT, ...}
 
 based on a single parameter:
 
 	PARAM_DB_ID = PARAM_SOURCE_DB_ID</note>
-      <xloc>304</xloc>
-      <yloc>448</yloc>
+      <xloc>288</xloc>
+      <yloc>480</yloc>
       <width>274</width>
-      <heigth>164</heigth>
+      <heigth>108</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
