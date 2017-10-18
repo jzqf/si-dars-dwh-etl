@@ -1,21 +1,16 @@
 <job>
-  <name>jb_set_dynamic_target_db_connection_variables</name>
+  <name>jb_populate_table_meta-hardwired_tables</name>
   <description />
   <extended_description />
   <job_version />
   <job_status>0</job_status>
-  <directory>/generic/dynamic_db_connections</directory>
+  <directory>/generic/populate_etl_metadata_tables</directory>
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/10/14 19:44:02.249</modified_date>
+  <modified_date>2017/10/18 13:14:36.446</modified_date>
   <parameters>
-    <parameter>
-      <name>PARAM_TARGET_DB_ID</name>
-      <default_value>-1</default_value>
-      <description>ID of the "target" database to which "source" DB tables will be archived/mirrored</description>
-    </parameter>
-  </parameters>
+    </parameters>
   <connection>
     <name>logging_db</name>
     <server>${QF_LOGGING_DB_HOST}</server>
@@ -359,67 +354,58 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>32</xloc>
-      <yloc>192</yloc>
+      <xloc>144</xloc>
+      <yloc>128</yloc>
     </entry>
     <entry>
-      <name>Abort job</name>
+      <name>tr_populate_table_meta-list_of_hardwired_tables</name>
       <description />
-      <type>ABORT</type>
-      <message>Aborting jb_set_dynamic_target_db_connection_variables</message>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>768</xloc>
-      <yloc>688</yloc>
-    </entry>
-    <entry>
-      <name>Write To Log: Parameters</name>
-      <description />
-      <type>WRITE_TO_LOG</type>
-      <logmessage>PARAM_TARGET_DB_ID = ${PARAM_TARGET_DB_ID}</logmessage>
+      <type>TRANS</type>
+      <specification_method>rep_name</specification_method>
+      <trans_object_id />
+      <filename />
+      <transname>tr_populate_table_meta-list_of_hardwired_tables</transname>
+      <directory>/generic/populate_etl_metadata_tables</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <clear_rows>Y</clear_rows>
+      <clear_files>N</clear_files>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
       <loglevel>Basic</loglevel>
-      <logsubject>Parameters received by jb_set_dynamic_target_db_connection_variables</logsubject>
+      <cluster>N</cluster>
+      <slave_server_name />
+      <set_append_logfile>N</set_append_logfile>
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <create_parent_folder>N</create_parent_folder>
+      <logging_remote_work>N</logging_remote_work>
+      <run_configuration>Pentaho local</run_configuration>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+      </parameters>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>144</xloc>
-      <yloc>192</yloc>
+      <yloc>224</yloc>
     </entry>
     <entry>
-      <name>PARAM_TARGET_DB_ID = QF_DB_ID_PSA ?</name>
-      <description />
-      <type>SIMPLE_EVAL</type>
-      <valuetype>variable</valuetype>
-      <fieldname />
-      <variablename>${PARAM_TARGET_DB_ID}</variablename>
-      <fieldtype>number</fieldtype>
-      <mask />
-      <comparevalue>${QF_DB_ID_PSA}</comparevalue>
-      <minvalue />
-      <maxvalue />
-      <successcondition>equal</successcondition>
-      <successnumbercondition>equal</successnumbercondition>
-      <successbooleancondition>true</successbooleancondition>
-      <successwhenvarset>N</successwhenvarset>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>144</xloc>
-      <yloc>288</yloc>
-    </entry>
-    <entry>
-      <name>jb_log_error - Untreated case</name>
+      <name>jb_populate_table_meta-one_table</name>
       <description />
       <type>JOB</type>
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
-      <jobname>jb_log_error</jobname>
-      <directory>/generic</directory>
+      <jobname>jb_populate_table_meta-one_table</jobname>
+      <directory>/generic/populate_etl_metadata_tables</directory>
       <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
+      <params_from_previous>Y</params_from_previous>
+      <exec_per_row>Y</exec_per_row>
       <set_logfile>N</set_logfile>
       <logfile />
       <logext />
@@ -435,9 +421,34 @@
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
         <parameter>
-          <name>PARAM_ERROR_MESSAGE</name>
-          <stream_name />
-          <value>Untreated case for PARAM_TARGET_DB_ID=${PARAM_TARGET_DB_ID} in jb_set_dynamic_target_db_connection_variables</value>
+          <name>PARAM_SOURCE_DB_ID</name>
+          <stream_name>source_db_id</stream_name>
+          <value />
+        </parameter>
+        <parameter>
+          <name>PARAM_SOURCE_SCHEMA</name>
+          <stream_name>source_schema_name</stream_name>
+          <value />
+        </parameter>
+        <parameter>
+          <name>PARAM_SOURCE_TABLE</name>
+          <stream_name>source_table_name</stream_name>
+          <value />
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_DB_ID</name>
+          <stream_name>target_db_id</stream_name>
+          <value />
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_SCHEMA</name>
+          <stream_name>target_schema_name</stream_name>
+          <value />
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_TABLE</name>
+          <stream_name>target_table_name</stream_name>
+          <value />
         </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
@@ -445,109 +456,13 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>144</xloc>
-      <yloc>688</yloc>
-    </entry>
-    <entry>
-      <name>Set dynamic target connection parameters for PSA DB</name>
-      <description />
-      <type>SET_VARIABLES</type>
-      <replacevars>Y</replacevars>
-      <filename />
-      <file_variable_type>JVM</file_variable_type>
-      <fields>
-        <field>
-          <variable_name>QF_DYN_DB_CONN_TARGET_DB_HOST</variable_name>
-          <variable_value>${QF_PSA_DB_HOST}</variable_value>
-          <variable_type>ROOT_JOB</variable_type>
-        </field>
-        <field>
-          <variable_name>QF_DYN_DB_CONN_TARGET_DB_PORT</variable_name>
-          <variable_value>${QF_PSA_DB_PORT}</variable_value>
-          <variable_type>ROOT_JOB</variable_type>
-        </field>
-        <field>
-          <variable_name>QF_DYN_DB_CONN_TARGET_DB_DATABASE</variable_name>
-          <variable_value>${QF_PSA_DB_DATABASE}</variable_value>
-          <variable_type>ROOT_JOB</variable_type>
-        </field>
-        <field>
-          <variable_name>QF_DYN_DB_CONN_TARGET_DB_USERNAME</variable_name>
-          <variable_value>${QF_PSA_DB_USERNAME}</variable_value>
-          <variable_type>ROOT_JOB</variable_type>
-        </field>
-        <field>
-          <variable_name>QF_DYN_DB_CONN_TARGET_DB_PASSWORD</variable_name>
-          <variable_value>${QF_PSA_DB_PASSWORD}</variable_value>
-          <variable_type>ROOT_JOB</variable_type>
-        </field>
-      </fields>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>480</xloc>
-      <yloc>288</yloc>
-    </entry>
-    <entry>
-      <name>jb_log_error - Error setting vrbls</name>
-      <description />
-      <type>JOB</type>
-      <specification_method>rep_name</specification_method>
-      <job_object_id />
-      <filename />
-      <jobname>jb_log_error</jobname>
-      <directory>/generic</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Nothing</loglevel>
-      <slave_server_name />
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <expand_remote_job>N</expand_remote_job>
-      <create_parent_folder>N</create_parent_folder>
-      <pass_export>N</pass_export>
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-        <parameter>
-          <name>PARAM_ERROR_MESSAGE</name>
-          <stream_name />
-          <value>Error setting variables for PARAM_TARGET_DB_ID=${PARAM_TARGET_DB_ID} in jb_set_dynamic_target_db_connection_variables</value>
-        </parameter>
-      </parameters>
-      <set_append_logfile>N</set_append_logfile>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>768</xloc>
-      <yloc>448</yloc>
-    </entry>
-    <entry>
-      <name>Write variables to log - PSA DB</name>
-      <description />
-      <type>WRITE_TO_LOG</type>
-      <logmessage>QF_DYN_DB_CONN_TARGET_DB_HOST     = ${QF_DYN_DB_CONN_TARGET_DB_HOST}
-QF_DYN_DB_CONN_TARGET_DB_PORT     = ${QF_DYN_DB_CONN_TARGET_DB_PORT}
-QF_DYN_DB_CONN_TARGET_DB_DATABASE = ${QF_DYN_DB_CONN_TARGET_DB_DATABASE}
-QF_DYN_DB_CONN_TARGET_DB_USERNAME = ${QF_DYN_DB_CONN_TARGET_DB_USERNAME}
-QF_DYN_DB_CONN_TARGET_DB_PASSWORD = ${QF_DYN_DB_CONN_TARGET_DB_PASSWORD}</logmessage>
-      <loglevel>Basic</loglevel>
-      <logsubject>PSA DB:</logsubject>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>480</xloc>
-      <yloc>208</yloc>
+      <yloc>320</yloc>
     </entry>
   </entries>
   <hops>
     <hop>
       <from>START</from>
-      <to>Write To Log: Parameters</to>
+      <to>tr_populate_table_meta-list_of_hardwired_tables</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -555,86 +470,27 @@ QF_DYN_DB_CONN_TARGET_DB_PASSWORD = ${QF_DYN_DB_CONN_TARGET_DB_PASSWORD}</logmes
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>Write To Log: Parameters</from>
-      <to>PARAM_TARGET_DB_ID = QF_DB_ID_PSA ?</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>PARAM_TARGET_DB_ID = QF_DB_ID_PSA ?</from>
-      <to>Set dynamic target connection parameters for PSA DB</to>
+      <from>tr_populate_table_meta-list_of_hardwired_tables</from>
+      <to>jb_populate_table_meta-one_table</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Set dynamic target connection parameters for PSA DB</from>
-      <to>jb_log_error - Error setting vrbls</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>jb_log_error - Untreated case</from>
-      <to>Abort job</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>jb_log_error - Error setting vrbls</from>
-      <to>Abort job</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>Set dynamic target connection parameters for PSA DB</from>
-      <to>Write variables to log - PSA DB</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>PARAM_TARGET_DB_ID = QF_DB_ID_PSA ?</from>
-      <to>jb_log_error - Untreated case</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
       <unconditional>N</unconditional>
     </hop>
   </hops>
   <notepads>
     <notepad>
-      <note>This job sets PDI variables that specify a dynamic database connection to a "target" DB. These are the variables:
+      <note>This job writes default rows to the tables:
 
-	QF_DYN_DB_CONN_TARGET_DB_HOST
-	QF_DYN_DB_CONN_TARGET_DB_PORT
-	QF_DYN_DB_CONN_TARGET_DB_DATABASE
-	QF_DYN_DB_CONN_TARGET_DB_USERNAME
-	QF_DYN_DB_CONN_TARGET_DB_PASSWORD
+	etl.table_meta table 
+	etl.column_meta table
 
-This job has parameters:
-
-	PARAM_TARGET_DB_ID			ID of the "target" database to which "source" DB tables will be archived/mirrored</note>
+using the metadata supplied by the tr_populate_table_meta-list_of_hardwired_tables transformation.</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>701</width>
-      <heigth>164</heigth>
+      <width>607</width>
+      <heigth>94</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -651,14 +507,16 @@ This job has parameters:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>This "Abort" is needed
-to tell the root calling
-job that execution has
-failed.</note>
-      <xloc>816</xloc>
-      <yloc>672</yloc>
-      <width>139</width>
-      <heigth>66</heigth>
+      <note>Obtain a hardwired list of tables for which the table metadata
+will be generated, i.e., written to the tables etl.table_meta and
+etl.column_meta of the ETL DB.
+
+This transformation can be modified to use a "CSV file input"
+step to read this data from a file instead of using a "Data grid".</note>
+      <xloc>320</xloc>
+      <yloc>192</yloc>
+      <width>377</width>
+      <heigth>94</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -675,13 +533,12 @@ failed.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Check for additional
-"target" DBs as I add
-support for them.</note>
-      <xloc>176</xloc>
-      <yloc>448</yloc>
-      <width>132</width>
-      <heigth>52</heigth>
+      <note>This sub-job is run once for each table that is specified in
+tr_populate_table_meta-list_of_hardwired_tables.</note>
+      <xloc>320</xloc>
+      <yloc>320</yloc>
+      <width>338</width>
+      <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -690,8 +547,8 @@ support for them.</note>
       <fontcolorgreen>0</fontcolorgreen>
       <fontcolorblue>0</fontcolorblue>
       <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>255</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
       <bordercolorblue>100</bordercolorblue>
