@@ -1,152 +1,17 @@
 <transformation>
   <info>
-    <name>tr_target-update_table-insert_only_table</name>
+    <name>tr_populate_column_meta-all_tables</name>
     <description />
     <extended_description />
     <trans_version />
     <trans_type>Normal</trans_type>
     <trans_status>0</trans_status>
-    <directory>/generic/target_update</directory>
+    <directory>/generic/populate_etl_metadata_tables/DELETE</directory>
     <parameters>
       <parameter>
-        <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
-        <default_value>2100.01.01 00:00:00</default_value>
-        <description>Timestamp of the current load (no rows after this timestamp will be loaded)</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_CDC_LAST_LOAD_UTC</name>
-        <default_value>1900.01.01 00:00:00</default_value>
-        <description>Timestamp of last successful load from the source database</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE</name>
-        <default_value>odms_opr</default_value>
-        <description>for source DB "dynamic" database connections</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER</name>
-        <default_value />
-        <description>for source DB "dynamic" database connections</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_DYN_DB_CONN_SOURCE_DB_HOST</name>
-        <default_value>si01-qfr-07cl.si01.q-free.com</default_value>
-        <description>for source DB "dynamic" database connections</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD</name>
-        <default_value>ap68rDpVo0wcbKNtSEZbf00_Vw4rrxq0</default_value>
-        <description>for source DB "dynamic" database connections</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_DYN_DB_CONN_SOURCE_DB_PORT</name>
-        <default_value>5432</default_value>
-        <description>for source DB "dynamic" database connections</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_DYN_DB_CONN_SOURCE_DB_URL</name>
-        <default_value />
-        <description>for source DB "dynamic" database connections</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME</name>
-        <default_value>qfree_odms</default_value>
-        <description>for source DB "dynamic" database connections</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_DYN_DB_CONN_TARGET_DB_DATABASE</name>
-        <default_value />
-        <description>for target DB "dynamic" database connections</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_DYN_DB_CONN_TARGET_DB_DRIVER</name>
-        <default_value />
-        <description>for target DB "dynamic" database connections</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_DYN_DB_CONN_TARGET_DB_HOST</name>
-        <default_value />
-        <description>for target DB "dynamic" database connections</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD</name>
-        <default_value />
-        <description>for target DB "dynamic" database connections</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_DYN_DB_CONN_TARGET_DB_PORT</name>
-        <default_value />
-        <description>for target DB "dynamic" database connections</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_DYN_DB_CONN_TARGET_DB_URL</name>
-        <default_value />
-        <description>for target DB "dynamic" database connections</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_DYN_DB_CONN_TARGET_DB_USERNAME</name>
-        <default_value />
-        <description>for target DB "dynamic" database connections</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_MAX_INSERT_ID</name>
-        <default_value>1000</default_value>
-        <description>Maximum value of the "insert_id" column for rows to load from the source DB table</description>
-      </parameter>
-      <parameter>
         <name>PARAM_SOURCE_DB_ID</name>
-        <default_value>4</default_value>
+        <default_value />
         <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_SOURCE_INSERTED_ON_COLNAME</name>
-        <default_value />
-        <description>Name of column acting as "inserted_on" timestamp column of source table</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_SOURCE_INSERT_ID_COLNAME</name>
-        <default_value>sid</default_value>
-        <description>Name of column acting as "insert_id" column of source table</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_SOURCE_SCHEMA</name>
-        <default_value>public</default_value>
-        <description>Name of schema containing source table to mirror to target table</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_SOURCE_TABLE</name>
-        <default_value>sid_roles</default_value>
-        <description>Name of source table to mirror to target table</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_TABLE_META_ID</name>
-        <default_value>37</default_value>
-        <description>Primary key of etl.table_meta row for "source" table from which rows will be deleted</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_TARGET_DB_ID</name>
-        <default_value>-1</default_value>
-        <description>ID of the "target" database to which "source" DB tables will be archived/mirrored</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_TARGET_INSERTED_ON_COLNAME</name>
-        <default_value />
-        <description>Name of column acting as "inserted_on" timestamp column of target table</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_TARGET_INSERT_ID_COLNAME</name>
-        <default_value>sid</default_value>
-        <description>Name of column acting as "insert_id" column of target table</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_TARGET_SCHEMA</name>
-        <default_value>odms</default_value>
-        <description>Name of schema containing target table to update</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_TARGET_TABLE</name>
-        <default_value>sid_roles</default_value>
-        <description>Name of target table to update</description>
       </parameter>
     </parameters>
     <log>
@@ -569,77 +434,25 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/10/18 09:32:10.552</modified_date>
+    <modified_date>2017/10/18 14:23:40.176</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>This transformation uses ETL Metadata injection to control how columns of a table in a source database are mapped to columns 
-of a target table in a target database. This is a generic algorithm that can work with *any* table, as long as it is "insert-only" and it 
-has the necessary  "insert_id" &amp; "inserted_on" columns. This transformation has parameters:
+      <note>This transformation writes default rows to the etl.column_meta table under the simple assumption that all columns of all 
+tables that are listed in the etl.table_meta table will be mirrored and that the column names in the target database will be
+identical to the column names in the source database. 
 
-	PARAM_CDC_LAST_LOAD_UTC						Timestamp for when the target DB was most recently updated successfully
-	PARAM_CDC_CURRENT_LOAD_UTC					Used so that a consistent max timestamp is used for all ETL
-	PARAM_TABLE_META_ID							Primary key of etl.table_meta row for "source" table from which rows will be deleted
-	PARAM_DYN_DB_CONN_TARGET_DB_HOST			for target DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_TARGET_DB_PORT			for target DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_TARGET_DB_DATABASE		for target DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_TARGET_DB_USERNAME	for target DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD	for target DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_TARGET_DB_DRIVER		for target DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_TARGET_DB_URL			for target DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_SOURCE_DB_HOST			for source DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_SOURCE_DB_PORT			for source DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE	for source DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME	for source DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD	for source DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER		for source DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_SOURCE_DB_URL			for source DB "dynamic" database connections
-	PARAM_MAX_INSERT_ID							Maximum value of the "insert_id" column for rows to load from the source DB table
-	PARAM_SOURCE_DB_ID								ID the "source" database containing tables will be mirrored to a "target" database
-	PARAM_SOURCE_SCHEMA							Name of schema containing source table to mirror/archive
-	PARAM_SOURCE_TABLE							Name of source table to mirror/archive
-	PARAM_SOURCE_INSERT_ID_COLNAME				Name of column acting as "insert_id"  timestamp column of source table
-	PARAM_SOURCE_INSERTED_ON_COLNAME			Name of column acting as "inserted_on" column of source table
-	PARAM_TARGET_DB_ID								ID of the "target" database to which the "source" DB tables will be archived/mirrored
-	PARAM_TARGET_SCHEMA							Name of schema containing target table to update (not currently used)
-	PARAM_TARGET_TABLE								Name of target table to update (not currently used)
-	PARAM_TARGET_INSERT_ID_COLNAME				Name of column acting as "insert_id"  timestamp column of target table
-	PARAM_TARGET_INSERTED_ON_COLNAME			Name of column acting as "inserted_on" column of target table</note>
-      <xloc>16</xloc>
+Therefore, this transformation writes one row to the etl.column_meta table for every column that exists for every table
+listed in the etl.table_meta table.
+
+This transformation has parameters:
+
+	PARAM_SOURCE_DB_ID			ID the "source" database containing tables will be mirrored to a "target" database</note>
+      <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>843</width>
-      <heigth>458</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Either of these 2 steps can be used to inject metadata to specify the fields to stream to the
-target database table via the template transformation. They also enable the specified
-fields to be renamed to match column names in the target table.
-
-Only *one* of these steps should have an enabled hop to the ETL Metadata Injection step!
-
-The Data Grid step is only used for testing this transformation by running it in Spoon using 
-manually supplied parameter values (or default values set for the parameters). When you 
-disable a hop to the ETL Metadata Injection step, all configuration settings may be cleared,
-so do not do this unless you are prepared to reconfigure this step.</note>
-      <xloc>784</xloc>
-      <yloc>480</yloc>
-      <width>541</width>
+      <width>723</width>
       <heigth>150</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -657,16 +470,18 @@ so do not do this unless you are prepared to reconfigure this step.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>The query here must match the query in 
-jb_target-update_table-insert_only_table
-where this transformation is executed. See the 
-comments in that job for an explanation.</note>
-      <xloc>16</xloc>
-      <yloc>480</yloc>
-      <width>283</width>
-      <heigth>66</heigth>
+      <note>Currently, this transformation is not used.
+
+This transformation will not work in its current form because
+tr_populate_column_meta-one_table requires additional
+parameters to be given values, included the "dynamic"
+database connection patrameters for a "source" database.</note>
+      <xloc>96</xloc>
+      <yloc>288</yloc>
+      <width>527</width>
+      <heigth>142</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>14</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -785,18 +600,82 @@ comments in that job for an explanation.</note>
   </connection>
   <order>
     <hop>
-      <from>Data Grid - Column mapping metadata</from>
-      <to>Inject metadata - tmplt_target-update_table-insert_only_table</to>
-      <enabled>N</enabled>
-    </hop>
-    <hop>
-      <from>Column mapping metadata</from>
-      <to>Inject metadata - tmplt_target-update_table-insert_only_table</to>
+      <from>Table input - Get list of tables</from>
+      <to>Executor: tr_populate_column_meta-one_table</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Column mapping metadata</name>
+    <name>Executor: tr_populate_column_meta-one_table</name>
+    <type>TransExecutor</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <specification_method>rep_name</specification_method>
+    <trans_object_id />
+    <trans_name>tr_populate_column_meta-one_table</trans_name>
+    <filename />
+    <directory_path>${Internal.Entry.Current.Directory}</directory_path>
+    <group_size>1</group_size>
+    <group_field />
+    <group_time />
+    <parameters>
+      <variablemapping>
+        <variable>PARAM_SOURCE_SCHEMA</variable>
+        <field>source_schema_name</field>
+        <input />
+      </variablemapping>
+      <variablemapping>
+        <variable>PARAM_SOURCE_TABLE</variable>
+        <field>source_table_name</field>
+        <input />
+      </variablemapping>
+      <variablemapping>
+        <variable>PARAM_TABLE_META_ID</variable>
+        <field>table_meta_id</field>
+        <input />
+      </variablemapping>
+      <inherit_all_vars>Y</inherit_all_vars>
+    </parameters>
+    <execution_result_target_step />
+    <execution_time_field>ExecutionTime</execution_time_field>
+    <execution_result_field>ExecutionResult</execution_result_field>
+    <execution_errors_field>ExecutionNrErrors</execution_errors_field>
+    <execution_lines_read_field>ExecutionLinesRead</execution_lines_read_field>
+    <execution_lines_written_field>ExecutionLinesWritten</execution_lines_written_field>
+    <execution_lines_input_field>ExecutionLinesInput</execution_lines_input_field>
+    <execution_lines_output_field>ExecutionLinesOutput</execution_lines_output_field>
+    <execution_lines_rejected_field>ExecutionLinesRejected</execution_lines_rejected_field>
+    <execution_lines_updated_field>ExecutionLinesUpdated</execution_lines_updated_field>
+    <execution_lines_deleted_field>ExecutionLinesDeleted</execution_lines_deleted_field>
+    <execution_files_retrieved_field>ExecutionFilesRetrieved</execution_files_retrieved_field>
+    <execution_exit_status_field>ExecutionExitStatus</execution_exit_status_field>
+    <execution_log_text_field>ExecutionLogText</execution_log_text_field>
+    <execution_log_channelid_field>ExecutionLogChannelId</execution_log_channelid_field>
+    <result_rows_target_step />
+    <result_files_target_step />
+    <result_files_file_name_field>FileName</result_files_file_name_field>
+    <executors_output_step />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>432</xloc>
+      <yloc>192</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Table input - Get list of tables</name>
     <type>TableInput</type>
     <description />
     <distribute>Y</distribute>
@@ -808,18 +687,17 @@ comments in that job for an explanation.</note>
     </partitioning>
     <connection>etl_db</connection>
     <sql>SELECT
-    source_column_name AS "source_col_name", 
-    target_column_name AS "target_col_name" 
+    table_meta_id, 
+    source_schema_name,
+    source_table_name 
 FROM 
-    etl.column_meta 
+    etl.table_meta 
 WHERE 
-    table_meta_id = ${PARAM_TABLE_META_ID} AND 
-    mirror_column = true AND
-    source_column_name IS NOT NULL 
+    source_db_id = ${PARAM_SOURCE_DB_ID} 
 ORDER BY 
-    -- Ordering by "column_meta_id" means the columns will be treated in
-    -- the same order as they appear in the table in the "source" DB. 
-    column_meta_id ASC</sql>
+    source_schema_name ASC, 
+    source_table_name ASC
+</sql>
     <limit>0</limit>
     <lookup />
     <execute_each_row>N</execute_each_row>
@@ -833,141 +711,8 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>384</xloc>
-      <yloc>496</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Data Grid - Column mapping metadata</name>
-    <type>DataGrid</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <fields>
-      <field>
-        <name>source_col_name</name>
-        <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>64</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>target_col_name</name>
-        <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>64</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-    </fields>
-    <data>
-      <line>
-        <item>passage_id</item>
-        <item>passage_id</item>
-      </line>
-      <line>
-        <item>passage_status_id</item>
-        <item>passage_status_id</item>
-      </line>
-      <line>
-        <item>passage_date</item>
-        <item>passage_date</item>
-      </line>
-      <line>
-        <item>arrival_date</item>
-        <item>arrival_date</item>
-      </line>
-      <line>
-        <item>charging_point_id</item>
-        <item>charging_point_id</item>
-      </line>
-      <line>
-        <item>archive_id</item>
-        <item>archive_id</item>
-      </line>
-      <line>
-        <item>archive_date</item>
-        <item>archive_date</item>
-      </line>
-      <line>
-        <item>etl_batch_id_insert</item>
-        <item>etl_batch_id_insert</item>
-      </line>
-    </data>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>656</xloc>
-      <yloc>496</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Inject metadata - tmplt_target-update_table-insert_only_table</name>
-    <type>MetaInject</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <specification_method>rep_name</specification_method>
-    <trans_object_id />
-    <trans_name>tmplt_target-update_table-insert_only_table</trans_name>
-    <filename />
-    <directory_path>${Internal.Entry.Current.Directory}</directory_path>
-    <source_step />
-    <source_output_fields>    </source_output_fields>
-    <target_file />
-    <no_execution>N</no_execution>
-    <stream_source_step />
-    <stream_target_step />
-    <mappings>
-      <mapping>
-        <target_step_name>Map column names</target_step_name>
-        <target_attribute_key>FIELD_NAME</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Column mapping metadata</source_step>
-        <source_field>source_col_name</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Map column names</target_step_name>
-        <target_attribute_key>FIELD_RENAME</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Column mapping metadata</source_step>
-        <source_field>target_col_name</source_field>
-      </mapping>
-    </mappings>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>384</xloc>
-      <yloc>608</yloc>
+      <xloc>112</xloc>
+      <yloc>192</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

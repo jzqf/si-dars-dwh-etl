@@ -1,153 +1,13 @@
 <transformation>
   <info>
-    <name>tr_target-update_table-insert_only_table</name>
+    <name>tr_populate_table_meta-list_of_hardwired_tables</name>
     <description />
     <extended_description />
     <trans_version />
     <trans_type>Normal</trans_type>
     <trans_status>0</trans_status>
-    <directory>/generic/target_update</directory>
+    <directory>/generic/populate_etl_metadata_tables</directory>
     <parameters>
-      <parameter>
-        <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
-        <default_value>2100.01.01 00:00:00</default_value>
-        <description>Timestamp of the current load (no rows after this timestamp will be loaded)</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_CDC_LAST_LOAD_UTC</name>
-        <default_value>1900.01.01 00:00:00</default_value>
-        <description>Timestamp of last successful load from the source database</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE</name>
-        <default_value>odms_opr</default_value>
-        <description>for source DB "dynamic" database connections</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER</name>
-        <default_value />
-        <description>for source DB "dynamic" database connections</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_DYN_DB_CONN_SOURCE_DB_HOST</name>
-        <default_value>si01-qfr-07cl.si01.q-free.com</default_value>
-        <description>for source DB "dynamic" database connections</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD</name>
-        <default_value>ap68rDpVo0wcbKNtSEZbf00_Vw4rrxq0</default_value>
-        <description>for source DB "dynamic" database connections</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_DYN_DB_CONN_SOURCE_DB_PORT</name>
-        <default_value>5432</default_value>
-        <description>for source DB "dynamic" database connections</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_DYN_DB_CONN_SOURCE_DB_URL</name>
-        <default_value />
-        <description>for source DB "dynamic" database connections</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME</name>
-        <default_value>qfree_odms</default_value>
-        <description>for source DB "dynamic" database connections</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_DYN_DB_CONN_TARGET_DB_DATABASE</name>
-        <default_value />
-        <description>for target DB "dynamic" database connections</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_DYN_DB_CONN_TARGET_DB_DRIVER</name>
-        <default_value />
-        <description>for target DB "dynamic" database connections</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_DYN_DB_CONN_TARGET_DB_HOST</name>
-        <default_value />
-        <description>for target DB "dynamic" database connections</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD</name>
-        <default_value />
-        <description>for target DB "dynamic" database connections</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_DYN_DB_CONN_TARGET_DB_PORT</name>
-        <default_value />
-        <description>for target DB "dynamic" database connections</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_DYN_DB_CONN_TARGET_DB_URL</name>
-        <default_value />
-        <description>for target DB "dynamic" database connections</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_DYN_DB_CONN_TARGET_DB_USERNAME</name>
-        <default_value />
-        <description>for target DB "dynamic" database connections</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_MAX_INSERT_ID</name>
-        <default_value>1000</default_value>
-        <description>Maximum value of the "insert_id" column for rows to load from the source DB table</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_SOURCE_DB_ID</name>
-        <default_value>4</default_value>
-        <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_SOURCE_INSERTED_ON_COLNAME</name>
-        <default_value />
-        <description>Name of column acting as "inserted_on" timestamp column of source table</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_SOURCE_INSERT_ID_COLNAME</name>
-        <default_value>sid</default_value>
-        <description>Name of column acting as "insert_id" column of source table</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_SOURCE_SCHEMA</name>
-        <default_value>public</default_value>
-        <description>Name of schema containing source table to mirror to target table</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_SOURCE_TABLE</name>
-        <default_value>sid_roles</default_value>
-        <description>Name of source table to mirror to target table</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_TABLE_META_ID</name>
-        <default_value>37</default_value>
-        <description>Primary key of etl.table_meta row for "source" table from which rows will be deleted</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_TARGET_DB_ID</name>
-        <default_value>-1</default_value>
-        <description>ID of the "target" database to which "source" DB tables will be archived/mirrored</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_TARGET_INSERTED_ON_COLNAME</name>
-        <default_value />
-        <description>Name of column acting as "inserted_on" timestamp column of target table</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_TARGET_INSERT_ID_COLNAME</name>
-        <default_value>sid</default_value>
-        <description>Name of column acting as "insert_id" column of target table</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_TARGET_SCHEMA</name>
-        <default_value>odms</default_value>
-        <description>Name of schema containing target table to update</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_TARGET_TABLE</name>
-        <default_value>sid_roles</default_value>
-        <description>Name of target table to update</description>
-      </parameter>
     </parameters>
     <log>
       <trans-log-table>
@@ -569,48 +429,21 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/10/18 09:32:10.552</modified_date>
+    <modified_date>2017/10/18 13:29:28.643</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>This transformation uses ETL Metadata injection to control how columns of a table in a source database are mapped to columns 
-of a target table in a target database. This is a generic algorithm that can work with *any* table, as long as it is "insert-only" and it 
-has the necessary  "insert_id" &amp; "inserted_on" columns. This transformation has parameters:
+      <note>This transformation specifies the tables from a "source" database that will be mirrored to corresponding tables of a "target" database.
 
-	PARAM_CDC_LAST_LOAD_UTC						Timestamp for when the target DB was most recently updated successfully
-	PARAM_CDC_CURRENT_LOAD_UTC					Used so that a consistent max timestamp is used for all ETL
-	PARAM_TABLE_META_ID							Primary key of etl.table_meta row for "source" table from which rows will be deleted
-	PARAM_DYN_DB_CONN_TARGET_DB_HOST			for target DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_TARGET_DB_PORT			for target DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_TARGET_DB_DATABASE		for target DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_TARGET_DB_USERNAME	for target DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD	for target DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_TARGET_DB_DRIVER		for target DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_TARGET_DB_URL			for target DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_SOURCE_DB_HOST			for source DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_SOURCE_DB_PORT			for source DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE	for source DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME	for source DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD	for source DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER		for source DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_SOURCE_DB_URL			for source DB "dynamic" database connections
-	PARAM_MAX_INSERT_ID							Maximum value of the "insert_id" column for rows to load from the source DB table
-	PARAM_SOURCE_DB_ID								ID the "source" database containing tables will be mirrored to a "target" database
-	PARAM_SOURCE_SCHEMA							Name of schema containing source table to mirror/archive
-	PARAM_SOURCE_TABLE							Name of source table to mirror/archive
-	PARAM_SOURCE_INSERT_ID_COLNAME				Name of column acting as "insert_id"  timestamp column of source table
-	PARAM_SOURCE_INSERTED_ON_COLNAME			Name of column acting as "inserted_on" column of source table
-	PARAM_TARGET_DB_ID								ID of the "target" database to which the "source" DB tables will be archived/mirrored
-	PARAM_TARGET_SCHEMA							Name of schema containing target table to update (not currently used)
-	PARAM_TARGET_TABLE								Name of target table to update (not currently used)
-	PARAM_TARGET_INSERT_ID_COLNAME				Name of column acting as "insert_id"  timestamp column of target table
-	PARAM_TARGET_INSERTED_ON_COLNAME			Name of column acting as "inserted_on" column of target table</note>
-      <xloc>16</xloc>
+The stream from this transformation is copied to the "result" of this transformation. This result set is used in the parent job to execute
+a sub-job once for each row in this stream. At the same time, the stream values from the row are assigned to parameters that are 
+passed to the sub-job. This procedure is used to generate table metadata for each  table in the "source" and "target" databases.</note>
+      <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>843</width>
-      <heigth>458</heigth>
+      <width>799</width>
+      <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -627,44 +460,12 @@ has the necessary  "insert_id" &amp; "inserted_on" columns. This transformation 
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Either of these 2 steps can be used to inject metadata to specify the fields to stream to the
-target database table via the template transformation. They also enable the specified
-fields to be renamed to match column names in the target table.
-
-Only *one* of these steps should have an enabled hop to the ETL Metadata Injection step!
-
-The Data Grid step is only used for testing this transformation by running it in Spoon using 
-manually supplied parameter values (or default values set for the parameters). When you 
-disable a hop to the ETL Metadata Injection step, all configuration settings may be cleared,
-so do not do this unless you are prepared to reconfigure this step.</note>
-      <xloc>784</xloc>
-      <yloc>480</yloc>
-      <width>541</width>
-      <heigth>150</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>The query here must match the query in 
-jb_target-update_table-insert_only_table
-where this transformation is executed. See the 
-comments in that job for an explanation.</note>
+      <note>Each row of the stream created by the "data grid" step specifies one table from a 
+"source" DB to be archived/mirrored to a matching table from a target DB.</note>
       <xloc>16</xloc>
-      <yloc>480</yloc>
-      <width>283</width>
-      <heigth>66</heigth>
+      <yloc>112</yloc>
+      <width>486</width>
+      <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -673,65 +474,14 @@ comments in that job for an explanation.</note>
       <fontcolorgreen>0</fontcolorgreen>
       <fontcolorblue>0</fontcolorblue>
       <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>255</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
       <bordercolorblue>100</bordercolorblue>
       <drawshadow>Y</drawshadow>
     </notepad>
   </notepads>
-  <connection>
-    <name>etl_db</name>
-    <server>${QF_ETL_DB_HOST}</server>
-    <type>POSTGRESQL</type>
-    <access>Native</access>
-    <database>${QF_ETL_DB_DATABASE}</database>
-    <port>${QF_ETL_DB_PORT}</port>
-    <username>${QF_ETL_DB_USERNAME}</username>
-    <password>${QF_ETL_DB_PASSWORD}</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
-    <attributes>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>IS_CLUSTERED</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>PORT_NUMBER</code>
-        <attribute>${QF_ETL_DB_PORT}</attribute>
-      </attribute>
-      <attribute>
-        <code>PRESERVE_RESERVED_WORD_CASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>QUOTE_ALL_FIELDS</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>USE_POOLING</code>
-        <attribute>N</attribute>
-      </attribute>
-    </attributes>
-  </connection>
   <connection>
     <name>logging_db</name>
     <server>${QF_LOGGING_DB_HOST}</server>
@@ -785,61 +535,23 @@ comments in that job for an explanation.</note>
   </connection>
   <order>
     <hop>
-      <from>Data Grid - Column mapping metadata</from>
-      <to>Inject metadata - tmplt_target-update_table-insert_only_table</to>
+      <from>MDX OBO Archive DB tables - 2017.08.31</from>
+      <to>Copy rows to result</to>
       <enabled>N</enabled>
     </hop>
     <hop>
-      <from>Column mapping metadata</from>
-      <to>Inject metadata - tmplt_target-update_table-insert_only_table</to>
+      <from>Source tables to generate metadata for</from>
+      <to>Copy rows to result</to>
+      <enabled>N</enabled>
+    </hop>
+    <hop>
+      <from>All source tables for PSA</from>
+      <to>Copy rows to result</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Column mapping metadata</name>
-    <type>TableInput</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <connection>etl_db</connection>
-    <sql>SELECT
-    source_column_name AS "source_col_name", 
-    target_column_name AS "target_col_name" 
-FROM 
-    etl.column_meta 
-WHERE 
-    table_meta_id = ${PARAM_TABLE_META_ID} AND 
-    mirror_column = true AND
-    source_column_name IS NOT NULL 
-ORDER BY 
-    -- Ordering by "column_meta_id" means the columns will be treated in
-    -- the same order as they appear in the table in the "source" DB. 
-    column_meta_id ASC</sql>
-    <limit>0</limit>
-    <lookup />
-    <execute_each_row>N</execute_each_row>
-    <variables_active>Y</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>384</xloc>
-      <yloc>496</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Data Grid - Column mapping metadata</name>
+    <name>All source tables for PSA</name>
     <type>DataGrid</type>
     <description />
     <distribute>Y</distribute>
@@ -851,60 +563,368 @@ ORDER BY
     </partitioning>
     <fields>
       <field>
-        <name>source_col_name</name>
-        <type>String</type>
+        <name>source_db_id</name>
+        <type>Integer</type>
         <format />
         <currency />
         <decimal />
         <group />
-        <length>64</length>
+        <length>-1</length>
         <precision>-1</precision>
         <set_empty_string>N</set_empty_string>
       </field>
       <field>
-        <name>target_col_name</name>
+        <name>source_schema_name</name>
         <type>String</type>
         <format />
         <currency />
         <decimal />
         <group />
-        <length>64</length>
+        <length>255</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>source_table_name</name>
+        <type>String</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>255</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>target_db_id</name>
+        <type>Integer</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>target_schema_name</name>
+        <type>String</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>255</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>target_table_name</name>
+        <type>String</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>255</length>
         <precision>-1</precision>
         <set_empty_string>N</set_empty_string>
       </field>
     </fields>
     <data>
       <line>
-        <item>passage_id</item>
-        <item>passage_id</item>
+        <item>4</item>
+        <item>public</item>
+        <item>country</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
       </line>
       <line>
-        <item>passage_status_id</item>
-        <item>passage_status_id</item>
+        <item>4</item>
+        <item>public</item>
+        <item>cso_reference_type</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
       </line>
       <line>
-        <item>passage_date</item>
-        <item>passage_date</item>
+        <item>4</item>
+        <item>public</item>
+        <item>database_patch_log</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
       </line>
       <line>
-        <item>arrival_date</item>
-        <item>arrival_date</item>
+        <item>4</item>
+        <item>public</item>
+        <item>datamodel_type</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
       </line>
       <line>
-        <item>charging_point_id</item>
-        <item>charging_point_id</item>
+        <item>4</item>
+        <item>public</item>
+        <item>datamodel_version_tracking</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
       </line>
       <line>
-        <item>archive_id</item>
-        <item>archive_id</item>
+        <item>4</item>
+        <item>public</item>
+        <item>datamodels</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
       </line>
       <line>
-        <item>archive_date</item>
-        <item>archive_date</item>
+        <item>4</item>
+        <item>public</item>
+        <item>engineering_data</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
       </line>
       <line>
-        <item>etl_batch_id_insert</item>
-        <item>etl_batch_id_insert</item>
+        <item>4</item>
+        <item>public</item>
+        <item>engineering_data_links</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>engineering_data_type</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>history_datamodel_version_tracking</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>history_event_type</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>history_managed_process_versions</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>managed_process_control</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>managed_process_register</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>managed_process_versions</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>mex_event_category</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>odms_api_request_tracking</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>odms_api_request_type</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>odms_personalisation_data</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>odms_personalisation_register</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>odms_qpertino_event_tracking</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>odms_rest_response_error_details</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>odms_rest_response_subcode</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>odms_session_completion_type</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>odms_session_status</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>odms_session_tracking</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>odms_session_type</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>process_state</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>property_collection_data</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>property_collection_links</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>property_collections</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>qpertino_event_type</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>security_authentication_type</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>security_realms</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>security_roles</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>sid_register</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
+      </line>
+      <line>
+        <item>4</item>
+        <item>public</item>
+        <item>sid_roles</item>
+        <item>10</item>
+        <item>odms</item>
+        <item />
       </line>
     </data>
     <cluster_schema />
@@ -915,14 +935,14 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>656</xloc>
-      <yloc>496</yloc>
+      <xloc>128</xloc>
+      <yloc>256</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Inject metadata - tmplt_target-update_table-insert_only_table</name>
-    <type>MetaInject</type>
+    <name>Copy rows to result</name>
+    <type>RowsToResult</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -931,33 +951,6 @@ ORDER BY
       <method>none</method>
       <schema_name />
     </partitioning>
-    <specification_method>rep_name</specification_method>
-    <trans_object_id />
-    <trans_name>tmplt_target-update_table-insert_only_table</trans_name>
-    <filename />
-    <directory_path>${Internal.Entry.Current.Directory}</directory_path>
-    <source_step />
-    <source_output_fields>    </source_output_fields>
-    <target_file />
-    <no_execution>N</no_execution>
-    <stream_source_step />
-    <stream_target_step />
-    <mappings>
-      <mapping>
-        <target_step_name>Map column names</target_step_name>
-        <target_attribute_key>FIELD_NAME</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Column mapping metadata</source_step>
-        <source_field>source_col_name</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Map column names</target_step_name>
-        <target_attribute_key>FIELD_RENAME</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Column mapping metadata</source_step>
-        <source_field>target_col_name</source_field>
-      </mapping>
-    </mappings>
     <cluster_schema />
     <remotesteps>
       <input>
@@ -966,8 +959,244 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>384</xloc>
-      <yloc>608</yloc>
+      <xloc>672</xloc>
+      <yloc>176</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>MDX OBO Archive DB tables - 2017.08.31</name>
+    <type>DataGrid</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <field>
+        <name>source_db_id</name>
+        <type>Integer</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>source_schema_name</name>
+        <type>String</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>255</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>source_table_name</name>
+        <type>String</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>255</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>target_db_id</name>
+        <type>Integer</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>target_schema_name</name>
+        <type>String</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>255</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>target_table_name</name>
+        <type>String</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>255</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+    </fields>
+    <data>
+      <line>
+        <item>2</item>
+        <item>passage</item>
+        <item>passage</item>
+        <item>10</item>
+        <item />
+        <item />
+      </line>
+      <line>
+        <item>2</item>
+        <item>passage</item>
+        <item>image</item>
+        <item>10</item>
+        <item />
+        <item />
+      </line>
+      <line>
+        <item>2</item>
+        <item>tolldomain</item>
+        <item>charging_point</item>
+        <item>10</item>
+        <item />
+        <item />
+      </line>
+      <line>
+        <item>2</item>
+        <item>tolldomain</item>
+        <item>charging_point_group</item>
+        <item>10</item>
+        <item />
+        <item />
+      </line>
+      <line>
+        <item>2</item>
+        <item>tolldomain</item>
+        <item>charging_point_group_group</item>
+        <item>10</item>
+        <item />
+        <item />
+      </line>
+    </data>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>128</xloc>
+      <yloc>432</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Source tables to generate metadata for</name>
+    <type>DataGrid</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <field>
+        <name>source_db_id</name>
+        <type>Integer</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>source_schema_name</name>
+        <type>String</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>255</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>source_table_name</name>
+        <type>String</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>255</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>target_db_id</name>
+        <type>Integer</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>target_schema_name</name>
+        <type>String</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>255</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>target_table_name</name>
+        <type>String</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>255</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+    </fields>
+    <data>
+      <line>
+        <item />
+        <item />
+        <item />
+        <item />
+        <item />
+        <item />
+      </line>
+    </data>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>128</xloc>
+      <yloc>176</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

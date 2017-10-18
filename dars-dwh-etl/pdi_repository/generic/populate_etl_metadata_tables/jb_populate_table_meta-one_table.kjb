@@ -1,68 +1,18 @@
 <job>
-  <name>jb_target-update_table</name>
+  <name>jb_populate_table_meta-one_table</name>
   <description />
   <extended_description />
   <job_version />
   <job_status>0</job_status>
-  <directory>/generic/target_update</directory>
+  <directory>/generic/populate_etl_metadata_tables</directory>
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/10/18 09:08:26.059</modified_date>
+  <modified_date>2017/10/18 12:54:58.055</modified_date>
   <parameters>
     <parameter>
-      <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
-      <default_value>2017.06.15 00:00:00</default_value>
-      <description>Timestamp of the current load (no rows after this timestamp will be loaded)</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_CDC_LAST_LOAD_UTC</name>
-      <default_value>1900.01.01 00:00:00</default_value>
-      <description>Timestamp of last successful load from the source database</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_DYN_DB_CONN_TARGET_DB_DATABASE</name>
-      <default_value />
-      <description>for target DB "dynamic" database connections</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_DYN_DB_CONN_TARGET_DB_DRIVER</name>
-      <default_value />
-      <description>for target DB "dynamic" database connections</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_DYN_DB_CONN_TARGET_DB_HOST</name>
-      <default_value />
-      <description>for target DB "dynamic" database connections</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD</name>
-      <default_value />
-      <description>for target DB "dynamic" database connections</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_DYN_DB_CONN_TARGET_DB_PORT</name>
-      <default_value />
-      <description>for target DB "dynamic" database connections</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_DYN_DB_CONN_TARGET_DB_URL</name>
-      <default_value />
-      <description>for target DB "dynamic" database connections</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_DYN_DB_CONN_TARGET_DB_USERNAME</name>
-      <default_value />
-      <description>for target DB "dynamic" database connections</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_MAX_INSERT_ID</name>
-      <default_value />
-      <description>Maximum value of the "insert_id" column for rows to load from the source DB table</description>
-    </parameter>
-    <parameter>
       <name>PARAM_SOURCE_DB_ID</name>
-      <default_value>0</default_value>
+      <default_value />
       <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
     </parameter>
     <parameter>
@@ -71,54 +21,24 @@
       <description>Name of schema containing source table to mirror to target table</description>
     </parameter>
     <parameter>
-      <name>PARAM_SOURCE_SCHEMA_DOT_TABLE</name>
-      <default_value>passage.image</default_value>
-      <description>${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</description>
-    </parameter>
-    <parameter>
       <name>PARAM_SOURCE_TABLE</name>
       <default_value>image</default_value>
       <description>Name of source table to mirror to target table</description>
     </parameter>
     <parameter>
-      <name>PARAM_TABLE_META_ID</name>
-      <default_value>0</default_value>
-      <description>Primary key of etl.table_meta row for "source" table archived/mirrored to "target" table</description>
-    </parameter>
-    <parameter>
       <name>PARAM_TARGET_DB_ID</name>
-      <default_value>-1</default_value>
-      <description>ID of the "target" database to which "source" DB tables will be archived/mirrored</description>
+      <default_value />
+      <description>ID of the "target" database to which the "source" DB tables will be archived/mirrored</description>
     </parameter>
     <parameter>
       <name>PARAM_TARGET_SCHEMA</name>
-      <default_value>passage</default_value>
-      <description>Name of schema containing target table to update (not currently used)</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_TARGET_SCHEMA_DOT_TABLE</name>
-      <default_value>passage.image</default_value>
-      <description>${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</description>
+      <default_value />
+      <description>Name of schema cin the "target" DB ontaining the target table </description>
     </parameter>
     <parameter>
       <name>PARAM_TARGET_TABLE</name>
-      <default_value>image</default_value>
-      <description>Name of target table to update (not currently used)</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_USE_CUSTOM_MIRROR_ALGORITHM</name>
-      <default_value>N</default_value>
-      <description>"Y" if a custom update algorithm shall be used for this table</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_USE_GENERIC_INSERT_ONLY_TABLE_ALGORITHM</name>
-      <default_value>N</default_value>
-      <description>"Y" if the generic update algorithm for "insert-only" tables should be used for the specified table</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_USE_GENERIC_UPDATEABLE_TABLE_ALGORITHM</name>
-      <default_value>N</default_value>
-      <description>"Y" if the generic update algorithm for "updateable" tables should be used for the specified table</description>
+      <default_value />
+      <description>Name of the table in the "target" DB that the "source" table will be archived/mirrored to</description>
     </parameter>
   </parameters>
   <connection>
@@ -464,178 +384,141 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>16</xloc>
-      <yloc>448</yloc>
+      <xloc>32</xloc>
+      <yloc>256</yloc>
     </entry>
     <entry>
-      <name>Abort job</name>
+      <name>tr_populate_table_meta-one_table</name>
       <description />
-      <type>ABORT</type>
-      <message>Aborting jb_target-update_table</message>
+      <type>TRANS</type>
+      <specification_method>rep_name</specification_method>
+      <trans_object_id />
+      <filename />
+      <transname>tr_populate_table_meta-one_table</transname>
+      <directory>${Internal.Entry.Current.Directory}</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <clear_rows>N</clear_rows>
+      <clear_files>N</clear_files>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Basic</loglevel>
+      <cluster>N</cluster>
+      <slave_server_name />
+      <set_append_logfile>N</set_append_logfile>
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <create_parent_folder>N</create_parent_folder>
+      <logging_remote_work>N</logging_remote_work>
+      <run_configuration>Pentaho local</run_configuration>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_TARGET_SCHEMA</name>
+          <stream_name />
+          <value>${PARAM_TARGET_SCHEMA}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_TABLE</name>
+          <stream_name />
+          <value>${PARAM_TARGET_TABLE}</value>
+        </parameter>
+      </parameters>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>736</xloc>
-      <yloc>752</yloc>
+      <xloc>320</xloc>
+      <yloc>592</yloc>
     </entry>
     <entry>
-      <name>Write To Log: Parameters</name>
+      <name>Log parameters</name>
       <description />
       <type>WRITE_TO_LOG</type>
-      <logmessage>PARAM_CDC_LAST_LOAD_UTC                       = ${PARAM_CDC_LAST_LOAD_UTC}
-PARAM_CDC_CURRENT_LOAD_UTC                    = ${PARAM_CDC_CURRENT_LOAD_UTC}
-PARAM_DYN_DB_CONN_TARGET_DB_HOST              = ${PARAM_DYN_DB_CONN_TARGET_DB_HOST}
-PARAM_DYN_DB_CONN_TARGET_DB_PORT              = ${PARAM_DYN_DB_CONN_TARGET_DB_PORT}
-PARAM_DYN_DB_CONN_TARGET_DB_DATABASE          = ${PARAM_DYN_DB_CONN_TARGET_DB_DATABASE}
-PARAM_DYN_DB_CONN_TARGET_DB_USERNAME          = ${PARAM_DYN_DB_CONN_TARGET_DB_USERNAME}
-PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD          = ${PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD}
-PARAM_DYN_DB_CONN_TARGET_DB_URL               = ${PARAM_DYN_DB_CONN_TARGET_DB_URL}
-PARAM_DYN_DB_CONN_TARGET_DB_DRIVER            = ${PARAM_DYN_DB_CONN_TARGET_DB_DRIVER}
-PARAM_MAX_INSERT_ID                           = ${PARAM_MAX_INSERT_ID}
-PARAM_TABLE_META_ID                           = ${PARAM_TABLE_META_ID}
-PARAM_SOURCE_DB_ID                            = ${PARAM_SOURCE_DB_ID}
-PARAM_SOURCE_SCHEMA                           = ${PARAM_SOURCE_SCHEMA}
-PARAM_SOURCE_TABLE                            = ${PARAM_SOURCE_TABLE}
-PARAM_SOURCE_SCHEMA_DOT_TABLE                 = ${PARAM_SOURCE_SCHEMA_DOT_TABLE}
-PARAM_TARGET_DB_ID                            = ${PARAM_TARGET_DB_ID}
-PARAM_TARGET_SCHEMA                           = ${PARAM_TARGET_SCHEMA}
-PARAM_TARGET_TABLE                            = ${PARAM_TARGET_TABLE}
-PARAM_TARGET_SCHEMA_DOT_TABLE                 = ${PARAM_TARGET_SCHEMA_DOT_TABLE}
-PARAM_USE_GENERIC_INSERT_ONLY_TABLE_ALGORITHM = ${PARAM_USE_GENERIC_INSERT_ONLY_TABLE_ALGORITHM}
-PARAM_USE_GENERIC_UPDATEABLE_TABLE_ALGORITHM  = ${PARAM_USE_GENERIC_UPDATEABLE_TABLE_ALGORITHM}
-PARAM_USE_CUSTOM_MIRROR_ALGORITHM             = ${PARAM_USE_CUSTOM_MIRROR_ALGORITHM}</logmessage>
+      <logmessage> 
+PARAM_SOURCE_DB_ID  = ${PARAM_SOURCE_DB_ID}
+PARAM_SOURCE_SCHEMA = ${PARAM_SOURCE_SCHEMA}
+PARAM_SOURCE_TABLE  = ${PARAM_SOURCE_TABLE}
+PARAM_TARGET_DB_ID  = ${PARAM_TARGET_DB_ID}
+PARAM_TARGET_SCHEMA = ${PARAM_TARGET_SCHEMA}
+PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}
+ </logmessage>
       <loglevel>Basic</loglevel>
-      <logsubject>Parameters received by jb_target-update_table</logsubject>
+      <logsubject>Parameters received by: jb_populate_table_meta-one_table:</logsubject>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>144</xloc>
-      <yloc>448</yloc>
+      <yloc>256</yloc>
     </entry>
     <entry>
-      <name>Use custom algorithm?</name>
+      <name>tr_populate_table_meta-get_table_meta_id</name>
       <description />
-      <type>SIMPLE_EVAL</type>
-      <valuetype>variable</valuetype>
-      <fieldname />
-      <variablename>${PARAM_USE_CUSTOM_MIRROR_ALGORITHM}</variablename>
-      <fieldtype>boolean</fieldtype>
-      <mask />
-      <comparevalue />
-      <minvalue />
-      <maxvalue />
-      <successcondition>equal</successcondition>
-      <successnumbercondition>equal</successnumbercondition>
-      <successbooleancondition>true</successbooleancondition>
-      <successwhenvarset>N</successwhenvarset>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>144</xloc>
-      <yloc>848</yloc>
-    </entry>
-    <entry>
-      <name>jb_target-update_table-custom_algorithm_dispatcher</name>
-      <description />
-      <type>JOB</type>
+      <type>TRANS</type>
       <specification_method>rep_name</specification_method>
-      <job_object_id />
+      <trans_object_id />
       <filename />
-      <jobname>jb_target-update_table-custom_algorithm_dispatcher</jobname>
+      <transname>tr_populate_table_meta-get_table_meta_id</transname>
       <directory>${Internal.Entry.Current.Directory}</directory>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
+      <clear_rows>Y</clear_rows>
+      <clear_files>N</clear_files>
       <set_logfile>N</set_logfile>
       <logfile />
       <logext />
       <add_date>N</add_date>
       <add_time>N</add_time>
-      <loglevel>Nothing</loglevel>
+      <loglevel>Basic</loglevel>
+      <cluster>N</cluster>
       <slave_server_name />
+      <set_append_logfile>N</set_append_logfile>
       <wait_until_finished>Y</wait_until_finished>
       <follow_abort_remote>N</follow_abort_remote>
-      <expand_remote_job>N</expand_remote_job>
       <create_parent_folder>N</create_parent_folder>
-      <pass_export>N</pass_export>
+      <logging_remote_work>N</logging_remote_work>
+      <run_configuration>Pentaho local</run_configuration>
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
       </parameters>
-      <set_append_logfile>N</set_append_logfile>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>464</xloc>
-      <yloc>848</yloc>
+      <xloc>320</xloc>
+      <yloc>720</yloc>
     </entry>
     <entry>
-      <name>Use generic algorithm for insert-only tables?</name>
+      <name>tr_populate_column_meta-one_table</name>
       <description />
-      <type>SIMPLE_EVAL</type>
-      <valuetype>variable</valuetype>
-      <fieldname />
-      <variablename>${PARAM_USE_GENERIC_INSERT_ONLY_TABLE_ALGORITHM}</variablename>
-      <fieldtype>boolean</fieldtype>
-      <mask />
-      <comparevalue />
-      <minvalue />
-      <maxvalue />
-      <successcondition>equal</successcondition>
-      <successnumbercondition>equal</successnumbercondition>
-      <successbooleancondition>true</successbooleancondition>
-      <successwhenvarset>N</successwhenvarset>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>144</xloc>
-      <yloc>656</yloc>
-    </entry>
-    <entry>
-      <name>Use generic algorithm for updateable tables?</name>
-      <description />
-      <type>SIMPLE_EVAL</type>
-      <valuetype>variable</valuetype>
-      <fieldname />
-      <variablename>${PARAM_USE_GENERIC_UPDATEABLE_TABLE_ALGORITHM}</variablename>
-      <fieldtype>boolean</fieldtype>
-      <mask />
-      <comparevalue />
-      <minvalue />
-      <maxvalue />
-      <successcondition>equal</successcondition>
-      <successnumbercondition>equal</successnumbercondition>
-      <successbooleancondition>true</successbooleancondition>
-      <successwhenvarset>N</successwhenvarset>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>144</xloc>
-      <yloc>752</yloc>
-    </entry>
-    <entry>
-      <name>jb_target-update_table-insert_only_table</name>
-      <description />
-      <type>JOB</type>
+      <type>TRANS</type>
       <specification_method>rep_name</specification_method>
-      <job_object_id />
+      <trans_object_id />
       <filename />
-      <jobname>jb_target-update_table-insert_only_table</jobname>
+      <transname>tr_populate_column_meta-one_table</transname>
       <directory>${Internal.Entry.Current.Directory}</directory>
       <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
+      <params_from_previous>Y</params_from_previous>
+      <exec_per_row>Y</exec_per_row>
+      <clear_rows>N</clear_rows>
+      <clear_files>N</clear_files>
       <set_logfile>N</set_logfile>
       <logfile />
       <logext />
       <add_date>N</add_date>
       <add_time>N</add_time>
-      <loglevel>Nothing</loglevel>
+      <loglevel>Basic</loglevel>
+      <cluster>N</cluster>
       <slave_server_name />
+      <set_append_logfile>N</set_append_logfile>
       <wait_until_finished>Y</wait_until_finished>
       <follow_abort_remote>N</follow_abort_remote>
-      <expand_remote_job>N</expand_remote_job>
       <create_parent_folder>N</create_parent_folder>
-      <pass_export>N</pass_export>
+      <logging_remote_work>N</logging_remote_work>
+      <run_configuration>Pentaho local</run_configuration>
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
         <parameter>
@@ -673,85 +556,20 @@ PARAM_USE_CUSTOM_MIRROR_ALGORITHM             = ${PARAM_USE_CUSTOM_MIRROR_ALGORI
           <stream_name />
           <value>${QF_DYN_DB_CONN_DB_DRIVER}</value>
         </parameter>
+        <parameter>
+          <name>PARAM_TABLE_META_ID</name>
+          <stream_name>table_meta_id</stream_name>
+          <value />
+        </parameter>
       </parameters>
-      <set_append_logfile>N</set_append_logfile>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>464</xloc>
-      <yloc>656</yloc>
+      <xloc>320</xloc>
+      <yloc>816</yloc>
     </entry>
     <entry>
-      <name>jb_target-update_table-updatable_table</name>
-      <description />
-      <type>JOB</type>
-      <specification_method>rep_name</specification_method>
-      <job_object_id />
-      <filename />
-      <jobname>jb_target-update_table-updatable_table</jobname>
-      <directory>${Internal.Entry.Current.Directory}</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Nothing</loglevel>
-      <slave_server_name />
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <expand_remote_job>N</expand_remote_job>
-      <create_parent_folder>N</create_parent_folder>
-      <pass_export>N</pass_export>
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-        <parameter>
-          <name>PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE</name>
-          <stream_name />
-          <value>${QF_DYN_DB_CONN_DB_DATABASE}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_DYN_DB_CONN_SOURCE_DB_HOST</name>
-          <stream_name />
-          <value>${QF_DYN_DB_CONN_DB_HOST}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD</name>
-          <stream_name />
-          <value>${QF_DYN_DB_CONN_DB_PASSWORD}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_DYN_DB_CONN_SOURCE_DB_PORT</name>
-          <stream_name />
-          <value>${QF_DYN_DB_CONN_DB_PORT}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME</name>
-          <stream_name />
-          <value>${QF_DYN_DB_CONN_DB_USERNAME}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_DYN_DB_CONN_SOURCE_DB_URL</name>
-          <stream_name />
-          <value>${QF_DYN_DB_CONN_DB_URL}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER</name>
-          <stream_name />
-          <value>${QF_DYN_DB_CONN_DB_DRIVER}</value>
-        </parameter>
-      </parameters>
-      <set_append_logfile>N</set_append_logfile>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>464</xloc>
-      <yloc>752</yloc>
-    </entry>
-    <entry>
-      <name>jb_log_error - Untreated case</name>
+      <name>jb_log_error</name>
       <description />
       <type>JOB</type>
       <specification_method>rep_name</specification_method>
@@ -779,15 +597,26 @@ PARAM_USE_CUSTOM_MIRROR_ALGORITHM             = ${PARAM_USE_CUSTOM_MIRROR_ALGORI
         <parameter>
           <name>PARAM_ERROR_MESSAGE</name>
           <stream_name />
-          <value>Untreated case in jb_target-update_table for ETL algorithm to use</value>
+          <value>Error executing tr_populate_column_meta-one_table from jb_populate_table_meta-one_table: PARAM_SOURCE_DB_ID=${PARAM_SOURCE_DB_ID}, source table = ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</value>
         </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>144</xloc>
-      <yloc>944</yloc>
+      <xloc>96</xloc>
+      <yloc>816</yloc>
+    </entry>
+    <entry>
+      <name>Abort job</name>
+      <description />
+      <type>ABORT</type>
+      <message>Aborting jb_populate_table_meta-one_table</message>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>96</xloc>
+      <yloc>720</yloc>
     </entry>
     <entry>
       <name>jb_set_dynamic_db_connection_variables</name>
@@ -825,54 +654,108 @@ PARAM_USE_CUSTOM_MIRROR_ALGORITHM             = ${PARAM_USE_CUSTOM_MIRROR_ALGORI
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>144</xloc>
-      <yloc>544</yloc>
+      <xloc>320</xloc>
+      <yloc>464</yloc>
     </entry>
     <entry>
-      <name>DUMMY</name>
+      <name>Set PARAM_TARGET_SCHEMA = PARAM_SOURCE_SCHEMA</name>
       <description />
-      <type>SPECIAL</type>
-      <start>N</start>
-      <dummy>Y</dummy>
-      <repeat>N</repeat>
-      <schedulerType>0</schedulerType>
-      <intervalSeconds>0</intervalSeconds>
-      <intervalMinutes>60</intervalMinutes>
-      <hour>12</hour>
-      <minutes>0</minutes>
-      <weekDay>1</weekDay>
-      <DayOfMonth>1</DayOfMonth>
+      <type>SET_VARIABLES</type>
+      <replacevars>Y</replacevars>
+      <filename />
+      <file_variable_type>JVM</file_variable_type>
+      <fields>
+        <field>
+          <variable_name>PARAM_TARGET_SCHEMA</variable_name>
+          <variable_value>${PARAM_SOURCE_SCHEMA}</variable_value>
+          <variable_type>CURRENT_JOB</variable_type>
+        </field>
+      </fields>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>736</xloc>
-      <yloc>544</yloc>
+      <xloc>624</xloc>
+      <yloc>256</yloc>
     </entry>
     <entry>
-      <name>DUMMY 2</name>
+      <name>PARAM_TARGET_SCHEMA has value ?</name>
       <description />
-      <type>SPECIAL</type>
-      <start>N</start>
-      <dummy>Y</dummy>
-      <repeat>N</repeat>
-      <schedulerType>0</schedulerType>
-      <intervalSeconds>0</intervalSeconds>
-      <intervalMinutes>60</intervalMinutes>
-      <hour>12</hour>
-      <minutes>0</minutes>
-      <weekDay>1</weekDay>
-      <DayOfMonth>1</DayOfMonth>
+      <type>SIMPLE_EVAL</type>
+      <valuetype>variable</valuetype>
+      <fieldname />
+      <variablename>${PARAM_TARGET_SCHEMA}</variablename>
+      <fieldtype>string</fieldtype>
+      <mask />
+      <comparevalue />
+      <minvalue />
+      <maxvalue />
+      <successcondition>different</successcondition>
+      <successnumbercondition>equal</successnumbercondition>
+      <successbooleancondition>false</successbooleancondition>
+      <successwhenvarset>N</successwhenvarset>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>736</xloc>
-      <yloc>944</yloc>
+      <xloc>320</xloc>
+      <yloc>256</yloc>
+    </entry>
+    <entry>
+      <name>Set PARAM_TARGET_TABLE = PARAM_SOURCE_TABLE</name>
+      <description />
+      <type>SET_VARIABLES</type>
+      <replacevars>Y</replacevars>
+      <filename />
+      <file_variable_type>JVM</file_variable_type>
+      <fields>
+        <field>
+          <variable_name>PARAM_TARGET_TABLE</variable_name>
+          <variable_value>${PARAM_SOURCE_TABLE}</variable_value>
+          <variable_type>CURRENT_JOB</variable_type>
+        </field>
+      </fields>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>624</xloc>
+      <yloc>352</yloc>
+    </entry>
+    <entry>
+      <name>PARAM_TARGET_TABLE has value ?</name>
+      <description />
+      <type>SIMPLE_EVAL</type>
+      <valuetype>variable</valuetype>
+      <fieldname />
+      <variablename>${PARAM_TARGET_TABLE}</variablename>
+      <fieldtype>string</fieldtype>
+      <mask />
+      <comparevalue />
+      <minvalue />
+      <maxvalue />
+      <successcondition>different</successcondition>
+      <successnumbercondition>equal</successnumbercondition>
+      <successbooleancondition>false</successbooleancondition>
+      <successwhenvarset>N</successwhenvarset>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>320</xloc>
+      <yloc>352</yloc>
+    </entry>
+    <entry>
+      <name>Success</name>
+      <description />
+      <type>SUCCESS</type>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>320</xloc>
+      <yloc>912</yloc>
     </entry>
   </entries>
   <hops>
     <hop>
       <from>START</from>
-      <to>Write To Log: Parameters</to>
+      <to>Log parameters</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -880,8 +763,8 @@ PARAM_USE_CUSTOM_MIRROR_ALGORITHM             = ${PARAM_USE_CUSTOM_MIRROR_ALGORI
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>Use custom algorithm?</from>
-      <to>jb_target-update_table-custom_algorithm_dispatcher</to>
+      <from>tr_populate_table_meta-one_table</from>
+      <to>tr_populate_table_meta-get_table_meta_id</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -889,89 +772,17 @@ PARAM_USE_CUSTOM_MIRROR_ALGORITHM             = ${PARAM_USE_CUSTOM_MIRROR_ALGORI
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Use generic algorithm for insert-only tables?</from>
-      <to>Use generic algorithm for updateable tables?</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Use generic algorithm for updateable tables?</from>
-      <to>Use custom algorithm?</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Use generic algorithm for insert-only tables?</from>
-      <to>jb_target-update_table-insert_only_table</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Use generic algorithm for updateable tables?</from>
-      <to>jb_target-update_table-updatable_table</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>jb_target-update_table-insert_only_table</from>
+      <from>jb_log_error</from>
       <to>Abort job</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>jb_target-update_table-updatable_table</from>
-      <to>Abort job</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>jb_target-update_table-custom_algorithm_dispatcher</from>
-      <to>Abort job</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Use custom algorithm?</from>
-      <to>jb_log_error - Untreated case</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
+      <unconditional>Y</unconditional>
     </hop>
     <hop>
       <from>jb_set_dynamic_db_connection_variables</from>
-      <to>Use generic algorithm for insert-only tables?</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>jb_set_dynamic_db_connection_variables</from>
-      <to>DUMMY</to>
+      <to>Abort job</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -979,17 +790,26 @@ PARAM_USE_CUSTOM_MIRROR_ALGORITHM             = ${PARAM_USE_CUSTOM_MIRROR_ALGORI
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>DUMMY</from>
+      <from>tr_populate_table_meta-one_table</from>
       <to>Abort job</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>jb_log_error - Untreated case</from>
-      <to>DUMMY 2</to>
+      <from>tr_populate_table_meta-get_table_meta_id</from>
+      <to>Abort job</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Log parameters</from>
+      <to>PARAM_TARGET_SCHEMA has value ?</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -997,60 +817,118 @@ PARAM_USE_CUSTOM_MIRROR_ALGORITHM             = ${PARAM_USE_CUSTOM_MIRROR_ALGORI
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>DUMMY 2</from>
-      <to>Abort job</to>
+      <from>PARAM_TARGET_SCHEMA has value ?</from>
+      <to>Set PARAM_TARGET_SCHEMA = PARAM_SOURCE_SCHEMA</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>PARAM_TARGET_SCHEMA has value ?</from>
+      <to>PARAM_TARGET_TABLE has value ?</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
+      <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Write To Log: Parameters</from>
+      <from>PARAM_TARGET_TABLE has value ?</from>
+      <to>Set PARAM_TARGET_TABLE = PARAM_SOURCE_TABLE</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Set PARAM_TARGET_TABLE = PARAM_SOURCE_TABLE</from>
       <to>jb_set_dynamic_db_connection_variables</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>PARAM_TARGET_TABLE has value ?</from>
+      <to>jb_set_dynamic_db_connection_variables</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Set PARAM_TARGET_SCHEMA = PARAM_SOURCE_SCHEMA</from>
+      <to>PARAM_TARGET_TABLE has value ?</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_set_dynamic_db_connection_variables</from>
+      <to>tr_populate_table_meta-one_table</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>tr_populate_table_meta-get_table_meta_id</from>
+      <to>tr_populate_column_meta-one_table</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>tr_populate_column_meta-one_table</from>
+      <to>Success</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>tr_populate_column_meta-one_table</from>
+      <to>jb_log_error</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
       <evaluation>N</evaluation>
-      <unconditional>Y</unconditional>
+      <unconditional>N</unconditional>
     </hop>
   </hops>
   <notepads>
     <notepad>
-      <note>This job updates a single table in the target database. A dispatch mechanism is used to execute the appropriate update algorithm, which can be one of:
+      <note>This job writes a single default row to the etl.table_meta tablefor a table pair (one from a "source" DB and one from a 
+"target" DB) that is specified by parameters passed to this job.
 
-	1.	Generic update algorithm for "insert-only" tables
-	2.	Generic update algorithm for "updateable" tables
-	3.	Custom update algorithm
+This job also creates a set of default etl.column_meta rows for the etl.table_meta row just created, one for each
+row of the table in the source DB.
 
 This job has parameters:
 
-	PARAM_CDC_LAST_LOAD_UTC								Timestamp for when the target DB mirror tables were last updated from the source DB
-	PARAM_CDC_CURRENT_LOAD_UTC							Timestamp of the current load (no rows after this timestamp will be loaded)
-	PARAM_TABLE_META_ID									Primary key of etl.table_meta row for "source" table archived/mirrored to "target" table
-	PARAM_DYN_DB_CONN_TARGET_DB_HOST					for target DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_TARGET_DB_PORT					for target DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_TARGET_DB_DATABASE				for target DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_TARGET_DB_USERNAME			for target DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD			for target DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_TARGET_DB_DRIVER				for target DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_TARGET_DB_URL					for target DB "dynamic" database connections
-	PARAM_MAX_INSERT_ID									Maximum value of the "insert_id" column for rows to load from the source DB table
-	PARAM_SOURCE_DB_ID										ID the "source" database containing tables that are mirrored to a "target" database
-	PARAM_SOURCE_SCHEMA									Name of schema containing source table that is mirrored to target table
-	PARAM_SOURCE_TABLE									Name of source table that is mirrored to target table
-	PARAM_SOURCE_SCHEMA_DOT_TABLE						${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
-	PARAM_TARGET_DB_ID										ID of the "target" database to which the "source" DB tables will be archived/mirrored
-	PARAM_TARGET_SCHEMA									Name of schema containing target table that is mirrored to target table (not currently used)
-	PARAM_TARGET_TABLE										Name of target table that is mirrored to target table (not currently used)
-	PARAM_TARGET_SCHEMA_DOT_TABLE						${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}
-	PARAM_USE_GENERIC_INSERT_ONLY_TABLE_ALGORITHM	"Y" if the generic update algorithm for "insert-only" tables should be used for the specified table
-	PARAM_USE_GENERIC_UPDATEABLE_TABLE_ALGORITHM	"Y" if the generic update algorithm for "updateable" tables should be used for the specified table
-	PARAM_USE_CUSTOM_MIRROR_ALGORITHM				"Y" if a custom update algorithm shall be used for this table</note>
+	PARAM_SOURCE_DB_ID			ID the "source" database containing the table for generating table metadata
+	PARAM_SOURCE_SCHEMA		Name of schema containing source table for generating table metadata
+	PARAM_SOURCE_TABLE		Name of source table for generating table metatdata
+	PARAM_TARGET_DB_ID			ID of the "target" database to which the "source" DB tables will be archived/mirrored
+	PARAM_TARGET_SCHEMA		Name of schema in the "target" DB ontaining the target table.
+									If blank, PARAM_SOURCE_SCHEMA will be used instead.
+	PARAM_TARGET_TABLE			Name of the table in the "target" DB that the "source" table will be archived/mirrored to
+									If blank, PARAM_SOURCE_TABLE will be used instead.</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>964</width>
-      <heigth>430</heigth>
+      <width>740</width>
+      <heigth>234</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -1067,14 +945,66 @@ This job has parameters:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>This "Abort" is needed
-to tell the root calling
-job that execution has
-failed.</note>
-      <xloc>800</xloc>
+      <note>Get the value of "table_meta_id" for the new etl.table_meta row just created.
+This is placed in the stream and then copied to the "Result set" so that it can
+be accessed by the next transformation.</note>
+      <xloc>480</xloc>
       <yloc>720</yloc>
-      <width>139</width>
-      <heigth>66</heigth>
+      <width>461</width>
+      <heigth>52</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Create a new etl.table_meta row using the values of the parameters passed to
+this job. Even though the option "Pass parameter values to sub transformation"
+is selected for this job entry, two of the parameters are explicitly passed as:
+
+	PARAM_TARGET_SCHEMA	= ${PARAM_TARGET_SCHEMA}
+	PARAM_TARGET_TABLE		= ${PARAM_TARGET_TABLE}
+
+This is because the values for these variables are modified in this job if they are passed
+to this job as "". If this is done, it seems that their *original* blank values are passed to 
+sub-transformation here unless we explicitly pass the parameters as shown.</note>
+      <xloc>480</xloc>
+      <yloc>544</yloc>
+      <width>516</width>
+      <heigth>150</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Create a set of default etl.column_meta rows
+for the etl.table_meta row just created, one
+for each row of the table in the source DB.</note>
+      <xloc>480</xloc>
+      <yloc>800</yloc>
+      <width>275</width>
+      <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -1097,10 +1027,10 @@ failed.</note>
 
 based on a single parameter:
 
-	PARAM_DB_ID = PARAM_SOURCE_DB_ID</note>
-      <xloc>288</xloc>
-      <yloc>496</yloc>
-      <width>274</width>
+	PARAM_DB_ID = ${PARAM_SOURCE_DB_ID}</note>
+      <xloc>480</xloc>
+      <yloc>416</yloc>
+      <width>289</width>
       <heigth>108</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
