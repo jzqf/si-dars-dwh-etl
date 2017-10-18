@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/09/06 14:51:52.735</modified_date>
+  <modified_date>2017/10/18 10:25:40.556</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_SOURCE_DB_ID</name>
@@ -432,13 +432,13 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>320</xloc>
-      <yloc>688</yloc>
+      <yloc>672</yloc>
     </entry>
     <entry>
       <name>Write parameters to log</name>
       <description />
       <type>WRITE_TO_LOG</type>
-      <logmessage>
+      <logmessage> 
 PARAM_SOURCE_DB_ID  = ${PARAM_SOURCE_DB_ID}
 PARAM_SOURCE_SCHEMA = ${PARAM_SOURCE_SCHEMA}
 PARAM_SOURCE_TABLE  = ${PARAM_SOURCE_TABLE}
@@ -447,7 +447,7 @@ PARAM_TARGET_SCHEMA = ${PARAM_TARGET_SCHEMA}
 PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}
  </logmessage>
       <loglevel>Basic</loglevel>
-      <logsubject>Parameters passed to jb_populate_table_meta-one_table:</logsubject>
+      <logsubject>Parameters received by: jb_populate_table_meta-one_table:</logsubject>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
@@ -489,7 +489,7 @@ PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>320</xloc>
-      <yloc>848</yloc>
+      <yloc>832</yloc>
     </entry>
     <entry>
       <name>tr_populate_column_meta-one_table</name>
@@ -547,6 +547,16 @@ PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}
           <value>${QF_DYN_DB_CONN_DB_PASSWORD}</value>
         </parameter>
         <parameter>
+          <name>PARAM_DYN_DB_CONN_SOURCE_DB_URL</name>
+          <stream_name />
+          <value>${QF_DYN_DB_CONN_DB_URL}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER</name>
+          <stream_name />
+          <value>${QF_DYN_DB_CONN_DB_DRIVER}</value>
+        </parameter>
+        <parameter>
           <name>PARAM_TABLE_META_ID</name>
           <stream_name>table_meta_id</stream_name>
           <value />
@@ -556,7 +566,7 @@ PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>560</xloc>
-      <yloc>944</yloc>
+      <yloc>928</yloc>
     </entry>
     <entry>
       <name>jb_is_specified_db_type - PostgreSQL?</name>
@@ -600,7 +610,7 @@ PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>320</xloc>
-      <yloc>944</yloc>
+      <yloc>928</yloc>
     </entry>
     <entry>
       <name>jb_log_error - Untreated case</name>
@@ -639,7 +649,7 @@ PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>96</xloc>
-      <yloc>944</yloc>
+      <yloc>928</yloc>
     </entry>
     <entry>
       <name>Abort job</name>
@@ -650,7 +660,7 @@ PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>96</xloc>
-      <yloc>688</yloc>
+      <yloc>672</yloc>
     </entry>
     <entry>
       <name>jb_set_dynamic_db_connection_variables</name>
@@ -973,7 +983,7 @@ This transformation has parameters:
 This is placed in the stream and then copied to the "Result set" so that it can
 be accessed by the next transformation.</note>
       <xloc>480</xloc>
-      <yloc>848</yloc>
+      <yloc>832</yloc>
       <width>461</width>
       <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
@@ -1003,7 +1013,7 @@ This is because the values for these variables are modified in this job if they 
 to this job as "". If this is done, it seems that their *original* blank values are passed to 
 sub-transformation here unless we explicitly pass the parameters as shown.</note>
       <xloc>480</xloc>
-      <yloc>672</yloc>
+      <yloc>656</yloc>
       <width>516</width>
       <heigth>150</heigth>
       <fontname>Ubuntu</fontname>
@@ -1026,7 +1036,7 @@ sub-transformation here unless we explicitly pass the parameters as shown.</note
 for the etl.table_meta row just created, one
 for each row of the table in the source DB.</note>
       <xloc>704</xloc>
-      <yloc>928</yloc>
+      <yloc>912</yloc>
       <width>275</width>
       <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
@@ -1049,7 +1059,7 @@ for each row of the table in the source DB.</note>
 dispatched to a different transformation based on this one in order
 to treat another database type, e.g., Oracle.</note>
       <xloc>464</xloc>
-      <yloc>992</yloc>
+      <yloc>976</yloc>
       <width>403</width>
       <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
@@ -1070,19 +1080,15 @@ to treat another database type, e.g., Oracle.</note>
     <notepad>
       <note>This job sets the PDI variables:
 
-	QF_DYN_DB_CONN_DB_HOST
-	QF_DYN_DB_CONN_DB_PORT
-	QF_DYN_DB_CONN_DB_DATABASE
-	QF_DYN_DB_CONN_DB_USERNAME
-	QF_DYN_DB_CONN_DB_PASSWORD
+	QF_DYN_DB_CONN_DB_{HOST, PORT, ...}
 
 based on a single parameter:
 
 	PARAM_DB_ID = ${PARAM_SOURCE_DB_ID}</note>
       <xloc>480</xloc>
-      <yloc>496</yloc>
+      <yloc>528</yloc>
       <width>289</width>
-      <heigth>164</heigth>
+      <heigth>108</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
