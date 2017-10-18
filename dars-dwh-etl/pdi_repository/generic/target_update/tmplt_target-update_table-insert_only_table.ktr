@@ -24,6 +24,11 @@
         <description />
       </parameter>
       <parameter>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER</name>
+        <default_value />
+        <description>for generic target database connection "generic_source_db"</description>
+      </parameter>
+      <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_HOST</name>
         <default_value />
         <description />
@@ -39,6 +44,11 @@
         <description />
       </parameter>
       <parameter>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_URL</name>
+        <default_value />
+        <description>for generic target database connection "generic_source_db"</description>
+      </parameter>
+      <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME</name>
         <default_value />
         <description />
@@ -47,6 +57,11 @@
         <name>PARAM_DYN_DB_CONN_TARGET_DB_DATABASE</name>
         <default_value />
         <description>for "dynamic" target database connection, e.g., "dynamic_postgres_target_db"</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_TARGET_DB_DRIVER</name>
+        <default_value />
+        <description>for generic target database connection "generic_target_db"</description>
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_TARGET_DB_HOST</name>
@@ -62,6 +77,11 @@
         <name>PARAM_DYN_DB_CONN_TARGET_DB_PORT</name>
         <default_value />
         <description>for "dynamic" target database connection, e.g., "dynamic_postgres_target_db"</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_TARGET_DB_URL</name>
+        <default_value />
+        <description>for generic target database connection "generic_target_db"</description>
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_TARGET_DB_USERNAME</name>
@@ -534,7 +554,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/10/17 13:10:22.524</modified_date>
+    <modified_date>2017/10/18 09:47:33.675</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -546,7 +566,7 @@ It is important to sort these rows chronologically (by either the "insert_id" or
 fails in the middle somewhere and if this transaction does not run in a single transaction, then next time this transformation is 
 executed, we want to start again where we left off (by computing, e.g., MAX(insert_id) for the target DB table).</note>
       <xloc>304</xloc>
-      <yloc>880</yloc>
+      <yloc>928</yloc>
       <width>765</width>
       <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
@@ -567,7 +587,7 @@ executed, we want to start again where we left off (by computing, e.g., MAX(inse
     <notepad>
       <note>Insert the new rows into the target DB table.</note>
       <xloc>304</xloc>
-      <yloc>1104</yloc>
+      <yloc>1152</yloc>
       <width>270</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -588,7 +608,7 @@ executed, we want to start again where we left off (by computing, e.g., MAX(inse
     <notepad>
       <note>Write parameters and max_target_insert_id value to the log so it will be obvious which values were used.</note>
       <xloc>304</xloc>
-      <yloc>816</yloc>
+      <yloc>864</yloc>
       <width>624</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -610,7 +630,7 @@ executed, we want to start again where we left off (by computing, e.g., MAX(inse
       <note>Get batch ID for current transformation. This will be stored in the target DB table for auditing/logging. This step *must* come after
 the "Map column names" step because the metadata injected into that step does not include this column/field.</note>
       <xloc>304</xloc>
-      <yloc>1040</yloc>
+      <yloc>1088</yloc>
       <width>775</width>
       <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
@@ -644,7 +664,7 @@ Alternatively, we could eliminate this step entirely and load source rows for: i
 but this will not be as efficient for the case when we need to re-start the mirroring process after it fails for some reason. In that
 case we would re-process all of the rows that were successfully mirrored during the previous run.</note>
       <xloc>304</xloc>
-      <yloc>384</yloc>
+      <yloc>432</yloc>
       <width>766</width>
       <heigth>206</heigth>
       <fontname>Ubuntu</fontname>
@@ -674,11 +694,15 @@ This transformation has parameters:
 	PARAM_DYN_DB_CONN_TARGET_DB_DATABASE		for "dynamic" target database connection, e.g., "dynamic_postgres_target_db"
 	PARAM_DYN_DB_CONN_TARGET_DB_USERNAME	for "dynamic" target database connection, e.g., "dynamic_postgres_target_db"
 	PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD	for "dynamic" target database connection, e.g., "dynamic_postgres_target_db"
-	PARAM_DYN_DB_CONN_SOURCE_DB_HOST			for "dynamic_postgres_source_db" database connection
-	PARAM_DYN_DB_CONN_SOURCE_DB_PORT			for "dynamic_postgres_source_db" database connection
-	PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE	for "dynamic_postgres_source_db" database connection
-	PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME	for "dynamic_postgres_source_db" database connection
-	PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD	for "dynamic_postgres_source_db" database connection
+	PARAM_DYN_DB_CONN_TARGET_DB_DRIVER		for generic target database connection "generic_target_db"
+	PARAM_DYN_DB_CONN_TARGET_DB_URL			for generic target database connection "generic_target_db"
+	PARAM_DYN_DB_CONN_SOURCE_DB_HOST			for "dynamic" database connection, e.g., "dynamic_postgres_source_db"
+	PARAM_DYN_DB_CONN_SOURCE_DB_PORT			for "dynamic" database connection, e.g., "dynamic_postgres_source_db"
+	PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE	for "dynamic" database connection, e.g., "dynamic_postgres_source_db"
+	PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME	for "dynamic" database connection, e.g., "dynamic_postgres_source_db"
+	PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD	for "dynamic" database connection, e.g., "dynamic_postgres_source_db"
+	PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER		for generic target database connection "generic_source_db"
+	PARAM_DYN_DB_CONN_SOURCE_DB_URL			for generic target database connection "generic_source_db"
 	PARAM_MAX_INSERT_ID							Maximum value of the "insert_id" column for rows to load from the source DB table
 	PARAM_SOURCE_SCHEMA							Name of schema containing source table to mirror/archive
 	PARAM_SOURCE_TABLE							Name of source table to mirror/archive
@@ -691,7 +715,7 @@ This transformation has parameters:
       <xloc>0</xloc>
       <yloc>0</yloc>
       <width>834</width>
-      <heigth>360</heigth>
+      <heigth>416</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -722,7 +746,7 @@ This transformation has parameters:
 		Before executing the SQL, modify it where appropriate. For example, replace "UNKNOWN" for timestamp columns with 
 		"timestamp without time zone" or "bytea", primary key constraint, ...</note>
       <xloc>304</xloc>
-      <yloc>608</yloc>
+      <yloc>656</yloc>
       <width>843</width>
       <heigth>192</heigth>
       <fontname>Ubuntu</fontname>
@@ -743,7 +767,7 @@ This transformation has parameters:
     <notepad>
       <note>Select and possibly rename fields (table column names), as appropriate.</note>
       <xloc>304</xloc>
-      <yloc>976</yloc>
+      <yloc>1024</yloc>
       <width>431</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -764,7 +788,7 @@ This transformation has parameters:
     <notepad>
       <note>Metadata injected -></note>
       <xloc>16</xloc>
-      <yloc>976</yloc>
+      <yloc>1024</yloc>
       <width>130</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -785,7 +809,7 @@ This transformation has parameters:
     <notepad>
       <note>Uses "SELECT *" -></note>
       <xloc>16</xloc>
-      <yloc>912</yloc>
+      <yloc>960</yloc>
       <width>117</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -1103,7 +1127,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>416</yloc>
+      <yloc>464</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1130,7 +1154,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>976</yloc>
+      <yloc>1024</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1160,7 +1184,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>1040</yloc>
+      <yloc>1088</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1193,7 +1217,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>240</xloc>
-      <yloc>656</yloc>
+      <yloc>704</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1234,7 +1258,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>912</yloc>
+      <yloc>960</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1277,7 +1301,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>1104</yloc>
+      <yloc>1152</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1296,23 +1320,32 @@ ORDER BY
     <displayHeader>Y</displayHeader>
     <limitRows>N</limitRows>
     <limitRowsNumber>0</limitRowsNumber>
-    <logmessage>tmplt_mirrored_insert_only_table-update:
-PARAM_DYN_DB_CONN_SOURCE_DB_HOST        = ${PARAM_DYN_DB_CONN_SOURCE_DB_HOST}
-PARAM_DYN_DB_CONN_SOURCE_DB_PORT        = ${PARAM_DYN_DB_CONN_SOURCE_DB_PORT}
-PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE    = ${PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE}
-PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME    = ${PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME}
-PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD    = ${PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD}
+    <logmessage>tmplt_target-update_table-insert_only_table:
 PARAM_CDC_LAST_LOAD_UTC              = ${PARAM_CDC_LAST_LOAD_UTC}
 PARAM_CDC_CURRENT_LOAD_UTC           = ${PARAM_CDC_CURRENT_LOAD_UTC}
-PARAM_MAX_INSERT_ID              = ${PARAM_MAX_INSERT_ID}
-PARAM_SOURCE_SCHEMA              = ${PARAM_SOURCE_SCHEMA}
-PARAM_SOURCE_TABLE               = ${PARAM_SOURCE_TABLE}
-PARAM_SOURCE_INSERTED_ON_COLNAME = ${PARAM_SOURCE_INSERTED_ON_COLNAME}
-PARAM_SOURCE_INSERT_ID_COLNAME   = ${PARAM_SOURCE_INSERT_ID_COLNAME}   
-PARAM_TARGET_SCHEMA              = ${PARAM_TARGET_SCHEMA}
-PARAM_TARGET_TABLE               = ${PARAM_TARGET_TABLE}
-PARAM_TARGET_INSERTED_ON_COLNAME = ${PARAM_TARGET_INSERTED_ON_COLNAME}
-PARAM_TARGET_INSERT_ID_COLNAME   = ${PARAM_TARGET_INSERT_ID_COLNAME}   </logmessage>
+PARAM_DYN_DB_CONN_SOURCE_DB_HOST     = ${PARAM_DYN_DB_CONN_SOURCE_DB_HOST}
+PARAM_DYN_DB_CONN_SOURCE_DB_PORT     = ${PARAM_DYN_DB_CONN_SOURCE_DB_PORT}
+PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE = ${PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE}
+PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD = ${PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD}
+PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME = ${PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME}
+PARAM_DYN_DB_CONN_SOURCE_DB_URL      = ${PARAM_DYN_DB_CONN_SOURCE_DB_URL}
+PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER   = ${PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER}
+PARAM_DYN_DB_CONN_TARGET_DB_HOST     = ${PARAM_DYN_DB_CONN_TARGET_DB_HOST}
+PARAM_DYN_DB_CONN_TARGET_DB_PORT     = ${PARAM_DYN_DB_CONN_TARGET_DB_PORT}
+PARAM_DYN_DB_CONN_TARGET_DB_DATABASE = ${PARAM_DYN_DB_CONN_TARGET_DB_DATABASE}
+PARAM_DYN_DB_CONN_TARGET_DB_USERNAME = ${PARAM_DYN_DB_CONN_TARGET_DB_USERNAME}
+PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD = ${PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD}
+PARAM_DYN_DB_CONN_TARGET_DB_URL      = ${PARAM_DYN_DB_CONN_TARGET_DB_URL}
+PARAM_DYN_DB_CONN_TARGET_DB_DRIVER   = ${PARAM_DYN_DB_CONN_TARGET_DB_DRIVER}
+PARAM_MAX_INSERT_ID                  = ${PARAM_MAX_INSERT_ID}
+PARAM_SOURCE_SCHEMA                  = ${PARAM_SOURCE_SCHEMA}
+PARAM_SOURCE_TABLE                   = ${PARAM_SOURCE_TABLE}
+PARAM_SOURCE_INSERT_ID_COLNAME       = ${PARAM_SOURCE_INSERT_ID_COLNAME}   
+PARAM_SOURCE_INSERTED_ON_COLNAME     = ${PARAM_SOURCE_INSERTED_ON_COLNAME}
+PARAM_TARGET_SCHEMA                  = ${PARAM_TARGET_SCHEMA}
+PARAM_TARGET_TABLE                   = ${PARAM_TARGET_TABLE}
+PARAM_TARGET_INSERT_ID_COLNAME       = ${PARAM_TARGET_INSERT_ID_COLNAME}
+PARAM_TARGET_INSERTED_ON_COLNAME     = ${PARAM_TARGET_INSERTED_ON_COLNAME}</logmessage>
     <fields>
       <field>
         <name>max_target_insert_id</name>
@@ -1327,7 +1360,7 @@ PARAM_TARGET_INSERT_ID_COLNAME   = ${PARAM_TARGET_INSERT_ID_COLNAME}   </logmess
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>816</yloc>
+      <yloc>864</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
