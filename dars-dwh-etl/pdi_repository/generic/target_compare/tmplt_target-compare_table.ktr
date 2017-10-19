@@ -579,22 +579,22 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/10/19 14:50:17.258</modified_date>
+    <modified_date>2017/10/19 19:49:04.374</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>Load the data from both the source (OBO) database table and
-the target (PSA) database table to which it is mirrored. The 
-"ORDER BY" clauses must consist of the tables' primary key 
-column(s). This is needed by the "Merge Rows" step. The fields 
-in each stream must be identical and in the same order when 
-fed to the "Merge rows" step. The SELECT statements in these 
-two "Table input" steps set the field order appropriately.</note>
+      <note>Load the data from both the source DB table and the targetDB
+table to which it is mirrored. The "ORDER BY" clauses must 
+consist of the tables' primary key column(s). This is needed by
+the "Merge Rows" step. The fields in each stream must be
+identical and in the same order when fed to the "Merge rows"
+step. The SELECT statements in these two "Table input" steps
+set the field order appropriately.</note>
       <xloc>512</xloc>
       <yloc>496</yloc>
-      <width>375</width>
+      <width>377</width>
       <heigth>108</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -795,6 +795,65 @@ the "Merge rows" step.</note>
     </attributes>
   </connection>
   <connection>
+    <name>generic_target_db</name>
+    <server />
+    <type>GENERIC</type>
+    <access>Native</access>
+    <database />
+    <port>1521</port>
+    <username>${PARAM_DYN_DB_CONN_TARGET_DB_USERNAME}</username>
+    <password>${PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD}</password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>CUSTOM_DRIVER_CLASS</code>
+        <attribute>${PARAM_DYN_DB_CONN_TARGET_DB_DRIVER}</attribute>
+      </attribute>
+      <attribute>
+        <code>CUSTOM_URL</code>
+        <attribute>${PARAM_DYN_DB_CONN_TARGET_DB_URL}</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>1521</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
+  <connection>
     <name>logging_db</name>
     <server>${QF_LOGGING_DB_HOST}</server>
     <type>POSTGRESQL</type>
@@ -822,57 +881,6 @@ the "Merge rows" step.</note>
       <attribute>
         <code>PORT_NUMBER</code>
         <attribute>${QF_LOGGING_DB_PORT}</attribute>
-      </attribute>
-      <attribute>
-        <code>PRESERVE_RESERVED_WORD_CASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>QUOTE_ALL_FIELDS</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>USE_POOLING</code>
-        <attribute>N</attribute>
-      </attribute>
-    </attributes>
-  </connection>
-  <connection>
-    <name>psa_db</name>
-    <server>${QF_PSA_DB_HOST}</server>
-    <type>POSTGRESQL</type>
-    <access>Native</access>
-    <database>${QF_PSA_DB_DATABASE}</database>
-    <port>${QF_PSA_DB_PORT}</port>
-    <username>${QF_PSA_DB_USERNAME}</username>
-    <password>${QF_DWH_DB_PASSWORD}</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
-    <attributes>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>IS_CLUSTERED</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>PORT_NUMBER</code>
-        <attribute>${QF_PSA_DB_PORT}</attribute>
       </attribute>
       <attribute>
         <code>PRESERVE_RESERVED_WORD_CASE</code>
@@ -960,7 +968,7 @@ the "Merge rows" step.</note>
       <method>none</method>
       <schema_name />
     </partitioning>
-    <connection>psa_db</connection>
+    <connection>generic_target_db</connection>
     <sql />
     <limit>0</limit>
     <lookup />
