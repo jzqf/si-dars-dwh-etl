@@ -579,7 +579,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/10/19 20:57:24.351</modified_date>
+    <modified_date>2017/10/19 21:17:55.913</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -592,7 +592,7 @@ the "Merge Rows" step. The fields in each stream must be
 identical and in the same order when fed to the "Merge rows"
 step. The SELECT statements in these two "Table input" steps
 set the field order appropriately.</note>
-      <xloc>512</xloc>
+      <xloc>544</xloc>
       <yloc>496</yloc>
       <width>377</width>
       <heigth>108</heigth>
@@ -723,7 +723,7 @@ identical, different, "new" or "deleted".</note>
       <note>Rename the stream fields from the target DB to the
 field names from the source DB. This is required for
 the "Merge rows" step.</note>
-      <xloc>512</xloc>
+      <xloc>544</xloc>
       <yloc>624</yloc>
       <width>311</width>
       <heigth>52</heigth>
@@ -914,12 +914,12 @@ the "Merge rows" step.</note>
   </connection>
   <order>
     <hop>
-      <from>Get rows from target (PSA) DB table</from>
-      <to>Rename PSA field names -> OBO field names</to>
+      <from>Get rows from target DB table</from>
+      <to>Rename target DB field names -> source DB field names</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Rename PSA field names -> OBO field names</from>
+      <from>Rename target DB field names -> source DB field names</from>
       <to>Merge Rows (diff)</to>
       <enabled>Y</enabled>
     </hop>
@@ -929,13 +929,13 @@ the "Merge rows" step.</note>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Get rows from source (OBO) DB table</from>
+      <from>Get rows from source DB table</from>
       <to>Merge Rows (diff)</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Get rows from source (OBO) DB table</name>
+    <name>Get rows from source DB table</name>
     <type>TableInput</type>
     <description />
     <distribute>Y</distribute>
@@ -966,7 +966,7 @@ the "Merge rows" step.</note>
     </GUI>
   </step>
   <step>
-    <name>Get rows from target (PSA) DB table</name>
+    <name>Get rows from target DB table</name>
     <type>TableInput</type>
     <description />
     <distribute>Y</distribute>
@@ -1012,8 +1012,8 @@ the "Merge rows" step.</note>
     <values>
     </values>
     <flag_field>flagfield</flag_field>
-    <reference>Get rows from source (OBO) DB table</reference>
-    <compare>Rename PSA field names -> OBO field names</compare>
+    <reference>Get rows from source DB table</reference>
+    <compare>Rename target DB field names -> source DB field names</compare>
     <compare>
     </compare>
     <cluster_schema />
@@ -1030,7 +1030,7 @@ the "Merge rows" step.</note>
     </GUI>
   </step>
   <step>
-    <name>Rename PSA field names -> OBO field names</name>
+    <name>Rename target DB field names -> source DB field names</name>
     <type>SelectValues</type>
     <description />
     <distribute>Y</distribute>
