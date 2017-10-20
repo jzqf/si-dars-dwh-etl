@@ -1,21 +1,16 @@
 <job>
-  <name>jb_psa-compare</name>
+  <name>jb_psa-update</name>
   <description />
   <extended_description />
   <job_version />
-  <job_status>0</job_status>
+  <job_status>1</job_status>
   <directory>/psa</directory>
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/10/20 09:06:38.797</modified_date>
+  <modified_date>2017/10/20 09:23:54.291</modified_date>
   <parameters>
-    <parameter>
-      <name>PARAM_MAX_NUM_COMPARE_ROWS</name>
-      <default_value>100000</default_value>
-      <description>Maximum number of rows that will be compared for these tables. Pass 0 for *all* rows.</description>
-    </parameter>
-  </parameters>
+    </parameters>
   <connection>
     <name>logging_db</name>
     <server>${QF_LOGGING_DB_HOST}</server>
@@ -359,18 +354,18 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>192</xloc>
-      <yloc>192</yloc>
+      <xloc>224</xloc>
+      <yloc>144</yloc>
     </entry>
     <entry>
-      <name>jb_target-compare</name>
+      <name>jb_target-update</name>
       <description />
       <type>JOB</type>
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
-      <jobname>jb_target-compare</jobname>
-      <directory>/generic/target_compare</directory>
+      <jobname>jb_target-update</jobname>
+      <directory>/generic/target_update</directory>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
@@ -398,18 +393,18 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>192</xloc>
-      <yloc>288</yloc>
+      <xloc>224</xloc>
+      <yloc>240</yloc>
     </entry>
     <entry>
-      <name>Success</name>
+      <name>Success 2</name>
       <description />
       <type>SUCCESS</type>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>256</xloc>
-      <yloc>384</yloc>
+      <xloc>288</xloc>
+      <yloc>336</yloc>
     </entry>
     <entry>
       <name>Abort job</name>
@@ -419,14 +414,14 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>128</xloc>
-      <yloc>384</yloc>
+      <xloc>160</xloc>
+      <yloc>336</yloc>
     </entry>
   </entries>
   <hops>
     <hop>
       <from>START</from>
-      <to>jb_target-compare</to>
+      <to>jb_target-update</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -434,8 +429,8 @@
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>jb_target-compare</from>
-      <to>Success</to>
+      <from>jb_target-update</from>
+      <to>Success 2</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -443,7 +438,7 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>jb_target-compare</from>
+      <from>jb_target-update</from>
       <to>Abort job</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -454,21 +449,17 @@
   </hops>
   <notepads>
     <notepad>
-      <note>This job compares the content of each table in the PSA DB to the table from a source DB that is being archived/mirrored to it. This is done to 
-verify that the mirroring algorithm are correctly implemented for each table. This verifies also the CDC implementatiom for each table.
+      <note>This is a top-level job that updates the PSA database.
 
-"Pass batch ID?" is selected for this job so that the batch ID is passed to tr_set_job_batch_id_variable via jb_init, which assigns this value to QF_JOB_BATCH_ID.
+"Pass batch ID?" is selected for this job so that the batch ID is passed to tr_set_job_batch_id_variable via jb_init, which assigns 
+this value to QF_JOB_BATCH_ID.
 
-If this job has a parent, the setting "Pass batch ID?" should also be set for the parent *if* it is desired that QF_JOB_BATCH_ID should be assigned
-the batch ID of the root job (not this job). This may vary from case to case.
-
-This job has parameter:
-
-	PARAM_MAX_NUM_COMPARE_ROWS	Maximum number of rows that will be compared for these tables. 0 means *all* rows.</note>
+If this job has a parent, the setting "Pass batch ID?" should also be set for the parent *if* it is desired that QF_JOB_BATCH_ID
+should be assigned the batch ID of the root job (not this job). This may vary from case to case.</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>935</width>
-      <heigth>164</heigth>
+      <width>744</width>
+      <heigth>108</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -485,14 +476,13 @@ This job has parameter:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>jb_target-compare is passed two parameters:
+      <note>jb_target-update is passed a single parameter:
 
-	PARAM_TARGET_DB_ID					= ${QF_DB_ID_PSA}
-	PARAM_MAX_NUM_COMPARE_ROWS</note>
-      <xloc>304</xloc>
-      <yloc>272</yloc>
-      <width>388</width>
-      <heigth>66</heigth>
+	PARAM_TARGET_DB_ID = ${QF_DB_ID_PSA}</note>
+      <xloc>336</xloc>
+      <yloc>224</yloc>
+      <width>289</width>
+      <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
