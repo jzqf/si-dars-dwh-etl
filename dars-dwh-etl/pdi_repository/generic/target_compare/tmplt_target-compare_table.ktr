@@ -1,17 +1,112 @@
 <transformation>
   <info>
-    <name>tr_populate_table_meta-one_table</name>
+    <name>tmplt_target-compare_table</name>
     <description />
     <extended_description />
     <trans_version />
     <trans_type>Normal</trans_type>
     <trans_status>0</trans_status>
-    <directory>/generic/populate_etl_metadata_tables</directory>
+    <directory>/generic/target_compare</directory>
     <parameters>
       <parameter>
-        <name>PARAM_SOURCE_DB_ID</name>
+        <name>PARAM_CDC_LAST_LOAD_UTC</name>
+        <default_value>1900.01.01 00:00:00</default_value>
+        <description>Timestamp for when the target DB was most recently updated successfully</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE</name>
         <default_value />
-        <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
+        <description>for source DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER</name>
+        <default_value />
+        <description>for source DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_HOST</name>
+        <default_value />
+        <description>for source DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD</name>
+        <default_value />
+        <description>for source DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_PORT</name>
+        <default_value />
+        <description>for source DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_URL</name>
+        <default_value />
+        <description>for source DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME</name>
+        <default_value />
+        <description>for source DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_TARGET_DB_DATABASE</name>
+        <default_value />
+        <description>for target DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_TARGET_DB_DRIVER</name>
+        <default_value />
+        <description>for target DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_TARGET_DB_HOST</name>
+        <default_value />
+        <description>for target DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD</name>
+        <default_value />
+        <description>for target DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_TARGET_DB_PORT</name>
+        <default_value />
+        <description>for target DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_TARGET_DB_URL</name>
+        <default_value />
+        <description>for target DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_TARGET_DB_USERNAME</name>
+        <default_value />
+        <description>for target DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_INSERT_ID_FROM</name>
+        <default_value>100</default_value>
+        <description>"from" value for the "insert_id" column of the source DB table that is being compared to the target DB table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_INSERT_ID_TO</name>
+        <default_value>110</default_value>
+        <description>"to" value for the "insert_id" column of the source DB table that is being compared to the target DB table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_SOURCE_DB_ID</name>
+        <default_value>-1</default_value>
+        <description>ID the "source" database containing the table that has been mirrored to a "target" database</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_SOURCE_INSERTED_ON_COLNAME</name>
+        <default_value>inserted_on</default_value>
+        <description>Name of column acting as "inserted_on" timestamp column of source table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_SOURCE_INSERT_ID_COLNAME</name>
+        <default_value>insert_id</default_value>
+        <description>Name of column acting as "insert_id" column of source table</description>
       </parameter>
       <parameter>
         <name>PARAM_SOURCE_SCHEMA</name>
@@ -19,24 +114,49 @@
         <description>Name of schema containing source table to mirror to target table</description>
       </parameter>
       <parameter>
+        <name>PARAM_SOURCE_SCHEMA_TABLE</name>
+        <default_value>passage.passage</default_value>
+        <description>${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</description>
+      </parameter>
+      <parameter>
         <name>PARAM_SOURCE_TABLE</name>
-        <default_value>image</default_value>
+        <default_value>passage</default_value>
         <description>Name of source table to mirror to target table</description>
       </parameter>
       <parameter>
+        <name>PARAM_TABLE_META_ID</name>
+        <default_value>0</default_value>
+        <description>Primary key of etl.table_meta row for the table pair being compared</description>
+      </parameter>
+      <parameter>
         <name>PARAM_TARGET_DB_ID</name>
-        <default_value />
-        <description>ID of the "target" database to which the "source" DB tables will be archived/mirrored</description>
+        <default_value>-1</default_value>
+        <description>ID of the "target" database to which the "source" DB table has been archived/mirrored</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_INSERTED_ON_COLNAME</name>
+        <default_value>inserted_on</default_value>
+        <description>Name of column acting as "inserted_on" timestamp column of target table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_INSERT_ID_COLNAME</name>
+        <default_value>insert_id</default_value>
+        <description>Name of column acting as "insert_id" column of target table</description>
       </parameter>
       <parameter>
         <name>PARAM_TARGET_SCHEMA</name>
-        <default_value />
-        <description>Name of schema cin the "target" DB ontaining the target table </description>
+        <default_value>passage</default_value>
+        <description>Name of schema containing target table to update (not currently used)</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_SCHEMA_TABLE</name>
+        <default_value>passage.passage</default_value>
+        <description>${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</description>
       </parameter>
       <parameter>
         <name>PARAM_TARGET_TABLE</name>
-        <default_value />
-        <description>Name of the table in the "target" DB that the "source" table will be archived/mirrored to</description>
+        <default_value>passage</default_value>
+        <description>Name of target table to update (not currently used)</description>
       </parameter>
     </parameters>
     <log>
@@ -459,170 +579,154 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/10/19 21:30:11.752</modified_date>
+    <modified_date>2017/10/19 21:17:55.913</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>This transformation writes a row to the etl.table_meta table for a single specified table from the source database.
-It is assumed that the table name in the target database is identical to the table name in the source database. 
-
-This transformation has parameters:
-
-	PARAM_SOURCE_DB_ID			ID the "source" database containing the table for generating table metadata
-	PARAM_SOURCE_SCHEMA		Name of schema containing source table for generating table metadata
-	PARAM_SOURCE_TABLE		Name of source table for generating table metadata
-	PARAM_TARGET_DB_ID			ID of the "target" database to which the "source" DB tables will be archived/mirrored
-	PARAM_TARGET_SCHEMA		Name of schema in the "target" DB ontaining the target table
-	PARAM_TARGET_TABLE			Name of the table in the "target" DB that the "source" table will be archived/mirrored to</note>
-      <xloc>16</xloc>
-      <yloc>0</yloc>
-      <width>740</width>
-      <heigth>164</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Create a single stream row using the parameter values passed to this transformation
-for the field/column values.</note>
-      <xloc>272</xloc>
-      <yloc>192</yloc>
-      <width>506</width>
-      <heigth>38</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Duplicate fields "source_schema_name" &amp; "source_table_name" to "target_schema_name" &amp; 
-"target_table_name". This assumes that the schema &amp; table names in the target database are
-identical to the schema &amp; table names in the source database.</note>
-      <xloc>272</xloc>
-      <yloc>256</yloc>
-      <width>552</width>
-      <heigth>52</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>mirror_tables=N									The source table will *not* be archived/mirrored to the target DB
-mark_rows_for_deletion=N							The source table will not have rows "marked for deletion"
-delete_marked_rows=N								The source table will *not*have "marked rows deleted from it
-compare_tables=N									The source DB table will *not* be compared with the target DB table
-													when a "compare" is performed (must enable manually)
-can_insert_rows=Y									The source DB table can have rows inserted into it
-can_update_rows=N								The source DB table can have rows updated
-can_delete_rows=N									The source DB table will never have rows deleted from it
-use_custom_mirror_algorithm=N					Generic archive/mirror algorithm will be used
-use_custom_mark_rows_for_deletion_algorithm=N	Generic "mark rows for deletion" algorithm will be used
-use_custom_delete_marked_rows_algorithm=N		Generic "delete marked rows" algorithm will be used</note>
-      <xloc>272</xloc>
-      <yloc>416</yloc>
-      <width>723</width>
-      <heigth>164</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Add a constant field to the stream named "table_meta_id"
-that contains the value MAX(table_meta_id)+1. This value
-will be used as the primary key for the new row. </note>
+      <note>Load the data from both the source DB table and the targetDB
+table to which it is mirrored. The "ORDER BY" clauses must 
+consist of the tables' primary key column(s). This is needed by
+the "Merge Rows" step. The fields in each stream must be
+identical and in the same order when fed to the "Merge rows"
+step. The SELECT statements in these two "Table input" steps
+set the field order appropriately.</note>
       <xloc>544</xloc>
-      <yloc>336</yloc>
-      <width>351</width>
+      <yloc>496</yloc>
+      <width>377</width>
+      <heigth>108</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>This transformation verifies that a table from a "source" DB has been correctly mirrored to a "target" DB. This is an ETL metadata injection
+"template" transformation that can be used to compare *any* tables that are mirrored between two databases. It has parameters (many are not used):
+
+	PARAM_CDC_LAST_LOAD_UTC						Timestamp for when the target DB was most recently updated successfully
+	PARAM_INSERT_ID_FROM							"from" value for the "insert_id" column of the source table that is being compared to the target table
+	PARAM_INSERT_ID_TO								"to" value for the "insert_id" column of the source table that is being compared to the target table
+	PARAM_DYN_DB_CONN_SOURCE_DB_HOST			for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_PORT			for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE	for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME	for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD	for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_URL			for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER		for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_HOST			for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_PORT			for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_DATABASE		for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_USERNAME	for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD	for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_URL			for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_DRIVER		for target DB "dynamic" database connections
+	PARAM_TABLE_META_ID							Primary key of etl.table_meta row for the table pair being compared
+	PARAM_SOURCE_DB_ID								ID the "source" database containing tables that are mirrored to a "target" database
+	PARAM_SOURCE_SCHEMA							Name of schema containing the source table to compare to the target table
+	PARAM_SOURCE_TABLE							Name of the source table to compare to the target table
+	PARAM_SOURCE_SCHEMA_TABLE					${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
+	PARAM_SOURCE_INSERT_ID_COLNAME				Name of column acting as the "insert_id"  timestamp column of the source table
+	PARAM_SOURCE_INSERTED_ON_COLNAME			Name of column acting as the "inserted_on" column of the source table
+	PARAM_TARGET_DB_ID								ID of the "target" database to which "source" DB tables have been archived/mirrored
+	PARAM_TARGET_SCHEMA							Name of schema containing the target table to compare with the source table (not currently used?)
+	PARAM_TARGET_TABLE								Name of the target table to compare with the source table (not currently used?)
+	PARAM_TARGET_SCHEMA_TABLE					${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}
+	PARAM_TARGET_INSERT_ID_COLNAME				Name of column acting as the "insert_id" timestamp column of the target table
+	PARAM_TARGET_INSERTED_ON_COLNAME			Name of column acting as the "inserted_on" column of the target table</note>
+      <xloc>0</xloc>
+      <yloc>0</yloc>
+      <width>936</width>
+      <heigth>472</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Update the "table_meta" row for the tables being compared with the comparison statistics:
+
+	compared_rows_equal
+	compared_rows_unequal
+	...
+
+This sub-transformation (mapping) is passed a single stream field "flagfield" that is 
+generated by the "Merge Rows (diff)" step. In order to update the appropriate 
+etl.table_meta row, it is also passed the parameters:
+
+	PARAM_SOURCE_DB_ID
+	PARAM_SOURCE_SCHEMA
+	PARAM_SOURCE_TABLE</note>
+      <xloc>352</xloc>
+      <yloc>800</yloc>
+      <width>544</width>
+      <heigth>192</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Compare the two streams row by row and determine whether they are 
+identical, different, "new" or "deleted".</note>
+      <xloc>352</xloc>
+      <yloc>736</yloc>
+      <width>423</width>
+      <heigth>38</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Rename the stream fields from the target DB to the
+field names from the source DB. This is required for
+the "Merge rows" step.</note>
+      <xloc>544</xloc>
+      <yloc>624</yloc>
+      <width>311</width>
       <heigth>52</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Table "table_state" contains state information for each source/target table pair. It has a one-to-one relation
-to the table_meta table.</note>
-      <xloc>272</xloc>
-      <yloc>704</yloc>
-      <width>638</width>
-      <heigth>38</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Table "table_meta" contains metadata for each source/target table pair. It has a one-to-one relation
-to the table_state table.</note>
-      <xloc>272</xloc>
-      <yloc>608</yloc>
-      <width>593</width>
-      <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -640,18 +744,26 @@ to the table_state table.</note>
     </notepad>
   </notepads>
   <connection>
-    <name>etl_db</name>
-    <server>${QF_ETL_DB_HOST}</server>
-    <type>POSTGRESQL</type>
+    <name>generic_source_db</name>
+    <server />
+    <type>GENERIC</type>
     <access>Native</access>
-    <database>${QF_ETL_DB_DATABASE}</database>
-    <port>${QF_ETL_DB_PORT}</port>
-    <username>${QF_ETL_DB_USERNAME}</username>
-    <password>${QF_ETL_DB_PASSWORD}</password>
+    <database />
+    <port>-1</port>
+    <username>${PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME}</username>
+    <password>${PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD}</password>
     <servername />
     <data_tablespace />
     <index_tablespace />
     <attributes>
+      <attribute>
+        <code>CUSTOM_DRIVER_CLASS</code>
+        <attribute>${PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER}</attribute>
+      </attribute>
+      <attribute>
+        <code>CUSTOM_URL</code>
+        <attribute>${PARAM_DYN_DB_CONN_SOURCE_DB_URL}</attribute>
+      </attribute>
       <attribute>
         <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
         <attribute>N</attribute>
@@ -666,11 +778,70 @@ to the table_state table.</note>
       </attribute>
       <attribute>
         <code>PORT_NUMBER</code>
-        <attribute>${QF_ETL_DB_PORT}</attribute>
+        <attribute>-1</attribute>
       </attribute>
       <attribute>
         <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
         <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
+  <connection>
+    <name>generic_target_db</name>
+    <server />
+    <type>GENERIC</type>
+    <access>Native</access>
+    <database />
+    <port>1521</port>
+    <username>${PARAM_DYN_DB_CONN_TARGET_DB_USERNAME}</username>
+    <password>${PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD}</password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>CUSTOM_DRIVER_CLASS</code>
+        <attribute>${PARAM_DYN_DB_CONN_TARGET_DB_DRIVER}</attribute>
+      </attribute>
+      <attribute>
+        <code>CUSTOM_URL</code>
+        <attribute>${PARAM_DYN_DB_CONN_TARGET_DB_URL}</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>1521</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>Y</attribute>
       </attribute>
       <attribute>
         <code>QUOTE_ALL_FIELDS</code>
@@ -743,334 +914,28 @@ to the table_state table.</note>
   </connection>
   <order>
     <hop>
-      <from>Create row from parameters</from>
-      <to>Duplicate schema &amp; table name fields</to>
-      <enabled>N</enabled>
-    </hop>
-    <hop>
-      <from>Get MAX(table_meta_id)+1 from etl.table_meta</from>
-      <to>Join Rows (cartesian product)</to>
+      <from>Get rows from target DB table</from>
+      <to>Rename target DB field names -> source DB field names</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Duplicate schema &amp; table name fields</from>
-      <to>Join Rows (cartesian product)</to>
-      <enabled>N</enabled>
-    </hop>
-    <hop>
-      <from>Join Rows (cartesian product)</from>
-      <to>Add fields with constant values</to>
+      <from>Rename target DB field names -> source DB field names</from>
+      <to>Merge Rows (diff)</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Add fields with constant values</from>
-      <to>Insert new etl.table_meta row</to>
+      <from>Merge Rows (diff)</from>
+      <to>tr_update_table_meta_compare_stats</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Create row from parameters</from>
-      <to>Join Rows (cartesian product)</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Insert new etl.table_meta row</from>
-      <to>Insert new etl.table_state row</to>
+      <from>Get rows from source DB table</from>
+      <to>Merge Rows (diff)</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Add fields with constant values</name>
-    <type>Constant</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <fields>
-      <field>
-        <name>mirror_tables</name>
-        <type>Boolean</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif>N</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>mark_rows_for_deletion</name>
-        <type>Boolean</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif>N</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>delete_marked_rows</name>
-        <type>Boolean</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif>N</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>compare_tables</name>
-        <type>Boolean</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif>N</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>can_insert_rows</name>
-        <type>Boolean</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif>Y</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>can_update_rows</name>
-        <type>Boolean</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif>N</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>can_delete_rows</name>
-        <type>Boolean</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif>N</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>use_custom_mirror_algorithm</name>
-        <type>Boolean</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif>N</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>use_custom_mark_rows_for_deletion_algorithm</name>
-        <type>Boolean</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif>N</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>use_custom_delete_marked_rows_algorithm</name>
-        <type>Boolean</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif>N</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-    </fields>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>128</xloc>
-      <yloc>464</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Create row from parameters</name>
-    <type>GetVariable</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <fields>
-      <field>
-        <name>source_db_id</name>
-        <variable>${PARAM_SOURCE_DB_ID}</variable>
-        <type>Integer</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>-1</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>source_schema_name</name>
-        <variable>${PARAM_SOURCE_SCHEMA}</variable>
-        <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>255</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>source_table_name</name>
-        <variable>${PARAM_SOURCE_TABLE}</variable>
-        <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>255</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>target_db_id</name>
-        <variable>${PARAM_TARGET_DB_ID}</variable>
-        <type>Integer</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>-1</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>target_schema_name</name>
-        <variable>${PARAM_TARGET_SCHEMA}</variable>
-        <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>255</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>target_table_name</name>
-        <variable>${PARAM_TARGET_TABLE}</variable>
-        <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>255</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-    </fields>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>128</xloc>
-      <yloc>192</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Duplicate schema &amp; table name fields</name>
-    <type>SelectValues</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <fields>
-      <field>
-        <name>source_db_id</name>
-      </field>
-      <field>
-        <name>source_schema_name</name>
-      </field>
-      <field>
-        <name>source_table_name</name>
-      </field>
-      <field>
-        <name>source_schema_name</name>
-        <rename>target_schema_name</rename>
-      </field>
-      <field>
-        <name>source_table_name</name>
-        <rename>target_table_name</rename>
-      </field>
-      <field>
-        <name>target_db_id</name>
-      </field>
-      <select_unspecified>N</select_unspecified>
-    </fields>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>224</xloc>
-      <yloc>272</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Get MAX(table_meta_id)+1 from etl.table_meta</name>
+    <name>Get rows from source DB table</name>
     <type>TableInput</type>
     <description />
     <distribute>Y</distribute>
@@ -1080,12 +945,8 @@ to the table_state table.</note>
       <method>none</method>
       <schema_name />
     </partitioning>
-    <connection>etl_db</connection>
-    <sql>SELECT 
-    -- COALESCE used in case the table is empty.
-    COALESCE(MAX(table_meta_id), 0)+1 AS "table_meta_id" 
-FROM 
-    etl.table_meta</sql>
+    <connection>generic_source_db</connection>
+    <sql />
     <limit>0</limit>
     <lookup />
     <execute_each_row>N</execute_each_row>
@@ -1099,14 +960,14 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>384</xloc>
-      <yloc>352</yloc>
+      <xloc>112</xloc>
+      <yloc>512</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Insert new etl.table_meta row</name>
-    <type>TableOutput</type>
+    <name>Get rows from target DB table</name>
+    <type>TableInput</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -1115,25 +976,13 @@ FROM
       <method>none</method>
       <schema_name />
     </partitioning>
-    <connection>etl_db</connection>
-    <schema>${QF_ETL_DB_SCHEMA}</schema>
-    <table>table_meta</table>
-    <commit>1000</commit>
-    <truncate>N</truncate>
-    <ignore_errors>N</ignore_errors>
-    <use_batch>Y</use_batch>
-    <specify_fields>N</specify_fields>
-    <partitioning_enabled>N</partitioning_enabled>
-    <partitioning_field />
-    <partitioning_daily>N</partitioning_daily>
-    <partitioning_monthly>Y</partitioning_monthly>
-    <tablename_in_field>N</tablename_in_field>
-    <tablename_field />
-    <tablename_in_table>Y</tablename_in_table>
-    <return_keys>N</return_keys>
-    <return_field />
-    <fields>
-    </fields>
+    <connection>generic_target_db</connection>
+    <sql />
+    <limit>0</limit>
+    <lookup />
+    <execute_each_row>N</execute_each_row>
+    <variables_active>Y</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1142,14 +991,14 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>128</xloc>
-      <yloc>608</yloc>
+      <xloc>352</xloc>
+      <yloc>512</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Insert new etl.table_state row</name>
-    <type>TableOutput</type>
+    <name>Merge Rows (diff)</name>
+    <type>MergeRows</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -1158,64 +1007,14 @@ FROM
       <method>none</method>
       <schema_name />
     </partitioning>
-    <connection>etl_db</connection>
-    <schema>${QF_ETL_DB_SCHEMA}</schema>
-    <table>table_state</table>
-    <commit>1000</commit>
-    <truncate>N</truncate>
-    <ignore_errors>N</ignore_errors>
-    <use_batch>Y</use_batch>
-    <specify_fields>Y</specify_fields>
-    <partitioning_enabled>N</partitioning_enabled>
-    <partitioning_field />
-    <partitioning_daily>N</partitioning_daily>
-    <partitioning_monthly>Y</partitioning_monthly>
-    <tablename_in_field>N</tablename_in_field>
-    <tablename_field />
-    <tablename_in_table>Y</tablename_in_table>
-    <return_keys>N</return_keys>
-    <return_field />
-    <fields>
-      <field>
-        <column_name>table_state_id</column_name>
-        <stream_name>table_meta_id</stream_name>
-      </field>
-    </fields>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>128</xloc>
-      <yloc>704</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Join Rows (cartesian product)</name>
-    <type>JoinRows</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <directory>%%java.io.tmpdir%%</directory>
-    <prefix>out</prefix>
-    <cache_size>500</cache_size>
-    <main>Add sequence - column_meta_id</main>
+    <keys>
+    </keys>
+    <values>
+    </values>
+    <flag_field>flagfield</flag_field>
+    <reference>Get rows from source DB table</reference>
+    <compare>Rename target DB field names -> source DB field names</compare>
     <compare>
-      <condition>
-        <negated>N</negated>
-        <leftvalue />
-        <function>=</function>
-        <rightvalue />
-      </condition>
     </compare>
     <cluster_schema />
     <remotesteps>
@@ -1225,8 +1024,91 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>128</xloc>
-      <yloc>352</yloc>
+      <xloc>208</xloc>
+      <yloc>736</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Rename target DB field names -> source DB field names</name>
+    <type>SelectValues</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <select_unspecified>N</select_unspecified>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>352</xloc>
+      <yloc>640</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>tr_update_table_meta_compare_stats</name>
+    <type>SimpleMapping</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <specification_method>rep_name</specification_method>
+    <trans_object_id />
+    <trans_name>tr_update_table_meta_compare_stats</trans_name>
+    <filename />
+    <directory_path>/generic</directory_path>
+    <mappings>
+      <input>
+        <mapping>
+          <input_step />
+          <output_step />
+          <main_path>Y</main_path>
+          <rename_on_output>Y</rename_on_output>
+          <description />
+          <connector>
+            <parent>flagfield</parent>
+            <child>flagfield</child>
+          </connector>
+        </mapping>
+      </input>
+      <output>
+        <mapping>
+          <input_step />
+          <output_step />
+          <main_path>Y</main_path>
+          <rename_on_output>N</rename_on_output>
+          <description />
+        </mapping>
+      </output>
+      <parameters>
+        <inherit_all_vars>Y</inherit_all_vars>
+      </parameters>
+    </mappings>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>208</xloc>
+      <yloc>816</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
