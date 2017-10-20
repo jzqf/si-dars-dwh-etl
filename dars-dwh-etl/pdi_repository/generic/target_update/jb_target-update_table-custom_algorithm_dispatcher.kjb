@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/10/16 09:55:03.623</modified_date>
+  <modified_date>2017/10/20 14:49:58.409</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
@@ -18,7 +18,7 @@
     <parameter>
       <name>PARAM_CDC_LAST_LOAD_UTC</name>
       <default_value />
-      <description>Timestamp of last successful load from the source database</description>
+      <description>Timestamp of last successful load of target database</description>
     </parameter>
     <parameter>
       <name>PARAM_MAX_INSERT_ID</name>
@@ -27,7 +27,7 @@
     </parameter>
     <parameter>
       <name>PARAM_SOURCE_DB_ID</name>
-      <default_value>0</default_value>
+      <default_value>-1</default_value>
       <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
     </parameter>
     <parameter>
@@ -47,7 +47,7 @@
     </parameter>
     <parameter>
       <name>PARAM_TABLE_META_ID</name>
-      <default_value>0</default_value>
+      <default_value>-1</default_value>
       <description>Primary key of etl.table_meta row for "source" table archived/mirrored to "target" table</description>
     </parameter>
     <parameter>
@@ -415,7 +415,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>32</xloc>
-      <yloc>272</yloc>
+      <yloc>240</yloc>
     </entry>
     <entry>
       <name>Write To Log: Parameters</name>
@@ -439,43 +439,21 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>160</xloc>
-      <yloc>272</yloc>
+      <yloc>240</yloc>
     </entry>
     <entry>
-      <name>Abort job - Untreated case</name>
+      <name>Abort job - Untreated target DB</name>
       <description />
       <type>ABORT</type>
-      <message>Aborting from jb_custom_mirrored_table_dispatcher. Untreated case in:  schema.table = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</message>
+      <message>Aborting from jb_target-update_table-custom_algorithm_dispatcher:  PARAM_TARGET_DB_ID=${PARAM_TARGET_DB_ID}</message>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>160</xloc>
-      <yloc>736</yloc>
+      <yloc>704</yloc>
     </entry>
     <entry>
-      <name>Target table = obo.passage_with_images ?</name>
-      <description />
-      <type>SIMPLE_EVAL</type>
-      <valuetype>variable</valuetype>
-      <fieldname />
-      <variablename>${PARAM_TARGET_SCHEMA_DOT_TABLE}</variablename>
-      <fieldtype>string</fieldtype>
-      <mask />
-      <comparevalue>obo.passage_with_images</comparevalue>
-      <minvalue />
-      <maxvalue />
-      <successcondition>equal</successcondition>
-      <successnumbercondition>equal</successnumbercondition>
-      <successbooleancondition>false</successbooleancondition>
-      <successwhenvarset>N</successwhenvarset>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>160</xloc>
-      <yloc>384</yloc>
-    </entry>
-    <entry>
-      <name>jb_log_error - Untreated case</name>
+      <name>jb_log_error - Untreated target DB</name>
       <description />
       <type>JOB</type>
       <specification_method>rep_name</specification_method>
@@ -503,7 +481,7 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
         <parameter>
           <name>PARAM_ERROR_MESSAGE</name>
           <stream_name />
-          <value>Untreated case in jb_custom_mirrored_table_dispatcher:  schema.table = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</value>
+          <value>Untreated case in jb_target-update_table-custom_algorithm_dispatcher:  PARAM_TARGET_DB_ID=${PARAM_TARGET_DB_ID}</value>
         </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
@@ -511,27 +489,27 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>160</xloc>
-      <yloc>640</yloc>
+      <yloc>608</yloc>
     </entry>
     <entry>
       <name>Abort job</name>
       <description />
       <type>ABORT</type>
-      <message>Aborting jb_custom_mirrored_table_dispatcher after job entry jb_psa-obo.passage_with_images-update</message>
+      <message>Aborting jb_target-update_table-custom_algorithm_dispatcher after job entry jb_psa-update_table-custom_algorithm_dispatcher</message>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>1</nr>
-      <xloc>736</xloc>
-      <yloc>416</yloc>
+      <xloc>624</xloc>
+      <yloc>352</yloc>
     </entry>
     <entry>
-      <name>jb_psa-obo.passage_with_images-update</name>
+      <name>jb_psa-update_table-custom_algorithm_dispatcher</name>
       <description />
       <type>JOB</type>
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
-      <jobname>jb_psa-obo.passage_with_images-update</jobname>
+      <jobname>jb_psa-update_table-custom_algorithm_dispatcher</jobname>
       <directory>/psa/custom</directory>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -555,46 +533,29 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>480</xloc>
-      <yloc>384</yloc>
+      <xloc>416</xloc>
+      <yloc>352</yloc>
     </entry>
     <entry>
-      <name>jb_update_etl_table_meta_mirror_details</name>
+      <name>Target DB = PSA ?</name>
       <description />
-      <type>JOB</type>
-      <specification_method>rep_name</specification_method>
-      <job_object_id />
-      <filename />
-      <jobname>jb_update_etl_table_meta_mirror_details</jobname>
-      <directory>/generic</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Nothing</loglevel>
-      <slave_server_name />
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <expand_remote_job>N</expand_remote_job>
-      <create_parent_folder>N</create_parent_folder>
-      <pass_export>N</pass_export>
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-        <parameter>
-          <name>PARAM_TABLE_MIRROR_TREATMENT_ID</name>
-          <stream_name />
-          <value>${QF_MIRROR_ALG_CUSTOM}</value>
-        </parameter>
-      </parameters>
-      <set_append_logfile>N</set_append_logfile>
+      <type>SIMPLE_EVAL</type>
+      <valuetype>variable</valuetype>
+      <fieldname />
+      <variablename>${PARAM_TARGET_DB_ID}</variablename>
+      <fieldtype>string</fieldtype>
+      <mask />
+      <comparevalue>${QF_DB_ID_PSA}</comparevalue>
+      <minvalue />
+      <maxvalue />
+      <successcondition>equal</successcondition>
+      <successnumbercondition>equal</successnumbercondition>
+      <successbooleancondition>false</successbooleancondition>
+      <successwhenvarset>N</successwhenvarset>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>736</xloc>
+      <xloc>160</xloc>
       <yloc>352</yloc>
     </entry>
   </entries>
@@ -609,17 +570,8 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>Target table = obo.passage_with_images ?</from>
-      <to>jb_log_error - Untreated case</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>jb_log_error - Untreated case</from>
-      <to>Abort job - Untreated case</to>
+      <from>jb_log_error - Untreated target DB</from>
+      <to>Abort job - Untreated target DB</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -627,16 +579,7 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>Write To Log: Parameters</from>
-      <to>Target table = obo.passage_with_images ?</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>jb_psa-obo.passage_with_images-update</from>
+      <from>jb_psa-update_table-custom_algorithm_dispatcher</from>
       <to>Abort job</to>
       <from_nr>0</from_nr>
       <to_nr>1</to_nr>
@@ -645,8 +588,17 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>jb_psa-obo.passage_with_images-update</from>
-      <to>jb_update_etl_table_meta_mirror_details</to>
+      <from>Write To Log: Parameters</from>
+      <to>Target DB = PSA ?</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>Target DB = PSA ?</from>
+      <to>jb_psa-update_table-custom_algorithm_dispatcher</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -654,19 +606,19 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Target table = obo.passage_with_images ?</from>
-      <to>jb_psa-obo.passage_with_images-update</to>
+      <from>Target DB = PSA ?</from>
+      <to>jb_log_error - Untreated target DB</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
+      <evaluation>N</evaluation>
       <unconditional>N</unconditional>
     </hop>
   </hops>
   <notepads>
     <notepad>
-      <note>This job updates a table in the target DB that is mirrored from a source database using a table-specific CUSTOM algorithm, i.e., a custom 
-job &amp; transformation is used that is specific to the table being updated in the target DB. This job has parameters:
+      <note>This job updates a table in a target database. This job acts as a "dispatcher" in that it runs an appropriate job to perform a CUSTOM 
+treatment that is specific for the target DB that is specified. This job has parameters:
 
 	PARAM_CDC_LAST_LOAD_UTC				Timestamp for when the target DB was most recently updated successfully
 	PARAM_CDC_CURRENT_LOAD_UTC			Timestamp of the current load (no rows after this timestamp will be loaded)
@@ -679,13 +631,11 @@ job &amp; transformation is used that is specific to the table being updated in 
 	PARAM_TARGET_DB_ID						ID of the "target" database to which the "source" DB tables will be archived/mirrored
 	PARAM_TARGET_SCHEMA
 	PARAM_TARGET_TABLE
-	PARAM_TARGET_SCHEMA_DOT_TABLE
-
-This job acts as a "dispatcher" in that it runs the appropriate job for the table that is specified by this job's parameters.</note>
+	PARAM_TARGET_SCHEMA_DOT_TABLE</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
       <width>855</width>
-      <heigth>248</heigth>
+      <heigth>220</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
