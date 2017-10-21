@@ -1,12 +1,12 @@
 <transformation>
   <info>
-    <name>tmplt_psa_mark_rows_for_deletion</name>
+    <name>tr_target-mark_rows_for_deletion-inject_meta</name>
     <description />
     <extended_description />
     <trans_version />
     <trans_type>Normal</trans_type>
     <trans_status>0</trans_status>
-    <directory>/psa</directory>
+    <directory>/generic/target_mark_rows_for_deletion</directory>
     <parameters>
       <parameter>
         <name>PARAM_CAN_DELETE_ROW_SOURCE_COLNAME</name>
@@ -20,6 +20,11 @@
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE</name>
+        <default_value />
+        <description>for source DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER</name>
         <default_value />
         <description>for source DB "dynamic" database connections</description>
       </parameter>
@@ -39,9 +44,49 @@
         <description>for source DB "dynamic" database connections</description>
       </parameter>
       <parameter>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_URL</name>
+        <default_value />
+        <description>for source DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME</name>
         <default_value />
         <description>for source DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_TARGET_DB_DATABASE</name>
+        <default_value />
+        <description>for target DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_TARGET_DB_DRIVER</name>
+        <default_value />
+        <description>for target DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_TARGET_DB_HOST</name>
+        <default_value />
+        <description>for target DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD</name>
+        <default_value />
+        <description>for target DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_TARGET_DB_PORT</name>
+        <default_value />
+        <description>for target DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_TARGET_DB_URL</name>
+        <default_value />
+        <description>for target DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_TARGET_DB_USERNAME</name>
+        <default_value />
+        <description>for target DB "dynamic" database connections</description>
       </parameter>
       <parameter>
         <name>PARAM_LAST_UPDATED_ON_SOURCE_COLNAME</name>
@@ -60,23 +105,28 @@
       </parameter>
       <parameter>
         <name>PARAM_SOURCE_DB_ID</name>
-        <default_value />
-        <description>ID of database containing the source tables to mirror</description>
+        <default_value>-1</default_value>
+        <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
       </parameter>
       <parameter>
         <name>PARAM_SOURCE_SCHEMA</name>
         <default_value>passage</default_value>
-        <description>Schema of mirrored table to compare</description>
+        <description>Name of schema containing source table to mirror to target table</description>
       </parameter>
       <parameter>
         <name>PARAM_SOURCE_TABLE</name>
-        <default_value>image</default_value>
-        <description>Name of mirrored table to compare</description>
+        <default_value>passage_status</default_value>
+        <description>Name of source table to mirror to target table</description>
       </parameter>
       <parameter>
         <name>PARAM_TABLE_META_ID</name>
-        <default_value>605</default_value>
+        <default_value>623</default_value>
         <description>Primary key of etl.table_meta row for "source" table from which rows will be deleted</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_DB_ID</name>
+        <default_value>-1</default_value>
+        <description>ID of the target database for which rows of the source DB tables will be "marked for deletion"</description>
       </parameter>
       <parameter>
         <name>PARAM_TARGET_SCHEMA</name>
@@ -85,7 +135,7 @@
       </parameter>
       <parameter>
         <name>PARAM_TARGET_TABLE</name>
-        <default_value>image</default_value>
+        <default_value>passage_status</default_value>
         <description>Name of target table to update (not currently used)</description>
       </parameter>
       <parameter>
@@ -514,58 +564,48 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/10/21 10:40:10.913</modified_date>
+    <modified_date>2017/10/21 10:44:34.884</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>Load the primary key column(s) from the source (OBO) database table.</note>
-      <xloc>304</xloc>
-      <yloc>336</yloc>
-      <width>423</width>
-      <heigth>24</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>This transformation marks rows for deletion from a table of the "source" (OBO) DB that have been archived/mirrored to the target (PSA) DB. This is an ETL 
-metadata injection "template" transformation that can be used to compare *any* tables that are mirrored between these two databases. It has parameters:
+      <note>This transformation uses ETL Metadata injection to delete rows of a source table in a source database that have been archived/mirrored to a target table in a
+target database. This is a generic algorithm that can work with *any* table, as long as the necessary metadata is available to be injected. This transformation
+has parameters:
 
 	PARAM_CDC_LAST_LOAD_UTC								Timestamp for when the target DB was most recently updated successfully
-														Used to ensure that we do not delete rows that are not yet fully archived/mirrored.
-	PARAM_SOURCE_DB_ID								ID the "source" database containing tables will be mirrored to a "target" database
+																Used to ensure that we do not delete rows that are not yet fully archived/mirrored.
+	PARAM_TABLE_META_ID									Primary key of etl.table_meta row for "source" table from which rows will be deleted
+	PARAM_USE_CUSTOM_DELETE_ALGORITHM					"Y" if a custom DELETE algorithm shall be used for this table
+	PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS			Number of seconds after the "row_can_be_deleted_from" timestamp that an archived row can be deleted
 	PARAM_DYN_DB_CONN_SOURCE_DB_HOST					for source DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_SOURCE_DB_PORT					for source DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE				for source DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME				for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE			for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME			for source DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD			for source DB "dynamic" database connections
-	PARAM_SOURCE_SCHEMA							Name of schema containing source table to compare to target table
-	PARAM_SOURCE_TABLE							Name of source table to compare to target table
-	PARAM_TARGET_SCHEMA							Name of schema containing target table to compare with (not currently used)
-	PARAM_TARGET_TABLE								Name of target table to compare with (not currently used)
-	PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS	Number of seconds after the "row_can_be_deleted_from" timestamp that an archived row can be deleted
-	PARAM_USE_CUSTOM_DELETE_ALGORITHM			"Y" if a custom DELETE algorithm shall be used for this table
+	PARAM_DYN_DB_CONN_SOURCE_DB_URL					for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_DRIVE					for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_HOST					for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_PORT					for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_DATABASE				for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_USERNAME			for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD			for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_DRIVER				for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_URL					for target DB "dynamic" database connections
+	PARAM_SOURCE_DB_ID										ID the "source" database containing tables will be mirrored to a "target" database
+	PARAM_SOURCE_SCHEMA									Name of schema containing source table to compare to target table
+	PARAM_SOURCE_TABLE									Name of source table to compare to target table
 	PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME	Column of source table that acts as a "row_can_be_deleted_from" timestamp column
-	PARAM_CAN_DELETE_ROW_SOURCE_COLNAME		Column of source table that indicates if the row can be deleted immediately
-	PARAM_LAST_UPDATED_ON_SOURCE_COLNAME	Column of source table that acts as a "last_updated_on" timestamp column
-	PARAM_TABLE_META_ID							Primary key of etl.table_meta row for "source" table from which rows will be deleted</note>
-      <xloc>0</xloc>
+	PARAM_CAN_DELETE_ROW_SOURCE_COLNAME				Column of source table that indicates if the row can be deleted immediately
+	PARAM_LAST_UPDATED_ON_SOURCE_COLNAME			Column of source table that acts as a "last_updated_on" timestamp column
+	PARAM_TARGET_DB_ID										ID of the target database for which rows of the source DB tables will be "marked for deletion"
+	PARAM_TARGET_SCHEMA									Name of schema containing target table to compare with (not currently used)
+	PARAM_TARGET_TABLE										Name of target table to compare with (not currently used)</note>
+      <xloc>16</xloc>
       <yloc>0</yloc>
-      <width>963</width>
-      <heigth>304</heigth>
+      <width>1011</width>
+      <heigth>458</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -582,11 +622,15 @@ metadata injection "template" transformation that can be used to compare *any* t
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Set the "can_delete_row" column for the table to "true".</note>
-      <xloc>304</xloc>
-      <yloc>496</yloc>
-      <width>336</width>
-      <heigth>24</heigth>
+      <note>The query here to provide the source (OBO)
+column names must match the query in 
+"jb_psa_mark_rows_for_deletion-table" from
+where this transformation is executed. See
+the comments in that job for an explanation.</note>
+      <xloc>704</xloc>
+      <yloc>640</yloc>
+      <width>275</width>
+      <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -595,71 +639,7 @@ metadata injection "template" transformation that can be used to compare *any* t
       <fontcolorgreen>0</fontcolorgreen>
       <fontcolorblue>0</fontcolorblue>
       <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Create constant field named "true_field" containing Y/true that will be assigned to the
-"can_delete_row" column of the table.</note>
-      <xloc>304</xloc>
-      <yloc>416</yloc>
-      <width>511</width>
-      <heigth>38</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Metadata injected -></note>
-      <xloc>16</xloc>
-      <yloc>336</yloc>
-      <width>130</width>
-      <heigth>24</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>255</fontcolorred>
-      <fontcolorgreen>255</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>0</backgroundcolorred>
-      <backgroundcolorgreen>0</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Metadata injected -></note>
-      <xloc>16</xloc>
-      <yloc>496</yloc>
-      <width>130</width>
-      <heigth>24</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>255</fontcolorred>
-      <fontcolorgreen>255</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>0</backgroundcolorred>
-      <backgroundcolorgreen>0</backgroundcolorgreen>
+      <backgroundcolorgreen>255</backgroundcolorgreen>
       <backgroundcolorblue>0</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
@@ -668,14 +648,14 @@ metadata injection "template" transformation that can be used to compare *any* t
     </notepad>
   </notepads>
   <connection>
-    <name>dynamic_postgres_source_db</name>
-    <server>${PARAM_DYN_DB_CONN_SOURCE_DB_HOST}</server>
+    <name>etl_db</name>
+    <server>${QF_ETL_DB_HOST}</server>
     <type>POSTGRESQL</type>
     <access>Native</access>
-    <database>${PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE}</database>
-    <port>${PARAM_DYN_DB_CONN_SOURCE_DB_PORT}</port>
-    <username>${PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME}</username>
-    <password>${PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD}</password>
+    <database>${QF_ETL_DB_DATABASE}</database>
+    <port>${QF_ETL_DB_PORT}</port>
+    <username>${QF_ETL_DB_USERNAME}</username>
+    <password>${QF_ETL_DB_PASSWORD}</password>
     <servername />
     <data_tablespace />
     <index_tablespace />
@@ -694,11 +674,11 @@ metadata injection "template" transformation that can be used to compare *any* t
       </attribute>
       <attribute>
         <code>PORT_NUMBER</code>
-        <attribute>${PARAM_DYN_DB_CONN_SOURCE_DB_PORT}</attribute>
+        <attribute>${QF_ETL_DB_PORT}</attribute>
       </attribute>
       <attribute>
         <code>PRESERVE_RESERVED_WORD_CASE</code>
-        <attribute>Y</attribute>
+        <attribute>N</attribute>
       </attribute>
       <attribute>
         <code>QUOTE_ALL_FIELDS</code>
@@ -771,19 +751,24 @@ metadata injection "template" transformation that can be used to compare *any* t
   </connection>
   <order>
     <hop>
-      <from>Create field "true_field"</from>
-      <to>Update: Mark rows for deletion</to>
+      <from>Source (OBO) primary key column names</from>
+      <to>ETL Metadata Injection: tmplt_psa_mark_rows_for_deletion</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Get primary key column(s) from source (OBO) DB table</from>
-      <to>Create field "true_field"</to>
+      <from>SELECT statement for source (OBO) DB table</from>
+      <to>ETL Metadata Injection: tmplt_psa_mark_rows_for_deletion</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Source (OBO) "can_delete_row" column metadata</from>
+      <to>ETL Metadata Injection: tmplt_psa_mark_rows_for_deletion</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Create field "true_field"</name>
-    <type>Constant</type>
+    <name>ETL Metadata Injection: tmplt_psa_mark_rows_for_deletion</name>
+    <type>MetaInject</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -792,20 +777,68 @@ metadata injection "template" transformation that can be used to compare *any* t
       <method>none</method>
       <schema_name />
     </partitioning>
-    <fields>
-      <field>
-        <name>true_field</name>
-        <type>Boolean</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif>Y</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-    </fields>
+    <specification_method>rep_name</specification_method>
+    <trans_object_id />
+    <trans_name>tmplt_psa_mark_rows_for_deletion</trans_name>
+    <filename />
+    <directory_path>/psa</directory_path>
+    <source_step />
+    <source_output_fields>    </source_output_fields>
+    <target_file />
+    <no_execution>N</no_execution>
+    <stream_source_step />
+    <stream_target_step />
+    <mappings>
+      <mapping>
+        <target_step_name>Update: Mark rows for deletion</target_step_name>
+        <target_attribute_key>UPDATE_LOOKUP</target_attribute_key>
+        <target_detail>Y</target_detail>
+        <source_step>Source (OBO) "can_delete_row" column metadata</source_step>
+        <source_field>can_delete_row_col_name</source_field>
+      </mapping>
+      <mapping>
+        <target_step_name>Update: Mark rows for deletion</target_step_name>
+        <target_attribute_key>KEY_CONDITION</target_attribute_key>
+        <target_detail>Y</target_detail>
+        <source_step>Source (OBO) primary key column names</source_step>
+        <source_field>key_field_value_comparator</source_field>
+      </mapping>
+      <mapping>
+        <target_step_name>Update: Mark rows for deletion</target_step_name>
+        <target_attribute_key>UPDATE_STREAM</target_attribute_key>
+        <target_detail>Y</target_detail>
+        <source_step>Source (OBO) "can_delete_row" column metadata</source_step>
+        <source_field>true_field_name</source_field>
+      </mapping>
+      <mapping>
+        <target_step_name>Get primary key column(s) from source (OBO) DB table</target_step_name>
+        <target_attribute_key>SQL</target_attribute_key>
+        <target_detail>N</target_detail>
+        <source_step>SELECT statement for source (OBO) DB table</source_step>
+        <source_field>select_source_rows_sql</source_field>
+      </mapping>
+      <mapping>
+        <target_step_name>Update: Mark rows for deletion</target_step_name>
+        <target_attribute_key>KEY_LOOKUP</target_attribute_key>
+        <target_detail>Y</target_detail>
+        <source_step>Source (OBO) primary key column names</source_step>
+        <source_field>source_key_col_name</source_field>
+      </mapping>
+      <mapping>
+        <target_step_name>Update: Mark rows for deletion</target_step_name>
+        <target_attribute_key>KEY_STREAM</target_attribute_key>
+        <target_detail>Y</target_detail>
+        <source_step>Source (OBO) primary key column names</source_step>
+        <source_field>source_key_col_name</source_field>
+      </mapping>
+      <mapping>
+        <target_step_name>Update: Mark rows for deletion</target_step_name>
+        <target_attribute_key>KEY_STREAM2</target_attribute_key>
+        <target_detail>Y</target_detail>
+        <source_step>Source (OBO) primary key column names</source_step>
+        <source_field>no_field</source_field>
+      </mapping>
+    </mappings>
     <cluster_schema />
     <remotesteps>
       <input>
@@ -814,13 +847,13 @@ metadata injection "template" transformation that can be used to compare *any* t
       </output>
     </remotesteps>
     <GUI>
-      <xloc>160</xloc>
-      <yloc>416</yloc>
+      <xloc>176</xloc>
+      <yloc>576</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Get primary key column(s) from source (OBO) DB table</name>
+    <name>SELECT statement for source (OBO) DB table</name>
     <type>TableInput</type>
     <description />
     <distribute>Y</distribute>
@@ -830,8 +863,49 @@ metadata injection "template" transformation that can be used to compare *any* t
       <method>none</method>
       <schema_name />
     </partitioning>
-    <connection>dynamic_postgres_source_db</connection>
-    <sql />
+    <connection>etl_db</connection>
+    <sql>WITH
+    -- Create table with a string column that contains the primary key column(s) from the 
+    -- source (OBO) table:
+    select_list AS (
+        SELECT 
+            -- POSTGRESQL-SPECIFIC
+          --array_to_string(array_agg(source_column_name ORDER BY primary_key_column_order ASC), ',') AS "str_value"   &lt;- Why not use this?
+            array_to_string(array_agg(source_column_name ORDER BY column_meta_id ASC), ',') AS "str_value"
+        FROM 
+            etl.column_meta 
+        WHERE 
+            table_meta_id = ${PARAM_TABLE_META_ID} AND 
+            is_primary_key_column = true 
+    ),
+    -- Create table with a string column that contains the "ORDER BY" clause. 
+    -- This consists of the column(s) that make up the primary key for the 
+    -- source (OBO) table.
+    orderby_list AS (
+        SELECT 
+           -- POSTGRESQL-SPECIFIC
+            array_to_string(array_agg(source_column_name ORDER BY primary_key_column_order ASC), ',') AS "str_value"
+        FROM 
+            etl.column_meta 
+        WHERE 
+            table_meta_id = ${PARAM_TABLE_META_ID} AND 
+            is_primary_key_column = true
+    )
+SELECT
+    -- Create SELECT statement to select rows from source (OBO) table to delete.
+    -- The WHERE clause includes only rows that should have been archived/mirrored.
+    -- Only select rows with "can_delete_row" column = false because only thoses rows need to have this column updated to true.
+    -- This will greatly reduce the number of rows selected here if the rows with "can_delete_row" are not currently being deleted.
+    'SELECT ' || CAST(select_list.str_value AS VARCHAR) || 
+    ' FROM ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE} ' || 
+    'WHERE ${PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME} + INTERVAL ''${PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS} seconds'' &lt; TIMESTAMP ''${PARAM_CDC_LAST_LOAD_UTC}'' ' ||
+    ' AND ${PARAM_CAN_DELETE_ROW_SOURCE_COLNAME}=false ' ||
+    'ORDER BY ' || CAST(orderby_list.str_value AS VARCHAR) 
+    AS "select_source_rows_sql" 
+FROM
+    select_list
+CROSS JOIN
+    orderby_list</sql>
     <limit>0</limit>
     <lookup />
     <execute_each_row>N</execute_each_row>
@@ -845,14 +919,14 @@ metadata injection "template" transformation that can be used to compare *any* t
       </output>
     </remotesteps>
     <GUI>
-      <xloc>160</xloc>
-      <yloc>336</yloc>
+      <xloc>528</xloc>
+      <yloc>480</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Update: Mark rows for deletion</name>
-    <type>Update</type>
+    <name>Source (OBO) "can_delete_row" column metadata</name>
+    <type>TableInput</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -861,16 +935,21 @@ metadata injection "template" transformation that can be used to compare *any* t
       <method>none</method>
       <schema_name />
     </partitioning>
-    <connection>dynamic_postgres_source_db</connection>
-    <skip_lookup>Y</skip_lookup>
-    <commit>100</commit>
-    <use_batch>Y</use_batch>
-    <error_ignored>N</error_ignored>
-    <ignore_flag_field />
-    <lookup>
-      <schema>${PARAM_SOURCE_SCHEMA}</schema>
-      <table>${PARAM_SOURCE_TABLE}</table>
-    </lookup>
+    <connection>etl_db</connection>
+    <sql>SELECT
+    source_column_name AS "can_delete_row_col_name",
+    -- This is a "constant" stream that is used to assign "true" to the "can_delete_row" column.
+    'true_field' AS "true_field_name" 
+FROM 
+    etl.column_meta 
+WHERE 
+    table_meta_id = ${PARAM_TABLE_META_ID} AND 
+    is_can_delete_row_column = true</sql>
+    <limit>0</limit>
+    <lookup />
+    <execute_each_row>N</execute_each_row>
+    <variables_active>Y</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
     <cluster_schema />
     <remotesteps>
       <input>
@@ -879,8 +958,52 @@ metadata injection "template" transformation that can be used to compare *any* t
       </output>
     </remotesteps>
     <GUI>
-      <xloc>160</xloc>
-      <yloc>496</yloc>
+      <xloc>528</xloc>
+      <yloc>576</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Source (OBO) primary key column names</name>
+    <type>TableInput</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <connection>etl_db</connection>
+    <sql>SELECT
+    source_column_name AS "source_key_col_name",
+    '=' AS "key_field_value_comparator",
+    -- "Stream field2" is not used in the "Update" step. Nevertheless, we must set 
+    -- it to something or an error is thrown during ETL metadata injection. The
+    -- only solution I have found is to inject an empty string for this field.
+    '' AS "no_field" 
+FROM 
+    etl.column_meta 
+WHERE 
+    table_meta_id = ${PARAM_TABLE_META_ID} AND 
+    is_primary_key_column = true
+ORDER BY 
+    primary_key_column_order</sql>
+    <limit>0</limit>
+    <lookup />
+    <execute_each_row>N</execute_each_row>
+    <variables_active>Y</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>528</xloc>
+      <yloc>672</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
