@@ -1,24 +1,19 @@
 <job>
-  <name>jb_target-compare</name>
+  <name>jb_target-mark_rows_for_deletion</name>
   <description />
   <extended_description />
   <job_version />
   <job_status>0</job_status>
-  <directory>/generic/target_compare</directory>
+  <directory>/generic/target_mark_rows_for_deletion</directory>
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/10/20 10:37:01.118</modified_date>
+  <modified_date>2017/10/20 10:47:35.990</modified_date>
   <parameters>
-    <parameter>
-      <name>PARAM_MAX_NUM_COMPARE_ROWS</name>
-      <default_value>100000</default_value>
-      <description>Maximum number of rows that will be compared for each table. Pass 0 for *all* rows.</description>
-    </parameter>
     <parameter>
       <name>PARAM_TARGET_DB_ID</name>
       <default_value>10</default_value>
-      <description>ID of the "target" database to which the "source" DB tables have been archived/mirrored</description>
+      <description>ID of the target database for which rows of the source DB tables will be "marked for deletion"</description>
     </parameter>
   </parameters>
   <connection>
@@ -365,7 +360,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>32</xloc>
-      <yloc>208</yloc>
+      <yloc>192</yloc>
     </entry>
     <entry>
       <name>tr_get_last_successful_load</name>
@@ -402,16 +397,16 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>368</xloc>
-      <yloc>304</yloc>
+      <yloc>288</yloc>
     </entry>
     <entry>
-      <name>tr_list_of_tables_to_compare</name>
+      <name>tr_list_of_tables_to_mark_rows_for_deletion</name>
       <description />
       <type>TRANS</type>
       <specification_method>rep_name</specification_method>
       <trans_object_id />
       <filename />
-      <transname>tr_list_of_tables_to_compare</transname>
+      <transname>tr_list_of_tables_to_mark_rows_for_deletion</transname>
       <directory>/generic</directory>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -439,17 +434,17 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>368</xloc>
-      <yloc>608</yloc>
+      <yloc>576</yloc>
     </entry>
     <entry>
-      <name>jb_target-compare_table</name>
+      <name>jb_target-mark_rows_for_deletion-table</name>
       <description />
       <type>JOB</type>
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
-      <jobname>jb_target-compare_table</jobname>
-      <directory>/generic/target_compare</directory>
+      <jobname>jb_target-mark_rows_for_deletion-table</jobname>
+      <directory>/generic/target_mark_rows_for_deletion</directory>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>Y</params_from_previous>
       <exec_per_row>Y</exec_per_row>
@@ -547,13 +542,38 @@
           <stream_name>target_schema_dot_table</stream_name>
           <value />
         </parameter>
+        <parameter>
+          <name>PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS</name>
+          <stream_name>row_can_be_deleted_from_seconds</stream_name>
+          <value />
+        </parameter>
+        <parameter>
+          <name>PARAM_USE_CUSTOM_DELETE_ALGORITHM</name>
+          <stream_name>use_custom_mark_rows_for_deletion_algorithm</stream_name>
+          <value />
+        </parameter>
+        <parameter>
+          <name>PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME</name>
+          <stream_name>row_can_be_deleted_from_source_colname</stream_name>
+          <value />
+        </parameter>
+        <parameter>
+          <name>PARAM_CAN_DELETE_ROW_SOURCE_COLNAME</name>
+          <stream_name>can_delete_row_source_colname</stream_name>
+          <value />
+        </parameter>
+        <parameter>
+          <name>PARAM_LAST_UPDATED_ON_SOURCE_COLNAME</name>
+          <stream_name>last_updated_on_source_colname</stream_name>
+          <value />
+        </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>368</xloc>
-      <yloc>720</yloc>
+      <yloc>688</yloc>
     </entry>
     <entry>
       <name>jb_send_default_email_job_notification - Success</name>
@@ -602,7 +622,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>368</xloc>
-      <yloc>864</yloc>
+      <yloc>832</yloc>
     </entry>
     <entry>
       <name>jb_send_default_email_job_notification - Failure</name>
@@ -651,7 +671,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>368</xloc>
-      <yloc>928</yloc>
+      <yloc>896</yloc>
     </entry>
     <entry>
       <name>Success</name>
@@ -661,7 +681,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>560</xloc>
-      <yloc>864</yloc>
+      <yloc>832</yloc>
     </entry>
     <entry>
       <name>Abort job</name>
@@ -672,7 +692,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>560</xloc>
-      <yloc>928</yloc>
+      <yloc>896</yloc>
     </entry>
     <entry>
       <name>jb_log_error 1</name>
@@ -711,7 +731,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>224</xloc>
-      <yloc>304</yloc>
+      <yloc>288</yloc>
     </entry>
     <entry>
       <name>DUMMY</name>
@@ -731,21 +751,20 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>32</xloc>
-      <yloc>512</yloc>
+      <yloc>576</yloc>
     </entry>
     <entry>
       <name>Log parameters</name>
       <description />
       <type>WRITE_TO_LOG</type>
-      <logmessage>PARAM_TARGET_DB_ID         = ${PARAM_TARGET_DB_ID}
-PARAM_MAX_NUM_COMPARE_ROWS = ${PARAM_MAX_NUM_COMPARE_ROWS}</logmessage>
+      <logmessage>PARAM_TARGET_DB_ID = ${PARAM_TARGET_DB_ID}</logmessage>
       <loglevel>Basic</loglevel>
-      <logsubject>Parameters received by jb_target-compare</logsubject>
+      <logsubject>Parameters received by jb_target-mark_rows_for_deletion</logsubject>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>112</xloc>
-      <yloc>208</yloc>
+      <yloc>192</yloc>
     </entry>
     <entry>
       <name>jb_target_init</name>
@@ -779,7 +798,47 @@ PARAM_MAX_NUM_COMPARE_ROWS = ${PARAM_MAX_NUM_COMPARE_ROWS}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>224</xloc>
-      <yloc>208</yloc>
+      <yloc>192</yloc>
+    </entry>
+    <entry>
+      <name>DUMMY</name>
+      <description />
+      <type>SPECIAL</type>
+      <start>N</start>
+      <dummy>Y</dummy>
+      <repeat>N</repeat>
+      <schedulerType>0</schedulerType>
+      <intervalSeconds>0</intervalSeconds>
+      <intervalMinutes>60</intervalMinutes>
+      <hour>12</hour>
+      <minutes>0</minutes>
+      <weekDay>1</weekDay>
+      <DayOfMonth>1</DayOfMonth>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>1</nr>
+      <xloc>368</xloc>
+      <yloc>192</yloc>
+    </entry>
+    <entry>
+      <name>DUMMY</name>
+      <description />
+      <type>SPECIAL</type>
+      <start>N</start>
+      <dummy>Y</dummy>
+      <repeat>N</repeat>
+      <schedulerType>0</schedulerType>
+      <intervalSeconds>0</intervalSeconds>
+      <intervalMinutes>60</intervalMinutes>
+      <hour>12</hour>
+      <minutes>0</minutes>
+      <weekDay>1</weekDay>
+      <DayOfMonth>1</DayOfMonth>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>2</nr>
+      <xloc>32</xloc>
+      <yloc>896</yloc>
     </entry>
     <entry>
       <name>jb_set_dynamic_db_connection_variables</name>
@@ -818,7 +877,7 @@ PARAM_MAX_NUM_COMPARE_ROWS = ${PARAM_MAX_NUM_COMPARE_ROWS}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>368</xloc>
-      <yloc>416</yloc>
+      <yloc>384</yloc>
     </entry>
     <entry>
       <name>Set PARAM_DYN_DB_CONN_TARGET_DB_*</name>
@@ -868,53 +927,13 @@ PARAM_MAX_NUM_COMPARE_ROWS = ${PARAM_MAX_NUM_COMPARE_ROWS}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>368</xloc>
-      <yloc>512</yloc>
-    </entry>
-    <entry>
-      <name>DUMMY</name>
-      <description />
-      <type>SPECIAL</type>
-      <start>N</start>
-      <dummy>Y</dummy>
-      <repeat>N</repeat>
-      <schedulerType>0</schedulerType>
-      <intervalSeconds>0</intervalSeconds>
-      <intervalMinutes>60</intervalMinutes>
-      <hour>12</hour>
-      <minutes>0</minutes>
-      <weekDay>1</weekDay>
-      <DayOfMonth>1</DayOfMonth>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>1</nr>
-      <xloc>368</xloc>
-      <yloc>208</yloc>
-    </entry>
-    <entry>
-      <name>DUMMY</name>
-      <description />
-      <type>SPECIAL</type>
-      <start>N</start>
-      <dummy>Y</dummy>
-      <repeat>N</repeat>
-      <schedulerType>0</schedulerType>
-      <intervalSeconds>0</intervalSeconds>
-      <intervalMinutes>60</intervalMinutes>
-      <hour>12</hour>
-      <minutes>0</minutes>
-      <weekDay>1</weekDay>
-      <DayOfMonth>1</DayOfMonth>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>2</nr>
-      <xloc>32</xloc>
-      <yloc>928</yloc>
+      <yloc>480</yloc>
     </entry>
   </entries>
   <hops>
     <hop>
-      <from>tr_list_of_tables_to_compare</from>
-      <to>jb_target-compare_table</to>
+      <from>tr_list_of_tables_to_mark_rows_for_deletion</from>
+      <to>jb_target-mark_rows_for_deletion-table</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -949,7 +968,7 @@ PARAM_MAX_NUM_COMPARE_ROWS = ${PARAM_MAX_NUM_COMPARE_ROWS}</logmessage>
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>jb_target-compare_table</from>
+      <from>jb_target-mark_rows_for_deletion-table</from>
       <to>jb_send_default_email_job_notification - Success</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -967,7 +986,7 @@ PARAM_MAX_NUM_COMPARE_ROWS = ${PARAM_MAX_NUM_COMPARE_ROWS}</logmessage>
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>tr_list_of_tables_to_compare</from>
+      <from>tr_list_of_tables_to_mark_rows_for_deletion</from>
       <to>DUMMY</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -976,7 +995,7 @@ PARAM_MAX_NUM_COMPARE_ROWS = ${PARAM_MAX_NUM_COMPARE_ROWS}</logmessage>
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>jb_target-compare_table</from>
+      <from>jb_target-mark_rows_for_deletion-table</from>
       <to>DUMMY</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -1012,49 +1031,22 @@ PARAM_MAX_NUM_COMPARE_ROWS = ${PARAM_MAX_NUM_COMPARE_ROWS}</logmessage>
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>tr_get_last_successful_load</from>
-      <to>jb_set_dynamic_db_connection_variables</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>jb_set_dynamic_db_connection_variables</from>
-      <to>Set PARAM_DYN_DB_CONN_TARGET_DB_*</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Set PARAM_DYN_DB_CONN_TARGET_DB_*</from>
-      <to>tr_list_of_tables_to_compare</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>jb_set_dynamic_db_connection_variables</from>
+      <from>jb_target_init</from>
       <to>DUMMY</to>
       <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
+      <to_nr>1</to_nr>
       <enabled>Y</enabled>
-      <evaluation>N</evaluation>
+      <evaluation>Y</evaluation>
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Set PARAM_DYN_DB_CONN_TARGET_DB_*</from>
-      <to>DUMMY</to>
-      <from_nr>0</from_nr>
+      <from>DUMMY</from>
+      <to>tr_get_last_successful_load</to>
+      <from_nr>1</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
     </hop>
     <hop>
       <from>DUMMY</from>
@@ -1075,42 +1067,68 @@ PARAM_MAX_NUM_COMPARE_ROWS = ${PARAM_MAX_NUM_COMPARE_ROWS}</logmessage>
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>jb_target_init</from>
-      <to>DUMMY</to>
+      <from>tr_get_last_successful_load</from>
+      <to>jb_set_dynamic_db_connection_variables</to>
       <from_nr>0</from_nr>
-      <to_nr>1</to_nr>
+      <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>Y</evaluation>
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>DUMMY</from>
-      <to>tr_get_last_successful_load</to>
-      <from_nr>1</from_nr>
+      <from>jb_set_dynamic_db_connection_variables</from>
+      <to>Set PARAM_DYN_DB_CONN_TARGET_DB_*</to>
+      <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Set PARAM_DYN_DB_CONN_TARGET_DB_*</from>
+      <to>tr_list_of_tables_to_mark_rows_for_deletion</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_set_dynamic_db_connection_variables</from>
+      <to>DUMMY</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Set PARAM_DYN_DB_CONN_TARGET_DB_*</from>
+      <to>DUMMY</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
     </hop>
   </hops>
   <notepads>
     <notepad>
-      <note>This job compares the content of each archived/mirrored table from the source DB with the content of the corresponding tables in the target DB. This is done to 
-verify that the mirroring algorithm(s) is(are) correctly implemented for each table. This verifies also the CDC implementatiom for each table.
+      <note>This job marks for deletion "source" DB rows that have been archived/mirrored to tables in a "target" DB. The selection of tables for which this will 
+be performed, as well as  some aspects of how and when this is performed, are controlled by settings stored in table etl.table_meta &amp; etl.column_meta.
 
 "Pass batch ID?" is selected for this job so that the batch ID is passed to tr_set_job_batch_id_variable via jb_init, which assigns this value to QF_JOB_BATCH_ID.
 
 If this job has a parent, the setting "Pass batch ID?" should also be set for the parent *if* it is desired that QF_JOB_BATCH_ID should be assigned
 the batch ID of the root job (not this job). This may vary from case to case.
 
-This job has parameters:
+This transformation has parameter:
 
-	PARAM_TARGET_DB_ID					ID of the "target" database to which the "source" DB tables have been archived/mirrored
-	PARAM_MAX_NUM_COMPARE_ROWS	Maximum number of rows that will be compared for each table. 0 means *all* rows.</note>
+	PARAM_TARGET_DB_ID		ID of the target database for which rows of the source DB tables will be "marked for deletion"</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>945</width>
-      <heigth>178</heigth>
+      <width>935</width>
+      <heigth>164</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -1129,8 +1147,8 @@ This job has parameters:
     <notepad>
       <note>Get the "last successful load" timestamp for the specified "target" DB database
 and assign it to variable QF_CDC_LAST_LOAD_UTC. </note>
-      <xloc>512</xloc>
-      <yloc>304</yloc>
+      <xloc>528</xloc>
+      <yloc>272</yloc>
       <width>474</width>
       <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
@@ -1149,12 +1167,11 @@ and assign it to variable QF_CDC_LAST_LOAD_UTC. </note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Create list of all tables from "source" DBs to compare with tables in the specified
-"target" DB.</note>
-      <xloc>512</xloc>
-      <yloc>592</yloc>
-      <width>484</width>
-      <heigth>38</heigth>
+      <note>Create list of tables from "source" DBs for which rows will be "marked for deletion".</note>
+      <xloc>528</xloc>
+      <yloc>576</yloc>
+      <width>501</width>
+      <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -1171,8 +1188,8 @@ and assign it to variable QF_CDC_LAST_LOAD_UTC. </note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Compute comparision statistics for each table that is archived/mirrored from a
-source DB to the specified target DB.  This sub-job is:
+      <note>Mark rows for deletion from each "source" table that is configured for this operation. 
+This sub-job is:
 
 	1.	***** RUN ONCE FOR EACH SOURCE/TARGET TABLE PAIR. *****
 
@@ -1183,9 +1200,9 @@ source DB to the specified target DB.  This sub-job is:
 
 	4.	Passed the target database connection parameters:
 			PARAM_DYN_DB_CONN_TARGET_DB_{HOST, PORT, ...}</note>
-      <xloc>512</xloc>
-      <yloc>656</yloc>
-      <width>470</width>
+      <xloc>528</xloc>
+      <yloc>624</yloc>
+      <width>511</width>
       <heigth>178</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -1205,7 +1222,7 @@ source DB to the specified target DB.  This sub-job is:
     <notepad>
       <note>Notify recipient(s) of SUCCESSFUL job execution.</note>
       <xloc>624</xloc>
-      <yloc>864</yloc>
+      <yloc>832</yloc>
       <width>294</width>
       <heigth>24</heigth>
       <fontname />
@@ -1226,7 +1243,7 @@ source DB to the specified target DB.  This sub-job is:
     <notepad>
       <note>Notify recipient(s) of FAILED job execution.</note>
       <xloc>624</xloc>
-      <yloc>928</yloc>
+      <yloc>896</yloc>
       <width>260</width>
       <heigth>24</heigth>
       <fontname />
@@ -1252,8 +1269,8 @@ source DB to the specified target DB.  This sub-job is:
 based on a single parameter:
 
 	PARAM_DB_ID = PARAM_TARGET_DB_ID</note>
-      <xloc>512</xloc>
-      <yloc>368</yloc>
+      <xloc>528</xloc>
+      <yloc>336</yloc>
       <width>387</width>
       <heigth>108</heigth>
       <fontname>Ubuntu</fontname>
@@ -1272,14 +1289,14 @@ based on a single parameter:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>The PDI variables QF_DYN_DB_CONN_DB_{HOST, PORT, ...} that were just set get over-written
-when jb_set_dynamic_db_connection_variables is executed again down lower in the call chain.
-Therefore, we define all of the PARAM_DYN_DB_CONN_TARGET_DB_* variables here, which
-do *not* get over-written. These variables are passed as parameters to jb_target-compare_table
-each time that job is executed below.</note>
-      <xloc>512</xloc>
-      <yloc>480</yloc>
-      <width>576</width>
+      <note>The PDI variables QF_DYN_DB_CONN_DB_{HOST, PORT, ...} that were just set get 
+over-written when jb_set_dynamic_db_connection_variables is executed again down
+lower in the call chain.Therefore, we define all of the PARAM_DYN_DB_CONN_TARGET_DB_*
+variables here, which do *not* get over-written. These variables are passed as parameters
+to jb_target-mark_rows_for_deletion-table each time that job is executed below.</note>
+      <xloc>528</xloc>
+      <yloc>464</yloc>
+      <width>545</width>
       <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
