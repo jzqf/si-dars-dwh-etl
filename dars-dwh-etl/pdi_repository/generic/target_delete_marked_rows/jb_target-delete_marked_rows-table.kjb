@@ -1,23 +1,23 @@
 <job>
-  <name>jb_psa-obo.passage_with_images-delete_marked_rows</name>
+  <name>jb_target-delete_marked_rows-table</name>
   <description />
   <extended_description />
   <job_version />
   <job_status>0</job_status>
-  <directory>/psa/custom</directory>
+  <directory>/generic/target_delete_marked_rows</directory>
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/10/21 19:59:17.277</modified_date>
+  <modified_date>2017/10/21 20:14:31.090</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CAN_DELETE_ROW_SOURCE_COLNAME</name>
-      <default_value>can_delete_row</default_value>
+      <default_value />
       <description>Column of source table that indicates if the row can be deleted immediately</description>
     </parameter>
     <parameter>
       <name>PARAM_SOURCE_DB_ID</name>
-      <default_value>2</default_value>
+      <default_value>-1</default_value>
       <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
     </parameter>
     <parameter>
@@ -32,7 +32,7 @@
     </parameter>
     <parameter>
       <name>PARAM_SOURCE_TABLE</name>
-      <default_value>passage</default_value>
+      <default_value>image</default_value>
       <description>Name of source table to mirror to target table</description>
     </parameter>
     <parameter>
@@ -47,20 +47,84 @@
     </parameter>
     <parameter>
       <name>PARAM_TARGET_SCHEMA</name>
-      <default_value>obo</default_value>
+      <default_value>passage</default_value>
       <description>Name of schema containing target table to update (not currently used)</description>
     </parameter>
     <parameter>
       <name>PARAM_TARGET_SCHEMA_TABLE</name>
-      <default_value>obo.passage_with_images</default_value>
+      <default_value>passage.passage</default_value>
       <description>${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</description>
     </parameter>
     <parameter>
       <name>PARAM_TARGET_TABLE</name>
-      <default_value>passage_with_images</default_value>
+      <default_value>image</default_value>
       <description>Name of target table to update (not currently used)</description>
     </parameter>
+    <parameter>
+      <name>PARAM_USE_CUSTOM_DELETE_ALGORITHM</name>
+      <default_value>N</default_value>
+      <description>"Y" if a custom DELETE algorithm shall be used for this table</description>
+    </parameter>
   </parameters>
+  <connection>
+    <name>generic_source_db</name>
+    <server />
+    <type>GENERIC</type>
+    <access>Native</access>
+    <database />
+    <port>-1</port>
+    <username>${PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME}</username>
+    <password>${PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD}</password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>CUSTOM_DRIVER_CLASS</code>
+        <attribute>${PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER}</attribute>
+      </attribute>
+      <attribute>
+        <code>CUSTOM_URL</code>
+        <attribute>${PARAM_DYN_DB_CONN_SOURCE_DB_URL}</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>-1</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
   <connection>
     <name>logging_db</name>
     <server>${QF_LOGGING_DB_HOST}</server>
@@ -89,57 +153,6 @@
       <attribute>
         <code>PORT_NUMBER</code>
         <attribute>${QF_LOGGING_DB_PORT}</attribute>
-      </attribute>
-      <attribute>
-        <code>PRESERVE_RESERVED_WORD_CASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>QUOTE_ALL_FIELDS</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>USE_POOLING</code>
-        <attribute>N</attribute>
-      </attribute>
-    </attributes>
-  </connection>
-  <connection>
-    <name>obo_opr_db</name>
-    <server>${QF_OBO_OPR_DB_HOST}</server>
-    <type>POSTGRESQL</type>
-    <access>Native</access>
-    <database>${QF_OBO_OPR_DB_DATABASE}</database>
-    <port>${QF_OBO_OPR_DB_PORT}</port>
-    <username>${QF_OBO_OPR_DB_USERNAME}</username>
-    <password>${QF_OBO_OPR_DB_PASSWORD}</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
-    <attributes>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>IS_CLUSTERED</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>PORT_NUMBER</code>
-        <attribute>${QF_OBO_OPR_DB_PORT}</attribute>
       </attribute>
       <attribute>
         <code>PRESERVE_RESERVED_WORD_CASE</code>
@@ -456,53 +469,10 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>32</xloc>
-      <yloc>256</yloc>
+      <yloc>224</yloc>
     </entry>
     <entry>
-      <name>Write To Log: Parameters</name>
-      <description />
-      <type>WRITE_TO_LOG</type>
-      <logmessage>PARAM_TABLE_META_ID                 = ${PARAM_TABLE_META_ID}
-PARAM_SOURCE_DB_ID                  = ${PARAM_SOURCE_DB_ID}
-PARAM_SOURCE_SCHEMA                 = ${PARAM_SOURCE_SCHEMA}
-PARAM_SOURCE_TABLE                  = ${PARAM_SOURCE_TABLE}
-PARAM_SOURCE_SCHEMA_TABLE           = ${PARAM_SOURCE_SCHEMA_TABLE}
-PARAM_CAN_DELETE_ROW_SOURCE_COLNAME = ${PARAM_CAN_DELETE_ROW_SOURCE_COLNAME}
-PARAM_TARGET_DB_ID                  = ${PARAM_TARGET_DB_ID}
-PARAM_TARGET_SCHEMA                 = ${PARAM_TARGET_SCHEMA}
-PARAM_TARGET_TABLE                  = ${PARAM_TARGET_TABLE}
-PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
-      <loglevel>Basic</loglevel>
-      <logsubject>Parameters received by jb_psa-obo.passage_with_images-delete_marked_rows</logsubject>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>176</xloc>
-      <yloc>256</yloc>
-    </entry>
-    <entry>
-      <name>Success</name>
-      <description />
-      <type>SUCCESS</type>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>176</xloc>
-      <yloc>480</yloc>
-    </entry>
-    <entry>
-      <name>Abort job</name>
-      <description />
-      <type>ABORT</type>
-      <message>Aborting from jb_psa-obo.passage_with_images-delete_marked_rows</message>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>672</xloc>
-      <yloc>368</yloc>
-    </entry>
-    <entry>
-      <name>jb_log_error - Error description</name>
+      <name>jb_log_error</name>
       <description />
       <type>JOB</type>
       <specification_method>rep_name</specification_method>
@@ -530,53 +500,286 @@ PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
         <parameter>
           <name>PARAM_ERROR_MESSAGE</name>
           <stream_name />
-          <value>Error in jb_psa-obo.passage_with_images-delete_marked_rows executing SQL to delete source rows associated with target table: ${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</value>
+          <value>Error in jb_target-delete_marked_rows-table executing SQL in job entry "Delete marked rows from specified table" for source table: ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</value>
         </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>480</xloc>
-      <yloc>368</yloc>
+      <xloc>384</xloc>
+      <yloc>672</yloc>
     </entry>
     <entry>
-      <name>Delete marked rows from source table(s)</name>
+      <name>Abort job</name>
+      <description />
+      <type>ABORT</type>
+      <message>Aborting job jb_target-delete_marked_rows-table</message>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>528</xloc>
+      <yloc>672</yloc>
+    </entry>
+    <entry>
+      <name>Write To Log: Parameters</name>
+      <description />
+      <type>WRITE_TO_LOG</type>
+      <logmessage>PARAM_TABLE_META_ID                 = ${PARAM_TABLE_META_ID}
+PARAM_USE_CUSTOM_DELETE_ALGORITHM   = ${PARAM_USE_CUSTOM_DELETE_ALGORITHM}
+PARAM_SOURCE_DB_ID                  = ${PARAM_SOURCE_DB_ID}
+PARAM_SOURCE_SCHEMA                 = ${PARAM_SOURCE_SCHEMA}
+PARAM_SOURCE_TABLE                  = ${PARAM_SOURCE_TABLE}
+PARAM_SOURCE_SCHEMA_TABLE           = ${PARAM_SOURCE_SCHEMA_TABLE}
+PARAM_CAN_DELETE_ROW_SOURCE_COLNAME = ${PARAM_CAN_DELETE_ROW_SOURCE_COLNAME}
+PARAM_TARGET_DB_ID                  = ${PARAM_TARGET_DB_ID}
+PARAM_TARGET_SCHEMA                 = ${PARAM_TARGET_SCHEMA}
+PARAM_TARGET_TABLE                  = ${PARAM_TARGET_TABLE}
+PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
+      <loglevel>Basic</loglevel>
+      <logsubject>Parameters passed to jb_target-delete_marked_rows-table</logsubject>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>160</xloc>
+      <yloc>224</yloc>
+    </entry>
+    <entry>
+      <name>Success</name>
+      <description />
+      <type>SUCCESS</type>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>160</xloc>
+      <yloc>768</yloc>
+    </entry>
+    <entry>
+      <name>Delete marked rows from specified table</name>
       <description />
       <type>SQL</type>
-      <sql>--DELETE FROM
---    passage.image 
---USING    -- POSTGRESQL-SPECIFIC: USING clause?
---    passage.passage 
---WHERE
---    image.passage_id = passage.passage_id 
---    AND passage.can_delete_row = true;
-
---DELETE FROM
---    ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
---WHERE
---	${PARAM_CAN_DELETE_ROW_SOURCE_COLNAME} = true
-
---UPDATE
---    ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE} 
---SET
---    ${PARAM_CAN_DELETE_ROW_SOURCE_COLNAME} = false
---WHERE
---    ${PARAM_CAN_DELETE_ROW_SOURCE_COLNAME} = true
-	</sql>
+      <sql>DELETE FROM
+    ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
+WHERE
+	${PARAM_CAN_DELETE_ROW_SOURCE_COLNAME} = true</sql>
       <useVariableSubstitution>T</useVariableSubstitution>
       <sqlfromfile>F</sqlfromfile>
       <sqlfilename />
       <sendOneStatement>T</sendOneStatement>
-      <connection>obo_opr_db</connection>
+      <connection>generic_source_db</connection>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>176</xloc>
-      <yloc>368</yloc>
+      <xloc>160</xloc>
+      <yloc>672</yloc>
+    </entry>
+    <entry>
+      <name>Use custom delete algorithm?</name>
+      <description />
+      <type>SIMPLE_EVAL</type>
+      <valuetype>variable</valuetype>
+      <fieldname />
+      <variablename>${PARAM_USE_CUSTOM_DELETE_ALGORITHM}</variablename>
+      <fieldtype>boolean</fieldtype>
+      <mask />
+      <comparevalue />
+      <minvalue />
+      <maxvalue />
+      <successcondition>equal</successcondition>
+      <successnumbercondition>equal</successnumbercondition>
+      <successbooleancondition>true</successbooleancondition>
+      <successwhenvarset>N</successwhenvarset>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>160</xloc>
+      <yloc>320</yloc>
+    </entry>
+    <entry>
+      <name>jb_set_dynamic_db_connection_variables</name>
+      <description />
+      <type>JOB</type>
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_set_dynamic_db_connection_variables</jobname>
+      <directory>/generic/dynamic_db_connections</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_DB_ID</name>
+          <stream_name />
+          <value>${PARAM_SOURCE_DB_ID}</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>160</xloc>
+      <yloc>416</yloc>
+    </entry>
+    <entry>
+      <name>Set PARAM_DYN_DB_CONN_SOURCE_DB_* variables</name>
+      <description />
+      <type>SET_VARIABLES</type>
+      <replacevars>Y</replacevars>
+      <filename />
+      <file_variable_type>JVM</file_variable_type>
+      <fields>
+        <field>
+          <variable_name>PARAM_DYN_DB_CONN_SOURCE_DB_HOST</variable_name>
+          <variable_value>${QF_DYN_DB_CONN_DB_HOST}</variable_value>
+          <variable_type>CURRENT_JOB</variable_type>
+        </field>
+        <field>
+          <variable_name>PARAM_DYN_DB_CONN_SOURCE_DB_PORT</variable_name>
+          <variable_value>${QF_DYN_DB_CONN_DB_PORT}</variable_value>
+          <variable_type>CURRENT_JOB</variable_type>
+        </field>
+        <field>
+          <variable_name>PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE</variable_name>
+          <variable_value>${QF_DYN_DB_CONN_DB_DATABASE}</variable_value>
+          <variable_type>CURRENT_JOB</variable_type>
+        </field>
+        <field>
+          <variable_name>PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME</variable_name>
+          <variable_value>${QF_DYN_DB_CONN_DB_USERNAME}</variable_value>
+          <variable_type>CURRENT_JOB</variable_type>
+        </field>
+        <field>
+          <variable_name>PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD</variable_name>
+          <variable_value>${QF_DYN_DB_CONN_DB_PASSWORD}</variable_value>
+          <variable_type>CURRENT_JOB</variable_type>
+        </field>
+        <field>
+          <variable_name>PARAM_DYN_DB_CONN_SOURCE_DB_URL</variable_name>
+          <variable_value>${QF_DYN_DB_CONN_DB_URL}</variable_value>
+          <variable_type>CURRENT_JOB</variable_type>
+        </field>
+        <field>
+          <variable_name>PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER</variable_name>
+          <variable_value>${QF_DYN_DB_CONN_DB_DRIVER}</variable_value>
+          <variable_type>CURRENT_JOB</variable_type>
+        </field>
+      </fields>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>160</xloc>
+      <yloc>544</yloc>
+    </entry>
+    <entry>
+      <name>DUMMY</name>
+      <description />
+      <type>SPECIAL</type>
+      <start>N</start>
+      <dummy>Y</dummy>
+      <repeat>N</repeat>
+      <schedulerType>0</schedulerType>
+      <intervalSeconds>0</intervalSeconds>
+      <intervalMinutes>60</intervalMinutes>
+      <hour>12</hour>
+      <minutes>0</minutes>
+      <weekDay>1</weekDay>
+      <DayOfMonth>1</DayOfMonth>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>384</xloc>
+      <yloc>544</yloc>
+    </entry>
+    <entry>
+      <name>DUMMY</name>
+      <description />
+      <type>SPECIAL</type>
+      <start>N</start>
+      <dummy>Y</dummy>
+      <repeat>N</repeat>
+      <schedulerType>0</schedulerType>
+      <intervalSeconds>0</intervalSeconds>
+      <intervalMinutes>60</intervalMinutes>
+      <hour>12</hour>
+      <minutes>0</minutes>
+      <weekDay>1</weekDay>
+      <DayOfMonth>1</DayOfMonth>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>1</nr>
+      <xloc>384</xloc>
+      <yloc>416</yloc>
+    </entry>
+    <entry>
+      <name>jb_target-delete_marked_rows-custom</name>
+      <description />
+      <type>JOB</type>
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_target-delete_marked_rows-custom</jobname>
+      <directory>${Internal.Entry.Current.Directory}</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>384</xloc>
+      <yloc>320</yloc>
+    </entry>
+    <entry>
+      <name>Abort job 2</name>
+      <description />
+      <type>ABORT</type>
+      <message>Aborting jb_target-delete_marked_rows-table: Error thrown in jb_target-delete_marked_rows-custom</message>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>560</xloc>
+      <yloc>320</yloc>
     </entry>
   </entries>
   <hops>
+    <hop>
+      <from>jb_log_error</from>
+      <to>Abort job</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
     <hop>
       <from>START</from>
       <to>Write To Log: Parameters</to>
@@ -587,25 +790,7 @@ PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>jb_log_error - Error description</from>
-      <to>Abort job</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>Write To Log: Parameters</from>
-      <to>Delete marked rows from source table(s)</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Delete marked rows from source table(s)</from>
+      <from>Delete marked rows from specified table</from>
       <to>Success</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -614,37 +799,124 @@ PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Delete marked rows from source table(s)</from>
-      <to>jb_log_error - Error description</to>
+      <from>Delete marked rows from specified table</from>
+      <to>jb_log_error</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>N</evaluation>
       <unconditional>N</unconditional>
     </hop>
+    <hop>
+      <from>jb_set_dynamic_db_connection_variables</from>
+      <to>Set PARAM_DYN_DB_CONN_SOURCE_DB_* variables</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Write To Log: Parameters</from>
+      <to>Use custom delete algorithm?</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Use custom delete algorithm?</from>
+      <to>jb_set_dynamic_db_connection_variables</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Set PARAM_DYN_DB_CONN_SOURCE_DB_* variables</from>
+      <to>DUMMY</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_set_dynamic_db_connection_variables</from>
+      <to>DUMMY</to>
+      <from_nr>0</from_nr>
+      <to_nr>1</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>DUMMY</from>
+      <to>Abort job</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>DUMMY</from>
+      <to>Abort job</to>
+      <from_nr>1</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>Use custom delete algorithm?</from>
+      <to>jb_target-delete_marked_rows-custom</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_target-delete_marked_rows-custom</from>
+      <to>Abort job 2</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Set PARAM_DYN_DB_CONN_SOURCE_DB_* variables</from>
+      <to>Delete marked rows from specified table</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
   </hops>
   <notepads>
     <notepad>
-      <note>This job executes a custom, table-specific algorithm to delete marked rows from the source tables that are associated with the PSA table:
+      <note>This job deletes "source" DB rows from a specified table in the source DB that have been "marked for deletion". This job has parameters:
 
-	obo.passage_with_images .
-
-This transformation has parameters:
-
-	PARAM_TABLE_META_ID						Primary key of etl.table_meta row for "source" table from which rows will be deleted
-	PARAM_SOURCE_DB_ID							ID the "source" database containing tables that are mirrored to a "target" database
-	PARAM_SOURCE_SCHEMA						Name of schema containing source table that is mirrored to target PSA table
-	PARAM_SOURCE_TABLE						Name of source table that is mirrored to target PSA table
-	PARAM_SOURCE_SCHEMA_TABLE				${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
-	PARAM_CAN_DELETE_ROW_SOURCE_COLNAME	Column of source table that indicates if the row can be deleted immediately
-	PARAM_TARGET_DB_ID							ID of the target database for which rows of the source DB tables will be deleted
-	PARAM_TARGET_SCHEMA						Name of schema containing target table that is mirrored to target PSA table (not currently used)
-	PARAM_TARGET_TABLE							Name of target table that is mirrored to target PSA table (not currently used)
-	PARAM_TARGET_SCHEMA_TABLE				${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</note>
+	PARAM_TABLE_META_ID							Primary key of etl.table_meta row for "source" table from which rows will be deleted
+	PARAM_USE_CUSTOM_DELETE_ALGORITHM			"Y" if a custom DELETE algorithm shall be used for this table
+	PARAM_SOURCE_DB_ID								ID the "source" database containing tables that are mirrored to a "target" database
+	PARAM_SOURCE_SCHEMA							Name of schema containing source table that is mirrored to target DB table
+	PARAM_SOURCE_TABLE							Name of source table that is mirrored to target DB table
+	PARAM_SOURCE_SCHEMA_TABLE					${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
+	PARAM_CAN_DELETE_ROW_SOURCE_COLNAME		Column of source table that indicates if the row can be deleted immediately
+	PARAM_TARGET_DB_ID								ID of the target database for which rows of the source DB tables will be deleted
+	PARAM_TARGET_SCHEMA							Name of schema containing the target table (not currently used)
+	PARAM_TARGET_TABLE								Name of target table (not currently used)
+	PARAM_TARGET_SCHEMA_TABLE					${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>885</width>
-      <heigth>234</heigth>
+      <width>843</width>
+      <heigth>192</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -661,12 +933,67 @@ This transformation has parameters:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>The error message set here will be
-sent out by e-mail by the root job.</note>
-      <xloc>400</xloc>
-      <yloc>432</yloc>
-      <width>211</width>
-      <heigth>38</heigth>
+      <note>This "Abort" is needed to
+tell the root calling job 
+that execution has failed.</note>
+      <xloc>480</xloc>
+      <yloc>736</yloc>
+      <width>157</width>
+      <heigth>52</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>This job sets the PDI variables:
+
+	QF_DYN_DB_CONN_DB_{HOST, PORT, ...}
+
+based on a single parameter:
+
+	PARAM_DB_ID = PARAM_SOURCE_DB_ID</note>
+      <xloc>512</xloc>
+      <yloc>384</yloc>
+      <width>274</width>
+      <heigth>108</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>"Dynamic" database connections, e.g., "generic_source_db", which is used below,
+expect the variables PARAM_DYN_DB_CONN_SOURCE_DB_* to be defined, where
+
+	* = HOST, PORT, DATABASE, USERNAME, PASSWORD, URL, DRIVER
+
+not the variables QF_DYN_DB_CONN_DB_* that were set above. Therefore, we define
+all of the PARAM_DYN_DB_CONN_SOURCE_DB_* variables here for use below.</note>
+      <xloc>512</xloc>
+      <yloc>512</yloc>
+      <width>507</width>
+      <heigth>108</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
