@@ -9,9 +9,19 @@
     <directory>/generic/target_mark_rows_for_deletion</directory>
     <parameters>
       <parameter>
+        <name>PARAM_CAN_DELETE_ROW_SCHEMA_NAME</name>
+        <default_value />
+        <description>Name of schema containing table ${PARAM_CAN_DELETE_ROW_TABLE_NAME}</description>
+      </parameter>
+      <parameter>
         <name>PARAM_CAN_DELETE_ROW_SOURCE_COLNAME</name>
         <default_value />
         <description>Column of source table that indicates if the row can be deleted immediately</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_CAN_DELETE_ROW_TABLE_NAME</name>
+        <default_value />
+        <description>Name of table from source DB to use *instead* of column PARAM_CAN_DELETE_ROW_SOURCE_COLNAME</description>
       </parameter>
       <parameter>
         <name>PARAM_CDC_LAST_LOAD_UTC</name>
@@ -107,6 +117,11 @@
         <name>PARAM_SOURCE_DB_ID</name>
         <default_value>-1</default_value>
         <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_SOURCE_INSERT_ID_COLNAME</name>
+        <default_value />
+        <description>Name of column acting as "insert_id" column of source table</description>
       </parameter>
       <parameter>
         <name>PARAM_SOURCE_SCHEMA</name>
@@ -564,7 +579,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/10/25 14:45:03.296</modified_date>
+    <modified_date>2017/10/25 16:06:26.817</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -600,16 +615,19 @@ This transformation and has parameters:
 	PARAM_SOURCE_DB_ID										ID the "source" database containing tables will be mirrored to a "target" database
 	PARAM_SOURCE_SCHEMA									Name of schema containing source table to compare to target table
 	PARAM_SOURCE_TABLE									Name of source table to compare to target table
+	PARAM_SOURCE_INSERT_ID_COLNAME						Name of column acting as "insert_id" column of source table
 	PARAM_LAST_UPDATED_ON_SOURCE_COLNAME			Column of source table that acts as a "last_updated_on" timestamp column
 	PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME	Column of source table that acts as a "row_can_be_deleted_from" timestamp column
 	PARAM_CAN_DELETE_ROW_SOURCE_COLNAME				Column of source table that indicates if the row can be deleted immediately
+	PARAM_CAN_DELETE_ROW_SCHEMA_NAME					Name of schema containing table ${PARAM_CAN_DELETE_ROW_TABLE_NAME}
+	PARAM_CAN_DELETE_ROW_TABLE_NAME					Name of table from source DB to use *instead* of column PARAM_CAN_DELETE_ROW_SOURCE_COLNAME
 	PARAM_TARGET_DB_ID										ID of the target database for which rows of the source DB tables will be "marked for deletion"
 	PARAM_TARGET_SCHEMA									Name of schema containing target table to compare with (not currently used)
 	PARAM_TARGET_TABLE										Name of target table to compare with (not currently used)</note>
-      <xloc>16</xloc>
+      <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>1011</width>
-      <heigth>514</heigth>
+      <width>1018</width>
+      <heigth>556</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -626,15 +644,106 @@ This transformation and has parameters:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>The query here to provide the source table
-column names must match the query in 
-"jb_target-mark_rows_for_deletion-table" from
-where this transformation is executed. See
-the comments in that job for an explanation.</note>
-      <xloc>704</xloc>
-      <yloc>688</yloc>
-      <width>288</width>
+      <note>|	Must use "generic_target_db"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+2.	Remove "-inject_meta" from name. Do this in Eclipse.
+
+3.	Remove mention of ETL metadata injects from header note.
+
+4.	Eliminate some parameters:
+
+?		PARAM_CAN_DELETE_ROW_SOURCE_COLNAME
+
+?		PARAM_DYN_DB_CONN_TARGET_DB_DATABASE
+		PARAM_DYN_DB_CONN_TARGET_DB_DRIVER
+		PARAM_DYN_DB_CONN_TARGET_DB_HOST
+		PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD
+		PARAM_DYN_DB_CONN_TARGET_DB_PORT
+		PARAM_DYN_DB_CONN_TARGET_DB_URL
+		PARAM_DYN_DB_CONN_TARGET_DB_USERNAME
+</note>
+      <xloc>960</xloc>
+      <yloc>656</yloc>
+      <width>484</width>
+      <heigth>334</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>12</fontsize>
+      <fontbold>Y</fontbold>
+      <fontitalic>Y</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Insert rows into the specified "can delete row" table to mark source table rows for deletion.
+This table is specified by parameters:
+
+	PARAM_CAN_DELETE_ROW_SCHEMA_NAME
+	PARAM_CAN_DELETE_ROW_TABLE_NAME</note>
+      <xloc>336</xloc>
+      <yloc>720</yloc>
+      <width>547</width>
       <heigth>80</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Create two fields:
+
+1.	Field named "${QF_CDR_TABLE_NAME_COLNAME}" containing the qualified name of the
+	table that will have rows marked for deletion, ${PARAM_SOURCE_SCHEMA_TABLE.}
+
+2.	Field named "${QF_CDR_INSERT_ID_COLNAME}" containing "insert_id" values from the
+	source database table for the rows to be marked for deletion.</note>
+      <xloc>336</xloc>
+      <yloc>576</yloc>
+      <width>548</width>
+      <heigth>108</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>TODO:	Must I do something similar for the "image" table, i.e.,
+		mark rows from that table for deletion also? Or is it better
+		to delete the "image" rows when the "passage_with_images"
+		rows are deleted (this will require a custom "delete" 
+		algorithm, of course, which I have not yet implemented)?
+		Let us take the second approach for now.</note>
+      <xloc>32</xloc>
+      <yloc>848</yloc>
+      <width>412</width>
+      <heigth>94</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -652,18 +761,26 @@ the comments in that job for an explanation.</note>
     </notepad>
   </notepads>
   <connection>
-    <name>etl_db</name>
-    <server>${QF_ETL_DB_HOST}</server>
-    <type>POSTGRESQL</type>
+    <name>generic_source_db</name>
+    <server />
+    <type>GENERIC</type>
     <access>Native</access>
-    <database>${QF_ETL_DB_DATABASE}</database>
-    <port>${QF_ETL_DB_PORT}</port>
-    <username>${QF_ETL_DB_USERNAME}</username>
-    <password>${QF_ETL_DB_PASSWORD}</password>
+    <database />
+    <port>-1</port>
+    <username>${PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME}</username>
+    <password>${PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD}</password>
     <servername />
     <data_tablespace />
     <index_tablespace />
     <attributes>
+      <attribute>
+        <code>CUSTOM_DRIVER_CLASS</code>
+        <attribute>${PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER}</attribute>
+      </attribute>
+      <attribute>
+        <code>CUSTOM_URL</code>
+        <attribute>${PARAM_DYN_DB_CONN_SOURCE_DB_URL}</attribute>
+      </attribute>
       <attribute>
         <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
         <attribute>N</attribute>
@@ -678,11 +795,11 @@ the comments in that job for an explanation.</note>
       </attribute>
       <attribute>
         <code>PORT_NUMBER</code>
-        <attribute>${QF_ETL_DB_PORT}</attribute>
+        <attribute>-1</attribute>
       </attribute>
       <attribute>
         <code>PRESERVE_RESERVED_WORD_CASE</code>
-        <attribute>N</attribute>
+        <attribute>Y</attribute>
       </attribute>
       <attribute>
         <code>QUOTE_ALL_FIELDS</code>
@@ -755,24 +872,24 @@ the comments in that job for an explanation.</note>
   </connection>
   <order>
     <hop>
-      <from>Source DB primary key column names</from>
-      <to>ETL Metadata Injection: tmplt_target-mark_rows_for_deletion-column</to>
+      <from>Get "insert_id" values for source DB table rows</from>
+      <to>Insert rows into the "can delete row" table</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>SELECT statement for source DB table</from>
-      <to>ETL Metadata Injection: tmplt_target-mark_rows_for_deletion-column</to>
-      <enabled>Y</enabled>
+      <from>Get "insert_id" values for source DB table rows</from>
+      <to>Write to log</to>
+      <enabled>N</enabled>
     </hop>
     <hop>
-      <from>Source DB "can_delete_row" column metadata</from>
-      <to>ETL Metadata Injection: tmplt_target-mark_rows_for_deletion-column</to>
-      <enabled>Y</enabled>
+      <from>Write to log</from>
+      <to>Insert rows into the "can delete row" table</to>
+      <enabled>N</enabled>
     </hop>
   </order>
   <step>
-    <name>ETL Metadata Injection: tmplt_target-mark_rows_for_deletion-column</name>
-    <type>MetaInject</type>
+    <name>Get "insert_id" values for source DB table rows</name>
+    <type>TableInput</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -781,68 +898,32 @@ the comments in that job for an explanation.</note>
       <method>none</method>
       <schema_name />
     </partitioning>
-    <specification_method>rep_name</specification_method>
-    <trans_object_id />
-    <trans_name>tmplt_target-mark_rows_for_deletion-column</trans_name>
-    <filename />
-    <directory_path>${Internal.Entry.Current.Directory}</directory_path>
-    <source_step />
-    <source_output_fields>    </source_output_fields>
-    <target_file />
-    <no_execution>N</no_execution>
-    <stream_source_step />
-    <stream_target_step />
-    <mappings>
-      <mapping>
-        <target_step_name>Update: Mark rows for deletion</target_step_name>
-        <target_attribute_key>UPDATE_LOOKUP</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Source DB "can_delete_row" column metadata</source_step>
-        <source_field>can_delete_row_col_name</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Update: Mark rows for deletion</target_step_name>
-        <target_attribute_key>KEY_CONDITION</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Source DB primary key column names</source_step>
-        <source_field>key_field_value_comparator</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Update: Mark rows for deletion</target_step_name>
-        <target_attribute_key>UPDATE_STREAM</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Source DB "can_delete_row" column metadata</source_step>
-        <source_field>true_field_name</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Update: Mark rows for deletion</target_step_name>
-        <target_attribute_key>KEY_LOOKUP</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Source DB primary key column names</source_step>
-        <source_field>source_key_col_name</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Get primary key column(s) from source DB table</target_step_name>
-        <target_attribute_key>SQL</target_attribute_key>
-        <target_detail>N</target_detail>
-        <source_step>SELECT statement for source DB table</source_step>
-        <source_field>select_source_rows_sql</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Update: Mark rows for deletion</target_step_name>
-        <target_attribute_key>KEY_STREAM</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Source DB primary key column names</source_step>
-        <source_field>source_key_col_name</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Update: Mark rows for deletion</target_step_name>
-        <target_attribute_key>KEY_STREAM2</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Source DB primary key column names</source_step>
-        <source_field>no_field</source_field>
-      </mapping>
-    </mappings>
+    <connection>generic_source_db</connection>
+    <sql>-- SELECT rows from source table to mark for deletion.
+-- The WHERE clause includes only rows that should have been archived/mirrored.
+-- Only source table rows that are *not* yet linked to a ${PARAM_CAN_DELETE_ROW_SCHEMA_NAME}.${PARAM_CAN_DELETE_ROW_TABLE_NAME} row
+-- are selected because only thoses rows need to have  a ${PARAM_CAN_DELETE_ROW_SCHEMA_NAME}.${PARAM_CAN_DELETE_ROW_TABLE_NAME} row
+-- created and linked to. This will avoid attempting to link a source row to more than once.
+-- ${PARAM_CAN_DELETE_ROW_SCHEMA_NAME}.${PARAM_CAN_DELETE_ROW_TABLE_NAME} row, which would cause problems.
+SELECT
+    src_tbl.${PARAM_SOURCE_INSERT_ID_COLNAME} AS "${QF_CDR_INSERT_ID_COLNAME}",
+    '${PARAM_SOURCE_SCHEMA_TABLE}' AS "${QF_CDR_TABLE_NAME_COLNAME}"
+FROM
+    ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE} src_tbl
+LEFT OUTER JOIN  -- An outer join is used here so that we can retrieve source table rows that are *not* linked to a "can delete row" table row.
+                 -- Certainly, this could be done differently without using an outer join, but that was the approach that seems most obvious.
+    ${PARAM_CAN_DELETE_ROW_SCHEMA_NAME}.${PARAM_CAN_DELETE_ROW_TABLE_NAME} cdr ON cdr.${QF_CDR_TABLE_NAME_COLNAME}='${PARAM_SOURCE_SCHEMA_TABLE}' AND 
+                                                                                  cdr.${QF_CDR_INSERT_ID_COLNAME}=src_tbl.${PARAM_SOURCE_INSERT_ID_COLNAME}
+WHERE
+    src_tbl.${PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME} + INTERVAL '${PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS} seconds' &lt; TIMESTAMP '${PARAM_CDC_LAST_LOAD_UTC}' 
+    AND cdr.${QF_CDR_INSERT_ID_COLNAME} IS NULL  -- Only select source table rows that are *not* yet linked to a "can delete row" table row
+ORDER BY
+    src_tbl.${PARAM_SOURCE_INSERT_ID_COLNAME}</sql>
+    <limit>0</limit>
+    <lookup />
+    <execute_each_row>N</execute_each_row>
+    <variables_active>Y</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
     <cluster_schema />
     <remotesteps>
       <input>
@@ -852,13 +933,13 @@ the comments in that job for an explanation.</note>
     </remotesteps>
     <GUI>
       <xloc>176</xloc>
-      <yloc>624</yloc>
+      <yloc>608</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>SELECT statement for source DB table</name>
-    <type>TableInput</type>
+    <name>Insert rows into the "can delete row" table</name>
+    <type>TableOutput</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -867,54 +948,25 @@ the comments in that job for an explanation.</note>
       <method>none</method>
       <schema_name />
     </partitioning>
-    <connection>etl_db</connection>
-    <sql>WITH
-    -- Create table with a string column that contains the primary key column(s) from the 
-    -- source (OBO) table:
-    select_list AS (
-        SELECT 
-            -- POSTGRESQL-SPECIFIC
-          --array_to_string(array_agg(source_column_name ORDER BY primary_key_column_order ASC), ',') AS "str_value"   &lt;- Why not use this?
-            array_to_string(array_agg(source_column_name ORDER BY column_meta_id ASC), ',') AS "str_value"
-        FROM 
-            etl.column_meta 
-        WHERE 
-            table_meta_id = ${PARAM_TABLE_META_ID} AND 
-            is_primary_key_column = true 
-    ),
-    -- Create table with a string column that contains the "ORDER BY" clause. 
-    -- This consists of the column(s) that make up the primary key for the 
-    -- source (OBO) table.
-    orderby_list AS (
-        SELECT 
-           -- POSTGRESQL-SPECIFIC
-            array_to_string(array_agg(source_column_name ORDER BY primary_key_column_order ASC), ',') AS "str_value"
-        FROM 
-            etl.column_meta 
-        WHERE 
-            table_meta_id = ${PARAM_TABLE_META_ID} AND 
-            is_primary_key_column = true
-    )
-SELECT
-    -- Create SELECT statement to select rows from source (OBO) table to mark for deletion.
-    -- The WHERE clause includes only rows that should have been archived/mirrored.
-    -- Only select rows with "can_delete_row" column = false because only thoses rows need to have this column updated to true.
-    -- This will greatly reduce the number of rows selected here if the rows with "can_delete_row" are not currently being deleted.
-    'SELECT ' || CAST(select_list.str_value AS VARCHAR) || 
-    ' FROM ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE} ' || 
-    'WHERE ${PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME} + INTERVAL ''${PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS} seconds'' &lt; TIMESTAMP ''${PARAM_CDC_LAST_LOAD_UTC}'' ' ||
-    ' AND ${PARAM_CAN_DELETE_ROW_SOURCE_COLNAME}=false ' ||
-    'ORDER BY ' || CAST(orderby_list.str_value AS VARCHAR) 
-    AS "select_source_rows_sql" 
-FROM
-    select_list
-CROSS JOIN
-    orderby_list</sql>
-    <limit>0</limit>
-    <lookup />
-    <execute_each_row>N</execute_each_row>
-    <variables_active>Y</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
+    <connection>generic_source_db</connection>
+    <schema>${PARAM_CAN_DELETE_ROW_SCHEMA_NAME}</schema>
+    <table>${PARAM_CAN_DELETE_ROW_TABLE_NAME}</table>
+    <commit>1000</commit>
+    <truncate>N</truncate>
+    <ignore_errors>N</ignore_errors>
+    <use_batch>Y</use_batch>
+    <specify_fields>N</specify_fields>
+    <partitioning_enabled>N</partitioning_enabled>
+    <partitioning_field />
+    <partitioning_daily>N</partitioning_daily>
+    <partitioning_monthly>Y</partitioning_monthly>
+    <tablename_in_field>N</tablename_in_field>
+    <tablename_field />
+    <tablename_in_table>Y</tablename_in_table>
+    <return_keys>N</return_keys>
+    <return_field />
+    <fields>
+    </fields>
     <cluster_schema />
     <remotesteps>
       <input>
@@ -923,14 +975,14 @@ CROSS JOIN
       </output>
     </remotesteps>
     <GUI>
-      <xloc>528</xloc>
-      <yloc>528</yloc>
+      <xloc>176</xloc>
+      <yloc>736</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Source DB "can_delete_row" column metadata</name>
-    <type>TableInput</type>
+    <name>Write to log</name>
+    <type>WriteToLog</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -939,21 +991,19 @@ CROSS JOIN
       <method>none</method>
       <schema_name />
     </partitioning>
-    <connection>etl_db</connection>
-    <sql>SELECT
-    source_column_name AS "can_delete_row_col_name",
-    -- This is a "constant" stream that is used to assign "true" to the "can_delete_row" column.
-    'true_field' AS "true_field_name" 
-FROM 
-    etl.column_meta 
-WHERE 
-    table_meta_id = ${PARAM_TABLE_META_ID} AND 
-    is_can_delete_row_column = true</sql>
-    <limit>0</limit>
-    <lookup />
-    <execute_each_row>N</execute_each_row>
-    <variables_active>Y</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
+    <loglevel>log_level_basic</loglevel>
+    <displayHeader>Y</displayHeader>
+    <limitRows>N</limitRows>
+    <limitRowsNumber>0</limitRowsNumber>
+    <logmessage>tr_target-mark_rows_for_deletion-inject_meta-table:</logmessage>
+    <fields>
+      <field>
+        <name>qualified_table_name</name>
+      </field>
+      <field>
+        <name>insert_id</name>
+      </field>
+    </fields>
     <cluster_schema />
     <remotesteps>
       <input>
@@ -962,52 +1012,8 @@ WHERE
       </output>
     </remotesteps>
     <GUI>
-      <xloc>528</xloc>
-      <yloc>624</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Source DB primary key column names</name>
-    <type>TableInput</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <connection>etl_db</connection>
-    <sql>SELECT
-    source_column_name AS "source_key_col_name",
-    '=' AS "key_field_value_comparator",
-    -- "Stream field2" is not used in the "Update" step. Nevertheless, we must set 
-    -- it to something or an error is thrown during ETL metadata injection. The
-    -- only solution I have found is to inject an empty string for this field.
-    '' AS "no_field" 
-FROM 
-    etl.column_meta 
-WHERE 
-    table_meta_id = ${PARAM_TABLE_META_ID} AND 
-    is_primary_key_column = true
-ORDER BY 
-    primary_key_column_order</sql>
-    <limit>0</limit>
-    <lookup />
-    <execute_each_row>N</execute_each_row>
-    <variables_active>Y</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>528</xloc>
-      <yloc>720</yloc>
+      <xloc>96</xloc>
+      <yloc>672</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
