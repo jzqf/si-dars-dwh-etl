@@ -8,17 +8,32 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/10/26 12:15:03.597</modified_date>
+  <modified_date>2017/10/26 14:07:30.544</modified_date>
   <parameters>
+    <parameter>
+      <name>PARAM_CAN_DELETE_ROW_SCHEMA_NAME</name>
+      <default_value />
+      <description>Name of schema containing table ${PARAM_CAN_DELETE_ROW_TABLE_NAME}</description>
+    </parameter>
     <parameter>
       <name>PARAM_CAN_DELETE_ROW_SOURCE_COLNAME</name>
       <default_value />
       <description>Column of source table that indicates if the row can be deleted immediately</description>
     </parameter>
     <parameter>
+      <name>PARAM_CAN_DELETE_ROW_TABLE_NAME</name>
+      <default_value />
+      <description>Name of table from source DB to use *instead* of column PARAM_CAN_DELETE_ROW_SOURCE_COLNAME</description>
+    </parameter>
+    <parameter>
       <name>PARAM_SOURCE_DB_ID</name>
       <default_value>-1</default_value>
       <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_SOURCE_INSERT_ID_COLNAME</name>
+      <default_value />
+      <description>Name of column acting as "insert_id" column of source table</description>
     </parameter>
     <parameter>
       <name>PARAM_SOURCE_SCHEMA</name>
@@ -469,7 +484,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>32</xloc>
-      <yloc>224</yloc>
+      <yloc>256</yloc>
     </entry>
     <entry>
       <name>jb_log_error</name>
@@ -508,7 +523,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>384</xloc>
-      <yloc>672</yloc>
+      <yloc>704</yloc>
     </entry>
     <entry>
       <name>Abort job</name>
@@ -519,7 +534,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>528</xloc>
-      <yloc>672</yloc>
+      <yloc>704</yloc>
     </entry>
     <entry>
       <name>Log: Parameters</name>
@@ -531,7 +546,10 @@ PARAM_SOURCE_DB_ID                  = ${PARAM_SOURCE_DB_ID}
 PARAM_SOURCE_SCHEMA                 = ${PARAM_SOURCE_SCHEMA}
 PARAM_SOURCE_TABLE                  = ${PARAM_SOURCE_TABLE}
 PARAM_SOURCE_SCHEMA_TABLE           = ${PARAM_SOURCE_SCHEMA_TABLE}
+PARAM_SOURCE_INSERT_ID_COLNAME      = ${PARAM_SOURCE_INSERT_ID_COLNAME}
 PARAM_CAN_DELETE_ROW_SOURCE_COLNAME = ${PARAM_CAN_DELETE_ROW_SOURCE_COLNAME}
+PARAM_CAN_DELETE_ROW_SCHEMA_NAME    = ${PARAM_CAN_DELETE_ROW_SCHEMA_NAME}
+PARAM_CAN_DELETE_ROW_TABLE_NAME     = ${PARAM_CAN_DELETE_ROW_TABLE_NAME}
 PARAM_TARGET_DB_ID                  = ${PARAM_TARGET_DB_ID}
 PARAM_TARGET_SCHEMA                 = ${PARAM_TARGET_SCHEMA}
 PARAM_TARGET_TABLE                  = ${PARAM_TARGET_TABLE}
@@ -542,7 +560,7 @@ PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>160</xloc>
-      <yloc>224</yloc>
+      <yloc>256</yloc>
     </entry>
     <entry>
       <name>Success</name>
@@ -552,7 +570,7 @@ PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>160</xloc>
-      <yloc>768</yloc>
+      <yloc>800</yloc>
     </entry>
     <entry>
       <name>Delete marked rows from specified table</name>
@@ -571,7 +589,7 @@ WHERE
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>160</xloc>
-      <yloc>672</yloc>
+      <yloc>704</yloc>
     </entry>
     <entry>
       <name>Use custom delete algorithm?</name>
@@ -593,7 +611,7 @@ WHERE
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>160</xloc>
-      <yloc>320</yloc>
+      <yloc>352</yloc>
     </entry>
     <entry>
       <name>jb_set_dynamic_db_connection_variables</name>
@@ -632,7 +650,7 @@ WHERE
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>160</xloc>
-      <yloc>416</yloc>
+      <yloc>448</yloc>
     </entry>
     <entry>
       <name>Set PARAM_DYN_DB_CONN_SOURCE_DB_* variables</name>
@@ -682,7 +700,7 @@ WHERE
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>160</xloc>
-      <yloc>544</yloc>
+      <yloc>576</yloc>
     </entry>
     <entry>
       <name>DUMMY</name>
@@ -702,7 +720,7 @@ WHERE
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>384</xloc>
-      <yloc>544</yloc>
+      <yloc>576</yloc>
     </entry>
     <entry>
       <name>DUMMY</name>
@@ -722,7 +740,7 @@ WHERE
       <draw>Y</draw>
       <nr>1</nr>
       <xloc>384</xloc>
-      <yloc>416</yloc>
+      <yloc>448</yloc>
     </entry>
     <entry>
       <name>jb_target-delete_marked_rows-custom</name>
@@ -756,7 +774,7 @@ WHERE
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>384</xloc>
-      <yloc>320</yloc>
+      <yloc>352</yloc>
     </entry>
     <entry>
       <name>Abort job 2</name>
@@ -767,7 +785,7 @@ WHERE
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>560</xloc>
-      <yloc>320</yloc>
+      <yloc>352</yloc>
     </entry>
   </entries>
   <hops>
@@ -908,15 +926,18 @@ WHERE
 	PARAM_SOURCE_SCHEMA							Name of schema containing source table that is mirrored to target DB table
 	PARAM_SOURCE_TABLE							Name of source table that is mirrored to target DB table
 	PARAM_SOURCE_SCHEMA_TABLE					${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
+	PARAM_SOURCE_INSERT_ID_COLNAME				Name of column acting as "insert_id" column of source table
 	PARAM_CAN_DELETE_ROW_SOURCE_COLNAME		Column of source table that indicates if the row can be deleted immediately
+	PARAM_CAN_DELETE_ROW_SCHEMA_NAME			Name of schema containing table ${PARAM_CAN_DELETE_ROW_TABLE_NAME}
+	PARAM_CAN_DELETE_ROW_TABLE_NAME			Name of table from source DB to use *instead* of column PARAM_CAN_DELETE_ROW_SOURCE_COLNAME
 	PARAM_TARGET_DB_ID								ID of the target database for which rows of the source DB tables will be deleted
 	PARAM_TARGET_SCHEMA							Name of schema containing the target table (not currently used)
 	PARAM_TARGET_TABLE								Name of target table (not currently used)
 	PARAM_TARGET_SCHEMA_TABLE					${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>843</width>
-      <heigth>192</heigth>
+      <width>970</width>
+      <heigth>234</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -937,7 +958,7 @@ WHERE
 tell the root calling job 
 that execution has failed.</note>
       <xloc>480</xloc>
-      <yloc>736</yloc>
+      <yloc>768</yloc>
       <width>157</width>
       <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
@@ -964,7 +985,7 @@ based on a single parameter:
 
 	PARAM_DB_ID = PARAM_SOURCE_DB_ID</note>
       <xloc>512</xloc>
-      <yloc>384</yloc>
+      <yloc>416</yloc>
       <width>274</width>
       <heigth>108</heigth>
       <fontname>Ubuntu</fontname>
@@ -991,7 +1012,7 @@ expect the variables PARAM_DYN_DB_CONN_SOURCE_DB_* to be defined, where
 not the variables QF_DYN_DB_CONN_DB_* that were set above. Therefore, we define
 all of the PARAM_DYN_DB_CONN_SOURCE_DB_* variables here for use below.</note>
       <xloc>512</xloc>
-      <yloc>512</yloc>
+      <yloc>544</yloc>
       <width>507</width>
       <heigth>108</heigth>
       <fontname>Ubuntu</fontname>
