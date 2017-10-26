@@ -564,7 +564,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/10/25 15:15:22.252</modified_date>
+    <modified_date>2017/10/26 09:57:07.160</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -626,15 +626,20 @@ This transformation and has parameters:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>The query here to provide the source table
-column names must match the query in 
-"jb_target-mark_rows_for_deletion-table" from
-where this transformation is executed. See
-the comments in that job for an explanation.</note>
-      <xloc>720</xloc>
-      <yloc>704</yloc>
-      <width>288</width>
-      <heigth>80</heigth>
+      <note>The query in this job entry must match the query in step 
+"Are primary key columns configured for this table?" in
+the parent job, "jb_target-mark_rows_for_deletion-table".
+This is to avoid a PDI runtime error that will occur here if
+an empty stream is sent to an "ETL Metadata Injection"
+step. To avoid that possibility here, we check in the parent
+job that the metadata is available before executing this
+transformation. This should never occur in practice, but
+we check anyway in order to provide a clear warning
+message, rather than letting PDI choke on this problem.</note>
+      <xloc>368</xloc>
+      <yloc>720</yloc>
+      <width>348</width>
+      <heigth>150</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -949,7 +954,7 @@ CROSS JOIN
       </output>
     </remotesteps>
     <GUI>
-      <xloc>560</xloc>
+      <xloc>208</xloc>
       <yloc>544</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1032,8 +1037,8 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>560</xloc>
-      <yloc>736</yloc>
+      <xloc>208</xloc>
+      <yloc>752</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

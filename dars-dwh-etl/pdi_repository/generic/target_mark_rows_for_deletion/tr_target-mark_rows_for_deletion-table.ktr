@@ -1,6 +1,6 @@
 <transformation>
   <info>
-    <name>tr_target-mark_rows_for_deletion-inject_meta-table</name>
+    <name>tr_target-mark_rows_for_deletion-table</name>
     <description />
     <extended_description />
     <trans_version />
@@ -579,14 +579,14 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/10/25 16:06:26.817</modified_date>
+    <modified_date>2017/10/26 09:04:22.232</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>This transformation uses ETL Metadata injection to "mark rows for deletion" from a table in a source database that have been archived/mirrored to a target table in a
-target database.   This transformation creates rows in the source DB table:
+      <note>This transformation "marks rows for deletion" from a table in a source database that have been archived/mirrored to a target table in a target database.  ETL Metadata injection
+is *not* used, but it *is*assumed that the source table has an "insert_id"column. This transformation creates rows in the source DB table:
 
 	PARAM_CAN_DELETE_ROW_SCHEMA_NAME.PARAM_CAN_DELETE_ROW_TABLE_NAME
 
@@ -605,20 +605,20 @@ This transformation and has parameters:
 	PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD			for source DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_SOURCE_DB_URL					for source DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_SOURCE_DB_DRIVE					for source DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_TARGET_DB_HOST					for target DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_TARGET_DB_PORT					for target DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_TARGET_DB_DATABASE				for target DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_TARGET_DB_USERNAME			for target DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD			for target DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_TARGET_DB_DRIVER				for target DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_TARGET_DB_URL					for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_HOST					for target DB "dynamic" database connections (not currently used)
+	PARAM_DYN_DB_CONN_TARGET_DB_PORT					for target DB "dynamic" database connections (not currently used)
+	PARAM_DYN_DB_CONN_TARGET_DB_DATABASE				for target DB "dynamic" database connections (not currently used)
+	PARAM_DYN_DB_CONN_TARGET_DB_USERNAME			for target DB "dynamic" database connections (not currently used)
+	PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD			for target DB "dynamic" database connections (not currently used)
+	PARAM_DYN_DB_CONN_TARGET_DB_DRIVER				for target DB "dynamic" database connections (not currently used)
+	PARAM_DYN_DB_CONN_TARGET_DB_URL					for target DB "dynamic" database connections (not currently used)
 	PARAM_SOURCE_DB_ID										ID the "source" database containing tables will be mirrored to a "target" database
 	PARAM_SOURCE_SCHEMA									Name of schema containing source table to compare to target table
 	PARAM_SOURCE_TABLE									Name of source table to compare to target table
 	PARAM_SOURCE_INSERT_ID_COLNAME						Name of column acting as "insert_id" column of source table
 	PARAM_LAST_UPDATED_ON_SOURCE_COLNAME			Column of source table that acts as a "last_updated_on" timestamp column
 	PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME	Column of source table that acts as a "row_can_be_deleted_from" timestamp column
-	PARAM_CAN_DELETE_ROW_SOURCE_COLNAME				Column of source table that indicates if the row can be deleted immediately
+	PARAM_CAN_DELETE_ROW_SOURCE_COLNAME				Column of source table that indicates if the row can be deleted immediately (not currently used)
 	PARAM_CAN_DELETE_ROW_SCHEMA_NAME					Name of schema containing table ${PARAM_CAN_DELETE_ROW_TABLE_NAME}
 	PARAM_CAN_DELETE_ROW_TABLE_NAME					Name of table from source DB to use *instead* of column PARAM_CAN_DELETE_ROW_SOURCE_COLNAME
 	PARAM_TARGET_DB_ID										ID of the target database for which rows of the source DB tables will be "marked for deletion"
@@ -626,50 +626,12 @@ This transformation and has parameters:
 	PARAM_TARGET_TABLE										Name of target table to compare with (not currently used)</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>1018</width>
+      <width>1041</width>
       <heigth>556</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>|	Must use "generic_target_db"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-2.	Remove "-inject_meta" from name. Do this in Eclipse.
-
-3.	Remove mention of ETL metadata injects from header note.
-
-4.	Eliminate some parameters:
-
-?		PARAM_CAN_DELETE_ROW_SOURCE_COLNAME
-
-?		PARAM_DYN_DB_CONN_TARGET_DB_DATABASE
-		PARAM_DYN_DB_CONN_TARGET_DB_DRIVER
-		PARAM_DYN_DB_CONN_TARGET_DB_HOST
-		PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD
-		PARAM_DYN_DB_CONN_TARGET_DB_PORT
-		PARAM_DYN_DB_CONN_TARGET_DB_URL
-		PARAM_DYN_DB_CONN_TARGET_DB_USERNAME
-</note>
-      <xloc>960</xloc>
-      <yloc>656</yloc>
-      <width>484</width>
-      <heigth>334</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>12</fontsize>
-      <fontbold>Y</fontbold>
-      <fontitalic>Y</fontitalic>
       <fontcolorred>0</fontcolorred>
       <fontcolorgreen>0</fontcolorgreen>
       <fontcolorblue>0</fontcolorblue>
@@ -995,7 +957,7 @@ ORDER BY
     <displayHeader>Y</displayHeader>
     <limitRows>N</limitRows>
     <limitRowsNumber>0</limitRowsNumber>
-    <logmessage>tr_target-mark_rows_for_deletion-inject_meta-table:</logmessage>
+    <logmessage>tr_target-mark_rows_for_deletion-table:</logmessage>
     <fields>
       <field>
         <name>qualified_table_name</name>
