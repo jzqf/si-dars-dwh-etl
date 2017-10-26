@@ -1,22 +1,102 @@
 <transformation>
   <info>
-    <name>tr_psa-obo.passage_with_images-mark_rows_for_deletion</name>
+    <name>tr_target-mark_rows_for_deletion-table</name>
     <description />
     <extended_description />
     <trans_version />
     <trans_type>Normal</trans_type>
     <trans_status>0</trans_status>
-    <directory>/psa/custom</directory>
+    <directory>/generic/target_mark_rows_for_deletion</directory>
     <parameters>
       <parameter>
+        <name>PARAM_CAN_DELETE_ROW_SCHEMA_NAME</name>
+        <default_value />
+        <description>Name of schema containing table ${PARAM_CAN_DELETE_ROW_TABLE_NAME}</description>
+      </parameter>
+      <parameter>
         <name>PARAM_CAN_DELETE_ROW_SOURCE_COLNAME</name>
-        <default_value>can_delete_row</default_value>
+        <default_value />
         <description>Column of source table that indicates if the row can be deleted immediately</description>
       </parameter>
       <parameter>
+        <name>PARAM_CAN_DELETE_ROW_TABLE_NAME</name>
+        <default_value />
+        <description>Name of table from source DB to use *instead* of column PARAM_CAN_DELETE_ROW_SOURCE_COLNAME</description>
+      </parameter>
+      <parameter>
         <name>PARAM_CDC_LAST_LOAD_UTC</name>
-        <default_value>2017.09.24 10:00:00</default_value>
+        <default_value>1900.01.01 00:00:00</default_value>
         <description>Timestamp of last successful load from the source database</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE</name>
+        <default_value />
+        <description>for source DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER</name>
+        <default_value />
+        <description>for source DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_HOST</name>
+        <default_value />
+        <description>for source DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD</name>
+        <default_value />
+        <description>for source DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_PORT</name>
+        <default_value />
+        <description>for source DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_URL</name>
+        <default_value />
+        <description>for source DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME</name>
+        <default_value />
+        <description>for source DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_TARGET_DB_DATABASE</name>
+        <default_value />
+        <description>for target DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_TARGET_DB_DRIVER</name>
+        <default_value />
+        <description>for target DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_TARGET_DB_HOST</name>
+        <default_value />
+        <description>for target DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD</name>
+        <default_value />
+        <description>for target DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_TARGET_DB_PORT</name>
+        <default_value />
+        <description>for target DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_TARGET_DB_URL</name>
+        <default_value />
+        <description>for target DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_TARGET_DB_USERNAME</name>
+        <default_value />
+        <description>for target DB "dynamic" database connections</description>
       </parameter>
       <parameter>
         <name>PARAM_LAST_UPDATED_ON_SOURCE_COLNAME</name>
@@ -25,43 +105,58 @@
       </parameter>
       <parameter>
         <name>PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS</name>
-        <default_value>10000000</default_value>
+        <default_value>2000000000</default_value>
         <description>Number of seconds after the "row_can_be_deleted_from" timestamp that an archived row can be deleted</description>
       </parameter>
       <parameter>
         <name>PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME</name>
-        <default_value>row_can_be_deleted_from</default_value>
+        <default_value />
         <description>Column of source table that acts as a "row_can_be_deleted_from" timestamp column</description>
       </parameter>
       <parameter>
         <name>PARAM_SOURCE_DB_ID</name>
-        <default_value>2</default_value>
-        <description>ID of database containing the source tables to mirror</description>
+        <default_value>-1</default_value>
+        <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_SOURCE_INSERT_ID_COLNAME</name>
+        <default_value />
+        <description>Name of column acting as "insert_id" column of source table</description>
       </parameter>
       <parameter>
         <name>PARAM_SOURCE_SCHEMA</name>
         <default_value>passage</default_value>
-        <description>Schema of mirrored table to compare</description>
+        <description>Name of schema containing source table to mirror to target table</description>
       </parameter>
       <parameter>
         <name>PARAM_SOURCE_TABLE</name>
-        <default_value>passage</default_value>
-        <description>Name of mirrored table to compare</description>
+        <default_value>passage_status</default_value>
+        <description>Name of source table to mirror to target table</description>
       </parameter>
       <parameter>
         <name>PARAM_TABLE_META_ID</name>
-        <default_value>38</default_value>
+        <default_value>623</default_value>
         <description>Primary key of etl.table_meta row for "source" table from which rows will be deleted</description>
       </parameter>
       <parameter>
+        <name>PARAM_TARGET_DB_ID</name>
+        <default_value>-1</default_value>
+        <description>ID of the target database for which rows of the source DB tables will be "marked for deletion"</description>
+      </parameter>
+      <parameter>
         <name>PARAM_TARGET_SCHEMA</name>
-        <default_value>obo</default_value>
+        <default_value>passage</default_value>
         <description>Name of schema containing target table to update (not currently used)</description>
       </parameter>
       <parameter>
         <name>PARAM_TARGET_TABLE</name>
-        <default_value>passage_with_images</default_value>
+        <default_value>passage_status</default_value>
         <description>Name of target table to update (not currently used)</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_USE_CUSTOM_DELETE_ALGORITHM</name>
+        <default_value>N</default_value>
+        <description>"Y" if a custom DELETE algorithm shall be used for this table</description>
       </parameter>
     </parameters>
     <log>
@@ -484,55 +579,55 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/09/24 09:57:12.996</modified_date>
+    <modified_date>2017/10/26 09:04:22.232</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>Load the primary key column(s) from the source (OBO) database table for the rows to be marked for deletion.</note>
-      <xloc>304</xloc>
-      <yloc>304</yloc>
-      <width>653</width>
-      <heigth>24</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>This transformation executes a custom, table-specific algorithm to mark rows for deletion from the table:
+      <note>This transformation "marks rows for deletion" from a table in a source database that have been archived/mirrored to a target table in a target database.  ETL Metadata injection
+is *not* used, but it *is*assumed that the source table has an "insert_id"column. This transformation creates rows in the source DB table:
 
-	obo.passage_with_images .
+	PARAM_CAN_DELETE_ROW_SCHEMA_NAME.PARAM_CAN_DELETE_ROW_TABLE_NAME
 
-in the source (OBO) database that have been archived/mirrored to a target (PSA) database. This transformation has parameters:
+to mark rows of the source table for deletion. This is a generic algorithm that can work with *any* table, as long as the necessary metadata is available to be injected.
+This transformation and has parameters:
 
-	PARAM_CDC_LAST_LOAD_UTC						Timestamp for when the target PSA DB mirror tables were last updated from the source DB.
-														Used to ensure that we do not delete rows that are not yet fully archived/mirrored.
-	PARAM_TABLE_META_ID							Primary key of etl.table_meta row for "source" table from which rows will be deleted
-	PARAM_SOURCE_DB_ID								ID the "source" database containing tables that are mirrored to a "target" database
-	PARAM_SOURCE_SCHEMA							Name of schema containing source table that is mirrored to target PSA table
-	PARAM_SOURCE_TABLE							Name of source table that is mirrored to target PSA table
-	PARAM_TARGET_SCHEMA							Name of schema containing target table that is mirrored to target PSA table (not currently used)
-	PARAM_TARGET_TABLE								Name of target table that is mirrored to target PSA table (not currently used)
-	PARAM_LAST_UPDATED_ON_SOURCE_COLNAME	Column of source table that acts as a "last_updated_on" timestamp column
-	PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS	Number of seconds after the "row_can_be_deleted_from" timestamp that an archived row can be deleted
+	PARAM_CDC_LAST_LOAD_UTC								Timestamp for when the target DB was most recently updated successfully
+																Used to ensure that we do not delete rows that are not yet fully archived/mirrored.
+	PARAM_TABLE_META_ID									Primary key of etl.table_meta row for "source" table from which rows will be deleted
+	PARAM_USE_CUSTOM_DELETE_ALGORITHM					"Y" if a custom DELETE algorithm shall be used for this table
+	PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS			Number of seconds after the "row_can_be_deleted_from" timestamp that an archived row can be deleted
+	PARAM_DYN_DB_CONN_SOURCE_DB_HOST					for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_PORT					for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE			for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME			for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD			for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_URL					for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_DRIVE					for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_HOST					for target DB "dynamic" database connections (not currently used)
+	PARAM_DYN_DB_CONN_TARGET_DB_PORT					for target DB "dynamic" database connections (not currently used)
+	PARAM_DYN_DB_CONN_TARGET_DB_DATABASE				for target DB "dynamic" database connections (not currently used)
+	PARAM_DYN_DB_CONN_TARGET_DB_USERNAME			for target DB "dynamic" database connections (not currently used)
+	PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD			for target DB "dynamic" database connections (not currently used)
+	PARAM_DYN_DB_CONN_TARGET_DB_DRIVER				for target DB "dynamic" database connections (not currently used)
+	PARAM_DYN_DB_CONN_TARGET_DB_URL					for target DB "dynamic" database connections (not currently used)
+	PARAM_SOURCE_DB_ID										ID the "source" database containing tables will be mirrored to a "target" database
+	PARAM_SOURCE_SCHEMA									Name of schema containing source table to compare to target table
+	PARAM_SOURCE_TABLE									Name of source table to compare to target table
+	PARAM_SOURCE_INSERT_ID_COLNAME						Name of column acting as "insert_id" column of source table
+	PARAM_LAST_UPDATED_ON_SOURCE_COLNAME			Column of source table that acts as a "last_updated_on" timestamp column
 	PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME	Column of source table that acts as a "row_can_be_deleted_from" timestamp column
-	PARAM_CAN_DELETE_ROW_SOURCE_COLNAME		Column of source table that indicates if the row can be deleted immediately</note>
+	PARAM_CAN_DELETE_ROW_SOURCE_COLNAME				Column of source table that indicates if the row can be deleted immediately (not currently used)
+	PARAM_CAN_DELETE_ROW_SCHEMA_NAME					Name of schema containing table ${PARAM_CAN_DELETE_ROW_TABLE_NAME}
+	PARAM_CAN_DELETE_ROW_TABLE_NAME					Name of table from source DB to use *instead* of column PARAM_CAN_DELETE_ROW_SOURCE_COLNAME
+	PARAM_TARGET_DB_ID										ID of the target database for which rows of the source DB tables will be "marked for deletion"
+	PARAM_TARGET_SCHEMA									Name of schema containing target table to compare with (not currently used)
+	PARAM_TARGET_TABLE										Name of target table to compare with (not currently used)</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>963</width>
-      <heigth>262</heigth>
+      <width>1041</width>
+      <heigth>556</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -549,11 +644,15 @@ in the source (OBO) database that have been archived/mirrored to a target (PSA) 
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Set the "can_delete_row" column for the table to "true".</note>
-      <xloc>304</xloc>
-      <yloc>464</yloc>
-      <width>336</width>
-      <heigth>24</heigth>
+      <note>Insert rows into the specified "can delete row" table to mark source table rows for deletion.
+This table is specified by parameters:
+
+	PARAM_CAN_DELETE_ROW_SCHEMA_NAME
+	PARAM_CAN_DELETE_ROW_TABLE_NAME</note>
+      <xloc>336</xloc>
+      <yloc>720</yloc>
+      <width>547</width>
+      <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -570,12 +669,17 @@ in the source (OBO) database that have been archived/mirrored to a target (PSA) 
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Create constant field named "true_field" containing Y/true that will be assigned to the
-"can_delete_row" column of the table.</note>
-      <xloc>304</xloc>
-      <yloc>384</yloc>
-      <width>511</width>
-      <heigth>38</heigth>
+      <note>Create two fields:
+
+1.	Field named "${QF_CDR_TABLE_NAME_COLNAME}" containing the qualified name of the
+	table that will have rows marked for deletion, ${PARAM_SOURCE_SCHEMA_TABLE.}
+
+2.	Field named "${QF_CDR_INSERT_ID_COLNAME}" containing "insert_id" values from the
+	source database table for the rows to be marked for deletion.</note>
+      <xloc>336</xloc>
+      <yloc>576</yloc>
+      <width>548</width>
+      <heigth>108</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -592,15 +696,15 @@ in the source (OBO) database that have been archived/mirrored to a target (PSA) 
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Must I do something similar for the "image" table, i.e.,
-mark rows from that table for deletion also? Or is it better
-to deete the "image" rows when the "passage_with_images"
-rows are deleted (this will require a custom "delete" 
-algorithm, of course, which I have not yet implemented)?
-Let us take the second approach for now.</note>
-      <xloc>272</xloc>
-      <yloc>528</yloc>
-      <width>360</width>
+      <note>TODO:	Must I do something similar for the "image" table, i.e.,
+		mark rows from that table for deletion also? Or is it better
+		to delete the "image" rows when the "passage_with_images"
+		rows are deleted (this will require a custom "delete" 
+		algorithm, of course, which I have not yet implemented)?
+		Let us take the second approach for now.</note>
+      <xloc>32</xloc>
+      <yloc>848</yloc>
+      <width>412</width>
       <heigth>94</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -618,6 +722,65 @@ Let us take the second approach for now.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
   </notepads>
+  <connection>
+    <name>generic_source_db</name>
+    <server />
+    <type>GENERIC</type>
+    <access>Native</access>
+    <database />
+    <port>-1</port>
+    <username>${PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME}</username>
+    <password>${PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD}</password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>CUSTOM_DRIVER_CLASS</code>
+        <attribute>${PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER}</attribute>
+      </attribute>
+      <attribute>
+        <code>CUSTOM_URL</code>
+        <attribute>${PARAM_DYN_DB_CONN_SOURCE_DB_URL}</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>-1</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
   <connection>
     <name>logging_db</name>
     <server>${QF_LOGGING_DB_HOST}</server>
@@ -669,109 +832,25 @@ Let us take the second approach for now.</note>
       </attribute>
     </attributes>
   </connection>
-  <connection>
-    <name>obo_opr_db</name>
-    <server>${QF_OBO_OPR_DB_HOST}</server>
-    <type>POSTGRESQL</type>
-    <access>Native</access>
-    <database>${QF_OBO_OPR_DB_DATABASE}</database>
-    <port>${QF_OBO_OPR_DB_PORT}</port>
-    <username>${QF_OBO_OPR_DB_USERNAME}</username>
-    <password>${QF_OBO_OPR_DB_PASSWORD}</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
-    <attributes>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>IS_CLUSTERED</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>PORT_NUMBER</code>
-        <attribute>${QF_OBO_OPR_DB_PORT}</attribute>
-      </attribute>
-      <attribute>
-        <code>PRESERVE_RESERVED_WORD_CASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>QUOTE_ALL_FIELDS</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>USE_POOLING</code>
-        <attribute>N</attribute>
-      </attribute>
-    </attributes>
-  </connection>
   <order>
     <hop>
-      <from>Create field "true_field"</from>
-      <to>Update: Mark rows for deletion</to>
+      <from>Get "insert_id" values for source DB table rows</from>
+      <to>Insert rows into the "can delete row" table</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Get primary key column(s) from source (OBO) DB table</from>
-      <to>Create field "true_field"</to>
-      <enabled>Y</enabled>
+      <from>Get "insert_id" values for source DB table rows</from>
+      <to>Write to log</to>
+      <enabled>N</enabled>
+    </hop>
+    <hop>
+      <from>Write to log</from>
+      <to>Insert rows into the "can delete row" table</to>
+      <enabled>N</enabled>
     </hop>
   </order>
   <step>
-    <name>Create field "true_field"</name>
-    <type>Constant</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <fields>
-      <field>
-        <name>true_field</name>
-        <type>Boolean</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif>Y</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-    </fields>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>160</xloc>
-      <yloc>384</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Get primary key column(s) from source (OBO) DB table</name>
+    <name>Get "insert_id" values for source DB table rows</name>
     <type>TableInput</type>
     <description />
     <distribute>Y</distribute>
@@ -781,20 +860,27 @@ Let us take the second approach for now.</note>
       <method>none</method>
       <schema_name />
     </partitioning>
-    <connection>obo_opr_db</connection>
-    <sql>-- SELECT statement to select rows from source table to mark for deletion.
+    <connection>generic_source_db</connection>
+    <sql>-- SELECT rows from source table to mark for deletion.
 -- The WHERE clause includes only rows that should have been archived/mirrored.
--- Only rows with "can_delete_row" column = false are selected because only thoses rows need to have this column updated to true.
--- This will greatly reduce the number of rows selected here if the rows with "can_delete_row" are not currently being deleted.
+-- Only source table rows that are *not* yet linked to a ${PARAM_CAN_DELETE_ROW_SCHEMA_NAME}.${PARAM_CAN_DELETE_ROW_TABLE_NAME} row
+-- are selected because only thoses rows need to have  a ${PARAM_CAN_DELETE_ROW_SCHEMA_NAME}.${PARAM_CAN_DELETE_ROW_TABLE_NAME} row
+-- created and linked to. This will avoid attempting to link a source row to more than once.
+-- ${PARAM_CAN_DELETE_ROW_SCHEMA_NAME}.${PARAM_CAN_DELETE_ROW_TABLE_NAME} row, which would cause problems.
 SELECT
-    passage_id 
+    src_tbl.${PARAM_SOURCE_INSERT_ID_COLNAME} AS "${QF_CDR_INSERT_ID_COLNAME}",
+    '${PARAM_SOURCE_SCHEMA_TABLE}' AS "${QF_CDR_TABLE_NAME_COLNAME}"
 FROM
-    passage.passage 
+    ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE} src_tbl
+LEFT OUTER JOIN  -- An outer join is used here so that we can retrieve source table rows that are *not* linked to a "can delete row" table row.
+                 -- Certainly, this could be done differently without using an outer join, but that was the approach that seems most obvious.
+    ${PARAM_CAN_DELETE_ROW_SCHEMA_NAME}.${PARAM_CAN_DELETE_ROW_TABLE_NAME} cdr ON cdr.${QF_CDR_TABLE_NAME_COLNAME}='${PARAM_SOURCE_SCHEMA_TABLE}' AND 
+                                                                                  cdr.${QF_CDR_INSERT_ID_COLNAME}=src_tbl.${PARAM_SOURCE_INSERT_ID_COLNAME}
 WHERE
-    ${PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME} + INTERVAL '${PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS} seconds' &lt; TIMESTAMP '${PARAM_CDC_LAST_LOAD_UTC}' 
-    AND ${PARAM_CAN_DELETE_ROW_SOURCE_COLNAME}=false 
+    src_tbl.${PARAM_ROW_CAN_BE_DELETED_FROM_SOURCE_COLNAME} + INTERVAL '${PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS} seconds' &lt; TIMESTAMP '${PARAM_CDC_LAST_LOAD_UTC}' 
+    AND cdr.${QF_CDR_INSERT_ID_COLNAME} IS NULL  -- Only select source table rows that are *not* yet linked to a "can delete row" table row
 ORDER BY
-    passage_id</sql>
+    src_tbl.${PARAM_SOURCE_INSERT_ID_COLNAME}</sql>
     <limit>0</limit>
     <lookup />
     <execute_each_row>N</execute_each_row>
@@ -808,14 +894,14 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>160</xloc>
-      <yloc>304</yloc>
+      <xloc>176</xloc>
+      <yloc>608</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Update: Mark rows for deletion</name>
-    <type>Update</type>
+    <name>Insert rows into the "can delete row" table</name>
+    <type>TableOutput</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -824,26 +910,25 @@ ORDER BY
       <method>none</method>
       <schema_name />
     </partitioning>
-    <connection>obo_opr_db</connection>
-    <skip_lookup>Y</skip_lookup>
-    <commit>100</commit>
+    <connection>generic_source_db</connection>
+    <schema>${PARAM_CAN_DELETE_ROW_SCHEMA_NAME}</schema>
+    <table>${PARAM_CAN_DELETE_ROW_TABLE_NAME}</table>
+    <commit>1000</commit>
+    <truncate>N</truncate>
+    <ignore_errors>N</ignore_errors>
     <use_batch>Y</use_batch>
-    <error_ignored>N</error_ignored>
-    <ignore_flag_field />
-    <lookup>
-      <schema>${PARAM_SOURCE_SCHEMA}</schema>
-      <table>${PARAM_SOURCE_TABLE}</table>
-      <key>
-        <name>passage_id</name>
-        <field>passage_id</field>
-        <condition>=</condition>
-        <name2 />
-      </key>
-      <value>
-        <name>can_delete_row</name>
-        <rename>true_field</rename>
-      </value>
-    </lookup>
+    <specify_fields>N</specify_fields>
+    <partitioning_enabled>N</partitioning_enabled>
+    <partitioning_field />
+    <partitioning_daily>N</partitioning_daily>
+    <partitioning_monthly>Y</partitioning_monthly>
+    <tablename_in_field>N</tablename_in_field>
+    <tablename_field />
+    <tablename_in_table>Y</tablename_in_table>
+    <return_keys>N</return_keys>
+    <return_field />
+    <fields>
+    </fields>
     <cluster_schema />
     <remotesteps>
       <input>
@@ -852,8 +937,45 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>160</xloc>
-      <yloc>464</yloc>
+      <xloc>176</xloc>
+      <yloc>736</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Write to log</name>
+    <type>WriteToLog</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <loglevel>log_level_basic</loglevel>
+    <displayHeader>Y</displayHeader>
+    <limitRows>N</limitRows>
+    <limitRowsNumber>0</limitRowsNumber>
+    <logmessage>tr_target-mark_rows_for_deletion-table:</logmessage>
+    <fields>
+      <field>
+        <name>qualified_table_name</name>
+      </field>
+      <field>
+        <name>insert_id</name>
+      </field>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>96</xloc>
+      <yloc>672</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
