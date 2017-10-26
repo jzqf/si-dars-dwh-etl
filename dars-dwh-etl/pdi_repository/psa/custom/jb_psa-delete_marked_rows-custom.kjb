@@ -8,17 +8,32 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/10/21 19:53:24.223</modified_date>
+  <modified_date>2017/10/26 15:08:42.183</modified_date>
   <parameters>
+    <parameter>
+      <name>PARAM_CAN_DELETE_ROW_SCHEMA_NAME</name>
+      <default_value />
+      <description>Name of schema containing table ${PARAM_CAN_DELETE_ROW_TABLE_NAME}</description>
+    </parameter>
     <parameter>
       <name>PARAM_CAN_DELETE_ROW_SOURCE_COLNAME</name>
       <default_value>can_delete_row</default_value>
       <description>Column of source table that indicates if the row can be deleted immediately</description>
     </parameter>
     <parameter>
+      <name>PARAM_CAN_DELETE_ROW_TABLE_NAME</name>
+      <default_value />
+      <description>Name of table from source DB to use *instead* of column PARAM_CAN_DELETE_ROW_SOURCE_COLNAME</description>
+    </parameter>
+    <parameter>
       <name>PARAM_SOURCE_DB_ID</name>
-      <default_value>2</default_value>
+      <default_value>-1</default_value>
       <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_SOURCE_INSERT_ID_COLNAME</name>
+      <default_value />
+      <description>Name of column acting as "insert_id" column of source table</description>
     </parameter>
     <parameter>
       <name>PARAM_SOURCE_SCHEMA</name>
@@ -405,10 +420,10 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>32</xloc>
-      <yloc>240</yloc>
+      <yloc>288</yloc>
     </entry>
     <entry>
-      <name>Log parameters</name>
+      <name>Log: Parameters</name>
       <description />
       <type>WRITE_TO_LOG</type>
       <logmessage>PARAM_TABLE_META_ID                 = ${PARAM_TABLE_META_ID}
@@ -416,7 +431,10 @@ PARAM_SOURCE_DB_ID                  = ${PARAM_SOURCE_DB_ID}
 PARAM_SOURCE_SCHEMA                 = ${PARAM_SOURCE_SCHEMA}
 PARAM_SOURCE_TABLE                  = ${PARAM_SOURCE_TABLE}
 PARAM_SOURCE_SCHEMA_TABLE           = ${PARAM_SOURCE_SCHEMA_TABLE}
+PARAM_SOURCE_INSERT_ID_COLNAME      = ${PARAM_SOURCE_INSERT_ID_COLNAME}
 PARAM_CAN_DELETE_ROW_SOURCE_COLNAME = ${PARAM_CAN_DELETE_ROW_SOURCE_COLNAME}
+PARAM_CAN_DELETE_ROW_SCHEMA_NAME    = ${PARAM_CAN_DELETE_ROW_SCHEMA_NAME}
+PARAM_CAN_DELETE_ROW_TABLE_NAME     = ${PARAM_CAN_DELETE_ROW_TABLE_NAME}
 PARAM_TARGET_DB_ID                  = ${PARAM_TARGET_DB_ID}
 PARAM_TARGET_SCHEMA                 = ${PARAM_TARGET_SCHEMA}
 PARAM_TARGET_TABLE                  = ${PARAM_TARGET_TABLE}
@@ -427,7 +445,7 @@ PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>160</xloc>
-      <yloc>240</yloc>
+      <yloc>288</yloc>
     </entry>
     <entry>
       <name>Abort job - Untreated case</name>
@@ -438,7 +456,7 @@ PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>160</xloc>
-      <yloc>672</yloc>
+      <yloc>720</yloc>
     </entry>
     <entry>
       <name>jb_log_error - Untreated case</name>
@@ -477,7 +495,7 @@ PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>160</xloc>
-      <yloc>576</yloc>
+      <yloc>624</yloc>
     </entry>
     <entry>
       <name>Abort job - 1</name>
@@ -488,7 +506,7 @@ PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>1</nr>
       <xloc>752</xloc>
-      <yloc>368</yloc>
+      <yloc>416</yloc>
     </entry>
     <entry>
       <name>Target table = obo.passage_with_images ?</name>
@@ -510,7 +528,7 @@ PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>160</xloc>
-      <yloc>368</yloc>
+      <yloc>416</yloc>
     </entry>
     <entry>
       <name>jb_psa-delete_marked_rows-obo.passage_with_images</name>
@@ -544,13 +562,13 @@ PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>480</xloc>
-      <yloc>368</yloc>
+      <yloc>416</yloc>
     </entry>
   </entries>
   <hops>
     <hop>
       <from>START</from>
-      <to>Log parameters</to>
+      <to>Log: Parameters</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -567,7 +585,7 @@ PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>Log parameters</from>
+      <from>Log: Parameters</from>
       <to>Target table = obo.passage_with_images ?</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -609,20 +627,23 @@ PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
 it runs an appropriate job/transformation to perform a table-specific CUSTOM treatment for the table that is specified by this job's parameters. This 
 job has parameters:
 
-	PARAM_TABLE_META_ID						Primary key of etl.table_meta row for "source" table from which rows will be deleted
-	PARAM_SOURCE_DB_ID							ID the "source" database containing tables that are mirrored to a "target" database
-	PARAM_SOURCE_SCHEMA						Name of schema containing source table that is mirrored to target PSA table
-	PARAM_SOURCE_TABLE						Name of source table that is mirrored to target PSA table
-	PARAM_SOURCE_SCHEMA_TABLE				${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
-	PARAM_CAN_DELETE_ROW_SOURCE_COLNAME	Column of source table that indicates if the row can be deleted immediately
-	PARAM_TARGET_DB_ID							ID of the target database for which rows of the source DB tables will be deleted
-	PARAM_TARGET_SCHEMA						Name of schema containing target table that is mirrored to target PSA table (not currently used)
-	PARAM_TARGET_TABLE							Name of target table that is mirrored to target PSA table (not currently used)
-	PARAM_TARGET_SCHEMA_TABLE				${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</note>
+	PARAM_TABLE_META_ID							Primary key of etl.table_meta row for "source" table from which rows will be deleted
+	PARAM_SOURCE_DB_ID								ID the "source" database containing tables that are mirrored to a "target" database
+	PARAM_SOURCE_SCHEMA							Name of schema containing source table that is mirrored to target DB table
+	PARAM_SOURCE_TABLE							Name of source table that is mirrored to target DB table
+	PARAM_SOURCE_SCHEMA_TABLE					${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
+	PARAM_SOURCE_INSERT_ID_COLNAME				Name of column acting as "insert_id" column of source table
+	PARAM_CAN_DELETE_ROW_SOURCE_COLNAME		Column of source table that indicates if the row can be deleted immediately
+	PARAM_CAN_DELETE_ROW_SCHEMA_NAME			Name of schema containing table ${PARAM_CAN_DELETE_ROW_TABLE_NAME}
+	PARAM_CAN_DELETE_ROW_TABLE_NAME			Name of table from source DB to use *instead* of column PARAM_CAN_DELETE_ROW_SOURCE_COLNAME
+	PARAM_TARGET_DB_ID								ID of the target database for which rows of the source DB tables will be deleted
+	PARAM_TARGET_SCHEMA							Name of schema containing the target table (not currently used)
+	PARAM_TARGET_TABLE								Name of target table (not currently used)
+	PARAM_TARGET_SCHEMA_TABLE					${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>885</width>
-      <heigth>206</heigth>
+      <width>970</width>
+      <heigth>248</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -647,7 +668,7 @@ than one "source" DB. It is also conceivable, though not likely, that the same s
 with more than one target table, in which case the combination of "source schema name" and "source table
 name" will not identify a unique etl.table_meta row.</note>
       <xloc>256</xloc>
-      <yloc>224</yloc>
+      <yloc>272</yloc>
       <width>651</width>
       <heigth>108</heigth>
       <fontname>Ubuntu</fontname>
