@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/10/26 15:32:46.938</modified_date>
+  <modified_date>2017/10/27 08:45:47.112</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CAN_DELETE_ROW_SCHEMA_NAME</name>
@@ -579,7 +579,7 @@ PARAM_TARGET_TABLE                           = ${PARAM_TARGET_TABLE}</logmessage
       <yloc>432</yloc>
     </entry>
     <entry>
-      <name>Log: Using PARAM_CAN_DELETE_ROW_SOURCE_COLNAME</name>
+      <name>Log: Using column-based algorithm</name>
       <description />
       <type>WRITE_TO_LOG</type>
       <logmessage>Delegating to: tr_psa-mark_rows_for_deletion-obo.passage_with_images-column</logmessage>
@@ -592,7 +592,7 @@ PARAM_TARGET_TABLE                           = ${PARAM_TARGET_TABLE}</logmessage
       <yloc>624</yloc>
     </entry>
     <entry>
-      <name>Log: Using PARAM_CAN_DELETE_ROW_TABLE_NAME</name>
+      <name>Log: Using table-based algorithm</name>
       <description />
       <type>WRITE_TO_LOG</type>
       <logmessage>Delegating to: tr_psa-mark_rows_for_deletion-obo.passage_with_images-table</logmessage>
@@ -753,7 +753,7 @@ PARAM_TARGET_TABLE                           = ${PARAM_TARGET_TABLE}</logmessage
         <parameter>
           <name>PARAM_ERROR_MESSAGE</name>
           <stream_name />
-          <value>PARAM_CAN_DELETE_ROW_TABLE_NAME is set, but PARAM_CAN_DELETE_ROW_SCHEMA_NAME is *not*  set</value>
+          <value>PARAM_CAN_DELETE_ROW_TABLE_NAME is set, but PARAM_CAN_DELETE_ROW_SCHEMA_NAME is *not*  set for source table: ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</value>
         </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
@@ -883,7 +883,7 @@ PARAM_TARGET_TABLE                           = ${PARAM_TARGET_TABLE}</logmessage
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>Log: Using PARAM_CAN_DELETE_ROW_SOURCE_COLNAME</from>
+      <from>Log: Using column-based algorithm</from>
       <to>tr_psa-mark_rows_for_deletion-obo.passage_with_images-column</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -892,7 +892,7 @@ PARAM_TARGET_TABLE                           = ${PARAM_TARGET_TABLE}</logmessage
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>Log: Using PARAM_CAN_DELETE_ROW_TABLE_NAME</from>
+      <from>Log: Using table-based algorithm</from>
       <to>tr_psa-mark_rows_for_deletion-obo.passage_with_images-table</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -938,7 +938,7 @@ PARAM_TARGET_TABLE                           = ${PARAM_TARGET_TABLE}</logmessage
     </hop>
     <hop>
       <from>PARAM_CAN_DELETE_ROW_SCHEMA_NAME is set?</from>
-      <to>Log: Using PARAM_CAN_DELETE_ROW_TABLE_NAME</to>
+      <to>Log: Using table-based algorithm</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -974,7 +974,7 @@ PARAM_TARGET_TABLE                           = ${PARAM_TARGET_TABLE}</logmessage
     </hop>
     <hop>
       <from>PARAM_CAN_DELETE_ROW_SOURCE_COLNAME is set?</from>
-      <to>Log: Using PARAM_CAN_DELETE_ROW_SOURCE_COLNAME</to>
+      <to>Log: Using column-based algorithm</to>
       <from_nr>1</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -1069,7 +1069,7 @@ PARAM_CAN_DELETE_ROW_SCHEMA_NAME
     <notepad>
       <note>Mark source rows for deletion
 by setting the "can delete row" 
-*column* of the *source table*:</note>
+*column* of the *source table*.</note>
       <xloc>288</xloc>
       <yloc>688</yloc>
       <width>194</width>
@@ -1092,7 +1092,7 @@ by setting the "can delete row"
     <notepad>
       <note>Mark source rows for deletion
 by creating *rows* of the
-"can delete row" *table*:</note>
+"can delete row" *table*.</note>
       <xloc>576</xloc>
       <yloc>688</yloc>
       <width>187</width>

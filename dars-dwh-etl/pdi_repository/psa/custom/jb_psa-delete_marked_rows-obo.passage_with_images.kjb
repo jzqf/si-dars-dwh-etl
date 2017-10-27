@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/10/26 15:31:33.551</modified_date>
+  <modified_date>2017/10/27 12:39:16.304</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CAN_DELETE_ROW_SCHEMA_NAME</name>
@@ -470,7 +470,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>176</xloc>
+      <xloc>368</xloc>
       <yloc>304</yloc>
     </entry>
     <entry>
@@ -491,36 +491,15 @@ PARAM_TARGET_SCHEMA                 = ${PARAM_TARGET_SCHEMA}
 PARAM_TARGET_TABLE                  = ${PARAM_TARGET_TABLE}
 PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
       <loglevel>Basic</loglevel>
-      <logsubject>Parameters received by jb_psa-delete_marked_rows-obo.passage_with_images</logsubject>
+      <logsubject>Parameters received by ${Internal.Job.Name}</logsubject>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>320</xloc>
+      <xloc>496</xloc>
       <yloc>304</yloc>
     </entry>
     <entry>
-      <name>Success</name>
-      <description />
-      <type>SUCCESS</type>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>320</xloc>
-      <yloc>528</yloc>
-    </entry>
-    <entry>
-      <name>Abort job</name>
-      <description />
-      <type>ABORT</type>
-      <message>Aborting from jb_psa-delete_marked_rows-obo.passage_with_images</message>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>816</xloc>
-      <yloc>416</yloc>
-    </entry>
-    <entry>
-      <name>jb_log_error - Error description</name>
+      <name>jb_log_error - 1</name>
       <description />
       <type>JOB</type>
       <specification_method>rep_name</specification_method>
@@ -548,33 +527,37 @@ PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
         <parameter>
           <name>PARAM_ERROR_MESSAGE</name>
           <stream_name />
-          <value>Error in jb_psa-delete_marked_rows-obo.passage_with_images executing SQL to delete source rows associated with target table: ${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</value>
+          <value>Error in ${Internal.Job.Name} executing column-based "delete marked rows" SQL to delete source rows associated with target table: ${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</value>
         </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>624</xloc>
-      <yloc>416</yloc>
+      <xloc>64</xloc>
+      <yloc>720</yloc>
     </entry>
     <entry>
-      <name>Delete marked rows from source table(s)</name>
+      <name>Delete marked rows from source table(s) - column</name>
       <description />
       <type>SQL</type>
-      <sql>--DELETE FROM
+      <sql>-- Delete passage.image rows:
+--DELETE FROM
 --    passage.image 
---USING    -- POSTGRESQL-SPECIFIC: USING clause?
+--USING    -- POSTGRESQL-SPECIFIC: USING clause? If you want to use standard SQL, use a sub-select here.
+--                                               See the PostgreSQL DELETE FROM documentation.
 --    passage.passage 
 --WHERE
 --    image.passage_id = passage.passage_id 
 --    AND passage.can_delete_row = true;
 
+-- Delete passage.passage rows:
 --DELETE FROM
 --    ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
 --WHERE
 --	${PARAM_CAN_DELETE_ROW_SOURCE_COLNAME} = true
 
+-- This is for testing only. It resets the "can delete row" column to "false" for passage.passage rows where it is currently "true".
 --UPDATE
 --    ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE} 
 --SET
@@ -590,8 +573,319 @@ PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>320</xloc>
-      <yloc>416</yloc>
+      <xloc>288</xloc>
+      <yloc>720</yloc>
+    </entry>
+    <entry>
+      <name>Success</name>
+      <description />
+      <type>SUCCESS</type>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>496</xloc>
+      <yloc>720</yloc>
+    </entry>
+    <entry>
+      <name>PARAM_CAN_DELETE_ROW_TABLE_NAME is set?</name>
+      <description />
+      <type>SIMPLE_EVAL</type>
+      <valuetype>variable</valuetype>
+      <fieldname />
+      <variablename>${PARAM_CAN_DELETE_ROW_TABLE_NAME}</variablename>
+      <fieldtype>string</fieldtype>
+      <mask />
+      <comparevalue />
+      <minvalue />
+      <maxvalue />
+      <successcondition>different</successcondition>
+      <successnumbercondition>equal</successnumbercondition>
+      <successbooleancondition>false</successbooleancondition>
+      <successwhenvarset>N</successwhenvarset>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>496</xloc>
+      <yloc>400</yloc>
+    </entry>
+    <entry>
+      <name>Log: Using column-based algorithm</name>
+      <description />
+      <type>WRITE_TO_LOG</type>
+      <logmessage>Executing column-based "delete marked rows" SQL to delete source rows associated with target table: ${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</logmessage>
+      <loglevel>Basic</loglevel>
+      <logsubject>${Internal.Job.Name}</logsubject>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>288</xloc>
+      <yloc>592</yloc>
+    </entry>
+    <entry>
+      <name>Log: Using table-based algorithm</name>
+      <description />
+      <type>WRITE_TO_LOG</type>
+      <logmessage>Executing table-based "delete marked rows" SQL to delete source rows associated with target table: ${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</logmessage>
+      <loglevel>Basic</loglevel>
+      <logsubject>${Internal.Job.Name}</logsubject>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>736</xloc>
+      <yloc>592</yloc>
+    </entry>
+    <entry>
+      <name>PARAM_CAN_DELETE_ROW_SCHEMA_NAME is set?</name>
+      <description />
+      <type>SIMPLE_EVAL</type>
+      <valuetype>variable</valuetype>
+      <fieldname />
+      <variablename>${PARAM_CAN_DELETE_ROW_SCHEMA_NAME}</variablename>
+      <fieldtype>string</fieldtype>
+      <mask />
+      <comparevalue />
+      <minvalue />
+      <maxvalue />
+      <successcondition>different</successcondition>
+      <successnumbercondition>equal</successnumbercondition>
+      <successbooleancondition>false</successbooleancondition>
+      <successwhenvarset>N</successwhenvarset>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>736</xloc>
+      <yloc>496</yloc>
+    </entry>
+    <entry>
+      <name>jb_log_error - 4</name>
+      <description />
+      <type>JOB</type>
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_log_error</jobname>
+      <directory>/generic</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_ERROR_MESSAGE</name>
+          <stream_name />
+          <value>PARAM_CAN_DELETE_ROW_TABLE_NAME is set, but PARAM_CAN_DELETE_ROW_SCHEMA_NAME is *not*  set for source table: ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>976</xloc>
+      <yloc>496</yloc>
+    </entry>
+    <entry>
+      <name>PARAM_CAN_DELETE_ROW_SOURCE_COLNAME is set?</name>
+      <description />
+      <type>SIMPLE_EVAL</type>
+      <valuetype>variable</valuetype>
+      <fieldname />
+      <variablename>${PARAM_CAN_DELETE_ROW_SOURCE_COLNAME}</variablename>
+      <fieldtype>string</fieldtype>
+      <mask />
+      <comparevalue />
+      <minvalue />
+      <maxvalue />
+      <successcondition>different</successcondition>
+      <successnumbercondition>equal</successnumbercondition>
+      <successbooleancondition>false</successbooleancondition>
+      <successwhenvarset>N</successwhenvarset>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>1</nr>
+      <xloc>288</xloc>
+      <yloc>496</yloc>
+    </entry>
+    <entry>
+      <name>jb_log_error - 3</name>
+      <description />
+      <type>JOB</type>
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_log_error</jobname>
+      <directory>/generic</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_ERROR_MESSAGE</name>
+          <stream_name />
+          <value>No "can_delete_row" column has been configured for source table: ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>2</nr>
+      <xloc>64</xloc>
+      <yloc>496</yloc>
+    </entry>
+    <entry>
+      <name>Abort job</name>
+      <description />
+      <type>ABORT</type>
+      <message>${QF_ABORT_JOB_MESSAGE}</message>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>1</nr>
+      <xloc>976</xloc>
+      <yloc>592</yloc>
+    </entry>
+    <entry>
+      <name>Abort job</name>
+      <description />
+      <type>ABORT</type>
+      <message>${QF_ABORT_JOB_MESSAGE}</message>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>2</nr>
+      <xloc>64</xloc>
+      <yloc>592</yloc>
+    </entry>
+    <entry>
+      <name>Delete marked rows from source table(s) - table</name>
+      <description />
+      <type>SQL</type>
+      <sql>
+-- TODO: All of the SQL in this step needs to be performed in a transaction.
+--       To execute this SQL in a transaction, we need to execute it somehow in a transformation (which supports transactions), 
+--       or use the Enterprise version of PDI, which supports transactions for jobs.
+
+-- Update the "row_deleted_on" column of the "can delete row" table rows to contain the current UTC timestamp.
+--UPDATE
+--    ${PARAM_CAN_DELETE_ROW_SCHEMA_NAME}.${PARAM_CAN_DELETE_ROW_TABLE_NAME} cdr_tbl 
+--SET
+--    ${QF_CDR_DELETED_ON_COLNAME}=CURRENT_TIMESTAMP AT TIME ZONE 'UTC' 
+--FROM
+--    ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE} src_tbl
+--WHERE
+--    cdr_tbl.${QF_CDR_TABLE_NAME_COLNAME}='${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}' AND
+--    cdr_tbl.${QF_CDR_INSERT_ID_COLNAME}=src_tbl.${PARAM_SOURCE_INSERT_ID_COLNAME};
+	
+-- Delete the passage.image rows related to the passage.passage rows:
+--WITH
+--    passages_to_delete AS (
+--        SELECT
+--            src_tbl.passage_id
+--        FROM
+--            ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE} src_tbl
+--        INNER JOIN
+--            ${PARAM_CAN_DELETE_ROW_SCHEMA_NAME}.${PARAM_CAN_DELETE_ROW_TABLE_NAME} cdr_tbl ON
+--                cdr_tbl.${QF_CDR_TABLE_NAME_COLNAME}='${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}' AND
+--                cdr_tbl.${QF_CDR_INSERT_ID_COLNAME}=src_tbl.${PARAM_SOURCE_INSERT_ID_COLNAME}
+--)
+--DELETE FROM
+--    passage.image i
+--USING    -- POSTGRESQL-SPECIFIC: USING clause? If you want to use standard SQL, use a sub-select here.
+--                                               See the PostgreSQL DELETE FROM documentation. 
+--    passages_to_delete
+--WHERE
+--    i.passage_id = passages_to_delete.passage_id;
+
+-- Delete the passage.passage rows:
+--DELETE FROM
+--    ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE} src_tbl
+--USING    -- POSTGRESQL-SPECIFIC: USING clause? If you want to use standard SQL, use a sub-select here.
+--                                               See the PostgreSQL DELETE FROM documentation.
+--    ${PARAM_CAN_DELETE_ROW_SCHEMA_NAME}.${PARAM_CAN_DELETE_ROW_TABLE_NAME} cdr_tbl
+--WHERE
+--    cdr_tbl.${QF_CDR_TABLE_NAME_COLNAME}='${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}' AND
+--    cdr_tbl.${QF_CDR_INSERT_ID_COLNAME}=src_tbl.${PARAM_SOURCE_INSERT_ID_COLNAME};
+
+-- This is for testing only. It deletes any "can delete row" table rows that are linked to the source table being treated here.
+--DELETE FROM
+--    ${PARAM_CAN_DELETE_ROW_SCHEMA_NAME}.${PARAM_CAN_DELETE_ROW_TABLE_NAME} cdr_tbl 
+--USING
+--    ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE} src_tbl
+--WHERE
+--    cdr_tbl.${QF_CDR_TABLE_NAME_COLNAME}='${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}' AND
+--    cdr_tbl.${QF_CDR_INSERT_ID_COLNAME}=src_tbl.${PARAM_SOURCE_INSERT_ID_COLNAME};
+</sql>
+      <useVariableSubstitution>T</useVariableSubstitution>
+      <sqlfromfile>F</sqlfromfile>
+      <sqlfilename />
+      <sendOneStatement>T</sendOneStatement>
+      <connection>obo_opr_db</connection>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>736</xloc>
+      <yloc>720</yloc>
+    </entry>
+    <entry>
+      <name>jb_log_error - 2</name>
+      <description />
+      <type>JOB</type>
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_log_error</jobname>
+      <directory>/generic</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_ERROR_MESSAGE</name>
+          <stream_name />
+          <value>Error in ${Internal.Job.Name} executing table-based "delete marked rows" SQL to delete source rows associated with target table: ${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>976</xloc>
+      <yloc>720</yloc>
     </entry>
   </entries>
   <hops>
@@ -605,17 +899,26 @@ PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>jb_log_error - Error description</from>
-      <to>Abort job</to>
+      <from>Delete marked rows from source table(s) - column</from>
+      <to>jb_log_error - 1</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
     </hop>
     <hop>
       <from>Log: Parameters</from>
-      <to>Delete marked rows from source table(s)</to>
+      <to>PARAM_CAN_DELETE_ROW_TABLE_NAME is set?</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>PARAM_CAN_DELETE_ROW_TABLE_NAME is set?</from>
+      <to>PARAM_CAN_DELETE_ROW_SCHEMA_NAME is set?</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -623,7 +926,88 @@ PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Delete marked rows from source table(s)</from>
+      <from>PARAM_CAN_DELETE_ROW_TABLE_NAME is set?</from>
+      <to>PARAM_CAN_DELETE_ROW_SOURCE_COLNAME is set?</to>
+      <from_nr>0</from_nr>
+      <to_nr>1</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>PARAM_CAN_DELETE_ROW_SCHEMA_NAME is set?</from>
+      <to>Log: Using table-based algorithm</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>PARAM_CAN_DELETE_ROW_SCHEMA_NAME is set?</from>
+      <to>jb_log_error - 4</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>PARAM_CAN_DELETE_ROW_SOURCE_COLNAME is set?</from>
+      <to>Log: Using column-based algorithm</to>
+      <from_nr>1</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>PARAM_CAN_DELETE_ROW_SOURCE_COLNAME is set?</from>
+      <to>jb_log_error - 3</to>
+      <from_nr>1</from_nr>
+      <to_nr>2</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_log_error - 3</from>
+      <to>Abort job</to>
+      <from_nr>2</from_nr>
+      <to_nr>2</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>jb_log_error - 4</from>
+      <to>Abort job</to>
+      <from_nr>0</from_nr>
+      <to_nr>1</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>jb_log_error - 1</from>
+      <to>Abort job</to>
+      <from_nr>0</from_nr>
+      <to_nr>2</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>Log: Using column-based algorithm</from>
+      <to>Delete marked rows from source table(s) - column</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>Delete marked rows from source table(s) - column</from>
       <to>Success</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -632,13 +1016,40 @@ PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Delete marked rows from source table(s)</from>
-      <to>jb_log_error - Error description</to>
+      <from>Log: Using table-based algorithm</from>
+      <to>Delete marked rows from source table(s) - table</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>Delete marked rows from source table(s) - table</from>
+      <to>Success</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Delete marked rows from source table(s) - table</from>
+      <to>jb_log_error - 2</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>N</evaluation>
       <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_log_error - 2</from>
+      <to>Abort job</to>
+      <from_nr>0</from_nr>
+      <to_nr>1</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
     </hop>
   </hops>
   <notepads>
@@ -684,8 +1095,99 @@ This transformation has parameters:
     <notepad>
       <note>The error message set here will be
 sent out by e-mail by the root job.</note>
-      <xloc>544</xloc>
-      <yloc>480</yloc>
+      <xloc>16</xloc>
+      <yloc>784</yloc>
+      <width>211</width>
+      <heigth>38</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Delete "marked" source rows 
+using a "can delete row" 
+*column* of the *source table*.</note>
+      <xloc>304</xloc>
+      <yloc>656</yloc>
+      <width>194</width>
+      <heigth>52</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>If PARAM_CAN_DELETE_ROW_TABLE_NAME is set, then
+PARAM_CAN_DELETE_ROW_SCHEMA_NAME
+*must* also be set.</note>
+      <xloc>672</xloc>
+      <yloc>416</yloc>
+      <width>334</width>
+      <heigth>52</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>255</backgroundcolorgreen>
+      <backgroundcolorblue>0</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Delete "marked" source rows
+using a "can delete row" 
+*table*.</note>
+      <xloc>560</xloc>
+      <yloc>656</yloc>
+      <width>181</width>
+      <heigth>52</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>The error message set here will be
+sent out by e-mail by the root job.</note>
+      <xloc>832</xloc>
+      <yloc>784</yloc>
       <width>211</width>
       <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
