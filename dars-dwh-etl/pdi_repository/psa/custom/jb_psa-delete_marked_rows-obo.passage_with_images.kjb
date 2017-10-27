@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/10/27 12:39:16.304</modified_date>
+  <modified_date>2017/10/27 15:46:18.904</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CAN_DELETE_ROW_SCHEMA_NAME</name>
@@ -541,7 +541,14 @@ PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
       <name>Delete marked rows from source table(s) - column</name>
       <description />
       <type>SQL</type>
-      <sql>-- Delete passage.image rows:
+      <sql>
+-- TODO: All of the SQL in this step needs to be performed in a transaction.
+--       To execute this SQL in a transaction, we need to execute it somehow in a transformation (which supports transactions), 
+--       or use the Enterprise version of PDI, which supports transactions for jobs. I  have selected the job entry option:
+--       "Send SQL as single statement?". It is not clear to me from the documentation, but this may also ensure that all of
+--       the SQL here is committed in a single transaction. However, I am not sure of this behaviour. 
+
+---- Delete passage.image rows:
 --DELETE FROM
 --    passage.image 
 --USING    -- POSTGRESQL-SPECIFIC: USING clause? If you want to use standard SQL, use a sub-select here.
@@ -551,13 +558,14 @@ PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
 --    image.passage_id = passage.passage_id 
 --    AND passage.can_delete_row = true;
 
--- Delete passage.passage rows:
+---- Delete passage.passage rows:
 --DELETE FROM
 --    ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
 --WHERE
 --	${PARAM_CAN_DELETE_ROW_SOURCE_COLNAME} = true
 
--- This is for testing only. It resets the "can delete row" column to "false" for passage.passage rows where it is currently "true".
+
+---- This is for testing only. It resets the "can delete row" column to "false" for passage.passage rows where it is currently "true".
 --UPDATE
 --    ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE} 
 --SET
@@ -785,9 +793,11 @@ PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
       <sql>
 -- TODO: All of the SQL in this step needs to be performed in a transaction.
 --       To execute this SQL in a transaction, we need to execute it somehow in a transformation (which supports transactions), 
---       or use the Enterprise version of PDI, which supports transactions for jobs.
+--       or use the Enterprise version of PDI, which supports transactions for jobs. I  have selected the job entry option:
+--       "Send SQL as single statement?". It is not clear to me from the documentation, but this may also ensure that all of
+--       the SQL here is committed in a single transaction. However, I am not sure of this behaviour. 
 
--- Update the "row_deleted_on" column of the "can delete row" table rows to contain the current UTC timestamp.
+---- Update the "row_deleted_on" column of the "can delete row" table rows to contain the current UTC timestamp.
 --UPDATE
 --    ${PARAM_CAN_DELETE_ROW_SCHEMA_NAME}.${PARAM_CAN_DELETE_ROW_TABLE_NAME} cdr_tbl 
 --SET
@@ -798,7 +808,7 @@ PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
 --    cdr_tbl.${QF_CDR_TABLE_NAME_COLNAME}='${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}' AND
 --    cdr_tbl.${QF_CDR_INSERT_ID_COLNAME}=src_tbl.${PARAM_SOURCE_INSERT_ID_COLNAME};
 	
--- Delete the passage.image rows related to the passage.passage rows:
+---- Delete the passage.image rows related to the passage.passage rows:
 --WITH
 --    passages_to_delete AS (
 --        SELECT
@@ -818,7 +828,7 @@ PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
 --WHERE
 --    i.passage_id = passages_to_delete.passage_id;
 
--- Delete the passage.passage rows:
+---- Delete the passage.passage rows:
 --DELETE FROM
 --    ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE} src_tbl
 --USING    -- POSTGRESQL-SPECIFIC: USING clause? If you want to use standard SQL, use a sub-select here.
@@ -828,7 +838,8 @@ PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
 --    cdr_tbl.${QF_CDR_TABLE_NAME_COLNAME}='${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}' AND
 --    cdr_tbl.${QF_CDR_INSERT_ID_COLNAME}=src_tbl.${PARAM_SOURCE_INSERT_ID_COLNAME};
 
--- This is for testing only. It deletes any "can delete row" table rows that are linked to the source table being treated here.
+
+---- This is for testing only. It deletes any "can delete row" table rows that are linked to the source table being treated here.
 --DELETE FROM
 --    ${PARAM_CAN_DELETE_ROW_SCHEMA_NAME}.${PARAM_CAN_DELETE_ROW_TABLE_NAME} cdr_tbl 
 --USING
