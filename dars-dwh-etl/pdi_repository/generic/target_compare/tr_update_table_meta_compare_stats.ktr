@@ -1,17 +1,27 @@
 <transformation>
   <info>
-    <name>tr_list_of_tables_to_mark_rows_for_deletion</name>
+    <name>tr_update_table_meta_compare_stats</name>
     <description />
     <extended_description />
     <trans_version />
     <trans_type>Normal</trans_type>
     <trans_status>0</trans_status>
-    <directory>/generic</directory>
+    <directory>/generic/target_compare</directory>
     <parameters>
       <parameter>
-        <name>PARAM_TARGET_DB_ID</name>
-        <default_value>-1</default_value>
-        <description>ID of the "target" database to which the "source" DB tables have been archived/mirrored</description>
+        <name>PARAM_SOURCE_DB_ID</name>
+        <default_value />
+        <description>ID of database containing the source tables to mirror</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_SOURCE_SCHEMA</name>
+        <default_value>passage</default_value>
+        <description>Schema of mirrored table to compare</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_SOURCE_TABLE</name>
+        <default_value>passage</default_value>
+        <description>Name of mirrored table to compare</description>
       </parameter>
     </parameters>
     <log>
@@ -46,7 +56,7 @@
           <id>LINES_READ</id>
           <enabled>Y</enabled>
           <name>LINES_READ</name>
-          <subject>Copy rows to result</subject>
+          <subject />
         </field>
         <field>
           <id>LINES_WRITTEN</id>
@@ -434,22 +444,27 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/10/24 14:20:55.895</modified_date>
+    <modified_date>2017/10/26 13:36:58.690</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>This transformation creates a stream that contains details of each table from one or more "source" database(s) that will have rows marked for deletion.
-Each row of the stream corresponds to a single table. This stream is copied to the "result" of this transformation so that it can be used elsewhere in another job.
+      <note>This transformation updates the "comparison" statistics in etl.table_meta for the table that is specified by the parameters 
+passed to this transformation. These statistics ("compared_rows_equal", "compared_rows_unequal", ...) are computed to 
+verify that the implementation of the mirrorring algorithm for the specified table is working correctly.
 
-This transformation has parameter:
+This transformation is designed to be executed via a "Simple mapping (sub-transformation)" step.
 
-	PARAM_TARGET_DB_ID			ID of the "target" database to which the "source" DB tables have been archived/mirrored</note>
-      <xloc>0</xloc>
+This transformation has parameters:
+
+	PARAM_SOURCE_DB_ID			ID of database containing the source tables to mirror
+	PARAM_SOURCE_SCHEMA		Schema containing the "source" table that was compared to its "target" table
+	PARAM_SOURCE_TABLE		Name of the "source"  table that was compared to its "target" table</note>
+      <xloc>16</xloc>
       <yloc>0</yloc>
-      <width>942</width>
-      <heigth>94</heigth>
+      <width>722</width>
+      <heigth>164</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -466,12 +481,100 @@ This transformation has parameter:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Each row of the stream created by this step specifies a table
-from a "source" database that will have rows marked for deletion.</note>
-      <xloc>16</xloc>
-      <yloc>192</yloc>
-      <width>397</width>
+      <note>Count the number of rows that are identical, missing, different or unexpected.
+There will be a separate row for each of these values.</note>
+      <xloc>320</xloc>
+      <yloc>352</yloc>
+      <width>464</width>
       <heigth>38</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>The row numbers computed in the previous step (one value per row) are 
+transposed here so that there is one value per COLUMN.</note>
+      <xloc>320</xloc>
+      <yloc>432</yloc>
+      <width>434</width>
+      <heigth>38</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Needed for the "Group by" step.</note>
+      <xloc>320</xloc>
+      <yloc>272</yloc>
+      <width>198</width>
+      <heigth>24</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>This sub-transformation (mapping) accepts a single input stream named "flagfield" 
+that has been set by a "Merge rows (diff)" step.</note>
+      <xloc>320</xloc>
+      <yloc>192</yloc>
+      <width>496</width>
+      <heigth>38</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>This is needed so that we can set the comparison statistics values to zero, instead of 
+not updating the etl.table_meta row at all for the case where the "source" and 
+"target" tables are both empty.</note>
+      <xloc>320</xloc>
+      <yloc>496</yloc>
+      <width>503</width>
+      <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -592,14 +695,44 @@ from a "source" database that will have rows marked for deletion.</note>
   </connection>
   <order>
     <hop>
-      <from>Load list of tables to mark for deletion</from>
-      <to>Copy rows to result</to>
+      <from>Group by flagfield</from>
+      <to>Transpose rows -> columns</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Sort rows</from>
+      <to>Group by flagfield</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Mapping input specification: flagfield</from>
+      <to>Sort rows</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Update table_meta with compare statistics</from>
+      <to>Mapping output specification</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Transpose rows -> columns</from>
+      <to>Detect empty stream</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Detect empty stream</from>
+      <to>Update table_meta with compare statistics</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Transpose rows -> columns</from>
+      <to>Update table_meta with compare statistics</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Copy rows to result</name>
-    <type>RowsToResult</type>
+    <name>Detect empty stream</name>
+    <type>DetectEmptyStream</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -616,14 +749,242 @@ from a "source" database that will have rows marked for deletion.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>544</xloc>
-      <yloc>128</yloc>
+      <xloc>64</xloc>
+      <yloc>496</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Load list of tables to mark for deletion</name>
-    <type>TableInput</type>
+    <name>Group by flagfield</name>
+    <type>GroupBy</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <all_rows>N</all_rows>
+    <ignore_aggregate>N</ignore_aggregate>
+    <field_ignore />
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>grp</prefix>
+    <add_linenr>N</add_linenr>
+    <linenr_fieldname />
+    <give_back_row>N</give_back_row>
+    <group>
+      <field>
+        <name>flagfield</name>
+      </field>
+    </group>
+    <fields>
+      <field>
+        <aggregate>count</aggregate>
+        <subject>flagfield</subject>
+        <type>COUNT_ALL</type>
+        <valuefield />
+      </field>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>160</xloc>
+      <yloc>352</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Mapping input specification: flagfield</name>
+    <type>MappingInput</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <field>
+        <name>flagfield</name>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <select_unspecified>N</select_unspecified>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>160</xloc>
+      <yloc>192</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Mapping output specification</name>
+    <type>MappingOutput</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>160</xloc>
+      <yloc>640</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Sort rows</name>
+    <type>SortRows</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>out</prefix>
+    <sort_size>1000000</sort_size>
+    <free_memory />
+    <compress>N</compress>
+    <compress_variable />
+    <unique_rows>N</unique_rows>
+    <fields>
+      <field>
+        <name>flagfield</name>
+        <ascending>Y</ascending>
+        <case_sensitive>Y</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>2</collator_strength>
+        <presorted>N</presorted>
+      </field>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>160</xloc>
+      <yloc>272</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Transpose rows -> columns</name>
+    <type>Denormaliser</type>
+    <description />
+    <distribute>N</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <key_field>flagfield</key_field>
+    <group>
+        </group>
+    <fields>
+      <field>
+        <field_name>count</field_name>
+        <key_value>identical</key_value>
+        <target_name>compared_rows_equal</target_name>
+        <target_type>Integer</target_type>
+        <target_format />
+        <target_length>-1</target_length>
+        <target_precision>-1</target_precision>
+        <target_decimal_symbol />
+        <target_grouping_symbol />
+        <target_currency_symbol />
+        <target_null_string />
+        <target_aggregation_type>-</target_aggregation_type>
+      </field>
+      <field>
+        <field_name>count</field_name>
+        <key_value>changed</key_value>
+        <target_name>compared_rows_unequal</target_name>
+        <target_type>Integer</target_type>
+        <target_format />
+        <target_length>-1</target_length>
+        <target_precision>-1</target_precision>
+        <target_decimal_symbol />
+        <target_grouping_symbol />
+        <target_currency_symbol />
+        <target_null_string />
+        <target_aggregation_type>-</target_aggregation_type>
+      </field>
+      <field>
+        <field_name>count</field_name>
+        <key_value>deleted</key_value>
+        <target_name>compared_rows_missing</target_name>
+        <target_type>Integer</target_type>
+        <target_format />
+        <target_length>-1</target_length>
+        <target_precision>-1</target_precision>
+        <target_decimal_symbol />
+        <target_grouping_symbol />
+        <target_currency_symbol />
+        <target_null_string />
+        <target_aggregation_type>-</target_aggregation_type>
+      </field>
+      <field>
+        <field_name>count</field_name>
+        <key_value>new</key_value>
+        <target_name>compared_rows_extra</target_name>
+        <target_type>Integer</target_type>
+        <target_format />
+        <target_length>-1</target_length>
+        <target_precision>-1</target_precision>
+        <target_decimal_symbol />
+        <target_grouping_symbol />
+        <target_currency_symbol />
+        <target_null_string />
+        <target_aggregation_type>-</target_aggregation_type>
+      </field>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>160</xloc>
+      <yloc>432</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Update table_meta with compare statistics</name>
+    <type>ExecSQL</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -633,60 +994,39 @@ from a "source" database that will have rows marked for deletion.</note>
       <schema_name />
     </partitioning>
     <connection>etl_db</connection>
-    <sql>SELECT
-    t.table_meta_id,
-    t.source_db_id,
-    t.source_schema_name AS "source_schema",
-    t.source_table_name AS "source_table",
-    t.source_schema_name || '.' || t.source_table_name AS "source_schema_dot_table",
-    t.target_db_id,
-    t.target_schema_name AS "target_schema",
-    t.target_table_name  AS "target_table",
-    t.target_schema_name || '.' || t.target_table_name AS "target_schema_dot_table",
-    t.row_can_be_deleted_from_seconds AS "row_can_be_deleted_from_seconds",
-    t.can_delete_row_schema_name AS "can_delete_row_schema_name",
-    t.can_delete_row_table_name AS "can_delete_row_table_name",
-    t.use_custom_mark_rows_for_deletion_algorithm,
-    (SELECT
-        c.source_column_name 
-     FROM
-         etl.column_meta c
-     WHERE
-         c.table_meta_id=t.table_meta_id AND c.is_row_can_be_deleted_from_column=true
-    ) AS "row_can_be_deleted_from_source_colname",
-    (SELECT
-        c.source_column_name 
-     FROM
-        etl.column_meta c
-     WHERE
-        c.table_meta_id=t.table_meta_id AND c.is_can_delete_row_column=true
-    ) AS "can_delete_row_source_colname",
-    (SELECT
-        c.source_column_name 
-     FROM
-         etl.column_meta c
-     WHERE
-         c.table_meta_id=t.table_meta_id AND c.is_insert_id_column=true
-    ) AS "source_insert_id_colname",
-    (SELECT
-        c.source_column_name 
-     FROM
-        etl.column_meta c
-     WHERE
-        c.table_meta_id=t.table_meta_id AND c.is_last_updated_on_column=true
-    ) AS "last_updated_on_source_colname"
-FROM
-    etl.table_meta t
+    <execute_each_row>Y</execute_each_row>
+    <single_statement>Y</single_statement>
+    <replace_variables>Y</replace_variables>
+    <quoteString>N</quoteString>
+    <sql>UPDATE
+    ${QF_ETL_DB_SCHEMA}.table_state
+SET
+    last_compared_on=LOCALTIMESTAMP    -- TODO: Shall I use UTC/GMT here?
+   ,compared_rows_equal=COALESCE(?, 0)
+   ,compared_rows_unequal=COALESCE(?, 0)
+   ,compared_rows_missing=COALESCE(?, 0)
+   ,compared_rows_extra=COALESCE(?, 0)
 WHERE
-    t.target_db_id=${PARAM_TARGET_DB_ID} AND
-    t.mark_rows_for_deletion=true 
-ORDER BY
-    t.table_meta_id</sql>
-    <limit>0</limit>
-    <lookup />
-    <execute_each_row>N</execute_each_row>
-    <variables_active>Y</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
+    table_state_id=${PARAM_TABLE_META_ID}</sql>
+    <set_params>Y</set_params>
+    <insert_field />
+    <update_field />
+    <delete_field />
+    <read_field />
+    <arguments>
+      <argument>
+        <name>compared_rows_equal</name>
+      </argument>
+      <argument>
+        <name>compared_rows_unequal</name>
+      </argument>
+      <argument>
+        <name>compared_rows_missing</name>
+      </argument>
+      <argument>
+        <name>compared_rows_extra</name>
+      </argument>
+    </arguments>
     <cluster_schema />
     <remotesteps>
       <input>
@@ -695,8 +1035,8 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>128</yloc>
+      <xloc>160</xloc>
+      <yloc>560</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

@@ -1,71 +1,87 @@
 <job>
-  <name>jb_psa-obo.passage_with_images-update</name>
+  <name>jb_update_etl_table_meta_mirror_details</name>
   <description />
   <extended_description />
   <job_version />
   <job_status>0</job_status>
-  <directory>/psa/custom</directory>
+  <directory>/generic/target_update</directory>
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/10/20 14:57:18.816</modified_date>
+  <modified_date>2017/10/26 13:29:50.729</modified_date>
   <parameters>
     <parameter>
-      <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
-      <default_value />
-      <description>Timestamp of the current load (no rows after this timestamp will be loaded)</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_CDC_LAST_LOAD_UTC</name>
-      <default_value />
-      <description>Timestamp of last successful load from the source database</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_MAX_INSERT_ID</name>
-      <default_value />
-      <description>Maximum value of the "insert_id" column for rows to load from the source DB table</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_SOURCE_DB_ID</name>
-      <default_value>-1</default_value>
-      <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_SOURCE_SCHEMA</name>
-      <default_value />
-      <description />
-    </parameter>
-    <parameter>
-      <name>PARAM_SOURCE_SCHEMA_DOT_TABLE</name>
-      <default_value />
-      <description />
-    </parameter>
-    <parameter>
-      <name>PARAM_SOURCE_TABLE</name>
-      <default_value />
-      <description />
-    </parameter>
-    <parameter>
       <name>PARAM_TABLE_META_ID</name>
-      <default_value>-1</default_value>
+      <default_value>0</default_value>
       <description>Primary key of etl.table_meta row for "source" table archived/mirrored to "target" table</description>
     </parameter>
     <parameter>
-      <name>PARAM_TARGET_SCHEMA</name>
-      <default_value />
-      <description />
+      <name>PARAM_TABLE_MIRROR_TREATMENT_ID</name>
+      <default_value>0</default_value>
+      <description>ID that specifies the algorithm to use for mirroring the table</description>
     </parameter>
     <parameter>
-      <name>PARAM_TARGET_SCHEMA_DOT_TABLE</name>
-      <default_value />
-      <description />
+      <name>PARAM_TARGET_SCHEMA</name>
+      <default_value>passage</default_value>
+      <description>Name of schema containing target table to update</description>
     </parameter>
     <parameter>
       <name>PARAM_TARGET_TABLE</name>
-      <default_value />
-      <description />
+      <default_value>passage</default_value>
+      <description>Name of target table to update</description>
     </parameter>
   </parameters>
+  <connection>
+    <name>etl_db</name>
+    <server>${QF_ETL_DB_HOST}</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>${QF_ETL_DB_DATABASE}</database>
+    <port>${QF_ETL_DB_PORT}</port>
+    <username>${QF_ETL_DB_USERNAME}</username>
+    <password>${QF_ETL_DB_PASSWORD}</password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>${QF_ETL_DB_PORT}</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
   <connection>
     <name>logging_db</name>
     <server>${QF_LOGGING_DB_HOST}</server>
@@ -409,55 +425,50 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>128</xloc>
-      <yloc>272</yloc>
+      <xloc>32</xloc>
+      <yloc>144</yloc>
     </entry>
     <entry>
-      <name>Write To Log: Parameters</name>
+      <name>Update table_meta mirror details</name>
+      <description />
+      <type>SQL</type>
+      <sql>UPDATE
+    etl.table_state
+SET
+    mirror_last_updated_treatment_id = ${PARAM_TABLE_MIRROR_TREATMENT_ID},
+    mirror_last_updated_on           = LOCALTIMESTAMP    -- TODO: Shall I use UTC/GMT here?
+WHERE
+    table_state_id = ${PARAM_TABLE_META_ID}</sql>
+      <useVariableSubstitution>T</useVariableSubstitution>
+      <sqlfromfile>F</sqlfromfile>
+      <sqlfilename />
+      <sendOneStatement>F</sendOneStatement>
+      <connection>etl_db</connection>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>240</xloc>
+      <yloc>144</yloc>
+    </entry>
+    <entry>
+      <name>Log - Parameters</name>
       <description />
       <type>WRITE_TO_LOG</type>
-      <logmessage>PARAM_CDC_LAST_LOAD_UTC       = ${PARAM_CDC_LAST_LOAD_UTC}
-PARAM_CDC_CURRENT_LOAD_UTC    = ${PARAM_CDC_CURRENT_LOAD_UTC}
-PARAM_TABLE_META_ID           = ${PARAM_TABLE_META_ID}
-PARAM_SOURCE_DB_ID            = ${PARAM_SOURCE_DB_ID}
-PARAM_MAX_INSERT_ID           = ${PARAM_MAX_INSERT_ID}
-PARAM_SOURCE_SCHEMA           = ${PARAM_SOURCE_SCHEMA}
-PARAM_SOURCE_TABLE            = ${PARAM_SOURCE_TABLE}
-PARAM_SOURCE_SCHEMA_DOT_TABLE = ${PARAM_SOURCE_SCHEMA_DOT_TABLE}
-PARAM_TARGET_SCHEMA           = ${PARAM_TARGET_SCHEMA}
-PARAM_TARGET_TABLE            = ${PARAM_TARGET_TABLE}
-PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
-      <loglevel>Basic</loglevel>
-      <logsubject>Parameters received by jb_psa-obo.passage_with_images-update</logsubject>
+      <logmessage>PARAM_TABLE_META_ID             = ${PARAM_TABLE_META_ID}
+PARAM_TARGET_SCHEMA             = ${PARAM_TARGET_SCHEMA}
+PARAM_TARGET_TABLE              = ${PARAM_TARGET_TABLE}
+PARAM_TABLE_MIRROR_TREATMENT_ID = ${PARAM_TABLE_MIRROR_TREATMENT_ID}
+</logmessage>
+      <loglevel>Detailed</loglevel>
+      <logsubject />
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>128</xloc>
-      <yloc>368</yloc>
+      <xloc>496</xloc>
+      <yloc>144</yloc>
     </entry>
     <entry>
-      <name>Success</name>
-      <description />
-      <type>SUCCESS</type>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>128</xloc>
-      <yloc>592</yloc>
-    </entry>
-    <entry>
-      <name>Abort job</name>
-      <description />
-      <type>ABORT</type>
-      <message>Aborting from jb_psa-obo.passage_with_images-update after error caught in tr_psa-obo.passage_with_images-update</message>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>544</xloc>
-      <yloc>480</yloc>
-    </entry>
-    <entry>
-      <name>jb_log_error - Error description</name>
+      <name>jb_log_error</name>
       <description />
       <type>JOB</type>
       <specification_method>rep_name</specification_method>
@@ -485,58 +496,32 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
         <parameter>
           <name>PARAM_ERROR_MESSAGE</name>
           <stream_name />
-          <value>An error occurred in tr_psa-obo.passage_with_images-update</value>
+          <value>Error updating table_meta details in jb_update_etl_table_meta_mirror_details for target table: ${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</value>
         </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
       <parallel>N</parallel>
       <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>368</xloc>
-      <yloc>480</yloc>
+      <nr>1</nr>
+      <xloc>240</xloc>
+      <yloc>240</yloc>
     </entry>
     <entry>
-      <name>tr_psa-obo.passage_with_images-update</name>
+      <name>Abort job</name>
       <description />
-      <type>TRANS</type>
-      <specification_method>rep_name</specification_method>
-      <trans_object_id />
-      <filename />
-      <transname>tr_psa-obo.passage_with_images-update</transname>
-      <directory>${Internal.Entry.Current.Directory}</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <clear_rows>N</clear_rows>
-      <clear_files>N</clear_files>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Basic</loglevel>
-      <cluster>N</cluster>
-      <slave_server_name />
-      <set_append_logfile>N</set_append_logfile>
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <create_parent_folder>N</create_parent_folder>
-      <logging_remote_work>N</logging_remote_work>
-      <run_configuration>Pentaho local</run_configuration>
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-      </parameters>
+      <type>ABORT</type>
+      <message>Aborting jb_update_etl_table_meta_mirror_details</message>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>128</xloc>
-      <yloc>480</yloc>
+      <xloc>240</xloc>
+      <yloc>352</yloc>
     </entry>
   </entries>
   <hops>
     <hop>
       <from>START</from>
-      <to>Write To Log: Parameters</to>
+      <to>Update table_meta mirror details</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -544,65 +529,46 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>jb_log_error - Error description</from>
-      <to>Abort job</to>
+      <from>Update table_meta mirror details</from>
+      <to>Log - Parameters</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>Write To Log: Parameters</from>
-      <to>tr_psa-obo.passage_with_images-update</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
+      <enabled>N</enabled>
       <evaluation>Y</evaluation>
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>tr_psa-obo.passage_with_images-update</from>
-      <to>Success</to>
+      <from>Update table_meta mirror details</from>
+      <to>jb_log_error</to>
       <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>tr_psa-obo.passage_with_images-update</from>
-      <to>jb_log_error - Error description</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
+      <to_nr>1</to_nr>
       <enabled>Y</enabled>
       <evaluation>N</evaluation>
       <unconditional>N</unconditional>
     </hop>
+    <hop>
+      <from>jb_log_error</from>
+      <to>Abort job</to>
+      <from_nr>1</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
   </hops>
   <notepads>
     <notepad>
-      <note>This job executes a custom, table-specific algorithm to update the target PSA table:
+      <note>This job updates a row of the etl.table_meta table after a table has been updated in the target DB from a table in
+a source database. This job has parameters:
 
-	obo.passage_with_images .
-
-This job has parameters:
-
-	PARAM_CDC_LAST_LOAD_UTC				Timestamp for when the target PSA DB mirror tables were last updated from the source DB
-	PARAM_CDC_CURRENT_LOAD_UTC			Timestamp of the current load (no rows after this timestamp will be loaded)
 	PARAM_TABLE_META_ID					Primary key of etl.table_meta row for "source" table archived/mirrored to "target" table
-	PARAM_SOURCE_DB_ID						ID the "source" database containing tables will be mirrored to a "target" database
-	PARAM_MAX_INSERT_ID					Maximum value of the "insert_id" column for rows to load from the source DB table
-	PARAM_SOURCE_SCHEMA					Not really needed since the transformation that will be run will be specific for the specified PSA table 
-	PARAM_SOURCE_TABLE					Not really needed since the transformation that will be run will be specific for the specified PSA table 
-	PARAM_SOURCE_SCHEMA_DOT_TABLE		Not really needed since the transformation that will be run will be specific for the specified PSA table 
-	PARAM_TARGET_SCHEMA
-	PARAM_TARGET_TABLE
-	PARAM_TARGET_SCHEMA_DOT_TABLE</note>
+	PARAM_TARGET_SCHEMA					Name of schema containing target table to update (not currently used)
+	PARAM_TARGET_TABLE						Name of target table to update (not currently used)
+	PARAM_TABLE_MIRROR_TREATMENT_ID	ID that specifies the algorithm to use for archiving/mirroring the table</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>892</width>
-      <heigth>248</heigth>
+      <width>814</width>
+      <heigth>108</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -619,67 +585,29 @@ This job has parameters:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>The error message set here will be
-sent out by e-mail by the root job.</note>
-      <xloc>288</xloc>
-      <yloc>544</yloc>
-      <width>211</width>
-      <heigth>38</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>This job is executed from "jb_custom_mirrored_table_dispatcher". That job could just as
-easily execute the transformation in this job, "tr_psa-obo.passage_with_images-update",
-in which case this job would not be needed at all. This job is used as a "wrapper" around
-the transformation "tr_psa-obo.passage_with_images-update" only to be able to
-perform a little extra logging and to set a meaningful error message in case of an error.</note>
-      <xloc>352</xloc>
-      <yloc>272</yloc>
-      <width>526</width>
+      <note>This "Abort" is needed so that the the 
+root calling job will know that 
+execution has failed. It will then direct
+the execution flow to the job that 
+sends out failure e-mails.</note>
+      <xloc>320</xloc>
+      <yloc>320</yloc>
+      <width>232</width>
       <heigth>80</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontname />
+      <fontsize>-1</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
       <fontcolorgreen>0</fontcolorgreen>
       <fontcolorblue>0</fontcolorblue>
       <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>255</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
       <bordercolorblue>100</bordercolorblue>
       <drawshadow>Y</drawshadow>
     </notepad>
   </notepads>
-  <attributes>
-    <group>
-      <name>METASTORE.pentaho</name>
-      <attribute>
-        <key>Default Run Configuration</key>
-        <value>{"namespace":"pentaho","id":"Default Run Configuration","name":"Default Run Configuration","description":"Defines a default run configuration","metaStoreName":null}</value>
-      </attribute>
-    </group>
-    <group>
-      <name>{"_":"Embedded MetaStore Elements","namespace":"pentaho","type":"Default Run Configuration"}</name>
-      <attribute>
-        <key>Pentaho local</key>
-        <value>{"children":[{"children":[],"id":"server","value":null},{"children":[],"id":"clustered","value":"N"},{"children":[],"id":"name","value":"Pentaho local"},{"children":[],"id":"description","value":null},{"children":[],"id":"readOnly","value":"Y"},{"children":[],"id":"sendResources","value":"N"},{"children":[],"id":"logRemoteExecutionLocally","value":"N"},{"children":[],"id":"remote","value":"N"},{"children":[],"id":"local","value":"Y"},{"children":[],"id":"showTransformations","value":"N"}],"id":"Pentaho local","value":null,"name":"Pentaho local","owner":null,"ownerPermissionsList":[]}</value>
-      </attribute>
-    </group>
-  </attributes>
 </job>

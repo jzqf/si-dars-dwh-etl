@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/10/21 18:41:42.945</modified_date>
+  <modified_date>2017/10/26 14:13:14.513</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_TARGET_DB_ID</name>
@@ -370,7 +370,7 @@
       <trans_object_id />
       <filename />
       <transname>tr_list_of_tables_to_delete_marked_rows_from</transname>
-      <directory>/generic</directory>
+      <directory>/generic/target_delete_marked_rows</directory>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
@@ -396,7 +396,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>304</xloc>
+      <xloc>336</xloc>
       <yloc>272</yloc>
     </entry>
     <entry>
@@ -456,8 +456,23 @@
           <value />
         </parameter>
         <parameter>
+          <name>PARAM_SOURCE_INSERT_ID_COLNAME</name>
+          <stream_name>source_insert_id_colname</stream_name>
+          <value />
+        </parameter>
+        <parameter>
           <name>PARAM_CAN_DELETE_ROW_SOURCE_COLNAME</name>
           <stream_name>can_delete_row_source_colname</stream_name>
+          <value />
+        </parameter>
+        <parameter>
+          <name>PARAM_CAN_DELETE_ROW_SCHEMA_NAME</name>
+          <stream_name>can_delete_row_schema_name</stream_name>
+          <value />
+        </parameter>
+        <parameter>
+          <name>PARAM_CAN_DELETE_ROW_TABLE_NAME</name>
+          <stream_name>can_delete_row_table_name</stream_name>
           <value />
         </parameter>
         <parameter>
@@ -480,7 +495,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>304</xloc>
+      <xloc>336</xloc>
       <yloc>368</yloc>
     </entry>
     <entry>
@@ -529,8 +544,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>304</xloc>
-      <yloc>512</yloc>
+      <xloc>336</xloc>
+      <yloc>480</yloc>
     </entry>
     <entry>
       <name>jb_send_default_email_job_notification - Failure</name>
@@ -578,8 +593,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>304</xloc>
-      <yloc>576</yloc>
+      <xloc>336</xloc>
+      <yloc>544</yloc>
     </entry>
     <entry>
       <name>Success</name>
@@ -588,8 +603,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>496</xloc>
-      <yloc>512</yloc>
+      <xloc>528</xloc>
+      <yloc>480</yloc>
     </entry>
     <entry>
       <name>Abort job</name>
@@ -599,8 +614,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>496</xloc>
-      <yloc>576</yloc>
+      <xloc>528</xloc>
+      <yloc>544</yloc>
     </entry>
     <entry>
       <name>DUMMY</name>
@@ -623,7 +638,7 @@
       <yloc>368</yloc>
     </entry>
     <entry>
-      <name>Log parameters</name>
+      <name>Log: Parameters</name>
       <description />
       <type>WRITE_TO_LOG</type>
       <logmessage>PARAM_TARGET_DB_ID = ${PARAM_TARGET_DB_ID}</logmessage>
@@ -632,7 +647,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>112</xloc>
+      <xloc>128</xloc>
       <yloc>176</yloc>
     </entry>
     <entry>
@@ -666,7 +681,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>224</xloc>
+      <xloc>240</xloc>
       <yloc>176</yloc>
     </entry>
     <entry>
@@ -686,7 +701,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>1</nr>
-      <xloc>304</xloc>
+      <xloc>336</xloc>
       <yloc>176</yloc>
     </entry>
     <entry>
@@ -707,7 +722,7 @@
       <draw>Y</draw>
       <nr>2</nr>
       <xloc>32</xloc>
-      <yloc>576</yloc>
+      <yloc>544</yloc>
     </entry>
   </entries>
   <hops>
@@ -767,7 +782,7 @@
     </hop>
     <hop>
       <from>START</from>
-      <to>Log parameters</to>
+      <to>Log: Parameters</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -775,7 +790,7 @@
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>Log parameters</from>
+      <from>Log: Parameters</from>
       <to>jb_target_init</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -862,7 +877,7 @@ This transformation has parameter:
     </notepad>
     <notepad>
       <note>Create list of tables to delete rows from.</note>
-      <xloc>464</xloc>
+      <xloc>480</xloc>
       <yloc>272</yloc>
       <width>250</width>
       <heigth>24</heigth>
@@ -888,8 +903,8 @@ configured for this operation. This sub-job is:
 	1.	***** RUN ONCE FOR EACH SOURCE/TARGET TABLE PAIR. *****
 
 	2.	Passed details of the source &amp; target databases, schemas, tables, etc.</note>
-      <xloc>464</xloc>
-      <yloc>368</yloc>
+      <xloc>480</xloc>
+      <yloc>352</yloc>
       <width>465</width>
       <heigth>94</heigth>
       <fontname>Ubuntu</fontname>
@@ -909,8 +924,8 @@ configured for this operation. This sub-job is:
     </notepad>
     <notepad>
       <note>Notify recipient(s) of SUCCESSFUL job execution.</note>
-      <xloc>560</xloc>
-      <yloc>512</yloc>
+      <xloc>592</xloc>
+      <yloc>480</yloc>
       <width>294</width>
       <heigth>24</heigth>
       <fontname />
@@ -930,8 +945,8 @@ configured for this operation. This sub-job is:
     </notepad>
     <notepad>
       <note>Notify recipient(s) of FAILED job execution.</note>
-      <xloc>560</xloc>
-      <yloc>576</yloc>
+      <xloc>592</xloc>
+      <yloc>544</yloc>
       <width>260</width>
       <heigth>24</heigth>
       <fontname />
