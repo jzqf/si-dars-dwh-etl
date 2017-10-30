@@ -11,7 +11,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -226,7 +229,15 @@ public class MergeProperties {
 				}
 
 				//System.out.println("kettle.properties after merging:");
+				/*
+				 * Print the properties sorted by key, which will be *much* easier to digest.
+				 */
+				List<String> keys = new ArrayList<>();
 				for (String key : kettleProperties.stringPropertyNames()) {
+					keys.add(key);
+				}
+				Collections.sort(keys);
+				for (String key : keys) { // kettleProperties.stringPropertyNames()) {
 					System.out.println(String.format("%s=%s", key, kettleProperties.getProperty(key, "")));
 				}
 
