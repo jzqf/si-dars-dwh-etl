@@ -25,7 +25,7 @@
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER</name>
-        <default_value />
+        <default_value>org.postgresql.Driver</default_value>
         <description>for source DB "dynamic" database connections</description>
       </parameter>
       <parameter>
@@ -35,7 +35,7 @@
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD</name>
-        <default_value>ap68rDpVo0wcbKNtSEZbf00_Vw4rrxq0</default_value>
+        <default_value>OBF:1lfi1l591jui1m781zsx1h8j1nce1iez1pjd1u2u1kjq1njx1hem1y141ndi1ni71nlr1nc81y0m1hgg1nk11kmw1u2g1pit1if71ndc1h8b1zst1m561jr81l811lc0</default_value>
         <description>for source DB "dynamic" database connections</description>
       </parameter>
       <parameter>
@@ -45,47 +45,47 @@
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_URL</name>
-        <default_value />
+        <default_value>jdbc:postgresql://si01-qfr-07cl.si01.q-free.com:5432/odms_opr</default_value>
         <description>for source DB "dynamic" database connections</description>
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME</name>
-        <default_value>qfree_odms</default_value>
+        <default_value>qfree_report_rest_srv</default_value>
         <description>for source DB "dynamic" database connections</description>
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_TARGET_DB_DATABASE</name>
-        <default_value />
+        <default_value>dars_psa_db</default_value>
         <description>for target DB "dynamic" database connections</description>
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_TARGET_DB_DRIVER</name>
-        <default_value />
+        <default_value>org.postgresql.Driver</default_value>
         <description>for target DB "dynamic" database connections</description>
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_TARGET_DB_HOST</name>
-        <default_value />
+        <default_value>localhost</default_value>
         <description>for target DB "dynamic" database connections</description>
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD</name>
-        <default_value />
+        <default_value>OBF:1ugo1z0f1uh2</default_value>
         <description>for target DB "dynamic" database connections</description>
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_TARGET_DB_PORT</name>
-        <default_value />
+        <default_value>5432</default_value>
         <description>for target DB "dynamic" database connections</description>
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_TARGET_DB_URL</name>
-        <default_value />
+        <default_value>jdbc:postgresql://localhost:5432/dars_psa_db</default_value>
         <description>for target DB "dynamic" database connections</description>
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_TARGET_DB_USERNAME</name>
-        <default_value />
+        <default_value>etl</default_value>
         <description>for target DB "dynamic" database connections</description>
       </parameter>
       <parameter>
@@ -130,7 +130,7 @@
       </parameter>
       <parameter>
         <name>PARAM_TARGET_DB_ID</name>
-        <default_value>-1</default_value>
+        <default_value>10</default_value>
         <description>ID of the "target" database to which "source" DB tables will be archived/mirrored</description>
       </parameter>
       <parameter>
@@ -161,7 +161,7 @@
     </parameters>
     <log>
       <trans-log-table>
-        <connection>logging_db</connection>
+        <connection>${QF_LOGGING_DB_CONNECTION}</connection>
         <schema>${QF_LOG_TRANS_SCHEMA}</schema>
         <table>${QF_LOG_TRANS_TABLE}</table>
         <size_limit_lines />
@@ -275,7 +275,7 @@
         </field>
       </trans-log-table>
       <perf-log-table>
-        <connection>logging_db</connection>
+        <connection>${QF_LOGGING_DB_CONNECTION}</connection>
         <schema>${QF_LOG_TRANSPERF_SCHEMA}</schema>
         <table>${QF_LOG_TRANSPERF_TABLE}</table>
         <interval />
@@ -357,7 +357,7 @@
         </field>
       </perf-log-table>
       <channel-log-table>
-        <connection>logging_db</connection>
+        <connection>${QF_LOGGING_DB_CONNECTION}</connection>
         <schema>${QF_LOG_CHANNEL_SCHEMA}</schema>
         <table>${QF_LOG_CHANNEL_TABLE}</table>
         <timeout_days>${QF_LOG_CHANNEL_TIMEOUT_IN_DAYS}</timeout_days>
@@ -423,7 +423,7 @@
         </field>
       </channel-log-table>
       <step-log-table>
-        <connection>logging_db</connection>
+        <connection>${QF_LOGGING_DB_CONNECTION}</connection>
         <schema>${QF_LOG_TRANSSTEP_SCHEMA}</schema>
         <table>${QF_LOG_TRANSSTEP_TABLE}</table>
         <timeout_days>${QF_LOG_TRANSSTEP_TIMEOUT_IN_DAYS}</timeout_days>
@@ -499,7 +499,7 @@
         </field>
       </step-log-table>
       <metrics-log-table>
-        <connection>logging_db</connection>
+        <connection>${QF_LOGGING_DB_CONNECTION}</connection>
         <schema>${QF_LOG_TRANSMETRICS_SCHEMA}</schema>
         <table>${QF_LOG_TRANSMETRICS_TABLE}</table>
         <timeout_days>${QF_LOG_TRANSMETRICS_TIMEOUT_IN_DAYS}</timeout_days>
@@ -579,7 +579,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/10/19 14:08:48.177</modified_date>
+    <modified_date>2017/11/04 15:37:16.736</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -720,7 +720,7 @@ comments in that job for an explanation.</note>
     <database>${QF_ETL_DB_DATABASE}</database>
     <port>${QF_ETL_DB_PORT}</port>
     <username>${QF_ETL_DB_USERNAME}</username>
-    <password>${QF_ETL_DB_PASSWORD}</password>
+    <password>OBF:1kx21qye1ldq1ily1p531j751m681h1m1nri1ld01f9b1lei1nqo1h101m661j7x1p4n1img1lds1qvc1l20</password>
     <servername />
     <data_tablespace />
     <index_tablespace />
@@ -771,7 +771,7 @@ comments in that job for an explanation.</note>
     <database>${QF_LOGGING_DB_DATABASE}</database>
     <port>${QF_LOGGING_DB_PORT}</port>
     <username>${QF_LOGGING_DB_USERNAME}</username>
-    <password>${QF_LOGGING_DB_PASSWORD}</password>
+    <password>OBF:1kx21qye1ldq1ily1p531kl41l6j1g1x1j061mcp1hmz1gn61qpr1gn01hmb1mdx1j0o1g1l1l6r1kli1p4n1img1lds1qvc1l20</password>
     <servername />
     <data_tablespace />
     <index_tablespace />

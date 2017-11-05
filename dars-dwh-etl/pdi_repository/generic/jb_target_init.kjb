@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/10/14 16:27:51.778</modified_date>
+  <modified_date>2017/10/29 09:48:25.252</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_TARGET_DB_ID</name>
@@ -274,7 +274,7 @@
   <slaveservers>
     </slaveservers>
   <job-log-table>
-    <connection>logging_db</connection>
+    <connection>${QF_LOGGING_DB_CONNECTION}</connection>
     <schema>${QF_LOG_JOB_SCHEMA}</schema>
     <table>${QF_LOG_JOB_TABLE}</table>
     <size_limit_lines />
@@ -387,7 +387,7 @@
     </field>
   </job-log-table>
   <jobentry-log-table>
-    <connection>logging_db</connection>
+    <connection>${QF_LOGGING_DB_CONNECTION}</connection>
     <schema>${QF_LOG_JOBENTRY_SCHEMA}</schema>
     <table>${QF_LOG_JOBENTRY_TABLE}</table>
     <timeout_days>${QF_LOG_JOBENTRY_TIMEOUT_IN_DAYS}</timeout_days>
@@ -478,7 +478,7 @@
     </field>
   </jobentry-log-table>
   <channel-log-table>
-    <connection>logging_db</connection>
+    <connection>${QF_LOGGING_DB_CONNECTION}</connection>
     <schema>${QF_LOG_CHANNEL_SCHEMA}</schema>
     <table>${QF_LOG_CHANNEL_TABLE}</table>
     <timeout_days>${QF_LOG_CHANNEL_TIMEOUT_IN_DAYS}</timeout_days>
@@ -814,7 +814,7 @@
         <parameter>
           <name>PARAM_ERROR_MESSAGE</name>
           <stream_name />
-          <value>Connection to ETL DB is not available.</value>
+          <value>Connection to Logging DB (ETL DB?) is not available.</value>
         </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
@@ -828,7 +828,7 @@
       <name>Abort job</name>
       <description />
       <type>ABORT</type>
-      <message>${QF_ABORT_JOB_PREFIX}Aborting from jb_target_init with PARAM_TARGET_DB_ID=${PARAM_TARGET_DB_ID}</message>
+      <message>Aborting from ${Internal.Job.Name} with PARAM_TARGET_DB_ID=${PARAM_TARGET_DB_ID}</message>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
@@ -881,7 +881,7 @@
         <parameter>
           <name>PARAM_ERROR_MESSAGE</name>
           <stream_name />
-          <value>Connection toODMS OPR DB is not available.</value>
+          <value>Connection to ODMS OPR DB is not available.</value>
         </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
@@ -942,7 +942,7 @@
         <parameter>
           <name>PARAM_ERROR_MESSAGE</name>
           <stream_name />
-          <value>Untreated case PARAM_TARGET_DB_ID=${PARAM_TARGET_DB_ID} in jb_target_init</value>
+          <value>Untreated case PARAM_TARGET_DB_ID=${PARAM_TARGET_DB_ID} in ${Internal.Job.Name}</value>
         </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
@@ -956,7 +956,7 @@
       <name>Abort job</name>
       <description />
       <type>ABORT</type>
-      <message>${QF_ABORT_JOB_PREFIX}Aborting from jb_target_init with PARAM_TARGET_DB_ID=${PARAM_TARGET_DB_ID}</message>
+      <message>Aborting from ${Internal.Job.Name} with PARAM_TARGET_DB_ID=${PARAM_TARGET_DB_ID}</message>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>1</nr>
