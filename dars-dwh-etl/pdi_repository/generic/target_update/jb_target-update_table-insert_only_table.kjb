@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/10/26 13:30:30.707</modified_date>
+  <modified_date>2017/11/13 13:48:20.648</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
@@ -687,6 +687,20 @@
       <is_usevars>Y</is_usevars>
       <custom_sql>SELECT
     source_column_name AS "source_col_name", 
+    NULL AS "source_col_length", 
+    -- The value "-1" is injected into the "Select values" step of the ETL metadata injection template transformation
+    -- to specify the "precision" of the "source_col_name" &amp; "target_col_name" fields. If this is not done, a problem 
+    -- was observed for fields created by loading data from database columns of PostgreSQL data type "double precison".
+    -- For such fields, it was observed that the values written out to a "target" database via a "Table output" step 
+    -- were truncated to integers. Ideally, the precision should probably be set to something like 15 or 16 for this 
+    -- case (double precision columns), but this value may not be appropriate for other data types. It was only by 
+    -- experimenting that I found that injecting "-1" solved the problem for double precision columns. I have decided 
+    -- to specify this for *all* columns until/unless I encounter a problem by doing this. If a problem does arise one 
+    -- day, it may be necessary to update the definition of the etl.column_meta table of the "etl" database to include 
+    -- a real column to store the column "precision" on a column-by-column basis. For columns that do not need a 
+    -- "precision" to be specified, NULL can be stored in this column. This will also require updating the 
+    -- "populate_etl_metadata_tables" ETL code that generates default metadata.
+    -1 AS "source_col_precision", 
     target_column_name AS "target_col_name" 
 FROM 
     etl.column_meta 
@@ -695,7 +709,9 @@ WHERE
     mirror_column = true AND
     source_column_name IS NOT NULL 
 ORDER BY 
-    source_column_name ASC</custom_sql>
+    -- Ordering by "column_meta_id" means the columns will be treated in
+    -- the same order as they appear in the table in the "source" DB. 
+    column_meta_id ASC</custom_sql>
       <add_rows_result>N</add_rows_result>
       <clear_result_rows>Y</clear_result_rows>
       <parallel>N</parallel>
@@ -1160,7 +1176,7 @@ may not be the best behaviour.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>The query in this step must match the query in 
+      <note>The query in this step (at least the WHERE clause) must match the query in 
 tr_target-update_table-insert_only_table
 that is executed below. This is because a PDI runtime error occurs if an 
 empty stream is sent to an ETL Metadata Injection step. To avoid this 
