@@ -579,7 +579,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/10/19 21:25:05.285</modified_date>
+    <modified_date>2017/11/14 09:19:05.271</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -639,14 +639,14 @@ available to be injected. This transformation has parameters:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>The query here to provide the source DB
-column names must match the query in 
-"jb_target-compare_table" from where
-this transformation is executed. See the 
-comments in that job for an explanation.</note>
-      <xloc>16</xloc>
-      <yloc>672</yloc>
-      <width>247</width>
+      <note>The query here (at least the WHERE clause) to
+provide the source DB column names must 
+match the query in "jb_target-compare_table"
+from where this transformation is executed.
+See the comments in that job for an explanation.</note>
+      <xloc>480</xloc>
+      <yloc>784</yloc>
+      <width>293</width>
       <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -664,14 +664,14 @@ comments in that job for an explanation.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>The query here to provide the source DB
-column names must match the query in 
-"jb_target-compare_table" from where
-this transformation is executed. See the 
-comments in that job for an explanation.</note>
-      <xloc>304</xloc>
+      <note>The query here (at least the WHERE clause) to
+provide the source DB key column names must
+match the query in "jb_target-compare_table"
+ from where this transformation is executed.
+See the comments in that job for an explanation.</note>
+      <xloc>112</xloc>
       <yloc>784</yloc>
-      <width>247</width>
+      <width>293</width>
       <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -798,17 +798,12 @@ comments in that job for an explanation.</note>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Target DB column names to compare</from>
-      <to>ETL Metadata Injection: tmplt_target-compare_table</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>Source DB primary key column names</from>
       <to>ETL Metadata Injection: tmplt_target-compare_table</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Source DB column names to compare</from>
+      <from>Source &amp; Target DB column names to compare</from>
       <to>ETL Metadata Injection: tmplt_target-compare_table</to>
       <enabled>Y</enabled>
     </hop>
@@ -842,6 +837,13 @@ comments in that job for an explanation.</note>
     <stream_target_step />
     <mappings>
       <mapping>
+        <target_step_name>Rename target DB field names -> source DB field names</target_step_name>
+        <target_attribute_key>FIELD_LENGTH</target_attribute_key>
+        <target_detail>Y</target_detail>
+        <source_step>Source &amp; Target DB column names to compare</source_step>
+        <source_field>source_col_length</source_field>
+      </mapping>
+      <mapping>
         <target_step_name>Merge Rows (diff)</target_step_name>
         <target_attribute_key>KEY_FIELDS</target_attribute_key>
         <target_detail>N</target_detail>
@@ -859,21 +861,28 @@ comments in that job for an explanation.</note>
         <target_step_name>Merge Rows (diff)</target_step_name>
         <target_attribute_key>VALUE_FIELDS</target_attribute_key>
         <target_detail>N</target_detail>
-        <source_step>Source DB column names to compare</source_step>
+        <source_step>Source &amp; Target DB column names to compare</source_step>
         <source_field>source_col_name</source_field>
       </mapping>
       <mapping>
         <target_step_name>Rename target DB field names -> source DB field names</target_step_name>
         <target_attribute_key>FIELD_NAME</target_attribute_key>
         <target_detail>Y</target_detail>
-        <source_step>Target DB column names to compare</source_step>
+        <source_step>Source &amp; Target DB column names to compare</source_step>
         <source_field>target_col_name</source_field>
+      </mapping>
+      <mapping>
+        <target_step_name>Rename target DB field names -> source DB field names</target_step_name>
+        <target_attribute_key>FIELD_PRECISION</target_attribute_key>
+        <target_detail>Y</target_detail>
+        <source_step>Source &amp; Target DB column names to compare</source_step>
+        <source_field>source_col_precision</source_field>
       </mapping>
       <mapping>
         <target_step_name>Rename target DB field names -> source DB field names</target_step_name>
         <target_attribute_key>FIELD_RENAME</target_attribute_key>
         <target_detail>Y</target_detail>
-        <source_step>Source DB column names to compare</source_step>
+        <source_step>Source &amp; Target DB column names to compare</source_step>
         <source_field>source_col_name</source_field>
       </mapping>
       <mapping>
@@ -967,7 +976,7 @@ CROSS JOIN
       </output>
     </remotesteps>
     <GUI>
-      <xloc>272</xloc>
+      <xloc>240</xloc>
       <yloc>512</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1048,7 +1057,7 @@ CROSS JOIN
     </GUI>
   </step>
   <step>
-    <name>Source DB column names to compare</name>
+    <name>Source &amp; Target DB column names to compare</name>
     <type>TableInput</type>
     <description />
     <distribute>Y</distribute>
@@ -1060,7 +1069,22 @@ CROSS JOIN
     </partitioning>
     <connection>etl_db</connection>
     <sql>SELECT
-    source_column_name AS "source_col_name" 
+    source_column_name AS "source_col_name", 
+    NULL AS "source_col_length", 
+    -- The value "-1" is injected into the "Select values" step of the ETL metadata injection template transformation
+    -- to specify the "precision" of the "source_col_name" &amp; "target_col_name" fields. If this is not done, a problem 
+    -- was observed for fields created by loading data from database columns of PostgreSQL data type "double precison".
+    -- For such fields, it was observed that the values written out to a "target" database via a "Table output" step 
+    -- were truncated to integers. Ideally, the precision should probably be set to something like 15 or 16 for this 
+    -- case (double precision columns), but this value may not be appropriate for other data types. It was only by 
+    -- experimenting that I found that injecting "-1" solved the problem for double precision columns. I have decided 
+    -- to specify this for *all* columns until/unless I encounter a problem by doing this. If a problem does arise one 
+    -- day, it may be necessary to update the definition of the etl.column_meta table of the "etl" database to include 
+    -- a real column to store the column "precision" on a column-by-column basis. For columns that do not need a 
+    -- "precision" to be specified, NULL can be stored in this column. This will also require updating the 
+    -- "populate_etl_metadata_tables" ETL code that generates default metadata.
+    -1 AS "source_col_precision", 
+    target_column_name AS "target_col_name" 
 FROM 
     etl.column_meta 
 WHERE 
@@ -1083,8 +1107,8 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>112</xloc>
-      <yloc>608</yloc>
+      <xloc>608</xloc>
+      <yloc>720</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1122,49 +1146,8 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>416</xloc>
+      <xloc>240</xloc>
       <yloc>720</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Target DB column names to compare</name>
-    <type>TableInput</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <connection>etl_db</connection>
-    <sql>SELECT
-    target_column_name AS "target_col_name" 
-FROM 
-    etl.column_meta 
-WHERE 
-    table_meta_id = ${PARAM_TABLE_META_ID} AND 
-    -- Although the primary key columns don't need to ne compared, they
-    -- are needed by the "Merge Rows" step so they are included here.
-    (compare_column=true OR is_primary_key_column=true)
-ORDER BY 
-    column_meta_id ASC  -- must use the same sort order in "Source DB column names to compare"</sql>
-    <limit>0</limit>
-    <lookup />
-    <execute_each_row>N</execute_each_row>
-    <variables_active>Y</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>720</xloc>
-      <yloc>608</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
