@@ -20,7 +20,7 @@
 		<app.user>dwh_etl</app.user>
 		<app.group>dwh_etl</app.group>
 		<!-- This is a trick to allow "maven-resources-plugin" to filter 
-		     (i.e., evaluate Maven properties) kettle.properties without also
+		     (i.e., evaluate Maven properties in) kettle.properties without also
 		     inserting newlines in the file. If "${line.separator}" is used in 
 		     kettle.properties, then "maven-resources-plugin" will replace such 
 		     occurrences with newline characters when it filters the file, which 
@@ -70,6 +70,54 @@
 			
 			<plugin>
 				<artifactId>maven-resources-plugin</artifactId>
+				<configuration>
+				<!-- This setting was necessary in order to include the references that
+				     represent newline characters in the kettle.properties file.
+				     
+				     If "${line.separator}" is used in kettle.properties, then 
+				     "maven-resources-plugin" will replace such occurrences with newline 
+				     characters when it filters the file, which is not allowed for Java 
+				     property values. Fortunately, PDI (Kettle). The reference
+				     "${line.separator}" evaluates to a newline character when processed
+				     by *either* Maven *or* PDI. 
+				     
+				     By escaping these references with "${line.separator}", Maven will
+				     replace these references with "${line.separator}", which PDI will
+				     treat as newlines. In this way, no line breaks are introduced when
+				      "maven-resources-plugin" filters the file kettle.properties.
+				      
+				     This trick is only needed because I filter kettle.properties with
+				     "maven-resources-plugin". The reason I do this is so that the line:
+				     
+				         QF_ETL_CODE_VERSION=${project.version}
+				     
+				     will have ${project.version} replaced with the Maven project 
+				     version so that it can be displayed when the ETL code is run.
+				     
+				     PDI is supposed to also support an alternate syntax for variable
+				     references, "%%variable%%", which would be a better way to hide 
+				     newline references from "maven-resources-plugin" during filtering,
+				     but I was not able to get this syntax to work when a PDI job is 
+				     run.
+				     
+				     The files dwh.properties & dwh-qfree.properties also contain 
+				     "\${line.separator}" references, even though these files are not 
+				     filtered by "maven-resources-plugin". However, after running
+				     merge_configuration_files.jar, these references will make their
+				     way into kettle.properties, so these references are also escaped
+				     in dwh.properties & dwh-qfree.properties.
+		
+				     However, when merge_configuration_files.jar is executed on an
+				     installation *after* the Debian package has been installed, this 
+				     means that kettle.properties will contain the escaped versions of
+				     these references, i.e., "\${line.separator}", not "${line.separator}.
+				     Fortunately, PDI processes the escaped reference identically to
+				     how it processes the unescaped reference, so everything works out OK
+				     and newlines are inserted when "\${line.separator}" is evaluated 
+				     in PDI as a PDI variable.
+				-->
+					<escapeString>\</escapeString>
+				</configuration>
 				<executions>
 
 					<!-- This is so that ${project.version} in config.properties 
