@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/11/10 16:05:33.619</modified_date>
+  <modified_date>2017/11/22 16:48:13.607</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CAN_DELETE_ROW_SCHEMA_NAME</name>
@@ -24,6 +24,11 @@
       <name>PARAM_CAN_DELETE_ROW_TABLE_NAME</name>
       <default_value />
       <description>Name of table from source DB to use *instead* of column PARAM_CAN_DELETE_ROW_SOURCE_COLNAME</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DELETE_MARKED_ROWS_ALGORITHM_ID</name>
+      <default_value>0</default_value>
+      <description>ID of the algorithm to use for deleting rows of the source table</description>
     </parameter>
     <parameter>
       <name>PARAM_SOURCE_DB_ID</name>
@@ -74,11 +79,6 @@
       <name>PARAM_TARGET_TABLE</name>
       <default_value>image</default_value>
       <description>Name of target table to update (not currently used)</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_USE_CUSTOM_DELETE_ALGORITHM</name>
-      <default_value>N</default_value>
-      <description>"Y" if a custom DELETE algorithm shall be used for this table</description>
     </parameter>
   </parameters>
   <connection>
@@ -487,26 +487,26 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>64</xloc>
-      <yloc>512</yloc>
+      <yloc>528</yloc>
     </entry>
     <entry>
       <name>Log: Parameters</name>
       <description />
       <type>WRITE_TO_LOG</type>
-      <logmessage>PARAM_TABLE_META_ID                 = ${PARAM_TABLE_META_ID}
-PARAM_USE_CUSTOM_DELETE_ALGORITHM   = ${PARAM_USE_CUSTOM_DELETE_ALGORITHM}
-PARAM_SOURCE_DB_ID                  = ${PARAM_SOURCE_DB_ID}
-PARAM_SOURCE_SCHEMA                 = ${PARAM_SOURCE_SCHEMA}
-PARAM_SOURCE_TABLE                  = ${PARAM_SOURCE_TABLE}
-PARAM_SOURCE_SCHEMA_TABLE           = ${PARAM_SOURCE_SCHEMA_TABLE}
-PARAM_SOURCE_INSERT_ID_COLNAME      = ${PARAM_SOURCE_INSERT_ID_COLNAME}
-PARAM_CAN_DELETE_ROW_SOURCE_COLNAME = ${PARAM_CAN_DELETE_ROW_SOURCE_COLNAME}
-PARAM_CAN_DELETE_ROW_SCHEMA_NAME    = ${PARAM_CAN_DELETE_ROW_SCHEMA_NAME}
-PARAM_CAN_DELETE_ROW_TABLE_NAME     = ${PARAM_CAN_DELETE_ROW_TABLE_NAME}
-PARAM_TARGET_DB_ID                  = ${PARAM_TARGET_DB_ID}
-PARAM_TARGET_SCHEMA                 = ${PARAM_TARGET_SCHEMA}
-PARAM_TARGET_TABLE                  = ${PARAM_TARGET_TABLE}
-PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
+      <logmessage>PARAM_TABLE_META_ID                   = ${PARAM_TABLE_META_ID}
+PARAM_DELETE_MARKED_ROWS_ALGORITHM_ID = ${PARAM_DELETE_MARKED_ROWS_ALGORITHM_ID}
+PARAM_SOURCE_DB_ID                    = ${PARAM_SOURCE_DB_ID}
+PARAM_SOURCE_SCHEMA                   = ${PARAM_SOURCE_SCHEMA}
+PARAM_SOURCE_TABLE                    = ${PARAM_SOURCE_TABLE}
+PARAM_SOURCE_SCHEMA_TABLE             = ${PARAM_SOURCE_SCHEMA_TABLE}
+PARAM_SOURCE_INSERT_ID_COLNAME        = ${PARAM_SOURCE_INSERT_ID_COLNAME}
+PARAM_CAN_DELETE_ROW_SOURCE_COLNAME   = ${PARAM_CAN_DELETE_ROW_SOURCE_COLNAME}
+PARAM_CAN_DELETE_ROW_SCHEMA_NAME      = ${PARAM_CAN_DELETE_ROW_SCHEMA_NAME}
+PARAM_CAN_DELETE_ROW_TABLE_NAME       = ${PARAM_CAN_DELETE_ROW_TABLE_NAME}
+PARAM_TARGET_DB_ID                    = ${PARAM_TARGET_DB_ID}
+PARAM_TARGET_SCHEMA                   = ${PARAM_TARGET_SCHEMA}
+PARAM_TARGET_TABLE                    = ${PARAM_TARGET_TABLE}
+PARAM_TARGET_SCHEMA_TABLE             = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
       <loglevel>Basic</loglevel>
       <logsubject>Parameters passed to ${Internal.Job.Name}</logsubject>
       <parallel>N</parallel>
@@ -532,7 +532,7 @@ PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>288</xloc>
-      <yloc>992</yloc>
+      <yloc>1072</yloc>
     </entry>
     <entry>
       <name>Use custom delete algorithm?</name>
@@ -540,10 +540,10 @@ PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
       <type>SIMPLE_EVAL</type>
       <valuetype>variable</valuetype>
       <fieldname />
-      <variablename>${PARAM_USE_CUSTOM_DELETE_ALGORITHM}</variablename>
-      <fieldtype>boolean</fieldtype>
+      <variablename>${PARAM_DELETE_MARKED_ROWS_ALGORITHM_ID}</variablename>
+      <fieldtype>number</fieldtype>
       <mask />
-      <comparevalue />
+      <comparevalue>${QF_DELETE_MARKED_ROWS_ALG_CUSTOM}</comparevalue>
       <minvalue />
       <maxvalue />
       <successcondition>equal</successcondition>
@@ -593,7 +593,7 @@ PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>496</xloc>
-      <yloc>448</yloc>
+      <yloc>528</yloc>
     </entry>
     <entry>
       <name>Set PARAM_DYN_DB_CONN_SOURCE_DB_* variables</name>
@@ -643,7 +643,7 @@ PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>496</xloc>
-      <yloc>576</yloc>
+      <yloc>656</yloc>
     </entry>
     <entry>
       <name>DUMMY</name>
@@ -663,7 +663,7 @@ PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>288</xloc>
-      <yloc>576</yloc>
+      <yloc>656</yloc>
     </entry>
     <entry>
       <name>DUMMY</name>
@@ -683,7 +683,7 @@ PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>1</nr>
       <xloc>288</xloc>
-      <yloc>448</yloc>
+      <yloc>528</yloc>
     </entry>
     <entry>
       <name>jb_target-delete_marked_rows-custom</name>
@@ -767,7 +767,7 @@ PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>64</xloc>
-      <yloc>992</yloc>
+      <yloc>1072</yloc>
     </entry>
     <entry>
       <name>Success</name>
@@ -777,7 +777,7 @@ PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>496</xloc>
-      <yloc>992</yloc>
+      <yloc>1072</yloc>
     </entry>
     <entry>
       <name>PARAM_CAN_DELETE_ROW_TABLE_NAME is set?</name>
@@ -799,7 +799,7 @@ PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>496</xloc>
-      <yloc>672</yloc>
+      <yloc>752</yloc>
     </entry>
     <entry>
       <name>Log: Using column-based algorithm</name>
@@ -812,7 +812,7 @@ PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>288</xloc>
-      <yloc>864</yloc>
+      <yloc>944</yloc>
     </entry>
     <entry>
       <name>Log: Using table-based algorithm</name>
@@ -825,7 +825,7 @@ PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>736</xloc>
-      <yloc>864</yloc>
+      <yloc>944</yloc>
     </entry>
     <entry>
       <name>PARAM_CAN_DELETE_ROW_SCHEMA_NAME is set?</name>
@@ -847,7 +847,7 @@ PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>736</xloc>
-      <yloc>768</yloc>
+      <yloc>848</yloc>
     </entry>
     <entry>
       <name>jb_log_error - 4</name>
@@ -886,7 +886,7 @@ PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>960</xloc>
-      <yloc>768</yloc>
+      <yloc>848</yloc>
     </entry>
     <entry>
       <name>PARAM_CAN_DELETE_ROW_SOURCE_COLNAME is set?</name>
@@ -908,7 +908,7 @@ PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>1</nr>
       <xloc>288</xloc>
-      <yloc>768</yloc>
+      <yloc>848</yloc>
     </entry>
     <entry>
       <name>jb_log_error - 3</name>
@@ -947,7 +947,7 @@ PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>2</nr>
       <xloc>64</xloc>
-      <yloc>768</yloc>
+      <yloc>848</yloc>
     </entry>
     <entry>
       <name>Delete marked rows from source table - table</name>
@@ -1000,7 +1000,7 @@ PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>736</xloc>
-      <yloc>992</yloc>
+      <yloc>1072</yloc>
     </entry>
     <entry>
       <name>jb_log_error - 2</name>
@@ -1039,7 +1039,7 @@ PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>960</xloc>
-      <yloc>992</yloc>
+      <yloc>1072</yloc>
     </entry>
     <entry>
       <name>Abort job</name>
@@ -1050,7 +1050,7 @@ PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>1</nr>
       <xloc>64</xloc>
-      <yloc>880</yloc>
+      <yloc>960</yloc>
     </entry>
     <entry>
       <name>Abort job</name>
@@ -1061,7 +1061,68 @@ PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>2</nr>
       <xloc>960</xloc>
-      <yloc>864</yloc>
+      <yloc>944</yloc>
+    </entry>
+    <entry>
+      <name>Use default generic delete algorithm?</name>
+      <description />
+      <type>SIMPLE_EVAL</type>
+      <valuetype>variable</valuetype>
+      <fieldname />
+      <variablename>${PARAM_DELETE_MARKED_ROWS_ALGORITHM_ID}</variablename>
+      <fieldtype>number</fieldtype>
+      <mask />
+      <comparevalue>${QF_DELETE_MARKED_ROWS_ALG_GENERIC}</comparevalue>
+      <minvalue />
+      <maxvalue />
+      <successcondition>equal</successcondition>
+      <successnumbercondition>equal</successnumbercondition>
+      <successbooleancondition>true</successbooleancondition>
+      <successwhenvarset>N</successwhenvarset>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>496</xloc>
+      <yloc>432</yloc>
+    </entry>
+    <entry>
+      <name>jb_log_error - Untreated case</name>
+      <description />
+      <type>JOB</type>
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_log_error</jobname>
+      <directory>/generic</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_ERROR_MESSAGE</name>
+          <stream_name />
+          <value>Untreated case in ${Internal.Job.Name} for algorithm to use: PARAM_DELETE_MARKED_ROWS_ALGORITHM_ID = ${PARAM_DELETE_MARKED_ROWS_ALGORITHM_ID}</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>288</xloc>
+      <yloc>432</yloc>
     </entry>
   </entries>
   <hops>
@@ -1090,15 +1151,6 @@ PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Use custom delete algorithm?</from>
-      <to>jb_set_dynamic_db_connection_variables</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
       <unconditional>N</unconditional>
     </hop>
     <hop>
@@ -1308,13 +1360,49 @@ PARAM_TARGET_SCHEMA_TABLE           = ${PARAM_TARGET_SCHEMA_TABLE}</logmessage>
       <evaluation>N</evaluation>
       <unconditional>Y</unconditional>
     </hop>
+    <hop>
+      <from>Use custom delete algorithm?</from>
+      <to>Use default generic delete algorithm?</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Use default generic delete algorithm?</from>
+      <to>jb_set_dynamic_db_connection_variables</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Use default generic delete algorithm?</from>
+      <to>jb_log_error - Untreated case</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_log_error - Untreated case</from>
+      <to>Abort job</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
   </hops>
   <notepads>
     <notepad>
       <note>This job deletes "source" DB rows from a specified table in the source DB that have been "marked for deletion". This job has parameters:
 
 	PARAM_TABLE_META_ID							Primary key of etl.table_meta row for "source" table from which rows will be deleted
-	PARAM_USE_CUSTOM_DELETE_ALGORITHM			"Y" if a custom DELETE algorithm shall be used for this table
+	PARAM_DELETE_MARKED_ROWS_ALGORITHM_ID	ID of the algorithm to use for deleting rows of the source table
 	PARAM_SOURCE_DB_ID								ID the "source" database containing tables that are mirrored to a "target" database
 	PARAM_SOURCE_SCHEMA							Name of schema containing source table that is mirrored to target DB table
 	PARAM_SOURCE_TABLE							Name of source table that is mirrored to target DB table
@@ -1355,7 +1443,7 @@ based on a single parameter:
 
 	PARAM_DB_ID = PARAM_SOURCE_DB_ID</note>
       <xloc>672</xloc>
-      <yloc>416</yloc>
+      <yloc>496</yloc>
       <width>274</width>
       <heigth>108</heigth>
       <fontname>Ubuntu</fontname>
@@ -1382,7 +1470,7 @@ Therefore, we define all of the
 PARAM_DYN_DB_CONN_SOURCE_DB_* variables here for
 use below.</note>
       <xloc>672</xloc>
-      <yloc>544</yloc>
+      <yloc>624</yloc>
       <width>360</width>
       <heigth>108</heigth>
       <fontname>Ubuntu</fontname>
@@ -1405,7 +1493,7 @@ use below.</note>
 PARAM_CAN_DELETE_ROW_SCHEMA_NAME
 *must* also be set.</note>
       <xloc>688</xloc>
-      <yloc>688</yloc>
+      <yloc>768</yloc>
       <width>334</width>
       <heigth>52</heigth>
       <fontname>Ubuntu</fontname>

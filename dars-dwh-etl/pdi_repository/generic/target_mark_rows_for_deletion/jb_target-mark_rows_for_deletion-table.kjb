@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/10/27 08:46:03.667</modified_date>
+  <modified_date>2017/11/22 16:47:42.474</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CAN_DELETE_ROW_SCHEMA_NAME</name>
@@ -71,6 +71,11 @@
       <description>Column of source table that acts as a "last_updated_on" timestamp column</description>
     </parameter>
     <parameter>
+      <name>PARAM_MARK_ROWS_FOR_DELETION_ALGORITHM_ID</name>
+      <default_value>0</default_value>
+      <description>ID of the algorithm to use for marking rows of the source table for deletion</description>
+    </parameter>
+    <parameter>
       <name>PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS</name>
       <default_value>2000000000</default_value>
       <description>Number of seconds after the "row_can_be_deleted_from" timestamp that an archived row can be deleted</description>
@@ -129,11 +134,6 @@
       <name>PARAM_TARGET_TABLE</name>
       <default_value>image</default_value>
       <description>Name of target table to update (not currently used)</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_USE_CUSTOM_DELETE_ALGORITHM</name>
-      <default_value>N</default_value>
-      <description>"Y" if a custom DELETE algorithm shall be used for this table</description>
     </parameter>
   </parameters>
   <connection>
@@ -542,7 +542,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>48</xloc>
-      <yloc>848</yloc>
+      <yloc>928</yloc>
     </entry>
     <entry>
       <name>Log: Parameters</name>
@@ -551,7 +551,7 @@
       <logmessage>PARAM_CDC_LAST_LOAD_UTC                      = ${PARAM_CDC_LAST_LOAD_UTC}
 PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS        = ${PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS}
 PARAM_TABLE_META_ID                          = ${PARAM_TABLE_META_ID}
-PARAM_USE_CUSTOM_DELETE_ALGORITHM            = ${PARAM_USE_CUSTOM_DELETE_ALGORITHM}
+PARAM_MARK_ROWS_FOR_DELETION_ALGORITHM_ID    = ${PARAM_MARK_ROWS_FOR_DELETION_ALGORITHM_ID}
 PARAM_DYN_DB_CONN_TARGET_DB_HOST             = ${PARAM_DYN_DB_CONN_TARGET_DB_HOST}
 PARAM_DYN_DB_CONN_TARGET_DB_PORT             = ${PARAM_DYN_DB_CONN_TARGET_DB_PORT}
 PARAM_DYN_DB_CONN_TARGET_DB_DATABASE         = ${PARAM_DYN_DB_CONN_TARGET_DB_DATABASE}
@@ -619,7 +619,7 @@ PARAM_TARGET_SCHEMA_TABLE                    = ${PARAM_TARGET_SCHEMA_TABLE}
       <draw>Y</draw>
       <nr>2</nr>
       <xloc>48</xloc>
-      <yloc>1008</yloc>
+      <yloc>1088</yloc>
     </entry>
     <entry>
       <name>Are primary key columns configured for this table?</name>
@@ -652,7 +652,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>1</nr>
       <xloc>384</xloc>
-      <yloc>1008</yloc>
+      <yloc>1088</yloc>
     </entry>
     <entry>
       <name>Use custom algorithm?</name>
@@ -660,10 +660,10 @@ ORDER BY
       <type>SIMPLE_EVAL</type>
       <valuetype>variable</valuetype>
       <fieldname />
-      <variablename>${PARAM_USE_CUSTOM_DELETE_ALGORITHM}</variablename>
-      <fieldtype>boolean</fieldtype>
+      <variablename>${PARAM_MARK_ROWS_FOR_DELETION_ALGORITHM_ID}</variablename>
+      <fieldtype>number</fieldtype>
       <mask />
-      <comparevalue />
+      <comparevalue>${QF_MARK_ROWS_FOR_DELETION_ALG_CUSTOM}</comparevalue>
       <minvalue />
       <maxvalue />
       <successcondition>equal</successcondition>
@@ -724,7 +724,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>2</nr>
       <xloc>160</xloc>
-      <yloc>848</yloc>
+      <yloc>928</yloc>
     </entry>
     <entry>
       <name>jb_target-mark_rows_for_deletion-custom</name>
@@ -780,7 +780,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>576</xloc>
-      <yloc>672</yloc>
+      <yloc>752</yloc>
     </entry>
     <entry>
       <name>jb_log_error 2</name>
@@ -819,7 +819,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>2</nr>
       <xloc>160</xloc>
-      <yloc>672</yloc>
+      <yloc>752</yloc>
     </entry>
     <entry>
       <name>jb_set_dynamic_db_connection_variables</name>
@@ -888,7 +888,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>576</xloc>
-      <yloc>1200</yloc>
+      <yloc>1280</yloc>
     </entry>
     <entry>
       <name>Abort job 4</name>
@@ -899,7 +899,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>48</xloc>
-      <yloc>1200</yloc>
+      <yloc>1280</yloc>
     </entry>
     <entry>
       <name>jb_log_error 5</name>
@@ -938,7 +938,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>160</xloc>
-      <yloc>1200</yloc>
+      <yloc>1280</yloc>
     </entry>
     <entry>
       <name>tr_target-mark_rows_for_deletion-inject_meta-column</name>
@@ -1010,7 +1010,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>384</xloc>
-      <yloc>1200</yloc>
+      <yloc>1280</yloc>
     </entry>
     <entry>
       <name>PARAM_CAN_DELETE_ROW_TABLE_NAME is set?</name>
@@ -1032,7 +1032,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>576</xloc>
-      <yloc>752</yloc>
+      <yloc>832</yloc>
     </entry>
     <entry>
       <name>Log: Using column-based algorithm</name>
@@ -1045,7 +1045,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>384</xloc>
-      <yloc>1088</yloc>
+      <yloc>1168</yloc>
     </entry>
     <entry>
       <name>Log: Using table-based algorithm</name>
@@ -1058,7 +1058,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>752</xloc>
-      <yloc>1088</yloc>
+      <yloc>1168</yloc>
     </entry>
     <entry>
       <name>Abort job 5</name>
@@ -1069,7 +1069,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>1088</xloc>
-      <yloc>1200</yloc>
+      <yloc>1280</yloc>
     </entry>
     <entry>
       <name>jb_log_error 6</name>
@@ -1108,7 +1108,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>960</xloc>
-      <yloc>1200</yloc>
+      <yloc>1280</yloc>
     </entry>
     <entry>
       <name>tr_target-mark_rows_for_deletion-table</name>
@@ -1180,7 +1180,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>752</xloc>
-      <yloc>1200</yloc>
+      <yloc>1280</yloc>
     </entry>
     <entry>
       <name>PARAM_CAN_DELETE_ROW_SCHEMA_NAME is set?</name>
@@ -1202,7 +1202,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>752</xloc>
-      <yloc>848</yloc>
+      <yloc>928</yloc>
     </entry>
     <entry>
       <name>jb_log_error 4</name>
@@ -1241,7 +1241,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>960</xloc>
-      <yloc>848</yloc>
+      <yloc>928</yloc>
     </entry>
     <entry>
       <name>PARAM_CAN_DELETE_ROW_SOURCE_COLNAME is set?</name>
@@ -1263,7 +1263,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>1</nr>
       <xloc>384</xloc>
-      <yloc>848</yloc>
+      <yloc>928</yloc>
     </entry>
     <entry>
       <name>PARAM_SOURCE_INSERT_ID_COLNAME is set?</name>
@@ -1285,7 +1285,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>752</xloc>
-      <yloc>1008</yloc>
+      <yloc>1088</yloc>
     </entry>
     <entry>
       <name>jb_log_error 7</name>
@@ -1324,7 +1324,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>2</nr>
       <xloc>1072</xloc>
-      <yloc>1008</yloc>
+      <yloc>1088</yloc>
     </entry>
     <entry>
       <name>Abort job</name>
@@ -1335,7 +1335,68 @@ ORDER BY
       <draw>Y</draw>
       <nr>1</nr>
       <xloc>1072</xloc>
-      <yloc>848</yloc>
+      <yloc>928</yloc>
+    </entry>
+    <entry>
+      <name>Use generic algorithm based on row age?</name>
+      <description />
+      <type>SIMPLE_EVAL</type>
+      <valuetype>variable</valuetype>
+      <fieldname />
+      <variablename>${PARAM_MARK_ROWS_FOR_DELETION_ALGORITHM_ID}</variablename>
+      <fieldtype>number</fieldtype>
+      <mask />
+      <comparevalue>${QF_MARK_ROWS_FOR_DELETION_ALG_ROW_AGE_GENERIC}</comparevalue>
+      <minvalue />
+      <maxvalue />
+      <successcondition>equal</successcondition>
+      <successnumbercondition>equal</successnumbercondition>
+      <successbooleancondition>true</successbooleancondition>
+      <successwhenvarset>N</successwhenvarset>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>576</xloc>
+      <yloc>656</yloc>
+    </entry>
+    <entry>
+      <name>jb_log_error - Untreated case</name>
+      <description />
+      <type>JOB</type>
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_log_error</jobname>
+      <directory>/generic</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_ERROR_MESSAGE</name>
+          <stream_name />
+          <value>Untreated case in ${Internal.Job.Name} for algorithm to use: PARAM_MARK_ROWS_FOR_DELETION_ALGORITHM_ID = ${PARAM_MARK_ROWS_FOR_DELETION_ALGORITHM_ID}</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>160</xloc>
+      <yloc>656</yloc>
     </entry>
   </entries>
   <hops>
@@ -1391,7 +1452,7 @@ ORDER BY
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
+      <unconditional>Y</unconditional>
     </hop>
     <hop>
       <from>"row_can_be_deleted_from" column configured for table?</from>
@@ -1592,15 +1653,6 @@ ORDER BY
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Use custom algorithm?</from>
-      <to>"row_can_be_deleted_from" column configured for table?</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
       <from>PARAM_CAN_DELETE_ROW_SCHEMA_NAME is set?</from>
       <to>PARAM_SOURCE_INSERT_ID_COLNAME is set?</to>
       <from_nr>0</from_nr>
@@ -1645,6 +1697,42 @@ ORDER BY
       <evaluation>N</evaluation>
       <unconditional>Y</unconditional>
     </hop>
+    <hop>
+      <from>Use custom algorithm?</from>
+      <to>Use generic algorithm based on row age?</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Use generic algorithm based on row age?</from>
+      <to>"row_can_be_deleted_from" column configured for table?</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Use generic algorithm based on row age?</from>
+      <to>jb_log_error - Untreated case</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_log_error - Untreated case</from>
+      <to>Abort job</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
   </hops>
   <notepads>
     <notepad>
@@ -1654,7 +1742,7 @@ This job has parameters:
 	PARAM_CDC_LAST_LOAD_UTC								Timestamp for when the target DB was most recently updated successfully
 																Used to ensure that we do not delete rows that are not yet fully archived/mirrored.
 	PARAM_TABLE_META_ID									Primary key of etl.table_meta row for "source" table from which rows will be deleted
-	PARAM_USE_CUSTOM_DELETE_ALGORITHM					"Y" if a custom DELETE algorithm shall be used for this table
+	PARAM_MARK_ROWS_FOR_DELETION_ALGORITHM_ID		ID of the algorithm to use for marking rows of the source table for deletion
 	PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS			Number of seconds after the "row_can_be_deleted_from" timestamp that an archived row can be deleted
 	PARAM_DYN_DB_CONN_TARGET_DB_HOST					for target DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_TARGET_DB_PORT					for target DB "dynamic" database connections
@@ -1727,7 +1815,7 @@ that provides the source table key column
 names. See the comments in that
 transformation for an explanation.</note>
       <xloc>416</xloc>
-      <yloc>912</yloc>
+      <yloc>992</yloc>
       <width>257</width>
       <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
@@ -1749,7 +1837,7 @@ transformation for an explanation.</note>
       <note>TODO:	These 2 sub-transformations must abort the current job
 		if they are not successful for every row. Is this the case?</note>
       <xloc>384</xloc>
-      <yloc>1264</yloc>
+      <yloc>1344</yloc>
       <width>382</width>
       <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
@@ -1768,33 +1856,12 @@ transformation for an explanation.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Generic algorithms:</note>
-      <xloc>528</xloc>
-      <yloc>624</yloc>
-      <width>124</width>
-      <heigth>24</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
       <note>This is to provide a nice error message in the log so that it is clear
 that a "row_can_be_deleted_from" must be configured for the
 table. Without this check PDI will choke when it tries to reference
 this column and it will be harder to track down the problem.</note>
       <xloc>768</xloc>
-      <yloc>656</yloc>
+      <yloc>736</yloc>
       <width>391</width>
       <heigth>66</heigth>
       <fontname>Ubuntu</fontname>
@@ -1844,7 +1911,7 @@ based on a single parameter:
 PARAM_CAN_DELETE_ROW_SCHEMA_NAME
 *must* also be set. If not, this job will abort here.</note>
       <xloc>768</xloc>
-      <yloc>768</yloc>
+      <yloc>848</yloc>
       <width>334</width>
       <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
@@ -1867,7 +1934,7 @@ PARAM_CAN_DELETE_ROW_SCHEMA_NAME
 by creating *rows* of the
 "can delete row" *table*.</note>
       <xloc>784</xloc>
-      <yloc>1152</yloc>
+      <yloc>1232</yloc>
       <width>187</width>
       <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
@@ -1890,7 +1957,7 @@ by creating *rows* of the
 by setting the "can delete row" 
 *column* of the *source table*.</note>
       <xloc>192</xloc>
-      <yloc>1152</yloc>
+      <yloc>1232</yloc>
       <width>194</width>
       <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
@@ -1915,7 +1982,7 @@ has *not* been configured for the source
 table. This is needed in the transformation
 that is executed below.</note>
       <xloc>784</xloc>
-      <yloc>912</yloc>
+      <yloc>992</yloc>
       <width>256</width>
       <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
