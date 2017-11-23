@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/10/29 09:48:25.252</modified_date>
+  <modified_date>2017/11/15 15:04:36.700</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_TARGET_DB_ID</name>
@@ -16,6 +16,57 @@
       <description>ID of the "target" database to which the "source" DB tables will be archived/mirrored</description>
     </parameter>
   </parameters>
+  <connection>
+    <name>dsa_db</name>
+    <server>${QF_DSA_DB_HOST}</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>${QF_DSA_DB_DATABASE}</database>
+    <port>${QF_DSA_DB_PORT}</port>
+    <username>${QF_DSA_DB_USERNAME}</username>
+    <password>${QF_DSA_DB_PASSWORD}</password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>${QF_DSA_DB_PORT}</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
   <connection>
     <name>etl_db</name>
     <server>${QF_ETL_DB_HOST}</server>
@@ -228,7 +279,7 @@
     <database>${QF_PSA_DB_DATABASE}</database>
     <port>${QF_PSA_DB_PORT}</port>
     <username>${QF_PSA_DB_USERNAME}</username>
-    <password>${QF_DWH_DB_PASSWORD}</password>
+    <password>${QF_PSA_DB_PASSWORD}</password>
     <servername />
     <data_tablespace />
     <index_tablespace />
@@ -758,7 +809,7 @@
         <parameter>
           <name>PARAM_ERROR_MESSAGE</name>
           <stream_name />
-          <value>Connection to DWH Mirror DB is not available.</value>
+          <value>Connection to PSA DB is not available.</value>
         </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
@@ -814,7 +865,7 @@
         <parameter>
           <name>PARAM_ERROR_MESSAGE</name>
           <stream_name />
-          <value>Connection to Logging DB (ETL DB?) is not available.</value>
+          <value>Connection to Logging DB is not available.</value>
         </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
@@ -833,7 +884,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>32</xloc>
-      <yloc>512</yloc>
+      <yloc>560</yloc>
     </entry>
     <entry>
       <name>Check ODMS OPR DB connection</name>
@@ -949,7 +1000,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>832</xloc>
+      <xloc>1008</xloc>
       <yloc>192</yloc>
     </entry>
     <entry>
@@ -960,8 +1011,254 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>1</nr>
+      <xloc>1008</xloc>
+      <yloc>560</yloc>
+    </entry>
+    <entry>
+      <name>PARAM_TARGET_DB_ID = QF_DB_ID_DSA ?</name>
+      <description />
+      <type>SIMPLE_EVAL</type>
+      <valuetype>variable</valuetype>
+      <fieldname />
+      <variablename>${PARAM_TARGET_DB_ID}</variablename>
+      <fieldtype>number</fieldtype>
+      <mask />
+      <comparevalue>${QF_DB_ID_DSA}</comparevalue>
+      <minvalue />
+      <maxvalue />
+      <successcondition>equal</successcondition>
+      <successnumbercondition>equal</successnumbercondition>
+      <successbooleancondition>true</successbooleancondition>
+      <successwhenvarset>N</successwhenvarset>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>624</xloc>
+      <yloc>192</yloc>
+    </entry>
+    <entry>
+      <name>Check Logging DB connection</name>
+      <description />
+      <type>CHECK_DB_CONNECTIONS</type>
+      <connections>
+        <connection>
+          <name>logging_db</name>
+          <waitfor>0</waitfor>
+          <waittime>millisecond</waittime>
+        </connection>
+      </connections>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>2</nr>
+      <xloc>624</xloc>
+      <yloc>368</yloc>
+    </entry>
+    <entry>
+      <name>Check ETL DB connection</name>
+      <description />
+      <type>CHECK_DB_CONNECTIONS</type>
+      <connections>
+        <connection>
+          <name>etl_db</name>
+          <waitfor>0</waitfor>
+          <waittime>millisecond</waittime>
+        </connection>
+      </connections>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>1</nr>
+      <xloc>624</xloc>
+      <yloc>464</yloc>
+    </entry>
+    <entry>
+      <name>jb_log_error 2</name>
+      <description />
+      <type>JOB</type>
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_log_error</jobname>
+      <directory>/generic</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_ERROR_MESSAGE</name>
+          <stream_name />
+          <value>Connection to Logging DB is not available.</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>2</nr>
+      <xloc>816</xloc>
+      <yloc>368</yloc>
+    </entry>
+    <entry>
+      <name>jb_log_error 3</name>
+      <description />
+      <type>JOB</type>
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_log_error</jobname>
+      <directory>/generic</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_ERROR_MESSAGE</name>
+          <stream_name />
+          <value>Connection to ETL DB is not available.</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>1</nr>
+      <xloc>816</xloc>
+      <yloc>464</yloc>
+    </entry>
+    <entry>
+      <name>Check PSA DB connection</name>
+      <description />
+      <type>CHECK_DB_CONNECTIONS</type>
+      <connections>
+        <connection>
+          <name>psa_db</name>
+          <waitfor>0</waitfor>
+          <waittime>millisecond</waittime>
+        </connection>
+      </connections>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>1</nr>
+      <xloc>624</xloc>
+      <yloc>752</yloc>
+    </entry>
+    <entry>
+      <name>jb_log_error 6</name>
+      <description />
+      <type>JOB</type>
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_log_error</jobname>
+      <directory>/generic</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_ERROR_MESSAGE</name>
+          <stream_name />
+          <value>Connection to PSA DB is not available.</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>1</nr>
       <xloc>832</xloc>
-      <yloc>304</yloc>
+      <yloc>752</yloc>
+    </entry>
+    <entry>
+      <name>Check DSA DB connection</name>
+      <description />
+      <type>CHECK_DB_CONNECTIONS</type>
+      <connections>
+        <connection>
+          <name>dsa_db</name>
+          <waitfor>0</waitfor>
+          <waittime>millisecond</waittime>
+        </connection>
+      </connections>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>1</nr>
+      <xloc>624</xloc>
+      <yloc>848</yloc>
+    </entry>
+    <entry>
+      <name>jb_log_error 7</name>
+      <description />
+      <type>JOB</type>
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_log_error</jobname>
+      <directory>/generic</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_ERROR_MESSAGE</name>
+          <stream_name />
+          <value>Connection to DSA DB is not available.</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>1</nr>
+      <xloc>832</xloc>
+      <yloc>848</yloc>
     </entry>
   </entries>
   <hops>
@@ -1128,7 +1425,25 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
+      <from>jb_log_error - Untreated case</from>
+      <to>Abort job</to>
+      <from_nr>0</from_nr>
+      <to_nr>1</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
       <from>PARAM_TARGET_DB_ID = QF_DB_ID_PSA ?</from>
+      <to>PARAM_TARGET_DB_ID = QF_DB_ID_DSA ?</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>PARAM_TARGET_DB_ID = QF_DB_ID_DSA ?</from>
       <to>jb_log_error - Untreated case</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -1137,9 +1452,108 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>jb_log_error - Untreated case</from>
-      <to>Abort job</to>
+      <from>PARAM_TARGET_DB_ID = QF_DB_ID_DSA ?</from>
+      <to>Check Logging DB connection</to>
       <from_nr>0</from_nr>
+      <to_nr>2</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Check Logging DB connection</from>
+      <to>Check ETL DB connection</to>
+      <from_nr>2</from_nr>
+      <to_nr>1</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Check ETL DB connection</from>
+      <to>Check PSA DB connection</to>
+      <from_nr>1</from_nr>
+      <to_nr>1</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Check PSA DB connection</from>
+      <to>Check DSA DB connection</to>
+      <from_nr>1</from_nr>
+      <to_nr>1</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Check Logging DB connection</from>
+      <to>jb_log_error 2</to>
+      <from_nr>2</from_nr>
+      <to_nr>2</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Check ETL DB connection</from>
+      <to>jb_log_error 3</to>
+      <from_nr>1</from_nr>
+      <to_nr>1</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Check PSA DB connection</from>
+      <to>jb_log_error 6</to>
+      <from_nr>1</from_nr>
+      <to_nr>1</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Check DSA DB connection</from>
+      <to>jb_log_error 7</to>
+      <from_nr>1</from_nr>
+      <to_nr>1</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_log_error 2</from>
+      <to>Abort job</to>
+      <from_nr>2</from_nr>
+      <to_nr>1</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>jb_log_error 3</from>
+      <to>Abort job</to>
+      <from_nr>1</from_nr>
+      <to_nr>1</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>jb_log_error 6</from>
+      <to>Abort job</to>
+      <from_nr>1</from_nr>
+      <to_nr>1</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>jb_log_error 7</from>
+      <to>Abort job</to>
+      <from_nr>1</from_nr>
       <to_nr>1</to_nr>
       <enabled>Y</enabled>
       <evaluation>N</evaluation>
@@ -1182,7 +1596,7 @@ This transformation has parameter:
       <note>Check for additional
 "target" DBs as I add
 support for them.</note>
-      <xloc>544</xloc>
+      <xloc>784</xloc>
       <yloc>208</yloc>
       <width>132</width>
       <heigth>52</heigth>
@@ -1202,11 +1616,11 @@ support for them.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>TODO:	Make this job fully generic by generating a steam of source DB IDs.
+      <note>TODO:	Make this job fully generic by generating a stream of source DB IDs.
 		Then execute a sub-job for each source DB ID which delegates to an
 		appropriate "Check XXX DB connection" job entry.</note>
-      <xloc>528</xloc>
-      <yloc>464</yloc>
+      <xloc>768</xloc>
+      <yloc>48</yloc>
       <width>452</width>
       <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
