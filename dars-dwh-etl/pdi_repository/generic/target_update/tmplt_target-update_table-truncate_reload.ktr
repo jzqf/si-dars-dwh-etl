@@ -529,7 +529,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/11/23 09:00:05.565</modified_date>
+    <modified_date>2017/11/23 14:44:00.372</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -718,27 +718,6 @@ This transformation has parameters:
       <drawshadow>N</drawshadow>
     </notepad>
     <notepad>
-      <note>Uses "SELECT *" -></note>
-      <xloc>16</xloc>
-      <yloc>368</yloc>
-      <width>117</width>
-      <heigth>24</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>255</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
       <note>Although this transformation has parameters whose values are used in its steps, these parameters are not passed values from
 the parent transformation in the usual way this is normally done in PDI. This is because the "ETL Metadata Injection" step (which
 is responsible for executing this template transformation) does not support parameter passing. Nevertheless, it appears
@@ -764,6 +743,27 @@ passed to it in the normal fashion because it is a normal transformation (all me
       <fontcolorblue>0</fontcolorblue>
       <backgroundcolorred>255</backgroundcolorred>
       <backgroundcolorgreen>255</backgroundcolorgreen>
+      <backgroundcolorblue>0</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Metadata injected -></note>
+      <xloc>16</xloc>
+      <yloc>368</yloc>
+      <width>130</width>
+      <heigth>24</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>255</fontcolorred>
+      <fontcolorgreen>255</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>0</backgroundcolorred>
+      <backgroundcolorgreen>0</backgroundcolorgreen>
       <backgroundcolorblue>0</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
@@ -1010,12 +1010,14 @@ passed to it in the normal fashion because it is a normal transformation (all me
       <schema_name />
     </partitioning>
     <connection>generic_source_db</connection>
-    <sql>SELECT
-    *
-FROM
-    ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</sql>
+    <sql>-- This statement is commented out because the SQL statement is, 
+-- instead, injected via ETL Metadata Injection:
+--SELECT
+--    *
+--FROM
+--    ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</sql>
     <limit>0</limit>
-    <lookup>Write to log: parameters, max_target_insert_id</lookup>
+    <lookup />
     <execute_each_row>N</execute_each_row>
     <variables_active>Y</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
