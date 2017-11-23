@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/11/22 09:20:54.204</modified_date>
+  <modified_date>2017/11/23 08:44:19.901</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
@@ -89,11 +89,6 @@
       <name>PARAM_DYN_DB_CONN_TARGET_DB_USERNAME</name>
       <default_value />
       <description>for target DB "dynamic" database connections</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_MAX_INSERT_ID</name>
-      <default_value />
-      <description>Maximum value of the "insert_id" column for rows to load from the source DB table</description>
     </parameter>
     <parameter>
       <name>PARAM_SOURCE_DB_ID</name>
@@ -526,16 +521,16 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>512</xloc>
-      <yloc>400</yloc>
+      <yloc>384</yloc>
     </entry>
     <entry>
-      <name>tr_target-update_table-insert_only_table</name>
+      <name>tr_target-update_table-truncate_reload</name>
       <description />
       <type>TRANS</type>
       <specification_method>rep_name</specification_method>
       <trans_object_id />
       <filename />
-      <transname>tr_target-update_table-insert_only_table</transname>
+      <transname>tr_target-update_table-truncate_reload</transname>
       <directory>${Internal.Entry.Current.Directory}</directory>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -558,32 +553,12 @@
       <run_configuration>Pentaho local</run_configuration>
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
-        <parameter>
-          <name>PARAM_SOURCE_INSERT_ID_COLNAME</name>
-          <stream_name />
-          <value>${QF_SOURCE_INSERT_ID_COLNAME}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_TARGET_INSERT_ID_COLNAME</name>
-          <stream_name />
-          <value>${QF_TARGET_INSERT_ID_COLNAME}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_SOURCE_INSERTED_ON_COLNAME</name>
-          <stream_name />
-          <value>${QF_SOURCE_INSERTED_ON_COLNAME}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_TARGET_INSERTED_ON_COLNAME</name>
-          <stream_name />
-          <value>${QF_TARGET_INSERTED_ON_COLNAME}</value>
-        </parameter>
       </parameters>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>624</xloc>
-      <yloc>688</yloc>
+      <yloc>672</yloc>
     </entry>
     <entry>
       <name>jb_update_etl_table_meta_mirror_details</name>
@@ -614,7 +589,7 @@
         <parameter>
           <name>PARAM_TABLE_MIRROR_TREATMENT_ID</name>
           <stream_name />
-          <value>${QF_MIRROR_ALG_INSERT_ONLY_GENERIC}</value>
+          <value>${QF_MIRROR_ALG_TRUNCATE_RELOAD_GENERIC}</value>
         </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
@@ -622,7 +597,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>624</xloc>
-      <yloc>784</yloc>
+      <yloc>768</yloc>
     </entry>
     <entry>
       <name>jb_log_error 3</name>
@@ -661,7 +636,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>416</xloc>
-      <yloc>688</yloc>
+      <yloc>672</yloc>
     </entry>
     <entry>
       <name>Abort job</name>
@@ -672,7 +647,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>304</xloc>
-      <yloc>592</yloc>
+      <yloc>576</yloc>
     </entry>
     <entry>
       <name>Is there column mapping metadata for this table?</name>
@@ -718,7 +693,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>624</xloc>
-      <yloc>496</yloc>
+      <yloc>480</yloc>
     </entry>
     <entry>
       <name>jb_log_error 1</name>
@@ -757,7 +732,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>1</nr>
       <xloc>416</xloc>
-      <yloc>496</yloc>
+      <yloc>480</yloc>
     </entry>
     <entry>
       <name>Success</name>
@@ -767,7 +742,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>304</xloc>
-      <yloc>496</yloc>
+      <yloc>480</yloc>
     </entry>
     <entry>
       <name>DUMMY</name>
@@ -787,7 +762,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>304</xloc>
-      <yloc>784</yloc>
+      <yloc>768</yloc>
     </entry>
     <entry>
       <name>Log parameters</name>
@@ -823,12 +798,12 @@ PARAM_TARGET_TABLE                   = ${PARAM_TARGET_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>624</xloc>
-      <yloc>400</yloc>
+      <yloc>384</yloc>
     </entry>
   </entries>
   <hops>
     <hop>
-      <from>tr_target-update_table-insert_only_table</from>
+      <from>tr_target-update_table-truncate_reload</from>
       <to>jb_log_error 3</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -873,7 +848,7 @@ PARAM_TARGET_TABLE                   = ${PARAM_TARGET_TABLE}</logmessage>
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>tr_target-update_table-insert_only_table</from>
+      <from>tr_target-update_table-truncate_reload</from>
       <to>jb_update_etl_table_meta_mirror_details</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -919,12 +894,12 @@ PARAM_TARGET_TABLE                   = ${PARAM_TARGET_TABLE}</logmessage>
     </hop>
     <hop>
       <from>Is there column mapping metadata for this table?</from>
-      <to>Abort job</to>
+      <to>tr_target-update_table-truncate_reload</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>Y</unconditional>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
     </hop>
   </hops>
   <notepads>
@@ -949,7 +924,6 @@ PARAM_TARGET_TABLE                   = ${PARAM_TARGET_TABLE}</logmessage>
 	PARAM_DYN_DB_CONN_SOURCE_DB_URL			for source DB "dynamic" database connections
 	PARAM_SOURCE_DB_ID								ID the "source" database containing tables will be mirrored to a "target" database
 	PARAM_TABLE_META_ID							Primary key of etl.table_meta row for "source" table archived/mirrored to "target" table
-	PARAM_MAX_INSERT_ID							Maximum value of the "insert_id" column for rows to load from the source DB table
 	PARAM_SOURCE_SCHEMA							Name of schema containing source table to mirror to target table
 	PARAM_SOURCE_TABLE							Name of source table to mirror to target table
 	PARAM_TARGET_DB_ID								ID of the "target" database to which the "source" DB tables will be archived/mirrored
@@ -958,7 +932,7 @@ PARAM_TARGET_TABLE                   = ${PARAM_TARGET_TABLE}</logmessage>
       <xloc>16</xloc>
       <yloc>0</yloc>
       <width>933</width>
-      <heigth>374</heigth>
+      <heigth>360</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -979,7 +953,7 @@ PARAM_TARGET_TABLE                   = ${PARAM_TARGET_TABLE}</logmessage>
 current job. This records which mirror algorithm was used, as well as when the 
 mirroring was performed.</note>
       <xloc>784</xloc>
-      <yloc>768</yloc>
+      <yloc>752</yloc>
       <width>467</width>
       <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
@@ -1004,7 +978,7 @@ execution has failed. It will then direct
 the execution flow to the job that 
 sends out failure e-mails.</note>
       <xloc>16</xloc>
-      <yloc>560</yloc>
+      <yloc>544</yloc>
       <width>232</width>
       <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
@@ -1029,7 +1003,7 @@ the case where no column mapping
 metdata is provided for the table. This
 may not be the best behaviour.</note>
       <xloc>16</xloc>
-      <yloc>464</yloc>
+      <yloc>448</yloc>
       <width>252</width>
       <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
@@ -1052,7 +1026,7 @@ may not be the best behaviour.</note>
 
 This transformation is for a PostgreSQL "source" and "target" DB.</note>
       <xloc>784</xloc>
-      <yloc>672</yloc>
+      <yloc>656</yloc>
       <width>392</width>
       <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
@@ -1071,18 +1045,18 @@ This transformation is for a PostgreSQL "source" and "target" DB.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>The query in this step (at least the WHERE clause) must match the query in 
-tr_target-update_table-insert_only_table
-that is executed below. This is because a PDI runtime error occurs if an 
-empty stream is sent to an ETL Metadata Injection step. To avoid this 
-from happening, we check that metadata is available here before 
-executing that transformation. The only reason why this case should 
-occur is if a table is marked for mirroring, but no column mapping 
-metadata is provided - this should never occur, but we check in order to 
-provide a warning message, rather than letting PDI choke on this problem.</note>
+      <note>The query in this step (at least the WHERE clause) must match the query in
+tr_target-update_table-truncate_reload that is executed below. This is 
+because a PDI runtime error occurs if an empty stream is sent to an ETL 
+Metadata Injection step. To avoid this from happening, we check that 
+metadata is available here before executing that transformation. The 
+only reason why this case should occur is if a table is marked for 
+mirroring, but no column mapping metadata is provided - this should 
+never occur, but we check in order to provide a warning message, rather
+than letting PDI choke on this problem.</note>
       <xloc>784</xloc>
-      <yloc>432</yloc>
-      <width>445</width>
+      <yloc>416</yloc>
+      <width>438</width>
       <heigth>136</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -1103,7 +1077,7 @@ provide a warning message, rather than letting PDI choke on this problem.</note>
       <note>TODO:	This sub-transformation entry must abort the current
 		job if it is not successful for every row. Is this the case?</note>
       <xloc>240</xloc>
-      <yloc>736</yloc>
+      <yloc>720</yloc>
       <width>375</width>
       <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
@@ -1116,48 +1090,6 @@ provide a warning message, rather than letting PDI choke on this problem.</note>
       <backgroundcolorred>0</backgroundcolorred>
       <backgroundcolorgreen>0</backgroundcolorgreen>
       <backgroundcolorblue>0</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>TODO: Make sure jb_update_etl_table_meta_mirror_details assigns 4 for the algorithm ID used!</note>
-      <xloc>624</xloc>
-      <yloc>848</yloc>
-      <width>861</width>
-      <heigth>32</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>14</fontsize>
-      <fontbold>Y</fontbold>
-      <fontitalic>Y</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>TODO: Update this note!</note>
-      <xloc>1248</xloc>
-      <yloc>480</yloc>
-      <width>226</width>
-      <heigth>32</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>14</fontsize>
-      <fontbold>Y</fontbold>
-      <fontitalic>Y</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
       <bordercolorblue>100</bordercolorblue>
