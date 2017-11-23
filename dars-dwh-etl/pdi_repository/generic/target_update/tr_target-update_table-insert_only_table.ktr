@@ -569,7 +569,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/11/22 12:07:28.871</modified_date>
+    <modified_date>2017/11/23 15:13:57.789</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -637,8 +637,8 @@ The Data Grid step is only used for testing this transformation by running it in
 manually supplied parameter values (or default values set for the parameters). When you 
 disable a hop to the ETL Metadata Injection step, all configuration settings may be cleared,
 so do not do this unless you are prepared to reconfigure this step.</note>
-      <xloc>784</xloc>
-      <yloc>480</yloc>
+      <xloc>16</xloc>
+      <yloc>768</yloc>
       <width>541</width>
       <heigth>150</heigth>
       <fontname>Ubuntu</fontname>
@@ -676,6 +676,29 @@ comments in that job for an explanation.</note>
       <backgroundcolorred>255</backgroundcolorred>
       <backgroundcolorgreen>255</backgroundcolorgreen>
       <backgroundcolorblue>0</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>This SELECT statement could, instead, be assigned to a PDI variable
+which is de-referenced in the template transformation. In that way it
+would be easier to debug &amp; log this statement.</note>
+      <xloc>736</xloc>
+      <yloc>480</yloc>
+      <width>406</width>
+      <heigth>52</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
       <bordercolorblue>100</bordercolorblue>
@@ -792,6 +815,11 @@ comments in that job for an explanation.</note>
     </hop>
     <hop>
       <from>Column mapping metadata</from>
+      <to>Inject metadata - tmplt_target-update_table-insert_only_table</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>SELECT statement for source DB</from>
       <to>Inject metadata - tmplt_target-update_table-insert_only_table</to>
       <enabled>Y</enabled>
     </hop>
@@ -930,8 +958,8 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>656</xloc>
-      <yloc>496</yloc>
+      <xloc>384</xloc>
+      <yloc>704</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -967,13 +995,6 @@ ORDER BY
       </mapping>
       <mapping>
         <target_step_name>Map column names</target_step_name>
-        <target_attribute_key>FIELD_NAME</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Column mapping metadata</source_step>
-        <source_field>source_col_name</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Map column names</target_step_name>
         <target_attribute_key>FIELD_PRECISION</target_attribute_key>
         <target_detail>Y</target_detail>
         <source_step>Column mapping metadata</source_step>
@@ -986,6 +1007,20 @@ ORDER BY
         <source_step>Column mapping metadata</source_step>
         <source_field>target_col_name</source_field>
       </mapping>
+      <mapping>
+        <target_step_name>Table input -  source_db.schema.table</target_step_name>
+        <target_attribute_key>SQL</target_attribute_key>
+        <target_detail>N</target_detail>
+        <source_step>SELECT statement for source DB</source_step>
+        <source_field>select_source_rows_sql</source_field>
+      </mapping>
+      <mapping>
+        <target_step_name>Map column names</target_step_name>
+        <target_attribute_key>FIELD_NAME</target_attribute_key>
+        <target_detail>Y</target_detail>
+        <source_step>Column mapping metadata</source_step>
+        <source_field>source_col_name</source_field>
+      </mapping>
     </mappings>
     <cluster_schema />
     <remotesteps>
@@ -995,8 +1030,66 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>384</xloc>
+      <xloc>496</xloc>
       <yloc>608</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>SELECT statement for source DB</name>
+    <type>TableInput</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <connection>etl_db</connection>
+    <sql>WITH
+    -- Create table with a string column that contains the columns from the 
+    -- source DB table to load:
+    select_list AS (
+        SELECT 
+            -- POSTGRESQL-SPECIFIC
+            array_to_string(array_agg(source_column_name ORDER BY column_meta_id ASC), ',') AS "str_value"
+        FROM 
+            etl.column_meta 
+        WHERE
+            table_meta_id = ${PARAM_TABLE_META_ID} AND 
+            -- This selects the columns from the source DB table that will be 
+            -- archived/mirrored with corresponding columns from the target DB table.
+            mirror_column = true
+    )
+SELECT
+    -- Create SELECT statement:
+    'SELECT ' || CAST(select_list.str_value AS VARCHAR) || 
+    ' FROM ' ||
+        '${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE} ' ||
+    'WHERE ' ||
+        '${PARAM_SOURCE_INSERT_ID_COLNAME} > ? AND ' ||                      -- newly INSERTed rows
+        '${PARAM_SOURCE_INSERT_ID_COLNAME} &lt;=  ${PARAM_MAX_INSERT_ID} ' ||   -- to avoid loading rows that are inserted after the job starts
+    'ORDER BY ' ||
+        '${PARAM_SOURCE_INSERT_ID_COLNAME}'
+    AS "select_source_rows_sql" 
+FROM
+    select_list</sql>
+    <limit>0</limit>
+    <lookup />
+    <execute_each_row>N</execute_each_row>
+    <variables_active>Y</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>624</xloc>
+      <yloc>496</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
