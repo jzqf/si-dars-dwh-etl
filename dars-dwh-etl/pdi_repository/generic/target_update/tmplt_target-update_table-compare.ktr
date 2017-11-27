@@ -1,6 +1,6 @@
 <transformation>
   <info>
-    <name>tr_target-update_table-updatable_table</name>
+    <name>tmplt_target-update_table-compare</name>
     <description />
     <extended_description />
     <trans_version />
@@ -9,18 +9,8 @@
     <directory>/generic/target_update</directory>
     <parameters>
       <parameter>
-        <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
-        <default_value>2100.01.01 00:00:00</default_value>
-        <description>Timestamp of the current load (no rows after this timestamp will be loaded)</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_CDC_LAST_LOAD_UTC</name>
-        <default_value>1900.01.01 00:00:00</default_value>
-        <description>Timestamp of last successful load from the source database</description>
-      </parameter>
-      <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE</name>
-        <default_value>odms_opr</default_value>
+        <default_value />
         <description>for source DB "dynamic" database connections</description>
       </parameter>
       <parameter>
@@ -30,17 +20,17 @@
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_HOST</name>
-        <default_value>localhost</default_value>
+        <default_value />
         <description>for source DB "dynamic" database connections</description>
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD</name>
-        <default_value>qfree_admin</default_value>
+        <default_value />
         <description>for source DB "dynamic" database connections</description>
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_PORT</name>
-        <default_value>5432</default_value>
+        <default_value />
         <description>for source DB "dynamic" database connections</description>
       </parameter>
       <parameter>
@@ -50,12 +40,12 @@
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME</name>
-        <default_value>qfree_admin</default_value>
+        <default_value />
         <description>for source DB "dynamic" database connections</description>
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_TARGET_DB_DATABASE</name>
-        <default_value>dars_psa_db</default_value>
+        <default_value />
         <description>for target DB "dynamic" database connections</description>
       </parameter>
       <parameter>
@@ -65,17 +55,17 @@
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_TARGET_DB_HOST</name>
-        <default_value>localhost</default_value>
+        <default_value />
         <description>for target DB "dynamic" database connections</description>
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD</name>
-        <default_value>etl</default_value>
+        <default_value />
         <description>for target DB "dynamic" database connections</description>
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_TARGET_DB_PORT</name>
-        <default_value>5432</default_value>
+        <default_value />
         <description>for target DB "dynamic" database connections</description>
       </parameter>
       <parameter>
@@ -85,78 +75,43 @@
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_TARGET_DB_USERNAME</name>
-        <default_value>etl</default_value>
+        <default_value />
         <description>for target DB "dynamic" database connections</description>
       </parameter>
       <parameter>
-        <name>PARAM_MAX_INSERT_ID</name>
-        <default_value>1000</default_value>
-        <description>Maximum value of the "insert_id" column for rows to load from the source DB table</description>
-      </parameter>
-      <parameter>
         <name>PARAM_SOURCE_DB_ID</name>
-        <default_value>2</default_value>
-        <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_SOURCE_INSERTED_ON_COLNAME</name>
-        <default_value />
-        <description>Name of column acting as "inserted_on" timestamp column of source table</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_SOURCE_INSERT_ID_COLNAME</name>
-        <default_value>sid</default_value>
-        <description>Name of column acting as "insert_id" column of source table</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_SOURCE_LAST_UPDATED_ON_COLNAME</name>
-        <default_value>last_updated_on</default_value>
-        <description>Name of "last_updated_on" timestamp column of source table</description>
+        <default_value>-1</default_value>
+        <description>ID the "source" database containing the table that has been mirrored to a "target" database</description>
       </parameter>
       <parameter>
         <name>PARAM_SOURCE_SCHEMA</name>
-        <default_value>public</default_value>
+        <default_value>passage</default_value>
         <description>Name of schema containing source table to mirror to target table</description>
       </parameter>
       <parameter>
         <name>PARAM_SOURCE_TABLE</name>
-        <default_value>sid_register</default_value>
+        <default_value>passage</default_value>
         <description>Name of source table to mirror to target table</description>
       </parameter>
       <parameter>
         <name>PARAM_TABLE_META_ID</name>
-        <default_value>297</default_value>
-        <description>Primary key of etl.table_meta row for "source" table archived/mirrored to "target" table</description>
+        <default_value>0</default_value>
+        <description>Primary key of etl.table_meta row for the table pair being compared</description>
       </parameter>
       <parameter>
         <name>PARAM_TARGET_DB_ID</name>
-        <default_value>10</default_value>
-        <description>ID of the "target" database to which "source" DB tables will be archived/mirrored</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_TARGET_INSERTED_ON_COLNAME</name>
-        <default_value />
-        <description>Name of column acting as "inserted_on" timestamp column of target table</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_TARGET_INSERT_ID_COLNAME</name>
-        <default_value>sid</default_value>
-        <description>Name of column acting as "insert_id" column of target table</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_TARGET_LAST_UPDATED_ON_COLNAME</name>
-        <default_value>last_updated_on</default_value>
-        <description>Name of "last_updated_on" timestamp column of target table</description>
+        <default_value>-1</default_value>
+        <description>ID of the "target" database to which the "source" DB table has been archived/mirrored</description>
       </parameter>
       <parameter>
         <name>PARAM_TARGET_SCHEMA</name>
-        <default_value>odms</default_value>
-        <description>Name of schema containing target table to update</description>
+        <default_value>passage</default_value>
+        <description>Name of schema containing target table to update (not currently used)</description>
       </parameter>
       <parameter>
         <name>PARAM_TARGET_TABLE</name>
-        <default_value>sid_register</default_value>
-        <description>Name of target table to update</description>
+        <default_value>passage</default_value>
+        <description>Name of target table to update (not currently used)</description>
       </parameter>
     </parameters>
     <log>
@@ -579,51 +534,22 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/11/27 13:47:20.756</modified_date>
+    <modified_date>2017/11/27 14:26:06.116</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>This transformation uses ETL Metadata injection to control how columns of a table in a source database are mapped to columns 
-of a target table in a target database. This is a generic algorithm that can work with *any* table, as long as it is classed as "updatable"
-(INSERTs &amp; UPDATEs allowed, but no DELETEs) and it has the necessary "insert_id", "inserted_on" &amp; "last_updated_on" columns. 
-This transformation has parameters:
-
-	PARAM_CDC_LAST_LOAD_UTC						Timestamp for when the target DB was most recently updated successfully
-	PARAM_CDC_CURRENT_LOAD_UTC					Used so that a consistent max timestamp is used for all ETL
-	PARAM_DYN_DB_CONN_SOURCE_DB_HOST			for source DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_SOURCE_DB_PORT			for source DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE	for source DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME	for source DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD	for source DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_SOURCE_DB_URL			for source DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER		for source DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_TARGET_DB_HOST			for target DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_TARGET_DB_PORT			for target DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_TARGET_DB_DATABASE		for target DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_TARGET_DB_USERNAME	for target DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD	for target DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_TARGET_DB_URL			for target DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_TARGET_DB_DRIVER		for target DB "dynamic" database connections
-	PARAM_MAX_INSERT_ID							Maximum value of the "insert_id" column for rows to load from the source DB table
-	PARAM_TABLE_META_ID							Primary key of etl.table_meta row for "source" table archived/mirrored to "target" table
-	PARAM_SOURCE_DB_ID								ID the "source" database containing tables will be mirrored to a "target" database
-	PARAM_SOURCE_SCHEMA							Name of schema containing source table to mirror to target table
-	PARAM_SOURCE_TABLE							Name of source table to mirror to target table
-	PARAM_SOURCE_INSERT_ID_COLNAME				Name of column acting as "insert_id"  timestamp column of source table
-	PARAM_SOURCE_INSERTED_ON_COLNAME			Name of column acting as "inserted_on" column of source table
-	PARAM_SOURCE_LAST_UPDATED_ON_COLNAME	Name of "last_updated_on" timestamp column of source table
-	PARAM_TARGET_DB_ID								ID of the "target" database to which the "source" DB tables will be archived/mirrored
-	PARAM_TARGET_SCHEMA							Name of schema containing target table to update (not currently used)
-	PARAM_TARGET_TABLE								Name of target table to update (not currently used)
-	PARAM_TARGET_INSERT_ID_COLNAME				Name of column acting as "insert_id"  timestamp column of target table
-	PARAM_TARGET_INSERTED_ON_COLNAME			Name of column acting as "inserted_on" column of target table
-	PARAM_TARGET_LAST_UPDATED_ON_COLNAME	Name of "last_updated_on" timestamp column of target table</note>
-      <xloc>16</xloc>
-      <yloc>0</yloc>
-      <width>862</width>
-      <heigth>500</heigth>
+      <note>Load the data from both the source DB table and the targetDB table to which
+it is mirrored. The "ORDER BY" clauses must consist of the tables' primary key
+column(s). This is needed by the "Merge Rows" step. The fields in each stream 
+must be identical and in the same order when fed to the "Merge rows" step. 
+The SELECT statements in these two "Table input" steps set the field order 
+appropriately.</note>
+      <xloc>464</xloc>
+      <yloc>368</yloc>
+      <width>463</width>
+      <heigth>94</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -640,87 +566,56 @@ This transformation has parameters:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>The query here (at least the WHERE clause)
-must match the query in 
-jb_target-update_table-updatable_table
-where this transformation is executed. See the 
-comments in that job for an explanation.</note>
-      <xloc>576</xloc>
-      <yloc>528</yloc>
-      <width>283</width>
-      <heigth>80</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>255</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>The query here (at least the WHERE clause) 
-must match the query in 
-jb_target-update_table-updatable_table
-where this transformation is executed. See the 
-comments in that job for an explanation.</note>
-      <xloc>576</xloc>
-      <yloc>640</yloc>
-      <width>283</width>
-      <heigth>80</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>255</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>The query here (at least the WHERE clause) 
-must match the query in 
-jb_target-update_table-updatable_table
-where this transformation is executed. See the 
-comments in that job for an explanation.</note>
-      <xloc>576</xloc>
-      <yloc>752</yloc>
-      <width>283</width>
-      <heigth>80</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>255</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>This SELECT statement could, instead, be assigned to a PDI variable
-which is de-referenced in the template transformation. In that way it
-would be easier to debug &amp; log this statement.</note>
+      <note>This transformation updates the target DB mirror of an "insert-only" table from the source DB. This is a generic algorithm that can work with *any* table, 
+as long as it is insert-only and it has the necessary metadata defined. This transformation has parameters:
+
+	PARAM_DYN_DB_CONN_SOURCE_DB_HOST			for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_PORT			for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE	for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME	for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD	for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER		for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_URL			for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_HOST			for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_PORT			for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_DATABASE		for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_USERNAME	for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD	for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_DRIVER		for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_URL			for target DB "dynamic" database connections
+	PARAM_TABLE_META_ID							Primary key of etl.table_meta row for the table pair being compared
+	PARAM_SOURCE_DB_ID								ID the "source" database containing tables that are mirrored to a "target" database
+	PARAM_SOURCE_SCHEMA							Name of schema containing the source table to compare to the target table
+	PARAM_SOURCE_TABLE							Name of the source table to compare to the target table
+	PARAM_TARGET_DB_ID								ID of the "target" database to which "source" DB tables have been archived/mirrored
+	PARAM_TARGET_SCHEMA							Name of schema containing the target table to compare with the source table (not currently used?)
+	PARAM_TARGET_TABLE								Name of the target table to compare with the source table (not currently used?)</note>
       <xloc>16</xloc>
-      <yloc>832</yloc>
-      <width>406</width>
+      <yloc>0</yloc>
+      <width>922</width>
+      <heigth>346</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Compare the two streams row by row and determine whether they are "identical", 
+"changed," "new" or "deleted". This adds a new field named "flagfield" to the 
+stream that contains these values.</note>
+      <xloc>384</xloc>
+      <yloc>560</yloc>
+      <width>489</width>
       <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -737,16 +632,301 @@ would be easier to debug &amp; log this statement.</note>
       <bordercolorblue>100</bordercolorblue>
       <drawshadow>Y</drawshadow>
     </notepad>
+    <notepad>
+      <note>Rename the stream fields from the source DB table to the field names from
+the target DB table. This is required for the "Merge rows" step.</note>
+      <xloc>384</xloc>
+      <yloc>480</yloc>
+      <width>450</width>
+      <heigth>38</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Filter rows on field "flagfield" that was created by the "Merge Rows" step. This so that we can
+treat separately source table rows that have been inserted, modified or deleted. The current
+behaviour retains rows of the target table that have been deleted from the source table.</note>
+      <xloc>384</xloc>
+      <yloc>640</yloc>
+      <width>556</width>
+      <heigth>52</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Update the target table, as appropriate. This step can potentially either insert, update or delete rows
+of the target table.</note>
+      <xloc>736</xloc>
+      <yloc>928</yloc>
+      <width>601</width>
+      <heigth>38</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Metadata
+injected -></note>
+      <xloc>32</xloc>
+      <yloc>368</yloc>
+      <width>70</width>
+      <heigth>38</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>255</fontcolorred>
+      <fontcolorgreen>255</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>26</backgroundcolorred>
+      <backgroundcolorgreen>26</backgroundcolorgreen>
+      <backgroundcolorblue>26</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Metadata injected -></note>
+      <xloc>16</xloc>
+      <yloc>480</yloc>
+      <width>130</width>
+      <heigth>24</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>255</fontcolorred>
+      <fontcolorgreen>255</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>26</backgroundcolorred>
+      <backgroundcolorgreen>26</backgroundcolorgreen>
+      <backgroundcolorblue>26</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Metadata injected -></note>
+      <xloc>64</xloc>
+      <yloc>576</yloc>
+      <width>130</width>
+      <heigth>24</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>255</fontcolorred>
+      <fontcolorgreen>255</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>26</backgroundcolorred>
+      <backgroundcolorgreen>26</backgroundcolorgreen>
+      <backgroundcolorblue>26</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Metadata
+injected -></note>
+      <xloc>272</xloc>
+      <yloc>368</yloc>
+      <width>70</width>
+      <heigth>38</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>255</fontcolorred>
+      <fontcolorgreen>255</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>26</backgroundcolorred>
+      <backgroundcolorgreen>26</backgroundcolorgreen>
+      <backgroundcolorblue>26</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Metadata injected -></note>
+      <xloc>656</xloc>
+      <yloc>864</yloc>
+      <width>130</width>
+      <heigth>24</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>255</fontcolorred>
+      <fontcolorgreen>255</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>26</backgroundcolorred>
+      <backgroundcolorgreen>26</backgroundcolorgreen>
+      <backgroundcolorblue>26</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>identical</note>
+      <xloc>16</xloc>
+      <yloc>784</yloc>
+      <width>60</width>
+      <heigth>24</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>deleted</note>
+      <xloc>208</xloc>
+      <yloc>784</yloc>
+      <width>56</width>
+      <heigth>24</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>new</note>
+      <xloc>464</xloc>
+      <yloc>784</yloc>
+      <width>34</width>
+      <heigth>24</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>changed</note>
+      <xloc>736</xloc>
+      <yloc>784</yloc>
+      <width>60</width>
+      <heigth>24</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>There is no point adding an option so that rows
+that have been deleted from the source table 
+are deleted from the target table. If that 
+behaviour is desired, then use the "truncate-
+reload" algorithm, not this "compare tables" 
+algorithm. The "truncate-reload" algorithm will
+be much faster.</note>
+      <xloc>128</xloc>
+      <yloc>848</yloc>
+      <width>286</width>
+      <heigth>108</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>255</backgroundcolorgreen>
+      <backgroundcolorblue>0</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
   </notepads>
   <connection>
-    <name>etl_db</name>
-    <server>${QF_ETL_DB_HOST}</server>
+    <name>generic_source_db</name>
+    <server>${PARAM_DYN_DB_CONN_SOURCE_DB_HOST}</server>
     <type>POSTGRESQL</type>
     <access>Native</access>
-    <database>${QF_ETL_DB_DATABASE}</database>
-    <port>${QF_ETL_DB_PORT}</port>
-    <username>${QF_ETL_DB_USERNAME}</username>
-    <password>${QF_ETL_DB_PASSWORD}</password>
+    <database>${PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE}</database>
+    <port>${PARAM_DYN_DB_CONN_SOURCE_DB_PORT}</port>
+    <username>${PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME}</username>
+    <password>${PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD}</password>
     <servername />
     <data_tablespace />
     <index_tablespace />
@@ -765,11 +945,62 @@ would be easier to debug &amp; log this statement.</note>
       </attribute>
       <attribute>
         <code>PORT_NUMBER</code>
-        <attribute>${QF_ETL_DB_PORT}</attribute>
+        <attribute>${PARAM_DYN_DB_CONN_SOURCE_DB_PORT}</attribute>
       </attribute>
       <attribute>
         <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
         <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
+  <connection>
+    <name>generic_target_db</name>
+    <server>${PARAM_DYN_DB_CONN_TARGET_DB_HOST}</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>${PARAM_DYN_DB_CONN_TARGET_DB_DATABASE}</database>
+    <port>${PARAM_DYN_DB_CONN_TARGET_DB_PORT}</port>
+    <username>${PARAM_DYN_DB_CONN_TARGET_DB_USERNAME}</username>
+    <password>${PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD}</password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>${PARAM_DYN_DB_CONN_TARGET_DB_PORT}</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>Y</attribute>
       </attribute>
       <attribute>
         <code>QUOTE_ALL_FIELDS</code>
@@ -842,29 +1073,69 @@ would be easier to debug &amp; log this statement.</note>
   </connection>
   <order>
     <hop>
-      <from>Source/target column mapping metadata</from>
-      <to>tmplt_target-update_table-updatable_table</to>
+      <from>Get rows from source DB table</from>
+      <to>Rename source DB field names -> target DB field names</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Target DB table primary key columns</from>
-      <to>tmplt_target-update_table-updatable_table</to>
+      <from>Rename source DB field names -> target DB field names</from>
+      <to>Merge Rows (diff)</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Target DB table updatable column metadata</from>
-      <to>tmplt_target-update_table-updatable_table</to>
+      <from>Get rows from target DB table</from>
+      <to>Merge Rows (diff)</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>SELECT statement for source DB</from>
-      <to>tmplt_target-update_table-updatable_table</to>
+      <from>Switch/Case on flagfield</from>
+      <to>Source row deleted - Do nothing</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Switch/Case on flagfield</from>
+      <to>Rows identical - Do nothing</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Merge Rows (diff)</from>
+      <to>Switch/Case on flagfield</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Switch/Case on flagfield</from>
+      <to>Set etl_batch_id_insert = Xform batch ID</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Switch/Case on flagfield</from>
+      <to>Set etl_batch_id_last_update = Xform batch ID</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Set etl_batch_id_insert = Xform batch ID</from>
+      <to>Synchronize after merge</to>
+      <enabled>N</enabled>
+    </hop>
+    <hop>
+      <from>Set etl_batch_id_last_update = Xform batch ID</from>
+      <to>Synchronize after merge</to>
+      <enabled>N</enabled>
+    </hop>
+    <hop>
+      <from>Set etl_batch_id_insert = Xform batch ID</from>
+      <to>Insert new rows into target table</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Set etl_batch_id_last_update = Xform batch ID</from>
+      <to>Update existing rows of target table</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>SELECT statement for source DB</name>
-    <type>TableInput</type>
+    <name>Source row deleted - Do nothing</name>
+    <type>Dummy</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -873,60 +1144,6 @@ would be easier to debug &amp; log this statement.</note>
       <method>none</method>
       <schema_name />
     </partitioning>
-    <connection>etl_db</connection>
-    <sql>WITH
-    -- Create table with a string column that contains the columns from the 
-    -- source DB table to load:
-    select_list AS (
-        SELECT 
-            -- POSTGRESQL-SPECIFIC
-            array_to_string(array_agg(source_column_name ORDER BY column_meta_id ASC), ',') AS "str_value"
-        FROM 
-            etl.column_meta 
-        WHERE
-            table_meta_id = ${PARAM_TABLE_META_ID} AND 
-            -- This selects the columns from the source DB table that will be 
-            -- archived/mirrored with corresponding columns from the target DB table.
-            mirror_column = true
-    )
-SELECT
-    -- Create SELECT statement:
-    'SELECT ' || CAST(select_list.str_value AS VARCHAR) || ' '
-    'FROM '    ||
-        '${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE} ' ||
-    'WHERE '  ||
-    '( '      ||
-    '    ${PARAM_SOURCE_INSERT_ID_COLNAME} > ? '        ||    -- newly INSERTed rows, since the last run
-    ' OR ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} >= ? ' ||    -- UPDATEd rows, since the last run. This is needed to be able to select rows that
-                                                              -- are modified during a period when the table is being treated as an insert-only
-                                                              -- table (not a likely scenario, but it is a possibility).
-                                                              -- Because ">=" is used here, not ">", this will include a least one row that was
-                                                              -- updated on the previous run (assuming that there was at least one row updated).
-                                                              -- This/these rows will have ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} = ?. The reason why
-                                                              -- ">=" is used is in case there were one or more rows that were *not* updated on the
-                                                              -- previous run, but which have ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} = ?. This can occur
-                                                              -- because of the finite resolution of timestamp values. As a result, more than one
-                                                              -- row can have the *same* value of ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME}, but not all of
-                                                              -- them were loaded and treated on the previous run, i.e., the cutoff imposed by
-                                                              -- the condition ${PARAM_SOURCE_INSERT_ID_COLNAME} &lt;= ${PARAM_MAX_INSERT_ID} or
-                                                              -- ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} &lt;= '${PARAM_CDC_CURRENT_LOAD_UTC}' loaded some,
-                                                              -- but not all, of the rows with this value of ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME}.
-    ') ' || 
-    'AND ${PARAM_SOURCE_INSERT_ID_COLNAME}   &lt;= ${PARAM_MAX_INSERT_ID} ' ||  -- to avoid loading rows that are *inserted* after the job starts
-    'AND ( ' ||
-            '${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} IS NULL OR ' ||                             -- rows that have been inserted but not modified
-            '${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} &lt;= ''${PARAM_CDC_CURRENT_LOAD_UTC}'' ' ||   -- to avoid loading rows that are *modified* after the job starts
-        ') ' ||
-    'ORDER BY ' ||
-        '${PARAM_SOURCE_INSERT_ID_COLNAME}'
-    AS "select_source_rows_sql" 
-FROM
-    select_list</sql>
-    <limit>0</limit>
-    <lookup />
-    <execute_each_row>N</execute_each_row>
-    <variables_active>Y</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
     <cluster_schema />
     <remotesteps>
       <input>
@@ -935,14 +1152,14 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>96</xloc>
-      <yloc>768</yloc>
+      <xloc>272</xloc>
+      <yloc>784</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Source/target column mapping metadata</name>
-    <type>TableInput</type>
+    <name>Was row deleted from source table?</name>
+    <type>FilterRows</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -951,39 +1168,25 @@ FROM
       <method>none</method>
       <schema_name />
     </partitioning>
-    <connection>etl_db</connection>
-    <sql>SELECT
-    source_column_name AS "source_col_name", 
-    NULL AS "source_col_length", 
-    -- The value "-1" is injected into the "Select values" step of the ETL metadata injection template transformation
-    -- to specify the "precision" of the "source_col_name" &amp; "target_col_name" fields. If this is not done, a problem 
-    -- was observed for fields created by loading data from database columns of PostgreSQL data type "double precison".
-    -- For such fields, it was observed that the values written out to a "target" database via a "Table output" step 
-    -- were truncated to integers. Ideally, the precision should probably be set to something like 15 or 16 for this 
-    -- case (double precision columns), but this value may not be appropriate for other data types. It was only by 
-    -- experimenting that I found that injecting "-1" solved the problem for double precision columns. I have decided 
-    -- to specify this for *all* columns until/unless I encounter a problem by doing this. If a problem does arise one 
-    -- day, it may be necessary to update the definition of the etl.column_meta table of the "etl" database to include 
-    -- a real column to store the column "precision" on a column-by-column basis. For columns that do not need a 
-    -- "precision" to be specified, NULL can be stored in this column. This will also require updating the 
-    -- "populate_etl_metadata_tables" ETL code that generates default metadata.
-    -1 AS "source_col_precision", 
-    target_column_name AS "target_col_name" 
-FROM 
-    etl.column_meta 
-WHERE 
-    table_meta_id = ${PARAM_TABLE_META_ID} AND 
-    mirror_column = true AND
-    source_column_name IS NOT NULL 
-ORDER BY 
-    -- Ordering by "column_meta_id" means the columns will be treated in
-    -- the same order as they appear in the table in the "source" DB. 
-    column_meta_id ASC</sql>
-    <limit>0</limit>
-    <lookup />
-    <execute_each_row>N</execute_each_row>
-    <variables_active>Y</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
+    <send_true_to>Source row deleted - Do nothing</send_true_to>
+    <send_false_to>Dummy</send_false_to>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <leftvalue>flagfield</leftvalue>
+        <function>=</function>
+        <rightvalue />
+        <value>
+          <name>constant</name>
+          <type>String</type>
+          <text>deleted</text>
+          <length>-1</length>
+          <precision>-1</precision>
+          <isnull>N</isnull>
+          <mask />
+        </value>
+      </condition>
+    </compare>
     <cluster_schema />
     <remotesteps>
       <input>
@@ -992,13 +1195,13 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>432</xloc>
-      <yloc>544</yloc>
+      <xloc>528</xloc>
+      <yloc>960</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Target DB table primary key columns</name>
+    <name>Get rows from source DB table</name>
     <type>TableInput</type>
     <description />
     <distribute>Y</distribute>
@@ -1008,21 +1211,8 @@ ORDER BY
       <method>none</method>
       <schema_name />
     </partitioning>
-    <connection>etl_db</connection>
-    <sql>SELECT
-    target_column_name AS "target_key_col_name", 
-    '=' AS "key_field_value_comparator",
-    -- "Stream field2" is not used in the "Update" step. Nevertheless, we must set 
-    -- it to something or an error is thrown during ETL metadata injection. The
-    -- only solution I have found is to inject an empty string for this field.
-    '' AS "no_field" 
-FROM 
-    etl.column_meta 
-WHERE 
-    table_meta_id = ${PARAM_TABLE_META_ID} AND 
-    is_primary_key_column = true
-ORDER BY 
-    primary_key_column_order</sql>
+    <connection>generic_source_db</connection>
+    <sql />
     <limit>0</limit>
     <lookup />
     <execute_each_row>N</execute_each_row>
@@ -1036,14 +1226,192 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>432</xloc>
+      <xloc>112</xloc>
+      <yloc>384</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Get rows from target DB table</name>
+    <type>TableInput</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <connection>generic_target_db</connection>
+    <sql />
+    <limit>0</limit>
+    <lookup />
+    <execute_each_row>N</execute_each_row>
+    <variables_active>Y</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>352</xloc>
+      <yloc>384</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Merge Rows (diff)</name>
+    <type>MergeRows</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <keys>
+    </keys>
+    <values>
+    </values>
+    <flag_field>flagfield</flag_field>
+    <reference>Get rows from target DB table</reference>
+    <compare>Rename source DB field names -> target DB field names</compare>
+    <compare>
+    </compare>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>208</xloc>
+      <yloc>576</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Rename source DB field names -> target DB field names</name>
+    <type>SelectValues</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <select_unspecified>N</select_unspecified>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>160</xloc>
+      <yloc>480</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Synchronize after merge</name>
+    <type>SynchronizeAfterMerge</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <connection>generic_target_db</connection>
+    <commit>100</commit>
+    <tablename_in_field>N</tablename_in_field>
+    <tablename_field />
+    <use_batch>Y</use_batch>
+    <perform_lookup>N</perform_lookup>
+    <operation_order_field>flagfield</operation_order_field>
+    <order_insert />
+    <order_update />
+    <order_delete />
+    <lookup>
+      <schema>${PARAM_TARGET_SCHEMA}</schema>
+      <table>${PARAM_TARGET_TABLE}</table>
+    </lookup>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>624</xloc>
+      <yloc>928</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Switch/Case on flagfield</name>
+    <type>SwitchCase</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fieldname>flagfield</fieldname>
+    <use_contains>N</use_contains>
+    <case_value_type>String</case_value_type>
+    <case_value_format />
+    <case_value_decimal />
+    <case_value_group />
+    <default_target_step>Rows identical - Do nothing</default_target_step>
+    <cases>
+      <case>
+        <value>identical</value>
+        <target_step>Rows identical - Do nothing</target_step>
+      </case>
+      <case>
+        <value>new</value>
+        <target_step>Set etl_batch_id_insert = Xform batch ID</target_step>
+      </case>
+      <case>
+        <value>changed</value>
+        <target_step>Set etl_batch_id_last_update = Xform batch ID</target_step>
+      </case>
+      <case>
+        <value>deleted</value>
+        <target_step>Source row deleted - Do nothing</target_step>
+      </case>
+    </cases>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>208</xloc>
       <yloc>656</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Target DB table updatable column metadata</name>
-    <type>TableInput</type>
+    <name>Set etl_batch_id_insert = Xform batch ID</name>
+    <type>SystemInfo</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -1052,37 +1420,12 @@ ORDER BY
       <method>none</method>
       <schema_name />
     </partitioning>
-    <connection>etl_db</connection>
-    <sql>-- A Common Table Expression is used here so that we can perform an "ORDER BY"
--- on the result of the UNION of two SELECT statements.
-WITH updateable_columns AS 
-(
-    SELECT
-        column_meta_id,
-        target_column_name AS "target_col_name" 
-    FROM 
-        etl.column_meta  
-    WHERE 
-        table_meta_id = ${PARAM_TABLE_META_ID} AND 
-        mirror_column = true AND
-        is_updatable_column = true 
-    UNION
-    -- The "etl_batch_id_last_update" column/field is added by the ETL code.
-    SELECT
-        1000000                    AS "column_meta_id",  -- order this column last
-        'etl_batch_id_last_update' AS "target_col_name"
-) 
-SELECT
-    target_col_name 
-FROM
-    updateable_columns 
-ORDER BY 
-    column_meta_id ASC</sql>
-    <limit>0</limit>
-    <lookup />
-    <execute_each_row>N</execute_each_row>
-    <variables_active>Y</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
+    <fields>
+      <field>
+        <name>etl_batch_id_insert</name>
+        <type>batch ID</type>
+      </field>
+    </fields>
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1091,14 +1434,14 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>432</xloc>
-      <yloc>768</yloc>
+      <xloc>512</xloc>
+      <yloc>784</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>tmplt_target-update_table-updatable_table</name>
-    <type>MetaInject</type>
+    <name>Rows identical - Do nothing</name>
+    <type>Dummy</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -1107,96 +1450,6 @@ ORDER BY
       <method>none</method>
       <schema_name />
     </partitioning>
-    <specification_method>rep_name</specification_method>
-    <trans_object_id />
-    <trans_name>tmplt_target-update_table-updatable_table</trans_name>
-    <filename />
-    <directory_path>${Internal.Entry.Current.Directory}</directory_path>
-    <source_step />
-    <source_output_fields>    </source_output_fields>
-    <target_file />
-    <no_execution>N</no_execution>
-    <stream_source_step />
-    <stream_target_step />
-    <mappings>
-      <mapping>
-        <target_step_name>Map column names</target_step_name>
-        <target_attribute_key>FIELD_LENGTH</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Source/target column mapping metadata</source_step>
-        <source_field>source_col_length</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Table input -  source_db.schema.table</target_step_name>
-        <target_attribute_key>SQL</target_attribute_key>
-        <target_detail>N</target_detail>
-        <source_step>SELECT statement for source DB</source_step>
-        <source_field>select_source_rows_sql</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Update - target_db.schema.table</target_step_name>
-        <target_attribute_key>UPDATE_LOOKUP</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Target DB table updatable column metadata</source_step>
-        <source_field>target_col_name</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Map column names</target_step_name>
-        <target_attribute_key>FIELD_NAME</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Source/target column mapping metadata</source_step>
-        <source_field>source_col_name</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Update - target_db.schema.table</target_step_name>
-        <target_attribute_key>KEY_CONDITION</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Target DB table primary key columns</source_step>
-        <source_field>key_field_value_comparator</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Map column names</target_step_name>
-        <target_attribute_key>FIELD_PRECISION</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Source/target column mapping metadata</source_step>
-        <source_field>source_col_precision</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Map column names</target_step_name>
-        <target_attribute_key>FIELD_RENAME</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Source/target column mapping metadata</source_step>
-        <source_field>target_col_name</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Update - target_db.schema.table</target_step_name>
-        <target_attribute_key>UPDATE_STREAM</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Target DB table updatable column metadata</source_step>
-        <source_field>target_col_name</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Update - target_db.schema.table</target_step_name>
-        <target_attribute_key>KEY_STREAM</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Target DB table primary key columns</source_step>
-        <source_field>target_key_col_name</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Update - target_db.schema.table</target_step_name>
-        <target_attribute_key>KEY_LOOKUP</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Target DB table primary key columns</source_step>
-        <source_field>target_key_col_name</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Update - target_db.schema.table</target_step_name>
-        <target_attribute_key>KEY_STREAM2</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Target DB table primary key columns</source_step>
-        <source_field>no_field</source_field>
-      </mapping>
-    </mappings>
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1205,8 +1458,115 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>656</yloc>
+      <xloc>80</xloc>
+      <yloc>784</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Set etl_batch_id_last_update = Xform batch ID</name>
+    <type>SystemInfo</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <field>
+        <name>etl_batch_id_last_update</name>
+        <type>batch ID</type>
+      </field>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>800</xloc>
+      <yloc>784</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Insert new rows into target table</name>
+    <type>TableOutput</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <connection>generic_target_db</connection>
+    <schema>${PARAM_TARGET_SCHEMA}</schema>
+    <table>${PARAM_TARGET_TABLE}</table>
+    <commit>1000</commit>
+    <truncate>N</truncate>
+    <ignore_errors>N</ignore_errors>
+    <use_batch>Y</use_batch>
+    <specify_fields>N</specify_fields>
+    <partitioning_enabled>N</partitioning_enabled>
+    <partitioning_field />
+    <partitioning_daily>N</partitioning_daily>
+    <partitioning_monthly>Y</partitioning_monthly>
+    <tablename_in_field>N</tablename_in_field>
+    <tablename_field />
+    <tablename_in_table>Y</tablename_in_table>
+    <return_keys>N</return_keys>
+    <return_field />
+    <fields>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>512</xloc>
+      <yloc>864</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Update existing rows of target table</name>
+    <type>Update</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <connection>generic_target_db</connection>
+    <skip_lookup>N</skip_lookup>
+    <commit>100</commit>
+    <use_batch>N</use_batch>
+    <error_ignored>N</error_ignored>
+    <ignore_flag_field />
+    <lookup>
+      <schema>${PARAM_TARGET_SCHEMA}</schema>
+      <table>${PARAM_TARGET_TABLE}</table>
+    </lookup>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>800</xloc>
+      <yloc>864</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
