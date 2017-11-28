@@ -544,7 +544,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/11/27 13:53:02.319</modified_date>
+    <modified_date>2017/11/28 13:50:32.157</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -682,29 +682,6 @@ See the comments in that job for an explanation.</note>
       <backgroundcolorred>255</backgroundcolorred>
       <backgroundcolorgreen>205</backgroundcolorgreen>
       <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>If I add step "Target DB table updatable column metadata", then coment out everything from this query 
-to do with "is_updateable_column" *AND* update my "To Document" notes as well. Do not document that 
-is_updatable_column" does not need to be set!</note>
-      <xloc>748</xloc>
-      <yloc>608</yloc>
-      <width>644</width>
-      <heigth>52</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>Y</fontbold>
-      <fontitalic>Y</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>30</backgroundcolorred>
-      <backgroundcolorgreen>144</backgroundcolorgreen>
-      <backgroundcolorblue>255</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
       <bordercolorblue>100</bordercolorblue>
@@ -1201,9 +1178,11 @@ CROSS JOIN
     -- "precision" to be specified, NULL can be stored in this column. This will also require updating the 
     -- "populate_etl_metadata_tables" ETL code that generates default metadata.
     -1 AS "target_col_precision", 
-    (is_primary_key_column=false) AS is_updateable_column  -- If false, the column will not be updated
--- Alternate possibility, if I want to be bothered with setting values for the etl.column_meta.is_updatable_column:
---    is_updatable_column AND (is_primary_key_column=false) AS is_updateable_column  -- If false, the column will not be updated
+    -- "is_updateable_column" is injected into step "Synchronize after merge", which is currently not used.
+    -- Hence, this column/field can be removed if I delete the step "Synchronize after merge":
+    --(is_primary_key_column=false) AS "is_updateable_column"  -- If false, the column will not be updated
+    -- Alternate possibility, if I want to be bothered with setting values for the etl.column_meta.is_updatable_column:
+    is_updatable_column AND (is_primary_key_column=false) AS "is_updateable_column"  -- If false, the column will not be updated
 FROM 
     etl.column_meta 
 WHERE 
@@ -1325,8 +1304,8 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>416</xloc>
-      <yloc>832</yloc>
+      <xloc>752</xloc>
+      <yloc>496</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
