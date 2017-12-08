@@ -434,7 +434,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/12/05 13:43:58.125</modified_date>
+    <modified_date>2017/12/08 11:13:14.730</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -472,24 +472,16 @@ This job has one parameter:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>This step replaces blank values for fields:
-
-	can_delete_row_schema_name
-	can_delete_row_table_name
-
-with SQL NULL values. 
-
-This step is used because it does not seem to be possible to generate
-NULL values for string fields with a "Data Grid" step.
-
-It turns out that this step is not really necessary here since all field values that are
-set in this step are passed to subsequent jobs &amp; transformations as parameters.
-As such, NULL values are automatically converted back to empty strings. This 
-means that these empty strings must be convert to NULL values there.</note>
-      <xloc>176</xloc>
+      <note>The "CSV Input" step reads empty string values as empty strings, "". The "Data Grid"step also creates empty string values for String fields 
+where the value is empty. It does not seem to be possible to generate NULL values by either the "CSV Input" or the "Data Grid" step for
+String fields. A "Null If" step could be used here to replace empty strings with NULL for selected fields. However, since all field values that 
+are set in this step are passed to subsequent jobs &amp; transformations as parameters, the NULL values will be automatically converted back 
+to empty strings (or non-empty strings if a default parameter value is specified). Therefore, empty strings generated in this transformations
+should be converted to NULL values (if this is required) where they are *used*, not here in this transformation.</note>
+      <xloc>0</xloc>
       <yloc>192</yloc>
-      <width>458</width>
-      <heigth>192</heigth>
+      <width>778</width>
+      <heigth>88</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -507,11 +499,13 @@ means that these empty strings must be convert to NULL values there.</note>
     </notepad>
     <notepad>
       <note>These Data Grid steps can be used during development to supply metadata 
-for tests or debugging, instead of loading the metadata from a CSV file.</note>
-      <xloc>160</xloc>
-      <yloc>672</yloc>
-      <width>424</width>
-      <heigth>36</heigth>
+for tests or debugging, instead of loading the metadata from a CSV file, and
+also for creating an intial copy of a CSV file that can be read using the
+"CSV Input" step of this transformation. </note>
+      <xloc>304</xloc>
+      <yloc>592</yloc>
+      <width>425</width>
+      <heigth>62</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -581,26 +575,6 @@ for tests or debugging, instead of loading the metadata from a CSV file.</note>
   </connection>
   <order>
     <hop>
-      <from>MDX OBO Archive DB tables - 2017.08.31</from>
-      <to>Copy rows to result</to>
-      <enabled>N</enabled>
-    </hop>
-    <hop>
-      <from>All PSA tables</from>
-      <to>Replace blank strings with NULL</to>
-      <enabled>N</enabled>
-    </hop>
-    <hop>
-      <from>Replace blank strings with NULL</from>
-      <to>Copy rows to result</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Tables to generate metadata for</from>
-      <to>Replace blank strings with NULL</to>
-      <enabled>N</enabled>
-    </hop>
-    <hop>
       <from>All PSA tables</from>
       <to>Create psa_metadata.csv</to>
       <enabled>N</enabled>
@@ -611,14 +585,24 @@ for tests or debugging, instead of loading the metadata from a CSV file.</note>
       <enabled>N</enabled>
     </hop>
     <hop>
-      <from>Read table metadata file</from>
-      <to>Replace blank strings with NULL</to>
-      <enabled>Y</enabled>
+      <from>All DSA tables</from>
+      <to>Copy rows to result</to>
+      <enabled>N</enabled>
     </hop>
     <hop>
-      <from>All DSA tables</from>
-      <to>Replace blank strings with NULL</to>
+      <from>All PSA tables</from>
+      <to>Copy rows to result</to>
       <enabled>N</enabled>
+    </hop>
+    <hop>
+      <from>Tables to generate metadata for</from>
+      <to>Copy rows to result</to>
+      <enabled>N</enabled>
+    </hop>
+    <hop>
+      <from>Read table metadata file</from>
+      <to>Copy rows to result</to>
+      <enabled>Y</enabled>
     </hop>
   </order>
   <step>
@@ -886,8 +870,8 @@ for tests or debugging, instead of loading the metadata from a CSV file.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>496</xloc>
-      <yloc>528</yloc>
+      <xloc>640</xloc>
+      <yloc>448</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -7742,8 +7726,8 @@ for tests or debugging, instead of loading the metadata from a CSV file.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>352</xloc>
-      <yloc>528</yloc>
+      <xloc>496</xloc>
+      <yloc>448</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -7766,8 +7750,8 @@ for tests or debugging, instead of loading the metadata from a CSV file.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>656</xloc>
-      <yloc>400</yloc>
+      <xloc>496</xloc>
+      <yloc>320</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -8099,142 +8083,8 @@ for tests or debugging, instead of loading the metadata from a CSV file.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>352</xloc>
-      <yloc>608</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>MDX OBO Archive DB tables - 2017.08.31</name>
-    <type>DataGrid</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <fields>
-      <field>
-        <name>source_db_id</name>
-        <type>Integer</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>source_schema_name</name>
-        <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>255</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>source_table_name</name>
-        <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>255</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>target_db_id</name>
-        <type>Integer</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>target_schema_name</name>
-        <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>255</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>target_table_name</name>
-        <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>255</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-    </fields>
-    <data>
-      <line>
-        <item>2</item>
-        <item>passage</item>
-        <item>passage</item>
-        <item>10</item>
-        <item />
-        <item />
-      </line>
-      <line>
-        <item>2</item>
-        <item>passage</item>
-        <item>image</item>
-        <item>10</item>
-        <item />
-        <item />
-      </line>
-      <line>
-        <item>2</item>
-        <item>tolldomain</item>
-        <item>charging_point</item>
-        <item>10</item>
-        <item />
-        <item />
-      </line>
-      <line>
-        <item>2</item>
-        <item>tolldomain</item>
-        <item>charging_point_group</item>
-        <item>10</item>
-        <item />
-        <item />
-      </line>
-      <line>
-        <item>2</item>
-        <item>tolldomain</item>
-        <item>charging_point_group_group</item>
-        <item>10</item>
-        <item />
-        <item />
-      </line>
-    </data>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>784</xloc>
-      <yloc>256</yloc>
+      <xloc>496</xloc>
+      <yloc>528</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -8261,17 +8111,17 @@ for tests or debugging, instead of loading the metadata from a CSV file.</note>
     <add_filename_result>N</add_filename_result>
     <parallel>N</parallel>
     <newline_possible>N</newline_possible>
-    <encoding />
+    <encoding>UTF-8</encoding>
     <fields>
       <field>
         <name>source_db_id</name>
         <type>Integer</type>
-        <format>#</format>
+        <format />
         <currency>$</currency>
         <decimal>.</decimal>
         <group>,</group>
-        <length>15</length>
-        <precision>0</precision>
+        <length>-1</length>
+        <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
       <field>
@@ -8281,7 +8131,7 @@ for tests or debugging, instead of loading the metadata from a CSV file.</note>
         <currency>$</currency>
         <decimal>.</decimal>
         <group>,</group>
-        <length>6</length>
+        <length>-1</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
@@ -8292,19 +8142,19 @@ for tests or debugging, instead of loading the metadata from a CSV file.</note>
         <currency>$</currency>
         <decimal>.</decimal>
         <group>,</group>
-        <length>39</length>
+        <length>-1</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
       <field>
         <name>target_db_id</name>
         <type>Integer</type>
-        <format>#</format>
+        <format />
         <currency>$</currency>
         <decimal>.</decimal>
         <group>,</group>
-        <length>15</length>
-        <precision>0</precision>
+        <length>-1</length>
+        <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
       <field>
@@ -8314,13 +8164,13 @@ for tests or debugging, instead of loading the metadata from a CSV file.</note>
         <currency>$</currency>
         <decimal>.</decimal>
         <group>,</group>
-        <length>3</length>
+        <length>-1</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
       <field>
         <name>target_table_name</name>
-        <type>Boolean</type>
+        <type>String</type>
         <format />
         <currency>$</currency>
         <decimal>.</decimal>
@@ -8336,7 +8186,7 @@ for tests or debugging, instead of loading the metadata from a CSV file.</note>
         <currency>$</currency>
         <decimal>.</decimal>
         <group>,</group>
-        <length>35</length>
+        <length>-1</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
@@ -8347,7 +8197,7 @@ for tests or debugging, instead of loading the metadata from a CSV file.</note>
         <currency>$</currency>
         <decimal>.</decimal>
         <group>,</group>
-        <length>15</length>
+        <length>-1</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
@@ -8398,12 +8248,12 @@ for tests or debugging, instead of loading the metadata from a CSV file.</note>
       <field>
         <name>mirror_algorithm_id</name>
         <type>Integer</type>
-        <format>#</format>
+        <format />
         <currency>$</currency>
         <decimal>.</decimal>
         <group>,</group>
-        <length>15</length>
-        <precision>0</precision>
+        <length>-1</length>
+        <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
       <field>
@@ -8431,23 +8281,23 @@ for tests or debugging, instead of loading the metadata from a CSV file.</note>
       <field>
         <name>mark_rows_for_deletion_algorithm_id</name>
         <type>Integer</type>
-        <format>#</format>
+        <format />
         <currency>$</currency>
         <decimal>.</decimal>
         <group>,</group>
-        <length>15</length>
-        <precision>0</precision>
+        <length>-1</length>
+        <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
       <field>
         <name>delete_marked_rows_algorithm_id</name>
         <type>Integer</type>
-        <format>#</format>
+        <format />
         <currency>$</currency>
         <decimal>.</decimal>
         <group>,</group>
-        <length>15</length>
-        <precision>0</precision>
+        <length>-1</length>
+        <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
       <field>
@@ -8485,7 +8335,7 @@ for tests or debugging, instead of loading the metadata from a CSV file.</note>
       </field>
       <field>
         <name>can_delete_row_schema_name</name>
-        <type>Boolean</type>
+        <type>String</type>
         <format />
         <currency>$</currency>
         <decimal>.</decimal>
@@ -8496,7 +8346,7 @@ for tests or debugging, instead of loading the metadata from a CSV file.</note>
       </field>
       <field>
         <name>can_delete_row_table_name</name>
-        <type>Boolean</type>
+        <type>String</type>
         <format />
         <currency>$</currency>
         <decimal>.</decimal>
@@ -8526,41 +8376,7 @@ for tests or debugging, instead of loading the metadata from a CSV file.</note>
     </remotesteps>
     <GUI>
       <xloc>80</xloc>
-      <yloc>400</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Replace blank strings with NULL</name>
-    <type>NullIf</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <fields>
-      <field>
-        <name>can_delete_row_schema_name</name>
-        <value />
-      </field>
-      <field>
-        <name>can_delete_row_table_name</name>
-        <value />
-      </field>
-    </fields>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>352</xloc>
-      <yloc>400</yloc>
+      <yloc>320</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -8865,8 +8681,8 @@ for tests or debugging, instead of loading the metadata from a CSV file.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>208</xloc>
-      <yloc>528</yloc>
+      <xloc>352</xloc>
+      <yloc>448</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -8966,7 +8782,7 @@ for tests or debugging, instead of loading the metadata from a CSV file.</note>
     </remotesteps>
     <GUI>
       <xloc>80</xloc>
-      <yloc>480</yloc>
+      <yloc>400</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
