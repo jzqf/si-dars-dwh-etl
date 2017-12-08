@@ -44,12 +44,12 @@
         <description>for source DB "dynamic" database connections</description>
       </parameter>
       <parameter>
-        <name>PARAM_INSERT_ID_COLNAME</name>
+        <name>PARAM_SOURCE_INSERT_ID_COLNAME</name>
         <default_value />
         <description>Name of the source table column that acts as the "insert_id" column</description>
       </parameter>
       <parameter>
-        <name>PARAM_LAST_UPDATED_ON_COLNAME</name>
+        <name>PARAM_SOURCE_LAST_UPDATED_ON_COLNAME</name>
         <default_value />
         <description>Name of the source table column that acts as the "last_updated_on" column</description>
       </parameter>
@@ -523,8 +523,8 @@ This transformation has parameters:
 	PARAM_SOURCE_DB_ID								ID the "source" database containing the table for generating column metadata
 	PARAM_SOURCE_SCHEMA							Name of schema containing source table for generating column metadata
 	PARAM_SOURCE_TABLE							Name of source table for generating column metadata
-	PARAM_INSERT_ID_COLNAME						Name of the source table column that acts as the "insert_id" column
-	PARAM_LAST_UPDATED_ON_COLNAME				Name of the source table column that acts as the "last_updated_on" column
+	PARAM_SOURCE_INSERT_ID_COLNAME						Name of the source table column that acts as the "insert_id" column
+	PARAM_SOURCE_LAST_UPDATED_ON_COLNAME				Name of the source table column that acts as the "last_updated_on" column
 	PARAM_MIRROR_ALGORITHM_ID					ID of the "mirror" algorithm for archiving/mirroring rows from the source table to the target table</note>
       <xloc>16</xloc>
       <yloc>0</yloc>
@@ -712,8 +712,8 @@ is_can_delete_row_column=N				(can be set  to Y below, depending on column name)
     <notepad>
       <note>For example:
 
-	is_insert_id_column 			= (source_column_name = ${PARAM_INSERT_ID_COLNAME})
-	is_last_updated_on_column	= (source_column_name = ${PARAM_LAST_UPDATED_ON_COLNAME})
+	is_insert_id_column 			= (source_column_name = ${PARAM_SOURCE_INSERT_ID_COLNAME})
+	is_last_updated_on_column	= (source_column_name = ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME})
 	is_updatable_column			= ...
 	...</note>
       <xloc>288</xloc>
@@ -1202,9 +1202,9 @@ is_can_delete_row_column = false;
   target_column_name, since at this point, they will necessarily be
   identical. It is conceivable that this could change in the future.
 */
-if(getVariable("PARAM_INSERT_ID_COLNAME", "").equals(source_column_name)) {
+if(getVariable("PARAM_SOURCE_INSERT_ID_COLNAME", "").equals(source_column_name)) {
     is_insert_id_column = true;
-} else if(getVariable("PARAM_LAST_UPDATED_ON_COLNAME", "").equals(source_column_name)) {
+} else if(getVariable("PARAM_SOURCE_LAST_UPDATED_ON_COLNAME", "").equals(source_column_name)) {
     is_last_updated_on_column = true;
 }
 
