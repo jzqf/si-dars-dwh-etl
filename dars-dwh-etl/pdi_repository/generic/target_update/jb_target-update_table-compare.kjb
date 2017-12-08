@@ -1,19 +1,59 @@
 <job>
-  <name>jb_target-compare_table</name>
+  <name>jb_target-update_table-compare</name>
   <description />
   <extended_description />
   <job_version />
   <job_status>0</job_status>
-  <directory>/generic/target_compare</directory>
+  <directory>/generic/target_update</directory>
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/11/28 10:32:08.080</modified_date>
+  <modified_date>2017/12/01 14:28:41.625</modified_date>
   <parameters>
+    <parameter>
+      <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
+      <default_value>2017.06.15 00:00:00</default_value>
+      <description>Timestamp of the current load (no rows after this timestamp will be loaded)</description>
+    </parameter>
     <parameter>
       <name>PARAM_CDC_LAST_LOAD_UTC</name>
       <default_value>1900.01.01 00:00:00</default_value>
       <description>Timestamp of last successful load from the source database</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE</name>
+      <default_value />
+      <description>for source DB "dynamic" database connections</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER</name>
+      <default_value />
+      <description>for source DB "dynamic" database connections</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_SOURCE_DB_HOST</name>
+      <default_value />
+      <description>for source DB "dynamic" database connections</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD</name>
+      <default_value />
+      <description>for source DB "dynamic" database connections</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_SOURCE_DB_PORT</name>
+      <default_value />
+      <description>for source DB "dynamic" database connections</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_SOURCE_DB_URL</name>
+      <default_value />
+      <description>for source DB "dynamic" database connections</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME</name>
+      <default_value />
+      <description>for source DB "dynamic" database connections</description>
     </parameter>
     <parameter>
       <name>PARAM_DYN_DB_CONN_TARGET_DB_DATABASE</name>
@@ -51,19 +91,9 @@
       <description>for target DB "dynamic" database connections</description>
     </parameter>
     <parameter>
-      <name>PARAM_MAX_NUM_COMPARE_ROWS</name>
-      <default_value>100000</default_value>
-      <description>Maximum number of rows that will be compared for these tables. Pass 0 for *all* rows.</description>
-    </parameter>
-    <parameter>
       <name>PARAM_SOURCE_DB_ID</name>
-      <default_value>-1</default_value>
-      <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_SOURCE_INSERT_ID_COLNAME</name>
-      <default_value />
-      <description>Name of column acting as "insert_id" column of source table - Do *not* specify a default value!</description>
+      <default_value>0</default_value>
+      <description>ID the "source" database containing tables will be archived/mirrored to a "target" database</description>
     </parameter>
     <parameter>
       <name>PARAM_SOURCE_SCHEMA</name>
@@ -71,29 +101,19 @@
       <description>Name of schema containing source table to mirror to target table</description>
     </parameter>
     <parameter>
-      <name>PARAM_SOURCE_SCHEMA_TABLE</name>
-      <default_value>passage.image</default_value>
-      <description>${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</description>
-    </parameter>
-    <parameter>
       <name>PARAM_SOURCE_TABLE</name>
-      <default_value>image</default_value>
+      <default_value>passage</default_value>
       <description>Name of source table to mirror to target table</description>
     </parameter>
     <parameter>
       <name>PARAM_TABLE_META_ID</name>
       <default_value>0</default_value>
-      <description>Primary key of etl.table_meta row for "source" table archived/mirrored to "target" table</description>
+      <description>Primary key of etl.table_meta row for "source" table from which rows will be deleted</description>
     </parameter>
     <parameter>
       <name>PARAM_TARGET_DB_ID</name>
       <default_value>-1</default_value>
-      <description>ID of the "target" database to which "source" DB tables have been archived/mirrored</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_TARGET_INSERT_ID_COLNAME</name>
-      <default_value />
-      <description>Name of column acting as "insert_id" column of target table - Do *not* specify a default value!</description>
+      <description>ID of the "target" database to which "source" DB tables will be archived/mirrored</description>
     </parameter>
     <parameter>
       <name>PARAM_TARGET_SCHEMA</name>
@@ -101,19 +121,9 @@
       <description>Name of schema containing target table to update (not currently used)</description>
     </parameter>
     <parameter>
-      <name>PARAM_TARGET_SCHEMA_TABLE</name>
-      <default_value>passage.image</default_value>
-      <description>${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</description>
-    </parameter>
-    <parameter>
       <name>PARAM_TARGET_TABLE</name>
-      <default_value>image</default_value>
+      <default_value>passage</default_value>
       <description>Name of target table to update (not currently used)</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_UPDATE_ALGORITHM_ID</name>
-      <default_value />
-      <description>ID of the algorithm used for mirroring/archiving the tables</description>
     </parameter>
   </parameters>
   <connection>
@@ -510,17 +520,17 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>48</xloc>
-      <yloc>352</yloc>
+      <xloc>464</xloc>
+      <yloc>400</yloc>
     </entry>
     <entry>
-      <name>tr_target-compare_table-inject_meta</name>
+      <name>tr_target-update_table-compare</name>
       <description />
       <type>TRANS</type>
       <specification_method>rep_name</specification_method>
       <trans_object_id />
       <filename />
-      <transname>tr_target-compare_table-inject_meta</transname>
+      <transname>tr_target-update_table-compare</transname>
       <directory>${Internal.Entry.Current.Directory}</directory>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -544,56 +554,80 @@
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
         <parameter>
-          <name>PARAM_DYN_DB_CONN_SOURCE_DB_HOST</name>
+          <name>PARAM_SOURCE_INSERT_ID_COLNAME</name>
           <stream_name />
-          <value>${QF_DYN_DB_CONN_DB_HOST}</value>
+          <value>${QF_SOURCE_INSERT_ID_COLNAME}</value>
         </parameter>
         <parameter>
-          <name>PARAM_DYN_DB_CONN_SOURCE_DB_PORT</name>
+          <name>PARAM_TARGET_INSERT_ID_COLNAME</name>
           <stream_name />
-          <value>${QF_DYN_DB_CONN_DB_PORT}</value>
+          <value>${QF_TARGET_INSERT_ID_COLNAME}</value>
         </parameter>
         <parameter>
-          <name>PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE</name>
+          <name>PARAM_SOURCE_INSERTED_ON_COLNAME</name>
           <stream_name />
-          <value>${QF_DYN_DB_CONN_DB_DATABASE}</value>
+          <value>${QF_SOURCE_INSERTED_ON_COLNAME}</value>
         </parameter>
         <parameter>
-          <name>PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME</name>
+          <name>PARAM_TARGET_INSERTED_ON_COLNAME</name>
           <stream_name />
-          <value>${QF_DYN_DB_CONN_DB_USERNAME}</value>
+          <value>${QF_TARGET_INSERTED_ON_COLNAME}</value>
         </parameter>
         <parameter>
-          <name>PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD</name>
+          <name>PARAM_SOURCE_LAST_UPDATED_ON_COLNAME</name>
           <stream_name />
-          <value>${QF_DYN_DB_CONN_DB_PASSWORD}</value>
+          <value>${QF_SOURCE_LAST_UPDATED_ON_COLNAME}</value>
         </parameter>
         <parameter>
-          <name>PARAM_DYN_DB_CONN_SOURCE_DB_URL</name>
+          <name>PARAM_TARGET_LAST_UPDATED_ON_COLNAME</name>
           <stream_name />
-          <value>${QF_DYN_DB_CONN_DB_URL}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER</name>
-          <stream_name />
-          <value>${QF_DYN_DB_CONN_DB_DRIVER}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_INSERT_ID_FROM</name>
-          <stream_name />
-          <value>${QF_MIRROR_COMPARE_INSERT_ID_FROM}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_INSERT_ID_TO</name>
-          <stream_name />
-          <value>${QF_MIRROR_COMPARE_INSERT_ID_TO}</value>
+          <value>${QF_TARGET_LAST_UPDATED_ON_COLNAME}</value>
         </parameter>
       </parameters>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>512</xloc>
-      <yloc>960</yloc>
+      <xloc>576</xloc>
+      <yloc>688</yloc>
+    </entry>
+    <entry>
+      <name>jb_update_etl_table_meta_mirror_details</name>
+      <description />
+      <type>JOB</type>
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_update_etl_table_meta_mirror_details</jobname>
+      <directory>/generic/target_update</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_TABLE_MIRROR_TREATMENT_ID</name>
+          <stream_name />
+          <value>${QF_MIRROR_ALG_COMPARE_GENERIC}</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>576</xloc>
+      <yloc>784</yloc>
     </entry>
     <entry>
       <name>jb_log_error 6</name>
@@ -624,29 +658,29 @@
         <parameter>
           <name>PARAM_ERROR_MESSAGE</name>
           <stream_name />
-          <value>Error executing tr_target-compare_table-inject_meta for target DB table: ${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</value>
+          <value>Error updating target table: ${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE} by tr_target-update_table-compare</value>
         </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>208</xloc>
-      <yloc>960</yloc>
+      <xloc>368</xloc>
+      <yloc>688</yloc>
     </entry>
     <entry>
       <name>Abort job</name>
       <description />
       <type>ABORT</type>
-      <message>Aborting jb_target-compare_table</message>
+      <message>${QF_ABORT_JOB_MESSAGE}</message>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>48</xloc>
-      <yloc>736</yloc>
+      <xloc>256</xloc>
+      <yloc>640</yloc>
     </entry>
     <entry>
-      <name>Are columns to compare configured for this table?</name>
+      <name>Is there column mapping metadata for this table?</name>
       <description />
       <type>EVAL_TABLE_CONTENT</type>
       <connection>etl_db</connection>
@@ -658,7 +692,8 @@
       <is_usevars>Y</is_usevars>
       <custom_sql>SELECT
     source_column_name AS "source_col_name", 
-    NULL AS "source_col_length", 
+    target_column_name AS "target_col_name", 
+    NULL AS "target_col_length", 
     -- The value "-1" is injected into the "Select values" step of the ETL metadata injection template transformation
     -- to specify the "precision" of the "source_col_name" &amp; "target_col_name" fields. If this is not done, a problem 
     -- was observed for fields created by loading data from database columns of PostgreSQL data type "double precison".
@@ -671,24 +706,28 @@
     -- a real column to store the column "precision" on a column-by-column basis. For columns that do not need a 
     -- "precision" to be specified, NULL can be stored in this column. This will also require updating the 
     -- "populate_etl_metadata_tables" ETL code that generates default metadata.
-    -1 AS "source_col_precision", 
-    target_column_name AS "target_col_name" 
+    -1 AS "target_col_precision", 
+    -- "is_updateable_column" is injected into step "Synchronize after merge", which is currently not used.
+    -- Hence, this column/field can be removed if I delete the step "Synchronize after merge":
+    --(is_primary_key_column=false) AS "is_updateable_column"  -- If false, the column will not be updated
+    -- Alternate possibility, if I want to be bothered with setting values for the etl.column_meta.is_updatable_column:
+    is_updatable_column AND (is_primary_key_column=false) AS "is_updateable_column"  -- If false, the column will not be updated
 FROM 
     etl.column_meta 
 WHERE 
     table_meta_id = ${PARAM_TABLE_META_ID} AND 
-    -- Although the primary key columns don't need to ne compared, they
+    -- Although the primary key columns don't need to be compared, they
     -- are needed by the "Merge Rows" step so they are included here.
-    (compare_column=true OR is_primary_key_column=true) 
+    (mirror_column=true OR is_primary_key_column=true) 
 ORDER BY 
-    column_meta_id ASC  -- must use the same sort order in "Target DB column names to compare"</custom_sql>
+    column_meta_id ASC</custom_sql>
       <add_rows_result>N</add_rows_result>
       <clear_result_rows>Y</clear_result_rows>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>512</xloc>
-      <yloc>448</yloc>
+      <xloc>576</xloc>
+      <yloc>496</yloc>
     </entry>
     <entry>
       <name>jb_log_error 1</name>
@@ -719,58 +758,15 @@ ORDER BY
         <parameter>
           <name>PARAM_ERROR_MESSAGE</name>
           <stream_name />
-          <value>No columns have been configured to be compared for source table: ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</value>
+          <value>No column metadata has been configured for source table: ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</value>
         </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>1</nr>
-      <xloc>208</xloc>
-      <yloc>448</yloc>
-    </entry>
-    <entry>
-      <name>Success 2</name>
-      <description />
-      <type>SUCCESS</type>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>48</xloc>
-      <yloc>448</yloc>
-    </entry>
-    <entry>
-      <name>Log parameters</name>
-      <description />
-      <type>WRITE_TO_LOG</type>
-      <logmessage>PARAM_CDC_LAST_LOAD_UTC              = ${PARAM_CDC_LAST_LOAD_UTC}
-PARAM_MAX_NUM_COMPARE_ROWS           = ${PARAM_MAX_NUM_COMPARE_ROWS}
-PARAM_TABLE_META_ID                  = ${PARAM_TABLE_META_ID}
-PARAM_DYN_DB_CONN_TARGET_DB_HOST     = ${PARAM_DYN_DB_CONN_TARGET_DB_HOST}
-PARAM_DYN_DB_CONN_TARGET_DB_PORT     = ${PARAM_DYN_DB_CONN_TARGET_DB_PORT}
-PARAM_DYN_DB_CONN_TARGET_DB_DATABASE = ${PARAM_DYN_DB_CONN_TARGET_DB_DATABASE}
-PARAM_DYN_DB_CONN_TARGET_DB_USERNAME = ${PARAM_DYN_DB_CONN_TARGET_DB_USERNAME}
-PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD = ${PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD}
-PARAM_DYN_DB_CONN_TARGET_DB_URL      = ${PARAM_DYN_DB_CONN_TARGET_DB_URL}
-PARAM_DYN_DB_CONN_TARGET_DB_DRIVER   = ${PARAM_DYN_DB_CONN_TARGET_DB_DRIVER}
-PARAM_SOURCE_DB_ID                   = ${PARAM_SOURCE_DB_ID}
-PARAM_SOURCE_SCHEMA                  = ${PARAM_SOURCE_SCHEMA}
-PARAM_SOURCE_TABLE                   = ${PARAM_SOURCE_TABLE}
-PARAM_SOURCE_SCHEMA_TABLE            = ${PARAM_SOURCE_SCHEMA_TABLE}
-PARAM_SOURCE_INSERT_ID_COLNAME       = ${PARAM_SOURCE_INSERT_ID_COLNAME}
-PARAM_TARGET_DB_ID                   = ${PARAM_TARGET_DB_ID}
-PARAM_TARGET_SCHEMA                  = ${PARAM_TARGET_SCHEMA}
-PARAM_TARGET_TABLE                   = ${PARAM_TARGET_TABLE}
-PARAM_TARGET_SCHEMA_TABLE            = ${PARAM_TARGET_SCHEMA_TABLE}
-PARAM_TARGET_INSERT_ID_COLNAME       = ${PARAM_TARGET_INSERT_ID_COLNAME}
-PARAM_UPDATE_ALGORITHM_ID            = ${PARAM_UPDATE_ALGORITHM_ID}</logmessage>
-      <loglevel>Basic</loglevel>
-      <logsubject>Parameters received by jb_target-compare_table</logsubject>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>208</xloc>
-      <yloc>352</yloc>
+      <xloc>368</xloc>
+      <yloc>496</yloc>
     </entry>
     <entry>
       <name>Success</name>
@@ -779,175 +775,41 @@ PARAM_UPDATE_ALGORITHM_ID            = ${PARAM_UPDATE_ALGORITHM_ID}</logmessage>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>512</xloc>
-      <yloc>1056</yloc>
+      <xloc>256</xloc>
+      <yloc>496</yloc>
     </entry>
     <entry>
-      <name>tr_target-compare_table-get_insert_id_from_to</name>
+      <name>Is there primary key metadata for this table?</name>
       <description />
-      <type>TRANS</type>
-      <specification_method>rep_name</specification_method>
-      <trans_object_id />
-      <filename />
-      <transname>tr_target-compare_table-get_insert_id_from_to</transname>
-      <directory>${Internal.Entry.Current.Directory}</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <clear_rows>N</clear_rows>
-      <clear_files>N</clear_files>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Basic</loglevel>
-      <cluster>N</cluster>
-      <slave_server_name />
-      <set_append_logfile>N</set_append_logfile>
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <create_parent_folder>N</create_parent_folder>
-      <logging_remote_work>N</logging_remote_work>
-      <run_configuration>Pentaho local</run_configuration>
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-        <parameter>
-          <name>PARAM_DYN_DB_CONN_SOURCE_DB_HOST</name>
-          <stream_name />
-          <value>${QF_DYN_DB_CONN_DB_HOST}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_DYN_DB_CONN_SOURCE_DB_PORT</name>
-          <stream_name />
-          <value>${QF_DYN_DB_CONN_DB_PORT}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE</name>
-          <stream_name />
-          <value>${QF_DYN_DB_CONN_DB_DATABASE}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME</name>
-          <stream_name />
-          <value>${QF_DYN_DB_CONN_DB_USERNAME}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD</name>
-          <stream_name />
-          <value>${QF_DYN_DB_CONN_DB_PASSWORD}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_DYN_DB_CONN_SOURCE_DB_URL</name>
-          <stream_name />
-          <value>${QF_DYN_DB_CONN_DB_URL}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER</name>
-          <stream_name />
-          <value>${QF_DYN_DB_CONN_DB_DRIVER}</value>
-        </parameter>
-      </parameters>
+      <type>EVAL_TABLE_CONTENT</type>
+      <connection>etl_db</connection>
+      <schemaname />
+      <tablename />
+      <success_condition>rows_count_greater</success_condition>
+      <limit>0</limit>
+      <is_custom_sql>Y</is_custom_sql>
+      <is_usevars>Y</is_usevars>
+      <custom_sql>SELECT
+    target_column_name AS "target_key_col_name", 
+    '=' AS "key_field_value_comparator",
+    -- "Stream field2" is not used in the "Update" step. Nevertheless, we must set 
+    -- it to something or an error is thrown during ETL metadata injection. The
+    -- only solution I have found is to inject an empty string for this field.
+    '' AS "no_field" 
+FROM 
+    etl.column_meta 
+WHERE 
+    table_meta_id = ${PARAM_TABLE_META_ID} AND 
+    is_primary_key_column = true
+ORDER BY 
+    primary_key_column_order</custom_sql>
+      <add_rows_result>N</add_rows_result>
+      <clear_result_rows>Y</clear_result_rows>
       <parallel>N</parallel>
       <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>384</xloc>
-      <yloc>736</yloc>
-    </entry>
-    <entry>
-      <name>Log: "insert_id" from/to values</name>
-      <description />
-      <type>WRITE_TO_LOG</type>
-      <logmessage>PARAM_SOURCE_INSERT_ID_COLNAME   = ${PARAM_SOURCE_INSERT_ID_COLNAME}
-PARAM_TARGET_INSERT_ID_COLNAME   = ${PARAM_TARGET_INSERT_ID_COLNAME}
-QF_MIRROR_COMPARE_INSERT_ID_FROM = ${QF_MIRROR_COMPARE_INSERT_ID_FROM}
-QF_MIRROR_COMPARE_INSERT_ID_TO   = ${QF_MIRROR_COMPARE_INSERT_ID_TO}
-</logmessage>
-      <loglevel>Basic</loglevel>
-      <logsubject>Variables set by tr_target-compare_table-get_insert_id_from_to or initialized to zero</logsubject>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>512</xloc>
-      <yloc>864</yloc>
-    </entry>
-    <entry>
-      <name>jb_log_error 5</name>
-      <description />
-      <type>JOB</type>
-      <specification_method>rep_name</specification_method>
-      <job_object_id />
-      <filename />
-      <jobname>jb_log_error</jobname>
-      <directory>/generic</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Nothing</loglevel>
-      <slave_server_name />
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <expand_remote_job>N</expand_remote_job>
-      <create_parent_folder>N</create_parent_folder>
-      <pass_export>N</pass_export>
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-        <parameter>
-          <name>PARAM_ERROR_MESSAGE</name>
-          <stream_name />
-          <value>Error executing step 'Log: "insert_id" "from" &amp; "to" values' for target DB table: ${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</value>
-        </parameter>
-      </parameters>
-      <set_append_logfile>N</set_append_logfile>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>208</xloc>
-      <yloc>864</yloc>
-    </entry>
-    <entry>
-      <name>jb_log_error 4</name>
-      <description />
-      <type>JOB</type>
-      <specification_method>rep_name</specification_method>
-      <job_object_id />
-      <filename />
-      <jobname>jb_log_error</jobname>
-      <directory>/generic</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Nothing</loglevel>
-      <slave_server_name />
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <expand_remote_job>N</expand_remote_job>
-      <create_parent_folder>N</create_parent_folder>
-      <pass_export>N</pass_export>
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-        <parameter>
-          <name>PARAM_ERROR_MESSAGE</name>
-          <stream_name />
-          <value>Error executing tr_target-compare_table-get_insert_id_from_to for target DB table: ${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</value>
-        </parameter>
-      </parameters>
-      <set_append_logfile>N</set_append_logfile>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>192</xloc>
-      <yloc>736</yloc>
+      <nr>1</nr>
+      <xloc>576</xloc>
+      <yloc>592</yloc>
     </entry>
     <entry>
       <name>jb_log_error 2</name>
@@ -978,136 +840,84 @@ QF_MIRROR_COMPARE_INSERT_ID_TO   = ${QF_MIRROR_COMPARE_INSERT_ID_TO}
         <parameter>
           <name>PARAM_ERROR_MESSAGE</name>
           <stream_name />
-          <value>No primary key columns have been configured for source table: ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</value>
+          <value>No primary key metadata has been configured for source table: ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</value>
         </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>2</nr>
-      <xloc>208</xloc>
-      <yloc>544</yloc>
+      <xloc>368</xloc>
+      <yloc>592</yloc>
     </entry>
     <entry>
-      <name>Are primary key columns configured for this table?</name>
+      <name>DUMMY</name>
       <description />
-      <type>EVAL_TABLE_CONTENT</type>
-      <connection>etl_db</connection>
-      <schemaname />
-      <tablename />
-      <success_condition>rows_count_greater</success_condition>
-      <limit>0</limit>
-      <is_custom_sql>Y</is_custom_sql>
-      <is_usevars>Y</is_usevars>
-      <custom_sql>SELECT
-    source_column_name AS "source_key_col_name" 
-FROM 
-    etl.column_meta 
-WHERE 
-    table_meta_id = ${PARAM_TABLE_META_ID} AND 
-    is_primary_key_column = true
-ORDER BY 
-    primary_key_column_order</custom_sql>
-      <add_rows_result>N</add_rows_result>
-      <clear_result_rows>Y</clear_result_rows>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>1</nr>
-      <xloc>512</xloc>
-      <yloc>544</yloc>
-    </entry>
-    <entry>
-      <name>jb_set_dynamic_db_connection_variables</name>
-      <description />
-      <type>JOB</type>
-      <specification_method>rep_name</specification_method>
-      <job_object_id />
-      <filename />
-      <jobname>jb_set_dynamic_db_connection_variables</jobname>
-      <directory>/generic/dynamic_db_connections</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Nothing</loglevel>
-      <slave_server_name />
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <expand_remote_job>N</expand_remote_job>
-      <create_parent_folder>N</create_parent_folder>
-      <pass_export>N</pass_export>
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-        <parameter>
-          <name>PARAM_DB_ID</name>
-          <stream_name />
-          <value>${PARAM_SOURCE_DB_ID}</value>
-        </parameter>
-      </parameters>
-      <set_append_logfile>N</set_append_logfile>
+      <type>SPECIAL</type>
+      <start>N</start>
+      <dummy>Y</dummy>
+      <repeat>N</repeat>
+      <schedulerType>0</schedulerType>
+      <intervalSeconds>0</intervalSeconds>
+      <intervalMinutes>60</intervalMinutes>
+      <hour>12</hour>
+      <minutes>0</minutes>
+      <weekDay>1</weekDay>
+      <DayOfMonth>1</DayOfMonth>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>512</xloc>
-      <yloc>352</yloc>
+      <xloc>256</xloc>
+      <yloc>784</yloc>
     </entry>
     <entry>
-      <name>Abort job 2</name>
+      <name>Log parameters</name>
       <description />
-      <type>ABORT</type>
-      <message>Aborting jb_target-compare_table</message>
+      <type>WRITE_TO_LOG</type>
+      <logmessage>PARAM_CDC_LAST_LOAD_UTC              = ${PARAM_CDC_LAST_LOAD_UTC}
+PARAM_CDC_CURRENT_LOAD_UTC           = ${PARAM_CDC_CURRENT_LOAD_UTC}
+PARAM_DYN_DB_CONN_SOURCE_DB_HOST     = ${PARAM_DYN_DB_CONN_SOURCE_DB_HOST}
+PARAM_DYN_DB_CONN_SOURCE_DB_PORT     = ${PARAM_DYN_DB_CONN_SOURCE_DB_PORT}
+PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE = ${PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE}
+PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD = ${PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD}
+PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME = ${PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME}
+PARAM_DYN_DB_CONN_SOURCE_DB_URL      = ${PARAM_DYN_DB_CONN_SOURCE_DB_URL}
+PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER   = ${PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER}
+PARAM_DYN_DB_CONN_TARGET_DB_HOST     = ${PARAM_DYN_DB_CONN_TARGET_DB_HOST}
+PARAM_DYN_DB_CONN_TARGET_DB_PORT     = ${PARAM_DYN_DB_CONN_TARGET_DB_PORT}
+PARAM_DYN_DB_CONN_TARGET_DB_DATABASE = ${PARAM_DYN_DB_CONN_TARGET_DB_DATABASE}
+PARAM_DYN_DB_CONN_TARGET_DB_USERNAME = ${PARAM_DYN_DB_CONN_TARGET_DB_USERNAME}
+PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD = ${PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD}
+PARAM_DYN_DB_CONN_TARGET_DB_URL      = ${PARAM_DYN_DB_CONN_TARGET_DB_URL}
+PARAM_DYN_DB_CONN_TARGET_DB_DRIVER   = ${PARAM_DYN_DB_CONN_TARGET_DB_DRIVER}
+PARAM_TABLE_META_ID                  = ${PARAM_TABLE_META_ID}
+PARAM_SOURCE_DB_ID                   = ${PARAM_SOURCE_DB_ID}
+PARAM_SOURCE_SCHEMA                  = ${PARAM_SOURCE_SCHEMA}
+PARAM_SOURCE_TABLE                   = ${PARAM_SOURCE_TABLE}
+PARAM_TARGET_DB_ID                   = ${PARAM_TARGET_DB_ID}
+PARAM_TARGET_SCHEMA                  = ${PARAM_TARGET_SCHEMA}
+PARAM_TARGET_TABLE                   = ${PARAM_TARGET_TABLE}</logmessage>
+      <loglevel>Basic</loglevel>
+      <logsubject>Parameters received by ${Internal.Job.Name}</logsubject>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>704</xloc>
-      <yloc>352</yloc>
-    </entry>
-    <entry>
-      <name>Set from/to "insert_id" vrbls=0</name>
-      <description />
-      <type>SET_VARIABLES</type>
-      <replacevars>Y</replacevars>
-      <filename />
-      <file_variable_type>JVM</file_variable_type>
-      <fields>
-        <field>
-          <variable_name>QF_MIRROR_COMPARE_INSERT_ID_FROM</variable_name>
-          <variable_value>0</variable_value>
-          <variable_type>ROOT_JOB</variable_type>
-        </field>
-        <field>
-          <variable_name>QF_MIRROR_COMPARE_INSERT_ID_TO</variable_name>
-          <variable_value>0</variable_value>
-          <variable_type>ROOT_JOB</variable_type>
-        </field>
-      </fields>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>624</xloc>
-      <yloc>736</yloc>
-    </entry>
-    <entry>
-      <name>Do source and target tables have an "insert_id" column?</name>
-      <description />
-      <type>EVAL</type>
-      <script>//!parent_job.getVariable("PARAM_SOURCE_INSERT_ID_COLNAME", "") &amp;&amp; !parent_job.getVariable("PARAM_TARGET_INSERT_ID_COLNAME", "")
-//parent_job.getVariable("PARAM_SOURCE_INSERT_ID_COLNAME", "").length != 0 &amp;&amp; parent_job.getVariable("PARAM_TARGET_INSERT_ID_COLNAME", "").length != 0
-!parent_job.getVariable("PARAM_SOURCE_INSERT_ID_COLNAME", "").equals("") &amp;&amp; !parent_job.getVariable("PARAM_TARGET_INSERT_ID_COLNAME", "").equals("")</script>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>512</xloc>
-      <yloc>640</yloc>
+      <xloc>576</xloc>
+      <yloc>400</yloc>
     </entry>
   </entries>
   <hops>
     <hop>
-      <from>tr_target-compare_table-inject_meta</from>
+      <from>tr_target-update_table-compare</from>
+      <to>jb_update_etl_table_meta_mirror_details</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>tr_target-update_table-compare</from>
       <to>jb_log_error 6</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -1125,6 +935,15 @@ ORDER BY
       <unconditional>Y</unconditional>
     </hop>
     <hop>
+      <from>Is there column mapping metadata for this table?</from>
+      <to>jb_log_error 1</to>
+      <from_nr>0</from_nr>
+      <to_nr>1</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
       <from>jb_log_error 1</from>
       <to>Abort job</to>
       <from_nr>1</from_nr>
@@ -1135,7 +954,7 @@ ORDER BY
     </hop>
     <hop>
       <from>jb_log_error 1</from>
-      <to>Success 2</to>
+      <to>Success</to>
       <from_nr>1</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -1143,73 +962,19 @@ ORDER BY
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>START</from>
-      <to>Log parameters</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>tr_target-compare_table-inject_meta</from>
-      <to>Success</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>tr_target-compare_table-get_insert_id_from_to</from>
-      <to>Log: "insert_id" from/to values</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>tr_target-compare_table-get_insert_id_from_to</from>
-      <to>jb_log_error 4</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>jb_log_error 4</from>
-      <to>Abort job</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>Log: "insert_id" from/to values</from>
-      <to>jb_log_error 5</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>jb_log_error 5</from>
-      <to>Abort job</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>Are columns to compare configured for this table?</from>
-      <to>jb_log_error 1</to>
+      <from>Is there column mapping metadata for this table?</from>
+      <to>Is there primary key metadata for this table?</to>
       <from_nr>0</from_nr>
       <to_nr>1</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Is there primary key metadata for this table?</from>
+      <to>jb_log_error 2</to>
+      <from_nr>1</from_nr>
+      <to_nr>2</to_nr>
       <enabled>Y</enabled>
       <evaluation>N</evaluation>
       <unconditional>N</unconditional>
@@ -1224,26 +989,35 @@ ORDER BY
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>Are columns to compare configured for this table?</from>
-      <to>Are primary key columns configured for this table?</to>
+      <from>jb_update_etl_table_meta_mirror_details</from>
+      <to>DUMMY</to>
       <from_nr>0</from_nr>
-      <to_nr>1</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Are primary key columns configured for this table?</from>
-      <to>jb_log_error 2</to>
-      <from_nr>1</from_nr>
-      <to_nr>2</to_nr>
+      <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>N</evaluation>
       <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>DUMMY</from>
+      <to>Abort job</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>START</from>
+      <to>Log parameters</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
     </hop>
     <hop>
       <from>Log parameters</from>
-      <to>jb_set_dynamic_db_connection_variables</to>
+      <to>Is there column mapping metadata for this table?</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -1251,63 +1025,9 @@ ORDER BY
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>jb_set_dynamic_db_connection_variables</from>
-      <to>Are columns to compare configured for this table?</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>jb_set_dynamic_db_connection_variables</from>
-      <to>Abort job 2</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Log: "insert_id" from/to values</from>
-      <to>tr_target-compare_table-inject_meta</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Set from/to "insert_id" vrbls=0</from>
-      <to>Log: "insert_id" from/to values</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>Are primary key columns configured for this table?</from>
-      <to>Do source and target tables have an "insert_id" column?</to>
+      <from>Is there primary key metadata for this table?</from>
+      <to>tr_target-update_table-compare</to>
       <from_nr>1</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Do source and target tables have an "insert_id" column?</from>
-      <to>Set from/to "insert_id" vrbls=0</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Do source and target tables have an "insert_id" column?</from>
-      <to>tr_target-compare_table-get_insert_id_from_to</to>
-      <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>Y</evaluation>
@@ -1316,11 +1036,18 @@ ORDER BY
   </hops>
   <notepads>
     <notepad>
-      <note>This job "compares" a single table from a source database with its corresponding table in the specified target database. This job has parameters:
+      <note>This job updates a single table by comparing all rows of the target table with all rows of the source table. Primary key column(s) must be specified for
+these tables, but neither an "insert_id" nor a "last_updated_on" column need to be specified. This job has parameters:
 
-	PARAM_CDC_LAST_LOAD_UTC						Timestamp for when the target DB tables were last updated from the source DBs
-	PARAM_MAX_NUM_COMPARE_ROWS				Maximum number of rows that will be compared for these tables. 0 means *all* rows
-	PARAM_TABLE_META_ID							Primary key of etl.table_meta row for "source" table archived/mirrored to "target" table
+	PARAM_CDC_LAST_LOAD_UTC						Timestamp for when the target DB was most recently updated successfully
+	PARAM_CDC_CURRENT_LOAD_UTC					Used so that a consistent max timestamp is used for all ETL
+	PARAM_DYN_DB_CONN_SOURCE_DB_HOST			for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_PORT			for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE	for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME	for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD	for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER		for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_URL			for source DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_TARGET_DB_HOST			for target DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_TARGET_DB_PORT			for target DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_TARGET_DB_DATABASE		for target DB "dynamic" database connections
@@ -1328,21 +1055,17 @@ ORDER BY
 	PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD	for target DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_TARGET_DB_DRIVER		for target DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_TARGET_DB_URL			for target DB "dynamic" database connections
-	PARAM_SOURCE_DB_ID								ID the "source" database containing tables that have been mirrored to a "target" database
-	PARAM_SOURCE_SCHEMA							Name of schema containing the source table that has been mirrored to the target table
-	PARAM_SOURCE_TABLE							Name of the source table that has been mirrored to the target table
-	PARAM_SOURCE_SCHEMA_TABLE					${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
-	PARAM_SOURCE_INSERT_ID_COLNAME				Name of column acting as the "insert_id"  timestamp column of the source table
-	PARAM_TARGET_DB_ID								ID of the "target" database to which "source" DB tables have been archived/mirrored
-	PARAM_TARGET_SCHEMA							Name of schema containing the target table (not currently used?)
-	PARAM_TARGET_TABLE								Name of the target table (not currently used?)
-	PARAM_TARGET_SCHEMA_TABLE					${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}
-	PARAM_TARGET_INSERT_ID_COLNAME				Name of column acting as the "insert_id" timestamp column of the target table
-	PARAM_UPDATE_ALGORITHM_ID					ID of the algorithm used for mirroring/archiving the tables</note>
-      <xloc>0</xloc>
+	PARAM_TABLE_META_ID							Primary key of etl.table_meta row for "source" table archived/mirrored to "target" table
+	PARAM_SOURCE_DB_ID								ID the "source" database containing tables will be mirrored to a "target" database
+	PARAM_SOURCE_SCHEMA							Name of schema containing source table to mirror to target table
+	PARAM_SOURCE_TABLE							Name of source table to mirror to target table
+	PARAM_TARGET_DB_ID								ID of the "target" database to which the "source" DB tables will be archived/mirrored
+	PARAM_TARGET_SCHEMA							Name of schema containing target table to update (not currently used)
+	PARAM_TARGET_TABLE								Name of target table to update (not currently used)</note>
+      <xloc>16</xloc>
       <yloc>0</yloc>
-      <width>874</width>
-      <heigth>332</heigth>
+      <width>886</width>
+      <heigth>374</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -1359,14 +1082,13 @@ ORDER BY
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>This "Abort" is needed
-to tell the root calling
-job that execution has
-failed.</note>
-      <xloc>0</xloc>
-      <yloc>784</yloc>
-      <width>139</width>
-      <heigth>66</heigth>
+      <note>Update the etl.table_meta row that corresponds to the table treated in the 
+current job. This records which mirror algorithm was used, as well as when the 
+mirroring was performed.</note>
+      <xloc>752</xloc>
+      <yloc>768</yloc>
+      <width>467</width>
+      <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -1383,64 +1105,14 @@ failed.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>This "Success" allows
-execution to continue
-without attempting to
-compare the source
-and target tables for
-the case where no
-column mapping 
-metdata is provided
-for the table.</note>
-      <xloc>0</xloc>
-      <yloc>496</yloc>
-      <width>140</width>
-      <heigth>136</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>tr_target-compare_table-inject_meta" compares the source and target tables using an "ETL Metadata Injection" step.</note>
-      <xloc>688</xloc>
-      <yloc>960</yloc>
-      <width>691</width>
-      <heigth>24</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>The query here (at least the WHERE clause) in this step must match the query in the step "Source &amp; Target DB column names to compare" in the
-transformation "tr_target-compare_table-inject_meta" that is executed below. This is because a PDI runtime error occurs if an empty stream is
-sent to an "ETL Metadata Injection" step. To avoid this possibility in "tr_target-compare_table-inject_meta", we check that metadata is available
-here before executing that transformation. The only reason why this case should occur is if a table is marked for mirroring, but no column mapping
-metdata is provided - this should never occur, but we check in order to provide a warning message, rather than letting PDI choke on this problem.</note>
-      <xloc>688</xloc>
-      <yloc>432</yloc>
-      <width>864</width>
+      <note>This "Abort" is needed so that the 
+root calling job will know that 
+execution has failed. It will then 
+direct the execution flow to the 
+job that sends out failure e-mails.</note>
+      <xloc>16</xloc>
+      <yloc>624</yloc>
+      <width>208</width>
       <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -1450,44 +1122,24 @@ metdata is provided - this should never occur, but we check in order to provide 
       <fontcolorgreen>0</fontcolorgreen>
       <fontcolorblue>0</fontcolorblue>
       <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>255</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
       <bordercolorblue>100</bordercolorblue>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>The query here (at least the WHERE clause) in this step must match the query in the step "Source DB primary key column names" in the
-transformation "tr_target-compare_table-inject_meta" that is executed below. This is to avoid a PDI runtime error that would occur if no primary
-key column metadata is availalbe for ETL metadata injection. The explanation is the same as that described for the previous step above.</note>
-      <xloc>688</xloc>
-      <yloc>528</yloc>
-      <width>851</width>
-      <heigth>52</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>255</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>This job sets the PDI variables:	QF_DYN_DB_CONN_DB_{HOST, PORT, ...}
-
-based on a single parameter:	PARAM_DB_ID = PARAM_SOURCE_DB_ID</note>
-      <xloc>768</xloc>
-      <yloc>352</yloc>
-      <width>442</width>
-      <heigth>52</heigth>
+      <note>This allows execution to continue
+without attempting to update a 
+target table for the case where 
+no column mapping metdata is 
+provided for the table. This may 
+not be the best behaviour.</note>
+      <xloc>16</xloc>
+      <yloc>480</yloc>
+      <width>204</width>
+      <heigth>94</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -1504,10 +1156,84 @@ based on a single parameter:	PARAM_DB_ID = PARAM_SOURCE_DB_ID</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
+      <note>This transformation updates the target table using an ETL Metadata Injection
+step for the source DB.</note>
+      <xloc>752</xloc>
+      <yloc>688</yloc>
+      <width>460</width>
+      <heigth>38</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>The query in this step (at least the WHERE clause) must match the query in 
+tr_target-update_table-compare
+that is executed below. This is because a PDI runtime error occurs if an 
+empty stream is sent to an ETL Metadata Injection step. To avoid this 
+from happening, we check that metadata is available here before 
+executing that transformation. The only reason why this case should 
+occur is if a table is marked for mirroring, but no column mapping 
+metadata is provided - this should never occur, but we check in order to 
+provide a warning message, rather than letting PDI choke on this problem.</note>
+      <xloc>752</xloc>
+      <yloc>432</yloc>
+      <width>445</width>
+      <heigth>136</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>255</backgroundcolorgreen>
+      <backgroundcolorblue>0</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>The query in this step must match the corresponding query in 
+tr_target-update_table-compare
+that is executed below (same reason as above).</note>
+      <xloc>752</xloc>
+      <yloc>592</yloc>
+      <width>367</width>
+      <heigth>52</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>255</backgroundcolorgreen>
+      <backgroundcolorblue>0</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
       <note>TODO:	This sub-transformation entry must abort the current
 		job if it is not successful for every row. Is this the case?</note>
-      <xloc>128</xloc>
-      <yloc>1008</yloc>
+      <xloc>192</xloc>
+      <yloc>880</yloc>
       <width>375</width>
       <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
@@ -1517,52 +1243,9 @@ based on a single parameter:	PARAM_DB_ID = PARAM_SOURCE_DB_ID</note>
       <fontcolorred>255</fontcolorred>
       <fontcolorgreen>255</fontcolorgreen>
       <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>26</backgroundcolorred>
-      <backgroundcolorgreen>26</backgroundcolorgreen>
-      <backgroundcolorblue>26</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Description of variables:
-
-	QF_MIRROR_COMPARE_INSERT_ID_FROM
-	QF_MIRROR_COMPARE_INSERT_ID_TO
-
-If the specified source &amp; target tables both have an "insert_id" column, then tr_target-compare_table-get_insert_id_from_to is executed
-to assign values to variables QF_MIRROR_COMPARE_INSERT_ID_FROM/TO, taking into account the value of the parameter
-PARAM_MAX_NUM_COMPARE_ROWS; otherwise, they are both set to zero.
-
-The values of these variables are assigned to parameters PARAM_INSERT_ID_FROM/TO when tr_target-compare_table-inject_meta is 
-executed below. If these parameters are both found to be zero in tr_target-compare_table-inject_meta, then *all* rows of the source and
-target tables will be compare with each other. Otherwise, these parameters are used to select the block of rows that are compared in 
-order to verify that the two tables "agree". This "insert_id" range will be table-specific, of course.
-
-This approach provides a way to compare only a *subset* of all the rows from the two tables (via PARAM_MAX_NUM_COMPARE_ROWS).
-More importantly, it restricts the block of rows that are compared to avoid comparing rows that would otherwise be reported as 
-problems. These are rows that fall into one of two cases:
-
-1.	Rows that have been *removed* from the source table that were mirrored earlier to the target table. We do not want to include these
-	rows from target table because the comparision for these rows will definitely "fail" (compared_rows_missing>0 will be reported).
-2.	Rows that have been *added* to the source table after the last mirror operation updated the target table. We do not want to include
-	these rows in the comparison because we cannot expect them to be found (yet) in the target table (compared_rows_extra>0 will be 
-	reported). Presumably, these rows will be be mirrored to the target table the next time the update code is run.</note>
-      <xloc>736</xloc>
-      <yloc>608</yloc>
-      <width>816</width>
-      <heigth>332</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
+      <backgroundcolorred>0</backgroundcolorred>
+      <backgroundcolorgreen>0</backgroundcolorgreen>
+      <backgroundcolorblue>0</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
       <bordercolorblue>100</bordercolorblue>

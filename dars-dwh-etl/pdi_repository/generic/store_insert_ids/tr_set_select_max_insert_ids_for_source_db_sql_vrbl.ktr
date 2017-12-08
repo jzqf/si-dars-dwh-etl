@@ -439,7 +439,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/11/10 12:34:22.818</modified_date>
+    <modified_date>2017/11/28 17:44:43.775</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -449,17 +449,22 @@
 
 	QF_SQL_SELECT_MAX_INSERT_IDS_FOR_SOURCE_DB
 
-to the SQL required to select the maximum value of the "insert_id" colum of each table in the specifed "source" DB
-that is archived/mirrored to the specified "target" DB.
+to the SQL required to select the maximum value of the "insert_id" colum of each table in the specifed "source" DB that is archived/mirrored 
+to the specified "target" DB.
+
+This is only done for tables that:
+
+1.	Are being mirrored/archived, and
+2.	Have an "insert_id" column.
 
 This transformation has parameters:
 
 	PARAM_SOURCE_DB_ID		ID the "source" DB containing tables to archive/mirror to the "target" DB
 	PARAM_TARGET_DB_ID		ID of the "target" DB to which the "source" DB tables will be archived/mirrored</note>
-      <xloc>0</xloc>
-      <yloc>16</yloc>
-      <width>676</width>
-      <heigth>164</heigth>
+      <xloc>16</xloc>
+      <yloc>0</yloc>
+      <width>828</width>
+      <heigth>234</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -482,7 +487,7 @@ option "Abort with error" selected in order that this
 situation will be propagated back up to the main job
 as a failure so that a failure email will be sent.</note>
       <xloc>624</xloc>
-      <yloc>448</yloc>
+      <yloc>512</yloc>
       <width>319</width>
       <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
@@ -507,7 +512,7 @@ instead of the first step generating *no*
 rows in the stream, it generates a single
 NULL row, which we catch here.</note>
       <xloc>16</xloc>
-      <yloc>368</yloc>
+      <yloc>432</yloc>
       <width>260</width>
       <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
@@ -630,7 +635,7 @@ NULL row, which we catch here.</note>
   </connection>
   <order>
     <hop>
-      <from>Generate SQL to fetch MAX(archive_ID) for each source table</from>
+      <from>Generate SQL to fetch MAX(insert_id) for each source table</from>
       <to>Write "select_sql_for_source_db" to log</to>
       <enabled>Y</enabled>
     </hop>
@@ -684,7 +689,7 @@ NULL row, which we catch here.</note>
     </remotesteps>
     <GUI>
       <xloc>736</xloc>
-      <yloc>384</yloc>
+      <yloc>448</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -708,12 +713,12 @@ NULL row, which we catch here.</note>
     </remotesteps>
     <GUI>
       <xloc>736</xloc>
-      <yloc>272</yloc>
+      <yloc>336</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Generate SQL to fetch MAX(archive_ID) for each source table</name>
+    <name>Generate SQL to fetch MAX(insert_id) for each source table</name>
     <type>TableInput</type>
     <description />
     <distribute>Y</distribute>
@@ -739,7 +744,7 @@ NULL row, which we catch here.</note>
             t.source_db_id = ${PARAM_SOURCE_DB_ID} AND
             t.target_db_id = ${PARAM_TARGET_DB_ID} AND
             t.mirror_tables = true AND    -- Only compute value of "max_insert_id" for tables that are being "mirrored"
-            c.is_insert_id_column = true
+            c.is_insert_id_column = true  -- Only compute value of "max_insert_id" for tables that have an "insert_id" column
         ORDER BY
             t.table_meta_id
     )
@@ -766,7 +771,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>400</xloc>
-      <yloc>192</yloc>
+      <yloc>256</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -799,7 +804,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>400</xloc>
-      <yloc>480</yloc>
+      <yloc>544</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -854,7 +859,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>400</xloc>
-      <yloc>384</yloc>
+      <yloc>448</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -888,7 +893,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>400</xloc>
-      <yloc>272</yloc>
+      <yloc>336</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

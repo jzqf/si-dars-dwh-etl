@@ -10,7 +10,7 @@
     <parameters>
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE</name>
-        <default_value />
+        <default_value>dars_dsa_db</default_value>
         <description>for source DB "dynamic" database connections</description>
       </parameter>
       <parameter>
@@ -20,17 +20,17 @@
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_HOST</name>
-        <default_value />
+        <default_value>localhost</default_value>
         <description>for source DB "dynamic" database connections</description>
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD</name>
-        <default_value />
+        <default_value>etl</default_value>
         <description>for source DB "dynamic" database connections</description>
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_PORT</name>
-        <default_value />
+        <default_value>5432</default_value>
         <description>for source DB "dynamic" database connections</description>
       </parameter>
       <parameter>
@@ -40,22 +40,37 @@
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME</name>
-        <default_value />
+        <default_value>etl</default_value>
         <description>for source DB "dynamic" database connections</description>
       </parameter>
       <parameter>
-        <name>PARAM_SOURCE_DB_ID</name>
+        <name>PARAM_SOURCE_INSERT_ID_COLNAME</name>
         <default_value />
+        <description>Name of the source table column that acts as the "insert_id" column</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_SOURCE_LAST_UPDATED_ON_COLNAME</name>
+        <default_value />
+        <description>Name of the source table column that acts as the "last_updated_on" column</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_MIRROR_ALGORITHM_ID</name>
+        <default_value>4</default_value>
+        <description>ID of the "mirror" algorithm for archiving/mirroring rows from the source table to the target table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_SOURCE_DB_ID</name>
+        <default_value>110</default_value>
         <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
       </parameter>
       <parameter>
         <name>PARAM_SOURCE_SCHEMA</name>
-        <default_value>passage</default_value>
+        <default_value>obo</default_value>
         <description>Name of schema containing source table to mirror to target table</description>
       </parameter>
       <parameter>
         <name>PARAM_SOURCE_TABLE</name>
-        <default_value>image</default_value>
+        <default_value>country</default_value>
         <description>Name of source table to mirror to target table</description>
       </parameter>
       <parameter>
@@ -484,7 +499,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/11/21 08:32:48.543</modified_date>
+    <modified_date>2017/12/05 09:51:34.813</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -507,11 +522,14 @@ This transformation has parameters:
 	PARAM_TABLE_META_ID							ID of the etl.table_meta row that the new etl.column_meta rows will be linked to
 	PARAM_SOURCE_DB_ID								ID the "source" database containing the table for generating column metadata
 	PARAM_SOURCE_SCHEMA							Name of schema containing source table for generating column metadata
-	PARAM_SOURCE_TABLE							Name of source table for generating column metadata</note>
+	PARAM_SOURCE_TABLE							Name of source table for generating column metadata
+	PARAM_SOURCE_INSERT_ID_COLNAME						Name of the source table column that acts as the "insert_id" column
+	PARAM_SOURCE_LAST_UPDATED_ON_COLNAME				Name of the source table column that acts as the "last_updated_on" column
+	PARAM_MIRROR_ALGORITHM_ID					ID of the "mirror" algorithm for archiving/mirroring rows from the source table to the target table</note>
       <xloc>16</xloc>
       <yloc>0</yloc>
-      <width>818</width>
-      <heigth>262</heigth>
+      <width>919</width>
+      <heigth>304</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -531,11 +549,11 @@ This transformation has parameters:
       <note>Append a field to the stream that contains the value of ${PARAM_TABLE_META_ID}. This is the
 value of the foreign key that will link the new column_meta rows to its parent table_meta row.</note>
       <xloc>288</xloc>
-      <yloc>592</yloc>
-      <width>561</width>
-      <heigth>38</heigth>
+      <yloc>784</yloc>
+      <width>528</width>
+      <heigth>36</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -552,11 +570,11 @@ value of the foreign key that will link the new column_meta rows to its parent t
     <notepad>
       <note>Get names of all columns from the specified table.</note>
       <xloc>288</xloc>
-      <yloc>288</yloc>
-      <width>305</width>
-      <heigth>24</heigth>
+      <yloc>320</yloc>
+      <width>285</width>
+      <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -574,11 +592,11 @@ value of the foreign key that will link the new column_meta rows to its parent t
       <note>Duplicate field "source_column_name" to "target_column_name". This assumes that the column
 names in the target database are identical to the column names in the source database.</note>
       <xloc>288</xloc>
-      <yloc>352</yloc>
-      <width>565</width>
-      <heigth>38</heigth>
+      <yloc>576</yloc>
+      <width>535</width>
+      <heigth>36</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -597,11 +615,11 @@ names in the target database are identical to the column names in the source dat
 a new field "column_meta_id" by adding MAX(column_meta_id) to these values.  "column_meta_id"
 will hold primary key values for the new etl.column_meta rows to insert.</note>
       <xloc>288</xloc>
-      <yloc>656</yloc>
-      <width>586</width>
-      <heigth>52</heigth>
+      <yloc>832</yloc>
+      <width>553</width>
+      <heigth>49</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -620,12 +638,12 @@ will hold primary key values for the new etl.column_meta rows to insert.</note>
 that contains the value MAX(column_meta_id). This is so that we
 can compute column_meta_id values that are not  yet used for
 new rows to insert into table etl.column_meta.</note>
-      <xloc>544</xloc>
-      <yloc>736</yloc>
-      <width>394</width>
-      <heigth>66</heigth>
+      <xloc>528</xloc>
+      <yloc>896</yloc>
+      <width>369</width>
+      <heigth>62</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -643,11 +661,11 @@ new rows to insert into table etl.column_meta.</note>
       <note>Add constant field "column_meta_id" to "column_meta_id_1" to create a new field "column_meta_id"
 to hold primary key values for the new etl.column_meta rows to insert.</note>
       <xloc>288</xloc>
-      <yloc>816</yloc>
-      <width>598</width>
-      <heigth>38</heigth>
+      <yloc>976</yloc>
+      <width>565</width>
+      <heigth>36</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -662,22 +680,22 @@ to hold primary key values for the new etl.column_meta rows to insert.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>mirror_column=Y							This assumes that all columns will be archived/mirrored
-											(can be set  to N below, depending on column name)
-compare_column=Y							This assumes that all columns will be compared
-											(can be set  to N below, depending on column name)
-is_updatable_column=N						This assumes that no columns of the table can be updated
-is_insert_id_column=N						(can be set  to T below, depending on column name)
-is_inserted_on_column=N					(can be set  to T below, depending on column name)
-is_last_updated_on_column=N				(can be set  to T below, depending on column name)
-is_row_can_be_deleted_from_column=N		(can be set  to T below, depending on column name)
-is_can_delete_row_column=N				(can be set  to T below, depending on column name)</note>
+      <note>mirror_column=Y						This assumes that all columns will be archived/mirrored
+										(can be set  to N below, depending on column name)
+compare_column=Y						This assumes that all columns will be compared
+										(can be set  to N below, depending on column name)
+is_updatable_column=N					(can be set  to Y below, depending on PARAM_MIRROR_ALGORITHM_ID)
+is_insert_id_column=N					(can be set  to Y below, depending on column name)
+is_inserted_on_column=N				(can be set  to Y below, depending on column name)
+is_last_updated_on_column=N			(can be set  to Y below, depending on column name)
+is_row_can_be_deleted_from_column=N	(can be set  to Y below, depending on column name)
+is_can_delete_row_column=N				(can be set  to Y below, depending on column name)</note>
       <xloc>288</xloc>
-      <yloc>416</yloc>
-      <width>613</width>
-      <heigth>150</heigth>
+      <yloc>624</yloc>
+      <width>645</width>
+      <heigth>140</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -692,16 +710,46 @@ is_can_delete_row_column=N				(can be set  to T below, depending on column name)
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>For example, if target_column_name="insert_id", then the following adjustment is made:
+      <note>For example:
 
-	is_insert_id_column = Y
-...</note>
+	is_insert_id_column 			= (source_column_name = ${PARAM_SOURCE_INSERT_ID_COLNAME})
+	is_last_updated_on_column	= (source_column_name = ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME})
+	is_updatable_column			= ...
+	...</note>
       <xloc>288</xloc>
-      <yloc>928</yloc>
-      <width>526</width>
-      <heigth>66</heigth>
+      <yloc>1072</yloc>
+      <width>586</width>
+      <heigth>88</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Discard rows for source columns named:
+
+	"etl_batch_id_insert"			and 
+	"etl_batch_id_last_update" . 
+
+"column_meta" rows should not be created for such target columns. Such target columns will be assigned *new* 
+values associated with the execution of the PDI transformation when the target table is updated, i.e., the values will
+*not* be copied from the source table.</note>
+      <xloc>288</xloc>
+      <yloc>384</yloc>
+      <width>645</width>
+      <heigth>114</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -901,23 +949,43 @@ is_can_delete_row_column=N				(can be set  to T below, depending on column name)
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Table input - Column mapping metadata</from>
-      <to>Duplicate column name field</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>Remove fields no longer needed</from>
-      <to>Adjust field values based on column name</to>
+      <to>Adjust column attributes based on ...</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Adjust field values based on column name</from>
+      <from>Adjust column attributes based on ...</from>
       <to>Insert new etl.column_meta rows</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
       <from>Duplicate column name field</from>
       <to>Add fields with constant values</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Table input - Column mapping metadata</from>
+      <to>etl_batch_id_insert ?</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>etl_batch_id_insert ?</from>
+      <to>Dummy</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>etl_batch_id_insert ?</from>
+      <to>etl_batch_id_last_update ?</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>etl_batch_id_last_update ?</from>
+      <to>Duplicate column name field</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>etl_batch_id_last_update ?</from>
+      <to>Dummy</to>
       <enabled>Y</enabled>
     </hop>
   </order>
@@ -1039,7 +1107,7 @@ is_can_delete_row_column=N				(can be set  to T below, depending on column name)
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>464</yloc>
+      <yloc>672</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1073,12 +1141,12 @@ is_can_delete_row_column=N				(can be set  to T below, depending on column name)
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>672</yloc>
+      <yloc>848</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Adjust field values based on column name</name>
+    <name>Adjust column attributes based on ...</name>
     <type>ScriptValueMod</type>
     <description />
     <distribute>Y</distribute>
@@ -1104,7 +1172,9 @@ is_can_delete_row_column=N				(can be set  to T below, depending on column name)
 */
 
 var source_table_name = getVariable("PARAM_SOURCE_TABLE", "");
-//Alert("PARAM_SOURCE_TABLE = " + source_table_name);
+var mirror_algorithm_id = getVariable("PARAM_MIRROR_ALGORITHM_ID", 0);
+
+//Alert("PARAM_SOURCE_TABLE, PARAM_MIRROR_ALGORITHM_ID = " + source_table_name + ", " + mirror_algorithm_id);
 
 /*
   Since all of the fields that are set here have:
@@ -1119,6 +1189,7 @@ var source_table_name = getVariable("PARAM_SOURCE_TABLE", "");
   explicitly treated here.
 */
 mirror_column = true;
+is_updatable_column = false;
 compare_column = true;
 is_insert_id_column = false;
 is_inserted_on_column = false;
@@ -1127,21 +1198,58 @@ is_row_can_be_deleted_from_column = false;
 is_can_delete_row_column = false;
 
 /*
-  We do not *also* test for target_column_name = source_table_name+"_id")
-  here in case there is is a column with that name, *as well as* a column
-  named "insert_id" or "archive_id". In that case we will end up with more
-  than one "insert_id"column for the table, which will lead to strange
-  problems when ETL code is run.
+  It should not matter if we test the value of source_columnn_name or
+  target_column_name, since at this point, they will necessarily be
+  identical. It is conceivable that this could change in the future.
 */
-//if(target_column_name == "insert_id" || target_column_name == "archive_id" || target_column_name == source_table_name+"_id") {
-if(target_column_name == "insert_id" || target_column_name == "archive_id") {
-    //Alert("target_column_name = " + target_column_name);
+if(getVariable("PARAM_SOURCE_INSERT_ID_COLNAME", "").equals(source_column_name)) {
     is_insert_id_column = true;
-} else if(target_column_name == "inserted_on" || target_column_name == "archive_date") {     // We could also test for other names here
-    is_inserted_on_column = true;
-} else if(target_column_name == "last_updated_on") { // We could also test for other names here
+} else if(getVariable("PARAM_SOURCE_LAST_UPDATED_ON_COLNAME", "").equals(source_column_name)) {
     is_last_updated_on_column = true;
-} else if(target_column_name == "row_can_be_deleted_from") { // We could also test for other names here
+}
+
+/*
+  Set is_updatable_column=true if any of the "updateable" mirror/update
+  algorithms have been specified for the table. Currently, these are algorithms
+  2 &amp; 5. This is done for all columns of the table *except" for primary key 
+  columns, because it/they can never be updateable.
+*/
+if(getVariable("QF_MIRROR_ALG_INSERT_OR_UPDATE_GENERIC", 0).equals(mirror_algorithm_id) || 
+   getVariable("QF_MIRROR_ALG_COMPARE_GENERIC", 0).equals(mirror_algorithm_id)) {
+    if(is_primary_key_column == false) {
+        is_updatable_column = true;
+    }
+}
+
+/*
+  Adjustments for columns that have "special" names. Most of this should
+  eventually be eliminated and replaced with code that cehcks for special
+  column names that are specified in the metadata loaded at the start of 
+  the root job.
+*/
+//if(source_column_name == "etl_batch_id_insert" || source_column_name == "etl_batch_id_last_update") {
+//	/*
+//      This case occurs when a source table is itself a target table, e.g.,
+//      an "obo" table of the PSA, which is a target table for a table in the
+//      "obo_opr" database, and at the same time it is a source table for a
+//      table in the DSA database. In this case the target columns will be 
+//      assigned *new* values associated with the execution of the PDI 
+//      transformation when the target table is updated, i.e., the values will 
+//      *not* be copied from the source table. In addition, although the target 
+//      table may have an 'etl_batch_id_insert'  or 'etl_batch_id_last_update' 
+//      column, no column_meta rows should be created for them. Hence, perhaps 
+//      an even better way to treat this case is to never create column_meta 
+//      rows for them in the first place. This can be done by introducing a
+//      "Filter Rows" step into this trnasformation. If this is doen, this "if"
+//      block can be removed.
+//    */
+//    mirror_column = false;
+//    is_updatable_column = false;
+//    compare_column = false;
+//} else if(target_column_name == "inserted_on" || target_column_name == "archive_date") {     // We could also test for other names here
+//    is_inserted_on_column = true;
+//} else 
+if(target_column_name == "row_can_be_deleted_from") { // We could also test for other names here
     is_row_can_be_deleted_from_column = true;
 } else if(target_column_name == "can_delete_row") { // We could also test for other names here
     is_can_delete_row_column = true;
@@ -1157,6 +1265,14 @@ if(target_column_name == "insert_id" || target_column_name == "archive_id") {
       <field>
         <name>mirror_column</name>
         <rename>mirror_column</rename>
+        <type>Boolean</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>Y</replace>
+      </field>
+      <field>
+        <name>is_updatable_column</name>
+        <rename>is_updatable_column</rename>
         <type>Boolean</type>
         <length>-1</length>
         <precision>-1</precision>
@@ -1220,7 +1336,7 @@ if(target_column_name == "insert_id" || target_column_name == "archive_id") {
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>944</yloc>
+      <yloc>1104</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1259,7 +1375,7 @@ if(target_column_name == "insert_id" || target_column_name == "archive_id") {
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>816</yloc>
+      <yloc>976</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1299,7 +1415,7 @@ if(target_column_name == "insert_id" || target_column_name == "archive_id") {
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>352</yloc>
+      <yloc>576</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1333,8 +1449,8 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>384</xloc>
-      <yloc>752</yloc>
+      <xloc>368</xloc>
+      <yloc>912</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1372,7 +1488,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>592</yloc>
+      <yloc>784</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1415,7 +1531,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>1024</yloc>
+      <yloc>1168</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1451,7 +1567,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>752</yloc>
+      <yloc>912</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1484,7 +1600,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>880</yloc>
+      <yloc>1040</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1504,6 +1620,12 @@ FROM
     c.column_name                    AS "source_column_name",
     kcu.ordinal_position IS NOT NULL AS "is_primary_key_column",
     kcu.ordinal_position             AS "primary_key_column_order"
+--    -- This column will be "true" if the specified table has a column
+--    -- named "xxxxxxxx".
+--    EXISTS (
+--        SELECT * FROM information_schema.columns 
+--        WHERE table_schema='ssssssss' AND table_name='tttttttt' AND column_name='xxxxxxxx'
+--    ) AS "exists_xxxxxxxx_column"
 FROM 
     information_schema.columns c
 -- These two left outer joins are for determining which column(s) make up the 
@@ -1539,7 +1661,117 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>288</yloc>
+      <yloc>320</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>etl_batch_id_insert ?</name>
+    <type>FilterRows</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <send_true_to>Dummy</send_true_to>
+    <send_false_to>etl_batch_id_last_update ?</send_false_to>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <leftvalue>source_column_name</leftvalue>
+        <function>=</function>
+        <rightvalue />
+        <value>
+          <name>constant</name>
+          <type>String</type>
+          <text>etl_batch_id_insert</text>
+          <length>-1</length>
+          <precision>-1</precision>
+          <isnull>N</isnull>
+          <mask />
+        </value>
+      </condition>
+    </compare>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>128</xloc>
+      <yloc>384</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Dummy</name>
+    <type>Dummy</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>16</xloc>
+      <yloc>384</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>etl_batch_id_last_update ?</name>
+    <type>FilterRows</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <send_true_to>Dummy</send_true_to>
+    <send_false_to>Duplicate column name field</send_false_to>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <leftvalue>source_column_name</leftvalue>
+        <function>=</function>
+        <rightvalue />
+        <value>
+          <name>constant</name>
+          <type>String</type>
+          <text>etl_batch_id_last_update</text>
+          <length>-1</length>
+          <precision>-1</precision>
+          <isnull>N</isnull>
+          <mask />
+        </value>
+      </condition>
+    </compare>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>128</xloc>
+      <yloc>480</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

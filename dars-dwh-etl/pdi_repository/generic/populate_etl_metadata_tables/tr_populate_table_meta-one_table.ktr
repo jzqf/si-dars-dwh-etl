@@ -9,18 +9,103 @@
     <directory>/generic/populate_etl_metadata_tables</directory>
     <parameters>
       <parameter>
+        <name>PARAM_CAN_DELETE_ROWS</name>
+        <default_value />
+        <description>"Y" if, under normal operation, rows can be deleted from the source table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_CAN_DELETE_ROW_SCHEMA_NAME</name>
+        <default_value />
+        <description>Name of the schema containing the "can delete row" table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_CAN_DELETE_ROW_TABLE_NAME</name>
+        <default_value />
+        <description>Name of the "can delete row" table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_CAN_INSERT_ROWS</name>
+        <default_value />
+        <description>"Y" if, under normal operation, rows can be inserted into the source table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_CAN_UPDATE_ROWS</name>
+        <default_value />
+        <description>"Y" if, under normal operation, rows can be updated in the source table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_COMPARE_TABLES</name>
+        <default_value />
+        <description>"Y" id "comparing" is enabled for the source/target table pair</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DELETE_MARKED_ROWS</name>
+        <default_value />
+        <description>"Y" if "delete marked rows" processing is enabled for the source table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DELETE_MARKED_ROWS_ALGORITHM_ID</name>
+        <default_value />
+        <description>ID of the "delete marked rows" algorithm to use for the source table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DELETE_MARKED_ROWS_TABLE_ORDER</name>
+        <default_value />
+        <description>Integer value for setting the order that tables are processed by the default the "delete marked rows" algorithm</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_SOURCE_INSERT_ID_COLNAME</name>
+        <default_value />
+        <description>Name of column that acts as the "insert_id" column</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_IS_STATIC_SUPPORT_TABLE</name>
+        <default_value />
+        <description>"Y" if the source table is a "static support table"</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_SOURCE_LAST_UPDATED_ON_COLNAME</name>
+        <default_value />
+        <description>Name of column that acts as the "last_updated_on" column</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_MARK_ROWS_FOR_DELETION</name>
+        <default_value />
+        <description>"Y" if "mark rows for deletion" processing is enabled for the source table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_MARK_ROWS_FOR_DELETION_ALGORITHM_ID</name>
+        <default_value />
+        <description>ID of the "mark rows for deletion" algorithm to use for the source table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_MIRROR_ALGORITHM_ID</name>
+        <default_value />
+        <description>ID of the "mirror" algorithm for archiving/mirroring rows from the source table to the target table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_MIRROR_TABLES</name>
+        <default_value />
+        <description>"Y" if archiving/mirroring is enabled for the source/target table pair</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS</name>
+        <default_value />
+        <description>Row "age" in seconds after which rows of the source table can be "marked rows for deletion"</description>
+      </parameter>
+      <parameter>
         <name>PARAM_SOURCE_DB_ID</name>
         <default_value />
         <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
       </parameter>
       <parameter>
         <name>PARAM_SOURCE_SCHEMA</name>
-        <default_value>passage</default_value>
+        <default_value />
         <description>Name of schema containing source table to mirror to target table</description>
       </parameter>
       <parameter>
         <name>PARAM_SOURCE_TABLE</name>
-        <default_value>image</default_value>
+        <default_value />
         <description>Name of source table to mirror to target table</description>
       </parameter>
       <parameter>
@@ -459,7 +544,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/11/22 16:03:42.377</modified_date>
+    <modified_date>2017/12/08 10:51:46.273</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -470,16 +555,33 @@ It is assumed that the table name in the target database is identical to the tab
 
 This transformation has parameters:
 
-	PARAM_SOURCE_DB_ID			ID the "source" database containing the table for generating table metadata
-	PARAM_SOURCE_SCHEMA		Name of schema containing source table for generating table metadata
-	PARAM_SOURCE_TABLE		Name of source table for generating table metadata
-	PARAM_TARGET_DB_ID			ID of the "target" database to which the "source" DB tables will be archived/mirrored
-	PARAM_TARGET_SCHEMA		Name of schema in the "target" DB ontaining the target table
-	PARAM_TARGET_TABLE			Name of the table in the "target" DB that the "source" table will be archived/mirrored to</note>
-      <xloc>16</xloc>
+	PARAM_SOURCE_DB_ID									ID the "source" database containing the table for generating table metadata
+	PARAM_SOURCE_SCHEMA								Name of schema containing source table for generating table metadata
+	PARAM_SOURCE_TABLE								Name of source table for generating table metatdata
+	PARAM_TARGET_DB_ID									ID of the "target" database to which the "source" DB tables will be archived/mirrored
+	PARAM_TARGET_SCHEMA								Name of schema in the "target" DB ontaining the target table.
+	PARAM_TARGET_TABLE									Name of the table in the "target" DB that the "source" table will be archived/mirrored to
+	PARAM_SOURCE_INSERT_ID_COLNAME							Name of column that acts as the "insert_id" column
+	PARAM_SOURCE_LAST_UPDATED_ON_COLNAME					Name of column that acts as the "last_updated_on" column
+	PARAM_IS_STATIC_SUPPORT_TABLE						"Y" if the source table is a "static support table"
+	PARAM_CAN_INSERT_ROWS							"Y" if, under normal operation, rows can be inserted into the source table
+	PARAM_CAN_UPDATE_ROWS							"Y" if, under normal operation, rows can be updated in the source table
+	PARAM_CAN_DELETE_ROWS							"Y" if, under normal operation, rows can be deleted from the source table
+	PARAM_MIRROR_ALGORITHM_ID						ID of the "mirror" algorithm for archiving/mirroring rows from the source table to the target table
+	PARAM_MIRROR_TABLES								"Y" if archiving/mirroring is enabled for the source/target table pair
+	PARAM_COMPARE_TABLES								"Y" id "comparing" is enabled for the source/target table pair
+	PARAM_MARK_ROWS_FOR_DELETION_ALGORITHM_ID	ID of the "mark rows for deletion" algorithm to use for the source table
+	PARAM_DELETE_MARKED_ROWS_ALGORITHM_ID		ID of the "delete marked rows" algorithm to use for the source table
+	PARAM_MARK_ROWS_FOR_DELETION					"Y" if "mark rows for deletion" processing is enabled for the source table
+	PARAM_DELETE_MARKED_ROWS						"Y" if "delete marked rows" processing is enabled for the source table
+	PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS		Row "age" in seconds after which rows of the source table can be "marked rows for deletion"
+	PARAM_CAN_DELETE_ROW_SCHEMA_NAME				Name of the schema containing the "can delete row" table
+	PARAM_CAN_DELETE_ROW_TABLE_NAME				Name of the "can delete row" table
+	PARAM_DELETE_MARKED_ROWS_TABLE_ORDER		Integer value for setting the order that tables are processed by the default the "delete marked rows" algorithm</note>
+      <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>740</width>
-      <heigth>164</heigth>
+      <width>1023</width>
+      <heigth>402</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -498,8 +600,8 @@ This transformation has parameters:
     <notepad>
       <note>Create a single stream row using the parameter values passed to this transformation
 for the field/column values.</note>
-      <xloc>272</xloc>
-      <yloc>192</yloc>
+      <xloc>224</xloc>
+      <yloc>432</yloc>
       <width>506</width>
       <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
@@ -521,8 +623,8 @@ for the field/column values.</note>
       <note>Duplicate fields "source_schema_name" &amp; "source_table_name" to "target_schema_name" &amp; 
 "target_table_name". This assumes that the schema &amp; table names in the target database are
 identical to the schema &amp; table names in the source database.</note>
-      <xloc>272</xloc>
-      <yloc>256</yloc>
+      <xloc>304</xloc>
+      <yloc>496</yloc>
       <width>552</width>
       <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
@@ -553,11 +655,14 @@ is_static_support_table=N					The source table is *not* a "static support table"
 mirror_algorithm_id=1						The generic update algorithm for insert-only tables will be used to 
 												mirror the source table to the target DB
 mark_rows_for_deletion_algorithm_id=1	Generic "mark rows for deletion" algorithm will be used
-delete_marked_rows_algorithm_id=1		Generic "delete marked rows" algorithm will be used</note>
-      <xloc>272</xloc>
-      <yloc>416</yloc>
+delete_marked_rows_algorithm_id=1		Generic "delete marked rows" algorithm will be used
+
+THIS STEP IS NO LONGER NEEDED NOW THAT I SPECIFY VALUES FOR *ALL* COLUMNS OF THE "table_meta"
+TABLE IN AN INITIAL "Data Grid" STEP.</note>
+      <xloc>288</xloc>
+      <yloc>720</yloc>
       <width>675</width>
-      <heigth>192</heigth>
+      <heigth>234</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -577,8 +682,8 @@ delete_marked_rows_algorithm_id=1		Generic "delete marked rows" algorithm will b
       <note>Add a constant field to the stream named "table_meta_id"
 that contains the value MAX(table_meta_id)+1. This value
 will be used as the primary key for the new row. </note>
-      <xloc>544</xloc>
-      <yloc>336</yloc>
+      <xloc>496</xloc>
+      <yloc>640</yloc>
       <width>351</width>
       <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
@@ -599,8 +704,8 @@ will be used as the primary key for the new row. </note>
     <notepad>
       <note>Table "table_state" contains state information for each source/target table pair. It has a one-to-one relation
 to the table_meta table.</note>
-      <xloc>272</xloc>
-      <yloc>720</yloc>
+      <xloc>224</xloc>
+      <yloc>1072</yloc>
       <width>638</width>
       <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
@@ -621,8 +726,8 @@ to the table_meta table.</note>
     <notepad>
       <note>Table "table_meta" contains metadata for each source/target table pair. It has a one-to-one relation
 to the table_state table.</note>
-      <xloc>272</xloc>
-      <yloc>624</yloc>
+      <xloc>224</xloc>
+      <yloc>976</yloc>
       <width>593</width>
       <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
@@ -755,29 +860,39 @@ to the table_state table.</note>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Duplicate schema &amp; table name fields</from>
-      <to>Join Rows (cartesian product)</to>
-      <enabled>N</enabled>
-    </hop>
-    <hop>
       <from>Join Rows (cartesian product)</from>
       <to>Add fields with constant values</to>
-      <enabled>Y</enabled>
+      <enabled>N</enabled>
     </hop>
     <hop>
       <from>Add fields with constant values</from>
       <to>Insert new etl.table_meta row</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Create row from parameters</from>
-      <to>Join Rows (cartesian product)</to>
-      <enabled>Y</enabled>
+      <enabled>N</enabled>
     </hop>
     <hop>
       <from>Insert new etl.table_meta row</from>
       <to>Insert new etl.table_state row</to>
       <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Join Rows (cartesian product)</from>
+      <to>Insert new etl.table_meta row</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Create row from parameters</from>
+      <to>Replace blank strings with NULL</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Replace blank strings with NULL</from>
+      <to>Join Rows (cartesian product)</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Duplicate schema &amp; table name fields</from>
+      <to>Replace blank strings with NULL</to>
+      <enabled>N</enabled>
     </hop>
   </order>
   <step>
@@ -933,8 +1048,8 @@ to the table_state table.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>128</xloc>
-      <yloc>464</yloc>
+      <xloc>176</xloc>
+      <yloc>816</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -970,7 +1085,7 @@ to the table_state table.</note>
         <currency />
         <decimal />
         <group />
-        <length>255</length>
+        <length>80</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
@@ -982,7 +1097,7 @@ to the table_state table.</note>
         <currency />
         <decimal />
         <group />
-        <length>255</length>
+        <length>80</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
@@ -1006,7 +1121,7 @@ to the table_state table.</note>
         <currency />
         <decimal />
         <group />
-        <length>255</length>
+        <length>80</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
@@ -1018,7 +1133,187 @@ to the table_state table.</note>
         <currency />
         <decimal />
         <group />
-        <length>255</length>
+        <length>80</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>is_static_support_table</name>
+        <variable>${PARAM_IS_STATIC_SUPPORT_TABLE}</variable>
+        <type>Boolean</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>can_insert_rows</name>
+        <variable>${PARAM_CAN_INSERT_ROWS}</variable>
+        <type>Boolean</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>can_update_rows</name>
+        <variable>${PARAM_CAN_UPDATE_ROWS}</variable>
+        <type>Boolean</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>can_delete_rows</name>
+        <variable>${PARAM_CAN_DELETE_ROWS}</variable>
+        <type>Boolean</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>mirror_algorithm_id</name>
+        <variable>${PARAM_MIRROR_ALGORITHM_ID}</variable>
+        <type>Integer</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>mark_rows_for_deletion_algorithm_id</name>
+        <variable>${PARAM_MARK_ROWS_FOR_DELETION_ALGORITHM_ID}</variable>
+        <type>Integer</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>delete_marked_rows_algorithm_id</name>
+        <variable>${PARAM_DELETE_MARKED_ROWS_ALGORITHM_ID}</variable>
+        <type>Integer</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>mirror_tables</name>
+        <variable>${PARAM_MIRROR_TABLES}</variable>
+        <type>Boolean</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>mark_rows_for_deletion</name>
+        <variable>${PARAM_MARK_ROWS_FOR_DELETION}</variable>
+        <type>Boolean</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>delete_marked_rows</name>
+        <variable>${PARAM_DELETE_MARKED_ROWS}</variable>
+        <type>Boolean</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>compare_tables</name>
+        <variable>${PARAM_COMPARE_TABLES}</variable>
+        <type>Boolean</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>row_can_be_deleted_from_seconds</name>
+        <variable>${PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS}</variable>
+        <type>Integer</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>can_delete_row_schema_name</name>
+        <variable>${PARAM_CAN_DELETE_ROW_SCHEMA_NAME}</variable>
+        <type>String</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>80</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>can_delete_row_table_name</name>
+        <variable>${PARAM_CAN_DELETE_ROW_TABLE_NAME}</variable>
+        <type>String</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>80</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>delete_marked_rows_table_order</name>
+        <variable>${PARAM_DELETE_MARKED_ROWS_TABLE_ORDER}</variable>
+        <type>Integer</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>-1</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
@@ -1031,8 +1326,8 @@ to the table_state table.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>128</xloc>
-      <yloc>192</yloc>
+      <xloc>80</xloc>
+      <yloc>432</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1078,8 +1373,8 @@ to the table_state table.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>224</xloc>
-      <yloc>272</yloc>
+      <xloc>176</xloc>
+      <yloc>512</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1113,8 +1408,8 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>384</xloc>
-      <yloc>352</yloc>
+      <xloc>336</xloc>
+      <yloc>656</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1156,8 +1451,8 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>128</xloc>
-      <yloc>624</yloc>
+      <xloc>80</xloc>
+      <yloc>976</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1203,8 +1498,8 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>128</xloc>
-      <yloc>720</yloc>
+      <xloc>80</xloc>
+      <yloc>1072</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1239,8 +1534,42 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>128</xloc>
-      <yloc>352</yloc>
+      <xloc>80</xloc>
+      <yloc>656</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Replace blank strings with NULL</name>
+    <type>NullIf</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <field>
+        <name>can_delete_row_schema_name</name>
+        <value />
+      </field>
+      <field>
+        <name>can_delete_row_table_name</name>
+        <value />
+      </field>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>80</xloc>
+      <yloc>576</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

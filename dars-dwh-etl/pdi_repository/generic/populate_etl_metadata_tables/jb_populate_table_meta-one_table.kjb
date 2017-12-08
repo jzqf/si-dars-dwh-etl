@@ -8,8 +8,93 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/11/10 12:30:56.108</modified_date>
+  <modified_date>2017/12/04 08:29:39.588</modified_date>
   <parameters>
+    <parameter>
+      <name>PARAM_CAN_DELETE_ROWS</name>
+      <default_value />
+      <description>"Y" if, under normal operation, rows can be deleted from the source table</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_CAN_DELETE_ROW_SCHEMA_NAME</name>
+      <default_value />
+      <description>Name of the schema containing the "can delete row" table</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_CAN_DELETE_ROW_TABLE_NAME</name>
+      <default_value />
+      <description>Name of the "can delete row" table</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_CAN_INSERT_ROWS</name>
+      <default_value />
+      <description>"Y" if, under normal operation, rows can be inserted into the source table</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_CAN_UPDATE_ROWS</name>
+      <default_value />
+      <description>"Y" if, under normal operation, rows can be updated in the source table</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_COMPARE_TABLES</name>
+      <default_value />
+      <description>"Y" id "comparing" is enabled for the source/target table pair</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DELETE_MARKED_ROWS</name>
+      <default_value />
+      <description>"Y" if "delete marked rows" processing is enabled for the source table</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DELETE_MARKED_ROWS_ALGORITHM_ID</name>
+      <default_value />
+      <description>ID of the "delete marked rows" algorithm to use for the source table</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DELETE_MARKED_ROWS_TABLE_ORDER</name>
+      <default_value />
+      <description>Integer value for setting the order that tables are processed by the default the "delete marked rows" algorithm</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_SOURCE_INSERT_ID_COLNAME</name>
+      <default_value />
+      <description>Name of the source table column that acts as the "insert_id" column</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_IS_STATIC_SUPPORT_TABLE</name>
+      <default_value />
+      <description>"Y" if the source table is a "static support table"</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_SOURCE_LAST_UPDATED_ON_COLNAME</name>
+      <default_value />
+      <description>Name of the source table column that acts as the "last_updated_on" column</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_MARK_ROWS_FOR_DELETION</name>
+      <default_value />
+      <description>"Y" if "mark rows for deletion" processing is enabled for the source table</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_MARK_ROWS_FOR_DELETION_ALGORITHM_ID</name>
+      <default_value />
+      <description>ID of the "mark rows for deletion" algorithm to use for the source table</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_MIRROR_ALGORITHM_ID</name>
+      <default_value />
+      <description>ID of the "mirror" algorithm for archiving/mirroring rows from the source table to the target table</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_MIRROR_TABLES</name>
+      <default_value />
+      <description>"Y" if archiving/mirroring is enabled for the source/target table pair</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS</name>
+      <default_value />
+      <description>Row "age" in seconds after which rows of the source table can be "marked rows for deletion"</description>
+    </parameter>
     <parameter>
       <name>PARAM_SOURCE_DB_ID</name>
       <default_value />
@@ -17,12 +102,12 @@
     </parameter>
     <parameter>
       <name>PARAM_SOURCE_SCHEMA</name>
-      <default_value>passage</default_value>
+      <default_value />
       <description>Name of schema containing source table to mirror to target table</description>
     </parameter>
     <parameter>
       <name>PARAM_SOURCE_TABLE</name>
-      <default_value>image</default_value>
+      <default_value />
       <description>Name of source table to mirror to target table</description>
     </parameter>
     <parameter>
@@ -385,7 +470,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>32</xloc>
-      <yloc>256</yloc>
+      <yloc>496</yloc>
     </entry>
     <entry>
       <name>tr_populate_table_meta-one_table</name>
@@ -432,27 +517,42 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>320</xloc>
-      <yloc>592</yloc>
+      <yloc>832</yloc>
     </entry>
     <entry>
       <name>Log parameters</name>
       <description />
       <type>WRITE_TO_LOG</type>
-      <logmessage> 
-PARAM_SOURCE_DB_ID  = ${PARAM_SOURCE_DB_ID}
-PARAM_SOURCE_SCHEMA = ${PARAM_SOURCE_SCHEMA}
-PARAM_SOURCE_TABLE  = ${PARAM_SOURCE_TABLE}
-PARAM_TARGET_DB_ID  = ${PARAM_TARGET_DB_ID}
-PARAM_TARGET_SCHEMA = ${PARAM_TARGET_SCHEMA}
-PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}
- </logmessage>
+      <logmessage>PARAM_SOURCE_DB_ID                        = ${PARAM_SOURCE_DB_ID}
+PARAM_SOURCE_SCHEMA                       = ${PARAM_SOURCE_SCHEMA}
+PARAM_SOURCE_TABLE                        = ${PARAM_SOURCE_TABLE}
+PARAM_TARGET_DB_ID                        = ${PARAM_TARGET_DB_ID}
+PARAM_TARGET_SCHEMA                       = ${PARAM_TARGET_SCHEMA}
+PARAM_TARGET_TABLE                        = ${PARAM_TARGET_TABLE}
+PARAM_SOURCE_INSERT_ID_COLNAME                   = ${PARAM_SOURCE_INSERT_ID_COLNAME}
+PARAM_SOURCE_LAST_UPDATED_ON_COLNAME             = ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME}
+PARAM_IS_STATIC_SUPPORT_TABLE             = ${PARAM_IS_STATIC_SUPPORT_TABLE}
+PARAM_CAN_INSERT_ROWS                     = ${PARAM_CAN_INSERT_ROWS}
+PARAM_CAN_UPDATE_ROWS                     = ${PARAM_CAN_UPDATE_ROWS}
+PARAM_CAN_DELETE_ROWS                     = ${PARAM_CAN_DELETE_ROWS}
+PARAM_MIRROR_ALGORITHM_ID                 = ${PARAM_MIRROR_ALGORITHM_ID}
+PARAM_MIRROR_TABLES                       = ${PARAM_MIRROR_TABLES}
+PARAM_COMPARE_TABLES                      = ${PARAM_COMPARE_TABLES}
+PARAM_MARK_ROWS_FOR_DELETION_ALGORITHM_ID = ${PARAM_MARK_ROWS_FOR_DELETION_ALGORITHM_ID}
+PARAM_DELETE_MARKED_ROWS_ALGORITHM_ID     = ${PARAM_DELETE_MARKED_ROWS_ALGORITHM_ID}
+PARAM_MARK_ROWS_FOR_DELETION              = ${PARAM_MARK_ROWS_FOR_DELETION}
+PARAM_DELETE_MARKED_ROWS                  = ${PARAM_DELETE_MARKED_ROWS}
+PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS     = ${PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS}
+PARAM_CAN_DELETE_ROW_SCHEMA_NAME          = ${PARAM_CAN_DELETE_ROW_SCHEMA_NAME}
+PARAM_CAN_DELETE_ROW_TABLE_NAME           = ${PARAM_CAN_DELETE_ROW_TABLE_NAME}
+PARAM_DELETE_MARKED_ROWS_TABLE_ORDER      = ${PARAM_DELETE_MARKED_ROWS_TABLE_ORDER}</logmessage>
       <loglevel>Basic</loglevel>
-      <logsubject>Parameters received by: jb_populate_table_meta-one_table:</logsubject>
+      <logsubject>Parameters received by ${Internal.Job.Name}</logsubject>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>144</xloc>
-      <yloc>256</yloc>
+      <yloc>496</yloc>
     </entry>
     <entry>
       <name>tr_populate_table_meta-get_table_meta_id</name>
@@ -489,7 +589,7 @@ PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>320</xloc>
-      <yloc>720</yloc>
+      <yloc>960</yloc>
     </entry>
     <entry>
       <name>tr_populate_column_meta-one_table</name>
@@ -566,7 +666,7 @@ PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>320</xloc>
-      <yloc>816</yloc>
+      <yloc>1056</yloc>
     </entry>
     <entry>
       <name>jb_log_error</name>
@@ -605,7 +705,7 @@ PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>96</xloc>
-      <yloc>816</yloc>
+      <yloc>1056</yloc>
     </entry>
     <entry>
       <name>Abort job</name>
@@ -616,7 +716,7 @@ PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>96</xloc>
-      <yloc>720</yloc>
+      <yloc>960</yloc>
     </entry>
     <entry>
       <name>jb_set_dynamic_db_connection_variables</name>
@@ -655,7 +755,7 @@ PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>320</xloc>
-      <yloc>464</yloc>
+      <yloc>704</yloc>
     </entry>
     <entry>
       <name>Set PARAM_TARGET_SCHEMA = PARAM_SOURCE_SCHEMA</name>
@@ -675,7 +775,7 @@ PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>624</xloc>
-      <yloc>256</yloc>
+      <yloc>496</yloc>
     </entry>
     <entry>
       <name>PARAM_TARGET_SCHEMA has value ?</name>
@@ -697,7 +797,7 @@ PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>320</xloc>
-      <yloc>256</yloc>
+      <yloc>496</yloc>
     </entry>
     <entry>
       <name>Set PARAM_TARGET_TABLE = PARAM_SOURCE_TABLE</name>
@@ -717,7 +817,7 @@ PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>624</xloc>
-      <yloc>352</yloc>
+      <yloc>592</yloc>
     </entry>
     <entry>
       <name>PARAM_TARGET_TABLE has value ?</name>
@@ -739,7 +839,7 @@ PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>320</xloc>
-      <yloc>352</yloc>
+      <yloc>592</yloc>
     </entry>
     <entry>
       <name>Success</name>
@@ -749,7 +849,7 @@ PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>320</xloc>
-      <yloc>912</yloc>
+      <yloc>1152</yloc>
     </entry>
   </entries>
   <hops>
@@ -917,18 +1017,35 @@ row of the table in the source DB.
 
 This job has parameters:
 
-	PARAM_SOURCE_DB_ID			ID the "source" database containing the table for generating table metadata
-	PARAM_SOURCE_SCHEMA		Name of schema containing source table for generating table metadata
-	PARAM_SOURCE_TABLE		Name of source table for generating table metatdata
-	PARAM_TARGET_DB_ID			ID of the "target" database to which the "source" DB tables will be archived/mirrored
-	PARAM_TARGET_SCHEMA		Name of schema in the "target" DB ontaining the target table.
-									If blank, PARAM_SOURCE_SCHEMA will be used instead.
-	PARAM_TARGET_TABLE			Name of the table in the "target" DB that the "source" table will be archived/mirrored to
-									If blank, PARAM_SOURCE_TABLE will be used instead.</note>
+	PARAM_SOURCE_DB_ID									ID the "source" database containing the table for generating table metadata
+	PARAM_SOURCE_SCHEMA								Name of schema containing source table for generating table metadata
+	PARAM_SOURCE_TABLE								Name of source table for generating table metatdata
+	PARAM_TARGET_DB_ID									ID of the "target" database to which the "source" DB tables will be archived/mirrored
+	PARAM_TARGET_SCHEMA								Name of schema in the "target" DB ontaining the target table.
+															If blank, PARAM_SOURCE_SCHEMA will be used instead.
+	PARAM_TARGET_TABLE									Name of the table in the "target" DB that the "source" table will be archived/mirrored to
+															If blank, PARAM_SOURCE_TABLE will be used instead.
+	PARAM_SOURCE_INSERT_ID_COLNAME							Name of the source table column that acts as the "insert_id" column
+	PARAM_SOURCE_LAST_UPDATED_ON_COLNAME					Name of the source table column that acts as the "last_updated_on" column
+	PARAM_IS_STATIC_SUPPORT_TABLE						"Y" if the source table is a "static support table"
+	PARAM_CAN_INSERT_ROWS							"Y" if, under normal operation, rows can be inserted into the source table
+	PARAM_CAN_UPDATE_ROWS							"Y" if, under normal operation, rows can be updated in the source table
+	PARAM_CAN_DELETE_ROWS							"Y" if, under normal operation, rows can be deleted from the source table
+	PARAM_MIRROR_ALGORITHM_ID						ID of the "mirror" algorithm for archiving/mirroring rows from the source table to the target table
+	PARAM_MIRROR_TABLES								"Y" if archiving/mirroring is enabled for the source/target table pair
+	PARAM_COMPARE_TABLES								"Y" id "comparing" is enabled for the source/target table pair
+	PARAM_MARK_ROWS_FOR_DELETION_ALGORITHM_ID	ID of the "mark rows for deletion" algorithm to use for the source table
+	PARAM_DELETE_MARKED_ROWS_ALGORITHM_ID		ID of the "delete marked rows" algorithm to use for the source table
+	PARAM_MARK_ROWS_FOR_DELETION					"Y" if "mark rows for deletion" processing is enabled for the source table
+	PARAM_DELETE_MARKED_ROWS						"Y" if "delete marked rows" processing is enabled for the source table
+	PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS		Row "age" in seconds after which rows of the source table can be "marked rows for deletion"
+	PARAM_CAN_DELETE_ROW_SCHEMA_NAME				Name of the schema containing the "can delete row" table
+	PARAM_CAN_DELETE_ROW_TABLE_NAME				Name of the "can delete row" table
+	PARAM_DELETE_MARKED_ROWS_TABLE_ORDER		Integer value for setting the order that tables are processed by the default the "delete marked rows" algorithm</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>740</width>
-      <heigth>234</heigth>
+      <width>1023</width>
+      <heigth>472</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -949,7 +1066,7 @@ This job has parameters:
 This is placed in the stream and then copied to the "Result set" so that it can
 be accessed by the next transformation.</note>
       <xloc>480</xloc>
-      <yloc>720</yloc>
+      <yloc>960</yloc>
       <width>461</width>
       <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
@@ -977,9 +1094,9 @@ is selected for this job entry, two of the parameters are explicitly passed as:
 
 This is because the values for these variables are modified in this job if they are passed
 to this job as "". If this is done, it seems that their *original* blank values are passed to 
-sub-transformation here unless we explicitly pass the parameters as shown.</note>
+sub-transformation here unless the parameters are explicitly passed as shown.</note>
       <xloc>480</xloc>
-      <yloc>544</yloc>
+      <yloc>784</yloc>
       <width>516</width>
       <heigth>150</heigth>
       <fontname>Ubuntu</fontname>
@@ -1002,7 +1119,7 @@ sub-transformation here unless we explicitly pass the parameters as shown.</note
 for the etl.table_meta row just created, one
 for each row of the table in the source DB.</note>
       <xloc>480</xloc>
-      <yloc>800</yloc>
+      <yloc>1040</yloc>
       <width>275</width>
       <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
@@ -1029,7 +1146,7 @@ based on a single parameter:
 
 	PARAM_DB_ID = ${PARAM_SOURCE_DB_ID}</note>
       <xloc>480</xloc>
-      <yloc>416</yloc>
+      <yloc>656</yloc>
       <width>289</width>
       <heigth>108</heigth>
       <fontname>Ubuntu</fontname>
