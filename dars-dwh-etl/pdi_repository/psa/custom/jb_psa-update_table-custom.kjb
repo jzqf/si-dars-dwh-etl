@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/10/26 13:31:20.822</modified_date>
+  <modified_date>2017/12/12 15:54:56.713</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
@@ -434,7 +434,7 @@ PARAM_TARGET_SCHEMA           = ${PARAM_TARGET_SCHEMA}
 PARAM_TARGET_TABLE            = ${PARAM_TARGET_TABLE}
 PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
       <loglevel>Basic</loglevel>
-      <logsubject>Parameters received by jb_psa-update_table-custom</logsubject>
+      <logsubject>Parameters received by ${Internal.Job.Name}</logsubject>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
@@ -445,7 +445,7 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
       <name>Abort job - Untreated case</name>
       <description />
       <type>ABORT</type>
-      <message>Aborting from jb_psa-update_table-custom. Untreated case:  schema.table = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</message>
+      <message>Aborting from ${Internal.Job.Name}. Untreated case:  schema.table = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</message>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
@@ -503,7 +503,7 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
         <parameter>
           <name>PARAM_ERROR_MESSAGE</name>
           <stream_name />
-          <value>Untreated case in jb_psa-update_table-custom:  schema.table = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</value>
+          <value>Untreated case in ${Internal.Job.Name}:  schema.table = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</value>
         </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
@@ -517,7 +517,7 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
       <name>Abort job</name>
       <description />
       <type>ABORT</type>
-      <message>Aborting jb_psa-update_table-custom after job entry jb_psa-update_table-obo.passage_with_images</message>
+      <message>Aborting ${Internal.Job.Name} after job entry jb_psa-update_table-obo.passage_with_images</message>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>1</nr>
@@ -585,7 +585,7 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
         <parameter>
-          <name>PARAM_TABLE_MIRROR_TREATMENT_ID</name>
+          <name>PARAM_TABLE_MIRROR_ALGORITHM_ID</name>
           <stream_name />
           <value>${QF_MIRROR_ALG_CUSTOM}</value>
         </parameter>
@@ -665,8 +665,8 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
   </hops>
   <notepads>
     <notepad>
-      <note>This job updates a table in the PSA DB that is mirrored from a source database using a table-specific CUSTOM algorithm, i.e., a custom 
-job &amp; transformation is used that is specific to the table being updated in the target DB. This job has parameters:
+      <note>This job updates a table in the target PSA DB that is mirrored from a source database using a table-specific CUSTOM algorithm, i.e.,
+a custom job &amp; transformation is used that is specific to the table being updated in the target PSA DB. This job has parameters:
 
 	PARAM_CDC_LAST_LOAD_UTC				Timestamp for when the target DB was most recently updated successfully
 	PARAM_CDC_CURRENT_LOAD_UTC			Timestamp of the current load (no rows after this timestamp will be loaded)
