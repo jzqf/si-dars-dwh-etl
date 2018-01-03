@@ -16,7 +16,7 @@
       <description>Primary key of etl.table_meta row for "source" table archived/mirrored to "target" table</description>
     </parameter>
     <parameter>
-      <name>PARAM_TABLE_MIRROR_TREATMENT_ID</name>
+      <name>PARAM_TABLE_MIRROR_ALGORITHM_ID</name>
       <default_value>0</default_value>
       <description>ID that specifies the algorithm to use for mirroring the table</description>
     </parameter>
@@ -435,7 +435,7 @@
       <sql>UPDATE
     etl.table_state
 SET
-    mirror_last_updated_treatment_id = ${PARAM_TABLE_MIRROR_TREATMENT_ID},
+    mirror_last_updated_algorithm_id = ${PARAM_TABLE_MIRROR_ALGORITHM_ID},
     mirror_last_updated_on           = LOCALTIMESTAMP    -- TODO: Shall I use UTC/GMT here?
 WHERE
     table_state_id = ${PARAM_TABLE_META_ID}</sql>
@@ -457,7 +457,7 @@ WHERE
       <logmessage>PARAM_TABLE_META_ID             = ${PARAM_TABLE_META_ID}
 PARAM_TARGET_SCHEMA             = ${PARAM_TARGET_SCHEMA}
 PARAM_TARGET_TABLE              = ${PARAM_TARGET_TABLE}
-PARAM_TABLE_MIRROR_TREATMENT_ID = ${PARAM_TABLE_MIRROR_TREATMENT_ID}
+PARAM_TABLE_MIRROR_ALGORITHM_ID = ${PARAM_TABLE_MIRROR_ALGORITHM_ID}
 </logmessage>
       <loglevel>Detailed</loglevel>
       <logsubject />
@@ -564,7 +564,7 @@ a source database. This job has parameters:
 	PARAM_TABLE_META_ID					Primary key of etl.table_meta row for "source" table archived/mirrored to "target" table
 	PARAM_TARGET_SCHEMA					Name of schema containing target table to update (not currently used)
 	PARAM_TARGET_TABLE						Name of target table to update (not currently used)
-	PARAM_TABLE_MIRROR_TREATMENT_ID	ID that specifies the algorithm to use for archiving/mirroring the table</note>
+	PARAM_TABLE_MIRROR_ALGORITHM_ID	ID that specifies the algorithm to use for archiving/mirroring the table</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
       <width>814</width>
