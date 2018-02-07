@@ -41,7 +41,21 @@
 			<plugin>
 				<artifactId>maven-resources-plugin</artifactId>
 				<configuration>
-				<!-- Setting the "escape string" was necessary in order to include the 
+				<!-- This issue no longer exists, so it is no longer necessary to use
+				     \${line.separator} in properties files. With earlier versions of
+				     PDI, it was necessary to use "${line.separator}" to represent a
+				     line break (used in email templates). For some reason, using "\n"
+				     did not work properly. Now, it seems that "\n" can be use without
+				     introducing any problems, so all occurrences of "${line.separator}"
+				     have been eliminated.
+				     
+				     However, I will leave this block here for the time being in case 
+				     this issue reappears in some form. Eventually, this block, 
+				     including the element <escapeString>\</escapeString>, can be deleted.
+				     
+				     Description of problem that no longer exists:
+				     
+				     Setting the "escape string" was necessary in order to include the 
 				     references that represent newline characters in the kettle.properties 
 				     file.
 				     
@@ -399,12 +413,12 @@
 								</data>
 								-->
 								<data>
-									<src>${basedir}/pdi_repository/psa</src>
+									<src>${basedir}/pdi_repository/dsa</src>
 									<type>directory</type>
 									<includes>*,**/*</includes>
 									<mapper>
 										<type>perm</type>
-										<prefix>${app.rootDir}/${app.user}/pdi_repository/psa</prefix>
+										<prefix>${app.rootDir}/${app.user}/pdi_repository/dsa</prefix>
 										<user>${app.user}</user>
 										<group>${app.group}</group>
 										<filemode>644</filemode>
@@ -417,6 +431,18 @@
 									<mapper>
 										<type>perm</type>
 										<prefix>${app.rootDir}/${app.user}/pdi_repository/generic</prefix>
+										<user>${app.user}</user>
+										<group>${app.group}</group>
+										<filemode>644</filemode>
+									</mapper>
+								</data>
+								<data>
+									<src>${basedir}/pdi_repository/psa</src>
+									<type>directory</type>
+									<includes>*,**/*</includes>
+									<mapper>
+										<type>perm</type>
+										<prefix>${app.rootDir}/${app.user}/pdi_repository/psa</prefix>
 										<user>${app.user}</user>
 										<group>${app.group}</group>
 										<filemode>644</filemode>
