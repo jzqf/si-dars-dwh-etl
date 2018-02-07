@@ -1,7 +1,6 @@
 #!/bin/bash
 #
-# This script updates the tables in the data warehouse (DWH) that are 
-# mirrors of tables in the OBO DB.
+# This script updates the Data warehouse Staging Area (DSA) database. 
 #
 # This script should be scheduled to run according to a sensible periodic
 # schedule. Although any scheduler can be used for this purpose, the simplest is
@@ -9,7 +8,7 @@
 # Linux. For example, to run this script daily at 2 a.m., use the following
 # entry in the "${app.user}" user's crontab:
 #
-# 0 2 * * * . $HOME/.profile; $DWH_HOME/bin/dwh_mirrored_tables-update.sh
+# 0 2 * * * . $HOME/.profile; $DWH_HOME/bin/dsa-update.sh
 #
 # This script can also be run manually from a bash shell. Be sure that this is
 # done under the "${app.user}" Linux account because this script expects certain 
@@ -19,8 +18,8 @@
 # Version history:
 #
 # Version:  1.0
-# Updated:  2017.05.29
+# Updated:  2018.02.06
 # Author:   Jeffrey Zelt
 # Changes:  Initial version
 
-$DWH_HOME/bin/kitchen.sh /dwh/mirror/jb_dwh_mirrored_tables-update.kjb
+$DWH_HOME/bin/kitchen.sh /dsa/jb_dsa-update.kjb

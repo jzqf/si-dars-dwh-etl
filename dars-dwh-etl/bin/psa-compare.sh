@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# This script compares the content of tables in the Persistent Staging Area 
+# This script compares the content of tables in the Persistent Storage Area 
 # (PSA) database with the content of tables in the OBO data base that are 
 # mirrored to the PSA. 
 #
