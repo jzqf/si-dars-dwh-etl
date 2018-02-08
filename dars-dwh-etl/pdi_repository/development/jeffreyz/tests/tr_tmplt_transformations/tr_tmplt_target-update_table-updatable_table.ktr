@@ -1,0 +1,1724 @@
+<transformation>
+  <info>
+    <name>tr_tmplt_target-update_table-updatable_table</name>
+    <description />
+    <extended_description />
+    <trans_version />
+    <trans_type>Normal</trans_type>
+    <trans_status>0</trans_status>
+    <directory>/development/jeffreyz/tests/tr_tmplt_transformations</directory>
+    <parameters>
+      <parameter>
+        <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
+        <default_value>2100.01.01 00:00:00</default_value>
+        <description>Timestamp of the current load (no rows after this timestamp will be loaded)</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_CDC_LAST_LOAD_UTC</name>
+        <default_value>1900.01.01 00:00:00</default_value>
+        <description>Timestamp of last successful load from the source database</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE</name>
+        <default_value>odms_opr</default_value>
+        <description>for source DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER</name>
+        <default_value>org.postgresql.Driver</default_value>
+        <description>for source DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_HOST</name>
+        <default_value>si01-qfr-07cl.si01.q-free.com</default_value>
+        <description>for source DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD</name>
+        <default_value>OBF:1lfi1l591jui1m781zsx1h8j1nce1iez1pjd1u2u1kjq1njx1hem1y141ndi1ni71nlr1nc81y0m1hgg1nk11kmw1u2g1pit1if71ndc1h8b1zst1m561jr81l811lc0</default_value>
+        <description>for source DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_PORT</name>
+        <default_value>5432</default_value>
+        <description>for source DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_URL</name>
+        <default_value>jdbc:postgresql://si01-qfr-07cl.si01.q-free.com:5432/odms_opr</default_value>
+        <description>for source DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME</name>
+        <default_value>qfree_report_rest_srv</default_value>
+        <description>for source DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_TARGET_DB_DATABASE</name>
+        <default_value>dars_psa_db</default_value>
+        <description>for target DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_TARGET_DB_DRIVER</name>
+        <default_value>org.postgresql.Driver</default_value>
+        <description>for target DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_TARGET_DB_HOST</name>
+        <default_value>localhost</default_value>
+        <description>for target DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD</name>
+        <default_value>OBF:1ugo1z0f1uh2</default_value>
+        <description>for target DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_TARGET_DB_PORT</name>
+        <default_value>5432</default_value>
+        <description>for target DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_TARGET_DB_URL</name>
+        <default_value>jdbc:postgresql://localhost:5432/dars_psa_db</default_value>
+        <description>for target DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_TARGET_DB_USERNAME</name>
+        <default_value>etl</default_value>
+        <description>for target DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_MAX_INSERT_ID</name>
+        <default_value>1000</default_value>
+        <description>Maximum value of the "insert_id" column for rows to load from the source DB table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_SOURCE_DB_ID</name>
+        <default_value>4</default_value>
+        <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_SOURCE_INSERTED_ON_COLNAME</name>
+        <default_value />
+        <description>Name of column acting as "inserted_on" timestamp column of source table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_SOURCE_INSERT_ID_COLNAME</name>
+        <default_value>sid</default_value>
+        <description>Name of column acting as "insert_id" column of source table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_SOURCE_LAST_UPDATED_ON_COLNAME</name>
+        <default_value>last_updated_on</default_value>
+        <description>Name of "last_updated_on" timestamp column of source table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_SOURCE_SCHEMA</name>
+        <default_value>public</default_value>
+        <description>Name of schema containing source table to mirror to target table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_SOURCE_TABLE</name>
+        <default_value>sid_register</default_value>
+        <description>Name of source table to mirror to target table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TABLE_META_ID</name>
+        <default_value>36</default_value>
+        <description>Primary key of etl.table_meta row for "source" table archived/mirrored to "target" table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_DB_ID</name>
+        <default_value>10</default_value>
+        <description>ID of the "target" database to which "source" DB tables will be archived/mirrored</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_INSERTED_ON_COLNAME</name>
+        <default_value />
+        <description>Name of column acting as "inserted_on" timestamp column of target table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_INSERT_ID_COLNAME</name>
+        <default_value>sid</default_value>
+        <description>Name of column acting as "insert_id" column of target table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_LAST_UPDATED_ON_COLNAME</name>
+        <default_value>last_updated_on</default_value>
+        <description>Name of "last_updated_on" timestamp column of target table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_SCHEMA</name>
+        <default_value>odms</default_value>
+        <description>Name of schema containing target table to update</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_TABLE</name>
+        <default_value>sid_register</default_value>
+        <description>Name of target table to update</description>
+      </parameter>
+    </parameters>
+    <log>
+      <trans-log-table>
+        <connection>${QF_LOGGING_DB_CONNECTION}</connection>
+        <schema>${QF_LOG_TRANS_SCHEMA}</schema>
+        <table>${QF_LOG_TRANS_TABLE}</table>
+        <size_limit_lines />
+        <interval />
+        <timeout_days>${QF_LOG_TRANS_TIMEOUT_IN_DAYS}</timeout_days>
+        <field>
+          <id>ID_BATCH</id>
+          <enabled>Y</enabled>
+          <name>ID_BATCH</name>
+        </field>
+        <field>
+          <id>CHANNEL_ID</id>
+          <enabled>Y</enabled>
+          <name>CHANNEL_ID</name>
+        </field>
+        <field>
+          <id>TRANSNAME</id>
+          <enabled>Y</enabled>
+          <name>TRANSNAME</name>
+        </field>
+        <field>
+          <id>STATUS</id>
+          <enabled>Y</enabled>
+          <name>STATUS</name>
+        </field>
+        <field>
+          <id>LINES_READ</id>
+          <enabled>Y</enabled>
+          <name>LINES_READ</name>
+          <subject>Table output - target_db.schema.table</subject>
+        </field>
+        <field>
+          <id>LINES_WRITTEN</id>
+          <enabled>Y</enabled>
+          <name>LINES_WRITTEN</name>
+          <subject>Table output - target_db.schema.table</subject>
+        </field>
+        <field>
+          <id>LINES_UPDATED</id>
+          <enabled>Y</enabled>
+          <name>LINES_UPDATED</name>
+          <subject>Table output - target_db.schema.table</subject>
+        </field>
+        <field>
+          <id>LINES_INPUT</id>
+          <enabled>Y</enabled>
+          <name>LINES_INPUT</name>
+          <subject>Table input -  source_db.schema.table</subject>
+        </field>
+        <field>
+          <id>LINES_OUTPUT</id>
+          <enabled>Y</enabled>
+          <name>LINES_OUTPUT</name>
+          <subject>Table output - target_db.schema.table</subject>
+        </field>
+        <field>
+          <id>LINES_REJECTED</id>
+          <enabled>Y</enabled>
+          <name>LINES_REJECTED</name>
+          <subject>Table output - target_db.schema.table</subject>
+        </field>
+        <field>
+          <id>ERRORS</id>
+          <enabled>Y</enabled>
+          <name>ERRORS</name>
+        </field>
+        <field>
+          <id>STARTDATE</id>
+          <enabled>Y</enabled>
+          <name>STARTDATE</name>
+        </field>
+        <field>
+          <id>ENDDATE</id>
+          <enabled>Y</enabled>
+          <name>ENDDATE</name>
+        </field>
+        <field>
+          <id>LOGDATE</id>
+          <enabled>Y</enabled>
+          <name>LOGDATE</name>
+        </field>
+        <field>
+          <id>DEPDATE</id>
+          <enabled>Y</enabled>
+          <name>DEPDATE</name>
+        </field>
+        <field>
+          <id>REPLAYDATE</id>
+          <enabled>Y</enabled>
+          <name>REPLAYDATE</name>
+        </field>
+        <field>
+          <id>LOG_FIELD</id>
+          <enabled>Y</enabled>
+          <name>LOG_FIELD</name>
+        </field>
+        <field>
+          <id>EXECUTING_SERVER</id>
+          <enabled>N</enabled>
+          <name>EXECUTING_SERVER</name>
+        </field>
+        <field>
+          <id>EXECUTING_USER</id>
+          <enabled>N</enabled>
+          <name>EXECUTING_USER</name>
+        </field>
+        <field>
+          <id>CLIENT</id>
+          <enabled>N</enabled>
+          <name>CLIENT</name>
+        </field>
+      </trans-log-table>
+      <perf-log-table>
+        <connection>${QF_LOGGING_DB_CONNECTION}</connection>
+        <schema>${QF_LOG_TRANSPERF_SCHEMA}</schema>
+        <table>${QF_LOG_TRANSPERF_TABLE}</table>
+        <interval />
+        <timeout_days>${QF_LOG_TRANSPERF_TIMEOUT_IN_DAYS}</timeout_days>
+        <field>
+          <id>ID_BATCH</id>
+          <enabled>Y</enabled>
+          <name>ID_BATCH</name>
+        </field>
+        <field>
+          <id>SEQ_NR</id>
+          <enabled>Y</enabled>
+          <name>SEQ_NR</name>
+        </field>
+        <field>
+          <id>LOGDATE</id>
+          <enabled>Y</enabled>
+          <name>LOGDATE</name>
+        </field>
+        <field>
+          <id>TRANSNAME</id>
+          <enabled>Y</enabled>
+          <name>TRANSNAME</name>
+        </field>
+        <field>
+          <id>STEPNAME</id>
+          <enabled>Y</enabled>
+          <name>STEPNAME</name>
+        </field>
+        <field>
+          <id>STEP_COPY</id>
+          <enabled>Y</enabled>
+          <name>STEP_COPY</name>
+        </field>
+        <field>
+          <id>LINES_READ</id>
+          <enabled>Y</enabled>
+          <name>LINES_READ</name>
+        </field>
+        <field>
+          <id>LINES_WRITTEN</id>
+          <enabled>Y</enabled>
+          <name>LINES_WRITTEN</name>
+        </field>
+        <field>
+          <id>LINES_UPDATED</id>
+          <enabled>Y</enabled>
+          <name>LINES_UPDATED</name>
+        </field>
+        <field>
+          <id>LINES_INPUT</id>
+          <enabled>Y</enabled>
+          <name>LINES_INPUT</name>
+        </field>
+        <field>
+          <id>LINES_OUTPUT</id>
+          <enabled>Y</enabled>
+          <name>LINES_OUTPUT</name>
+        </field>
+        <field>
+          <id>LINES_REJECTED</id>
+          <enabled>Y</enabled>
+          <name>LINES_REJECTED</name>
+        </field>
+        <field>
+          <id>ERRORS</id>
+          <enabled>Y</enabled>
+          <name>ERRORS</name>
+        </field>
+        <field>
+          <id>INPUT_BUFFER_ROWS</id>
+          <enabled>Y</enabled>
+          <name>INPUT_BUFFER_ROWS</name>
+        </field>
+        <field>
+          <id>OUTPUT_BUFFER_ROWS</id>
+          <enabled>Y</enabled>
+          <name>OUTPUT_BUFFER_ROWS</name>
+        </field>
+      </perf-log-table>
+      <channel-log-table>
+        <connection>${QF_LOGGING_DB_CONNECTION}</connection>
+        <schema>${QF_LOG_CHANNEL_SCHEMA}</schema>
+        <table>${QF_LOG_CHANNEL_TABLE}</table>
+        <timeout_days>${QF_LOG_CHANNEL_TIMEOUT_IN_DAYS}</timeout_days>
+        <field>
+          <id>ID_BATCH</id>
+          <enabled>Y</enabled>
+          <name>ID_BATCH</name>
+        </field>
+        <field>
+          <id>CHANNEL_ID</id>
+          <enabled>Y</enabled>
+          <name>CHANNEL_ID</name>
+        </field>
+        <field>
+          <id>LOG_DATE</id>
+          <enabled>Y</enabled>
+          <name>LOG_DATE</name>
+        </field>
+        <field>
+          <id>LOGGING_OBJECT_TYPE</id>
+          <enabled>Y</enabled>
+          <name>LOGGING_OBJECT_TYPE</name>
+        </field>
+        <field>
+          <id>OBJECT_NAME</id>
+          <enabled>Y</enabled>
+          <name>OBJECT_NAME</name>
+        </field>
+        <field>
+          <id>OBJECT_COPY</id>
+          <enabled>Y</enabled>
+          <name>OBJECT_COPY</name>
+        </field>
+        <field>
+          <id>REPOSITORY_DIRECTORY</id>
+          <enabled>Y</enabled>
+          <name>REPOSITORY_DIRECTORY</name>
+        </field>
+        <field>
+          <id>FILENAME</id>
+          <enabled>Y</enabled>
+          <name>FILENAME</name>
+        </field>
+        <field>
+          <id>OBJECT_ID</id>
+          <enabled>Y</enabled>
+          <name>OBJECT_ID</name>
+        </field>
+        <field>
+          <id>OBJECT_REVISION</id>
+          <enabled>Y</enabled>
+          <name>OBJECT_REVISION</name>
+        </field>
+        <field>
+          <id>PARENT_CHANNEL_ID</id>
+          <enabled>Y</enabled>
+          <name>PARENT_CHANNEL_ID</name>
+        </field>
+        <field>
+          <id>ROOT_CHANNEL_ID</id>
+          <enabled>Y</enabled>
+          <name>ROOT_CHANNEL_ID</name>
+        </field>
+      </channel-log-table>
+      <step-log-table>
+        <connection>${QF_LOGGING_DB_CONNECTION}</connection>
+        <schema>${QF_LOG_TRANSSTEP_SCHEMA}</schema>
+        <table>${QF_LOG_TRANSSTEP_TABLE}</table>
+        <timeout_days>${QF_LOG_TRANSSTEP_TIMEOUT_IN_DAYS}</timeout_days>
+        <field>
+          <id>ID_BATCH</id>
+          <enabled>Y</enabled>
+          <name>ID_BATCH</name>
+        </field>
+        <field>
+          <id>CHANNEL_ID</id>
+          <enabled>Y</enabled>
+          <name>CHANNEL_ID</name>
+        </field>
+        <field>
+          <id>LOG_DATE</id>
+          <enabled>Y</enabled>
+          <name>LOG_DATE</name>
+        </field>
+        <field>
+          <id>TRANSNAME</id>
+          <enabled>Y</enabled>
+          <name>TRANSNAME</name>
+        </field>
+        <field>
+          <id>STEPNAME</id>
+          <enabled>Y</enabled>
+          <name>STEPNAME</name>
+        </field>
+        <field>
+          <id>STEP_COPY</id>
+          <enabled>Y</enabled>
+          <name>STEP_COPY</name>
+        </field>
+        <field>
+          <id>LINES_READ</id>
+          <enabled>Y</enabled>
+          <name>LINES_READ</name>
+        </field>
+        <field>
+          <id>LINES_WRITTEN</id>
+          <enabled>Y</enabled>
+          <name>LINES_WRITTEN</name>
+        </field>
+        <field>
+          <id>LINES_UPDATED</id>
+          <enabled>Y</enabled>
+          <name>LINES_UPDATED</name>
+        </field>
+        <field>
+          <id>LINES_INPUT</id>
+          <enabled>Y</enabled>
+          <name>LINES_INPUT</name>
+        </field>
+        <field>
+          <id>LINES_OUTPUT</id>
+          <enabled>Y</enabled>
+          <name>LINES_OUTPUT</name>
+        </field>
+        <field>
+          <id>LINES_REJECTED</id>
+          <enabled>Y</enabled>
+          <name>LINES_REJECTED</name>
+        </field>
+        <field>
+          <id>ERRORS</id>
+          <enabled>Y</enabled>
+          <name>ERRORS</name>
+        </field>
+        <field>
+          <id>LOG_FIELD</id>
+          <enabled>N</enabled>
+          <name>LOG_FIELD</name>
+        </field>
+      </step-log-table>
+      <metrics-log-table>
+        <connection>${QF_LOGGING_DB_CONNECTION}</connection>
+        <schema>${QF_LOG_TRANSMETRICS_SCHEMA}</schema>
+        <table>${QF_LOG_TRANSMETRICS_TABLE}</table>
+        <timeout_days>${QF_LOG_TRANSMETRICS_TIMEOUT_IN_DAYS}</timeout_days>
+        <field>
+          <id>ID_BATCH</id>
+          <enabled>Y</enabled>
+          <name>ID_BATCH</name>
+        </field>
+        <field>
+          <id>CHANNEL_ID</id>
+          <enabled>Y</enabled>
+          <name>CHANNEL_ID</name>
+        </field>
+        <field>
+          <id>LOG_DATE</id>
+          <enabled>Y</enabled>
+          <name>LOG_DATE</name>
+        </field>
+        <field>
+          <id>METRICS_DATE</id>
+          <enabled>Y</enabled>
+          <name>METRICS_DATE</name>
+        </field>
+        <field>
+          <id>METRICS_CODE</id>
+          <enabled>Y</enabled>
+          <name>METRICS_CODE</name>
+        </field>
+        <field>
+          <id>METRICS_DESCRIPTION</id>
+          <enabled>Y</enabled>
+          <name>METRICS_DESCRIPTION</name>
+        </field>
+        <field>
+          <id>METRICS_SUBJECT</id>
+          <enabled>Y</enabled>
+          <name>METRICS_SUBJECT</name>
+        </field>
+        <field>
+          <id>METRICS_TYPE</id>
+          <enabled>Y</enabled>
+          <name>METRICS_TYPE</name>
+        </field>
+        <field>
+          <id>METRICS_VALUE</id>
+          <enabled>Y</enabled>
+          <name>METRICS_VALUE</name>
+        </field>
+      </metrics-log-table>
+    </log>
+    <maxdate>
+      <connection />
+      <table />
+      <field />
+      <offset>0.0</offset>
+      <maxdiff>0.0</maxdiff>
+    </maxdate>
+    <size_rowset>10000</size_rowset>
+    <sleep_time_empty>50</sleep_time_empty>
+    <sleep_time_full>50</sleep_time_full>
+    <unique_connections>N</unique_connections>
+    <feedback_shown>Y</feedback_shown>
+    <feedback_size>50000</feedback_size>
+    <using_thread_priorities>Y</using_thread_priorities>
+    <shared_objects_file />
+    <capture_step_performance>Y</capture_step_performance>
+    <step_performance_capturing_delay>1000</step_performance_capturing_delay>
+    <step_performance_capturing_size_limit>100</step_performance_capturing_size_limit>
+    <dependencies>
+    </dependencies>
+    <partitionschemas>
+    </partitionschemas>
+    <slaveservers>
+    </slaveservers>
+    <clusterschemas>
+    </clusterschemas>
+    <created_user>-</created_user>
+    <created_date>2016/04/03 09:57:16.279</created_date>
+    <modified_user>-</modified_user>
+    <modified_date>2017/11/10 12:28:47.979</modified_date>
+    <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
+    <is_key_private>N</is_key_private>
+  </info>
+  <notepads>
+    <notepad>
+      <note>Load the data from the source DB table that will be moved to the target DB table.
+
+It is important to sort these rows chronologically (by either the "insert_id" or "inserted_on" columns) so that if this transformation
+fails in the middle somewhere and if this transaction does not run in a single transaction, then next time this transformation is 
+executed, we want to start again where we left off (by computing, e.g., MAX(insert_id) for the target DB table).</note>
+      <xloc>272</xloc>
+      <yloc>896</yloc>
+      <width>765</width>
+      <heigth>80</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Insert new rows into the target DB table using a "Table output" step. Error handing is enabled for this step so that if a rows already exists,
+the rows are passed to an "Update" step.
+
+IMPORTANT:	A primary key constraint (or at least a "unique" constraint on the primary key column(s)) for the target table is 
+				*required*; otherwise, error handling will not be triggered when attempting to insert a row with a duplicate key.
+
+PDI does not fully support error handling when using "batch processing" with the PostgreSQL JDBC driver (a message to this 
+effect is displayed when accepting the transformation settings dialog), so make sure "Use batch update for inserts" is *not* 
+selected here!
+
+See:
+
+	/development/jeffreyz/tests/cdc_timestamps/tr_TEST_mirror_update-passage.passage-table_output
+
+for tests  benchmark results I obtained testing the speed of various INSERT/UPDATE algorithms. Using a "Table output" step with 
+an error handling hop to an "Update" step provides an approximately 2x speedup over an "Insert/Update" step for inserts *and* 
+it does not exhibit (for inserts only) the behaviour where a "java"and "postgres" process continue to run with a high CPU load long 
+after the transformation is finished. Hence, it should be favoured.
+
+An odd behaviour is observed when the error handling sends rows to the "Update" step. After processing a large number of rows, 
+it takes a long time for this transformation to end. During this period the "Pause" and "Stop" buttons remain enabled. Furthermore,
+running" top" shows that both "postgres"and "java" processes are actively using a 25-75% of the CPU. When this CPU usage stops, 
+the  "Pause" and "Stop" buttons become disabled, showing that the transformation is finally finished. Strange.</note>
+      <xloc>272</xloc>
+      <yloc>1120</yloc>
+      <width>813</width>
+      <heigth>332</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Get batch ID for current transformation. This will be stored in the target  table for auditing/logging. This step *must* come after the
+"Map column names" step because the metadata injected into that step does not include this column/field.</note>
+      <xloc>272</xloc>
+      <yloc>1056</yloc>
+      <width>780</width>
+      <heigth>38</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>This transformation updates the target DB mirror of a table from the source DB that can receive INSERTs or UPDATES. This is a generic
+algorithm that can work with *any* table,  as long as rows cannot be deleted from the source or target table, and it has the necessary 
+"insert_id", "inserted_on" &amp; "last_updated_on" columns. This transformation has parameters:
+
+	PARAM_CDC_LAST_LOAD_UTC						Timestamp for when the target DB was most recently updated successfully
+	PARAM_CDC_CURRENT_LOAD_UTC					Used so that a consistent max timestamp is used for all ETL
+	PARAM_DYN_DB_CONN_TARGET_DB_HOST			for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_PORT			for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_DATABASE		for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_USERNAME	for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD	for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_DRIVER		for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_URL			for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_HOST			for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_PORT			for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE	for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME	for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD	for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER		for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_URL			for source DB "dynamic" database connections
+	PARAM_MAX_INSERT_ID							Maximum value of the "insert_id" column for rows to load from the source DB table
+	PARAM_SOURCE_SCHEMA							Schema of mirrored table
+	PARAM_SOURCE_TABLE							Name of mirrored table to update
+	PARAM_SOURCE_INSERT_ID_COLNAME				Name of column acting as "insert_id"  timestamp column of source table
+	PARAM_SOURCE_INSERTED_ON_COLNAME			Name of column acting as "inserted_on" column of source table
+	PARAM_SOURCE_LAST_UPDATED_ON_COLNAME	Name of "last_updated_on" timestamp column of source table
+	PARAM_TARGET_SCHEMA							Name of schema containing target table to update (not currently used)
+	PARAM_TARGET_TABLE								Name of target table to update (not currently used)
+	PARAM_TARGET_INSERT_ID_COLNAME				Name of column acting as "insert_id"  timestamp column of target table
+	PARAM_TARGET_INSERTED_ON_COLNAME			Name of column acting as "inserted_on" column of target table
+	PARAM_TARGET_LAST_UPDATED_ON_COLNAME	Name of "last_updated_on" timestamp column of target table</note>
+      <xloc>16</xloc>
+      <yloc>0</yloc>
+      <width>834</width>
+      <heigth>444</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Get the maximum value stored in the "insert_id"column of the target DB table that will be updated by this transformation. 
+This will be used to the select data from the source DB table that was inserted since the last update. 
+
+We could, instead, treat this by getting the maximum value the "inserted_on" column and then loading all rows from the source
+table whose value of "inserted_on" is >= to this timestamp. We need to include "=" here because of the finite resolutiuon of 
+timestamp values. If we used only ">", we could miss rows that were inserted *after* the last update if they received exactly the
+same value as MAX(inserted_on) that was obtained here. However, this approach may process a small number of rows from 
+the source table that were migrated to the target table during the last successful update (again, because timestamp values are 
+not unique), but that is OK here because the algorithm used in this transformation can handle attempts to insert rows that already
+exist in the target table.
+
+Alternatively, we could eliminate this step entirely and load source DB table rows for: inserted_on >= PARAM_CDC_LAST_LOAD_UTC,
+but this will not be as efficient for the case when we need to re-start the mirroring process after it fails for some reason. In that
+case we would re-process all of the rows that were successfully mirrored during the previous run.</note>
+      <xloc>272</xloc>
+      <yloc>464</yloc>
+      <width>785</width>
+      <heigth>206</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Although this transformation has parameters whose values are used in its steps, these parameters are not passed values from
+the parent transformation in the usual way this is normally done in PDI. This is because the "ETL Metadata Injection" step (which
+is responsible for executing this template transformation) does not support parameter passing. Nevertheless, it appears
+that the parameters that are defined for this template transformation can be used as expected. The explanation for this
+behaviour *MAY* be that the references to these parameters, e.g., ${PARAM_SOURCE_TABLE}, in this transformation are
+simply using the values defined for these variables in the parent transformation that contains the "ETL Metadata Injection" 
+step that references this template transformation. Fortunately, all of the parameters that are used by this transformation
+are defined with the correct values in the parent transformation. I have tested this by removing the parameters entirely. The 
+result was that the transformation ran as expected, even though it made use of the parameters that were removed.
+
+Note that if a target file is created by the "ETL metadata Ijection" step, then that transformation *can* have its parameters 
+passed to it in the normal fashion because it is a normal transformation (all metadata has been injected into it).</note>
+      <xloc>816</xloc>
+      <yloc>0</yloc>
+      <width>749</width>
+      <heigth>178</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>255</backgroundcolorgreen>
+      <backgroundcolorblue>0</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Uses "SELECT *" -></note>
+      <xloc>16</xloc>
+      <yloc>912</yloc>
+      <width>117</width>
+      <heigth>24</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>255</backgroundcolorgreen>
+      <backgroundcolorblue>0</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Select and possibly map/rename fields (table column names), as appropriate.</note>
+      <xloc>272</xloc>
+      <yloc>992</yloc>
+      <width>462</width>
+      <heigth>24</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Metadata injected -></note>
+      <xloc>16</xloc>
+      <yloc>992</yloc>
+      <width>130</width>
+      <heigth>24</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>255</fontcolorred>
+      <fontcolorgreen>255</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>0</backgroundcolorred>
+      <backgroundcolorgreen>0</backgroundcolorgreen>
+      <backgroundcolorblue>0</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Metadata injected -></note>
+      <xloc>16</xloc>
+      <yloc>1344</yloc>
+      <width>130</width>
+      <heigth>24</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>255</fontcolorred>
+      <fontcolorgreen>255</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>0</backgroundcolorred>
+      <backgroundcolorgreen>0</backgroundcolorgreen>
+      <backgroundcolorblue>0</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>This step is only for generating the SQL for creating a new table using the "SQL" button of the "Table output" step below. To do this:
+	1.	Create a new copy of this transformation by entering a value for "Optional target file" in the "ETL Metadata Injection" step in
+		/generic/target_update/tr_target-update_table-updatable_table. Run that transformation, supplying the appropriate parameter
+		values, to create the new copy. Steps 2-6  below must be performed with this *new* transformation that has had all metadata injected.
+	2.	Disable the hop from the "Get max "insert_id: ..." step and enable the hop from the "Set max id &amp; date" step.
+	3.	Disable the hop to the "Table output" step below, as well as all following downstream hops.
+	4.	Preview the "Set etl_batch_id_last_update..." step, providing appropriate values for all parameters. Ensure that the expected  
+		rows are displayed.
+	5.	Re-enable the hop to the "Table output" step below.
+	6.	Double-click the "Table output" step and then click the "SQL" button to generate the appropriete SQL to create the table. 
+		The schema and table names that you specified in step 3 above will be used to generate the SQL DDL commands for that table.
+		Before executing the SQL, modify it where appropriate. For example, replace "UNKNOWN" for timestamp columns with 
+		"timestamp without time zone" or "bytea", add declaration for column "etl_batch_id_last_update", primary key constraint, ...</note>
+      <xloc>272</xloc>
+      <yloc>688</yloc>
+      <width>843</width>
+      <heigth>192</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>A primary key 
+constraint or a
+unique constraint
+on primary key
+column(s) is 
+
+
+*required* in 
+order for error 
+handling to be 
+triggered here!</note>
+      <xloc>16</xloc>
+      <yloc>1120</yloc>
+      <width>108</width>
+      <heigth>164</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>Y</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>255</backgroundcolorgreen>
+      <backgroundcolorblue>0</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+  </notepads>
+  <connection>
+    <name>dynamic_postgres_target_db</name>
+    <server>${PARAM_DYN_DB_CONN_TARGET_DB_HOST}</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>${PARAM_DYN_DB_CONN_TARGET_DB_DATABASE}</database>
+    <port>${PARAM_DYN_DB_CONN_TARGET_DB_PORT}</port>
+    <username>${PARAM_DYN_DB_CONN_TARGET_DB_USERNAME}</username>
+    <password>${PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD}</password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>${PARAM_DYN_DB_CONN_TARGET_DB_PORT}</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
+  <connection>
+    <name>etl_db</name>
+    <server>${QF_ETL_DB_HOST}</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>${QF_ETL_DB_DATABASE}</database>
+    <port>${QF_ETL_DB_PORT}</port>
+    <username>${QF_ETL_DB_USERNAME}</username>
+    <password>${QF_ETL_DB_PASSWORD}</password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>${QF_ETL_DB_PORT}</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
+  <connection>
+    <name>generic_source_db</name>
+    <server>${PARAM_DYN_DB_CONN_SOURCE_DB_HOST}</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>${PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE}</database>
+    <port>${PARAM_DYN_DB_CONN_SOURCE_DB_PORT}</port>
+    <username>${PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME}</username>
+    <password>${PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD}</password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>${PARAM_DYN_DB_CONN_SOURCE_DB_PORT}</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
+  <connection>
+    <name>generic_target_db</name>
+    <server>${PARAM_DYN_DB_CONN_TARGET_DB_HOST}</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>${PARAM_DYN_DB_CONN_TARGET_DB_DATABASE}</database>
+    <port>${PARAM_DYN_DB_CONN_TARGET_DB_PORT}</port>
+    <username>${PARAM_DYN_DB_CONN_TARGET_DB_USERNAME}</username>
+    <password>${PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD}</password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>${PARAM_DYN_DB_CONN_TARGET_DB_PORT}</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
+  <connection>
+    <name>logging_db</name>
+    <server>${QF_LOGGING_DB_HOST}</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>${QF_LOGGING_DB_DATABASE}</database>
+    <port>${QF_LOGGING_DB_PORT}</port>
+    <username>${QF_LOGGING_DB_USERNAME}</username>
+    <password>${QF_LOGGING_DB_PASSWORD}</password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>${QF_LOGGING_DB_PORT}</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
+  <order>
+    <hop>
+      <from>Get max id &amp; date: target_db.schema.table</from>
+      <to>Write to log: parameters, max id &amp; date</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Write to log: parameters, max id &amp; date</from>
+      <to>Table input -  source_db.schema.table</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Table output - target_db.schema.table</from>
+      <to>Set etl_batch_id_last_update = Xform batch ID</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Map column names</from>
+      <to>Set etl_batch_id_insert = Xform batch ID</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Set etl_batch_id_insert = Xform batch ID</from>
+      <to>Table output - target_db.schema.table</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Table input -  source_db.schema.table</from>
+      <to>Map column names</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Set max id &amp; date</from>
+      <to>Write to log: parameters, max id &amp; date</to>
+      <enabled>N</enabled>
+    </hop>
+    <hop>
+      <from>Set etl_batch_id_last_update = Xform batch ID</from>
+      <to>Write to log</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Write to log</from>
+      <to>Update - target_db.schema.table</to>
+      <enabled>Y</enabled>
+    </hop>
+  </order>
+  <step>
+    <name>Get max id &amp; date: target_db.schema.table</name>
+    <type>TableInput</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <connection>generic_target_db</connection>
+    <sql>SELECT
+    COALESCE(MAX(${PARAM_TARGET_INSERT_ID_COLNAME}), ${QF_INSERT_ID_LOWER_BOUND})       AS max_target_insert_id,
+    COALESCE(MAX(${PARAM_TARGET_LAST_UPDATED_ON_COLNAME}) , '${QF_LAST_UPDATED_ON_LOWER_BOUND}') AS max_target_last_updated_on
+FROM
+    ${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}
+</sql>
+    <limit>0</limit>
+    <lookup />
+    <execute_each_row>N</execute_each_row>
+    <variables_active>Y</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>128</xloc>
+      <yloc>528</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Map column names</name>
+    <type>SelectValues</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <field>
+        <name>sid</name>
+        <rename>sid</rename>
+      </field>
+      <field>
+        <name>security_authentication_type_id</name>
+        <rename>security_authentication_type_id</rename>
+      </field>
+      <field>
+        <name>security_apikey_id</name>
+        <rename>security_apikey_id</rename>
+      </field>
+      <field>
+        <name>security_apikey_salt</name>
+        <rename>security_apikey_salt</rename>
+      </field>
+      <field>
+        <name>security_apikey_secret_hash</name>
+        <rename>security_apikey_secret_hash</rename>
+      </field>
+      <field>
+        <name>expires_on</name>
+        <rename>expires_on</rename>
+      </field>
+      <field>
+        <name>locked_on</name>
+        <rename>locked_on</rename>
+      </field>
+      <field>
+        <name>created_by</name>
+        <rename>created_by</rename>
+      </field>
+      <field>
+        <name>created_on</name>
+        <rename>created_on</rename>
+      </field>
+      <field>
+        <name>last_updated_by</name>
+        <rename>last_updated_by</rename>
+      </field>
+      <field>
+        <name>last_updated_on</name>
+        <rename>last_updated_on</rename>
+      </field>
+      <select_unspecified>N</select_unspecified>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>128</xloc>
+      <yloc>992</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Set etl_batch_id_insert = Xform batch ID</name>
+    <type>SystemInfo</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <field>
+        <name>etl_batch_id_insert</name>
+        <type>batch ID</type>
+      </field>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>128</xloc>
+      <yloc>1056</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Set etl_batch_id_last_update = Xform batch ID</name>
+    <type>SystemInfo</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <field>
+        <name>etl_batch_id_last_update</name>
+        <type>batch ID</type>
+      </field>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>128</xloc>
+      <yloc>1264</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Set max id &amp; date</name>
+    <type>TableInput</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <connection>etl_db</connection>
+    <sql>SELECT
+          ${QF_INSERT_ID_LOWER_BOUND}                      AS max_target_insert_id,
+    CAST('${QF_LAST_UPDATED_ON_LOWER_BOUND}' AS timestamp) AS max_target_last_updated_on</sql>
+    <limit>0</limit>
+    <lookup />
+    <execute_each_row>N</execute_each_row>
+    <variables_active>Y</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>208</xloc>
+      <yloc>736</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Table input -  source_db.schema.table</name>
+    <type>TableInput</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <connection>generic_source_db</connection>
+    <sql>SELECT
+    *
+FROM
+    ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
+WHERE
+    (
+        ${PARAM_SOURCE_INSERT_ID_COLNAME} > ?                                 -- newly INSERTed rows, since the last run
+      --${PARAM_SOURCE_INSERTED_ON_COLNAME} > '${PARAM_CDC_LAST_LOAD_UTC}'    -- alternate condition, instead of the previous line
+     OR ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} >= ?                          -- UPDATEd rows, since the last run. This is needed to be able to select rows that
+                                                                              -- are modified during a period when the table is being treated as an insert-only
+                                                                              -- table (not a likely scenario, but it is a possibility).
+                                                                              -- Because ">=" is used here, not ">", this will include a least one row that was
+                                                                              -- updated on the previous run (assuming that there was at least one row updated).
+                                                                              -- This/these rows will have ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} = ?. The reason why
+                                                                              -- ">=" is used is in case there were one or more rows that were *not* updated on the
+                                                                              -- previous run, but which have ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} = ?. This can occur
+                                                                              -- because of the finite resolution of timestamp values. As a result, more than one
+                                                                              -- row can have the *same* value of ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME}, but not all of
+                                                                              -- them were loaded and treated on the previous run, i.e., the cutoff imposed by
+                                                                              -- the condition ${PARAM_SOURCE_INSERT_ID_COLNAME} &lt;= ${PARAM_MAX_INSERT_ID} or
+                                                                              -- ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} &lt;= '${PARAM_CDC_CURRENT_LOAD_UTC}' loaded some,
+                                                                              -- but not all, of the rows with this value of ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME}.
+      --OR ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} >= '${PARAM_CDC_LAST_LOAD_UTC}'       -- alternate condition, instead of the previous line
+    )
+    AND ${PARAM_SOURCE_INSERT_ID_COLNAME}   &lt;= ${PARAM_MAX_INSERT_ID}         -- to avoid loading rows that are *inserted* after the job starts
+  --AND ${PARAM_SOURCE_INSERTED_ON_COLNAME} &lt;= '${PARAM_CDC_CURRENT_LOAD_UTC}'    -- alternate condition, instead of the previous line 
+	AND (
+	        ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} IS NULL OR                       -- rows that have been inserted but not modified
+	        ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} &lt;= '${PARAM_CDC_CURRENT_LOAD_UTC}'   -- to avoid loading rows that are *modified* after the job starts
+	    )
+ORDER BY
+    ${PARAM_SOURCE_INSERT_ID_COLNAME}</sql>
+    <limit>0</limit>
+    <lookup>Write to log: parameters, max id &amp; date</lookup>
+    <execute_each_row>N</execute_each_row>
+    <variables_active>Y</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>128</xloc>
+      <yloc>912</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Table output - target_db.schema.table</name>
+    <type>TableOutput</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <connection>dynamic_postgres_target_db</connection>
+    <schema>${PARAM_TARGET_SCHEMA}</schema>
+    <table>${PARAM_TARGET_TABLE}</table>
+    <commit>1000</commit>
+    <truncate>N</truncate>
+    <ignore_errors>N</ignore_errors>
+    <use_batch>N</use_batch>
+    <specify_fields>N</specify_fields>
+    <partitioning_enabled>N</partitioning_enabled>
+    <partitioning_field />
+    <partitioning_daily>N</partitioning_daily>
+    <partitioning_monthly>Y</partitioning_monthly>
+    <tablename_in_field>N</tablename_in_field>
+    <tablename_field />
+    <tablename_in_table>Y</tablename_in_table>
+    <return_keys>N</return_keys>
+    <return_field />
+    <fields>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>128</xloc>
+      <yloc>1168</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Update - target_db.schema.table</name>
+    <type>Update</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <connection>generic_target_db</connection>
+    <skip_lookup>N</skip_lookup>
+    <commit>100</commit>
+    <use_batch>N</use_batch>
+    <error_ignored>N</error_ignored>
+    <ignore_flag_field />
+    <lookup>
+      <schema>${PARAM_TARGET_SCHEMA}</schema>
+      <table>${PARAM_TARGET_TABLE}</table>
+      <key>
+        <name>sid</name>
+        <field>sid</field>
+        <condition>=</condition>
+        <name2 />
+      </key>
+      <value>
+        <name>etl_batch_id_last_update</name>
+        <rename>etl_batch_id_last_update</rename>
+      </value>
+    </lookup>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>128</xloc>
+      <yloc>1344</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Write to log</name>
+    <type>WriteToLog</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <loglevel>log_level_basic</loglevel>
+    <displayHeader>Y</displayHeader>
+    <limitRows>N</limitRows>
+    <limitRowsNumber>0</limitRowsNumber>
+    <logmessage />
+    <fields>
+      <field>
+        <name>sid</name>
+      </field>
+      <field>
+        <name>etl_batch_id_last_update</name>
+      </field>
+      <field>
+        <name>err_number_of</name>
+      </field>
+      <field>
+        <name>err_description</name>
+      </field>
+      <field>
+        <name>err_fields</name>
+      </field>
+      <field>
+        <name>err_codes</name>
+      </field>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>224</xloc>
+      <yloc>1440</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Write to log: parameters, max id &amp; date</name>
+    <type>WriteToLog</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <loglevel>log_level_basic</loglevel>
+    <displayHeader>Y</displayHeader>
+    <limitRows>N</limitRows>
+    <limitRowsNumber>0</limitRowsNumber>
+    <logmessage>tmplt_target-update_table-updatable_table:
+PARAM_CDC_LAST_LOAD_UTC              = ${PARAM_CDC_LAST_LOAD_UTC}
+PARAM_CDC_CURRENT_LOAD_UTC           = ${PARAM_CDC_CURRENT_LOAD_UTC}
+PARAM_DYN_DB_CONN_SOURCE_DB_HOST     = ${PARAM_DYN_DB_CONN_SOURCE_DB_HOST}
+PARAM_DYN_DB_CONN_SOURCE_DB_PORT     = ${PARAM_DYN_DB_CONN_SOURCE_DB_PORT}
+PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE = ${PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE}
+PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD = ${PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD}
+PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME = ${PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME}
+PARAM_DYN_DB_CONN_SOURCE_DB_URL      = ${PARAM_DYN_DB_CONN_SOURCE_DB_URL}
+PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER   = ${PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER}
+PARAM_DYN_DB_CONN_TARGET_DB_HOST     = ${PARAM_DYN_DB_CONN_TARGET_DB_HOST}
+PARAM_DYN_DB_CONN_TARGET_DB_PORT     = ${PARAM_DYN_DB_CONN_TARGET_DB_PORT}
+PARAM_DYN_DB_CONN_TARGET_DB_DATABASE = ${PARAM_DYN_DB_CONN_TARGET_DB_DATABASE}
+PARAM_DYN_DB_CONN_TARGET_DB_USERNAME = ${PARAM_DYN_DB_CONN_TARGET_DB_USERNAME}
+PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD = ${PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD}
+PARAM_DYN_DB_CONN_TARGET_DB_URL      = ${PARAM_DYN_DB_CONN_TARGET_DB_URL}
+PARAM_DYN_DB_CONN_TARGET_DB_DRIVER   = ${PARAM_DYN_DB_CONN_TARGET_DB_DRIVER}
+PARAM_MAX_INSERT_ID                  = ${PARAM_MAX_INSERT_ID}
+PARAM_SOURCE_SCHEMA                  = ${PARAM_SOURCE_SCHEMA}
+PARAM_SOURCE_TABLE                   = ${PARAM_SOURCE_TABLE}
+PARAM_SOURCE_INSERT_ID_COLNAME       = ${PARAM_SOURCE_INSERT_ID_COLNAME}   
+PARAM_SOURCE_INSERTED_ON_COLNAME     = ${PARAM_SOURCE_INSERTED_ON_COLNAME}
+PARAM_SOURCE_LAST_UPDATED_ON_COLNAME = ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME}
+PARAM_TARGET_SCHEMA                  = ${PARAM_TARGET_SCHEMA}
+PARAM_TARGET_TABLE                   = ${PARAM_TARGET_TABLE}
+PARAM_TARGET_INSERT_ID_COLNAME       = ${PARAM_TARGET_INSERT_ID_COLNAME}   
+PARAM_TARGET_INSERTED_ON_COLNAME     = ${PARAM_TARGET_INSERTED_ON_COLNAME}
+PARAM_TARGET_LAST_UPDATED_ON_COLNAME = ${PARAM_TARGET_LAST_UPDATED_ON_COLNAME}</logmessage>
+    <fields>
+      <field>
+        <name>max_target_insert_id</name>
+      </field>
+      <field>
+        <name>max_target_last_updated_on</name>
+      </field>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>128</xloc>
+      <yloc>816</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step_error_handling>
+    <error>
+      <source_step>Table output - target_db.schema.table</source_step>
+      <target_step>Set etl_batch_id_last_update = Xform batch ID</target_step>
+      <is_enabled>Y</is_enabled>
+      <nr_valuename>err_number_of</nr_valuename>
+      <descriptions_valuename>err_description</descriptions_valuename>
+      <fields_valuename>err_fields</fields_valuename>
+      <codes_valuename>err_codes</codes_valuename>
+      <max_errors />
+      <max_pct_errors />
+      <min_pct_rows />
+    </error>
+  </step_error_handling>
+  <slave-step-copy-partition-distribution>
+  </slave-step-copy-partition-distribution>
+  <slave_transformation>N</slave_transformation>
+</transformation>

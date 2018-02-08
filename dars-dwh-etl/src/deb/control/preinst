@@ -1,0 +1,28 @@
+#!/bin/sh
+
+set -e
+
+case "$1" in
+    install|upgrade)
+
+#        # Create "tdp" user if it doesn't exist.
+#        #if ! id tdp > /dev/null 2>&1 ; then
+#        #    adduser --system --home /home/tdp --group --shell /bin/bash tdp
+#        #fi
+
+        # Create application user, "[[app.user]]", if it doesn't exist.
+        if ! id [[app.user]] > /dev/null 2>&1 ; then
+            adduser [[app.user]] --shell=/bin/bash --home /home/[[app.user]] --disabled-password --system --group
+        fi
+    ;;
+
+    abort-upgrade)
+    ;;
+
+    *)
+        echo "preinst called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+exit 0

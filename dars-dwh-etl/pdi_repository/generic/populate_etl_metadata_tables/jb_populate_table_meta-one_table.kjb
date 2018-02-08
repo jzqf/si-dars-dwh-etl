@@ -1,0 +1,1184 @@
+<job>
+  <name>jb_populate_table_meta-one_table</name>
+  <description />
+  <extended_description />
+  <job_version />
+  <job_status>0</job_status>
+  <directory>/generic/populate_etl_metadata_tables</directory>
+  <created_user>-</created_user>
+  <created_date>2016/04/03 14:57:58.609</created_date>
+  <modified_user>-</modified_user>
+  <modified_date>2017/12/04 08:29:39.588</modified_date>
+  <parameters>
+    <parameter>
+      <name>PARAM_CAN_DELETE_ROWS</name>
+      <default_value />
+      <description>"Y" if, under normal operation, rows can be deleted from the source table</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_CAN_DELETE_ROW_SCHEMA_NAME</name>
+      <default_value />
+      <description>Name of the schema containing the "can delete row" table</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_CAN_DELETE_ROW_TABLE_NAME</name>
+      <default_value />
+      <description>Name of the "can delete row" table</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_CAN_INSERT_ROWS</name>
+      <default_value />
+      <description>"Y" if, under normal operation, rows can be inserted into the source table</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_CAN_UPDATE_ROWS</name>
+      <default_value />
+      <description>"Y" if, under normal operation, rows can be updated in the source table</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_COMPARE_TABLES</name>
+      <default_value />
+      <description>"Y" id "comparing" is enabled for the source/target table pair</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DELETE_MARKED_ROWS</name>
+      <default_value />
+      <description>"Y" if "delete marked rows" processing is enabled for the source table</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DELETE_MARKED_ROWS_ALGORITHM_ID</name>
+      <default_value />
+      <description>ID of the "delete marked rows" algorithm to use for the source table</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DELETE_MARKED_ROWS_TABLE_ORDER</name>
+      <default_value />
+      <description>Integer value for setting the order that tables are processed by the default the "delete marked rows" algorithm</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_SOURCE_INSERT_ID_COLNAME</name>
+      <default_value />
+      <description>Name of the source table column that acts as the "insert_id" column</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_IS_STATIC_SUPPORT_TABLE</name>
+      <default_value />
+      <description>"Y" if the source table is a "static support table"</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_SOURCE_LAST_UPDATED_ON_COLNAME</name>
+      <default_value />
+      <description>Name of the source table column that acts as the "last_updated_on" column</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_MARK_ROWS_FOR_DELETION</name>
+      <default_value />
+      <description>"Y" if "mark rows for deletion" processing is enabled for the source table</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_MARK_ROWS_FOR_DELETION_ALGORITHM_ID</name>
+      <default_value />
+      <description>ID of the "mark rows for deletion" algorithm to use for the source table</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_MIRROR_ALGORITHM_ID</name>
+      <default_value />
+      <description>ID of the "mirror" algorithm for archiving/mirroring rows from the source table to the target table</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_MIRROR_TABLES</name>
+      <default_value />
+      <description>"Y" if archiving/mirroring is enabled for the source/target table pair</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS</name>
+      <default_value />
+      <description>Row "age" in seconds after which rows of the source table can be "marked rows for deletion"</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_SOURCE_DB_ID</name>
+      <default_value />
+      <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_SOURCE_SCHEMA</name>
+      <default_value />
+      <description>Name of schema containing source table to mirror to target table</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_SOURCE_TABLE</name>
+      <default_value />
+      <description>Name of source table to mirror to target table</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_TARGET_DB_ID</name>
+      <default_value />
+      <description>ID of the "target" database to which the "source" DB tables will be archived/mirrored</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_TARGET_SCHEMA</name>
+      <default_value />
+      <description>Name of schema cin the "target" DB ontaining the target table </description>
+    </parameter>
+    <parameter>
+      <name>PARAM_TARGET_TABLE</name>
+      <default_value />
+      <description>Name of the table in the "target" DB that the "source" table will be archived/mirrored to</description>
+    </parameter>
+  </parameters>
+  <connection>
+    <name>logging_db</name>
+    <server>${QF_LOGGING_DB_HOST}</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>${QF_LOGGING_DB_DATABASE}</database>
+    <port>${QF_LOGGING_DB_PORT}</port>
+    <username>${QF_LOGGING_DB_USERNAME}</username>
+    <password>${QF_LOGGING_DB_PASSWORD}</password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>${QF_LOGGING_DB_PORT}</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
+  <slaveservers>
+    </slaveservers>
+  <job-log-table>
+    <connection>${QF_LOGGING_DB_CONNECTION}</connection>
+    <schema>${QF_LOG_JOB_SCHEMA}</schema>
+    <table>${QF_LOG_JOB_TABLE}</table>
+    <size_limit_lines />
+    <interval />
+    <timeout_days>${QF_LOG_JOB_TIMEOUT_IN_DAYS}</timeout_days>
+    <field>
+      <id>ID_JOB</id>
+      <enabled>Y</enabled>
+      <name>ID_JOB</name>
+    </field>
+    <field>
+      <id>CHANNEL_ID</id>
+      <enabled>Y</enabled>
+      <name>CHANNEL_ID</name>
+    </field>
+    <field>
+      <id>JOBNAME</id>
+      <enabled>Y</enabled>
+      <name>JOBNAME</name>
+    </field>
+    <field>
+      <id>STATUS</id>
+      <enabled>Y</enabled>
+      <name>STATUS</name>
+    </field>
+    <field>
+      <id>LINES_READ</id>
+      <enabled>Y</enabled>
+      <name>LINES_READ</name>
+    </field>
+    <field>
+      <id>LINES_WRITTEN</id>
+      <enabled>Y</enabled>
+      <name>LINES_WRITTEN</name>
+    </field>
+    <field>
+      <id>LINES_UPDATED</id>
+      <enabled>Y</enabled>
+      <name>LINES_UPDATED</name>
+    </field>
+    <field>
+      <id>LINES_INPUT</id>
+      <enabled>Y</enabled>
+      <name>LINES_INPUT</name>
+    </field>
+    <field>
+      <id>LINES_OUTPUT</id>
+      <enabled>Y</enabled>
+      <name>LINES_OUTPUT</name>
+    </field>
+    <field>
+      <id>LINES_REJECTED</id>
+      <enabled>Y</enabled>
+      <name>LINES_REJECTED</name>
+    </field>
+    <field>
+      <id>ERRORS</id>
+      <enabled>Y</enabled>
+      <name>ERRORS</name>
+    </field>
+    <field>
+      <id>STARTDATE</id>
+      <enabled>Y</enabled>
+      <name>STARTDATE</name>
+    </field>
+    <field>
+      <id>ENDDATE</id>
+      <enabled>Y</enabled>
+      <name>ENDDATE</name>
+    </field>
+    <field>
+      <id>LOGDATE</id>
+      <enabled>Y</enabled>
+      <name>LOGDATE</name>
+    </field>
+    <field>
+      <id>DEPDATE</id>
+      <enabled>Y</enabled>
+      <name>DEPDATE</name>
+    </field>
+    <field>
+      <id>REPLAYDATE</id>
+      <enabled>Y</enabled>
+      <name>REPLAYDATE</name>
+    </field>
+    <field>
+      <id>LOG_FIELD</id>
+      <enabled>Y</enabled>
+      <name>LOG_FIELD</name>
+    </field>
+    <field>
+      <id>EXECUTING_SERVER</id>
+      <enabled>N</enabled>
+      <name>EXECUTING_SERVER</name>
+    </field>
+    <field>
+      <id>EXECUTING_USER</id>
+      <enabled>N</enabled>
+      <name>EXECUTING_USER</name>
+    </field>
+    <field>
+      <id>START_JOB_ENTRY</id>
+      <enabled>N</enabled>
+      <name>START_JOB_ENTRY</name>
+    </field>
+    <field>
+      <id>CLIENT</id>
+      <enabled>N</enabled>
+      <name>CLIENT</name>
+    </field>
+  </job-log-table>
+  <jobentry-log-table>
+    <connection>${QF_LOGGING_DB_CONNECTION}</connection>
+    <schema>${QF_LOG_JOBENTRY_SCHEMA}</schema>
+    <table>${QF_LOG_JOBENTRY_TABLE}</table>
+    <timeout_days>${QF_LOG_JOBENTRY_TIMEOUT_IN_DAYS}</timeout_days>
+    <field>
+      <id>ID_BATCH</id>
+      <enabled>Y</enabled>
+      <name>ID_BATCH</name>
+    </field>
+    <field>
+      <id>CHANNEL_ID</id>
+      <enabled>Y</enabled>
+      <name>CHANNEL_ID</name>
+    </field>
+    <field>
+      <id>LOG_DATE</id>
+      <enabled>Y</enabled>
+      <name>LOG_DATE</name>
+    </field>
+    <field>
+      <id>JOBNAME</id>
+      <enabled>Y</enabled>
+      <name>TRANSNAME</name>
+    </field>
+    <field>
+      <id>JOBENTRYNAME</id>
+      <enabled>Y</enabled>
+      <name>STEPNAME</name>
+    </field>
+    <field>
+      <id>LINES_READ</id>
+      <enabled>Y</enabled>
+      <name>LINES_READ</name>
+    </field>
+    <field>
+      <id>LINES_WRITTEN</id>
+      <enabled>Y</enabled>
+      <name>LINES_WRITTEN</name>
+    </field>
+    <field>
+      <id>LINES_UPDATED</id>
+      <enabled>Y</enabled>
+      <name>LINES_UPDATED</name>
+    </field>
+    <field>
+      <id>LINES_INPUT</id>
+      <enabled>Y</enabled>
+      <name>LINES_INPUT</name>
+    </field>
+    <field>
+      <id>LINES_OUTPUT</id>
+      <enabled>Y</enabled>
+      <name>LINES_OUTPUT</name>
+    </field>
+    <field>
+      <id>LINES_REJECTED</id>
+      <enabled>Y</enabled>
+      <name>LINES_REJECTED</name>
+    </field>
+    <field>
+      <id>ERRORS</id>
+      <enabled>Y</enabled>
+      <name>ERRORS</name>
+    </field>
+    <field>
+      <id>RESULT</id>
+      <enabled>Y</enabled>
+      <name>RESULT</name>
+    </field>
+    <field>
+      <id>NR_RESULT_ROWS</id>
+      <enabled>Y</enabled>
+      <name>NR_RESULT_ROWS</name>
+    </field>
+    <field>
+      <id>NR_RESULT_FILES</id>
+      <enabled>Y</enabled>
+      <name>NR_RESULT_FILES</name>
+    </field>
+    <field>
+      <id>LOG_FIELD</id>
+      <enabled>N</enabled>
+      <name>LOG_FIELD</name>
+    </field>
+    <field>
+      <id>COPY_NR</id>
+      <enabled>N</enabled>
+      <name>COPY_NR</name>
+    </field>
+  </jobentry-log-table>
+  <channel-log-table>
+    <connection>${QF_LOGGING_DB_CONNECTION}</connection>
+    <schema>${QF_LOG_CHANNEL_SCHEMA}</schema>
+    <table>${QF_LOG_CHANNEL_TABLE}</table>
+    <timeout_days>${QF_LOG_CHANNEL_TIMEOUT_IN_DAYS}</timeout_days>
+    <field>
+      <id>ID_BATCH</id>
+      <enabled>Y</enabled>
+      <name>ID_BATCH</name>
+    </field>
+    <field>
+      <id>CHANNEL_ID</id>
+      <enabled>Y</enabled>
+      <name>CHANNEL_ID</name>
+    </field>
+    <field>
+      <id>LOG_DATE</id>
+      <enabled>Y</enabled>
+      <name>LOG_DATE</name>
+    </field>
+    <field>
+      <id>LOGGING_OBJECT_TYPE</id>
+      <enabled>Y</enabled>
+      <name>LOGGING_OBJECT_TYPE</name>
+    </field>
+    <field>
+      <id>OBJECT_NAME</id>
+      <enabled>Y</enabled>
+      <name>OBJECT_NAME</name>
+    </field>
+    <field>
+      <id>OBJECT_COPY</id>
+      <enabled>Y</enabled>
+      <name>OBJECT_COPY</name>
+    </field>
+    <field>
+      <id>REPOSITORY_DIRECTORY</id>
+      <enabled>Y</enabled>
+      <name>REPOSITORY_DIRECTORY</name>
+    </field>
+    <field>
+      <id>FILENAME</id>
+      <enabled>Y</enabled>
+      <name>FILENAME</name>
+    </field>
+    <field>
+      <id>OBJECT_ID</id>
+      <enabled>Y</enabled>
+      <name>OBJECT_ID</name>
+    </field>
+    <field>
+      <id>OBJECT_REVISION</id>
+      <enabled>Y</enabled>
+      <name>OBJECT_REVISION</name>
+    </field>
+    <field>
+      <id>PARENT_CHANNEL_ID</id>
+      <enabled>Y</enabled>
+      <name>PARENT_CHANNEL_ID</name>
+    </field>
+    <field>
+      <id>ROOT_CHANNEL_ID</id>
+      <enabled>Y</enabled>
+      <name>ROOT_CHANNEL_ID</name>
+    </field>
+  </channel-log-table>
+  <pass_batchid>Y</pass_batchid>
+  <shared_objects_file />
+  <entries>
+    <entry>
+      <name>START</name>
+      <description />
+      <type>SPECIAL</type>
+      <start>Y</start>
+      <dummy>N</dummy>
+      <repeat>N</repeat>
+      <schedulerType>0</schedulerType>
+      <intervalSeconds>0</intervalSeconds>
+      <intervalMinutes>60</intervalMinutes>
+      <hour>12</hour>
+      <minutes>0</minutes>
+      <weekDay>1</weekDay>
+      <DayOfMonth>1</DayOfMonth>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>32</xloc>
+      <yloc>496</yloc>
+    </entry>
+    <entry>
+      <name>tr_populate_table_meta-one_table</name>
+      <description />
+      <type>TRANS</type>
+      <specification_method>rep_name</specification_method>
+      <trans_object_id />
+      <filename />
+      <transname>tr_populate_table_meta-one_table</transname>
+      <directory>${Internal.Entry.Current.Directory}</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <clear_rows>N</clear_rows>
+      <clear_files>N</clear_files>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Basic</loglevel>
+      <cluster>N</cluster>
+      <slave_server_name />
+      <set_append_logfile>N</set_append_logfile>
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <create_parent_folder>N</create_parent_folder>
+      <logging_remote_work>N</logging_remote_work>
+      <run_configuration>Pentaho local</run_configuration>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_TARGET_SCHEMA</name>
+          <stream_name />
+          <value>${PARAM_TARGET_SCHEMA}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_TABLE</name>
+          <stream_name />
+          <value>${PARAM_TARGET_TABLE}</value>
+        </parameter>
+      </parameters>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>320</xloc>
+      <yloc>832</yloc>
+    </entry>
+    <entry>
+      <name>Log parameters</name>
+      <description />
+      <type>WRITE_TO_LOG</type>
+      <logmessage>PARAM_SOURCE_DB_ID                        = ${PARAM_SOURCE_DB_ID}
+PARAM_SOURCE_SCHEMA                       = ${PARAM_SOURCE_SCHEMA}
+PARAM_SOURCE_TABLE                        = ${PARAM_SOURCE_TABLE}
+PARAM_TARGET_DB_ID                        = ${PARAM_TARGET_DB_ID}
+PARAM_TARGET_SCHEMA                       = ${PARAM_TARGET_SCHEMA}
+PARAM_TARGET_TABLE                        = ${PARAM_TARGET_TABLE}
+PARAM_SOURCE_INSERT_ID_COLNAME                   = ${PARAM_SOURCE_INSERT_ID_COLNAME}
+PARAM_SOURCE_LAST_UPDATED_ON_COLNAME             = ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME}
+PARAM_IS_STATIC_SUPPORT_TABLE             = ${PARAM_IS_STATIC_SUPPORT_TABLE}
+PARAM_CAN_INSERT_ROWS                     = ${PARAM_CAN_INSERT_ROWS}
+PARAM_CAN_UPDATE_ROWS                     = ${PARAM_CAN_UPDATE_ROWS}
+PARAM_CAN_DELETE_ROWS                     = ${PARAM_CAN_DELETE_ROWS}
+PARAM_MIRROR_ALGORITHM_ID                 = ${PARAM_MIRROR_ALGORITHM_ID}
+PARAM_MIRROR_TABLES                       = ${PARAM_MIRROR_TABLES}
+PARAM_COMPARE_TABLES                      = ${PARAM_COMPARE_TABLES}
+PARAM_MARK_ROWS_FOR_DELETION_ALGORITHM_ID = ${PARAM_MARK_ROWS_FOR_DELETION_ALGORITHM_ID}
+PARAM_DELETE_MARKED_ROWS_ALGORITHM_ID     = ${PARAM_DELETE_MARKED_ROWS_ALGORITHM_ID}
+PARAM_MARK_ROWS_FOR_DELETION              = ${PARAM_MARK_ROWS_FOR_DELETION}
+PARAM_DELETE_MARKED_ROWS                  = ${PARAM_DELETE_MARKED_ROWS}
+PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS     = ${PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS}
+PARAM_CAN_DELETE_ROW_SCHEMA_NAME          = ${PARAM_CAN_DELETE_ROW_SCHEMA_NAME}
+PARAM_CAN_DELETE_ROW_TABLE_NAME           = ${PARAM_CAN_DELETE_ROW_TABLE_NAME}
+PARAM_DELETE_MARKED_ROWS_TABLE_ORDER      = ${PARAM_DELETE_MARKED_ROWS_TABLE_ORDER}</logmessage>
+      <loglevel>Basic</loglevel>
+      <logsubject>Parameters received by ${Internal.Job.Name}</logsubject>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>144</xloc>
+      <yloc>496</yloc>
+    </entry>
+    <entry>
+      <name>tr_populate_table_meta-get_table_meta_id</name>
+      <description />
+      <type>TRANS</type>
+      <specification_method>rep_name</specification_method>
+      <trans_object_id />
+      <filename />
+      <transname>tr_populate_table_meta-get_table_meta_id</transname>
+      <directory>${Internal.Entry.Current.Directory}</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <clear_rows>Y</clear_rows>
+      <clear_files>N</clear_files>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Basic</loglevel>
+      <cluster>N</cluster>
+      <slave_server_name />
+      <set_append_logfile>N</set_append_logfile>
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <create_parent_folder>N</create_parent_folder>
+      <logging_remote_work>N</logging_remote_work>
+      <run_configuration>Pentaho local</run_configuration>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+      </parameters>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>320</xloc>
+      <yloc>960</yloc>
+    </entry>
+    <entry>
+      <name>tr_populate_column_meta-one_table</name>
+      <description />
+      <type>TRANS</type>
+      <specification_method>rep_name</specification_method>
+      <trans_object_id />
+      <filename />
+      <transname>tr_populate_column_meta-one_table</transname>
+      <directory>${Internal.Entry.Current.Directory}</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>Y</params_from_previous>
+      <exec_per_row>Y</exec_per_row>
+      <clear_rows>N</clear_rows>
+      <clear_files>N</clear_files>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Basic</loglevel>
+      <cluster>N</cluster>
+      <slave_server_name />
+      <set_append_logfile>N</set_append_logfile>
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <create_parent_folder>N</create_parent_folder>
+      <logging_remote_work>N</logging_remote_work>
+      <run_configuration>Pentaho local</run_configuration>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_DYN_DB_CONN_SOURCE_DB_HOST</name>
+          <stream_name />
+          <value>${QF_DYN_DB_CONN_DB_HOST}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_DYN_DB_CONN_SOURCE_DB_PORT</name>
+          <stream_name />
+          <value>${QF_DYN_DB_CONN_DB_PORT}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE</name>
+          <stream_name />
+          <value>${QF_DYN_DB_CONN_DB_DATABASE}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME</name>
+          <stream_name />
+          <value>${QF_DYN_DB_CONN_DB_USERNAME}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD</name>
+          <stream_name />
+          <value>${QF_DYN_DB_CONN_DB_PASSWORD}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_DYN_DB_CONN_SOURCE_DB_URL</name>
+          <stream_name />
+          <value>${QF_DYN_DB_CONN_DB_URL}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER</name>
+          <stream_name />
+          <value>${QF_DYN_DB_CONN_DB_DRIVER}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_TABLE_META_ID</name>
+          <stream_name>table_meta_id</stream_name>
+          <value />
+        </parameter>
+      </parameters>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>320</xloc>
+      <yloc>1056</yloc>
+    </entry>
+    <entry>
+      <name>jb_log_error</name>
+      <description />
+      <type>JOB</type>
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_log_error</jobname>
+      <directory>/generic</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_ERROR_MESSAGE</name>
+          <stream_name />
+          <value>Error executing tr_populate_column_meta-one_table from jb_populate_table_meta-one_table: PARAM_SOURCE_DB_ID=${PARAM_SOURCE_DB_ID}, source table = ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>96</xloc>
+      <yloc>1056</yloc>
+    </entry>
+    <entry>
+      <name>Abort job</name>
+      <description />
+      <type>ABORT</type>
+      <message>${QF_ABORT_JOB_MESSAGE}</message>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>96</xloc>
+      <yloc>960</yloc>
+    </entry>
+    <entry>
+      <name>jb_set_dynamic_db_connection_variables</name>
+      <description />
+      <type>JOB</type>
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_set_dynamic_db_connection_variables</jobname>
+      <directory>/generic/dynamic_db_connections</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_DB_ID</name>
+          <stream_name />
+          <value>${PARAM_SOURCE_DB_ID}</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>320</xloc>
+      <yloc>704</yloc>
+    </entry>
+    <entry>
+      <name>Set PARAM_TARGET_SCHEMA = PARAM_SOURCE_SCHEMA</name>
+      <description />
+      <type>SET_VARIABLES</type>
+      <replacevars>Y</replacevars>
+      <filename />
+      <file_variable_type>JVM</file_variable_type>
+      <fields>
+        <field>
+          <variable_name>PARAM_TARGET_SCHEMA</variable_name>
+          <variable_value>${PARAM_SOURCE_SCHEMA}</variable_value>
+          <variable_type>CURRENT_JOB</variable_type>
+        </field>
+      </fields>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>624</xloc>
+      <yloc>496</yloc>
+    </entry>
+    <entry>
+      <name>PARAM_TARGET_SCHEMA has value ?</name>
+      <description />
+      <type>SIMPLE_EVAL</type>
+      <valuetype>variable</valuetype>
+      <fieldname />
+      <variablename>${PARAM_TARGET_SCHEMA}</variablename>
+      <fieldtype>string</fieldtype>
+      <mask />
+      <comparevalue />
+      <minvalue />
+      <maxvalue />
+      <successcondition>different</successcondition>
+      <successnumbercondition>equal</successnumbercondition>
+      <successbooleancondition>false</successbooleancondition>
+      <successwhenvarset>N</successwhenvarset>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>320</xloc>
+      <yloc>496</yloc>
+    </entry>
+    <entry>
+      <name>Set PARAM_TARGET_TABLE = PARAM_SOURCE_TABLE</name>
+      <description />
+      <type>SET_VARIABLES</type>
+      <replacevars>Y</replacevars>
+      <filename />
+      <file_variable_type>JVM</file_variable_type>
+      <fields>
+        <field>
+          <variable_name>PARAM_TARGET_TABLE</variable_name>
+          <variable_value>${PARAM_SOURCE_TABLE}</variable_value>
+          <variable_type>CURRENT_JOB</variable_type>
+        </field>
+      </fields>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>624</xloc>
+      <yloc>592</yloc>
+    </entry>
+    <entry>
+      <name>PARAM_TARGET_TABLE has value ?</name>
+      <description />
+      <type>SIMPLE_EVAL</type>
+      <valuetype>variable</valuetype>
+      <fieldname />
+      <variablename>${PARAM_TARGET_TABLE}</variablename>
+      <fieldtype>string</fieldtype>
+      <mask />
+      <comparevalue />
+      <minvalue />
+      <maxvalue />
+      <successcondition>different</successcondition>
+      <successnumbercondition>equal</successnumbercondition>
+      <successbooleancondition>false</successbooleancondition>
+      <successwhenvarset>N</successwhenvarset>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>320</xloc>
+      <yloc>592</yloc>
+    </entry>
+    <entry>
+      <name>Success</name>
+      <description />
+      <type>SUCCESS</type>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>320</xloc>
+      <yloc>1152</yloc>
+    </entry>
+  </entries>
+  <hops>
+    <hop>
+      <from>START</from>
+      <to>Log parameters</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>tr_populate_table_meta-one_table</from>
+      <to>tr_populate_table_meta-get_table_meta_id</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_log_error</from>
+      <to>Abort job</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>jb_set_dynamic_db_connection_variables</from>
+      <to>Abort job</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>tr_populate_table_meta-one_table</from>
+      <to>Abort job</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>tr_populate_table_meta-get_table_meta_id</from>
+      <to>Abort job</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Log parameters</from>
+      <to>PARAM_TARGET_SCHEMA has value ?</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>PARAM_TARGET_SCHEMA has value ?</from>
+      <to>Set PARAM_TARGET_SCHEMA = PARAM_SOURCE_SCHEMA</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>PARAM_TARGET_SCHEMA has value ?</from>
+      <to>PARAM_TARGET_TABLE has value ?</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>PARAM_TARGET_TABLE has value ?</from>
+      <to>Set PARAM_TARGET_TABLE = PARAM_SOURCE_TABLE</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Set PARAM_TARGET_TABLE = PARAM_SOURCE_TABLE</from>
+      <to>jb_set_dynamic_db_connection_variables</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>PARAM_TARGET_TABLE has value ?</from>
+      <to>jb_set_dynamic_db_connection_variables</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Set PARAM_TARGET_SCHEMA = PARAM_SOURCE_SCHEMA</from>
+      <to>PARAM_TARGET_TABLE has value ?</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_set_dynamic_db_connection_variables</from>
+      <to>tr_populate_table_meta-one_table</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>tr_populate_table_meta-get_table_meta_id</from>
+      <to>tr_populate_column_meta-one_table</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>tr_populate_column_meta-one_table</from>
+      <to>Success</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>tr_populate_column_meta-one_table</from>
+      <to>jb_log_error</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+  </hops>
+  <notepads>
+    <notepad>
+      <note>This job writes a single default row to the etl.table_meta tablefor a table pair (one from a "source" DB and one from a 
+"target" DB) that is specified by parameters passed to this job.
+
+This job also creates a set of default etl.column_meta rows for the etl.table_meta row just created, one for each
+row of the table in the source DB.
+
+This job has parameters:
+
+	PARAM_SOURCE_DB_ID									ID the "source" database containing the table for generating table metadata
+	PARAM_SOURCE_SCHEMA								Name of schema containing source table for generating table metadata
+	PARAM_SOURCE_TABLE								Name of source table for generating table metatdata
+	PARAM_TARGET_DB_ID									ID of the "target" database to which the "source" DB tables will be archived/mirrored
+	PARAM_TARGET_SCHEMA								Name of schema in the "target" DB ontaining the target table.
+															If blank, PARAM_SOURCE_SCHEMA will be used instead.
+	PARAM_TARGET_TABLE									Name of the table in the "target" DB that the "source" table will be archived/mirrored to
+															If blank, PARAM_SOURCE_TABLE will be used instead.
+	PARAM_SOURCE_INSERT_ID_COLNAME							Name of the source table column that acts as the "insert_id" column
+	PARAM_SOURCE_LAST_UPDATED_ON_COLNAME					Name of the source table column that acts as the "last_updated_on" column
+	PARAM_IS_STATIC_SUPPORT_TABLE						"Y" if the source table is a "static support table"
+	PARAM_CAN_INSERT_ROWS							"Y" if, under normal operation, rows can be inserted into the source table
+	PARAM_CAN_UPDATE_ROWS							"Y" if, under normal operation, rows can be updated in the source table
+	PARAM_CAN_DELETE_ROWS							"Y" if, under normal operation, rows can be deleted from the source table
+	PARAM_MIRROR_ALGORITHM_ID						ID of the "mirror" algorithm for archiving/mirroring rows from the source table to the target table
+	PARAM_MIRROR_TABLES								"Y" if archiving/mirroring is enabled for the source/target table pair
+	PARAM_COMPARE_TABLES								"Y" id "comparing" is enabled for the source/target table pair
+	PARAM_MARK_ROWS_FOR_DELETION_ALGORITHM_ID	ID of the "mark rows for deletion" algorithm to use for the source table
+	PARAM_DELETE_MARKED_ROWS_ALGORITHM_ID		ID of the "delete marked rows" algorithm to use for the source table
+	PARAM_MARK_ROWS_FOR_DELETION					"Y" if "mark rows for deletion" processing is enabled for the source table
+	PARAM_DELETE_MARKED_ROWS						"Y" if "delete marked rows" processing is enabled for the source table
+	PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS		Row "age" in seconds after which rows of the source table can be "marked rows for deletion"
+	PARAM_CAN_DELETE_ROW_SCHEMA_NAME				Name of the schema containing the "can delete row" table
+	PARAM_CAN_DELETE_ROW_TABLE_NAME				Name of the "can delete row" table
+	PARAM_DELETE_MARKED_ROWS_TABLE_ORDER		Integer value for setting the order that tables are processed by the default the "delete marked rows" algorithm</note>
+      <xloc>0</xloc>
+      <yloc>0</yloc>
+      <width>1023</width>
+      <heigth>472</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Get the value of "table_meta_id" for the new etl.table_meta row just created.
+This is placed in the stream and then copied to the "Result set" so that it can
+be accessed by the next transformation.</note>
+      <xloc>480</xloc>
+      <yloc>960</yloc>
+      <width>461</width>
+      <heigth>52</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Create a new etl.table_meta row using the values of the parameters passed to
+this job. Even though the option "Pass parameter values to sub transformation"
+is selected for this job entry, two of the parameters are explicitly passed as:
+
+	PARAM_TARGET_SCHEMA	= ${PARAM_TARGET_SCHEMA}
+	PARAM_TARGET_TABLE		= ${PARAM_TARGET_TABLE}
+
+This is because the values for these variables are modified in this job if they are passed
+to this job as "". If this is done, it seems that their *original* blank values are passed to 
+sub-transformation here unless the parameters are explicitly passed as shown.</note>
+      <xloc>480</xloc>
+      <yloc>784</yloc>
+      <width>516</width>
+      <heigth>150</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Create a set of default etl.column_meta rows
+for the etl.table_meta row just created, one
+for each row of the table in the source DB.</note>
+      <xloc>480</xloc>
+      <yloc>1040</yloc>
+      <width>275</width>
+      <heigth>52</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>This job sets the PDI variables:
+
+	QF_DYN_DB_CONN_DB_{HOST, PORT, ...}
+
+based on a single parameter:
+
+	PARAM_DB_ID = ${PARAM_SOURCE_DB_ID}</note>
+      <xloc>480</xloc>
+      <yloc>656</yloc>
+      <width>289</width>
+      <heigth>108</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+  </notepads>
+  <attributes>
+    <group>
+      <name>METASTORE.pentaho</name>
+      <attribute>
+        <key>Default Run Configuration</key>
+        <value>{"namespace":"pentaho","id":"Default Run Configuration","name":"Default Run Configuration","description":"Defines a default run configuration","metaStoreName":null}</value>
+      </attribute>
+    </group>
+    <group>
+      <name>{"_":"Embedded MetaStore Elements","namespace":"pentaho","type":"Default Run Configuration"}</name>
+      <attribute>
+        <key>Pentaho local</key>
+        <value>{"children":[{"children":[],"id":"server","value":null},{"children":[],"id":"clustered","value":"N"},{"children":[],"id":"name","value":"Pentaho local"},{"children":[],"id":"description","value":null},{"children":[],"id":"readOnly","value":"Y"},{"children":[],"id":"sendResources","value":"N"},{"children":[],"id":"logRemoteExecutionLocally","value":"N"},{"children":[],"id":"remote","value":"N"},{"children":[],"id":"local","value":"Y"},{"children":[],"id":"showTransformations","value":"N"}],"id":"Pentaho local","value":null,"name":"Pentaho local","owner":null,"ownerPermissionsList":[]}</value>
+      </attribute>
+    </group>
+  </attributes>
+</job>
