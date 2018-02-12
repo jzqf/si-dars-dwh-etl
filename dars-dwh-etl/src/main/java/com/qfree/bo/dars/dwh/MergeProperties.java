@@ -216,8 +216,19 @@ public class MergeProperties {
 				 * Merge the installation-specific Q-Free properties into 
 				 * kettle.properties.
 				 */
+				//				System.out.println(String.format("About to merge %s Q-Free properties",
+				//						qfreeProperties.stringPropertyNames().size()));
 				for (String key : qfreeProperties.stringPropertyNames()) {
+					//System.out.println(String.format("Merging Q-Free properties: key = '%s', value = '%s'", key,
+					//		qfreeProperties.getProperty(key, "")));
+					//if (key.equals("QF_MAIL_MSG_QFREE_BODY_SUCCESS")) {
+					//	System.out.println("    key.equals(\"QF_MAIL_MSG_QFREE_BODY_SUCCESS\")");
+					//	String value = qfreeProperties.getProperty(key, "");
+					//	System.out.println("    value = " + value);
+					//	kettleProperties.setProperty(key, value);
+					//} else {
 					kettleProperties.setProperty(key, qfreeProperties.getProperty(key, ""));
+					//}
 				}
 
 				/*
@@ -234,6 +245,7 @@ public class MergeProperties {
 				 */
 				List<String> keys = new ArrayList<>();
 				for (String key : kettleProperties.stringPropertyNames()) {
+					//System.out.println("key = " + key);
 					keys.add(key);
 				}
 				Collections.sort(keys);

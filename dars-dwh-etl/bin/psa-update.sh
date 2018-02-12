@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# This script updates the Persistent Staging Area (PSA) database. 
+# This script updates the Persistent Storage Area (PSA) database. 
 #
 # This script should be scheduled to run according to a sensible periodic
 # schedule. Although any scheduler can be used for this purpose, the simplest is
