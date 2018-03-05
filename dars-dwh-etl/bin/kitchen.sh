@@ -102,6 +102,8 @@ function cleanup {
 
 if mkdir "${LOCK_DIR}" &>/dev/null; then
 
+    log_info "Acquired lock, running..."
+
     # Ensure that the lock directory gets removed.
     #
     # This will be done for:
@@ -113,8 +115,6 @@ if mkdir "${LOCK_DIR}" &>/dev/null; then
     # signal = SIGTERM: Software termination signal (sent by kill by default)
     # signal = ERR:     The command exits with a non-zero status
     trap "cleanup" EXIT SIGHUP SIGINT SIGQUIT SIGTERM ERR
-
-    log_info "Acquired lock, running..."
 
     # Use the PDI Kitchen utility to execute the job:
     /usr/share/pentaho/pdi/pdi-default/kitchen.sh -file="$JOB_DIR/$1" \

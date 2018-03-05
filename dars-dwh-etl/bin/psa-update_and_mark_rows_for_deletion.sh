@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# This is a wrapper script for both updating the Persistent Staging Area (PSA) 
+# This is a wrapper script for both updating the Persistent Storage Area (PSA) 
 # database, as well as marking for deletion rows of tables in the OBO database 
 # that have been archived/mirrored to the PSA database. 
 #
