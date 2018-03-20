@@ -55,7 +55,7 @@
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_TARGET_DB_DATABASE</name>
-        <default_value>dars_psa_db</default_value>
+        <default_value>dwh_psa_obo</default_value>
         <description>for target DB "dynamic" database connections</description>
       </parameter>
       <parameter>
@@ -70,7 +70,7 @@
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD</name>
-        <default_value>etl</default_value>
+        <default_value>tgt_db_password</default_value>
         <description>for target DB "dynamic" database connections</description>
       </parameter>
       <parameter>
@@ -85,7 +85,7 @@
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_TARGET_DB_USERNAME</name>
-        <default_value>etl</default_value>
+        <default_value>tgt_db_username</default_value>
         <description>for target DB "dynamic" database connections</description>
       </parameter>
       <parameter>
@@ -106,7 +106,7 @@
       <parameter>
         <name>PARAM_TABLE_META_ID</name>
         <default_value>199</default_value>
-        <description>Primary key of etl.table_meta row for "source" table from which rows will be deleted</description>
+        <description>Primary key of ${QF_ETL_DB_SCHEMA}.table_meta row for "source" table from which rows will be deleted</description>
       </parameter>
       <parameter>
         <name>PARAM_TARGET_DB_ID</name>
@@ -544,7 +544,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/11/23 14:07:19.444</modified_date>
+    <modified_date>2018/03/20 12:08:27.913</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -556,7 +556,7 @@ has the necessary  "insert_id" &amp; "inserted_on" columns. This transformation 
 
 	PARAM_CDC_LAST_LOAD_UTC						Timestamp for when the target DB was most recently updated successfully
 	PARAM_CDC_CURRENT_LOAD_UTC					Used so that a consistent max timestamp is used for all ETL
-	PARAM_TABLE_META_ID							Primary key of etl.table_meta row for "source" table from which rows will be deleted
+	PARAM_TABLE_META_ID							Primary key of ${QF_ETL_DB_SCHEMA}.table_meta row for "source" table from which rows will be deleted
 	PARAM_DYN_DB_CONN_TARGET_DB_HOST			for target DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_TARGET_DB_PORT			for target DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_TARGET_DB_DATABASE		for target DB "dynamic" database connections
@@ -579,7 +579,7 @@ has the necessary  "insert_id" &amp; "inserted_on" columns. This transformation 
 	PARAM_TARGET_TABLE								Name of target table to update (not currently used)</note>
       <xloc>16</xloc>
       <yloc>0</yloc>
-      <width>843</width>
+      <width>966</width>
       <heigth>388</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -759,14 +759,15 @@ comments in that job for an explanation.</note>
     -- case (double precision columns), but this value may not be appropriate for other data types. It was only by 
     -- experimenting that I found that injecting "-1" solved the problem for double precision columns. I have decided 
     -- to specify this for *all* columns until/unless I encounter a problem by doing this. If a problem does arise one 
-    -- day, it may be necessary to update the definition of the etl.column_meta table of the "etl" database to include 
+    -- day, it may be necessary to update the definition of the ${QF_ETL_DB_SCHEMA}.column_meta table of the "ETL" 
+    -- database to include 
     -- a real column to store the column "precision" on a column-by-column basis. For columns that do not need a 
     -- "precision" to be specified, NULL can be stored in this column. This will also require updating the 
     -- "populate_etl_metadata_tables" ETL code that generates default metadata.
     -1 AS "source_col_precision", 
     target_column_name AS "target_col_name" 
 FROM 
-    etl.column_meta 
+    ${QF_ETL_DB_SCHEMA}.column_meta 
 WHERE 
     table_meta_id = ${PARAM_TABLE_META_ID} AND 
     mirror_column = true AND
@@ -824,20 +825,6 @@ ORDER BY
         <source_field>source_col_length</source_field>
       </mapping>
       <mapping>
-        <target_step_name>Map column names</target_step_name>
-        <target_attribute_key>FIELD_PRECISION</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Column mapping metadata</source_step>
-        <source_field>source_col_precision</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Map column names</target_step_name>
-        <target_attribute_key>FIELD_RENAME</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Column mapping metadata</source_step>
-        <source_field>target_col_name</source_field>
-      </mapping>
-      <mapping>
         <target_step_name>Table input -  source_db.schema.table</target_step_name>
         <target_attribute_key>SQL</target_attribute_key>
         <target_detail>N</target_detail>
@@ -850,6 +837,20 @@ ORDER BY
         <target_detail>Y</target_detail>
         <source_step>Column mapping metadata</source_step>
         <source_field>source_col_name</source_field>
+      </mapping>
+      <mapping>
+        <target_step_name>Map column names</target_step_name>
+        <target_attribute_key>FIELD_PRECISION</target_attribute_key>
+        <target_detail>Y</target_detail>
+        <source_step>Column mapping metadata</source_step>
+        <source_field>source_col_precision</source_field>
+      </mapping>
+      <mapping>
+        <target_step_name>Map column names</target_step_name>
+        <target_attribute_key>FIELD_RENAME</target_attribute_key>
+        <target_detail>Y</target_detail>
+        <source_step>Column mapping metadata</source_step>
+        <source_field>target_col_name</source_field>
       </mapping>
     </mappings>
     <cluster_schema />
@@ -885,7 +886,7 @@ ORDER BY
             -- POSTGRESQL-SPECIFIC
             array_to_string(array_agg(source_column_name ORDER BY column_meta_id ASC), ',') AS "str_value"
         FROM 
-            etl.column_meta 
+            ${QF_ETL_DB_SCHEMA}.column_meta 
         WHERE
             table_meta_id = ${PARAM_TABLE_META_ID} AND 
             -- This selects the columns from the source DB table that will be 

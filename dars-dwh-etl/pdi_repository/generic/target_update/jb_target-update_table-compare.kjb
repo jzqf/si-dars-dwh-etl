@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/12/01 14:28:41.625</modified_date>
+  <modified_date>2018/03/20 10:52:15.957</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
@@ -108,7 +108,7 @@
     <parameter>
       <name>PARAM_TABLE_META_ID</name>
       <default_value>0</default_value>
-      <description>Primary key of etl.table_meta row for "source" table from which rows will be deleted</description>
+      <description>Primary key of ${QF_ETL_DB_SCHEMA}.table_meta row for "source" table from which rows will be deleted</description>
     </parameter>
     <parameter>
       <name>PARAM_TARGET_DB_ID</name>
@@ -702,18 +702,18 @@
     -- case (double precision columns), but this value may not be appropriate for other data types. It was only by 
     -- experimenting that I found that injecting "-1" solved the problem for double precision columns. I have decided 
     -- to specify this for *all* columns until/unless I encounter a problem by doing this. If a problem does arise one 
-    -- day, it may be necessary to update the definition of the etl.column_meta table of the "etl" database to include 
-    -- a real column to store the column "precision" on a column-by-column basis. For columns that do not need a 
+    -- day, it may be necessary to update the definition of the ${QF_ETL_DB_SCHEMA}.column_meta table of the "ETL" database 
+    -- to include a real column to store the column "precision" on a column-by-column basis. For columns that do not need a 
     -- "precision" to be specified, NULL can be stored in this column. This will also require updating the 
     -- "populate_etl_metadata_tables" ETL code that generates default metadata.
     -1 AS "target_col_precision", 
     -- "is_updateable_column" is injected into step "Synchronize after merge", which is currently not used.
     -- Hence, this column/field can be removed if I delete the step "Synchronize after merge":
-    --(is_primary_key_column=false) AS "is_updateable_column"  -- If false, the column will not be updated
-    -- Alternate possibility, if I want to be bothered with setting values for the etl.column_meta.is_updatable_column:
+    --(is_primary_key_column=false) AS "is_updateable_column"
+    -- Alternate possibility, if I want to be bothered with setting values for the ${QF_ETL_DB_SCHEMA}.column_meta.is_updatable_column:
     is_updatable_column AND (is_primary_key_column=false) AS "is_updateable_column"  -- If false, the column will not be updated
 FROM 
-    etl.column_meta 
+    ${QF_ETL_DB_SCHEMA}.column_meta 
 WHERE 
     table_meta_id = ${PARAM_TABLE_META_ID} AND 
     -- Although the primary key columns don't need to be compared, they
@@ -797,7 +797,7 @@ ORDER BY
     -- only solution I have found is to inject an empty string for this field.
     '' AS "no_field" 
 FROM 
-    etl.column_meta 
+    ${QF_ETL_DB_SCHEMA}.column_meta 
 WHERE 
     table_meta_id = ${PARAM_TABLE_META_ID} AND 
     is_primary_key_column = true
@@ -1055,7 +1055,7 @@ these tables, but neither an "insert_id" nor a "last_updated_on" column need to 
 	PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD	for target DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_TARGET_DB_DRIVER		for target DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_TARGET_DB_URL			for target DB "dynamic" database connections
-	PARAM_TABLE_META_ID							Primary key of etl.table_meta row for "source" table archived/mirrored to "target" table
+	PARAM_TABLE_META_ID							Primary key of ${QF_ETL_DB_SCHEMA}.table_meta row for "source" table archived/mirrored to "target" table
 	PARAM_SOURCE_DB_ID								ID the "source" database containing tables will be mirrored to a "target" database
 	PARAM_SOURCE_SCHEMA							Name of schema containing source table to mirror to target table
 	PARAM_SOURCE_TABLE							Name of source table to mirror to target table
@@ -1064,7 +1064,7 @@ these tables, but neither an "insert_id" nor a "last_updated_on" column need to 
 	PARAM_TARGET_TABLE								Name of target table to update (not currently used)</note>
       <xloc>16</xloc>
       <yloc>0</yloc>
-      <width>886</width>
+      <width>985</width>
       <heigth>374</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -1082,9 +1082,9 @@ these tables, but neither an "insert_id" nor a "last_updated_on" column need to 
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Update the etl.table_meta row that corresponds to the table treated in the 
-current job. This records which mirror algorithm was used, as well as when the 
-mirroring was performed.</note>
+      <note>Update the ${QF_ETL_DB_SCHEMA}.table_meta row that corresponds to the
+table treated in the current job. This records which mirror algorithm was used, 
+as well as when the mirroring was performed.</note>
       <xloc>752</xloc>
       <yloc>768</yloc>
       <width>467</width>

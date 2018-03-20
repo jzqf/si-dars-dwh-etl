@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/11/22 16:47:42.474</modified_date>
+  <modified_date>2018/03/20 10:22:10.728</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CAN_DELETE_ROW_SCHEMA_NAME</name>
@@ -113,7 +113,7 @@
     <parameter>
       <name>PARAM_TABLE_META_ID</name>
       <default_value>-1</default_value>
-      <description>Primary key of etl.table_meta row for "source" table from which rows will be deleted</description>
+      <description>Primary key of ${QF_ETL_DB_SCHEMA}.table_meta row for "source" table from which rows will be deleted</description>
     </parameter>
     <parameter>
       <name>PARAM_TARGET_DB_ID</name>
@@ -640,7 +640,7 @@ PARAM_TARGET_SCHEMA_TABLE                    = ${PARAM_TARGET_SCHEMA_TABLE}
     -- only solution I have found is to inject an empty string for this field.
     '' AS "no_field" 
 FROM 
-    etl.column_meta 
+    ${QF_ETL_DB_SCHEMA}.column_meta 
 WHERE 
     table_meta_id = ${PARAM_TABLE_META_ID} AND 
     is_primary_key_column = true
@@ -1741,7 +1741,7 @@ This job has parameters:
 
 	PARAM_CDC_LAST_LOAD_UTC								Timestamp for when the target DB was most recently updated successfully
 																Used to ensure that we do not delete rows that are not yet fully archived/mirrored.
-	PARAM_TABLE_META_ID									Primary key of etl.table_meta row for "source" table from which rows will be deleted
+	PARAM_TABLE_META_ID									Primary key of ${QF_ETL_DB_SCHEMA}.table_meta row for "source" table from which rows will be deleted
 	PARAM_MARK_ROWS_FOR_DELETION_ALGORITHM_ID		ID of the algorithm to use for marking rows of the source table for deletion
 	PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS			Number of seconds after the "row_can_be_deleted_from" timestamp that an archived row can be deleted
 	PARAM_DYN_DB_CONN_TARGET_DB_HOST					for target DB "dynamic" database connections
