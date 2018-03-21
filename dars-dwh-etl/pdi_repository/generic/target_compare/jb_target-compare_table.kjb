@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/11/28 10:32:08.080</modified_date>
+  <modified_date>2018/03/19 14:52:13.066</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CDC_LAST_LOAD_UTC</name>
@@ -83,7 +83,7 @@
     <parameter>
       <name>PARAM_TABLE_META_ID</name>
       <default_value>0</default_value>
-      <description>Primary key of etl.table_meta row for "source" table archived/mirrored to "target" table</description>
+      <description>Primary key of ${QF_ETL_DB_SCHEMA}.table_meta row for "source" table archived/mirrored to "target" table</description>
     </parameter>
     <parameter>
       <name>PARAM_TARGET_DB_ID</name>
@@ -667,14 +667,15 @@
     -- case (double precision columns), but this value may not be appropriate for other data types. It was only by 
     -- experimenting that I found that injecting "-1" solved the problem for double precision columns. I have decided 
     -- to specify this for *all* columns until/unless I encounter a problem by doing this. If a problem does arise one 
-    -- day, it may be necessary to update the definition of the etl.column_meta table of the "etl" database to include 
+    -- day, it may be necessary to update the definition of the ${QF_ETL_DB_SCHEMA}.column_meta table of the 
+    -- "${QF_ETL_DB_SCHEMA}" database to include 
     -- a real column to store the column "precision" on a column-by-column basis. For columns that do not need a 
     -- "precision" to be specified, NULL can be stored in this column. This will also require updating the 
     -- "populate_etl_metadata_tables" ETL code that generates default metadata.
     -1 AS "source_col_precision", 
     target_column_name AS "target_col_name" 
 FROM 
-    etl.column_meta 
+    ${QF_ETL_DB_SCHEMA}.column_meta 
 WHERE 
     table_meta_id = ${PARAM_TABLE_META_ID} AND 
     -- Although the primary key columns don't need to ne compared, they
@@ -1002,7 +1003,7 @@ QF_MIRROR_COMPARE_INSERT_ID_TO   = ${QF_MIRROR_COMPARE_INSERT_ID_TO}
       <custom_sql>SELECT
     source_column_name AS "source_key_col_name" 
 FROM 
-    etl.column_meta 
+    ${QF_ETL_DB_SCHEMA}.column_meta 
 WHERE 
     table_meta_id = ${PARAM_TABLE_META_ID} AND 
     is_primary_key_column = true
@@ -1320,7 +1321,7 @@ ORDER BY
 
 	PARAM_CDC_LAST_LOAD_UTC						Timestamp for when the target DB tables were last updated from the source DBs
 	PARAM_MAX_NUM_COMPARE_ROWS				Maximum number of rows that will be compared for these tables. 0 means *all* rows
-	PARAM_TABLE_META_ID							Primary key of etl.table_meta row for "source" table archived/mirrored to "target" table
+	PARAM_TABLE_META_ID							Primary key of ${QF_ETL_DB_SCHEMA}.table_meta row for "source" table archived/mirrored to "target" table
 	PARAM_DYN_DB_CONN_TARGET_DB_HOST			for target DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_TARGET_DB_PORT			for target DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_TARGET_DB_DATABASE		for target DB "dynamic" database connections
@@ -1341,7 +1342,7 @@ ORDER BY
 	PARAM_UPDATE_ALGORITHM_ID					ID of the algorithm used for mirroring/archiving the tables</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>874</width>
+      <width>985</width>
       <heigth>332</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>

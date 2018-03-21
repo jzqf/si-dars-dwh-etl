@@ -25,7 +25,7 @@
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD</name>
-        <default_value>etl</default_value>
+        <default_value>dsa_password</default_value>
         <description>for source DB "dynamic" database connections</description>
       </parameter>
       <parameter>
@@ -40,18 +40,8 @@
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME</name>
-        <default_value>etl</default_value>
+        <default_value>dsa_username</default_value>
         <description>for source DB "dynamic" database connections</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_SOURCE_INSERT_ID_COLNAME</name>
-        <default_value />
-        <description>Name of the source table column that acts as the "insert_id" column</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_SOURCE_LAST_UPDATED_ON_COLNAME</name>
-        <default_value />
-        <description>Name of the source table column that acts as the "last_updated_on" column</description>
       </parameter>
       <parameter>
         <name>PARAM_MIRROR_ALGORITHM_ID</name>
@@ -62,6 +52,16 @@
         <name>PARAM_SOURCE_DB_ID</name>
         <default_value>110</default_value>
         <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_SOURCE_INSERT_ID_COLNAME</name>
+        <default_value />
+        <description>Name of the source table column that acts as the "insert_id" column</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_SOURCE_LAST_UPDATED_ON_COLNAME</name>
+        <default_value />
+        <description>Name of the source table column that acts as the "last_updated_on" column</description>
       </parameter>
       <parameter>
         <name>PARAM_SOURCE_SCHEMA</name>
@@ -76,7 +76,7 @@
       <parameter>
         <name>PARAM_TABLE_META_ID</name>
         <default_value>-666</default_value>
-        <description>ID of the etl.table_meta row that the new etl.column_meta rows will be linked to</description>
+        <description>ID of the ${QF_ETL_DB_SCHEMA}.table_meta row that the new ${QF_ETL_DB_SCHEMA}.column_meta rows will be linked to</description>
       </parameter>
     </parameters>
     <log>
@@ -499,16 +499,16 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/12/05 09:51:34.813</modified_date>
+    <modified_date>2018/03/19 14:28:32.136</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>This transformation writes default rows to the etl.column_meta table for a single specified table from the source database.
+      <note>This transformation writes default rows to the ${QF_ETL_DB_SCHEMA}.column_meta table for a single specified table from the source database.
 It is assumed that the column names in the target database will be identical to the column names in the source database. 
 
-Therefore, this transformation writes one row to the etl.column_meta table for every column of the specified source table.
+Therefore, this transformation writes one row to the ${QF_ETL_DB_SCHEMA}.column_meta table for every column of the specified source table.
 
 This transformation has parameters:
 
@@ -519,16 +519,16 @@ This transformation has parameters:
 	PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD	for source DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER		for source DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_SOURCE_DB_URL			for source DB "dynamic" database connections
-	PARAM_TABLE_META_ID							ID of the etl.table_meta row that the new etl.column_meta rows will be linked to
+	PARAM_TABLE_META_ID							ID of the ${QF_ETL_DB_SCHEMA}.table_meta row that the new ${QF_ETL_DB_SCHEMA}.column_meta rows will be linked to
 	PARAM_SOURCE_DB_ID								ID the "source" database containing the table for generating column metadata
 	PARAM_SOURCE_SCHEMA							Name of schema containing source table for generating column metadata
 	PARAM_SOURCE_TABLE							Name of source table for generating column metadata
-	PARAM_SOURCE_INSERT_ID_COLNAME						Name of the source table column that acts as the "insert_id" column
-	PARAM_SOURCE_LAST_UPDATED_ON_COLNAME				Name of the source table column that acts as the "last_updated_on" column
+	PARAM_SOURCE_INSERT_ID_COLNAME				Name of the source table column that acts as the "insert_id" column
+	PARAM_SOURCE_LAST_UPDATED_ON_COLNAME	Name of the source table column that acts as the "last_updated_on" column
 	PARAM_MIRROR_ALGORITHM_ID					ID of the "mirror" algorithm for archiving/mirroring rows from the source table to the target table</note>
       <xloc>16</xloc>
       <yloc>0</yloc>
-      <width>919</width>
+      <width>1064</width>
       <heigth>304</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -613,7 +613,7 @@ names in the target database are identical to the column names in the source dat
     <notepad>
       <note>Add sequence field "column_meta_id_1" to the stream. This sequence starts at 1. Below, we create
 a new field "column_meta_id" by adding MAX(column_meta_id) to these values.  "column_meta_id"
-will hold primary key values for the new etl.column_meta rows to insert.</note>
+will hold primary key values for the new ${QF_ETL_DB_SCHEMA}.column_meta rows to insert.</note>
       <xloc>288</xloc>
       <yloc>832</yloc>
       <width>553</width>
@@ -637,10 +637,10 @@ will hold primary key values for the new etl.column_meta rows to insert.</note>
       <note>Add a constant field to the stream named "max_column_meta_id"
 that contains the value MAX(column_meta_id). This is so that we
 can compute column_meta_id values that are not  yet used for
-new rows to insert into table etl.column_meta.</note>
+new rows to insert into table ${QF_ETL_DB_SCHEMA}.column_meta.</note>
       <xloc>528</xloc>
       <yloc>896</yloc>
-      <width>369</width>
+      <width>382</width>
       <heigth>62</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
@@ -659,7 +659,7 @@ new rows to insert into table etl.column_meta.</note>
     </notepad>
     <notepad>
       <note>Add constant field "column_meta_id" to "column_meta_id_1" to create a new field "column_meta_id"
-to hold primary key values for the new etl.column_meta rows to insert.</note>
+to hold primary key values for the new ${QF_ETL_DB_SCHEMA}.column_meta rows to insert.</note>
       <xloc>288</xloc>
       <yloc>976</yloc>
       <width>565</width>
@@ -718,7 +718,7 @@ is_can_delete_row_column=N				(can be set  to Y below, depending on column name)
 	...</note>
       <xloc>288</xloc>
       <yloc>1072</yloc>
-      <width>586</width>
+      <width>637</width>
       <heigth>88</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
@@ -924,7 +924,7 @@ values associated with the execution of the PDI transformation when the target t
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Get MAX(column_meta_id) from etl.column_meta</from>
+      <from>Get MAX(column_meta_id) from column_meta</from>
       <to>Join Rows (cartesian product)</to>
       <enabled>Y</enabled>
     </hop>
@@ -955,7 +955,7 @@ values associated with the execution of the PDI transformation when the target t
     </hop>
     <hop>
       <from>Adjust column attributes based on ...</from>
-      <to>Insert new etl.column_meta rows</to>
+      <to>Insert new column_meta rows</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
@@ -1164,7 +1164,7 @@ values associated with the execution of the PDI transformation when the target t
         <jsScript_name>Script 1</jsScript_name>
         <jsScript_script>/*
   This script is run once for each row in the stream, i.e., once
-  per etl.column_meta row to create.
+  per ${QF_ETL_DB_SCHEMA}.column_meta row to create.
 
   Author:  Jeffrey Zelt
   Date:    2017.08.10
@@ -1380,6 +1380,30 @@ if(target_column_name == "row_can_be_deleted_from") { // We could also test for 
     </GUI>
   </step>
   <step>
+    <name>Dummy</name>
+    <type>Dummy</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>16</xloc>
+      <yloc>384</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
     <name>Duplicate column name field</name>
     <type>SelectValues</type>
     <description />
@@ -1420,7 +1444,7 @@ if(target_column_name == "row_can_be_deleted_from") { // We could also test for 
     </GUI>
   </step>
   <step>
-    <name>Get MAX(column_meta_id) from etl.column_meta</name>
+    <name>Get MAX(column_meta_id) from column_meta</name>
     <type>TableInput</type>
     <description />
     <distribute>Y</distribute>
@@ -1493,7 +1517,7 @@ FROM
     </GUI>
   </step>
   <step>
-    <name>Insert new etl.column_meta rows</name>
+    <name>Insert new column_meta rows</name>
     <type>TableOutput</type>
     <description />
     <distribute>Y</distribute>
@@ -1704,30 +1728,6 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>384</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Dummy</name>
-    <type>Dummy</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>16</xloc>
       <yloc>384</yloc>
       <draw>Y</draw>
     </GUI>
