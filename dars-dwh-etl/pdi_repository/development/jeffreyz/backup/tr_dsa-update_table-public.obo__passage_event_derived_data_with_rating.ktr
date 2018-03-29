@@ -6,7 +6,7 @@
     <trans_version />
     <trans_type>Normal</trans_type>
     <trans_status>0</trans_status>
-    <directory>/dsa/custom</directory>
+    <directory>/development/jeffreyz/backup</directory>
     <parameters>
       <parameter>
         <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
@@ -464,7 +464,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2018/03/29 16:00:31.441</modified_date>
+    <modified_date>2018/03/28 09:32:45.507</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -476,7 +476,7 @@ It is important to sort these rows chronologically (by either the "insert_id" or
 fails in the middle somewhere and if this transaction does not run in a single transaction, then next time this transformation is 
 executed, we can start again where we left off (by computing, e.g., MAX(insert_id) for the DSA table).</note>
       <xloc>304</xloc>
-      <yloc>336</yloc>
+      <yloc>448</yloc>
       <width>723</width>
       <heigth>75</heigth>
       <fontname>Ubuntu</fontname>
@@ -519,7 +519,7 @@ it takes a long time for this transformation to end. During this period the "Pau
 running" top" shows that both "postgres"and "java" processes are actively using a 25-75% of the CPU. When this CPU usage stops, 
 the  "Pause" and "Stop" buttons become disabled, showing that the transformation is finally finished. Strange.</note>
       <xloc>304</xloc>
-      <yloc>480</yloc>
+      <yloc>608</yloc>
       <width>773</width>
       <heigth>332</heigth>
       <fontname>Ubuntu</fontname>
@@ -540,7 +540,7 @@ the  "Pause" and "Stop" buttons become disabled, showing that the transformation
     <notepad>
       <note>Get batch ID for current transformation. This will be stored in the DSA table for auditing/logging.</note>
       <xloc>304</xloc>
-      <yloc>432</yloc>
+      <yloc>544</yloc>
       <width>577</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -615,12 +615,21 @@ to the DSA DB.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>This step is only for generating the SQL for creating a new table using the "SQL" button of the "Table output" step below. 
-See the transformation /generic/target_update/tmplt_target-update_table-updatable_table for details.</note>
+      <note>This step is only for generating the SQL for creating a new table using the "SQL" button of the "Table output" step below. To do this:
+1.	Disable the hop from the "Get max id &amp; ..." step and enable the hop from the "Set max id &amp; date" step.
+2.	Disable the hop to the "Table output" step below, as well as all following downstream hops.
+3.	Preview the "Set etl_batch_id_last_update..." step, providing appropriate values for all parameters. Ensure that the expected  
+	rows are displayed.
+4.	Re-enable the hop to the "Table output" step below.
+5.	Double-click the "Table output" step and then click the "SQL" button to generate the appropriete SQL to create the table. 
+	The schema and table names that you specified in step 3 above will be used to generate the SQL DDL commands for that table.
+	Before executing the SQL, modify it where appropriate. For example, replace "UNKNOWN" for timestamp columns with 
+	"timestamp without time zone" or "bytea", add declaration for column "etl_batch_id_last_update", primary key constraint, ...
+6.	Re-enable the hop from the "Get max id &amp; ..." step and disable the hop from the "Set max id &amp; date" step.</note>
       <xloc>304</xloc>
       <yloc>272</yloc>
-      <width>677</width>
-      <heigth>36</heigth>
+      <width>733</width>
+      <heigth>153</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -649,7 +658,7 @@ order for error
 handling to be 
 triggered here!</note>
       <xloc>16</xloc>
-      <yloc>496</yloc>
+      <yloc>608</yloc>
       <width>108</width>
       <heigth>164</heigth>
       <fontname>Ubuntu</fontname>
@@ -661,57 +670,6 @@ triggered here!</note>
       <fontcolorblue>0</fontcolorblue>
       <backgroundcolorred>255</backgroundcolorred>
       <backgroundcolorgreen>255</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>When using a *local* target database, 
-this algorithm is *slower" than using the 
-"Table output" step with error handling
-to an "Update" step. But it is *faster* for 
-a *remote* target database!</note>
-      <xloc>1120</xloc>
-      <yloc>704</yloc>
-      <width>237</width>
-      <heigth>75</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>9</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Eliminate etl_batch_id_last_update
-
-Reformat this transformation!!!!!
-
-Report the  correct job name in emails
-using /generic/jb_set_job_name_vrbl !!!!!!!!!!!</note>
-      <xloc>1104</xloc>
-      <yloc>880</yloc>
-      <width>406</width>
-      <heigth>142</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>14</fontsize>
-      <fontbold>Y</fontbold>
-      <fontitalic>Y</fontitalic>
-      <fontcolorred>255</fontcolorred>
-      <fontcolorgreen>255</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>0</backgroundcolorred>
-      <backgroundcolorgreen>0</backgroundcolorgreen>
       <backgroundcolorblue>0</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
@@ -937,17 +895,17 @@ using /generic/jb_set_job_name_vrbl !!!!!!!!!!!</note>
     <hop>
       <from>Table output - DSA.schema.table</from>
       <to>Set etl_batch_id_last_update = Xform batch ID</to>
-      <enabled>N</enabled>
+      <enabled>Y</enabled>
     </hop>
     <hop>
       <from>Set etl_batch_id_last_update = Xform batch ID</from>
       <to>Update - DSA.schema.table</to>
-      <enabled>N</enabled>
+      <enabled>Y</enabled>
     </hop>
     <hop>
       <from>Set etl_batch_id_insert = Xform batch ID</from>
       <to>Table output - DSA.schema.table</to>
-      <enabled>N</enabled>
+      <enabled>Y</enabled>
     </hop>
     <hop>
       <from>Set max id &amp; date</from>
@@ -957,51 +915,6 @@ using /generic/jb_set_job_name_vrbl !!!!!!!!!!!</note>
     <hop>
       <from>Table input - source PSA tables</from>
       <to>Set etl_batch_id_insert = Xform batch ID</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Set etl_batch_id_last_update = Xform batch ID 2</from>
-      <to>Insert / Update- DSA.schema.table</to>
-      <enabled>N</enabled>
-    </hop>
-    <hop>
-      <from>Set etl_batch_id_insert = Xform batch ID</from>
-      <to>Set etl_batch_id_last_update = Xform batch ID 2</to>
-      <enabled>N</enabled>
-    </hop>
-    <hop>
-      <from>Set insert_if_null flag field</from>
-      <to>INSERT or UPDATE?</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Set etl_batch_id_insert = Xform batch ID</from>
-      <to>Set insert_if_null flag field</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>INSERT or UPDATE?</from>
-      <to>Perform INSERT</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>INSERT or UPDATE?</from>
-      <to>Perform UPDATE</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Perform UPDATE</from>
-      <to>Update - DSA.schema.table 2</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Perform INSERT</from>
-      <to>Remove field "insert_if_null"</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Remove field "insert_if_null"</from>
-      <to>Table output - DSA.schema.table 2</to>
       <enabled>Y</enabled>
     </hop>
   </order>
@@ -1041,249 +954,6 @@ FROM
     </GUI>
   </step>
   <step>
-    <name>INSERT or UPDATE?</name>
-    <type>FilterRows</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <send_true_to>Perform INSERT</send_true_to>
-    <send_false_to>Perform UPDATE</send_false_to>
-    <compare>
-      <condition>
-        <negated>N</negated>
-        <leftvalue>insert_if_null</leftvalue>
-        <function>=</function>
-        <rightvalue />
-        <value>
-          <name>constant</name>
-          <type>Integer</type>
-          <text>-1</text>
-          <length>-1</length>
-          <precision>0</precision>
-          <isnull>N</isnull>
-          <mask>####0;-####0</mask>
-        </value>
-      </condition>
-    </compare>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>448</xloc>
-      <yloc>864</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Insert / Update- DSA.schema.table</name>
-    <type>InsertUpdate</type>
-    <description />
-    <distribute>N</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <connection>dsa_db</connection>
-    <commit>100</commit>
-    <update_bypassed>N</update_bypassed>
-    <lookup>
-      <schema>${PARAM_TARGET_SCHEMA}</schema>
-      <table>${PARAM_TARGET_TABLE}</table>
-      <key>
-        <name>pedd_id</name>
-        <field>pedd_id</field>
-        <condition>=</condition>
-        <name2 />
-      </key>
-      <value>
-        <name>pedd_id</name>
-        <rename>pedd_id</rename>
-        <update>N</update>
-      </value>
-      <value>
-        <name>pedd_status_id</name>
-        <rename>pedd_status_id</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>applied_axle_tariff_category_id</name>
-        <rename>applied_axle_tariff_category_id</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>applied_euro_emission_class_id</name>
-        <rename>applied_euro_emission_class_id</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>applied_lpn_country_code</name>
-        <rename>applied_lpn_country_code</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>base_rate_total</name>
-        <rename>base_rate_total</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>applied_infrastructure_fee</name>
-        <rename>applied_infrastructure_fee</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>applied_infrastructure_vat</name>
-        <rename>applied_infrastructure_vat</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>applied_surcharge</name>
-        <rename>applied_surcharge</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>applied_surcharge_vat</name>
-        <rename>applied_surcharge_vat</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>applied_external_fee_noise</name>
-        <rename>applied_external_fee_noise</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>applied_external_fee_noise_vat</name>
-        <rename>applied_external_fee_noise_vat</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>applied_external_fee_air</name>
-        <rename>applied_external_fee_air</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>applied_external_fee_air_vat</name>
-        <rename>applied_external_fee_air_vat</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>last_updated_on</name>
-        <rename>last_updated_on</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>etl_batch_id_insert</name>
-        <rename>etl_batch_id_insert</rename>
-        <update>N</update>
-      </value>
-      <value>
-        <name>etl_batch_id_last_update</name>
-        <rename>etl_batch_id_last_update</rename>
-        <update>Y</update>
-      </value>
-    </lookup>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>1216</xloc>
-      <yloc>640</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Perform INSERT</name>
-    <type>Dummy</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>576</xloc>
-      <yloc>832</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Perform UPDATE</name>
-    <type>Dummy</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>576</xloc>
-      <yloc>896</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Remove field "insert_if_null"</name>
-    <type>SelectValues</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <fields>
-      <select_unspecified>N</select_unspecified>
-      <remove>
-        <name>insert_if_null</name>
-      </remove>
-    </fields>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>704</xloc>
-      <yloc>832</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
     <name>Set etl_batch_id_insert = Xform batch ID</name>
     <type>SystemInfo</type>
     <description />
@@ -1309,7 +979,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>432</yloc>
+      <yloc>544</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1339,84 +1009,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>640</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Set etl_batch_id_last_update = Xform batch ID 2</name>
-    <type>SystemInfo</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <fields>
-      <field>
-        <name>etl_batch_id_last_update</name>
-        <type>batch ID</type>
-      </field>
-    </fields>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>1216</xloc>
-      <yloc>544</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Set insert_if_null flag field</name>
-    <type>DBLookup</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <connection>dsa_db</connection>
-    <cache>N</cache>
-    <cache_load_all>N</cache_load_all>
-    <cache_size>0</cache_size>
-    <lookup>
-      <schema>${PARAM_TARGET_SCHEMA}</schema>
-      <table>${PARAM_TARGET_TABLE}</table>
-      <orderby />
-      <fail_on_multiple>N</fail_on_multiple>
-      <eat_row_on_failure>N</eat_row_on_failure>
-      <key>
-        <name>pedd_id</name>
-        <field>pedd_id</field>
-        <condition>=</condition>
-        <name2 />
-      </key>
-      <value>
-        <name>pedd_id</name>
-        <rename>insert_if_null</rename>
-        <default>-1</default>
-        <type>Integer</type>
-      </value>
-    </lookup>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>288</xloc>
-      <yloc>864</yloc>
+      <yloc>752</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1449,8 +1042,8 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>240</xloc>
-      <yloc>272</yloc>
+      <xloc>224</xloc>
+      <yloc>288</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1533,7 +1126,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>368</yloc>
+      <yloc>480</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1551,7 +1144,7 @@ ORDER BY
     <connection>dsa_db</connection>
     <schema>${PARAM_TARGET_SCHEMA}</schema>
     <table>${PARAM_TARGET_TABLE}</table>
-    <commit>100</commit>
+    <commit>1000</commit>
     <truncate>N</truncate>
     <ignore_errors>N</ignore_errors>
     <use_batch>N</use_batch>
@@ -1576,50 +1169,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>544</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Table output - DSA.schema.table 2</name>
-    <type>TableOutput</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <connection>dsa_db</connection>
-    <schema>${PARAM_TARGET_SCHEMA}</schema>
-    <table>${PARAM_TARGET_TABLE}</table>
-    <commit>1000</commit>
-    <truncate>N</truncate>
-    <ignore_errors>N</ignore_errors>
-    <use_batch>Y</use_batch>
-    <specify_fields>N</specify_fields>
-    <partitioning_enabled>N</partitioning_enabled>
-    <partitioning_field />
-    <partitioning_daily>N</partitioning_daily>
-    <partitioning_monthly>Y</partitioning_monthly>
-    <tablename_in_field>N</tablename_in_field>
-    <tablename_field />
-    <tablename_in_table>Y</tablename_in_table>
-    <return_keys>N</return_keys>
-    <return_field />
-    <fields>
-    </fields>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>880</xloc>
-      <yloc>832</yloc>
+      <yloc>656</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1637,7 +1187,7 @@ ORDER BY
     <connection>dsa_db</connection>
     <skip_lookup>N</skip_lookup>
     <commit>100</commit>
-    <use_batch>Y</use_batch>
+    <use_batch>N</use_batch>
     <error_ignored>N</error_ignored>
     <ignore_flag_field />
     <lookup>
@@ -1700,10 +1250,6 @@ ORDER BY
       <value>
         <name>applied_external_fee_air_vat</name>
         <rename>applied_external_fee_air_vat</rename>
-      </value>
-      <value>
-        <name>last_updated_on</name>
-        <rename>last_updated_on</rename>
       </value>
       <value>
         <name>etl_batch_id_last_update</name>
@@ -1719,107 +1265,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>720</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Update - DSA.schema.table 2</name>
-    <type>Update</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <connection>dsa_db</connection>
-    <skip_lookup>N</skip_lookup>
-    <commit>1000</commit>
-    <use_batch>Y</use_batch>
-    <error_ignored>N</error_ignored>
-    <ignore_flag_field />
-    <lookup>
-      <schema>${PARAM_TARGET_SCHEMA}</schema>
-      <table>${PARAM_TARGET_TABLE}</table>
-      <key>
-        <name>pedd_id</name>
-        <field>pedd_id</field>
-        <condition>=</condition>
-        <name2 />
-      </key>
-      <value>
-        <name>pedd_status_id</name>
-        <rename>pedd_status_id</rename>
-      </value>
-      <value>
-        <name>applied_axle_tariff_category_id</name>
-        <rename>applied_axle_tariff_category_id</rename>
-      </value>
-      <value>
-        <name>applied_euro_emission_class_id</name>
-        <rename>applied_euro_emission_class_id</rename>
-      </value>
-      <value>
-        <name>applied_lpn_country_code</name>
-        <rename>applied_lpn_country_code</rename>
-      </value>
-      <value>
-        <name>base_rate_total</name>
-        <rename>base_rate_total</rename>
-      </value>
-      <value>
-        <name>applied_infrastructure_fee</name>
-        <rename>applied_infrastructure_fee</rename>
-      </value>
-      <value>
-        <name>applied_infrastructure_vat</name>
-        <rename>applied_infrastructure_vat</rename>
-      </value>
-      <value>
-        <name>applied_surcharge</name>
-        <rename>applied_surcharge</rename>
-      </value>
-      <value>
-        <name>applied_surcharge_vat</name>
-        <rename>applied_surcharge_vat</rename>
-      </value>
-      <value>
-        <name>applied_external_fee_noise</name>
-        <rename>applied_external_fee_noise</rename>
-      </value>
-      <value>
-        <name>applied_external_fee_noise_vat</name>
-        <rename>applied_external_fee_noise_vat</rename>
-      </value>
-      <value>
-        <name>applied_external_fee_air</name>
-        <rename>applied_external_fee_air</rename>
-      </value>
-      <value>
-        <name>applied_external_fee_air_vat</name>
-        <rename>applied_external_fee_air_vat</rename>
-      </value>
-      <value>
-        <name>last_updated_on</name>
-        <rename>last_updated_on</rename>
-      </value>
-      <value>
-        <name>etl_batch_id_last_update</name>
-        <rename>etl_batch_id_insert</rename>
-      </value>
-    </lookup>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>880</xloc>
-      <yloc>896</yloc>
+      <yloc>832</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1856,23 +1302,11 @@ PARAM_MAX_INSERT_ID        = ${PARAM_MAX_INSERT_ID}</logmessage>
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>288</yloc>
+      <yloc>368</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step_error_handling>
-    <error>
-      <source_step>Insert / Update- DSA.schema.table</source_step>
-      <target_step />
-      <is_enabled>N</is_enabled>
-      <nr_valuename />
-      <descriptions_valuename />
-      <fields_valuename />
-      <codes_valuename />
-      <max_errors />
-      <max_pct_errors />
-      <min_pct_rows />
-    </error>
     <error>
       <source_step>Table output - DSA.schema.table</source_step>
       <target_step>Set etl_batch_id_last_update = Xform batch ID</target_step>

@@ -439,7 +439,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/06/23 16:10:56.635</modified_date>
+    <modified_date>2018/03/28 15:17:14.738</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -454,7 +454,7 @@ It is also necessary to specify the step from which fields will  be used to supp
 for the "?" replacement characters.  In this case, the previous step is specified.</note>
       <xloc>288</xloc>
       <yloc>288</yloc>
-      <width>512</width>
+      <width>563</width>
       <heigth>108</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -630,7 +630,7 @@ http://forums.pentaho.com/showthread.php?71507-Batch-insert-mode-disabled-becaus
     </notepad>
     <notepad>
       <note>This step handles only inserts, so it is not 
-equivalent to the other approaches.For
+equivalent to the other approaches. For
 this reason, its benchmark values are
 higher.
 
@@ -663,11 +663,23 @@ batch=5000		(inserts only):	6100 rows/s</note>
 only happens when the error handling sends rows to the "Update" step):
 
 After processing a large number of rows, it takes a long time for this 
-transformation to end. During this period the "Pause" and "Stop" buttons  
-remain enabled. Furthermore, running" top" shows that both "postgres"and 
-"java" processes are actively using a 25-75% of the CPU. When this CPU usage 
-stops, the  "Pause" and "Stop" buttons become disabled, showing that the
-transformation is finally finished. Strange.
+transformation to end. It is this "Insert/Update" step that appears to continue
+running, even though the "Step Metrics" tab shows that no rows are being 
+streamed through any of the steps. During this period the "Pause" and "Stop" 
+buttons  remain enabled and there is no check mark next to the "Insert/Update" 
+step, which also shows that it is still running. Furthermore, running" top" shows a 
+"java" process using approximately 60% of the CPU and a "postgres"process using
+approximately 15% of the CPU (on my Ubuntu VB VM that uses 2 of 4 cores of my 
+Lenovo P50). When this CPU usage stops, the  "Pause" and "Stop" buttons become 
+disabled, showing that the transformation is finally finished. Strange. If the
+transformations isborted before it is finished by clicking the "Stop" button , the 
+"Active" columns for the "Insert / Update" step in the "Step Metrics" tab changes 
+from "Running" to "Halting", and the same CPU time continues to be used by the
+"java" &amp; "postgres" processes. This is a terrible behaviour because I don't know
+why this occurs and how this could impact ETL jobs in a production environment.
+The only way I have found to force the "java" &amp; "postgres" processes to finish is
+to quit Spoon. If we are lucky, this problem occurs only when running a 
+transformation with Spoon, but I have not been able to test this!
 
 This does *not* occur when the "Update" step is replaced with a Dummy step,
 which currently is acceptable if we do not need to perform updates -  i.e., if we
@@ -675,8 +687,8 @@ only need to be able to handle re-running an ETL script that tries to re-process
 a row that was processed earlier during a load that failed part-way through.</note>
       <xloc>304</xloc>
       <yloc>768</yloc>
-      <width>466</width>
-      <heigth>220</heigth>
+      <width>492</width>
+      <heigth>388</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -698,8 +710,8 @@ provides an approximately 2x speedup over an "Insert/Update" step for
 inserts *and* it does not exhibit (for inserts only) the behaviour where a 
 "java"and "postgres" process continue to run with a high CPU load long after 
 the transformation is finished.</note>
-      <xloc>320</xloc>
-      <yloc>1216</yloc>
+      <xloc>848</xloc>
+      <yloc>1040</yloc>
       <width>534</width>
       <heigth>95</heigth>
       <fontname>Ubuntu</fontname>
@@ -722,7 +734,7 @@ the transformation is finished.</note>
 were used.</note>
       <xloc>288</xloc>
       <yloc>224</yloc>
-      <width>479</width>
+      <width>561</width>
       <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -783,7 +795,7 @@ unique constraint on the column "passage_id". This can be done by explicitly add
 a constraint, or by making a primary key based on this column.</note>
       <xloc>800</xloc>
       <yloc>0</yloc>
-      <width>547</width>
+      <width>553</width>
       <heigth>220</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
