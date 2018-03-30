@@ -76,19 +76,19 @@
           <id>LINES_READ</id>
           <enabled>Y</enabled>
           <name>LINES_READ</name>
-          <subject>Table output - DSA.schema.table</subject>
+          <subject>Table output - DSA.schema.table 2</subject>
         </field>
         <field>
           <id>LINES_WRITTEN</id>
           <enabled>Y</enabled>
           <name>LINES_WRITTEN</name>
-          <subject>Table output - DSA.schema.table</subject>
+          <subject>Table output - DSA.schema.table 2</subject>
         </field>
         <field>
           <id>LINES_UPDATED</id>
           <enabled>Y</enabled>
           <name>LINES_UPDATED</name>
-          <subject>Table output - DSA.schema.table</subject>
+          <subject>Table output - DSA.schema.table 2</subject>
         </field>
         <field>
           <id>LINES_INPUT</id>
@@ -100,13 +100,13 @@
           <id>LINES_OUTPUT</id>
           <enabled>Y</enabled>
           <name>LINES_OUTPUT</name>
-          <subject>Table output - DSA.schema.table</subject>
+          <subject>Table output - DSA.schema.table 2</subject>
         </field>
         <field>
           <id>LINES_REJECTED</id>
           <enabled>Y</enabled>
           <name>LINES_REJECTED</name>
-          <subject>Table output - DSA.schema.table</subject>
+          <subject>Table output - DSA.schema.table 2</subject>
         </field>
         <field>
           <id>ERRORS</id>
@@ -464,7 +464,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2018/03/29 16:00:31.441</modified_date>
+    <modified_date>2018/03/30 10:39:27.726</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -472,12 +472,12 @@
     <notepad>
       <note>Load the data from the source tables that will be moved to the target DSA table.
 
-It is important to sort these rows chronologically (by either the "insert_id" or "inserted_on" columns) so that if this transformation
-fails in the middle somewhere and if this transaction does not run in a single transaction, then next time this transformation is 
-executed, we can start again where we left off (by computing, e.g., MAX(insert_id) for the DSA table).</note>
-      <xloc>304</xloc>
+It is important to sort these rows chronologically (by either the "insert_id" or "inserted_on" columns) so that if this 
+transformation fails in the middle somewhere and if this transaction does not run in a single transaction, then next time 
+this transformation is executed, we can start again where we left off (by computing, e.g., MAX(insert_id) for the DSA table).</note>
+      <xloc>496</xloc>
       <yloc>336</yloc>
-      <width>723</width>
+      <width>688</width>
       <heigth>75</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
@@ -495,35 +495,23 @@ executed, we can start again where we left off (by computing, e.g., MAX(insert_i
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Insert new rows into the DSA using a "Table output" step. Error handing is enabled for this step so that if a rows already exists,
-the rows are passed to an "Update" step.
+      <note>^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Insert new rows into the DSA using a "Table output" step. Error handing is enabled for this step so that
+rows already exist in the target table (based on primary key) are passed on to an "Update" step.
 
-IMPORTANT:	A primary key constraint (or at least a "unique" constraint on the primary key column(s)) for the target table is 
-				*required*; otherwise, error handling will not be triggered when attempting to insert a row with a duplicate key.
+IMPORTANT:	A primary key constraint (or at least a "unique" constraint on the primary key column(s)) 
+				for the target table is *required*; otherwise, error handling will not be triggered when 
+				attempting to insert a row with a duplicate key.
 
-PDI does not fully support error handling when using "batch processing" with the PostgreSQL JDBC driver (a message to this 
-effect is displayed when accepting the transformation settings dialog), so make sure "Use batch update for inserts" is *not* 
-selected here!
+For benchmark results I obtained testing the speed of various INSERT/UPDATE algorithms, see: 
 
-See:
-
-	/development/jeffreyz/tests/cdc_timestamps/tr_TEST_mirror_update-passage.passage-table_output
-
-for tests  benchmark results I obtained testing the speed of various INSERT/UPDATE algorithms. Using a "Table output" step with 
-an error handling hop to an "Update" step provides an approximately 2x speedup over an "Insert/Update" step for inserts *and* 
-it does not exhibit (for inserts only) the behaviour where a "java"and "postgres" process continue to run with a high CPU load long 
-after the transformation is finished. Hence, it should be favoured.
-
-An odd behaviour is observed when the error handling sends rows to the "Update" step. After processing a large number of rows, 
-it takes a long time for this transformation to end. During this period the "Pause" and "Stop" buttons remain enabled. Furthermore,
-running" top" shows that both "postgres"and "java" processes are actively using a 25-75% of the CPU. When this CPU usage stops, 
-the  "Pause" and "Stop" buttons become disabled, showing that the transformation is finally finished. Strange.</note>
-      <xloc>304</xloc>
-      <yloc>480</yloc>
-      <width>773</width>
-      <heigth>332</heigth>
+	/development/jeffreyz/tests/cdc_timestamps/tr_TEST_mirror_update-passage.passage-table_output</note>
+      <xloc>640</xloc>
+      <yloc>688</yloc>
+      <width>588</width>
+      <heigth>153</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -538,13 +526,14 @@ the  "Pause" and "Stop" buttons become disabled, showing that the transformation
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Get batch ID for current transformation. This will be stored in the DSA table for auditing/logging.</note>
-      <xloc>304</xloc>
+      <note>Get batch ID for current transformation. This will be stored in the DSA table for auditing/logging.
+It *must* be named "etl_batch_id_insert" here because we do not specify the table / stream fields in the "Table output" step.</note>
+      <xloc>496</xloc>
       <yloc>432</yloc>
-      <width>577</width>
-      <heigth>24</heigth>
+      <width>696</width>
+      <heigth>36</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -574,10 +563,10 @@ This transformation has parameters:
 	PARAM_TARGET_TABLE					Name of target table to update</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>771</width>
-      <heigth>192</heigth>
+      <width>740</width>
+      <heigth>179</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -595,7 +584,7 @@ This transformation has parameters:
       <note>Get the maximum values stored in the "insert_id" &amp; "last_upated_on" columns of the target table that will be updated by this 
 transformation. This will be used to the select data from the source table that was inserted or modified since the last update 
 to the DSA DB.</note>
-      <xloc>304</xloc>
+      <xloc>496</xloc>
       <yloc>208</yloc>
       <width>696</width>
       <heigth>49</heigth>
@@ -617,7 +606,7 @@ to the DSA DB.</note>
     <notepad>
       <note>This step is only for generating the SQL for creating a new table using the "SQL" button of the "Table output" step below. 
 See the transformation /generic/target_update/tmplt_target-update_table-updatable_table for details.</note>
-      <xloc>304</xloc>
+      <xloc>496</xloc>
       <yloc>272</yloc>
       <width>677</width>
       <heigth>36</heigth>
@@ -648,7 +637,7 @@ column(s) is
 order for error 
 handling to be 
 triggered here!</note>
-      <xloc>16</xloc>
+      <xloc>1024</xloc>
       <yloc>496</yloc>
       <width>108</width>
       <heigth>164</heigth>
@@ -668,15 +657,17 @@ triggered here!</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>When using a *local* target database, 
-this algorithm is *slower" than using the 
-"Table output" step with error handling
-to an "Update" step. But it is *faster* for 
-a *remote* target database!</note>
-      <xloc>1120</xloc>
-      <yloc>704</yloc>
-      <width>237</width>
-      <heigth>75</heigth>
+      <note>^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+When using a *local* target database, 
+this algorithm is *slower" than using 
+the "Table output" step with error 
+handling to an "Update" step. But it 
+is *faster* for a *remote* target 
+database!</note>
+      <xloc>0</xloc>
+      <yloc>576</yloc>
+      <width>219</width>
+      <heigth>101</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -693,26 +684,56 @@ a *remote* target database!</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Eliminate etl_batch_id_last_update
-
-Reformat this transformation!!!!!
-
-Report the  correct job name in emails
-using /generic/jb_set_job_name_vrbl !!!!!!!!!!!</note>
-      <xloc>1104</xloc>
+      <note>^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+This algorithm appears to be fastest for both local and remote target 
+databases. But because of the potential race condition described 
+above, be careful that it is only used where this in not an issue.</note>
+      <xloc>160</xloc>
       <yloc>880</yloc>
-      <width>406</width>
-      <heigth>142</heigth>
+      <width>392</width>
+      <heigth>62</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>14</fontsize>
-      <fontbold>Y</fontbold>
-      <fontitalic>Y</fontitalic>
-      <fontcolorred>255</fontcolorred>
-      <fontcolorgreen>255</fontcolorgreen>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
       <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>0</backgroundcolorred>
-      <backgroundcolorgreen>0</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>The "insert_if_null" field is set to the matching value of 
+pedd_id for rows that already exist in the target table, 
+and it is set to -1 for rows that do *not* exist in the 
+target table. INSERTs are executed below if 
+insert_if_null=-1, and UPDATEs are executed otherwise.
+There is a potential race condition because the data in 
+the target table can theoretically be modified between 
+the time that we create the "insert_if_null" field here 
+and we execute the INSERTs or UPDATEs below, but for
+the current use case, this job is the only way that the 
+target table can be modified so we do not need to 
+worry about this potential race condition.</note>
+      <xloc>432</xloc>
+      <yloc>496</yloc>
+      <width>317</width>
+      <heigth>166</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
       <bordercolorblue>100</bordercolorblue>
@@ -935,18 +956,8 @@ using /generic/jb_set_job_name_vrbl !!!!!!!!!!!</note>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Table output - DSA.schema.table</from>
-      <to>Set etl_batch_id_last_update = Xform batch ID</to>
-      <enabled>N</enabled>
-    </hop>
-    <hop>
-      <from>Set etl_batch_id_last_update = Xform batch ID</from>
-      <to>Update - DSA.schema.table</to>
-      <enabled>N</enabled>
-    </hop>
-    <hop>
       <from>Set etl_batch_id_insert = Xform batch ID</from>
-      <to>Table output - DSA.schema.table</to>
+      <to>Table output - DSA.schema.table 2</to>
       <enabled>N</enabled>
     </hop>
     <hop>
@@ -958,16 +969,6 @@ using /generic/jb_set_job_name_vrbl !!!!!!!!!!!</note>
       <from>Table input - source PSA tables</from>
       <to>Set etl_batch_id_insert = Xform batch ID</to>
       <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Set etl_batch_id_last_update = Xform batch ID 2</from>
-      <to>Insert / Update- DSA.schema.table</to>
-      <enabled>N</enabled>
-    </hop>
-    <hop>
-      <from>Set etl_batch_id_insert = Xform batch ID</from>
-      <to>Set etl_batch_id_last_update = Xform batch ID 2</to>
-      <enabled>N</enabled>
     </hop>
     <hop>
       <from>Set insert_if_null flag field</from>
@@ -991,7 +992,7 @@ using /generic/jb_set_job_name_vrbl !!!!!!!!!!!</note>
     </hop>
     <hop>
       <from>Perform UPDATE</from>
-      <to>Update - DSA.schema.table 2</to>
+      <to>Update - DSA.schema.table</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
@@ -1001,8 +1002,18 @@ using /generic/jb_set_job_name_vrbl !!!!!!!!!!!</note>
     </hop>
     <hop>
       <from>Remove field "insert_if_null"</from>
-      <to>Table output - DSA.schema.table 2</to>
+      <to>Table output - DSA.schema.table</to>
       <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Set etl_batch_id_insert = Xform batch ID</from>
+      <to>Insert / Update- DSA.schema.table</to>
+      <enabled>N</enabled>
+    </hop>
+    <hop>
+      <from>Table output - DSA.schema.table 2</from>
+      <to>Update - DSA.schema.table 2</to>
+      <enabled>N</enabled>
     </hop>
   </order>
   <step>
@@ -1035,7 +1046,7 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
+      <xloc>336</xloc>
       <yloc>224</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1078,8 +1089,8 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>448</xloc>
-      <yloc>864</yloc>
+      <xloc>336</xloc>
+      <yloc>592</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1188,7 +1199,7 @@ FROM
       </value>
       <value>
         <name>etl_batch_id_last_update</name>
-        <rename>etl_batch_id_last_update</rename>
+        <rename>etl_batch_id_insert</rename>
         <update>Y</update>
       </value>
     </lookup>
@@ -1200,8 +1211,8 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1216</xloc>
-      <yloc>640</yloc>
+      <xloc>96</xloc>
+      <yloc>512</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1224,8 +1235,8 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>576</xloc>
-      <yloc>832</yloc>
+      <xloc>240</xloc>
+      <yloc>688</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1248,8 +1259,8 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>576</xloc>
-      <yloc>896</yloc>
+      <xloc>432</xloc>
+      <yloc>688</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1278,8 +1289,8 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>704</xloc>
-      <yloc>832</yloc>
+      <xloc>240</xloc>
+      <yloc>752</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1308,68 +1319,8 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
+      <xloc>336</xloc>
       <yloc>432</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Set etl_batch_id_last_update = Xform batch ID</name>
-    <type>SystemInfo</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <fields>
-      <field>
-        <name>etl_batch_id_last_update</name>
-        <type>batch ID</type>
-      </field>
-    </fields>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>144</xloc>
-      <yloc>640</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Set etl_batch_id_last_update = Xform batch ID 2</name>
-    <type>SystemInfo</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <fields>
-      <field>
-        <name>etl_batch_id_last_update</name>
-        <type>batch ID</type>
-      </field>
-    </fields>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>1216</xloc>
-      <yloc>544</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1415,8 +1366,8 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>288</xloc>
-      <yloc>864</yloc>
+      <xloc>336</xloc>
+      <yloc>512</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1449,7 +1400,7 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>240</xloc>
+      <xloc>432</xloc>
       <yloc>272</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1532,13 +1483,13 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
+      <xloc>336</xloc>
       <yloc>368</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Table output - DSA.schema.table</name>
+    <name>Table output - DSA.schema.table 2</name>
     <type>TableOutput</type>
     <description />
     <distribute>Y</distribute>
@@ -1575,13 +1526,13 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>544</yloc>
+      <xloc>912</xloc>
+      <yloc>512</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Table output - DSA.schema.table 2</name>
+    <name>Table output - DSA.schema.table</name>
     <type>TableOutput</type>
     <description />
     <distribute>Y</distribute>
@@ -1618,13 +1569,13 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>880</xloc>
-      <yloc>832</yloc>
+      <xloc>240</xloc>
+      <yloc>816</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Update - DSA.schema.table</name>
+    <name>Update - DSA.schema.table 2</name>
     <type>Update</type>
     <description />
     <distribute>Y</distribute>
@@ -1707,7 +1658,7 @@ ORDER BY
       </value>
       <value>
         <name>etl_batch_id_last_update</name>
-        <rename>etl_batch_id_last_update</rename>
+        <rename>etl_batch_id_insert</rename>
       </value>
     </lookup>
     <cluster_schema />
@@ -1718,13 +1669,13 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>720</yloc>
+      <xloc>912</xloc>
+      <yloc>608</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Update - DSA.schema.table 2</name>
+    <name>Update - DSA.schema.table</name>
     <type>Update</type>
     <description />
     <distribute>Y</distribute>
@@ -1818,8 +1769,8 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>880</xloc>
-      <yloc>896</yloc>
+      <xloc>432</xloc>
+      <yloc>816</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1855,7 +1806,7 @@ PARAM_MAX_INSERT_ID        = ${PARAM_MAX_INSERT_ID}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
+      <xloc>336</xloc>
       <yloc>288</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1874,8 +1825,8 @@ PARAM_MAX_INSERT_ID        = ${PARAM_MAX_INSERT_ID}</logmessage>
       <min_pct_rows />
     </error>
     <error>
-      <source_step>Table output - DSA.schema.table</source_step>
-      <target_step>Set etl_batch_id_last_update = Xform batch ID</target_step>
+      <source_step>Table output - DSA.schema.table 2</source_step>
+      <target_step>Update - DSA.schema.table 2</target_step>
       <is_enabled>Y</is_enabled>
       <nr_valuename />
       <descriptions_valuename />
