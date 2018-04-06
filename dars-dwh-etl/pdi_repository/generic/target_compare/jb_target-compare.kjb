@@ -8,12 +8,17 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/11/27 18:07:00.334</modified_date>
+  <modified_date>2018/03/30 12:15:04.077</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_MAX_NUM_COMPARE_ROWS</name>
       <default_value>100000</default_value>
       <description>Maximum number of rows that will be compared for each table. Pass 0 for *all* rows.</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_PARENT_JOB_NAME</name>
+      <default_value />
+      <description>Name of the parent job that is calling this job</description>
     </parameter>
     <parameter>
       <name>PARAM_TARGET_DB_ID</name>
@@ -604,7 +609,7 @@
         <parameter>
           <name>PARAM_JOB_NAME</name>
           <stream_name />
-          <value>${Internal.Job.Name}</value>
+          <value>${QF_JOB_NAME}</value>
         </parameter>
         <parameter>
           <name>PARAM_SUCCESS</name>
@@ -653,7 +658,7 @@
         <parameter>
           <name>PARAM_JOB_NAME</name>
           <stream_name />
-          <value>${Internal.Job.Name}</value>
+          <value>${QF_JOB_NAME}</value>
         </parameter>
         <parameter>
           <name>PARAM_SUCCESS</name>
@@ -753,9 +758,10 @@
       <description />
       <type>WRITE_TO_LOG</type>
       <logmessage>PARAM_TARGET_DB_ID         = ${PARAM_TARGET_DB_ID}
-PARAM_MAX_NUM_COMPARE_ROWS = ${PARAM_MAX_NUM_COMPARE_ROWS}</logmessage>
+PARAM_MAX_NUM_COMPARE_ROWS = ${PARAM_MAX_NUM_COMPARE_ROWS}
+PARAM_PARENT_JOB_NAME      = ${PARAM_PARENT_JOB_NAME}</logmessage>
       <loglevel>Basic</loglevel>
-      <logsubject>Parameters received by jb_target-compare</logsubject>
+      <logsubject>Parameters received by ${Internal.Job.Name}</logsubject>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
@@ -788,6 +794,11 @@ PARAM_MAX_NUM_COMPARE_ROWS = ${PARAM_MAX_NUM_COMPARE_ROWS}</logmessage>
       <pass_export>N</pass_export>
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_CURRENT_JOB_NAME</name>
+          <stream_name />
+          <value>${Internal.Job.Name}</value>
+        </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
       <parallel>N</parallel>
@@ -1121,13 +1132,14 @@ the batch ID of the root job (not this job). This may vary from case to case.
 This job has parameters:
 
 	PARAM_TARGET_DB_ID					ID of the "target" database to which the "source" DB tables have been archived/mirrored
-	PARAM_MAX_NUM_COMPARE_ROWS	Maximum number of rows that will be compared for each table. 0 means *all* rows.</note>
+	PARAM_MAX_NUM_COMPARE_ROWS	Maximum number of rows that will be compared for each table. 0 means *all* rows
+	PARAM_PARENT_JOB_NAME			Name of the parent job that is calling this job</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>945</width>
-      <heigth>178</heigth>
+      <width>901</width>
+      <heigth>179</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -1146,10 +1158,10 @@ This job has parameters:
 and assign it to variable QF_CDC_LAST_LOAD_UTC. </note>
       <xloc>512</xloc>
       <yloc>304</yloc>
-      <width>474</width>
-      <heigth>38</heigth>
+      <width>445</width>
+      <heigth>36</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -1168,10 +1180,10 @@ and assign it to variable QF_CDC_LAST_LOAD_UTC. </note>
 "target" DB.</note>
       <xloc>512</xloc>
       <yloc>592</yloc>
-      <width>484</width>
-      <heigth>38</heigth>
+      <width>454</width>
+      <heigth>36</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -1200,10 +1212,10 @@ source DB to the specified target DB.  This sub-job is:
 			PARAM_DYN_DB_CONN_TARGET_DB_{HOST, PORT, ...}</note>
       <xloc>512</xloc>
       <yloc>656</yloc>
-      <width>470</width>
-      <heigth>178</heigth>
+      <width>440</width>
+      <heigth>166</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -1221,10 +1233,10 @@ source DB to the specified target DB.  This sub-job is:
       <note>Notify recipient(s) of SUCCESSFUL job execution.</note>
       <xloc>624</xloc>
       <yloc>864</yloc>
-      <width>294</width>
-      <heigth>24</heigth>
-      <fontname />
-      <fontsize>-1</fontsize>
+      <width>277</width>
+      <heigth>23</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -1260,7 +1272,7 @@ source DB to the specified target DB.  This sub-job is:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>This job sets PDI variables for the "target" database connection :
+      <note>This job sets PDI variables for the "target" database connection:
 
 	QF_DYN_DB_CONN_DB_{HOST, PORT, ...}
 
@@ -1269,10 +1281,10 @@ based on a single parameter:
 	PARAM_DB_ID = PARAM_TARGET_DB_ID</note>
       <xloc>512</xloc>
       <yloc>368</yloc>
-      <width>387</width>
-      <heigth>108</heigth>
+      <width>360</width>
+      <heigth>101</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -1294,10 +1306,10 @@ do *not* get over-written. These variables are passed as parameters to jb_target
 each time that job is executed below.</note>
       <xloc>512</xloc>
       <yloc>480</yloc>
-      <width>576</width>
-      <heigth>80</heigth>
+      <width>539</width>
+      <heigth>75</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>

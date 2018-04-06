@@ -534,7 +534,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2018/03/20 10:56:27.525</modified_date>
+    <modified_date>2018/03/28 13:44:43.405</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -547,7 +547,7 @@ must be identical and in the same order when fed to the "Merge rows" step.
 The SELECT statements in these two "Table input" steps set the field order 
 appropriately.</note>
       <xloc>464</xloc>
-      <yloc>368</yloc>
+      <yloc>400</yloc>
       <width>463</width>
       <heigth>94</heigth>
       <fontname>Ubuntu</fontname>
@@ -566,8 +566,10 @@ appropriately.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>This transformation updates the target DB mirror of an "insert-only" table from the source DB. This is a generic algorithm that can work with *any* table, 
-as long as it is insert-only and it has the necessary metadata defined. This transformation has parameters:
+      <note>This transformation updates the target DB mirror of a table from the source DB. This is a generic algorithm that can work with *any* table, as long as it has the necessary 
+metadata defined. However, it should not be used to treat tables whose row count can grow very large because *all* of the rows fro the target table must be streamed 
+through this transformation. Hence, it is best suited as an alternative to the "truncate-reload" algorithm, especially when it is necessary to retain rows of the targert table 
+that have been deleted from the source table. This transformation has parameters:
 
 	PARAM_DYN_DB_CONN_SOURCE_DB_HOST			for source DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_SOURCE_DB_PORT			for source DB "dynamic" database connections
@@ -592,8 +594,8 @@ as long as it is insert-only and it has the necessary metadata defined. This tra
 	PARAM_TARGET_TABLE								Name of the target table to compare with the source table (not currently used?)</note>
       <xloc>16</xloc>
       <yloc>0</yloc>
-      <width>922</width>
-      <heigth>346</heigth>
+      <width>999</width>
+      <heigth>374</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -614,7 +616,7 @@ as long as it is insert-only and it has the necessary metadata defined. This tra
 "changed," "new" or "deleted". This adds a new field named "flagfield" to the 
 stream that contains these values.</note>
       <xloc>384</xloc>
-      <yloc>560</yloc>
+      <yloc>592</yloc>
       <width>489</width>
       <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
@@ -636,7 +638,7 @@ stream that contains these values.</note>
       <note>Rename the stream fields from the source DB table to the field names from
 the target DB table. This is required for the "Merge rows" step.</note>
       <xloc>384</xloc>
-      <yloc>480</yloc>
+      <yloc>512</yloc>
       <width>450</width>
       <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
@@ -659,7 +661,7 @@ the target DB table. This is required for the "Merge rows" step.</note>
 treat separately source table rows that have been inserted, modified or deleted. The current
 behaviour retains rows of the target table that have been deleted from the source table.</note>
       <xloc>384</xloc>
-      <yloc>640</yloc>
+      <yloc>672</yloc>
       <width>556</width>
       <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
@@ -684,7 +686,7 @@ potentially either insert, update or delete rows of the target table.
 I decided to use, instead a "Table Output" and an "Update" step so that
 I can assign either "etl_batch_id_insert" or "etl_batch_id_last_update".</note>
       <xloc>448</xloc>
-      <yloc>1056</yloc>
+      <yloc>1088</yloc>
       <width>424</width>
       <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
@@ -706,7 +708,7 @@ I can assign either "etl_batch_id_insert" or "etl_batch_id_last_update".</note>
       <note>Metadata
 injected -></note>
       <xloc>32</xloc>
-      <yloc>368</yloc>
+      <yloc>400</yloc>
       <width>70</width>
       <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
@@ -727,7 +729,7 @@ injected -></note>
     <notepad>
       <note>Metadata injected -></note>
       <xloc>16</xloc>
-      <yloc>480</yloc>
+      <yloc>512</yloc>
       <width>130</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -748,7 +750,7 @@ injected -></note>
     <notepad>
       <note>Metadata injected -></note>
       <xloc>64</xloc>
-      <yloc>576</yloc>
+      <yloc>608</yloc>
       <width>130</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -770,7 +772,7 @@ injected -></note>
       <note>Metadata
 injected -></note>
       <xloc>272</xloc>
-      <yloc>368</yloc>
+      <yloc>400</yloc>
       <width>70</width>
       <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
@@ -791,7 +793,7 @@ injected -></note>
     <notepad>
       <note>Metadata injected -></note>
       <xloc>656</xloc>
-      <yloc>944</yloc>
+      <yloc>976</yloc>
       <width>130</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -812,7 +814,7 @@ injected -></note>
     <notepad>
       <note>identical</note>
       <xloc>16</xloc>
-      <yloc>784</yloc>
+      <yloc>816</yloc>
       <width>60</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -833,7 +835,7 @@ injected -></note>
     <notepad>
       <note>deleted</note>
       <xloc>208</xloc>
-      <yloc>784</yloc>
+      <yloc>816</yloc>
       <width>56</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -854,7 +856,7 @@ injected -></note>
     <notepad>
       <note>new</note>
       <xloc>464</xloc>
-      <yloc>784</yloc>
+      <yloc>816</yloc>
       <width>34</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -875,7 +877,7 @@ injected -></note>
     <notepad>
       <note>changed</note>
       <xloc>736</xloc>
-      <yloc>784</yloc>
+      <yloc>816</yloc>
       <width>60</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -902,7 +904,7 @@ reload" algorithm, not this "compare tables"
 algorithm. The "truncate-reload" algorithm will
 be much faster.</note>
       <xloc>112</xloc>
-      <yloc>848</yloc>
+      <yloc>880</yloc>
       <width>286</width>
       <heigth>108</heigth>
       <fontname>Ubuntu</fontname>
@@ -1173,7 +1175,7 @@ be much faster.</note>
     </remotesteps>
     <GUI>
       <xloc>112</xloc>
-      <yloc>384</yloc>
+      <yloc>416</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1204,7 +1206,7 @@ be much faster.</note>
     </remotesteps>
     <GUI>
       <xloc>352</xloc>
-      <yloc>384</yloc>
+      <yloc>416</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1247,7 +1249,7 @@ be much faster.</note>
     </remotesteps>
     <GUI>
       <xloc>512</xloc>
-      <yloc>944</yloc>
+      <yloc>976</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1280,7 +1282,7 @@ be much faster.</note>
     </remotesteps>
     <GUI>
       <xloc>208</xloc>
-      <yloc>576</yloc>
+      <yloc>608</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1310,7 +1312,7 @@ be much faster.</note>
     </remotesteps>
     <GUI>
       <xloc>512</xloc>
-      <yloc>864</yloc>
+      <yloc>896</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1340,7 +1342,7 @@ be much faster.</note>
     </remotesteps>
     <GUI>
       <xloc>800</xloc>
-      <yloc>864</yloc>
+      <yloc>896</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1367,7 +1369,7 @@ be much faster.</note>
     </remotesteps>
     <GUI>
       <xloc>160</xloc>
-      <yloc>480</yloc>
+      <yloc>512</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1391,7 +1393,7 @@ be much faster.</note>
     </remotesteps>
     <GUI>
       <xloc>80</xloc>
-      <yloc>784</yloc>
+      <yloc>816</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1421,7 +1423,7 @@ be much faster.</note>
     </remotesteps>
     <GUI>
       <xloc>512</xloc>
-      <yloc>784</yloc>
+      <yloc>816</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1451,7 +1453,7 @@ be much faster.</note>
     </remotesteps>
     <GUI>
       <xloc>800</xloc>
-      <yloc>784</yloc>
+      <yloc>816</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1475,7 +1477,7 @@ be much faster.</note>
     </remotesteps>
     <GUI>
       <xloc>272</xloc>
-      <yloc>784</yloc>
+      <yloc>816</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1524,7 +1526,7 @@ be much faster.</note>
     </remotesteps>
     <GUI>
       <xloc>208</xloc>
-      <yloc>656</yloc>
+      <yloc>688</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1562,7 +1564,7 @@ be much faster.</note>
     </remotesteps>
     <GUI>
       <xloc>640</xloc>
-      <yloc>1008</yloc>
+      <yloc>1040</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1596,7 +1598,7 @@ be much faster.</note>
     </remotesteps>
     <GUI>
       <xloc>800</xloc>
-      <yloc>944</yloc>
+      <yloc>976</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
