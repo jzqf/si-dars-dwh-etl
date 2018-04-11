@@ -1076,20 +1076,20 @@ FROM
     ardd_3.rate_component_vat        AS "applied_external_fee_air_vat",
     GREATEST(pedd.last_updated_on, peddd.last_updated_on) AS "last_updated_on"
 FROM
-    obo.passage_event_derived_data pedd
+    public.obo__passage_event_derived_data pedd
 LEFT OUTER JOIN
-    obo.passage_event_derived_data_details peddd ON peddd.pedd_id=pedd.pedd_id  -- one-to-one relations, but we cannot be sure that a "peddd" row has been created yet
+    public.obo__passage_event_derived_data_details peddd ON peddd.pedd_id=pedd.pedd_id  -- one-to-one relations, but we cannot be sure that a "peddd" row has been created yet
 LEFT OUTER JOIN
-    obo.applied_rating_detail_data ardd_1 ON ardd_1.pedd_id=peddd.pedd_id AND 
+    public.obo__applied_rating_detail_data ardd_1 ON ardd_1.pedd_id=peddd.pedd_id AND 
     ardd_1.rate_component_fee_type_id=${QF_RATE_COMPONENT_FEE_TYPE_ID_APPLIED_FEE} AND ardd_1.rate_component_fee_category_id=${QF_RATE_COMPONENT_FEE_CATEGORY_ID_INFRASTRUCTURE_FEE}
 LEFT OUTER JOIN
-    obo.applied_rating_detail_data ardd_2 ON ardd_2.pedd_id=peddd.pedd_id AND 
+    public.obo__applied_rating_detail_data ardd_2 ON ardd_2.pedd_id=peddd.pedd_id AND 
     ardd_2.rate_component_fee_type_id=${QF_RATE_COMPONENT_FEE_TYPE_ID_APPLIED_FEE} AND ardd_2.rate_component_fee_category_id=${QF_RATE_COMPONENT_FEE_CATEGORY_ID_INFRASTRUCTURE_MARKUP_FEE}
 LEFT OUTER JOIN
-    obo.applied_rating_detail_data ardd_4 ON ardd_4.pedd_id=peddd.pedd_id AND 
+    public.obo__applied_rating_detail_data ardd_4 ON ardd_4.pedd_id=peddd.pedd_id AND 
     ardd_4.rate_component_fee_type_id=${QF_RATE_COMPONENT_FEE_TYPE_ID_APPLIED_FEE} AND ardd_4.rate_component_fee_category_id=${QF_RATE_COMPONENT_FEE_CATEGORY_ID_EXTERNAL_FEE_NOISE}
 LEFT OUTER JOIN
-    obo.applied_rating_detail_data ardd_3 ON ardd_3.pedd_id=peddd.pedd_id AND 
+    public.obo__applied_rating_detail_data ardd_3 ON ardd_3.pedd_id=peddd.pedd_id AND 
     ardd_3.rate_component_fee_type_id=${QF_RATE_COMPONENT_FEE_TYPE_ID_APPLIED_FEE} AND ardd_3.rate_component_fee_category_id=${QF_RATE_COMPONENT_FEE_CATEGORY_ID_EXTERNAL_FEE_AIR}
 WHERE
     ( 
