@@ -158,6 +158,16 @@
         <default_value>sid_register</default_value>
         <description>Name of target table to update</description>
       </parameter>
+      <parameter>
+        <name>PARAM_TARGET_TABLE_MAX_INSERT_ID</name>
+        <default_value />
+        <description>Maximum value for the "insert_id" integer column of the target table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_TABLE_MAX_LAST_UPDATED_ON</name>
+        <default_value />
+        <description>Maximum value for the "last updated on" timestamp column of the target table</description>
+      </parameter>
     </parameters>
     <log>
       <trans-log-table>
@@ -579,7 +589,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2018/04/11 15:45:00.534</modified_date>
+    <modified_date>2018/04/12 10:44:11.039</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -619,11 +629,13 @@ The "updatable" table generic update algorithm #2 for INSERTs is used. This tran
 	PARAM_TARGET_TABLE								Name of target table to update (not currently used)
 	PARAM_TARGET_INSERT_ID_COLNAME				Name of column acting as "insert_id"  timestamp column of target table
 	PARAM_TARGET_INSERTED_ON_COLNAME			Name of column acting as "inserted_on" column of target table
-	PARAM_TARGET_LAST_UPDATED_ON_COLNAME	Name of "last_updated_on" timestamp column of target table</note>
-      <xloc>16</xloc>
+	PARAM_TARGET_LAST_UPDATED_ON_COLNAME	Name of "last_updated_on" timestamp column of target table
+	PARAM_TARGET_TABLE_MAX_INSERT_ID			Maximum value for the "insert_id" integer column of the target table
+	PARAM_TARGET_TABLE_MAX_LAST_UPDATED_ON	Maximum value for the "last updated on" timestamp column of the target table</note>
+      <xloc>0</xloc>
       <yloc>0</yloc>
       <width>985</width>
-      <heigth>500</heigth>
+      <heigth>528</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -641,14 +653,13 @@ The "updatable" table generic update algorithm #2 for INSERTs is used. This tran
     </notepad>
     <notepad>
       <note>The query here (at least the WHERE clause)
-must match the query in 
-jb_target-update_table-updatable_table
+must match the query in the parent job
 where this transformation is executed. See the 
 comments in that job for an explanation.</note>
-      <xloc>576</xloc>
-      <yloc>528</yloc>
+      <xloc>640</xloc>
+      <yloc>544</yloc>
       <width>283</width>
-      <heigth>80</heigth>
+      <heigth>66</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -666,14 +677,13 @@ comments in that job for an explanation.</note>
     </notepad>
     <notepad>
       <note>The query here (at least the WHERE clause) 
-must match the query in 
-jb_target-update_table-updatable_table
+must match the query the parent job
 where this transformation is executed. See the 
 comments in that job for an explanation.</note>
-      <xloc>576</xloc>
+      <xloc>640</xloc>
       <yloc>640</yloc>
       <width>283</width>
-      <heigth>80</heigth>
+      <heigth>66</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -691,14 +701,13 @@ comments in that job for an explanation.</note>
     </notepad>
     <notepad>
       <note>The query here (at least the WHERE clause) 
-must match the query in 
-jb_target-update_table-updatable_table
+must match the query in the parent job
 where this transformation is executed. See the 
 comments in that job for an explanation.</note>
-      <xloc>576</xloc>
-      <yloc>752</yloc>
+      <xloc>640</xloc>
+      <yloc>736</yloc>
       <width>283</width>
-      <heigth>80</heigth>
+      <heigth>66</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -715,13 +724,15 @@ comments in that job for an explanation.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>This SELECT statement could, instead, be assigned to a PDI variable
-which is de-referenced in the template transformation. In that way it
-would be easier to debug &amp; log this statement.</note>
+      <note>This SELECT statement could, instead, be assigned to a 
+PDI variable which is de-referenced in the template 
+transformation. In that way it would be easier to debug 
+and log this SELECT statement. In other words, metadata
+injection is not strictly necessary here.</note>
       <xloc>16</xloc>
-      <yloc>832</yloc>
-      <width>406</width>
-      <heigth>52</heigth>
+      <yloc>720</yloc>
+      <width>343</width>
+      <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -896,21 +907,25 @@ SELECT
         '${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE} ' ||
     'WHERE '  ||
     '( '      ||
-    '    ${PARAM_SOURCE_INSERT_ID_COLNAME} > ? '        ||    -- newly INSERTed rows, since the last run
-    ' OR ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} >= ? ' ||    -- UPDATEd rows, since the last run. This is needed to be able to select rows that
-                                                              -- are modified during a period when the table is being treated as an insert-only
-                                                              -- table (not a likely scenario, but it is a possibility).
-                                                              -- Because ">=" is used here, not ">", this will include a least one row that was
-                                                              -- updated on the previous run (assuming that there was at least one row updated).
-                                                              -- This/these rows will have ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} = ?. The reason why
-                                                              -- ">=" is used is in case there were one or more rows that were *not* updated on the
-                                                              -- previous run, but which have ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} = ?. This can occur
-                                                              -- because of the finite resolution of timestamp values. As a result, more than one
-                                                              -- row can have the *same* value of ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME}, but not all of
-                                                              -- them were loaded and treated on the previous run, i.e., the cutoff imposed by
-                                                              -- the condition ${PARAM_SOURCE_INSERT_ID_COLNAME} &lt;= ${PARAM_MAX_INSERT_ID} or
-                                                              -- ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} &lt;= '${PARAM_CDC_CURRENT_LOAD_UTC}' loaded some,
-                                                              -- but not all, of the rows with this value of ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME}.
+
+    '    ${PARAM_SOURCE_INSERT_ID_COLNAME}       >  ${PARAM_TARGET_TABLE_MAX_INSERT_ID} '       ||  -- newly INSERTed rows, since the last run
+    ' OR ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} >= ${PARAM_TARGET_TABLE_MAX_LAST_UPDATED_ON} ' ||  -- UPDATEd rows, since the last run. 
+                                                                                 -- This condition is needed to be able to select rows that
+                                                                                 -- are modified during a period when the table is being treated as an insert-only
+                                                                                 -- table (not a likely scenario, but it is a possibility).
+                                                                                 -- Because ">=" is used here, not ">", this will include a least one row that was
+                                                                                 -- updated on the previous run (assuming that there was at least one row updated).
+                                                                                 -- This/these rows will have:
+                                                                                 --   ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} = ${PARAM_TARGET_TABLE_MAX_LAST_UPDATED_ON}.
+                                                                                 -- The reason why ">=" is used is in case there were one or more rows that were *not* 
+                                                                                 -- updated on the previous run, but which have: 
+                                                                                 --   ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} = ${PARAM_TARGET_TABLE_MAX_LAST_UPDATED_ON}.
+                                                                                 -- This can occur
+                                                                                 -- because of the finite resolution of timestamp values. As a result, more than one
+                                                                                 -- row can have the *same* value of ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME}, but not all of
+                                                                                 -- them were loaded and treated on the previous run, i.e., the cutoff imposed by
+                                                                                 -- the condition ${PARAM_SOURCE_INSERT_ID_COLNAME} &lt;= ${PARAM_MAX_INSERT_ID} or
+                                                                                 -- ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} &lt;= '${PARAM_CDC_CURRENT_LOAD_UTC}' loaded some,                                                                                 -- but not all, of the rows with this value of ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME}.
     ') ' || 
     'AND ${PARAM_SOURCE_INSERT_ID_COLNAME}   &lt;= ${PARAM_MAX_INSERT_ID} ' ||  -- to avoid loading rows that are *inserted* after the job starts
     'AND ( ' ||
@@ -935,8 +950,8 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>96</xloc>
-      <yloc>768</yloc>
+      <xloc>192</xloc>
+      <yloc>656</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -993,8 +1008,8 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>432</xloc>
-      <yloc>544</yloc>
+      <xloc>496</xloc>
+      <yloc>560</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1037,7 +1052,7 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>432</xloc>
+      <xloc>496</xloc>
       <yloc>656</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1092,8 +1107,8 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>432</xloc>
-      <yloc>768</yloc>
+      <xloc>496</xloc>
+      <yloc>752</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1115,8 +1130,8 @@ ORDER BY
     <directory_path>${Internal.Entry.Current.Directory}</directory_path>
     <source_step />
     <source_output_fields>    </source_output_fields>
-    <target_file />
-    <no_execution>N</no_execution>
+    <target_file>/development/jeffreyz/tests/tr_tmplt_target-update_table-updatable_table_2_inserts</target_file>
+    <no_execution>Y</no_execution>
     <stream_source_step />
     <stream_target_step />
     <mappings>
@@ -1206,8 +1221,8 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>656</yloc>
+      <xloc>192</xloc>
+      <yloc>560</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
