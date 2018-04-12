@@ -1,5 +1,5 @@
 <job>
-  <name>jb_target-update_table-updatable_table</name>
+  <name>jb_target-update_table-updatable_table_2</name>
   <description />
   <extended_description />
   <job_version />
@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2018/04/11 14:59:47.053</modified_date>
+  <modified_date>2018/04/12 08:50:25.392</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
@@ -529,13 +529,13 @@
       <yloc>416</yloc>
     </entry>
     <entry>
-      <name>tr_target-update_table-updatable_table</name>
+      <name>tr_target-update_table-updatable_table_2_inserts</name>
       <description />
       <type>TRANS</type>
       <specification_method>rep_name</specification_method>
       <trans_object_id />
       <filename />
-      <transname>tr_target-update_table-updatable_table</transname>
+      <transname>tr_target-update_table-updatable_table_2_inserts</transname>
       <directory>${Internal.Entry.Current.Directory}</directory>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -624,7 +624,7 @@
         <parameter>
           <name>PARAM_TABLE_MIRROR_ALGORITHM_ID</name>
           <stream_name />
-          <value>${QF_MIRROR_ALG_INSERT_OR_UPDATE_GENERIC_1}</value>
+          <value>${QF_MIRROR_ALG_INSERT_OR_UPDATE_GENERIC_2}</value>
         </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
@@ -1140,10 +1140,57 @@ PARAM_TARGET_TABLE                   = ${PARAM_TARGET_TABLE}</logmessage>
       <xloc>576</xloc>
       <yloc>416</yloc>
     </entry>
+    <entry>
+      <name>tr_set_target_table_max_id_and_date_vrbls</name>
+      <description />
+      <type>TRANS</type>
+      <specification_method>rep_name</specification_method>
+      <trans_object_id />
+      <filename />
+      <transname>tr_set_target_table_max_id_and_date_vrbls</transname>
+      <directory>/generic</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <clear_rows>N</clear_rows>
+      <clear_files>N</clear_files>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Basic</loglevel>
+      <cluster>N</cluster>
+      <slave_server_name />
+      <set_append_logfile>N</set_append_logfile>
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <create_parent_folder>N</create_parent_folder>
+      <logging_remote_work>N</logging_remote_work>
+      <run_configuration>Pentaho local</run_configuration>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_TARGET_INSERT_ID_COLNAME</name>
+          <stream_name />
+          <value>${QF_TARGET_INSERT_ID_COLNAME}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_LAST_UPDATED_ON_COLNAME</name>
+          <stream_name />
+          <value>${QF_TARGET_LAST_UPDATED_ON_COLNAME}</value>
+        </parameter>
+      </parameters>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>1104</xloc>
+      <yloc>1152</yloc>
+    </entry>
   </entries>
   <hops>
     <hop>
-      <from>tr_target-update_table-updatable_table</from>
+      <from>tr_target-update_table-updatable_table_2_inserts</from>
       <to>jb_update_etl_table_meta_mirror_details</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -1152,7 +1199,7 @@ PARAM_TARGET_TABLE                   = ${PARAM_TARGET_TABLE}</logmessage>
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>tr_target-update_table-updatable_table</from>
+      <from>tr_target-update_table-updatable_table_2_inserts</from>
       <to>jb_log_error 6</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -1342,18 +1389,27 @@ PARAM_TARGET_TABLE                   = ${PARAM_TARGET_TABLE}</logmessage>
     </hop>
     <hop>
       <from>tr_set_inserted_colnames_vrbls</from>
-      <to>tr_target-update_table-updatable_table</to>
+      <to>tr_set_target_table_max_id_and_date_vrbls</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>tr_set_target_table_max_id_and_date_vrbls</from>
+      <to>tr_target-update_table-updatable_table_2_inserts</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
     </hop>
   </hops>
   <notepads>
     <notepad>
       <note>This job updates a single "updatable" table (INSERTs &amp; UPDATEs allowed, but no DELETEs) in the target database that mirrors a table from a source database.
-The "updatable" table generic update algorithm #1 is used. This job has parameters:
+The "updatable" table generic update algorithm #2 is used. This job has parameters:
 
 	PARAM_CDC_LAST_LOAD_UTC						Timestamp for when the target DB was most recently updated successfully
 	PARAM_CDC_CURRENT_LOAD_UTC					Used so that a consistent max timestamp is used for all ETL
@@ -1659,6 +1715,71 @@ to the job entry tr_target-update_table-updatable_table below.</note>
       <backgroundcolorred>26</backgroundcolorred>
       <backgroundcolorgreen>26</backgroundcolorgreen>
       <backgroundcolorblue>26</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>&lt;- Update this note to refer to INSERTs only!</note>
+      <xloc>1184</xloc>
+      <yloc>992</yloc>
+      <width>388</width>
+      <heigth>32</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>14</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>173</backgroundcolorred>
+      <backgroundcolorgreen>216</backgroundcolorgreen>
+      <backgroundcolorblue>230</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>&lt;- Add job entry to execute UPDATE step</note>
+      <xloc>624</xloc>
+      <yloc>1040</yloc>
+      <width>364</width>
+      <heigth>32</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>14</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>173</backgroundcolorred>
+      <backgroundcolorgreen>216</backgroundcolorgreen>
+      <backgroundcolorblue>230</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>&lt;- I may have to run a query here to set parameters that are equal 
+	to the maximum value of the "insert_id" &amp; "last_updated_on" 
+	columns of the *TARGET* table. Pass to next 2 job entries.</note>
+      <xloc>624</xloc>
+      <yloc>944</yloc>
+      <width>484</width>
+      <heigth>64</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>12</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>173</backgroundcolorred>
+      <backgroundcolorgreen>216</backgroundcolorgreen>
+      <backgroundcolorblue>230</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
       <bordercolorblue>100</bordercolorblue>
