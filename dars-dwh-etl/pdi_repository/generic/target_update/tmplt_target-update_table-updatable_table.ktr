@@ -89,7 +89,7 @@
         <description>for target DB "dynamic" database connections</description>
       </parameter>
       <parameter>
-        <name>PARAM_MAX_INSERT_ID</name>
+        <name>PARAM_SOURCE_TABLE_MAX_INSERT_ID</name>
         <default_value>0</default_value>
         <description>Maximum value of the "insert_id" column for rows to load from the source DB table</description>
       </parameter>
@@ -680,7 +680,7 @@ can work with *any* table,  as long as rows cannot be deleted from the source or
 	PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD	for source DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER		for source DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_SOURCE_DB_URL			for source DB "dynamic" database connections
-	PARAM_MAX_INSERT_ID							Maximum value of the "insert_id" column for rows to load from the source DB table
+	PARAM_SOURCE_TABLE_MAX_INSERT_ID							Maximum value of the "insert_id" column for rows to load from the source DB table
 	PARAM_SOURCE_SCHEMA							Schema of mirrored table
 	PARAM_SOURCE_TABLE							Name of mirrored table to update
 	PARAM_SOURCE_INSERT_ID_COLNAME				Name of column acting as "insert_id"  timestamp column of source table
@@ -1361,12 +1361,12 @@ FROM
 --                                                                              -- because of the finite resolution of timestamp values. As a result, more than one
 --                                                                              -- row can have the *same* value of ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME}, but not all of
 --                                                                              -- them were loaded and treated on the previous run, i.e., the cutoff imposed by
---                                                                              -- the condition ${PARAM_SOURCE_INSERT_ID_COLNAME} &lt;= ${PARAM_MAX_INSERT_ID} or
+--                                                                              -- the condition ${PARAM_SOURCE_INSERT_ID_COLNAME} &lt;= ${PARAM_SOURCE_TABLE_MAX_INSERT_ID} or
 --                                                                              -- ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} &lt;= '${PARAM_CDC_CURRENT_LOAD_UTC}' loaded some,
 --                                                                              -- but not all, of the rows with this value of ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME}.
 --      --OR ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} >= '${PARAM_CDC_LAST_LOAD_UTC}'       -- alternate condition, instead of the previous line
 --    )
---    AND ${PARAM_SOURCE_INSERT_ID_COLNAME}   &lt;= ${PARAM_MAX_INSERT_ID}         -- to avoid loading rows that are *inserted* after the job starts
+--    AND ${PARAM_SOURCE_INSERT_ID_COLNAME}   &lt;= ${PARAM_SOURCE_TABLE_MAX_INSERT_ID}         -- to avoid loading rows that are *inserted* after the job starts
 --  --AND ${PARAM_SOURCE_INSERTED_ON_COLNAME} &lt;= '${PARAM_CDC_CURRENT_LOAD_UTC}'    -- alternate condition, instead of the previous line 
 --    AND (
 --            ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} IS NULL OR                       -- rows that have been inserted but not modified
@@ -1501,7 +1501,7 @@ PARAM_DYN_DB_CONN_TARGET_DB_USERNAME = ${PARAM_DYN_DB_CONN_TARGET_DB_USERNAME}
 PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD = ${PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD}
 PARAM_DYN_DB_CONN_TARGET_DB_URL      = ${PARAM_DYN_DB_CONN_TARGET_DB_URL}
 PARAM_DYN_DB_CONN_TARGET_DB_DRIVER   = ${PARAM_DYN_DB_CONN_TARGET_DB_DRIVER}
-PARAM_MAX_INSERT_ID                  = ${PARAM_MAX_INSERT_ID}
+PARAM_SOURCE_TABLE_MAX_INSERT_ID                  = ${PARAM_SOURCE_TABLE_MAX_INSERT_ID}
 PARAM_SOURCE_SCHEMA                  = ${PARAM_SOURCE_SCHEMA}
 PARAM_SOURCE_TABLE                   = ${PARAM_SOURCE_TABLE}
 PARAM_SOURCE_INSERT_ID_COLNAME       = ${PARAM_SOURCE_INSERT_ID_COLNAME}   

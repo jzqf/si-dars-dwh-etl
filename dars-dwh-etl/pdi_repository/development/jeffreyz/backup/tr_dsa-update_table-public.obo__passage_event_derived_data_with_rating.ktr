@@ -19,7 +19,7 @@
         <description>Timestamp of last successful load from the source database</description>
       </parameter>
       <parameter>
-        <name>PARAM_MAX_INSERT_ID</name>
+        <name>PARAM_SOURCE_TABLE_MAX_INSERT_ID</name>
         <default_value>1964240</default_value>
         <description>Maximum value of the "insert_id" column for rows to load from the source DB table</description>
       </parameter>
@@ -567,7 +567,7 @@ This transformation has parameters:
 
 	PARAM_CDC_LAST_LOAD_UTC			Timestamp for when *all* tables of the DSA were most recently updated successfully
 	PARAM_CDC_CURRENT_LOAD_UTC		Used so that a consistent max timestamp is used for all ETL
-	PARAM_MAX_INSERT_ID				Maximum value of the "insert_id" column for rows to load from the source DB table
+	PARAM_SOURCE_TABLE_MAX_INSERT_ID				Maximum value of the "insert_id" column for rows to load from the source DB table
 	PARAM_SOURCE_SCHEMA				Name of schema containing the "main" source table to archive/mirror to target table
 	PARAM_SOURCE_TABLE				Name of the "main" source table to archive/mirror to target table
 	PARAM_TARGET_SCHEMA				Name of schema containing target table to update
@@ -1098,7 +1098,7 @@ WHERE
         OR peddd.created_on      > '${PARAM_CDC_LAST_LOAD_UTC}'      -- Newly INSERTed "peddd" rows, since the last run.
         OR peddd.last_updated_on > '${PARAM_CDC_LAST_LOAD_UTC}'      -- UPDATEd        "peddd" rows, since the last run.
     )
-    AND pedd.pedd_id  &lt;= ${PARAM_MAX_INSERT_ID}          -- To avoid loading rows that are *inserted* after the job starts.
+    AND pedd.pedd_id  &lt;= ${PARAM_SOURCE_TABLE_MAX_INSERT_ID}          -- To avoid loading rows that are *inserted* after the job starts.
                                                          -- It is not necessary to include a similar condition for the "peddd"
                                                          -- table because it will necessarily be satisfied, due to 
                                                          -- the one-to-one relation between the "pedd" &amp; "peddd" tables.
@@ -1287,7 +1287,7 @@ ORDER BY
     <logmessage>tr_dsa-update_table-public.obo__passage_event_derived_data_with_rating:
 PARAM_CDC_LAST_LOAD_UTC    = ${PARAM_CDC_LAST_LOAD_UTC}
 PARAM_CDC_CURRENT_LOAD_UTC = ${PARAM_CDC_CURRENT_LOAD_UTC}
-PARAM_MAX_INSERT_ID        = ${PARAM_MAX_INSERT_ID}</logmessage>
+PARAM_SOURCE_TABLE_MAX_INSERT_ID        = ${PARAM_SOURCE_TABLE_MAX_INSERT_ID}</logmessage>
     <fields>
       <field>
         <name>max_target_insert_id</name>
