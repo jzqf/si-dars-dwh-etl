@@ -89,11 +89,6 @@
         <description>for target DB "dynamic" database connections</description>
       </parameter>
       <parameter>
-        <name>PARAM_SOURCE_TABLE_MAX_INSERT_ID</name>
-        <default_value>0</default_value>
-        <description>Maximum value of the "insert_id" column for rows to load from the source DB table</description>
-      </parameter>
-      <parameter>
         <name>PARAM_SOURCE_INSERTED_ON_COLNAME</name>
         <default_value>inserted_on</default_value>
         <description>Name of column acting as "inserted_on" timestamp column of source table</description>
@@ -117,6 +112,11 @@
         <name>PARAM_SOURCE_TABLE</name>
         <default_value>passage</default_value>
         <description>Name of source table to mirror to target table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_SOURCE_TABLE_MAX_INSERT_ID</name>
+        <default_value>0</default_value>
+        <description>Maximum value of the "insert_id" column for rows to load from the source DB table</description>
       </parameter>
       <parameter>
         <name>PARAM_TARGET_INSERTED_ON_COLNAME</name>
@@ -564,7 +564,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2018/04/11 15:40:53.732</modified_date>
+    <modified_date>2018/04/14 10:19:59.379</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -576,11 +576,11 @@ It is important to sort these rows chronologically (by either the "insert_id" or
 fails in the middle somewhere and if this transaction does not run in a single transaction, then next time this transformation is 
 executed, we want to start again where we left off (by computing, e.g., MAX(insert_id) for the target DB table).</note>
       <xloc>272</xloc>
-      <yloc>896</yloc>
-      <width>765</width>
-      <heigth>80</heigth>
+      <yloc>832</yloc>
+      <width>723</width>
+      <heigth>75</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -619,11 +619,11 @@ it takes a long time for this transformation to end. During this period the "Pau
 running" top" shows that both "postgres"and "java" processes are actively using a 25-75% of the CPU. When this CPU usage stops, 
 the  "Pause" and "Stop" buttons become disabled, showing that the transformation is finally finished. Strange.</note>
       <xloc>272</xloc>
-      <yloc>1120</yloc>
-      <width>813</width>
-      <heigth>332</heigth>
+      <yloc>1056</yloc>
+      <width>764</width>
+      <heigth>309</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -641,11 +641,11 @@ the  "Pause" and "Stop" buttons become disabled, showing that the transformation
       <note>Get batch ID for current transformation. This will be stored in the target  table for auditing/logging. This step *must* come after the
 "Map column names" step because the metadata injected into that step does not include this column/field.</note>
       <xloc>272</xloc>
-      <yloc>1056</yloc>
-      <width>780</width>
-      <heigth>38</heigth>
+      <yloc>992</yloc>
+      <width>739</width>
+      <heigth>36</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -664,39 +664,39 @@ the  "Pause" and "Stop" buttons become disabled, showing that the transformation
 can work with *any* table,  as long as rows cannot be deleted from the source or target table, and it has the necessary "insert_id", "inserted_on" &amp; 
 "last_updated_on" columns. The "updatable" table generic update algorithm #1 is used. This transformation has parameters:
 
-	PARAM_CDC_LAST_LOAD_UTC						Timestamp for when the target DB was most recently updated successfully
-	PARAM_CDC_CURRENT_LOAD_UTC					Used so that a consistent max timestamp is used for all ETL
-	PARAM_DYN_DB_CONN_TARGET_DB_HOST			for target DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_TARGET_DB_PORT			for target DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_TARGET_DB_DATABASE		for target DB "dynamic" database connections
+	PARAM_CDC_LAST_LOAD_UTC					Timestamp for when the target DB was most recently updated successfully
+	PARAM_CDC_CURRENT_LOAD_UTC				Used so that a consistent max timestamp is used for all ETL
+	PARAM_DYN_DB_CONN_TARGET_DB_HOST		for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_PORT		for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_DATABASE	for target DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_TARGET_DB_USERNAME	for target DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD	for target DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_TARGET_DB_DRIVER		for target DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_TARGET_DB_URL			for target DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_SOURCE_DB_HOST			for source DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_SOURCE_DB_PORT			for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_HOST		for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_PORT		for source DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE	for source DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME	for source DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD	for source DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER		for source DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_SOURCE_DB_URL			for source DB "dynamic" database connections
-	PARAM_SOURCE_TABLE_MAX_INSERT_ID							Maximum value of the "insert_id" column for rows to load from the source DB table
-	PARAM_SOURCE_SCHEMA							Schema of mirrored table
+	PARAM_SOURCE_TABLE_MAX_INSERT_ID			Maximum value of the "insert_id" column for rows to load from the source DB table
+	PARAM_SOURCE_SCHEMA						Schema of mirrored table
 	PARAM_SOURCE_TABLE							Name of mirrored table to update
-	PARAM_SOURCE_INSERT_ID_COLNAME				Name of column acting as "insert_id"  timestamp column of source table
-	PARAM_SOURCE_INSERTED_ON_COLNAME			Name of column acting as "inserted_on" column of source table
+	PARAM_SOURCE_INSERT_ID_COLNAME			Name of column acting as "insert_id"  timestamp column of source table
+	PARAM_SOURCE_INSERTED_ON_COLNAME		Name of column acting as "inserted_on" column of source table
 	PARAM_SOURCE_LAST_UPDATED_ON_COLNAME	Name of "last_updated_on" timestamp column of source table
-	PARAM_TARGET_SCHEMA							Name of schema containing target table to update (not currently used)
-	PARAM_TARGET_TABLE								Name of target table to update (not currently used)
-	PARAM_TARGET_INSERT_ID_COLNAME				Name of column acting as "insert_id"  timestamp column of target table
-	PARAM_TARGET_INSERTED_ON_COLNAME			Name of column acting as "inserted_on" column of target table
+	PARAM_TARGET_SCHEMA						Name of schema containing target table to update (not currently used)
+	PARAM_TARGET_TABLE							Name of target table to update (not currently used)
+	PARAM_TARGET_INSERT_ID_COLNAME			Name of column acting as "insert_id"  timestamp column of target table
+	PARAM_TARGET_INSERTED_ON_COLNAME		Name of column acting as "inserted_on" column of target table
 	PARAM_TARGET_LAST_UPDATED_ON_COLNAME	Name of "last_updated_on" timestamp column of target table</note>
-      <xloc>16</xloc>
+      <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>878</width>
-      <heigth>444</heigth>
+      <width>833</width>
+      <heigth>413</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -726,11 +726,11 @@ Alternatively, we could eliminate this step entirely and load source DB table ro
 but this will not be as efficient for the case when we need to re-start the mirroring process after it fails for some reason. In that
 case we would re-process all of the rows that were successfully mirrored during the previous run.</note>
       <xloc>272</xloc>
-      <yloc>464</yloc>
-      <width>785</width>
-      <heigth>206</heigth>
+      <yloc>432</yloc>
+      <width>737</width>
+      <heigth>192</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -745,24 +745,27 @@ case we would re-process all of the rows that were successfully mirrored during 
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Although this transformation has parameters whose values are used in its steps, these parameters are not passed values from
-the parent transformation in the usual way this is normally done in PDI. This is because the "ETL Metadata Injection" step (which
-is responsible for executing this template transformation) does not support parameter passing. Nevertheless, it appears
-that the parameters that are defined for this template transformation can be used as expected. The explanation for this
-behaviour *MAY* be that the references to these parameters, e.g., ${PARAM_SOURCE_TABLE}, in this transformation are
-simply using the values defined for these variables in the parent transformation that contains the "ETL Metadata Injection" 
-step that references this template transformation. Fortunately, all of the parameters that are used by this transformation
-are defined with the correct values in the parent transformation. I have tested this by removing the parameters entirely. The 
-result was that the transformation ran as expected, even though it made use of the parameters that were removed.
+      <note>Although this transformation has parameters whose values are used in its steps, these parameters are not 
+passed values from the parent transformation in the usual way this is normally done in PDI. This is because 
+the "ETL Metadata Injection" step (which is responsible for executing this template transformation) does not 
+support parameter passing. Nevertheless, it appears that the parameters that are defined for this template 
+transformation can be used as expected. The explanation for this behaviour *MAY* be that the references to 
+these parameters, e.g., ${PARAM_SOURCE_TABLE}, in this transformation are simply using the values defined 
+for these variables in the parent transformation that contains the "ETL Metadata Injection" step that 
+references this template transformation. Fortunately, all of the parameters that are used by this transformation 
+are defined with the correct values in the parent transformation. I have tested this by removing the parameters 
+entirely. The result was that the transformation ran as expected, even though it made use of the parameters 
+that were removed.
 
-Note that if a target file is created by the "ETL metadata Injection" step, then that transformation *can* have its parameters 
-passed to it in the normal fashion because it is a normal transformation (all metadata has been injected into it).</note>
-      <xloc>832</xloc>
-      <yloc>48</yloc>
-      <width>749</width>
-      <heigth>178</heigth>
+Note that if a target file is created by the "ETL metadata Injection" step, then that transformation *can* have 
+its parameters passed to it in the normal fashion because it is a normal transformation (all metadata has been 
+injected into it).</note>
+      <xloc>848</xloc>
+      <yloc>0</yloc>
+      <width>628</width>
+      <heigth>205</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -779,11 +782,11 @@ passed to it in the normal fashion because it is a normal transformation (all me
     <notepad>
       <note>Select and possibly map/rename fields (table column names), as appropriate.</note>
       <xloc>272</xloc>
-      <yloc>992</yloc>
-      <width>462</width>
-      <heigth>24</heigth>
+      <yloc>928</yloc>
+      <width>427</width>
+      <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -800,11 +803,11 @@ passed to it in the normal fashion because it is a normal transformation (all me
     <notepad>
       <note>Metadata injected -></note>
       <xloc>0</xloc>
-      <yloc>992</yloc>
-      <width>130</width>
-      <heigth>24</heigth>
+      <yloc>928</yloc>
+      <width>124</width>
+      <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>255</fontcolorred>
@@ -820,12 +823,12 @@ passed to it in the normal fashion because it is a normal transformation (all me
     </notepad>
     <notepad>
       <note>Metadata injected -></note>
-      <xloc>16</xloc>
-      <yloc>1344</yloc>
-      <width>130</width>
-      <heigth>24</heigth>
+      <xloc>0</xloc>
+      <yloc>1280</yloc>
+      <width>124</width>
+      <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>255</fontcolorred>
@@ -854,11 +857,11 @@ passed to it in the normal fashion because it is a normal transformation (all me
 		Before executing the SQL, modify it where appropriate. For example, replace "UNKNOWN" for timestamp columns with 
 		"timestamp without time zone" or "bytea", add declaration for column "etl_batch_id_last_update", primary key constraint, ...</note>
       <xloc>272</xloc>
-      <yloc>688</yloc>
-      <width>843</width>
-      <heigth>192</heigth>
+      <yloc>640</yloc>
+      <width>797</width>
+      <heigth>179</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -880,16 +883,17 @@ on primary key
 column(s) is 
 
 
+
 *required* in 
 order for error 
 handling to be 
 triggered here!</note>
       <xloc>16</xloc>
-      <yloc>1120</yloc>
-      <width>108</width>
-      <heigth>164</heigth>
+      <yloc>1056</yloc>
+      <width>105</width>
+      <heigth>166</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>Y</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -906,11 +910,11 @@ triggered here!</note>
     <notepad>
       <note>Metadata injected -></note>
       <xloc>0</xloc>
-      <yloc>912</yloc>
-      <width>130</width>
-      <heigth>24</heigth>
+      <yloc>848</yloc>
+      <width>124</width>
+      <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>255</fontcolorred>
@@ -1203,7 +1207,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>528</yloc>
+      <yloc>496</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1230,7 +1234,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>992</yloc>
+      <yloc>928</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1260,7 +1264,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>1056</yloc>
+      <yloc>992</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1290,7 +1294,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>1264</yloc>
+      <yloc>1200</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1323,7 +1327,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>208</xloc>
-      <yloc>736</yloc>
+      <yloc>688</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1388,7 +1392,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>912</yloc>
+      <yloc>848</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1431,7 +1435,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>1168</yloc>
+      <yloc>1104</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1465,7 +1469,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>1344</yloc>
+      <yloc>1280</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1529,7 +1533,7 @@ PARAM_TARGET_LAST_UPDATED_ON_COLNAME = ${PARAM_TARGET_LAST_UPDATED_ON_COLNAME}</
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>816</yloc>
+      <yloc>768</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
