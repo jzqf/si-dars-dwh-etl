@@ -19,7 +19,7 @@
         <description>Timestamp of last successful load from the source database</description>
       </parameter>
       <parameter>
-        <name>PARAM_MAX_INSERT_ID</name>
+        <name>PARAM_SOURCE_TABLE_MAX_INSERT_ID</name>
         <default_value>10</default_value>
         <description>Maximum value of the "insert_id" column for rows to load from the source DB table</description>
       </parameter>
@@ -573,7 +573,7 @@ This transformation has parameters:
 
 	PARAM_CDC_LAST_LOAD_UTC			Timestamp for when *all* tables of the PSA were most recently updated successfully
 	PARAM_CDC_CURRENT_LOAD_UTC		Used so that a consistent max timestamp is used for all ETL
-	PARAM_MAX_INSERT_ID			Maximum value of the "insert_id" column for rows to load from the source DB table
+	PARAM_SOURCE_TABLE_MAX_INSERT_ID			Maximum value of the "insert_id" column for rows to load from the source DB table
 	PARAM_SOURCE_SCHEMA			Name of schema containing the "main" source table to archive/mirror to target table
 	PARAM_SOURCE_TABLE			Name of the "main" source table to archive/mirror to target table
 	PARAM_TARGET_SCHEMA			Name of schema containing target table to update
@@ -1470,7 +1470,7 @@ WHERE
                                                          -- "last_updated_on" column *is* updated when this happens, then this 
                                                          -- test here is not necessary.
     )
-    AND p.passage_id &lt;= ${PARAM_MAX_INSERT_ID}           -- To avoid loading rows that are *inserted* after the job starts.
+    AND p.passage_id &lt;= ${PARAM_SOURCE_TABLE_MAX_INSERT_ID}           -- To avoid loading rows that are *inserted* after the job starts.
     AND (
             p.last_updated_on IS NULL OR                          -- Rows that have been inserted but not modified.
             p.last_updated_on &lt;= '${PARAM_CDC_CURRENT_LOAD_UTC}'  -- To avoid loading rows that are *modified* after the job starts.
@@ -1693,7 +1693,7 @@ ORDER BY
     <logmessage>tr_psa-update_table-obo.passage_with_images:
 PARAM_CDC_LAST_LOAD_UTC    = ${PARAM_CDC_LAST_LOAD_UTC}
 PARAM_CDC_CURRENT_LOAD_UTC = ${PARAM_CDC_CURRENT_LOAD_UTC}
-PARAM_MAX_INSERT_ID        = ${PARAM_MAX_INSERT_ID}</logmessage>
+PARAM_SOURCE_TABLE_MAX_INSERT_ID        = ${PARAM_SOURCE_TABLE_MAX_INSERT_ID}</logmessage>
     <fields>
       <field>
         <name>max_target_insert_id</name>
