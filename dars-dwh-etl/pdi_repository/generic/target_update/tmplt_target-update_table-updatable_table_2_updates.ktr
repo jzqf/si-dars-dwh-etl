@@ -574,7 +574,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2018/04/14 15:08:03.980</modified_date>
+    <modified_date>2018/04/18 12:45:22.727</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -820,6 +820,29 @@ injected into it).</note>
       <bordercolorblue>100</bordercolorblue>
       <drawshadow>Y</drawshadow>
     </notepad>
+    <notepad>
+      <note>Set PDI variable:
+
+	QF_UPDATE_TABLE_NUM_UPDATES</note>
+      <xloc>288</xloc>
+      <yloc>832</yloc>
+      <width>231</width>
+      <heigth>49</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
   </notepads>
   <connection>
     <name>generic_source_db</name>
@@ -991,13 +1014,18 @@ injected into it).</note>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Compute number of rows updated</from>
-      <to>Log number of rows updated</to>
+      <from>Update - target_db.schema.table</from>
+      <to>Compute number of rows updated</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Update - target_db.schema.table</from>
-      <to>Compute number of rows updated</to>
+      <from>Compute number of rows updated</from>
+      <to>Set QF_UPDATE_TABLE_NUM_INSERTS</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Set QF_UPDATE_TABLE_NUM_INSERTS</from>
+      <to>Log number of rows updated</to>
       <enabled>Y</enabled>
     </hop>
   </order>
@@ -1072,7 +1100,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>832</yloc>
+      <yloc>896</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1233,6 +1261,39 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
     <GUI>
       <xloc>144</xloc>
       <yloc>704</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Set QF_UPDATE_TABLE_NUM_INSERTS</name>
+    <type>SetVariable</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <field>
+        <field_name>num_rows_updated</field_name>
+        <variable_name>QF_UPDATE_TABLE_NUM_UPDATES</variable_name>
+        <variable_type>ROOT_JOB</variable_type>
+        <default_value />
+      </field>
+    </fields>
+    <use_formatting>Y</use_formatting>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>144</xloc>
+      <yloc>832</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
