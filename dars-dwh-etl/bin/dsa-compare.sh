@@ -24,4 +24,4 @@
 # Author:   Jeffrey Zelt
 # Changes:  Initial version
 
-$DWH_HOME/bin/kitchen.sh /dsa/jb_dsa-compare.kjb
+$DWH_HOME/bin/kitchen.sh /dsa/jb_dsa-compare.kjb Minimal
