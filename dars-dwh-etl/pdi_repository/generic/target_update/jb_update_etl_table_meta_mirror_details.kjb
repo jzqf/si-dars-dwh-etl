@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2018/04/18 14:25:45.024</modified_date>
+  <modified_date>2018/04/19 09:29:04.851</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_TABLE_META_ID</name>
@@ -457,6 +457,15 @@
 SET
     mirror_last_updated_algorithm_id = ${PARAM_TABLE_MIRROR_ALGORITHM_ID},
     mirror_last_updated_on           = LOCALTIMESTAMP    -- TODO: Shall I use UTC/GMT here?
+
+    -- Values that are not set here should be SQL NULL, but it is possible that this is not so. If this occurs,
+    -- I may have to check for a guard value and then use NULLIF(&lt;update value>, &lt;guard value>).
+--    ,mirror_last_updated_elapsed_time_millis    = ${QF_UPDATE_TABLE_ELAPSED_MILLISECONDS},
+--    mirror_last_updated_num_rows_processed     = ${PARAM_UPDATE_TABLE_NUM_ROWS},
+--    mirror_last_updated_num_inserts            = ${PARAM_UPDATE_TABLE_NUM_INSERTS},
+--    mirror_last_updated_num_updates            = ${PARAM_UPDATE_TABLE_NUM_UPDATES},
+--    mirror_last_updated_rows_processed_per_sec = ${QF_UPDATE_TABLE_ROWS_PER_SEC}
+
 WHERE
     table_state_id = ${PARAM_TABLE_META_ID}</sql>
       <useVariableSubstitution>T</useVariableSubstitution>
