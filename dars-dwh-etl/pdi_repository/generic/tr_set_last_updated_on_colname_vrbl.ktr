@@ -26,7 +26,7 @@
       <parameter>
         <name>PARAM_TABLE_META_ID</name>
         <default_value>0</default_value>
-        <description>Primary key of etl.table_meta row for "source" table archived/mirrored to "target" table</description>
+        <description>Primary key of ${QF_ETL_DB_SCHEMA}.table_meta row for "source" table archived/mirrored to "target" table</description>
       </parameter>
       <parameter>
         <name>PARAM_TARGET_SCHEMA</name>
@@ -459,7 +459,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/09/20 14:05:15.111</modified_date>
+    <modified_date>2018/03/20 12:24:23.885</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -473,14 +473,14 @@
 to the names of the columns from the source &amp; target tables that function as a "last_updated_on" columns. This transformation has parameters:
 
 	PARAM_SOURCE_DB_ID			ID the "source" database containing tables will be mirrored to a "target" database
-	PARAM_TABLE_META_ID		Primary key of etl.table_meta row for "source" table archived/mirrored to "target" table
+	PARAM_TABLE_META_ID		Primary key of ${QF_ETL_DB_SCHEMA}.table_meta row for "source" table archived/mirrored to "target" table
 	PARAM_SOURCE_SCHEMA		Name of schema containing source table to mirror to target table
 	PARAM_SOURCE_TABLE		Name of source table to mirror to target table
 	PARAM_TARGET_SCHEMA		Name of schema containing target table to update (not currently used)
 	PARAM_TARGET_TABLE			Name of target table to update (not currently used)</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>850</width>
+      <width>865</width>
       <heigth>192</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -847,7 +847,7 @@ a failure so that a failure email will be sent.</note>
     source_column_name AS "source_last_updated_on_col_name",
     target_column_name AS "target_last_updated_on_col_name" 
 FROM 
-    etl.column_meta 
+    ${QF_ETL_DB_SCHEMA}.column_meta 
 WHERE 
     table_meta_id = ${PARAM_TABLE_META_ID} AND 
     is_last_updated_on_column = true

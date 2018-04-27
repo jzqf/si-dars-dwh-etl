@@ -89,7 +89,7 @@
         <description>for target DB "dynamic" database connections</description>
       </parameter>
       <parameter>
-        <name>PARAM_MAX_INSERT_ID</name>
+        <name>PARAM_SOURCE_TABLE_MAX_INSERT_ID</name>
         <default_value>0</default_value>
         <description>Maximum value of the "insert_id" column for rows to load from the source DB table</description>
       </parameter>
@@ -703,7 +703,7 @@ This transformation has parameters:
 	PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD	for source DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER		for source DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_SOURCE_DB_URL			for source DB "dynamic" database connections
-	PARAM_MAX_INSERT_ID							Maximum value of the "insert_id" column for rows to load from the source DB table
+	PARAM_SOURCE_TABLE_MAX_INSERT_ID							Maximum value of the "insert_id" column for rows to load from the source DB table
 	PARAM_SOURCE_SCHEMA							Name of schema containing source table to mirror/archive
 	PARAM_SOURCE_TABLE							Name of source table to mirror/archive
 	PARAM_SOURCE_INSERT_ID_COLNAME				Name of column acting as "insert_id"  timestamp column of source table
@@ -1243,7 +1243,7 @@ FROM
 --WHERE
 --    ${PARAM_SOURCE_INSERT_ID_COLNAME} > ? AND                                -- newly INSERTed rows
 --  --${PARAM_SOURCE_INSERTED_ON_COLNAME} >  '${PARAM_CDC_LAST_LOAD_UTC}' AND  -- alternate condition, instead of the previous line
---    ${PARAM_SOURCE_INSERT_ID_COLNAME}   &lt;=  ${PARAM_MAX_INSERT_ID}           -- to avoid loading rows that are inserted after the job starts
+--    ${PARAM_SOURCE_INSERT_ID_COLNAME}   &lt;=  ${PARAM_SOURCE_TABLE_MAX_INSERT_ID}           -- to avoid loading rows that are inserted after the job starts
 --  --${PARAM_SOURCE_INSERTED_ON_COLNAME} &lt;= '${PARAM_CDC_CURRENT_LOAD_UTC}'   -- alternate condition, instead of the previous line 
 --ORDER BY
 --    ${PARAM_SOURCE_INSERT_ID_COLNAME}</sql>
@@ -1340,7 +1340,7 @@ PARAM_DYN_DB_CONN_TARGET_DB_USERNAME = ${PARAM_DYN_DB_CONN_TARGET_DB_USERNAME}
 PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD = ${PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD}
 PARAM_DYN_DB_CONN_TARGET_DB_URL      = ${PARAM_DYN_DB_CONN_TARGET_DB_URL}
 PARAM_DYN_DB_CONN_TARGET_DB_DRIVER   = ${PARAM_DYN_DB_CONN_TARGET_DB_DRIVER}
-PARAM_MAX_INSERT_ID                  = ${PARAM_MAX_INSERT_ID}
+PARAM_SOURCE_TABLE_MAX_INSERT_ID                  = ${PARAM_SOURCE_TABLE_MAX_INSERT_ID}
 PARAM_SOURCE_SCHEMA                  = ${PARAM_SOURCE_SCHEMA}
 PARAM_SOURCE_TABLE                   = ${PARAM_SOURCE_TABLE}
 PARAM_SOURCE_INSERT_ID_COLNAME       = ${PARAM_SOURCE_INSERT_ID_COLNAME}   

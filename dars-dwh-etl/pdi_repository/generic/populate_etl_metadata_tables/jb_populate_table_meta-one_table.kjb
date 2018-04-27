@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/12/04 08:29:39.588</modified_date>
+  <modified_date>2018/03/19 14:14:23.505</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CAN_DELETE_ROWS</name>
@@ -56,19 +56,9 @@
       <description>Integer value for setting the order that tables are processed by the default the "delete marked rows" algorithm</description>
     </parameter>
     <parameter>
-      <name>PARAM_SOURCE_INSERT_ID_COLNAME</name>
-      <default_value />
-      <description>Name of the source table column that acts as the "insert_id" column</description>
-    </parameter>
-    <parameter>
       <name>PARAM_IS_STATIC_SUPPORT_TABLE</name>
       <default_value />
       <description>"Y" if the source table is a "static support table"</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_SOURCE_LAST_UPDATED_ON_COLNAME</name>
-      <default_value />
-      <description>Name of the source table column that acts as the "last_updated_on" column</description>
     </parameter>
     <parameter>
       <name>PARAM_MARK_ROWS_FOR_DELETION</name>
@@ -99,6 +89,16 @@
       <name>PARAM_SOURCE_DB_ID</name>
       <default_value />
       <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_SOURCE_INSERT_ID_COLNAME</name>
+      <default_value />
+      <description>Name of the source table column that acts as the "insert_id" column</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_SOURCE_LAST_UPDATED_ON_COLNAME</name>
+      <default_value />
+      <description>Name of the source table column that acts as the "last_updated_on" column</description>
     </parameter>
     <parameter>
       <name>PARAM_SOURCE_SCHEMA</name>
@@ -1009,11 +1009,11 @@ PARAM_DELETE_MARKED_ROWS_TABLE_ORDER      = ${PARAM_DELETE_MARKED_ROWS_TABLE_ORD
   </hops>
   <notepads>
     <notepad>
-      <note>This job writes a single default row to the etl.table_meta tablefor a table pair (one from a "source" DB and one from a 
+      <note>This job writes a single default row to the ${QF_ETL_DB_SCHEMA}.table_meta tablefor a table pair (one from a "source" DB and one from a 
 "target" DB) that is specified by parameters passed to this job.
 
-This job also creates a set of default etl.column_meta rows for the etl.table_meta row just created, one for each
-row of the table in the source DB.
+This job also creates a set of default ${QF_ETL_DB_SCHEMA}.column_meta rows for the ${QF_ETL_DB_SCHEMA}.table_meta row just created, 
+one for each row of the table in the source DB.
 
 This job has parameters:
 
@@ -1025,8 +1025,8 @@ This job has parameters:
 															If blank, PARAM_SOURCE_SCHEMA will be used instead.
 	PARAM_TARGET_TABLE									Name of the table in the "target" DB that the "source" table will be archived/mirrored to
 															If blank, PARAM_SOURCE_TABLE will be used instead.
-	PARAM_SOURCE_INSERT_ID_COLNAME							Name of the source table column that acts as the "insert_id" column
-	PARAM_SOURCE_LAST_UPDATED_ON_COLNAME					Name of the source table column that acts as the "last_updated_on" column
+	PARAM_SOURCE_INSERT_ID_COLNAME					Name of the source table column that acts as the "insert_id" column
+	PARAM_SOURCE_LAST_UPDATED_ON_COLNAME		Name of the source table column that acts as the "last_updated_on" column
 	PARAM_IS_STATIC_SUPPORT_TABLE						"Y" if the source table is a "static support table"
 	PARAM_CAN_INSERT_ROWS							"Y" if, under normal operation, rows can be inserted into the source table
 	PARAM_CAN_UPDATE_ROWS							"Y" if, under normal operation, rows can be updated in the source table
@@ -1062,12 +1062,12 @@ This job has parameters:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Get the value of "table_meta_id" for the new etl.table_meta row just created.
+      <note>Get the value of "table_meta_id" for the new ${QF_ETL_DB_SCHEMA}.table_meta row just created.
 This is placed in the stream and then copied to the "Result set" so that it can
 be accessed by the next transformation.</note>
       <xloc>480</xloc>
       <yloc>960</yloc>
-      <width>461</width>
+      <width>584</width>
       <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -1085,7 +1085,7 @@ be accessed by the next transformation.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Create a new etl.table_meta row using the values of the parameters passed to
+      <note>Create a new ${QF_ETL_DB_SCHEMA}.table_meta row using the values of the parameters passed to
 this job. Even though the option "Pass parameter values to sub transformation"
 is selected for this job entry, two of the parameters are explicitly passed as:
 
@@ -1097,7 +1097,7 @@ to this job as "". If this is done, it seems that their *original* blank values 
 sub-transformation here unless the parameters are explicitly passed as shown.</note>
       <xloc>480</xloc>
       <yloc>784</yloc>
-      <width>516</width>
+      <width>591</width>
       <heigth>150</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -1115,12 +1115,12 @@ sub-transformation here unless the parameters are explicitly passed as shown.</n
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Create a set of default etl.column_meta rows
-for the etl.table_meta row just created, one
+      <note>Create a set of default ${QF_ETL_DB_SCHEMA}.column_meta rows
+for the ${QF_ETL_DB_SCHEMA}.table_meta row just created, one
 for each row of the table in the source DB.</note>
       <xloc>480</xloc>
       <yloc>1040</yloc>
-      <width>275</width>
+      <width>398</width>
       <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>

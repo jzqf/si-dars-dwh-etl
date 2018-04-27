@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2018/02/13 13:58:12.316</modified_date>
+  <modified_date>2018/03/19 14:16:11.185</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_FILENAME</name>
@@ -573,9 +573,9 @@
     <notepad>
       <note>This job writes default rows to the tables:
 
-	etl.table_meta
-	etl.table_state
-	etl.column_meta
+	${QF_ETL_DB_SCHEMA}.table_meta
+	${QF_ETL_DB_SCHEMA}.table_state
+	${QF_ETL_DB_SCHEMA}.column_meta
 
 using the initial metadata supplied by the tr_populate_metadata_tables-get_list_of_tables transformation.
 
@@ -605,9 +605,9 @@ This job has one parameter:
       <note>Obtain a list of tables for which the table metadata will be generated, i.e.,
 written to the following tables of the ETL DB:
 
-	etl.table_meta
-	etl.table_state
-	etl.column_meta .
+	${QF_ETL_DB_SCHEMA}.table_meta
+	${QF_ETL_DB_SCHEMA}.table_state
+	${QF_ETL_DB_SCHEMA}.column_meta .
 
 This reads the list of tables from a CSV file, but a "Data Grid" step can
 also be used for custom tests or for debigging during development.</note>
@@ -655,21 +655,21 @@ tr_populate_table_meta-list_of_hardwired_tables.</note>
     <notepad>
       <note>TODO?:	Consider adding parameter for an option to first delete rows from the tables:
 
-			etl.column_meta
-			etl.table_state
-			etl.table_meta
+			${QF_ETL_DB_SCHEMA}.column_meta
+			${QF_ETL_DB_SCHEMA}.table_state
+			${QF_ETL_DB_SCHEMA}.table_meta
 
 		Do not use TRUNCATE". This is easier said than done. Perhaps, instead, 
 		the optional behaviour can be to delete just the existing rows from these
 		tables that are associated with the current table pair being treated (as we 
 		iterate over all table pairs to treat). In other words, we delete:
 
-		1.	All existing etl.column_meta rows, if any, associate with the table pair to be treated.
-		2.	One existing etl.table_state row, if there is one, associated  with the table pair to be treated.
-		3.	One existing etl.table_meta row, if there is one, associated  with the table pair to be treated.</note>
+		1.	All existing ${QF_ETL_DB_SCHEMA}.column_meta rows, if any, associate with the table pair to be treated.
+		2.	One existing ${QF_ETL_DB_SCHEMA}.table_state row, if there is one, associated  with the table pair to be treated.
+		3.	One existing ${QF_ETL_DB_SCHEMA}.table_meta row, if there is one, associated  with the table pair to be treated.</note>
       <xloc>672</xloc>
       <yloc>0</yloc>
-      <width>591</width>
+      <width>707</width>
       <heigth>192</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
