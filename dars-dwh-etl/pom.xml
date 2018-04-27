@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.qfree.bo.dars</groupId>
 		<artifactId>dars-pom</artifactId>
-		<version>1.2.1</version>
+		<version>1.2.3</version>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
@@ -23,7 +23,7 @@
 
 	<build>
 		<plugins>
-		
+
 			<!--
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -37,7 +37,7 @@
 				</executions>
 			</plugin>
 			-->
-			
+
 			<plugin>
 				<artifactId>maven-resources-plugin</artifactId>
 				<configuration>
@@ -48,70 +48,70 @@
 				     did not work properly. Now, it seems that "\n" can be use without
 				     introducing any problems, so all occurrences of "${line.separator}"
 				     have been eliminated.
-				     
-				     However, I will leave this block here for the time being in case 
-				     this issue reappears in some form. Eventually, this block, 
+
+				     However, I will leave this block here for the time being in case
+				     this issue reappears in some form. Eventually, this block,
 				     including the element <escapeString>\</escapeString>, can be deleted.
-				     
+
 				     Description of problem that no longer exists:
-				     
-				     Setting the "escape string" was necessary in order to include the 
-				     references that represent newline characters in the kettle.properties 
+
+				     Setting the "escape string" was necessary in order to include the
+				     references that represent newline characters in the kettle.properties
 				     file.
-				     
-				     If "${line.separator}" is used in kettle.properties, then 
-				     "maven-resources-plugin" will replace such occurrences with newline 
-				     characters when it filters the file, which is not allowed for Java 
-				     property values. The reference "${line.separator}" evaluates to a 
-				     newline character when processed by *either* Maven *or* PDI. 
-				     
+
+				     If "${line.separator}" is used in kettle.properties, then
+				     "maven-resources-plugin" will replace such occurrences with newline
+				     characters when it filters the file, which is not allowed for Java
+				     property values. The reference "${line.separator}" evaluates to a
+				     newline character when processed by *either* Maven *or* PDI.
+
 				     By escaping these references as "\${line.separator}", Maven will
 				     replace these references with "${line.separator}", which PDI will
-				     treat as newlines, as intended. In this way, no line breaks are 
-				     introduced when "maven-resources-plugin" filters the file 
+				     treat as newlines, as intended. In this way, no line breaks are
+				     introduced when "maven-resources-plugin" filters the file
 				     kettle.properties.
-				      
+
 				     This trick is only needed because I filter kettle.properties with
 				     "maven-resources-plugin". The reason I do this is so that the line:
-				     
+
 				         QF_ETL_CODE_VERSION=${project.version}
-				     
-				     will have ${project.version} replaced with the Maven project 
+
+				     will have ${project.version} replaced with the Maven project
 				     version so that it can be displayed when the ETL code is run.
-				     
+
 				     PDI is supposed to also support an alternate syntax for variable
-				     references, "%%variable%%", which would be a better way to hide 
+				     references, "%%variable%%", which would be a better way to hide
 				     newline references from "maven-resources-plugin" during filtering,
-				     but I was not able to get this syntax to work when a PDI job is 
+				     but I was not able to get this syntax to work when a PDI job is
 				     run.
-				     
-				     The files dwh.properties & dwh-qfree.properties also contain 
-				     "\${line.separator}" references, even though these files are not 
+
+				     The files dwh.properties & dwh-qfree.properties also contain
+				     "\${line.separator}" references, even though these files are not
 				     filtered by "maven-resources-plugin". However, after running
 				     merge_configuration_files.jar, these references will make their
 				     way into kettle.properties, so the references are also escaped
 				     in dwh.properties & dwh-qfree.properties.
-		
+
 				     However, when merge_configuration_files.jar is executed on an
-				     installation *after* the Debian package has been installed, this 
+				     installation *after* the Debian package has been installed, this
 				     means that kettle.properties might contain the escaped versions of
 				     these references, i.e., "\${line.separator}", not "${line.separator}".
 				     Fortunately, PDI processes the escaped reference identically to
-				     how it processes the unescaped reference, so everything will work 
-				     out OK and newlines are inserted when "\${line.separator}" is evaluated 
-				     in PDI as a PDI variable. Actually, testing shows that the Java 
+				     how it processes the unescaped reference, so everything will work
+				     out OK and newlines are inserted when "\${line.separator}" is evaluated
+				     in PDI as a PDI variable. Actually, testing shows that the Java
 				     code in merge_configuration_files.jar actually writes out
-				     "${line.separator}", not "\${line.separator}", so the escaped 
-				     string is not even seen by PDI; however, it is good to know that 
-				     the escaped version will not cause problems if it *does* appear 
+				     "${line.separator}", not "\${line.separator}", so the escaped
+				     string is not even seen by PDI; however, it is good to know that
+				     the escaped version will not cause problems if it *does* appear
 				     in kettle.properties somehow.
 				-->
 					<escapeString>\</escapeString>
 				</configuration>
 				<executions>
 
-					<!-- This is so that ${project.version} in config.properties 
-					     gets replaced with this project's current version. 
+					<!-- This is so that ${project.version} in config.properties
+					     gets replaced with this project's current version.
 					-->
 					<execution>
 						<id>filter-config.properties</id>
@@ -205,7 +205,7 @@
 			</plugin>
 
 			<!-- This plugin must appear before the "jdeb" plugin so that the JAR
-			     file "merge_configuration_files.jar" is generated before it is 
+			     file "merge_configuration_files.jar" is generated before it is
 			     packaged in the Debian package.
 			-->
 			<plugin>
@@ -234,7 +234,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			
+
 			<plugin>
 				<groupId>org.vafer</groupId>
 				<artifactId>jdeb</artifactId>
@@ -503,6 +503,6 @@
 			</plugin>
 
 		</plugins>
-		
+
 	</build>
 </project>
