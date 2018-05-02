@@ -10,27 +10,27 @@
     <parameters>
       <parameter>
         <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
-        <default_value>2100.01.01 00:00:00</default_value>
+        <default_value>2018.04.19 08:33:00</default_value>
         <description>Timestamp of the current load (no rows after this timestamp will be loaded)</description>
       </parameter>
       <parameter>
         <name>PARAM_CDC_LAST_LOAD_UTC</name>
-        <default_value>1900.01.01 00:00:00</default_value>
+        <default_value>1970.01.01 00:00:00</default_value>
         <description>Timestamp of last successful load from the source database</description>
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE</name>
-        <default_value>odms_opr</default_value>
+        <default_value>obo_opr</default_value>
         <description>for source DB "dynamic" database connections</description>
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER</name>
-        <default_value />
+        <default_value>org.postgresql.Driver</default_value>
         <description>for source DB "dynamic" database connections</description>
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_HOST</name>
-        <default_value>localhost</default_value>
+        <default_value>trdci0913.q-free.com</default_value>
         <description>for source DB "dynamic" database connections</description>
       </parameter>
       <parameter>
@@ -45,7 +45,7 @@
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_URL</name>
-        <default_value />
+        <default_value>jdbc:postgresql://trdci0913.q-free.com:5432/obo_opr</default_value>
         <description>for source DB "dynamic" database connections</description>
       </parameter>
       <parameter>
@@ -60,7 +60,7 @@
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_TARGET_DB_DRIVER</name>
-        <default_value />
+        <default_value>org.postgresql.Driver</default_value>
         <description>for target DB "dynamic" database connections</description>
       </parameter>
       <parameter>
@@ -70,7 +70,7 @@
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD</name>
-        <default_value>tgt_obo_password</default_value>
+        <default_value>qfree_admin</default_value>
         <description>for target DB "dynamic" database connections</description>
       </parameter>
       <parameter>
@@ -80,12 +80,12 @@
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_TARGET_DB_URL</name>
-        <default_value />
+        <default_value>jdbc:postgresql://localhost:5432/dars_psa_db</default_value>
         <description>for target DB "dynamic" database connections</description>
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_TARGET_DB_USERNAME</name>
-        <default_value>tgt_db_username</default_value>
+        <default_value>qfree_admin</default_value>
         <description>for target DB "dynamic" database connections</description>
       </parameter>
       <parameter>
@@ -579,7 +579,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2018/04/14 11:12:17.934</modified_date>
+    <modified_date>2018/04/19 14:52:08.055</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -912,11 +912,30 @@ SELECT
                                                               -- ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} &lt;= '${PARAM_CDC_CURRENT_LOAD_UTC}' loaded some,
                                                               -- but not all, of the rows with this value of ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME}.
     ') ' || 
-    'AND ${PARAM_SOURCE_INSERT_ID_COLNAME}   &lt;= ${PARAM_SOURCE_TABLE_MAX_INSERT_ID} ' ||  -- to avoid loading rows that are *inserted* after the job starts
-    'AND ( ' ||
-            '${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} IS NULL OR ' ||                             -- rows that have been inserted but not modified
-            '${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} &lt;= ''${PARAM_CDC_CURRENT_LOAD_UTC}'' ' ||   -- to avoid loading rows that are *modified* after the job starts
-        ') ' ||
+    'AND ${PARAM_SOURCE_INSERT_ID_COLNAME} &lt;= ${PARAM_SOURCE_TABLE_MAX_INSERT_ID} ' ||  -- to avoid loading rows that are *inserted* after the job starts
+
+-- This condition cannot be used because it prevents selecting rows here that really must be selected in order for this update algorithm to 
+-- function correctly. If this condition were used, rows that satisfy the following will not be loaded and mirrored/archived as they should:
+--   1. Row is inserted into the source database *after* the previous run of the ETL job (or this is the first run of the ETL job), and:
+--   2. The "last_updated_on" column satisfies: ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} > '${PARAM_CDC_CURRENT_LOAD_UTC}'. This can 
+--     happen for a number of reasons:
+--     a. This is the first run of the ETL job and the row is updated after the ETL job starts, or:
+--     b. The row was inserted after the last execution of the ETL job, but it has had its
+--        "last_updated_on" column set *after* the current execution of the ETL job started.
+-- The result of excluding the rows that satisfy these conditions is that these rows will 
+-- not get inserted into the target database. In fact, they will *never* get inserted into 
+-- the target database because the next time this algorithm is run, these rows will be 
+-- rejected because of the condition: ${PARAM_SOURCE_INSERT_ID_COLNAME} > ?. The result
+-- will be that the jb_target-compare job will report these rows as "missing" from the target 
+-- table. They will never get archived/mirrored because their insert_id will always *fail* the
+-- condition: ${PARAM_SOURCE_INSERT_ID_COLNAME} > ?, where "?" here is the maximum value of the 
+-- "insert_id" column of the target table.
+--
+--    'AND ( ' ||
+--            '${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} IS NULL OR ' ||                             -- rows that have been inserted but not modified
+--            '${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} &lt;= ''${PARAM_CDC_CURRENT_LOAD_UTC}'' ' ||   -- to avoid loading rows that are *modified* after the job starts
+--        ') ' ||
+
     'ORDER BY ' ||
         '${PARAM_SOURCE_INSERT_ID_COLNAME}'
     AS "select_source_rows_sql" 

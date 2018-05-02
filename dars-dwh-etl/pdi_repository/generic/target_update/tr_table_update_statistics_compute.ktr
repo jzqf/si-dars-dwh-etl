@@ -1,27 +1,32 @@
 <transformation>
   <info>
-    <name>tr_update_table_meta_compare_stats</name>
+    <name>tr_table_update_statistics_compute</name>
     <description />
     <extended_description />
     <trans_version />
     <trans_type>Normal</trans_type>
     <trans_status>0</trans_status>
-    <directory>/generic/target_compare</directory>
+    <directory>/generic/target_update</directory>
     <parameters>
       <parameter>
-        <name>PARAM_SOURCE_DB_ID</name>
+        <name>PARAM_UPDATE_TABLE_NUM_INSERTS</name>
         <default_value />
-        <description>ID of database containing the source tables to mirror</description>
+        <description>Number of rows inserted into the target table by the ETL job</description>
       </parameter>
       <parameter>
-        <name>PARAM_SOURCE_SCHEMA</name>
-        <default_value>passage</default_value>
-        <description>Schema of mirrored table to compare</description>
+        <name>PARAM_UPDATE_TABLE_NUM_ROWS</name>
+        <default_value />
+        <description>Number of rows processed by the ETL job (in case this number cannot be broken down into inserts &amp; updates)</description>
       </parameter>
       <parameter>
-        <name>PARAM_SOURCE_TABLE</name>
-        <default_value>passage</default_value>
-        <description>Name of mirrored table to compare</description>
+        <name>PARAM_UPDATE_TABLE_NUM_UPDATES</name>
+        <default_value />
+        <description>Number of rows of the target table updated by the ETL job</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_UPDATE_TABLE_START_MILLISECONDS</name>
+        <default_value />
+        <description>Timer start value for updating a table</description>
       </parameter>
     </parameters>
     <log>
@@ -430,7 +435,7 @@
     <feedback_size>50000</feedback_size>
     <using_thread_priorities>Y</using_thread_priorities>
     <shared_objects_file />
-    <capture_step_performance>Y</capture_step_performance>
+    <capture_step_performance>N</capture_step_performance>
     <step_performance_capturing_delay>1000</step_performance_capturing_delay>
     <step_performance_capturing_size_limit>100</step_performance_capturing_size_limit>
     <dependencies>
@@ -442,139 +447,30 @@
     <clusterschemas>
     </clusterschemas>
     <created_user>-</created_user>
-    <created_date>2016/04/03 09:57:16.279</created_date>
+    <created_date>2016/04/05 11:01:03.994</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2018/04/21 12:10:01.270</modified_date>
+    <modified_date>2018/04/19 16:07:01.766</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>This transformation updates the "comparison" statistics in ${QF_ETL_DB_SCHEMA}.table_state for the table that is specified by the parameters 
-passed to this transformation. These statistics ("compared_rows_equal", "compared_rows_unequal", ...) are computed to 
-verify that the implementation of the mirrorring algorithm for the specified table is working correctly.
+      <note>This job computes the "update statistics" for a table that was just updated. This transformation sets the PDI variables (to be accessed in the calling job):
 
-This transformation is designed to be executed via a "Simple mapping (sub-transformation)" step.
+	QF_UPDATE_TABLE_ROWS_PER_SEC
+	QF_UPDATE_TABLE_INSERTS_PER_SEC		&lt;- No, I do not compute this
+	QF_UPDATE_TABLE_UPDATES_PER_SEC	&lt;- No, I do not compute this
 
-This transformation has parameters:
+ This job has parameters:
 
-	PARAM_SOURCE_DB_ID		ID of database containing the source tables to mirror
-	PARAM_SOURCE_SCHEMA	Schema containing the "source" table that was compared to its "target" table
-	PARAM_SOURCE_TABLE		Name of the "source"  table that was compared to its "target" table</note>
-      <xloc>16</xloc>
+	PARAM_UPDATE_TABLE_START_MILLISECONDS	Timer start value for updating a table
+	PARAM_UPDATE_TABLE_NUM_ROWS			Number of rows processed by the ETL job (in case this number cannot be broken down into inserts &amp; updates)
+	PARAM_UPDATE_TABLE_NUM_INSERTS		Number of rows inserted into the target table by the ETL job
+	PARAM_UPDATE_TABLE_NUM_UPDATES		Number of rows of the target table updated by the ETL job</note>
+      <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>796</width>
-      <heigth>153</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>9</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Count the number of rows that are identical, missing, different or unexpected.
-There will be a separate row for each of these values.</note>
-      <xloc>320</xloc>
-      <yloc>304</yloc>
-      <width>441</width>
-      <heigth>36</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>9</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>The row numbers computed in the previous step (one value per row) are 
-transposed here so that there is one value per COLUMN.</note>
-      <xloc>320</xloc>
-      <yloc>368</yloc>
-      <width>411</width>
-      <heigth>36</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>9</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Needed for the "Group by" step.</note>
-      <xloc>320</xloc>
-      <yloc>240</yloc>
-      <width>189</width>
-      <heigth>23</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>9</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>This sub-transformation (mapping) accepts a single input stream named "flagfield" 
-that has been set by a "Merge rows (diff)" step.</note>
-      <xloc>320</xloc>
-      <yloc>176</yloc>
-      <width>463</width>
-      <heigth>36</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>9</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>This is needed so that we can set the comparison statistics values to zero, instead of 
-not updating the ${QF_ETL_DB_SCHEMA}.table_state row at all for the case where the 
-"source" and "target" tables are both empty.</note>
-      <xloc>320</xloc>
-      <yloc>432</yloc>
-      <width>487</width>
-      <heigth>49</heigth>
+      <width>900</width>
+      <heigth>166</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -591,57 +487,6 @@ not updating the ${QF_ETL_DB_SCHEMA}.table_state row at all for the case where t
       <drawshadow>Y</drawshadow>
     </notepad>
   </notepads>
-  <connection>
-    <name>etl_db</name>
-    <server>${QF_ETL_DB_HOST}</server>
-    <type>POSTGRESQL</type>
-    <access>Native</access>
-    <database>${QF_ETL_DB_DATABASE}</database>
-    <port>${QF_ETL_DB_PORT}</port>
-    <username>${QF_ETL_DB_USERNAME}</username>
-    <password>${QF_ETL_DB_PASSWORD}</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
-    <attributes>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>IS_CLUSTERED</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>PORT_NUMBER</code>
-        <attribute>${QF_ETL_DB_PORT}</attribute>
-      </attribute>
-      <attribute>
-        <code>PRESERVE_RESERVED_WORD_CASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>QUOTE_ALL_FIELDS</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>USE_POOLING</code>
-        <attribute>N</attribute>
-      </attribute>
-    </attributes>
-  </connection>
   <connection>
     <name>logging_db</name>
     <server>${QF_LOGGING_DB_HOST}</server>
@@ -695,118 +540,19 @@ not updating the ${QF_ETL_DB_SCHEMA}.table_state row at all for the case where t
   </connection>
   <order>
     <hop>
-      <from>Group by flagfield</from>
-      <to>Transpose rows -> columns</to>
+      <from>Generate single dummy row</from>
+      <to>Log parameters</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Sort rows</from>
-      <to>Group by flagfield</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Mapping input specification: flagfield</from>
-      <to>Sort rows</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Update table_state with compare statistics</from>
-      <to>Mapping output specification</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Transpose rows -> columns</from>
-      <to>Detect empty stream</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Transpose rows -> columns</from>
-      <to>Write compare statistics to log</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Write compare statistics to log</from>
-      <to>Update table_state with compare statistics</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Detect empty stream</from>
-      <to>Write compare statistics to log</to>
+      <from>Log parameters</from>
+      <to>JavaScript - Set PDI variables</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Detect empty stream</name>
-    <type>DetectEmptyStream</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>64</xloc>
-      <yloc>432</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Group by flagfield</name>
-    <type>GroupBy</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <all_rows>N</all_rows>
-    <ignore_aggregate>N</ignore_aggregate>
-    <field_ignore />
-    <directory>%%java.io.tmpdir%%</directory>
-    <prefix>grp</prefix>
-    <add_linenr>N</add_linenr>
-    <linenr_fieldname />
-    <give_back_row>N</give_back_row>
-    <group>
-      <field>
-        <name>flagfield</name>
-      </field>
-    </group>
-    <fields>
-      <field>
-        <aggregate>count</aggregate>
-        <subject>flagfield</subject>
-        <type>COUNT_ALL</type>
-        <valuefield />
-      </field>
-    </fields>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>160</xloc>
-      <yloc>304</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Mapping input specification: flagfield</name>
-    <type>MappingInput</type>
+    <name>Generate single dummy row</name>
+    <type>RowGenerator</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -817,13 +563,23 @@ not updating the ${QF_ETL_DB_SCHEMA}.table_state row at all for the case where t
     </partitioning>
     <fields>
       <field>
-        <name>flagfield</name>
-        <type>String</type>
+        <name>rownum</name>
+        <type>Integer</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <nullif>1</nullif>
         <length>-1</length>
         <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
       </field>
-      <select_unspecified>N</select_unspecified>
     </fields>
+    <limit>1</limit>
+    <never_ending>N</never_ending>
+    <interval_in_ms>5000</interval_in_ms>
+    <row_time_field>now</row_time_field>
+    <last_time_field>FiveSecondsAgo</last_time_field>
     <cluster_schema />
     <remotesteps>
       <input>
@@ -832,14 +588,14 @@ not updating the ${QF_ETL_DB_SCHEMA}.table_state row at all for the case where t
       </output>
     </remotesteps>
     <GUI>
-      <xloc>160</xloc>
-      <yloc>176</yloc>
+      <xloc>176</xloc>
+      <yloc>192</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Mapping output specification</name>
-    <type>MappingOutput</type>
+    <name>JavaScript - Set PDI variables</name>
+    <type>ScriptValueMod</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -848,6 +604,70 @@ not updating the ${QF_ETL_DB_SCHEMA}.table_state row at all for the case where t
       <method>none</method>
       <schema_name />
     </partitioning>
+    <compatible>N</compatible>
+    <optimizationLevel>9</optimizationLevel>
+    <jsScripts>
+      <jsScript>
+        <jsScript_type>0</jsScript_type>
+        <jsScript_name>Set PDI variable</jsScript_name>
+        <jsScript_script>// Set variable with scope "root job". The variable will be valid
+// in the root job and all the child jobs and transformations.
+// Possible scopes:
+//   "s": system-wide
+//   "r": up to the root job
+//   "p": up to the parent job
+//   "g": up to the grandparent job
+
+now_millis = Date.now();
+
+not_set_value = getVariable("QF_POSITIVE_INTEGER_NOT_SET_VALUE", "-1");
+
+// Get parameter values:
+start_millis = getVariable("PARAM_UPDATE_TABLE_START_MILLISECONDS", not_set_value);
+num_rows     = getVariable("PARAM_UPDATE_TABLE_NUM_ROWS"          , not_set_value);
+num_inserts  = getVariable("PARAM_UPDATE_TABLE_NUM_INSERTS"       , not_set_value);
+num_updates  = getVariable("PARAM_UPDATE_TABLE_NUM_UPDATES"       , not_set_value);
+
+// Inititalize in case any or all of the PDI variables are not set:
+elapsed_millis      = setVariable("QF_UPDATE_TABLE_ELAPSED_MILLISECONDS", null, "r");
+num_rows_per_sec    = setVariable("QF_UPDATE_TABLE_ROWS_PER_SEC"        , null, "r");
+//num_inserts_per_sec = setVariable("QF_UPDATE_TABLE_INSERTS_PER_SEC"     , null, "r");
+//num_updates_per_sec = setVariable("QF_UPDATE_TABLE_UPDATES_PER_SEC"     , null, "r");
+
+if (start_millis != not_set_value) {
+    elapsed_millis = now_millis - start_millis;
+    if(num_rows != not_set_value) {
+        num_rows_per_sec    = num_rows * 1000/elapsed_millis;
+    } else if (num_inserts != not_set_value &amp;&amp; num_updates != not_set_value) {
+        //num_rows = parseInt(num_inserts, 10) + parseInt(num_updates, 10);
+        //num_rows_per_sec    = num_rows * 1000/elapsed_millis;
+        num_rows_per_sec    = (parseInt(num_inserts, 10) + parseInt(num_updates, 10)) * 1000/elapsed_millis;
+        //Alert("num_rows = "+num_rows+"\nelapsed_millis = "+elapsed_millis+"\nnum_rows_per_sec = "+num_rows_per_sec);
+    } else if (num_inserts != not_set_value) {
+        num_rows_per_sec    = num_inserts * 1000/elapsed_millis;
+    } else if (num_updates != not_set_value) {
+        num_rows_per_sec    = num_updates * 1000/elapsed_millis;
+    }
+    //if(num_rows != not_set_value) {
+    //    num_rows_per_sec    = num_rows*1000    / elapsed_millis;
+    //}
+    //if(num_inserts != not_set_value) {
+    //    num_inserts_per_sec = num_inserts*1000 / elapsed_millis;
+    //}
+    //if(num_updates != not_set_value) {
+    //    num_updates_per_sec = num_updates*1000 / elapsed_millis;
+    //}
+}
+
+// Set the variables that will be accessed in the calling job.:
+setVariable("QF_UPDATE_TABLE_ELAPSED_MILLISECONDS", elapsed_millis    , "r");
+setVariable("QF_UPDATE_TABLE_ROWS_PER_SEC"        , num_rows_per_sec  , "r");
+//setVariable("QF_UPDATE_TABLE_INSERTS_PER_SEC"     , num_inserts_per_sec, "r");
+//setVariable("QF_UPDATE_TABLE_UPDATES_PER_SEC"     , num_updates_per_sec, "r");
+</jsScript_script>
+      </jsScript>
+    </jsScripts>
+    <fields>    </fields>
     <cluster_schema />
     <remotesteps>
       <input>
@@ -856,197 +676,13 @@ not updating the ${QF_ETL_DB_SCHEMA}.table_state row at all for the case where t
       </output>
     </remotesteps>
     <GUI>
-      <xloc>160</xloc>
-      <yloc>624</yloc>
+      <xloc>176</xloc>
+      <yloc>352</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Sort rows</name>
-    <type>SortRows</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <directory>%%java.io.tmpdir%%</directory>
-    <prefix>out</prefix>
-    <sort_size>1000000</sort_size>
-    <free_memory />
-    <compress>N</compress>
-    <compress_variable />
-    <unique_rows>N</unique_rows>
-    <fields>
-      <field>
-        <name>flagfield</name>
-        <ascending>Y</ascending>
-        <case_sensitive>Y</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>2</collator_strength>
-        <presorted>N</presorted>
-      </field>
-    </fields>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>160</xloc>
-      <yloc>240</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Transpose rows -> columns</name>
-    <type>Denormaliser</type>
-    <description />
-    <distribute>N</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <key_field>flagfield</key_field>
-    <group>
-        </group>
-    <fields>
-      <field>
-        <field_name>count</field_name>
-        <key_value>identical</key_value>
-        <target_name>compared_rows_equal</target_name>
-        <target_type>Integer</target_type>
-        <target_format />
-        <target_length>-1</target_length>
-        <target_precision>-1</target_precision>
-        <target_decimal_symbol />
-        <target_grouping_symbol />
-        <target_currency_symbol />
-        <target_null_string />
-        <target_aggregation_type>-</target_aggregation_type>
-      </field>
-      <field>
-        <field_name>count</field_name>
-        <key_value>changed</key_value>
-        <target_name>compared_rows_unequal</target_name>
-        <target_type>Integer</target_type>
-        <target_format />
-        <target_length>-1</target_length>
-        <target_precision>-1</target_precision>
-        <target_decimal_symbol />
-        <target_grouping_symbol />
-        <target_currency_symbol />
-        <target_null_string />
-        <target_aggregation_type>-</target_aggregation_type>
-      </field>
-      <field>
-        <field_name>count</field_name>
-        <key_value>deleted</key_value>
-        <target_name>compared_rows_missing</target_name>
-        <target_type>Integer</target_type>
-        <target_format />
-        <target_length>-1</target_length>
-        <target_precision>-1</target_precision>
-        <target_decimal_symbol />
-        <target_grouping_symbol />
-        <target_currency_symbol />
-        <target_null_string />
-        <target_aggregation_type>-</target_aggregation_type>
-      </field>
-      <field>
-        <field_name>count</field_name>
-        <key_value>new</key_value>
-        <target_name>compared_rows_extra</target_name>
-        <target_type>Integer</target_type>
-        <target_format />
-        <target_length>-1</target_length>
-        <target_precision>-1</target_precision>
-        <target_decimal_symbol />
-        <target_grouping_symbol />
-        <target_currency_symbol />
-        <target_null_string />
-        <target_aggregation_type>-</target_aggregation_type>
-      </field>
-    </fields>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>160</xloc>
-      <yloc>368</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Update table_state with compare statistics</name>
-    <type>ExecSQL</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <connection>etl_db</connection>
-    <execute_each_row>Y</execute_each_row>
-    <single_statement>Y</single_statement>
-    <replace_variables>Y</replace_variables>
-    <quoteString>N</quoteString>
-    <sql>UPDATE
-    ${QF_ETL_DB_SCHEMA}.table_state
-SET
-    last_compared_on=LOCALTIMESTAMP    -- TODO: Shall I use UTC/GMT here?
-   ,compared_rows_equal=COALESCE(?, 0)
-   ,compared_rows_unequal=COALESCE(?, 0)
-   ,compared_rows_missing=COALESCE(?, 0)
-   ,compared_rows_extra=COALESCE(?, 0)
-WHERE
-    table_state_id=${PARAM_TABLE_META_ID}</sql>
-    <set_params>Y</set_params>
-    <insert_field />
-    <update_field />
-    <delete_field />
-    <read_field />
-    <arguments>
-      <argument>
-        <name>compared_rows_equal</name>
-      </argument>
-      <argument>
-        <name>compared_rows_unequal</name>
-      </argument>
-      <argument>
-        <name>compared_rows_missing</name>
-      </argument>
-      <argument>
-        <name>compared_rows_extra</name>
-      </argument>
-    </arguments>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>160</xloc>
-      <yloc>560</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Write compare statistics to log</name>
+    <name>Log parameters</name>
     <type>WriteToLog</type>
     <description />
     <distribute>Y</distribute>
@@ -1056,25 +692,17 @@ WHERE
       <method>none</method>
       <schema_name />
     </partitioning>
-    <loglevel>log_level_minimal</loglevel>
+    <loglevel>log_level_basic</loglevel>
     <displayHeader>Y</displayHeader>
     <limitRows>N</limitRows>
     <limitRowsNumber>0</limitRowsNumber>
-    <logmessage>tr_update_table_meta_compare_stats:</logmessage>
+    <logmessage>Parameters passed to tr_table_update_statistics_compute:
+PARAM_UPDATE_TABLE_START_MILLISECONDS = ${PARAM_UPDATE_TABLE_START_MILLISECONDS}
+PARAM_UPDATE_TABLE_NUM_ROWS           = ${PARAM_UPDATE_TABLE_NUM_ROWS}
+PARAM_UPDATE_TABLE_NUM_INSERTS        = ${PARAM_UPDATE_TABLE_NUM_INSERTS}
+PARAM_UPDATE_TABLE_NUM_UPDATES        = ${PARAM_UPDATE_TABLE_NUM_UPDATES}</logmessage>
     <fields>
-      <field>
-        <name>compared_rows_equal</name>
-      </field>
-      <field>
-        <name>compared_rows_unequal</name>
-      </field>
-      <field>
-        <name>compared_rows_missing</name>
-      </field>
-      <field>
-        <name>compared_rows_extra</name>
-      </field>
-    </fields>
+      </fields>
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1083,8 +711,8 @@ WHERE
       </output>
     </remotesteps>
     <GUI>
-      <xloc>160</xloc>
-      <yloc>496</yloc>
+      <xloc>176</xloc>
+      <yloc>272</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

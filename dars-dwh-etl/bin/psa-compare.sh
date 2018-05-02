@@ -24,4 +24,4 @@
 # Author:   Jeffrey Zelt
 # Changes:  Initial version
 
-$DWH_HOME/bin/kitchen.sh /psa/jb_psa-compare.kjb
+$DWH_HOME/bin/kitchen.sh /psa/jb_psa-compare.kjb Minimal

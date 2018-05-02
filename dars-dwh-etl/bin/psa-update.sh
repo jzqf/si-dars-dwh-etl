@@ -22,4 +22,4 @@
 # Author:   Jeffrey Zelt
 # Changes:  Initial version
 
-$DWH_HOME/bin/kitchen.sh /psa/jb_psa-update.kjb
+$DWH_HOME/bin/kitchen.sh /psa/jb_psa-update.kjb Minimal

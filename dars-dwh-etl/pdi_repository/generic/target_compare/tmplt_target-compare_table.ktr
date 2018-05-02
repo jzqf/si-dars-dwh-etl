@@ -569,23 +569,21 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2018/04/14 16:12:30.313</modified_date>
+    <modified_date>2018/04/26 10:27:16.813</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>Load the data from both the source DB table and the targetDB
-table to which it is mirrored. The "ORDER BY" clauses must 
-consist of the tables' primary key column(s). This is needed by
-the "Merge Rows" step. The fields in each stream must be
-identical and in the same order when fed to the "Merge rows"
-step. The SELECT statements in these two "Table input" steps
+      <note>Load the data from both the source DB table and the target DB table to which it is mirrored. 
+The "ORDER BY" clauses must consist of the tables' primary key column(s). This is needed by
+the "Merge Rows" step. The fields in each stream must be identical and in the same order 
+when fed to the "Merge rows" step. The SELECT statements in these two "Table input" steps
 set the field order appropriately.</note>
       <xloc>528</xloc>
       <yloc>432</yloc>
-      <width>357</width>
-      <heigth>101</heigth>
+      <width>521</width>
+      <heigth>75</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -605,37 +603,37 @@ set the field order appropriately.</note>
       <note>This transformation verifies that a table from a "source" DB has been correctly mirrored to a "target" DB. This is an ETL metadata injection
 "template" transformation that can be used to compare *any* tables that are mirrored between two databases. It has parameters (many are not used):
 
-	PARAM_CDC_LAST_LOAD_UTC						Timestamp for when the target DB was most recently updated successfully
-	PARAM_INSERT_ID_FROM							"from" value for the "insert_id" column of the source table that is being compared to the target table
-	PARAM_INSERT_ID_TO								"to" value for the "insert_id" column of the source table that is being compared to the target table
-	PARAM_DYN_DB_CONN_SOURCE_DB_HOST			for source DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_SOURCE_DB_PORT			for source DB "dynamic" database connections
+	PARAM_CDC_LAST_LOAD_UTC					Timestamp for when the target DB was most recently updated successfully
+	PARAM_INSERT_ID_FROM						"from" value for the "insert_id" column of the source table that is being compared to the target table
+	PARAM_INSERT_ID_TO							"to" value for the "insert_id" column of the source table that is being compared to the target table
+	PARAM_DYN_DB_CONN_SOURCE_DB_HOST		for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_PORT		for source DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE	for source DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME	for source DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD	for source DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_SOURCE_DB_URL			for source DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER		for source DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_TARGET_DB_HOST			for target DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_TARGET_DB_PORT			for target DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_TARGET_DB_DATABASE		for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_HOST		for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_PORT		for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_DATABASE	for target DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_TARGET_DB_USERNAME	for target DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD	for target DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_TARGET_DB_URL			for target DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_TARGET_DB_DRIVER		for target DB "dynamic" database connections
 	PARAM_TABLE_META_ID							Primary key of ${QF_ETL_DB_SCHEMA}.table_meta row for the table pair being compared
-	PARAM_SOURCE_DB_ID								ID the "source" database containing tables that are mirrored to a "target" database
-	PARAM_SOURCE_SCHEMA							Name of schema containing the source table to compare to the target table
+	PARAM_SOURCE_DB_ID							ID the "source" database containing tables that are mirrored to a "target" database
+	PARAM_SOURCE_SCHEMA						Name of schema containing the source table to compare to the target table
 	PARAM_SOURCE_TABLE							Name of the source table to compare to the target table
 	PARAM_SOURCE_SCHEMA_TABLE					${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
-	PARAM_SOURCE_INSERT_ID_COLNAME				Name of column acting as the "insert_id"  timestamp column of the source table
-	PARAM_TARGET_DB_ID								ID of the "target" database to which "source" DB tables have been archived/mirrored
-	PARAM_TARGET_SCHEMA							Name of schema containing the target table to compare with the source table (not currently used?)
-	PARAM_TARGET_TABLE								Name of the target table to compare with the source table (not currently used?)
+	PARAM_SOURCE_INSERT_ID_COLNAME			Name of column acting as the "insert_id"  timestamp column of the source table
+	PARAM_TARGET_DB_ID							ID of the "target" database to which "source" DB tables have been archived/mirrored
+	PARAM_TARGET_SCHEMA						Name of schema containing the target table to compare with the source table (not currently used?)
+	PARAM_TARGET_TABLE							Name of the target table to compare with the source table (not currently used?)
 	PARAM_TARGET_SCHEMA_TABLE					${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}
-	PARAM_TARGET_INSERT_ID_COLNAME				Name of column acting as the "insert_id" timestamp column of the target table</note>
+	PARAM_TARGET_INSERT_ID_COLNAME			Name of column acting as the "insert_id" timestamp column of the target table</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>904</width>
+      <width>880</width>
       <heigth>413</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
@@ -655,10 +653,10 @@ set the field order appropriately.</note>
     <notepad>
       <note>Update the "table_meta" row for the tables being compared with the comparison statistics:
 
-	compared_rows_equal
-	compared_rows_unequal
-	compared_rows_missing		Rows in *source* table, but missing from *target* table
-	compared_rows_extra		Extra rows in the *target* table with no correspoding rows in the *source* table
+	compared_rows_equal	(flag="identical")
+	compared_rows_unequal	(flag="changed")
+	compared_rows_extra	(flag="new")		Extra rows in the *target* table with no corresponding rows in the *source* table
+	compared_rows_missing	(flag="deleted")	Rows in *source* table, but missing from *target* table
 
 This sub-transformation (mapping) is passed a single stream field "flagfield" that is 
 generated by the "Merge Rows (diff)" step. In order to update the appropriate 
@@ -667,9 +665,9 @@ ${QF_ETL_DB_SCHEMA}.table_meta row, it is also passed the parameters:
 	PARAM_SOURCE_DB_ID
 	PARAM_SOURCE_SCHEMA
 	PARAM_SOURCE_TABLE</note>
-      <xloc>336</xloc>
-      <yloc>736</yloc>
-      <width>643</width>
+      <xloc>448</xloc>
+      <yloc>752</yloc>
+      <width>722</width>
       <heigth>192</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
@@ -687,11 +685,41 @@ ${QF_ETL_DB_SCHEMA}.table_meta row, it is also passed the parameters:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Compare the two streams row by row and determine whether they are 
-identical, different, "new" or "deleted".</note>
-      <xloc>336</xloc>
-      <yloc>672</yloc>
-      <width>401</width>
+      <note>Compare the two streams row by row and flag each row as one of: 
+
+	"identical":	Row from source table matches by key to row from target table, and all columns are identical.
+				The output row is created based on the *source* row.
+	"changed":	Row from source table matches by key to row from target table, but not all columns are identical
+				The output row is created based on the *target* row.
+	"new":		Row exists in the *target* table with no corresponding rows in the *source* table
+				The output row is created based on the *target* row.
+	"deleted":	Row exists in the *source* table with no corresponding rows in the *target* table
+				The output row is created based on the *source* row.</note>
+      <xloc>448</xloc>
+      <yloc>592</yloc>
+      <width>637</width>
+      <heigth>140</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Rename the stream fields from the target DB to the field names 
+from the source DB. This is required for the "Merge rows" step.</note>
+      <xloc>528</xloc>
+      <yloc>528</yloc>
+      <width>367</width>
       <heigth>36</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
@@ -709,13 +737,14 @@ identical, different, "new" or "deleted".</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Rename the stream fields from the target DB to the
-field names from the source DB. This is required for
-the "Merge rows" step.</note>
-      <xloc>528</xloc>
-      <yloc>560</yloc>
-      <width>298</width>
-      <heigth>49</heigth>
+      <note>The primary keys of rows that 
+are *not* identical are written
+to a file so the problem rows 
+can be examined post-mortem.</note>
+      <xloc>256</xloc>
+      <yloc>880</yloc>
+      <width>180</width>
+      <heigth>62</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -906,6 +935,21 @@ the "Merge rows" step.</note>
       <to>Merge Rows (diff)</to>
       <enabled>Y</enabled>
     </hop>
+    <hop>
+      <from>Merge Rows (diff)</from>
+      <to>Rows identical?</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Rows identical?</from>
+      <to>Write problem rows to file</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Rows identical?</from>
+      <to>Discard rows</to>
+      <enabled>Y</enabled>
+    </hop>
   </order>
   <step>
     <name>Get rows from source DB table</name>
@@ -933,7 +977,7 @@ the "Merge rows" step.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>96</xloc>
+      <xloc>112</xloc>
       <yloc>448</yloc>
       <draw>Y</draw>
     </GUI>
@@ -964,7 +1008,7 @@ the "Merge rows" step.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>336</xloc>
+      <xloc>352</xloc>
       <yloc>448</yloc>
       <draw>Y</draw>
     </GUI>
@@ -973,7 +1017,7 @@ the "Merge rows" step.</note>
     <name>Merge Rows (diff)</name>
     <type>MergeRows</type>
     <description />
-    <distribute>Y</distribute>
+    <distribute>N</distribute>
     <custom_distribution />
     <copies>1</copies>
     <partitioning>
@@ -997,8 +1041,8 @@ the "Merge rows" step.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>192</xloc>
-      <yloc>672</yloc>
+      <xloc>208</xloc>
+      <yloc>624</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1024,8 +1068,8 @@ the "Merge rows" step.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>336</xloc>
-      <yloc>576</yloc>
+      <xloc>352</xloc>
+      <yloc>528</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1080,8 +1124,123 @@ the "Merge rows" step.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>192</xloc>
-      <yloc>784</yloc>
+      <xloc>304</xloc>
+      <yloc>800</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Write problem rows to file</name>
+    <type>TextFileOutput</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <separator>;</separator>
+    <enclosure>"</enclosure>
+    <enclosure_forced>N</enclosure_forced>
+    <enclosure_fix_disabled>N</enclosure_fix_disabled>
+    <header>Y</header>
+    <footer>N</footer>
+    <format>UNIX</format>
+    <compression>None</compression>
+    <encoding>UTF-8</encoding>
+    <endedLine />
+    <fileNameInField>N</fileNameInField>
+    <fileNameField />
+    <create_parent_folder>Y</create_parent_folder>
+    <file>
+      <name>/tmp/dars_dwh_etl-problem_rows/${PARAM_TARGET_SCHEMA_TABLE}</name>
+      <is_command>N</is_command>
+      <servlet_output>N</servlet_output>
+      <do_not_open_new_file_init>Y</do_not_open_new_file_init>
+      <extention>csv</extention>
+      <append>N</append>
+      <split>N</split>
+      <haspartno>N</haspartno>
+      <add_date>Y</add_date>
+      <add_time>Y</add_time>
+      <SpecifyFormat>N</SpecifyFormat>
+      <date_time_format />
+      <add_to_result_filenames>Y</add_to_result_filenames>
+      <pad>N</pad>
+      <fast_dump>N</fast_dump>
+      <splitevery>0</splitevery>
+    </file>
+    <fields>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>160</xloc>
+      <yloc>896</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Rows identical?</name>
+    <type>FilterRows</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <send_true_to>Discard rows</send_true_to>
+    <send_false_to>Write problem rows to file</send_false_to>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <leftvalue />
+        <function>=</function>
+        <rightvalue />
+      </condition>
+    </compare>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>96</xloc>
+      <yloc>800</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Discard rows</name>
+    <type>Dummy</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>32</xloc>
+      <yloc>896</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

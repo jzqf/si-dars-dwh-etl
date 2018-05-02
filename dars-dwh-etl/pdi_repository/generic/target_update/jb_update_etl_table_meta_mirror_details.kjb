@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2018/04/14 10:19:45.869</modified_date>
+  <modified_date>2018/04/19 16:07:05.517</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_TABLE_META_ID</name>
@@ -29,6 +29,26 @@
       <name>PARAM_TARGET_TABLE</name>
       <default_value>passage</default_value>
       <description>Name of target table to update</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_UPDATE_TABLE_NUM_INSERTS</name>
+      <default_value />
+      <description>Number of rows inserted into the target table by the ETL job</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_UPDATE_TABLE_NUM_ROWS</name>
+      <default_value />
+      <description>Number of rows processed by the ETL job (in case this number cannot be broken down into inserts &amp; updates)</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_UPDATE_TABLE_NUM_UPDATES</name>
+      <default_value />
+      <description>Number of rows of the target table updated by the ETL job</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_UPDATE_TABLE_START_MILLISECONDS</name>
+      <default_value />
+      <description>Timer start value for updating a table</description>
     </parameter>
   </parameters>
   <connection>
@@ -425,11 +445,11 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>32</xloc>
-      <yloc>144</yloc>
+      <xloc>48</xloc>
+      <yloc>192</yloc>
     </entry>
     <entry>
-      <name>Update table_meta mirror details</name>
+      <name>Update details stored in table_state row</name>
       <description />
       <type>SQL</type>
       <sql>UPDATE
@@ -437,6 +457,15 @@
 SET
     mirror_last_updated_algorithm_id = ${PARAM_TABLE_MIRROR_ALGORITHM_ID},
     mirror_last_updated_on           = LOCALTIMESTAMP    -- TODO: Shall I use UTC/GMT here?
+
+    -- Values that are not set here should be SQL NULL, but it is possible that this is not so. If this occurs,
+    -- I may have to check for a guard value and then use NULLIF(&lt;update value>, &lt;guard value>).
+--    ,mirror_last_updated_elapsed_time_millis    = ${QF_UPDATE_TABLE_ELAPSED_MILLISECONDS},
+--    mirror_last_updated_num_rows_processed     = ${PARAM_UPDATE_TABLE_NUM_ROWS},
+--    mirror_last_updated_num_inserts            = ${PARAM_UPDATE_TABLE_NUM_INSERTS},
+--    mirror_last_updated_num_updates            = ${PARAM_UPDATE_TABLE_NUM_UPDATES},
+--    mirror_last_updated_rows_processed_per_sec = ${QF_UPDATE_TABLE_ROWS_PER_SEC}
+
 WHERE
     table_state_id = ${PARAM_TABLE_META_ID}</sql>
       <useVariableSubstitution>T</useVariableSubstitution>
@@ -447,25 +476,29 @@ WHERE
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>240</xloc>
-      <yloc>144</yloc>
+      <xloc>144</xloc>
+      <yloc>480</yloc>
     </entry>
     <entry>
       <name>Log - Parameters</name>
       <description />
       <type>WRITE_TO_LOG</type>
-      <logmessage>PARAM_TABLE_META_ID             = ${PARAM_TABLE_META_ID}
-PARAM_TARGET_SCHEMA             = ${PARAM_TARGET_SCHEMA}
-PARAM_TARGET_TABLE              = ${PARAM_TARGET_TABLE}
-PARAM_TABLE_MIRROR_ALGORITHM_ID = ${PARAM_TABLE_MIRROR_ALGORITHM_ID}
-</logmessage>
-      <loglevel>Detailed</loglevel>
-      <logsubject />
+      <logmessage>jb_update_etl_table_meta_mirror_details:
+PARAM_TABLE_META_ID                   = ${PARAM_TABLE_META_ID}
+PARAM_TARGET_SCHEMA                   = ${PARAM_TARGET_SCHEMA}
+PARAM_TARGET_TABLE                    = ${PARAM_TARGET_TABLE}
+PARAM_TABLE_MIRROR_ALGORITHM_ID       = ${PARAM_TABLE_MIRROR_ALGORITHM_ID}
+PARAM_UPDATE_TABLE_START_MILLISECONDS = ${PARAM_UPDATE_TABLE_START_MILLISECONDS}
+PARAM_UPDATE_TABLE_NUM_ROWS           = ${PARAM_UPDATE_TABLE_NUM_ROWS}
+PARAM_UPDATE_TABLE_NUM_INSERTS        = ${PARAM_UPDATE_TABLE_NUM_INSERTS}
+PARAM_UPDATE_TABLE_NUM_UPDATES        = ${PARAM_UPDATE_TABLE_NUM_UPDATES}</logmessage>
+      <loglevel>Basic</loglevel>
+      <logsubject>jb_update_etl_table_meta_mirror_details parameters</logsubject>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>496</xloc>
-      <yloc>144</yloc>
+      <xloc>144</xloc>
+      <yloc>192</yloc>
     </entry>
     <entry>
       <name>jb_log_error</name>
@@ -503,8 +536,8 @@ PARAM_TABLE_MIRROR_ALGORITHM_ID = ${PARAM_TABLE_MIRROR_ALGORITHM_ID}
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>1</nr>
-      <xloc>240</xloc>
-      <yloc>240</yloc>
+      <xloc>144</xloc>
+      <yloc>576</yloc>
     </entry>
     <entry>
       <name>Abort job</name>
@@ -514,31 +547,73 @@ PARAM_TABLE_MIRROR_ALGORITHM_ID = ${PARAM_TABLE_MIRROR_ALGORITHM_ID}
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>240</xloc>
-      <yloc>352</yloc>
+      <xloc>144</xloc>
+      <yloc>672</yloc>
+    </entry>
+    <entry>
+      <name>tr_table_update_statistics_compute</name>
+      <description />
+      <type>TRANS</type>
+      <specification_method>rep_name</specification_method>
+      <trans_object_id />
+      <filename />
+      <transname>tr_table_update_statistics_compute</transname>
+      <directory>${Internal.Entry.Current.Directory}</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <clear_rows>N</clear_rows>
+      <clear_files>N</clear_files>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Basic</loglevel>
+      <cluster>N</cluster>
+      <slave_server_name />
+      <set_append_logfile>N</set_append_logfile>
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <create_parent_folder>N</create_parent_folder>
+      <logging_remote_work>N</logging_remote_work>
+      <run_configuration>Pentaho local</run_configuration>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+      </parameters>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>144</xloc>
+      <yloc>288</yloc>
+    </entry>
+    <entry>
+      <name>Write To Log</name>
+      <description />
+      <type>WRITE_TO_LOG</type>
+      <logmessage>${Internal.Job.Name}:
+PARAM_TABLE_META_ID                   = ${PARAM_TABLE_META_ID}
+PARAM_TARGET_SCHEMA                   = ${PARAM_TARGET_SCHEMA}
+PARAM_TARGET_TABLE                    = ${PARAM_TARGET_TABLE}
+PARAM_TABLE_MIRROR_ALGORITHM_ID       = ${PARAM_TABLE_MIRROR_ALGORITHM_ID}
+PARAM_UPDATE_TABLE_START_MILLISECONDS = ${PARAM_UPDATE_TABLE_START_MILLISECONDS}
+PARAM_UPDATE_TABLE_NUM_ROWS           = ${PARAM_UPDATE_TABLE_NUM_ROWS}
+PARAM_UPDATE_TABLE_NUM_INSERTS        = ${PARAM_UPDATE_TABLE_NUM_INSERTS}
+PARAM_UPDATE_TABLE_NUM_UPDATES        = ${PARAM_UPDATE_TABLE_NUM_UPDATES}
+QF_UPDATE_TABLE_ELAPSED_MILLISECONDS  = ${QF_UPDATE_TABLE_ELAPSED_MILLISECONDS}
+QF_UPDATE_TABLE_ROWS_PER_SEC          = ${QF_UPDATE_TABLE_ROWS_PER_SEC}</logmessage>
+      <loglevel>Minimal</loglevel>
+      <logsubject />
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>144</xloc>
+      <yloc>384</yloc>
     </entry>
   </entries>
   <hops>
     <hop>
-      <from>START</from>
-      <to>Update table_meta mirror details</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>Update table_meta mirror details</from>
-      <to>Log - Parameters</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>N</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Update table_meta mirror details</from>
+      <from>Update details stored in table_state row</from>
       <to>jb_log_error</to>
       <from_nr>0</from_nr>
       <to_nr>1</to_nr>
@@ -555,20 +630,60 @@ PARAM_TABLE_MIRROR_ALGORITHM_ID = ${PARAM_TABLE_MIRROR_ALGORITHM_ID}
       <evaluation>N</evaluation>
       <unconditional>Y</unconditional>
     </hop>
+    <hop>
+      <from>START</from>
+      <to>Log - Parameters</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>Log - Parameters</from>
+      <to>tr_table_update_statistics_compute</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>tr_table_update_statistics_compute</from>
+      <to>Write To Log</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>Write To Log</from>
+      <to>Update details stored in table_state row</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
   </hops>
   <notepads>
     <notepad>
-      <note>This job updates a row of the ${QF_ETL_DB_SCHEMA}.table_meta table after a table has been updated in the target DB from a table in
+      <note>This job updates a row of the ${QF_ETL_DB_SCHEMA}.table_state table after a table has been updated in the target DB from a table in
 a source database. This job has parameters:
 
-	PARAM_TABLE_META_ID					Primary key of ${QF_ETL_DB_SCHEMA}.table_meta row for "source" table archived/mirrored to "target" table
-	PARAM_TARGET_SCHEMA					Name of schema containing target table to update (not currently used)
-	PARAM_TARGET_TABLE						Name of target table to update (not currently used)
-	PARAM_TABLE_MIRROR_ALGORITHM_ID	ID that specifies the algorithm to use for archiving/mirroring the table</note>
+	PARAM_TABLE_META_ID						Primary key of ${QF_ETL_DB_SCHEMA}.table_meta/state row for "source" table archived/mirrored to "target" table
+	PARAM_TARGET_SCHEMA						Name of schema containing target table to update (not currently used)
+	PARAM_TARGET_TABLE							Name of target table to update (not currently used)
+	PARAM_TABLE_MIRROR_ALGORITHM_ID		ID that specifies the algorithm to use for archiving/mirroring the table
+	PARAM_UPDATE_TABLE_START_MILLISECONDS	Timer start value for updating a table
+	PARAM_UPDATE_TABLE_NUM_ROWS			Number of rows processed by the ETL job (in case this number cannot be broken down into inserts &amp; updates)
+	PARAM_UPDATE_TABLE_NUM_INSERTS			Number of rows inserted into the target table by the ETL job
+	PARAM_UPDATE_TABLE_NUM_UPDATES			Number of rows of the target table updated by the ETL job</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>937</width>
-      <heigth>108</heigth>
+      <width>996</width>
+      <heigth>164</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -590,8 +705,8 @@ root calling job will know that
 execution has failed. It will then direct
 the execution flow to the job that 
 sends out failure e-mails.</note>
-      <xloc>320</xloc>
-      <yloc>320</yloc>
+      <xloc>272</xloc>
+      <yloc>640</yloc>
       <width>232</width>
       <heigth>80</heigth>
       <fontname />
@@ -609,5 +724,73 @@ sends out failure e-mails.</note>
       <bordercolorblue>100</bordercolorblue>
       <drawshadow>Y</drawshadow>
     </notepad>
+    <notepad>
+      <note>Compute the "update statistics" for the specified table that was just updated. This transformation sets the PDI variables:
+
+	QF_UPDATE_TABLE_ELAPSED_MILLISECONDS
+	QF_UPDATE_TABLE_ROWS_PER_SEC
+	QF_UPDATE_TABLE_INSERTS_PER_SEC		&lt;- No, I do not compute this
+	QF_UPDATE_TABLE_UPDATES_PER_SEC	&lt;- No, I do not compute this</note>
+      <xloc>272</xloc>
+      <yloc>256</yloc>
+      <width>669</width>
+      <heigth>88</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Log the values assigned to the PDI variables:
+
+	QF_UPDATE_TABLE_ELAPSED_MILLISECONDS
+	QF_UPDATE_TABLE_ROWS_PER_SEC
+	QF_UPDATE_TABLE_INSERTS_PER_SEC		&lt;- No
+	QF_UPDATE_TABLE_UPDATES_PER_SEC	&lt;- No</note>
+      <xloc>272</xloc>
+      <yloc>368</yloc>
+      <width>304</width>
+      <heigth>88</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
   </notepads>
+  <attributes>
+    <group>
+      <name>METASTORE.pentaho</name>
+      <attribute>
+        <key>Default Run Configuration</key>
+        <value>{"namespace":"pentaho","id":"Default Run Configuration","name":"Default Run Configuration","description":"Defines a default run configuration","metaStoreName":null}</value>
+      </attribute>
+    </group>
+    <group>
+      <name>{"_":"Embedded MetaStore Elements","namespace":"pentaho","type":"Default Run Configuration"}</name>
+      <attribute>
+        <key>Pentaho local</key>
+        <value>{"children":[{"children":[],"id":"server","value":null},{"children":[],"id":"clustered","value":"N"},{"children":[],"id":"name","value":"Pentaho local"},{"children":[],"id":"description","value":null},{"children":[],"id":"readOnly","value":"Y"},{"children":[],"id":"sendResources","value":"N"},{"children":[],"id":"logRemoteExecutionLocally","value":"N"},{"children":[],"id":"remote","value":"N"},{"children":[],"id":"local","value":"Y"},{"children":[],"id":"showTransformations","value":"N"}],"id":"Pentaho local","value":null,"name":"Pentaho local","owner":null,"ownerPermissionsList":[]}</value>
+      </attribute>
+    </group>
+  </attributes>
 </job>
