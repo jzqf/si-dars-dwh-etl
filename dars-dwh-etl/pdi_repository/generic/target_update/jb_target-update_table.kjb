@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/11/27 08:21:15.711</modified_date>
+  <modified_date>2018/04/21 11:09:20.073</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
@@ -56,11 +56,6 @@
       <description>for target DB "dynamic" database connections</description>
     </parameter>
     <parameter>
-      <name>PARAM_MAX_INSERT_ID</name>
-      <default_value />
-      <description>Maximum value of the "insert_id" column for rows to load from the source DB table</description>
-    </parameter>
-    <parameter>
       <name>PARAM_SOURCE_DB_ID</name>
       <default_value>0</default_value>
       <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
@@ -81,9 +76,14 @@
       <description>Name of source table to mirror to target table</description>
     </parameter>
     <parameter>
+      <name>PARAM_SOURCE_TABLE_MAX_INSERT_ID</name>
+      <default_value />
+      <description>Maximum value of the "insert_id" column for rows to load from the source DB table</description>
+    </parameter>
+    <parameter>
       <name>PARAM_TABLE_META_ID</name>
       <default_value>0</default_value>
-      <description>Primary key of etl.table_meta row for "source" table archived/mirrored to "target" table</description>
+      <description>Primary key of ${QF_ETL_DB_SCHEMA}.table_meta row for "source" table archived/mirrored to "target" table</description>
     </parameter>
     <parameter>
       <name>PARAM_TARGET_DB_ID</name>
@@ -455,7 +455,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>16</xloc>
-      <yloc>432</yloc>
+      <yloc>400</yloc>
     </entry>
     <entry>
       <name>Abort job</name>
@@ -466,13 +466,15 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>736</xloc>
-      <yloc>816</yloc>
+      <yloc>784</yloc>
     </entry>
     <entry>
       <name>Write To Log: Parameters</name>
       <description />
       <type>WRITE_TO_LOG</type>
-      <logmessage>PARAM_CDC_LAST_LOAD_UTC              = ${PARAM_CDC_LAST_LOAD_UTC}
+      <logmessage>
+Parameters received by ${Internal.Job.Name}:
+PARAM_CDC_LAST_LOAD_UTC              = ${PARAM_CDC_LAST_LOAD_UTC}
 PARAM_CDC_CURRENT_LOAD_UTC           = ${PARAM_CDC_CURRENT_LOAD_UTC}
 PARAM_DYN_DB_CONN_TARGET_DB_HOST     = ${PARAM_DYN_DB_CONN_TARGET_DB_HOST}
 PARAM_DYN_DB_CONN_TARGET_DB_PORT     = ${PARAM_DYN_DB_CONN_TARGET_DB_PORT}
@@ -481,7 +483,7 @@ PARAM_DYN_DB_CONN_TARGET_DB_USERNAME = ${PARAM_DYN_DB_CONN_TARGET_DB_USERNAME}
 PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD = ${PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD}
 PARAM_DYN_DB_CONN_TARGET_DB_URL      = ${PARAM_DYN_DB_CONN_TARGET_DB_URL}
 PARAM_DYN_DB_CONN_TARGET_DB_DRIVER   = ${PARAM_DYN_DB_CONN_TARGET_DB_DRIVER}
-PARAM_MAX_INSERT_ID                  = ${PARAM_MAX_INSERT_ID}
+PARAM_SOURCE_TABLE_MAX_INSERT_ID     = ${PARAM_SOURCE_TABLE_MAX_INSERT_ID}
 PARAM_TABLE_META_ID                  = ${PARAM_TABLE_META_ID}
 PARAM_SOURCE_DB_ID                   = ${PARAM_SOURCE_DB_ID}
 PARAM_SOURCE_SCHEMA                  = ${PARAM_SOURCE_SCHEMA}
@@ -492,13 +494,13 @@ PARAM_TARGET_SCHEMA                  = ${PARAM_TARGET_SCHEMA}
 PARAM_TARGET_TABLE                   = ${PARAM_TARGET_TABLE}
 PARAM_TARGET_SCHEMA_DOT_TABLE        = ${PARAM_TARGET_SCHEMA_DOT_TABLE}
 PARAM_UPDATE_ALGORITHM_ID            = ${PARAM_UPDATE_ALGORITHM_ID}</logmessage>
-      <loglevel>Basic</loglevel>
-      <logsubject>Parameters received by jb_target-update_table</logsubject>
+      <loglevel>Minimal</loglevel>
+      <logsubject>Parameters received by ${Internal.Job.Name}</logsubject>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>144</xloc>
-      <yloc>432</yloc>
+      <yloc>400</yloc>
     </entry>
     <entry>
       <name>Use custom algorithm?</name>
@@ -520,7 +522,7 @@ PARAM_UPDATE_ALGORITHM_ID            = ${PARAM_UPDATE_ALGORITHM_ID}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>144</xloc>
-      <yloc>1008</yloc>
+      <yloc>1168</yloc>
     </entry>
     <entry>
       <name>jb_target-update_table-custom</name>
@@ -554,7 +556,7 @@ PARAM_UPDATE_ALGORITHM_ID            = ${PARAM_UPDATE_ALGORITHM_ID}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>464</xloc>
-      <yloc>1008</yloc>
+      <yloc>1168</yloc>
     </entry>
     <entry>
       <name>Use generic algorithm for insert-only tables?</name>
@@ -576,10 +578,10 @@ PARAM_UPDATE_ALGORITHM_ID            = ${PARAM_UPDATE_ALGORITHM_ID}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>144</xloc>
-      <yloc>816</yloc>
+      <yloc>784</yloc>
     </entry>
     <entry>
-      <name>Use generic algorithm for updateable tables?</name>
+      <name>Use generic algorithm #1 for updatable tables?</name>
       <description />
       <type>SIMPLE_EVAL</type>
       <valuetype>variable</valuetype>
@@ -587,7 +589,7 @@ PARAM_UPDATE_ALGORITHM_ID            = ${PARAM_UPDATE_ALGORITHM_ID}</logmessage>
       <variablename>${PARAM_UPDATE_ALGORITHM_ID}</variablename>
       <fieldtype>number</fieldtype>
       <mask />
-      <comparevalue>${QF_MIRROR_ALG_INSERT_OR_UPDATE_GENERIC}</comparevalue>
+      <comparevalue>${QF_MIRROR_ALG_INSERT_OR_UPDATE_GENERIC_1}</comparevalue>
       <minvalue />
       <maxvalue />
       <successcondition>equal</successcondition>
@@ -598,7 +600,7 @@ PARAM_UPDATE_ALGORITHM_ID            = ${PARAM_UPDATE_ALGORITHM_ID}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>144</xloc>
-      <yloc>912</yloc>
+      <yloc>880</yloc>
     </entry>
     <entry>
       <name>jb_target-update_table-insert_only_table</name>
@@ -667,7 +669,7 @@ PARAM_UPDATE_ALGORITHM_ID            = ${PARAM_UPDATE_ALGORITHM_ID}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>464</xloc>
-      <yloc>816</yloc>
+      <yloc>784</yloc>
     </entry>
     <entry>
       <name>jb_target-update_table-updatable_table</name>
@@ -736,7 +738,7 @@ PARAM_UPDATE_ALGORITHM_ID            = ${PARAM_UPDATE_ALGORITHM_ID}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>464</xloc>
-      <yloc>912</yloc>
+      <yloc>880</yloc>
     </entry>
     <entry>
       <name>jb_log_error - Untreated case</name>
@@ -775,7 +777,7 @@ PARAM_UPDATE_ALGORITHM_ID            = ${PARAM_UPDATE_ALGORITHM_ID}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>144</xloc>
-      <yloc>1104</yloc>
+      <yloc>1264</yloc>
     </entry>
     <entry>
       <name>jb_set_dynamic_db_connection_variables</name>
@@ -814,7 +816,7 @@ PARAM_UPDATE_ALGORITHM_ID            = ${PARAM_UPDATE_ALGORITHM_ID}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>144</xloc>
-      <yloc>528</yloc>
+      <yloc>496</yloc>
     </entry>
     <entry>
       <name>DUMMY</name>
@@ -834,7 +836,7 @@ PARAM_UPDATE_ALGORITHM_ID            = ${PARAM_UPDATE_ALGORITHM_ID}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>736</xloc>
-      <yloc>528</yloc>
+      <yloc>496</yloc>
     </entry>
     <entry>
       <name>DUMMY 2</name>
@@ -854,7 +856,7 @@ PARAM_UPDATE_ALGORITHM_ID            = ${PARAM_UPDATE_ALGORITHM_ID}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>736</xloc>
-      <yloc>1104</yloc>
+      <yloc>1264</yloc>
     </entry>
     <entry>
       <name>Use generic truncate &amp; reload algorithm?</name>
@@ -876,7 +878,7 @@ PARAM_UPDATE_ALGORITHM_ID            = ${PARAM_UPDATE_ALGORITHM_ID}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>144</xloc>
-      <yloc>624</yloc>
+      <yloc>592</yloc>
     </entry>
     <entry>
       <name>jb_target-update_table-truncate_reload</name>
@@ -945,7 +947,7 @@ PARAM_UPDATE_ALGORITHM_ID            = ${PARAM_UPDATE_ALGORITHM_ID}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>464</xloc>
-      <yloc>624</yloc>
+      <yloc>592</yloc>
     </entry>
     <entry>
       <name>Use generic table compare algorithm?</name>
@@ -967,7 +969,7 @@ PARAM_UPDATE_ALGORITHM_ID            = ${PARAM_UPDATE_ALGORITHM_ID}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>144</xloc>
-      <yloc>720</yloc>
+      <yloc>688</yloc>
     </entry>
     <entry>
       <name>jb_target-update_table-compare</name>
@@ -1036,7 +1038,189 @@ PARAM_UPDATE_ALGORITHM_ID            = ${PARAM_UPDATE_ALGORITHM_ID}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>464</xloc>
-      <yloc>720</yloc>
+      <yloc>688</yloc>
+    </entry>
+    <entry>
+      <name>Use generic algorithm #2 for updatable tables?</name>
+      <description />
+      <type>SIMPLE_EVAL</type>
+      <valuetype>variable</valuetype>
+      <fieldname />
+      <variablename>${PARAM_UPDATE_ALGORITHM_ID}</variablename>
+      <fieldtype>number</fieldtype>
+      <mask />
+      <comparevalue>${QF_MIRROR_ALG_INSERT_OR_UPDATE_GENERIC_2}</comparevalue>
+      <minvalue />
+      <maxvalue />
+      <successcondition>equal</successcondition>
+      <successnumbercondition>equal</successnumbercondition>
+      <successbooleancondition>true</successbooleancondition>
+      <successwhenvarset>N</successwhenvarset>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>144</xloc>
+      <yloc>976</yloc>
+    </entry>
+    <entry>
+      <name>jb_target-update_table-updatable_table_2</name>
+      <description />
+      <type>JOB</type>
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_target-update_table-updatable_table_2</jobname>
+      <directory>${Internal.Entry.Current.Directory}</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE</name>
+          <stream_name />
+          <value>${QF_DYN_DB_CONN_DB_DATABASE}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_DYN_DB_CONN_SOURCE_DB_HOST</name>
+          <stream_name />
+          <value>${QF_DYN_DB_CONN_DB_HOST}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD</name>
+          <stream_name />
+          <value>${QF_DYN_DB_CONN_DB_PASSWORD}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_DYN_DB_CONN_SOURCE_DB_PORT</name>
+          <stream_name />
+          <value>${QF_DYN_DB_CONN_DB_PORT}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME</name>
+          <stream_name />
+          <value>${QF_DYN_DB_CONN_DB_USERNAME}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_DYN_DB_CONN_SOURCE_DB_URL</name>
+          <stream_name />
+          <value>${QF_DYN_DB_CONN_DB_URL}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER</name>
+          <stream_name />
+          <value>${QF_DYN_DB_CONN_DB_DRIVER}</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>464</xloc>
+      <yloc>976</yloc>
+    </entry>
+    <entry>
+      <name>Use generic algorithm #3 for updatable tables?</name>
+      <description />
+      <type>SIMPLE_EVAL</type>
+      <valuetype>variable</valuetype>
+      <fieldname />
+      <variablename>${PARAM_UPDATE_ALGORITHM_ID}</variablename>
+      <fieldtype>number</fieldtype>
+      <mask />
+      <comparevalue>${QF_MIRROR_ALG_INSERT_OR_UPDATE_GENERIC_3}</comparevalue>
+      <minvalue />
+      <maxvalue />
+      <successcondition>equal</successcondition>
+      <successnumbercondition>equal</successnumbercondition>
+      <successbooleancondition>true</successbooleancondition>
+      <successwhenvarset>N</successwhenvarset>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>144</xloc>
+      <yloc>1072</yloc>
+    </entry>
+    <entry>
+      <name>jb_target-update_table-updatable_table_3</name>
+      <description />
+      <type>JOB</type>
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_target-update_table-updatable_table_3</jobname>
+      <directory>${Internal.Entry.Current.Directory}</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE</name>
+          <stream_name />
+          <value>${QF_DYN_DB_CONN_DB_DATABASE}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_DYN_DB_CONN_SOURCE_DB_HOST</name>
+          <stream_name />
+          <value>${QF_DYN_DB_CONN_DB_HOST}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD</name>
+          <stream_name />
+          <value>${QF_DYN_DB_CONN_DB_PASSWORD}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_DYN_DB_CONN_SOURCE_DB_PORT</name>
+          <stream_name />
+          <value>${QF_DYN_DB_CONN_DB_PORT}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME</name>
+          <stream_name />
+          <value>${QF_DYN_DB_CONN_DB_USERNAME}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_DYN_DB_CONN_SOURCE_DB_URL</name>
+          <stream_name />
+          <value>${QF_DYN_DB_CONN_DB_URL}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER</name>
+          <stream_name />
+          <value>${QF_DYN_DB_CONN_DB_DRIVER}</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>464</xloc>
+      <yloc>1072</yloc>
     </entry>
   </entries>
   <hops>
@@ -1060,16 +1244,7 @@ PARAM_UPDATE_ALGORITHM_ID            = ${PARAM_UPDATE_ALGORITHM_ID}</logmessage>
     </hop>
     <hop>
       <from>Use generic algorithm for insert-only tables?</from>
-      <to>Use generic algorithm for updateable tables?</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Use generic algorithm for updateable tables?</from>
-      <to>Use custom algorithm?</to>
+      <to>Use generic algorithm #1 for updatable tables?</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -1086,7 +1261,7 @@ PARAM_UPDATE_ALGORITHM_ID            = ${PARAM_UPDATE_ALGORITHM_ID}</logmessage>
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Use generic algorithm for updateable tables?</from>
+      <from>Use generic algorithm #1 for updatable tables?</from>
       <to>jb_target-update_table-updatable_table</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -1238,6 +1413,69 @@ PARAM_UPDATE_ALGORITHM_ID            = ${PARAM_UPDATE_ALGORITHM_ID}</logmessage>
       <evaluation>N</evaluation>
       <unconditional>N</unconditional>
     </hop>
+    <hop>
+      <from>Use generic algorithm #1 for updatable tables?</from>
+      <to>Use generic algorithm #2 for updatable tables?</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Use generic algorithm #2 for updatable tables?</from>
+      <to>jb_target-update_table-updatable_table_2</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_target-update_table-updatable_table_2</from>
+      <to>Abort job</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Use generic algorithm #2 for updatable tables?</from>
+      <to>Use generic algorithm #3 for updatable tables?</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Use generic algorithm #3 for updatable tables?</from>
+      <to>Use custom algorithm?</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Use generic algorithm #3 for updatable tables?</from>
+      <to>jb_target-update_table-updatable_table_3</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_target-update_table-updatable_table_3</from>
+      <to>Abort job</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
   </hops>
   <notepads>
     <notepad>
@@ -1249,32 +1487,32 @@ PARAM_UPDATE_ALGORITHM_ID            = ${PARAM_UPDATE_ALGORITHM_ID}</logmessage>
 
 This job has parameters:
 
-	PARAM_CDC_LAST_LOAD_UTC						Timestamp for when the target DB mirror tables were last updated from the source DB
-	PARAM_CDC_CURRENT_LOAD_UTC					Timestamp of the current load (no rows after this timestamp will be loaded)
-	PARAM_TABLE_META_ID							Primary key of etl.table_meta row for "source" table archived/mirrored to "target" table
-	PARAM_DYN_DB_CONN_TARGET_DB_HOST			for target DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_TARGET_DB_PORT			for target DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_TARGET_DB_DATABASE		for target DB "dynamic" database connections
+	PARAM_CDC_LAST_LOAD_UTC					Timestamp for when the target DB mirror tables were last updated from the source DB
+	PARAM_CDC_CURRENT_LOAD_UTC				Timestamp of the current load (no rows after this timestamp will be loaded)
+	PARAM_TABLE_META_ID							Primary key of ${QF_ETL_DB_SCHEMA}.table_meta row for "source" table archived/mirrored to "target" table
+	PARAM_DYN_DB_CONN_TARGET_DB_HOST		for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_PORT		for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_DATABASE	for target DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_TARGET_DB_USERNAME	for target DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD	for target DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_TARGET_DB_DRIVER		for target DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_TARGET_DB_URL			for target DB "dynamic" database connections
-	PARAM_MAX_INSERT_ID							Maximum value of the "insert_id" column for rows to load from the source DB table
-	PARAM_SOURCE_DB_ID								ID the "source" database containing tables that are mirrored to a "target" database
-	PARAM_SOURCE_SCHEMA							Name of schema containing source table that is mirrored to target table
+	PARAM_SOURCE_TABLE_MAX_INSERT_ID			Maximum value of the "insert_id" column for rows to load from the source DB table
+	PARAM_SOURCE_DB_ID							ID the "source" database containing tables that are mirrored to a "target" database
+	PARAM_SOURCE_SCHEMA						Name of schema containing source table that is mirrored to target table
 	PARAM_SOURCE_TABLE							Name of source table that is mirrored to target table
-	PARAM_SOURCE_SCHEMA_DOT_TABLE				${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
-	PARAM_TARGET_DB_ID								ID of the "target" database to which the "source" DB tables will be archived/mirrored
-	PARAM_TARGET_SCHEMA							Name of schema containing the target table (not currently used)
-	PARAM_TARGET_TABLE								Name of target table (not currently used)
-	PARAM_TARGET_SCHEMA_DOT_TABLE				${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}
+	PARAM_SOURCE_SCHEMA_DOT_TABLE			${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
+	PARAM_TARGET_DB_ID							ID of the "target" database to which the "source" DB tables will be archived/mirrored
+	PARAM_TARGET_SCHEMA						Name of schema containing the target table (not currently used)
+	PARAM_TARGET_TABLE							Name of target table (not currently used)
+	PARAM_TARGET_SCHEMA_DOT_TABLE			${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}
 	PARAM_UPDATE_ALGORITHM_ID					ID of the algorithm to use for updating the target table from the source table</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>891</width>
-      <heigth>402</heigth>
+      <width>923</width>
+      <heigth>374</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -1294,11 +1532,11 @@ to tell the root calling
 job that execution has
 failed.</note>
       <xloc>800</xloc>
-      <yloc>784</yloc>
-      <width>139</width>
-      <heigth>66</heigth>
+      <yloc>768</yloc>
+      <width>132</width>
+      <heigth>62</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -1321,11 +1559,11 @@ based on a single parameter:
 
 	PARAM_DB_ID = PARAM_SOURCE_DB_ID</note>
       <xloc>288</xloc>
-      <yloc>480</yloc>
-      <width>274</width>
-      <heigth>108</heigth>
+      <yloc>464</yloc>
+      <width>260</width>
+      <heigth>101</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -1334,6 +1572,29 @@ based on a single parameter:
       <backgroundcolorred>255</backgroundcolorred>
       <backgroundcolorgreen>205</backgroundcolorgreen>
       <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>This algorithm has not been implemented because the 
+"Database Value Lookup" step does not currently support 
+metadata injection!</note>
+      <xloc>608</xloc>
+      <yloc>1056</yloc>
+      <width>329</width>
+      <heigth>49</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>173</backgroundcolorred>
+      <backgroundcolorgreen>216</backgroundcolorgreen>
+      <backgroundcolorblue>230</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
       <bordercolorblue>100</bordercolorblue>

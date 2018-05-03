@@ -8,8 +8,13 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/11/22 16:08:23.008</modified_date>
+  <modified_date>2018/03/30 12:53:32.661</modified_date>
   <parameters>
+    <parameter>
+      <name>PARAM_PARENT_JOB_NAME</name>
+      <default_value />
+      <description>Name of the parent job that is calling this job</description>
+    </parameter>
     <parameter>
       <name>PARAM_TARGET_DB_ID</name>
       <default_value>10</default_value>
@@ -624,7 +629,7 @@
         <parameter>
           <name>PARAM_JOB_NAME</name>
           <stream_name />
-          <value>${Internal.Job.Name}</value>
+          <value>${QF_JOB_NAME}</value>
         </parameter>
         <parameter>
           <name>PARAM_SUCCESS</name>
@@ -673,7 +678,7 @@
         <parameter>
           <name>PARAM_JOB_NAME</name>
           <stream_name />
-          <value>${Internal.Job.Name}</value>
+          <value>${QF_JOB_NAME}</value>
         </parameter>
         <parameter>
           <name>PARAM_SUCCESS</name>
@@ -807,6 +812,11 @@
       <pass_export>N</pass_export>
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_CURRENT_JOB_NAME</name>
+          <stream_name />
+          <value>${Internal.Job.Name}</value>
+        </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
       <parallel>N</parallel>
@@ -1129,8 +1139,8 @@
   </hops>
   <notepads>
     <notepad>
-      <note>This job marks for deletion "source" DB rows that have been archived/mirrored to tables in a "target" DB. The selection of tables for which this will 
-be performed, as well as  some aspects of how and when this is performed, are controlled by settings stored in table etl.table_meta &amp; etl.column_meta.
+      <note>This job marks for deletion "source" DB rows that have been archived/mirrored to tables in a "target" DB. The selection of tables for which this will be performed, 
+as well as  some aspects of how and when this is performed, are controlled by settings stored in table ${QF_ETL_DB_SCHEMA}.table_meta &amp; ${QF_ETL_DB_SCHEMA}.column_meta.
 
 "Pass batch ID?" is selected for this job so that the batch ID is passed to tr_set_job_batch_id_variable via jb_init, which assigns this value to QF_JOB_BATCH_ID.
 
@@ -1139,13 +1149,14 @@ the batch ID of the root job (not this job). This may vary from case to case.
 
 This transformation has parameter:
 
-	PARAM_TARGET_DB_ID		ID of the target database for which rows of the source DB tables will be "marked for deletion"</note>
+	PARAM_TARGET_DB_ID			ID of the target database for which rows of the source DB tables will be "marked for deletion"
+	PARAM_PARENT_JOB_NAME		Name of the parent job that is calling this job</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>935</width>
-      <heigth>164</heigth>
+      <width>987</width>
+      <heigth>166</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>

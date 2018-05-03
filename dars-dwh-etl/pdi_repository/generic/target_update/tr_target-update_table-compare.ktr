@@ -20,7 +20,7 @@
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE</name>
-        <default_value>dars_psa_db</default_value>
+        <default_value>dwh_psa_obo</default_value>
         <description>for source DB "dynamic" database connections</description>
       </parameter>
       <parameter>
@@ -35,7 +35,7 @@
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD</name>
-        <default_value>etl</default_value>
+        <default_value>src_db_password</default_value>
         <description>for source DB "dynamic" database connections</description>
       </parameter>
       <parameter>
@@ -50,12 +50,12 @@
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME</name>
-        <default_value>etl</default_value>
+        <default_value>src_db_username</default_value>
         <description>for source DB "dynamic" database connections</description>
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_TARGET_DB_DATABASE</name>
-        <default_value>dars_dsa_db</default_value>
+        <default_value>dwh_dsa_obo</default_value>
         <description>for target DB "dynamic" database connections</description>
       </parameter>
       <parameter>
@@ -70,7 +70,7 @@
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD</name>
-        <default_value>etl</default_value>
+        <default_value>tgt_db_password</default_value>
         <description>for target DB "dynamic" database connections</description>
       </parameter>
       <parameter>
@@ -85,7 +85,7 @@
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_TARGET_DB_USERNAME</name>
-        <default_value>etl</default_value>
+        <default_value>tgt_db_username</default_value>
         <description>for target DB "dynamic" database connections</description>
       </parameter>
       <parameter>
@@ -106,7 +106,7 @@
       <parameter>
         <name>PARAM_TABLE_META_ID</name>
         <default_value>310</default_value>
-        <description>Primary key of etl.table_meta row for the table pair being compared</description>
+        <description>Primary key of ${QF_ETL_DB_SCHEMA}.table_meta row for the table pair being compared</description>
       </parameter>
       <parameter>
         <name>PARAM_TARGET_DB_ID</name>
@@ -544,7 +544,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/11/28 13:50:32.157</modified_date>
+    <modified_date>2018/03/20 11:08:59.614</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -569,7 +569,7 @@ This is a generic algorithm that can work with *any* table, as long as the neces
 	PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD	for target DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_TARGET_DB_DRIVER		for target DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_TARGET_DB_URL			for target DB "dynamic" database connections
-	PARAM_TABLE_META_ID							Primary key of etl.table_meta row for "source" table archived/mirrored to "target" table
+	PARAM_TABLE_META_ID							Primary key of ${QF_ETL_DB_SCHEMA}.table_meta row for "source" table archived/mirrored to "target" table
 	PARAM_SOURCE_DB_ID								ID the "source" database containing tables will be mirrored to a "target" database
 	PARAM_SOURCE_SCHEMA							Name of schema containing source table to mirror to target table
 	PARAM_SOURCE_TABLE							Name of source table to mirror to target table
@@ -578,7 +578,7 @@ This is a generic algorithm that can work with *any* table, as long as the neces
 	PARAM_TARGET_TABLE								Name of target table to update</note>
       <xloc>16</xloc>
       <yloc>0</yloc>
-      <width>919</width>
+      <width>985</width>
       <heigth>374</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -1022,7 +1022,7 @@ See the comments in that job for an explanation.</note>
             -- POSTGRESQL-SPECIFIC
             array_to_string(array_agg(source_column_name ORDER BY column_meta_id ASC), ',') AS "str_value"
         FROM 
-            etl.column_meta 
+            ${QF_ETL_DB_SCHEMA}.column_meta 
         WHERE
             table_meta_id = ${PARAM_TABLE_META_ID} AND 
             -- This selects the columns from the source DB table that will be 
@@ -1040,7 +1040,7 @@ See the comments in that job for an explanation.</note>
            -- POSTGRESQL-SPECIFIC
             array_to_string(array_agg(source_column_name ORDER BY primary_key_column_order ASC), ',') AS "str_value"
         FROM 
-            etl.column_meta 
+            ${QF_ETL_DB_SCHEMA}.column_meta 
         WHERE
             table_meta_id = ${PARAM_TABLE_META_ID} AND 
             -- This selects the columns that make up the primary key for the
@@ -1096,7 +1096,7 @@ CROSS JOIN
            -- POSTGRESQL-SPECIFIC
             array_to_string(array_agg(target_column_name ORDER BY column_meta_id ASC), ',') AS "str_value"
         FROM 
-            etl.column_meta 
+            ${QF_ETL_DB_SCHEMA}.column_meta 
         WHERE
             table_meta_id = ${PARAM_TABLE_META_ID} AND 
             -- This selects the columns from the target DB table that will be 
@@ -1114,7 +1114,7 @@ CROSS JOIN
            -- POSTGRESQL-SPECIFIC
             array_to_string(array_agg(target_column_name ORDER BY primary_key_column_order ASC), ',') AS "str_value"
         FROM 
-            etl.column_meta 
+            ${QF_ETL_DB_SCHEMA}.column_meta 
         WHERE
             table_meta_id = ${PARAM_TABLE_META_ID} AND 
             -- This selects the columns that make up the primary key for the
@@ -1173,7 +1173,8 @@ CROSS JOIN
     -- case (double precision columns), but this value may not be appropriate for other data types. It was only by 
     -- experimenting that I found that injecting "-1" solved the problem for double precision columns. I have decided 
     -- to specify this for *all* columns until/unless I encounter a problem by doing this. If a problem does arise one 
-    -- day, it may be necessary to update the definition of the etl.column_meta table of the "etl" database to include 
+    -- day, it may be necessary to update the definition of the ${QF_ETL_DB_SCHEMA}.column_meta table of the "ETL" 
+    -- database to include 
     -- a real column to store the column "precision" on a column-by-column basis. For columns that do not need a 
     -- "precision" to be specified, NULL can be stored in this column. This will also require updating the 
     -- "populate_etl_metadata_tables" ETL code that generates default metadata.
@@ -1181,10 +1182,10 @@ CROSS JOIN
     -- "is_updateable_column" is injected into step "Synchronize after merge", which is currently not used.
     -- Hence, this column/field can be removed if I delete the step "Synchronize after merge":
     --(is_primary_key_column=false) AS "is_updateable_column"  -- If false, the column will not be updated
-    -- Alternate possibility, if I want to be bothered with setting values for the etl.column_meta.is_updatable_column:
+    -- Alternate possibility, if I want to be bothered with setting values for the ${QF_ETL_DB_SCHEMA}.column_meta.is_updatable_column:
     is_updatable_column AND (is_primary_key_column=false) AS "is_updateable_column"  -- If false, the column will not be updated
 FROM 
-    etl.column_meta 
+    ${QF_ETL_DB_SCHEMA}.column_meta 
 WHERE 
     table_meta_id = ${PARAM_TABLE_META_ID} AND 
     -- Although the primary key columns don't need to be compared, they
@@ -1230,7 +1231,7 @@ ORDER BY
     -- only solution I have found is to inject an empty string for this field.
     '' AS "no_field" 
 FROM 
-    etl.column_meta 
+    ${QF_ETL_DB_SCHEMA}.column_meta 
 WHERE 
     table_meta_id = ${PARAM_TABLE_META_ID} AND 
     is_primary_key_column = true
@@ -1274,7 +1275,7 @@ WITH updateable_columns AS
         column_meta_id,
         target_column_name AS "target_col_name" 
     FROM 
-        etl.column_meta  
+        ${QF_ETL_DB_SCHEMA}.column_meta  
     WHERE 
         table_meta_id = ${PARAM_TABLE_META_ID} AND 
         mirror_column = true AND

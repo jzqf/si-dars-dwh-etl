@@ -1,17 +1,32 @@
 <transformation>
   <info>
-    <name>tr_cdc_timestamp_load_end</name>
+    <name>tr_table_update_statistics_compute</name>
     <description />
     <extended_description />
     <trans_version />
     <trans_type>Normal</trans_type>
     <trans_status>0</trans_status>
-    <directory>/generic/cdc</directory>
+    <directory>/generic/target_update</directory>
     <parameters>
       <parameter>
-        <name>PARAM_TARGET_DB_ID</name>
+        <name>PARAM_UPDATE_TABLE_NUM_INSERTS</name>
         <default_value />
-        <description>Primary key of cdc_timestamps row to use</description>
+        <description>Number of rows inserted into the target table by the ETL job</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_UPDATE_TABLE_NUM_ROWS</name>
+        <default_value />
+        <description>Number of rows processed by the ETL job (in case this number cannot be broken down into inserts &amp; updates)</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_UPDATE_TABLE_NUM_UPDATES</name>
+        <default_value />
+        <description>Number of rows of the target table updated by the ETL job</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_UPDATE_TABLE_START_MILLISECONDS</name>
+        <default_value />
+        <description>Timer start value for updating a table</description>
       </parameter>
     </parameters>
     <log>
@@ -46,37 +61,37 @@
           <id>LINES_READ</id>
           <enabled>Y</enabled>
           <name>LINES_READ</name>
-          <subject>Update last_successful_load timestamp</subject>
+          <subject />
         </field>
         <field>
           <id>LINES_WRITTEN</id>
           <enabled>Y</enabled>
           <name>LINES_WRITTEN</name>
-          <subject>Update last_successful_load timestamp</subject>
+          <subject />
         </field>
         <field>
           <id>LINES_UPDATED</id>
           <enabled>Y</enabled>
           <name>LINES_UPDATED</name>
-          <subject>Update last_successful_load timestamp</subject>
+          <subject />
         </field>
         <field>
           <id>LINES_INPUT</id>
           <enabled>Y</enabled>
           <name>LINES_INPUT</name>
-          <subject>Update last_successful_load timestamp</subject>
+          <subject />
         </field>
         <field>
           <id>LINES_OUTPUT</id>
           <enabled>Y</enabled>
           <name>LINES_OUTPUT</name>
-          <subject>Update last_successful_load timestamp</subject>
+          <subject />
         </field>
         <field>
           <id>LINES_REJECTED</id>
           <enabled>Y</enabled>
           <name>LINES_REJECTED</name>
-          <subject>Update last_successful_load timestamp</subject>
+          <subject />
         </field>
         <field>
           <id>ERRORS</id>
@@ -434,93 +449,30 @@
     <created_user>-</created_user>
     <created_date>2016/04/05 11:01:03.994</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2018/03/19 14:05:40.626</modified_date>
+    <modified_date>2018/04/19 16:07:01.766</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>This transformation updates the "last_successful_load" timestamp with the current value of the
-"current_load" timestamp for a specified "cdc_timestamps" row. This transformation should only
-be called if no errors occurred. The "cdc_timestamps" row to use is specified by the parameter:
+      <note>This job computes the "update statistics" for a table that was just updated. This transformation sets the PDI variables (to be accessed in the calling job):
 
-    PARAM_TARGET_DB_ID</note>
-      <xloc>16</xloc>
-      <yloc>16</yloc>
-      <width>574</width>
-      <heigth>80</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>The option "Execute for each row?" must 
-be selected for this step in order for 
-variable substitution to be used with the 
-"?" character.</note>
-      <xloc>384</xloc>
-      <yloc>384</yloc>
-      <width>249</width>
-      <heigth>66</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>The parameter 
-PARAM_TARGET_DB_ID
-must be set for this transformation.</note>
+	QF_UPDATE_TABLE_ROWS_PER_SEC
+	QF_UPDATE_TABLE_INSERTS_PER_SEC		&lt;- No, I do not compute this
+	QF_UPDATE_TABLE_UPDATES_PER_SEC	&lt;- No, I do not compute this
+
+ This job has parameters:
+
+	PARAM_UPDATE_TABLE_START_MILLISECONDS	Timer start value for updating a table
+	PARAM_UPDATE_TABLE_NUM_ROWS			Number of rows processed by the ETL job (in case this number cannot be broken down into inserts &amp; updates)
+	PARAM_UPDATE_TABLE_NUM_INSERTS		Number of rows inserted into the target table by the ETL job
+	PARAM_UPDATE_TABLE_NUM_UPDATES		Number of rows of the target table updated by the ETL job</note>
       <xloc>0</xloc>
-      <yloc>384</yloc>
-      <width>218</width>
-      <heigth>52</heigth>
+      <yloc>0</yloc>
+      <width>900</width>
+      <heigth>166</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Get previous and current load timestamps
-so that these values can be written to the
-log.</note>
-      <xloc>800</xloc>
-      <yloc>384</yloc>
-      <width>257</width>
-      <heigth>52</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -535,57 +487,6 @@ log.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
   </notepads>
-  <connection>
-    <name>etl_db</name>
-    <server>${QF_ETL_DB_HOST}</server>
-    <type>POSTGRESQL</type>
-    <access>Native</access>
-    <database>${QF_ETL_DB_DATABASE}</database>
-    <port>${QF_ETL_DB_PORT}</port>
-    <username>${QF_ETL_DB_USERNAME}</username>
-    <password>${QF_ETL_DB_PASSWORD}</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
-    <attributes>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>IS_CLUSTERED</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>PORT_NUMBER</code>
-        <attribute>${QF_ETL_DB_PORT}</attribute>
-      </attribute>
-      <attribute>
-        <code>PRESERVE_RESERVED_WORD_CASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>QUOTE_ALL_FIELDS</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>USE_POOLING</code>
-        <attribute>N</attribute>
-      </attribute>
-    </attributes>
-  </connection>
   <connection>
     <name>logging_db</name>
     <server>${QF_LOGGING_DB_HOST}</server>
@@ -639,77 +540,19 @@ log.</note>
   </connection>
   <order>
     <hop>
-      <from>PARAM_TARGET_DB_ID is not null?</from>
-      <to>Abort</to>
+      <from>Generate single dummy row</from>
+      <to>Log parameters</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Get Variables</from>
-      <to>PARAM_TARGET_DB_ID is not null?</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>PARAM_TARGET_DB_ID is not null?</from>
-      <to>Write to log - target_db_id</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Write to log - target_db_id</from>
-      <to>Update last_successful_load timestamp</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Update last_successful_load timestamp</from>
-      <to>Row updated?</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Row updated?</from>
-      <to>Row not updated!</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Get previous &amp; current timestamps</from>
-      <to>Write to log 2</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Row updated?</from>
-      <to>Get previous &amp; current timestamps</to>
+      <from>Log parameters</from>
+      <to>JavaScript - Set PDI variables</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Abort</name>
-    <type>Abort</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <row_threshold>0</row_threshold>
-    <message>Parameter PARAM_TARGET_DB_ID was not specified for tr_cdc_timestamp_load_end</message>
-    <always_log_rows>Y</always_log_rows>
-    <abort_with_error>Y</abort_with_error>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>80</xloc>
-      <yloc>320</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Get Variables</name>
-    <type>GetVariable</type>
+    <name>Generate single dummy row</name>
+    <type>RowGenerator</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -720,18 +563,23 @@ log.</note>
     </partitioning>
     <fields>
       <field>
-        <name>target_db_id</name>
-        <variable>${PARAM_TARGET_DB_ID}</variable>
+        <name>rownum</name>
         <type>Integer</type>
         <format />
         <currency />
         <decimal />
         <group />
+        <nullif>1</nullif>
         <length>-1</length>
         <precision>-1</precision>
-        <trim_type>none</trim_type>
+        <set_empty_string>N</set_empty_string>
       </field>
     </fields>
+    <limit>1</limit>
+    <never_ending>N</never_ending>
+    <interval_in_ms>5000</interval_in_ms>
+    <row_time_field>now</row_time_field>
+    <last_time_field>FiveSecondsAgo</last_time_field>
     <cluster_schema />
     <remotesteps>
       <input>
@@ -740,14 +588,14 @@ log.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>160</xloc>
-      <yloc>128</yloc>
+      <xloc>176</xloc>
+      <yloc>192</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Get previous &amp; current timestamps</name>
-    <type>DBLookup</type>
+    <name>JavaScript - Set PDI variables</name>
+    <type>ScriptValueMod</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -756,35 +604,70 @@ log.</note>
       <method>none</method>
       <schema_name />
     </partitioning>
-    <connection>etl_db</connection>
-    <cache>N</cache>
-    <cache_load_all>N</cache_load_all>
-    <cache_size>0</cache_size>
-    <lookup>
-      <schema>${QF_ETL_DB_SCHEMA}</schema>
-      <table>cdc_timestamps</table>
-      <orderby />
-      <fail_on_multiple>N</fail_on_multiple>
-      <eat_row_on_failure>N</eat_row_on_failure>
-      <key>
-        <name>target_db_id</name>
-        <field>target_db_id</field>
-        <condition>=</condition>
-        <name2 />
-      </key>
-      <value>
-        <name>last_successful_load</name>
-        <rename>last_successful_load</rename>
-        <default />
-        <type>Timestamp</type>
-      </value>
-      <value>
-        <name>current_load</name>
-        <rename>current_load</rename>
-        <default />
-        <type>Timestamp</type>
-      </value>
-    </lookup>
+    <compatible>N</compatible>
+    <optimizationLevel>9</optimizationLevel>
+    <jsScripts>
+      <jsScript>
+        <jsScript_type>0</jsScript_type>
+        <jsScript_name>Set PDI variable</jsScript_name>
+        <jsScript_script>// Set variable with scope "root job". The variable will be valid
+// in the root job and all the child jobs and transformations.
+// Possible scopes:
+//   "s": system-wide
+//   "r": up to the root job
+//   "p": up to the parent job
+//   "g": up to the grandparent job
+
+now_millis = Date.now();
+
+not_set_value = getVariable("QF_POSITIVE_INTEGER_NOT_SET_VALUE", "-1");
+
+// Get parameter values:
+start_millis = getVariable("PARAM_UPDATE_TABLE_START_MILLISECONDS", not_set_value);
+num_rows     = getVariable("PARAM_UPDATE_TABLE_NUM_ROWS"          , not_set_value);
+num_inserts  = getVariable("PARAM_UPDATE_TABLE_NUM_INSERTS"       , not_set_value);
+num_updates  = getVariable("PARAM_UPDATE_TABLE_NUM_UPDATES"       , not_set_value);
+
+// Inititalize in case any or all of the PDI variables are not set:
+elapsed_millis      = setVariable("QF_UPDATE_TABLE_ELAPSED_MILLISECONDS", null, "r");
+num_rows_per_sec    = setVariable("QF_UPDATE_TABLE_ROWS_PER_SEC"        , null, "r");
+//num_inserts_per_sec = setVariable("QF_UPDATE_TABLE_INSERTS_PER_SEC"     , null, "r");
+//num_updates_per_sec = setVariable("QF_UPDATE_TABLE_UPDATES_PER_SEC"     , null, "r");
+
+if (start_millis != not_set_value) {
+    elapsed_millis = now_millis - start_millis;
+    if(num_rows != not_set_value) {
+        num_rows_per_sec    = num_rows * 1000/elapsed_millis;
+    } else if (num_inserts != not_set_value &amp;&amp; num_updates != not_set_value) {
+        //num_rows = parseInt(num_inserts, 10) + parseInt(num_updates, 10);
+        //num_rows_per_sec    = num_rows * 1000/elapsed_millis;
+        num_rows_per_sec    = (parseInt(num_inserts, 10) + parseInt(num_updates, 10)) * 1000/elapsed_millis;
+        //Alert("num_rows = "+num_rows+"\nelapsed_millis = "+elapsed_millis+"\nnum_rows_per_sec = "+num_rows_per_sec);
+    } else if (num_inserts != not_set_value) {
+        num_rows_per_sec    = num_inserts * 1000/elapsed_millis;
+    } else if (num_updates != not_set_value) {
+        num_rows_per_sec    = num_updates * 1000/elapsed_millis;
+    }
+    //if(num_rows != not_set_value) {
+    //    num_rows_per_sec    = num_rows*1000    / elapsed_millis;
+    //}
+    //if(num_inserts != not_set_value) {
+    //    num_inserts_per_sec = num_inserts*1000 / elapsed_millis;
+    //}
+    //if(num_updates != not_set_value) {
+    //    num_updates_per_sec = num_updates*1000 / elapsed_millis;
+    //}
+}
+
+// Set the variables that will be accessed in the calling job.:
+setVariable("QF_UPDATE_TABLE_ELAPSED_MILLISECONDS", elapsed_millis    , "r");
+setVariable("QF_UPDATE_TABLE_ROWS_PER_SEC"        , num_rows_per_sec  , "r");
+//setVariable("QF_UPDATE_TABLE_INSERTS_PER_SEC"     , num_inserts_per_sec, "r");
+//setVariable("QF_UPDATE_TABLE_UPDATES_PER_SEC"     , num_updates_per_sec, "r");
+</jsScript_script>
+      </jsScript>
+    </jsScripts>
+    <fields>    </fields>
     <cluster_schema />
     <remotesteps>
       <input>
@@ -793,163 +676,13 @@ log.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>928</xloc>
-      <yloc>320</yloc>
+      <xloc>176</xloc>
+      <yloc>352</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>PARAM_TARGET_DB_ID is not null?</name>
-    <type>FilterRows</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <send_true_to>Write to log - target_db_id</send_true_to>
-    <send_false_to>Abort</send_false_to>
-    <compare>
-      <condition>
-        <negated>N</negated>
-        <leftvalue>target_db_id</leftvalue>
-        <function>IS NOT NULL</function>
-        <rightvalue />
-      </condition>
-    </compare>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>160</xloc>
-      <yloc>208</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Row not updated!</name>
-    <type>Abort</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <row_threshold>0</row_threshold>
-    <message>A cdc_timestamps row was not updated in tr_cdc_timestamp_load_end</message>
-    <always_log_rows>Y</always_log_rows>
-    <abort_with_error>Y</abort_with_error>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>720</xloc>
-      <yloc>432</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Row updated?</name>
-    <type>FilterRows</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <send_true_to>Get previous &amp; current timestamps</send_true_to>
-    <send_false_to>Row not updated!</send_false_to>
-    <compare>
-      <condition>
-        <negated>N</negated>
-        <leftvalue>update_stats</leftvalue>
-        <function>=</function>
-        <rightvalue />
-        <value>
-          <name>constant</name>
-          <type>Integer</type>
-          <text>1</text>
-          <length>-1</length>
-          <precision>0</precision>
-          <isnull>N</isnull>
-          <mask>#;-#</mask>
-        </value>
-      </condition>
-    </compare>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>720</xloc>
-      <yloc>320</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Update last_successful_load timestamp</name>
-    <type>ExecSQL</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <connection>etl_db</connection>
-    <execute_each_row>Y</execute_each_row>
-    <single_statement>N</single_statement>
-    <replace_variables>Y</replace_variables>
-    <quoteString>N</quoteString>
-    <sql>UPDATE
-    ${QF_ETL_DB_SCHEMA}.cdc_timestamps
-SET
-    last_successful_load = current_load
-WHERE
-    target_db_id = ?;</sql>
-    <set_params>N</set_params>
-    <insert_field />
-    <update_field>update_stats</update_field>
-    <delete_field />
-    <read_field />
-    <arguments>
-      <argument>
-        <name>target_db_id</name>
-      </argument>
-    </arguments>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>496</xloc>
-      <yloc>320</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Write to log - target_db_id</name>
+    <name>Log parameters</name>
     <type>WriteToLog</type>
     <description />
     <distribute>Y</distribute>
@@ -963,12 +696,13 @@ WHERE
     <displayHeader>Y</displayHeader>
     <limitRows>N</limitRows>
     <limitRowsNumber>0</limitRowsNumber>
-    <logmessage>tr_cdc_timestamp_load_end:</logmessage>
+    <logmessage>Parameters passed to tr_table_update_statistics_compute:
+PARAM_UPDATE_TABLE_START_MILLISECONDS = ${PARAM_UPDATE_TABLE_START_MILLISECONDS}
+PARAM_UPDATE_TABLE_NUM_ROWS           = ${PARAM_UPDATE_TABLE_NUM_ROWS}
+PARAM_UPDATE_TABLE_NUM_INSERTS        = ${PARAM_UPDATE_TABLE_NUM_INSERTS}
+PARAM_UPDATE_TABLE_NUM_UPDATES        = ${PARAM_UPDATE_TABLE_NUM_UPDATES}</logmessage>
     <fields>
-      <field>
-        <name>target_db_id</name>
-      </field>
-    </fields>
+      </fields>
     <cluster_schema />
     <remotesteps>
       <input>
@@ -977,48 +711,8 @@ WHERE
       </output>
     </remotesteps>
     <GUI>
-      <xloc>256</xloc>
-      <yloc>320</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Write to log 2</name>
-    <type>WriteToLog</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <loglevel>log_level_basic</loglevel>
-    <displayHeader>Y</displayHeader>
-    <limitRows>N</limitRows>
-    <limitRowsNumber>0</limitRowsNumber>
-    <logmessage>tr_cdc_timestamp_load_end:</logmessage>
-    <fields>
-      <field>
-        <name>target_db_id</name>
-      </field>
-      <field>
-        <name>last_successful_load</name>
-      </field>
-      <field>
-        <name>current_load</name>
-      </field>
-    </fields>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>1120</xloc>
-      <yloc>320</yloc>
+      <xloc>176</xloc>
+      <yloc>272</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

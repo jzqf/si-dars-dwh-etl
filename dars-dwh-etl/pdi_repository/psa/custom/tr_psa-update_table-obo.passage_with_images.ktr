@@ -19,11 +19,6 @@
         <description>Timestamp of last successful load from the source database</description>
       </parameter>
       <parameter>
-        <name>PARAM_MAX_INSERT_ID</name>
-        <default_value>10</default_value>
-        <description>Maximum value of the "insert_id" column for rows to load from the source DB table</description>
-      </parameter>
-      <parameter>
         <name>PARAM_SOURCE_SCHEMA</name>
         <default_value>passage</default_value>
         <description>Name of schema containing the "main" source table to mirror to target table</description>
@@ -32,6 +27,11 @@
         <name>PARAM_SOURCE_TABLE</name>
         <default_value>passage</default_value>
         <description>Name of the "main" source table to mirror to target table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_SOURCE_TABLE_MAX_INSERT_ID</name>
+        <default_value>10</default_value>
+        <description>Maximum value of the "insert_id" column for rows to load from the source DB table</description>
       </parameter>
       <parameter>
         <name>PARAM_TARGET_SCHEMA</name>
@@ -464,7 +464,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/12/13 09:03:13.638</modified_date>
+    <modified_date>2018/04/19 15:10:51.941</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -476,11 +476,11 @@ It is important to sort these rows chronologically (by either the "insert_id" or
 fails in the middle somewhere and if this transaction does not run in a single transaction, then next time this transformation is 
 executed, we can start again where we left off (by computing, e.g., by making use of MAX(insert_id) for the PSA table).</note>
       <xloc>304</xloc>
-      <yloc>560</yloc>
-      <width>765</width>
-      <heigth>80</heigth>
+      <yloc>512</yloc>
+      <width>723</width>
+      <heigth>75</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -519,11 +519,11 @@ it takes a long time for this transformation to end. During this period the "Pau
 running" top" shows that both "postgres"and "java" processes are actively using a 25-75% of the CPU. When this CPU usage stops, 
 the  "Pause" and "Stop" buttons become disabled, showing that the transformation is finally finished. Strange.</note>
       <xloc>304</xloc>
-      <yloc>864</yloc>
-      <width>773</width>
-      <heigth>332</heigth>
+      <yloc>784</yloc>
+      <width>730</width>
+      <heigth>309</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -540,11 +540,11 @@ the  "Pause" and "Stop" buttons become disabled, showing that the transformation
     <notepad>
       <note>Get batch ID for current transformation. This will be stored in the PSA table for auditing/logging.</note>
       <xloc>304</xloc>
-      <yloc>800</yloc>
-      <width>576</width>
-      <heigth>24</heigth>
+      <yloc>736</yloc>
+      <width>542</width>
+      <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -573,17 +573,17 @@ This transformation has parameters:
 
 	PARAM_CDC_LAST_LOAD_UTC			Timestamp for when *all* tables of the PSA were most recently updated successfully
 	PARAM_CDC_CURRENT_LOAD_UTC		Used so that a consistent max timestamp is used for all ETL
-	PARAM_MAX_INSERT_ID			Maximum value of the "insert_id" column for rows to load from the source DB table
-	PARAM_SOURCE_SCHEMA			Name of schema containing the "main" source table to archive/mirror to target table
-	PARAM_SOURCE_TABLE			Name of the "main" source table to archive/mirror to target table
-	PARAM_TARGET_SCHEMA			Name of schema containing target table to update
-	PARAM_TARGET_TABLE				Name of target table to update</note>
+	PARAM_SOURCE_TABLE_MAX_INSERT_ID	Maximum value of the "insert_id" column for rows to load from the source DB table
+	PARAM_SOURCE_SCHEMA				Name of schema containing the "main" source table to archive/mirror to target table
+	PARAM_SOURCE_TABLE					Name of the "main" source table to archive/mirror to target table
+	PARAM_TARGET_SCHEMA				Name of schema containing target table to update
+	PARAM_TARGET_TABLE					Name of target table to update</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>801</width>
-      <heigth>276</heigth>
+      <width>750</width>
+      <heigth>257</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -602,11 +602,11 @@ This transformation has parameters:
 be updated by this transformation. This will be used to the select data from the source passage.passage table that was inserted or
 modified since the last update to the PSA DB.</note>
       <xloc>304</xloc>
-      <yloc>288</yloc>
-      <width>783</width>
-      <heigth>52</heigth>
+      <yloc>272</yloc>
+      <width>732</width>
+      <heigth>49</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -623,11 +623,11 @@ modified since the last update to the PSA DB.</note>
     <notepad>
       <note>Select, delete and map/rename fields (table column names), as appropriate.</note>
       <xloc>304</xloc>
-      <yloc>672</yloc>
-      <width>454</width>
-      <heigth>24</heigth>
+      <yloc>608</yloc>
+      <width>423</width>
+      <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -654,11 +654,11 @@ modified since the last update to the PSA DB.</note>
 		"timestamp without time zone" or "bytea", add declaration for column "etl_batch_id_last_update", primary key constraint, ...
 	6.	Re-enable the hop from the "Get max "insert_id" step and disable the hop from the "Set max ID &amp; ..." step.</note>
       <xloc>304</xloc>
-      <yloc>368</yloc>
-      <width>799</width>
-      <heigth>164</heigth>
+      <yloc>336</yloc>
+      <width>753</width>
+      <heigth>153</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -680,16 +680,17 @@ on primary key
 column(s) is 
 
 
+
 *required* in 
 order for error 
 handling to be 
 triggered here!</note>
       <xloc>16</xloc>
-      <yloc>864</yloc>
-      <width>108</width>
-      <heigth>164</heigth>
+      <yloc>784</yloc>
+      <width>105</width>
+      <heigth>166</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>Y</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -706,11 +707,11 @@ triggered here!</note>
     <notepad>
       <note>Denormalize the stream data by introducing new passage columns to hold details for up to 4 images linked to each passage.</note>
       <xloc>304</xloc>
-      <yloc>736</yloc>
-      <width>737</width>
-      <heigth>24</heigth>
+      <yloc>672</yloc>
+      <width>686</width>
+      <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -975,7 +976,117 @@ triggered here!</note>
       <to>Set etl_batch_id_insert = Xform batch ID</to>
       <enabled>Y</enabled>
     </hop>
+    <hop>
+      <from>Compute number of rows processed</from>
+      <to>Set QF_UPDATE_TABLE_NUM_ROWS</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Compute number of rows updated</from>
+      <to>Set QF_UPDATE_TABLE_NUM_UPDATES</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Update - PSA.schema.table</from>
+      <to>Compute number of rows updated</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Table input - Source DB: obo_opr</from>
+      <to>Compute number of rows processed</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Set QF_UPDATE_TABLE_NUM_UPDATES</from>
+      <to>Get transformation name</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Get transformation name</from>
+      <to>Log number of rows updated</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Set QF_UPDATE_TABLE_NUM_ROWS</from>
+      <to>Get transformation name 2</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Get transformation name 2</from>
+      <to>Log number of rows processed</to>
+      <enabled>Y</enabled>
+    </hop>
   </order>
+  <step>
+    <name>Compute number of rows processed</name>
+    <type>MemoryGroupBy</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <give_back_row>Y</give_back_row>
+    <group>
+      </group>
+    <fields>
+      <field>
+        <aggregate>num_rows</aggregate>
+        <subject />
+        <type>COUNT_ANY</type>
+        <valuefield />
+      </field>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>384</xloc>
+      <yloc>1120</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Compute number of rows updated</name>
+    <type>MemoryGroupBy</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <give_back_row>Y</give_back_row>
+    <group>
+      </group>
+    <fields>
+      <field>
+        <aggregate>num_rows_updated</aggregate>
+        <subject />
+        <type>COUNT_ANY</type>
+        <valuefield />
+      </field>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>144</xloc>
+      <yloc>1120</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
   <step>
     <name>Get max id &amp; date for: PSA.obo.passage_with_images</name>
     <type>TableInput</type>
@@ -1021,7 +1132,151 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>304</yloc>
+      <yloc>288</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Get transformation name</name>
+    <type>SystemInfo</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <field>
+        <name>current_transformation</name>
+        <type>transformation name</type>
+      </field>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>144</xloc>
+      <yloc>1248</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Get transformation name 2</name>
+    <type>SystemInfo</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <field>
+        <name>current_transformation</name>
+        <type>transformation name</type>
+      </field>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>384</xloc>
+      <yloc>1248</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Log number of rows processed</name>
+    <type>WriteToLog</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <loglevel>log_level_minimal</loglevel>
+    <displayHeader>Y</displayHeader>
+    <limitRows>N</limitRows>
+    <limitRowsNumber>0</limitRowsNumber>
+    <logmessage>PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE   = ${PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE}
+PARAM_DYN_DB_CONN_TARGET_DB_DATABASE   = ${PARAM_DYN_DB_CONN_TARGET_DB_DATABASE}
+PARAM_SOURCE_SCHEMA                    = ${PARAM_SOURCE_SCHEMA}
+PARAM_SOURCE_TABLE                     = ${PARAM_SOURCE_TABLE}
+PARAM_TARGET_SCHEMA                    = ${PARAM_TARGET_SCHEMA}
+PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
+    <fields>
+      <field>
+        <name>current_transformation</name>
+      </field>
+      <field>
+        <name>num_rows</name>
+      </field>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>384</xloc>
+      <yloc>1312</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Log number of rows updated</name>
+    <type>WriteToLog</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <loglevel>log_level_minimal</loglevel>
+    <displayHeader>Y</displayHeader>
+    <limitRows>N</limitRows>
+    <limitRowsNumber>0</limitRowsNumber>
+    <logmessage>PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE   = ${PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE}
+PARAM_DYN_DB_CONN_TARGET_DB_DATABASE   = ${PARAM_DYN_DB_CONN_TARGET_DB_DATABASE}
+PARAM_SOURCE_SCHEMA                    = ${PARAM_SOURCE_SCHEMA}
+PARAM_SOURCE_TABLE                     = ${PARAM_SOURCE_TABLE}
+PARAM_TARGET_SCHEMA                    = ${PARAM_TARGET_SCHEMA}
+PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
+    <fields>
+      <field>
+        <name>current_transformation</name>
+      </field>
+      <field>
+        <name>num_rows_updated</name>
+      </field>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>144</xloc>
+      <yloc>1312</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1065,7 +1320,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>672</yloc>
+      <yloc>608</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1321,7 +1576,73 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>736</yloc>
+      <yloc>672</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Set QF_UPDATE_TABLE_NUM_ROWS</name>
+    <type>SetVariable</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <field>
+        <field_name>num_rows</field_name>
+        <variable_name>QF_UPDATE_TABLE_NUM_ROWS</variable_name>
+        <variable_type>ROOT_JOB</variable_type>
+        <default_value />
+      </field>
+    </fields>
+    <use_formatting>Y</use_formatting>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>384</xloc>
+      <yloc>1184</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Set QF_UPDATE_TABLE_NUM_UPDATES</name>
+    <type>SetVariable</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <field>
+        <field_name>num_rows_updated</field_name>
+        <variable_name>QF_UPDATE_TABLE_NUM_UPDATES</variable_name>
+        <variable_type>ROOT_JOB</variable_type>
+        <default_value />
+      </field>
+    </fields>
+    <use_formatting>Y</use_formatting>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>144</xloc>
+      <yloc>1184</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1351,7 +1672,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>800</yloc>
+      <yloc>736</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1381,7 +1702,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>1008</yloc>
+      <yloc>928</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1417,7 +1738,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>224</xloc>
-      <yloc>416</yloc>
+      <yloc>384</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1425,7 +1746,7 @@ FROM
     <name>Table input - Source DB: obo_opr</name>
     <type>TableInput</type>
     <description />
-    <distribute>Y</distribute>
+    <distribute>N</distribute>
     <custom_distribution />
     <copies>1</copies>
     <partitioning>
@@ -1470,11 +1791,18 @@ WHERE
                                                          -- "last_updated_on" column *is* updated when this happens, then this 
                                                          -- test here is not necessary.
     )
-    AND p.passage_id &lt;= ${PARAM_MAX_INSERT_ID}           -- To avoid loading rows that are *inserted* after the job starts.
-    AND (
-            p.last_updated_on IS NULL OR                          -- Rows that have been inserted but not modified.
-            p.last_updated_on &lt;= '${PARAM_CDC_CURRENT_LOAD_UTC}'  -- To avoid loading rows that are *modified* after the job starts.
-        ) 
+    AND p.passage_id &lt;= ${PARAM_SOURCE_TABLE_MAX_INSERT_ID}           -- To avoid loading rows that are *inserted* after the job starts.
+
+-- This condition is commented out because it is not needed and leads to problems if used.
+-- For details, see the comments in the step that creates the SELECT statement for the source table
+-- in transformation:
+--
+--   /generic/target_update/tr_target-update_table-updatable_table
+--
+--    AND (
+--            p.last_updated_on IS NULL OR                          -- Rows that have been inserted but not modified.
+--            p.last_updated_on &lt;= '${PARAM_CDC_CURRENT_LOAD_UTC}'  -- To avoid loading rows that are *modified* after the job starts.
+--        ) 
 ORDER BY 
     p.passage_id, 
     i.image_id</sql>
@@ -1492,7 +1820,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>592</yloc>
+      <yloc>544</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1535,7 +1863,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>912</yloc>
+      <yloc>832</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1671,7 +1999,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>1088</yloc>
+      <yloc>1008</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1693,7 +2021,7 @@ ORDER BY
     <logmessage>tr_psa-update_table-obo.passage_with_images:
 PARAM_CDC_LAST_LOAD_UTC    = ${PARAM_CDC_LAST_LOAD_UTC}
 PARAM_CDC_CURRENT_LOAD_UTC = ${PARAM_CDC_CURRENT_LOAD_UTC}
-PARAM_MAX_INSERT_ID        = ${PARAM_MAX_INSERT_ID}</logmessage>
+PARAM_SOURCE_TABLE_MAX_INSERT_ID        = ${PARAM_SOURCE_TABLE_MAX_INSERT_ID}</logmessage>
     <fields>
       <field>
         <name>max_target_insert_id</name>
@@ -1717,7 +2045,7 @@ PARAM_MAX_INSERT_ID        = ${PARAM_MAX_INSERT_ID}</logmessage>
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>496</yloc>
+      <yloc>448</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

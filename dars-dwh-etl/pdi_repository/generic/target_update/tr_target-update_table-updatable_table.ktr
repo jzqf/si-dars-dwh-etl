@@ -10,27 +10,27 @@
     <parameters>
       <parameter>
         <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
-        <default_value>2100.01.01 00:00:00</default_value>
+        <default_value>2018.04.19 08:33:00</default_value>
         <description>Timestamp of the current load (no rows after this timestamp will be loaded)</description>
       </parameter>
       <parameter>
         <name>PARAM_CDC_LAST_LOAD_UTC</name>
-        <default_value>1900.01.01 00:00:00</default_value>
+        <default_value>1970.01.01 00:00:00</default_value>
         <description>Timestamp of last successful load from the source database</description>
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE</name>
-        <default_value>odms_opr</default_value>
+        <default_value>obo_opr</default_value>
         <description>for source DB "dynamic" database connections</description>
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER</name>
-        <default_value />
+        <default_value>org.postgresql.Driver</default_value>
         <description>for source DB "dynamic" database connections</description>
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_HOST</name>
-        <default_value>localhost</default_value>
+        <default_value>trdci0913.q-free.com</default_value>
         <description>for source DB "dynamic" database connections</description>
       </parameter>
       <parameter>
@@ -45,7 +45,7 @@
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_URL</name>
-        <default_value />
+        <default_value>jdbc:postgresql://trdci0913.q-free.com:5432/obo_opr</default_value>
         <description>for source DB "dynamic" database connections</description>
       </parameter>
       <parameter>
@@ -55,12 +55,12 @@
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_TARGET_DB_DATABASE</name>
-        <default_value>dars_psa_db</default_value>
+        <default_value>dwh_psa_obo</default_value>
         <description>for target DB "dynamic" database connections</description>
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_TARGET_DB_DRIVER</name>
-        <default_value />
+        <default_value>org.postgresql.Driver</default_value>
         <description>for target DB "dynamic" database connections</description>
       </parameter>
       <parameter>
@@ -70,7 +70,7 @@
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD</name>
-        <default_value>etl</default_value>
+        <default_value>qfree_admin</default_value>
         <description>for target DB "dynamic" database connections</description>
       </parameter>
       <parameter>
@@ -80,18 +80,13 @@
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_TARGET_DB_URL</name>
-        <default_value />
+        <default_value>jdbc:postgresql://localhost:5432/dars_psa_db</default_value>
         <description>for target DB "dynamic" database connections</description>
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_TARGET_DB_USERNAME</name>
-        <default_value>etl</default_value>
+        <default_value>qfree_admin</default_value>
         <description>for target DB "dynamic" database connections</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_MAX_INSERT_ID</name>
-        <default_value>1000</default_value>
-        <description>Maximum value of the "insert_id" column for rows to load from the source DB table</description>
       </parameter>
       <parameter>
         <name>PARAM_SOURCE_DB_ID</name>
@@ -124,9 +119,14 @@
         <description>Name of source table to mirror to target table</description>
       </parameter>
       <parameter>
+        <name>PARAM_SOURCE_TABLE_MAX_INSERT_ID</name>
+        <default_value>1000</default_value>
+        <description>Maximum value of the "insert_id" column for rows to load from the source DB table</description>
+      </parameter>
+      <parameter>
         <name>PARAM_TABLE_META_ID</name>
         <default_value>297</default_value>
-        <description>Primary key of etl.table_meta row for "source" table archived/mirrored to "target" table</description>
+        <description>Primary key of ${QF_ETL_DB_SCHEMA}.table_meta row for "source" table archived/mirrored to "target" table</description>
       </parameter>
       <parameter>
         <name>PARAM_TARGET_DB_ID</name>
@@ -579,7 +579,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/11/27 13:47:20.756</modified_date>
+    <modified_date>2018/04/19 14:52:08.055</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -588,44 +588,44 @@
       <note>This transformation uses ETL Metadata injection to control how columns of a table in a source database are mapped to columns 
 of a target table in a target database. This is a generic algorithm that can work with *any* table, as long as it is classed as "updatable"
 (INSERTs &amp; UPDATEs allowed, but no DELETEs) and it has the necessary "insert_id", "inserted_on" &amp; "last_updated_on" columns. 
-This transformation has parameters:
+The "updatable" table generic update algorithm #1 is used. This transformation has parameters:
 
-	PARAM_CDC_LAST_LOAD_UTC						Timestamp for when the target DB was most recently updated successfully
-	PARAM_CDC_CURRENT_LOAD_UTC					Used so that a consistent max timestamp is used for all ETL
-	PARAM_DYN_DB_CONN_SOURCE_DB_HOST			for source DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_SOURCE_DB_PORT			for source DB "dynamic" database connections
+	PARAM_CDC_LAST_LOAD_UTC					Timestamp for when the target DB was most recently updated successfully
+	PARAM_CDC_CURRENT_LOAD_UTC				Used so that a consistent max timestamp is used for all ETL
+	PARAM_DYN_DB_CONN_SOURCE_DB_HOST		for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_PORT		for source DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE	for source DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME	for source DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD	for source DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_SOURCE_DB_URL			for source DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER		for source DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_TARGET_DB_HOST			for target DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_TARGET_DB_PORT			for target DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_TARGET_DB_DATABASE		for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_HOST		for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_PORT		for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_DATABASE	for target DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_TARGET_DB_USERNAME	for target DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD	for target DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_TARGET_DB_URL			for target DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_TARGET_DB_DRIVER		for target DB "dynamic" database connections
-	PARAM_MAX_INSERT_ID							Maximum value of the "insert_id" column for rows to load from the source DB table
-	PARAM_TABLE_META_ID							Primary key of etl.table_meta row for "source" table archived/mirrored to "target" table
-	PARAM_SOURCE_DB_ID								ID the "source" database containing tables will be mirrored to a "target" database
-	PARAM_SOURCE_SCHEMA							Name of schema containing source table to mirror to target table
+	PARAM_SOURCE_TABLE_MAX_INSERT_ID			Maximum value of the "insert_id" column for rows to load from the source DB table
+	PARAM_TABLE_META_ID							Primary key of ${QF_ETL_DB_SCHEMA}.table_meta row for "source" table archived/mirrored to "target" table
+	PARAM_SOURCE_DB_ID							ID the "source" database containing tables will be mirrored to a "target" database
+	PARAM_SOURCE_SCHEMA						Name of schema containing source table to mirror to target table
 	PARAM_SOURCE_TABLE							Name of source table to mirror to target table
-	PARAM_SOURCE_INSERT_ID_COLNAME				Name of column acting as "insert_id"  timestamp column of source table
-	PARAM_SOURCE_INSERTED_ON_COLNAME			Name of column acting as "inserted_on" column of source table
+	PARAM_SOURCE_INSERT_ID_COLNAME			Name of column acting as "insert_id"  timestamp column of source table
+	PARAM_SOURCE_INSERTED_ON_COLNAME		Name of column acting as "inserted_on" column of source table
 	PARAM_SOURCE_LAST_UPDATED_ON_COLNAME	Name of "last_updated_on" timestamp column of source table
-	PARAM_TARGET_DB_ID								ID of the "target" database to which the "source" DB tables will be archived/mirrored
-	PARAM_TARGET_SCHEMA							Name of schema containing target table to update (not currently used)
-	PARAM_TARGET_TABLE								Name of target table to update (not currently used)
-	PARAM_TARGET_INSERT_ID_COLNAME				Name of column acting as "insert_id"  timestamp column of target table
-	PARAM_TARGET_INSERTED_ON_COLNAME			Name of column acting as "inserted_on" column of target table
+	PARAM_TARGET_DB_ID							ID of the "target" database to which the "source" DB tables will be archived/mirrored
+	PARAM_TARGET_SCHEMA						Name of schema containing target table to update (not currently used)
+	PARAM_TARGET_TABLE							Name of target table to update (not currently used)
+	PARAM_TARGET_INSERT_ID_COLNAME			Name of column acting as "insert_id"  timestamp column of target table
+	PARAM_TARGET_INSERTED_ON_COLNAME		Name of column acting as "inserted_on" column of target table
 	PARAM_TARGET_LAST_UPDATED_ON_COLNAME	Name of "last_updated_on" timestamp column of target table</note>
       <xloc>16</xloc>
       <yloc>0</yloc>
-      <width>862</width>
-      <heigth>500</heigth>
+      <width>923</width>
+      <heigth>465</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -646,11 +646,11 @@ jb_target-update_table-updatable_table
 where this transformation is executed. See the 
 comments in that job for an explanation.</note>
       <xloc>576</xloc>
-      <yloc>528</yloc>
-      <width>283</width>
-      <heigth>80</heigth>
+      <yloc>480</yloc>
+      <width>271</width>
+      <heigth>75</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -671,11 +671,11 @@ jb_target-update_table-updatable_table
 where this transformation is executed. See the 
 comments in that job for an explanation.</note>
       <xloc>576</xloc>
-      <yloc>640</yloc>
-      <width>283</width>
-      <heigth>80</heigth>
+      <yloc>592</yloc>
+      <width>271</width>
+      <heigth>75</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -696,11 +696,11 @@ jb_target-update_table-updatable_table
 where this transformation is executed. See the 
 comments in that job for an explanation.</note>
       <xloc>576</xloc>
-      <yloc>752</yloc>
-      <width>283</width>
-      <heigth>80</heigth>
+      <yloc>704</yloc>
+      <width>271</width>
+      <heigth>75</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -719,11 +719,11 @@ comments in that job for an explanation.</note>
 which is de-referenced in the template transformation. In that way it
 would be easier to debug &amp; log this statement.</note>
       <xloc>16</xloc>
-      <yloc>832</yloc>
-      <width>406</width>
-      <heigth>52</heigth>
+      <yloc>784</yloc>
+      <width>388</width>
+      <heigth>49</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -882,7 +882,7 @@ would be easier to debug &amp; log this statement.</note>
             -- POSTGRESQL-SPECIFIC
             array_to_string(array_agg(source_column_name ORDER BY column_meta_id ASC), ',') AS "str_value"
         FROM 
-            etl.column_meta 
+            ${QF_ETL_DB_SCHEMA}.column_meta 
         WHERE
             table_meta_id = ${PARAM_TABLE_META_ID} AND 
             -- This selects the columns from the source DB table that will be 
@@ -908,15 +908,34 @@ SELECT
                                                               -- because of the finite resolution of timestamp values. As a result, more than one
                                                               -- row can have the *same* value of ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME}, but not all of
                                                               -- them were loaded and treated on the previous run, i.e., the cutoff imposed by
-                                                              -- the condition ${PARAM_SOURCE_INSERT_ID_COLNAME} &lt;= ${PARAM_MAX_INSERT_ID} or
+                                                              -- the condition ${PARAM_SOURCE_INSERT_ID_COLNAME} &lt;= ${PARAM_SOURCE_TABLE_MAX_INSERT_ID} or
                                                               -- ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} &lt;= '${PARAM_CDC_CURRENT_LOAD_UTC}' loaded some,
                                                               -- but not all, of the rows with this value of ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME}.
     ') ' || 
-    'AND ${PARAM_SOURCE_INSERT_ID_COLNAME}   &lt;= ${PARAM_MAX_INSERT_ID} ' ||  -- to avoid loading rows that are *inserted* after the job starts
-    'AND ( ' ||
-            '${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} IS NULL OR ' ||                             -- rows that have been inserted but not modified
-            '${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} &lt;= ''${PARAM_CDC_CURRENT_LOAD_UTC}'' ' ||   -- to avoid loading rows that are *modified* after the job starts
-        ') ' ||
+    'AND ${PARAM_SOURCE_INSERT_ID_COLNAME} &lt;= ${PARAM_SOURCE_TABLE_MAX_INSERT_ID} ' ||  -- to avoid loading rows that are *inserted* after the job starts
+
+-- This condition cannot be used because it prevents selecting rows here that really must be selected in order for this update algorithm to 
+-- function correctly. If this condition were used, rows that satisfy the following will not be loaded and mirrored/archived as they should:
+--   1. Row is inserted into the source database *after* the previous run of the ETL job (or this is the first run of the ETL job), and:
+--   2. The "last_updated_on" column satisfies: ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} > '${PARAM_CDC_CURRENT_LOAD_UTC}'. This can 
+--     happen for a number of reasons:
+--     a. This is the first run of the ETL job and the row is updated after the ETL job starts, or:
+--     b. The row was inserted after the last execution of the ETL job, but it has had its
+--        "last_updated_on" column set *after* the current execution of the ETL job started.
+-- The result of excluding the rows that satisfy these conditions is that these rows will 
+-- not get inserted into the target database. In fact, they will *never* get inserted into 
+-- the target database because the next time this algorithm is run, these rows will be 
+-- rejected because of the condition: ${PARAM_SOURCE_INSERT_ID_COLNAME} > ?. The result
+-- will be that the jb_target-compare job will report these rows as "missing" from the target 
+-- table. They will never get archived/mirrored because their insert_id will always *fail* the
+-- condition: ${PARAM_SOURCE_INSERT_ID_COLNAME} > ?, where "?" here is the maximum value of the 
+-- "insert_id" column of the target table.
+--
+--    'AND ( ' ||
+--            '${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} IS NULL OR ' ||                             -- rows that have been inserted but not modified
+--            '${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} &lt;= ''${PARAM_CDC_CURRENT_LOAD_UTC}'' ' ||   -- to avoid loading rows that are *modified* after the job starts
+--        ') ' ||
+
     'ORDER BY ' ||
         '${PARAM_SOURCE_INSERT_ID_COLNAME}'
     AS "select_source_rows_sql" 
@@ -936,7 +955,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>96</xloc>
-      <yloc>768</yloc>
+      <yloc>720</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -963,14 +982,15 @@ FROM
     -- case (double precision columns), but this value may not be appropriate for other data types. It was only by 
     -- experimenting that I found that injecting "-1" solved the problem for double precision columns. I have decided 
     -- to specify this for *all* columns until/unless I encounter a problem by doing this. If a problem does arise one 
-    -- day, it may be necessary to update the definition of the etl.column_meta table of the "etl" database to include 
+    -- day, it may be necessary to update the definition of the ${QF_ETL_DB_SCHEMA}.column_meta table of the "ETL" 
+    -- database to include 
     -- a real column to store the column "precision" on a column-by-column basis. For columns that do not need a 
     -- "precision" to be specified, NULL can be stored in this column. This will also require updating the 
     -- "populate_etl_metadata_tables" ETL code that generates default metadata.
     -1 AS "source_col_precision", 
     target_column_name AS "target_col_name" 
 FROM 
-    etl.column_meta 
+    ${QF_ETL_DB_SCHEMA}.column_meta 
 WHERE 
     table_meta_id = ${PARAM_TABLE_META_ID} AND 
     mirror_column = true AND
@@ -993,7 +1013,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>432</xloc>
-      <yloc>544</yloc>
+      <yloc>496</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1017,7 +1037,7 @@ ORDER BY
     -- only solution I have found is to inject an empty string for this field.
     '' AS "no_field" 
 FROM 
-    etl.column_meta 
+    ${QF_ETL_DB_SCHEMA}.column_meta 
 WHERE 
     table_meta_id = ${PARAM_TABLE_META_ID} AND 
     is_primary_key_column = true
@@ -1037,7 +1057,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>432</xloc>
-      <yloc>656</yloc>
+      <yloc>608</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1061,7 +1081,7 @@ WITH updateable_columns AS
         column_meta_id,
         target_column_name AS "target_col_name" 
     FROM 
-        etl.column_meta  
+        ${QF_ETL_DB_SCHEMA}.column_meta  
     WHERE 
         table_meta_id = ${PARAM_TABLE_META_ID} AND 
         mirror_column = true AND
@@ -1092,7 +1112,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>432</xloc>
-      <yloc>768</yloc>
+      <yloc>720</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1206,7 +1226,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>656</yloc>
+      <yloc>608</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

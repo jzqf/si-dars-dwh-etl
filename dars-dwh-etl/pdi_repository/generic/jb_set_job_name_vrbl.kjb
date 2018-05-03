@@ -1,19 +1,24 @@
 <job>
-  <name>jb_populate_column_meta-all_tables</name>
+  <name>jb_set_job_name_vrbl</name>
   <description />
   <extended_description />
   <job_version />
   <job_status>0</job_status>
-  <directory>/generic/populate_etl_metadata_tables/DELETE</directory>
+  <directory>/generic</directory>
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2017/10/18 14:23:00.495</modified_date>
+  <modified_date>2018/03/30 12:12:51.612</modified_date>
   <parameters>
     <parameter>
-      <name>PARAM_SOURCE_DB_ID</name>
+      <name>PARAM_CURRENT_JOB_NAME</name>
       <default_value />
-      <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
+      <description>Name of the job that executes this job</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_PARENT_JOB_NAME</name>
+      <default_value />
+      <description>Name of the parent job of the job that executes this job</description>
     </parameter>
   </parameters>
   <connection>
@@ -359,133 +364,103 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>112</xloc>
-      <yloc>144</yloc>
+      <xloc>32</xloc>
+      <yloc>128</yloc>
     </entry>
     <entry>
-      <name>tr_populate_column_meta-list_of_tables</name>
+      <name>Write To Log: Parameters</name>
       <description />
-      <type>TRANS</type>
-      <specification_method>rep_name</specification_method>
-      <trans_object_id />
-      <filename />
-      <transname>tr_populate_column_meta-list_of_tables</transname>
-      <directory>${Internal.Entry.Current.Directory}</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <clear_rows>Y</clear_rows>
-      <clear_files>N</clear_files>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
+      <type>WRITE_TO_LOG</type>
+      <logmessage>PARAM_PARENT_JOB_NAME  = ${PARAM_PARENT_JOB_NAME}
+PARAM_CURRENT_JOB_NAME = ${PARAM_CURRENT_JOB_NAME}</logmessage>
       <loglevel>Basic</loglevel>
-      <cluster>N</cluster>
-      <slave_server_name />
-      <set_append_logfile>N</set_append_logfile>
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <create_parent_folder>N</create_parent_folder>
-      <logging_remote_work>N</logging_remote_work>
-      <run_configuration>Pentaho local</run_configuration>
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-      </parameters>
+      <logsubject>Parameters received by ${Internal.Job.Name}</logsubject>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>112</xloc>
-      <yloc>240</yloc>
+      <xloc>144</xloc>
+      <yloc>128</yloc>
     </entry>
     <entry>
-      <name>OBO OPR database specified?</name>
+      <name>PARAM_PARENT_JOB_NAME is set?</name>
       <description />
       <type>SIMPLE_EVAL</type>
       <valuetype>variable</valuetype>
       <fieldname />
-      <variablename>${PARAM_SOURCE_DB_ID}</variablename>
-      <fieldtype>number</fieldtype>
+      <variablename>${PARAM_PARENT_JOB_NAME}</variablename>
+      <fieldtype>string</fieldtype>
       <mask />
-      <comparevalue>${QF_DB_ID_OBO_OPR}</comparevalue>
+      <comparevalue />
       <minvalue />
       <maxvalue />
-      <successcondition>equal</successcondition>
+      <successcondition>different</successcondition>
       <successnumbercondition>equal</successnumbercondition>
-      <successbooleancondition>false</successbooleancondition>
+      <successbooleancondition>true</successbooleancondition>
       <successwhenvarset>N</successwhenvarset>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>112</xloc>
-      <yloc>336</yloc>
+      <xloc>144</xloc>
+      <yloc>224</yloc>
     </entry>
     <entry>
-      <name>Abort job</name>
+      <name>Set QF_JOB_NAME = ${PARAM_PARENT_JOB_NAME}</name>
       <description />
-      <type>ABORT</type>
-      <message>Untreated case:  PARAM_SOURCE_DB_ID = ${PARAM_SOURCE_DB_ID}</message>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>112</xloc>
-      <yloc>432</yloc>
-    </entry>
-    <entry>
-      <name>jb_populate_column_meta-one_table</name>
-      <description />
-      <type>JOB</type>
-      <specification_method>rep_name</specification_method>
-      <job_object_id />
+      <type>SET_VARIABLES</type>
+      <replacevars>Y</replacevars>
       <filename />
-      <jobname>jb_populate_column_meta-one_table</jobname>
-      <directory>${Internal.Entry.Current.Directory}</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>Y</params_from_previous>
-      <exec_per_row>Y</exec_per_row>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Nothing</loglevel>
-      <slave_server_name />
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <expand_remote_job>N</expand_remote_job>
-      <create_parent_folder>N</create_parent_folder>
-      <pass_export>N</pass_export>
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-        <parameter>
-          <name>PARAM_SOURCE_SCHEMA</name>
-          <stream_name>source_schema_name</stream_name>
-          <value />
-        </parameter>
-        <parameter>
-          <name>PARAM_SOURCE_TABLE</name>
-          <stream_name>source_table_name</stream_name>
-          <value />
-        </parameter>
-        <parameter>
-          <name>PARAM_TABLE_META_ID</name>
-          <stream_name>table_meta_id</stream_name>
-          <value />
-        </parameter>
-      </parameters>
-      <set_append_logfile>N</set_append_logfile>
+      <file_variable_type>JVM</file_variable_type>
+      <fields>
+        <field>
+          <variable_name>QF_JOB_NAME</variable_name>
+          <variable_value>${PARAM_PARENT_JOB_NAME}</variable_value>
+          <variable_type>ROOT_JOB</variable_type>
+        </field>
+      </fields>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>320</xloc>
-      <yloc>336</yloc>
+      <xloc>480</xloc>
+      <yloc>224</yloc>
+    </entry>
+    <entry>
+      <name>Write QF_JOB_NAME to log</name>
+      <description />
+      <type>WRITE_TO_LOG</type>
+      <logmessage>QF_JOB_NAME = ${QF_JOB_NAME}</logmessage>
+      <loglevel>Basic</loglevel>
+      <logsubject>${Internal.Job.Name}</logsubject>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>480</xloc>
+      <yloc>320</yloc>
+    </entry>
+    <entry>
+      <name>Set QF_JOB_NAME = ${PARAM_CURRENT_JOB_NAME}</name>
+      <description />
+      <type>SET_VARIABLES</type>
+      <replacevars>Y</replacevars>
+      <filename />
+      <file_variable_type>JVM</file_variable_type>
+      <fields>
+        <field>
+          <variable_name>QF_JOB_NAME</variable_name>
+          <variable_value>${PARAM_CURRENT_JOB_NAME}</variable_value>
+          <variable_type>ROOT_JOB</variable_type>
+        </field>
+      </fields>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>144</xloc>
+      <yloc>320</yloc>
     </entry>
   </entries>
   <hops>
     <hop>
       <from>START</from>
-      <to>tr_populate_column_meta-list_of_tables</to>
+      <to>Write To Log: Parameters</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -493,17 +468,17 @@
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>OBO OPR database specified?</from>
-      <to>Abort job</to>
+      <from>Write To Log: Parameters</from>
+      <to>PARAM_PARENT_JOB_NAME is set?</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
+      <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>OBO OPR database specified?</from>
-      <to>jb_populate_column_meta-one_table</to>
+      <from>PARAM_PARENT_JOB_NAME is set?</from>
+      <to>Set QF_JOB_NAME = ${PARAM_PARENT_JOB_NAME}</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -511,8 +486,26 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>tr_populate_column_meta-list_of_tables</from>
-      <to>OBO OPR database specified?</to>
+      <from>Set QF_JOB_NAME = ${PARAM_PARENT_JOB_NAME}</from>
+      <to>Write QF_JOB_NAME to log</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>PARAM_PARENT_JOB_NAME is set?</from>
+      <to>Set QF_JOB_NAME = ${PARAM_CURRENT_JOB_NAME}</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Set QF_JOB_NAME = ${PARAM_CURRENT_JOB_NAME}</from>
+      <to>Write QF_JOB_NAME to log</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -522,94 +515,17 @@
   </hops>
   <notepads>
     <notepad>
-      <note>This job writes default rows to the etl.column_meta table under the simple assumption that most columns of all tables that are listed in the etl.table_meta 
-table will be archived/mirrored and that the column names in the target database will be identical to the column names in the source database. 
+      <note>This job sets the PDI variable QF_JOB_NAME. This variable can be passed as a parameter to
+jobs/transformations that send notification emails to indicate which job the email refers to.
 
-Therefore, this job writes one row to the etl.column_meta table for every column that exists for every table listed in the etl.table_meta table.
+This job has the parameters:
 
-This job has parameters:
-
-	PARAM_SOURCE_DB_ID			ID the "source" database containing tables will be archived/mirrored to a "target" database</note>
+	PARAM_PARENT_JOB_NAME		Name of the parent job of the job that executes this job
+	PARAM_CURRENT_JOB_NAME		Name                                   of the job that executes this job</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>915</width>
-      <heigth>122</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Create list of tables for which the column metadata will be generated.
-This subtransformation is passed parameter PARAM_SOURCE_DB_ID.</note>
-      <xloc>464</xloc>
-      <yloc>240</yloc>
-      <width>420</width>
-      <heigth>38</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Ideally, we should set the database connection for the "Table input" step in the
-transformation tr_populate_column_meta-one_table based on the value of
-PARAM_SOURCE_DB_ID, but this is not possible. Neither can it be injected 
-into that step via ETL metadata injection.
-
-The only way that I can see supporting multiple source databases, i.e., 
-different values of PARAM_SOURCE_DB_ID, is to make several copies of
-"tr_populate_column_meta-one_table" and then use a dispatch mechanism that
-consists of a series of cascading "Simple evaluation" job entries to select the
-appropriate job/transformation to execute here based on the value of
-parameter PARAM_SOURCE_DB_ID, as I have started doing here in this job. </note>
-      <xloc>192</xloc>
-      <yloc>400</yloc>
-      <width>473</width>
-      <heigth>178</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>255</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>This sub-job is run once for each table that is specified in 
-tr_populate_column_meta-list_of_tables.</note>
-      <xloc>464</xloc>
-      <yloc>320</yloc>
-      <width>341</width>
-      <heigth>38</heigth>
+      <width>574</width>
+      <heigth>108</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>

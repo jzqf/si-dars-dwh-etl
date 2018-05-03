@@ -449,13 +449,13 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/10/18 12:58:24.319</modified_date>
+    <modified_date>2018/03/19 14:34:57.158</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>This transformation obtains the value of the primary key of a row of the etl.table_meta table that corresponds to
+      <note>This transformation obtains the value of the primary key of a row of the ${QF_ETL_DB_SCHEMA}.table_meta table that corresponds to
 the values of the parameters passed to this transformation.
 
 The stream from this transformation is copied to the "result" of this transformation. This result set can be used in
@@ -469,7 +469,7 @@ This transformation has parameters:
 	PARAM_TARGET_DB_ID			ID of the "target" database to which the "source" DB tables will be archived/mirrored</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>726</width>
+      <width>794</width>
       <heigth>178</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -488,14 +488,14 @@ This transformation has parameters:
     </notepad>
     <notepad>
       <note>Retrieve the value of the primary key, table_meta_id, of the row
-of the etl.table_meta table that corresponds to the values of
+of the ${QF_ETL_DB_SCHEMA}.table_meta table that corresponds to the values of
 the parameters passed to this transformation. The stream
 created by this step consists of a single row with a single field:
 
 	table_meta_id</note>
       <xloc>0</xloc>
       <yloc>192</yloc>
-      <width>382</width>
+      <width>490</width>
       <heigth>94</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -515,10 +515,10 @@ created by this step consists of a single row with a single field:
     <notepad>
       <note>Execution will reach this Abort entry if the parameters passed
 to this transformation do not correspond to an existing 
-etl.table_meta row. This Abort will warn the user of problem.</note>
+${QF_ETL_DB_SCHEMA}.table_meta row. This Abort will warn the user of problem.</note>
       <xloc>224</xloc>
       <yloc>480</yloc>
-      <width>370</width>
+      <width>491</width>
       <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -656,12 +656,12 @@ etl.table_meta row. This Abort will warn the user of problem.</note>
     </hop>
     <hop>
       <from>Detect empty stream</from>
-      <to>Abort: No etl.table_meta row found</to>
+      <to>Abort: No table_meta row found</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Abort: No etl.table_meta row found</name>
+    <name>Abort: No table_meta row found</name>
     <type>Abort</type>
     <description />
     <distribute>Y</distribute>
@@ -672,7 +672,7 @@ etl.table_meta row. This Abort will warn the user of problem.</note>
       <schema_name />
     </partitioning>
     <row_threshold>0</row_threshold>
-    <message>No etl.table_meta row loaded for table ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</message>
+    <message>No ${QF_ETL_DB_SCHEMA}.table_meta row loaded for table ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</message>
     <always_log_rows>Y</always_log_rows>
     <abort_with_error>Y</abort_with_error>
     <cluster_schema />

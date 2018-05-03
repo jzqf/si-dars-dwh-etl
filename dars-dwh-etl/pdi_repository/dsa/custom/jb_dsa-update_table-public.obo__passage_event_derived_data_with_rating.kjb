@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2018/02/13 18:07:14.824</modified_date>
+  <modified_date>2018/04/18 17:34:38.068</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
@@ -19,11 +19,6 @@
       <name>PARAM_CDC_LAST_LOAD_UTC</name>
       <default_value />
       <description>Timestamp of last successful load from the source database</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_MAX_INSERT_ID</name>
-      <default_value />
-      <description>Maximum value of the "insert_id" column for rows to load from the source DB table</description>
     </parameter>
     <parameter>
       <name>PARAM_SOURCE_DB_ID</name>
@@ -46,9 +41,14 @@
       <description />
     </parameter>
     <parameter>
+      <name>PARAM_SOURCE_TABLE_MAX_INSERT_ID</name>
+      <default_value />
+      <description>Maximum value of the "insert_id" column for rows to load from the source DB table</description>
+    </parameter>
+    <parameter>
       <name>PARAM_TABLE_META_ID</name>
       <default_value>-1</default_value>
-      <description>Primary key of etl.table_meta row for "source" table archived/mirrored to "target" table</description>
+      <description>Primary key of ${QF_ETL_DB_SCHEMA}.table_meta row for "source" table archived/mirrored to "target" table</description>
     </parameter>
     <parameter>
       <name>PARAM_TARGET_SCHEMA</name>
@@ -410,7 +410,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>208</xloc>
-      <yloc>272</yloc>
+      <yloc>256</yloc>
     </entry>
     <entry>
       <name>Write To Log: Parameters</name>
@@ -420,7 +420,7 @@
 PARAM_CDC_CURRENT_LOAD_UTC    = ${PARAM_CDC_CURRENT_LOAD_UTC}
 PARAM_TABLE_META_ID           = ${PARAM_TABLE_META_ID}
 PARAM_SOURCE_DB_ID            = ${PARAM_SOURCE_DB_ID}
-PARAM_MAX_INSERT_ID           = ${PARAM_MAX_INSERT_ID}
+PARAM_SOURCE_TABLE_MAX_INSERT_ID           = ${PARAM_SOURCE_TABLE_MAX_INSERT_ID}
 PARAM_SOURCE_SCHEMA           = ${PARAM_SOURCE_SCHEMA}
 PARAM_SOURCE_TABLE            = ${PARAM_SOURCE_TABLE}
 PARAM_SOURCE_SCHEMA_DOT_TABLE = ${PARAM_SOURCE_SCHEMA_DOT_TABLE}
@@ -433,7 +433,7 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>208</xloc>
-      <yloc>368</yloc>
+      <yloc>352</yloc>
     </entry>
     <entry>
       <name>Success</name>
@@ -443,7 +443,7 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>208</xloc>
-      <yloc>592</yloc>
+      <yloc>576</yloc>
     </entry>
     <entry>
       <name>Abort job</name>
@@ -454,7 +454,7 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>720</xloc>
-      <yloc>480</yloc>
+      <yloc>464</yloc>
     </entry>
     <entry>
       <name>jb_log_error - Error description</name>
@@ -493,7 +493,7 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>544</xloc>
-      <yloc>480</yloc>
+      <yloc>464</yloc>
     </entry>
     <entry>
       <name>tr_dsa-update_table-public.obo__passage_event_derived_data_with_rating</name>
@@ -530,7 +530,7 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>208</xloc>
-      <yloc>480</yloc>
+      <yloc>464</yloc>
     </entry>
   </entries>
   <hops>
@@ -588,23 +588,23 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
 
 This job has parameters:
 
-	PARAM_CDC_LAST_LOAD_UTC				Timestamp for when the target DSA DB mirror tables were last updated from the source DB
-	PARAM_CDC_CURRENT_LOAD_UTC			Timestamp of the current load (no rows after this timestamp will be loaded)
-	PARAM_TABLE_META_ID					Primary key of etl.table_meta row for "source" table archived/mirrored to "target" table
-	PARAM_SOURCE_DB_ID						ID the "source" database containing tables will be mirrored to a "target" database
-	PARAM_MAX_INSERT_ID					Maximum value of the "insert_id" column for rows to load from the source DB table
-	PARAM_SOURCE_SCHEMA					Not really needed since the transformation that will be run will be specific for the specified PSA table 
+	PARAM_CDC_LAST_LOAD_UTC			Timestamp for when the target DSA DB mirror tables were last updated from the source DB
+	PARAM_CDC_CURRENT_LOAD_UTC		Timestamp of the current load (no rows after this timestamp will be loaded)
+	PARAM_TABLE_META_ID					Primary key of ${QF_ETL_DB_SCHEMA}.table_meta row for "source" table archived/mirrored to "target" table
+	PARAM_SOURCE_DB_ID					ID the "source" database containing tables will be mirrored to a "target" database
+	PARAM_SOURCE_TABLE_MAX_INSERT_ID	Maximum value of the "insert_id" column for rows to load from the source DB table
+	PARAM_SOURCE_SCHEMA				Not really needed since the transformation that will be run will be specific for the specified PSA table 
 	PARAM_SOURCE_TABLE					Not really needed since the transformation that will be run will be specific for the specified PSA table 
-	PARAM_SOURCE_SCHEMA_DOT_TABLE		Not really needed since the transformation that will be run will be specific for the specified PSA table 
+	PARAM_SOURCE_SCHEMA_DOT_TABLE	Not really needed since the transformation that will be run will be specific for the specified PSA table 
 	PARAM_TARGET_SCHEMA
 	PARAM_TARGET_TABLE
 	PARAM_TARGET_SCHEMA_DOT_TABLE</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>892</width>
-      <heigth>248</heigth>
+      <width>875</width>
+      <heigth>231</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -621,12 +621,12 @@ This job has parameters:
     <notepad>
       <note>The error message set here will be
 sent out by e-mail by the root job.</note>
-      <xloc>448</xloc>
-      <yloc>544</yloc>
-      <width>211</width>
-      <heigth>38</heigth>
+      <xloc>464</xloc>
+      <yloc>528</yloc>
+      <width>200</width>
+      <heigth>36</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -650,12 +650,12 @@ in which case this job would not be needed at all. This job is used as a "wrappe
 transformation "tr_dsa-update_table-public.obo__passage_event_derived_data_with_rating"
 only to be able to perform a little extra logging and to set a meaningful error message in 
 case of an error.</note>
-      <xloc>336</xloc>
-      <yloc>272</yloc>
-      <width>555</width>
-      <heigth>136</heigth>
+      <xloc>352</xloc>
+      <yloc>256</yloc>
+      <width>518</width>
+      <heigth>127</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
