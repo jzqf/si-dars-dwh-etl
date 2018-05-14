@@ -22,4 +22,4 @@
 # Author:   Jeffrey Zelt
 # Changes:  Initial version
 
-$DWH_HOME/bin/kitchen.sh /dsa/jb_dsa-update.kjb
+$DWH_HOME/bin/kitchen.sh /dsa/jb_dsa-update.kjb Minimal
