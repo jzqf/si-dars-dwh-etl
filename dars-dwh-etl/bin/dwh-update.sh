@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # This is a wrapper script for executing whatever scripts are necessary for 
-# updating the databases that toether form 
+# updating the databases that together form the "data warehouse".
 #
 # A wrapper script is used, rather than scheduling each wrapped script
 # individually, so that these wrapped scripts cannot inadvertently be scheduled
@@ -16,7 +16,7 @@
 # Linux. For example, to run this script daily at 2 a.m., use the following
 # entry in the "${app.user}" user's crontab:
 #
-# 0 2 * * * . $HOME/.profile; $DWH_HOME/bin/dwh_update.sh
+# 0 2 * * * . $HOME/.profile; $DWH_HOME/bin/dwh-update.sh
 #
 # This script can also be run manually from a bash shell. Be sure that this is
 # done under the "${app.user}" Linux account because this script expects certain 
@@ -30,5 +30,5 @@
 # Author:   Jeffrey Zelt
 # Changes:  Initial version
 
-$DWH_HOME/bin/kitchen.sh /psa/jb_psa-update.kjb
-$DWH_HOME/bin/kitchen.sh /dsa/jb_dsa-update.kjb
+$DWH_HOME/bin/kitchen.sh /psa/jb_psa-update.kjb Minimal
+$DWH_HOME/bin/kitchen.sh /dsa/jb_dsa-update.kjb Minimal
