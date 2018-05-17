@@ -31,5 +31,14 @@
 # Author:   Jeffrey Zelt
 # Changes:  Initial version
 
-/usr/share/pentaho/pdi/pdi-default/kitchen.sh -file="$DWH_HOME/pdi_repository/psa/jb_psa-compare.kjb" -rep=DWH -logfile=$DWH_LOGDIR/dwh-etl.log -level=Minimal -param:PARAM_MAX_NUM_COMPARE_ROWS=0
-/usr/share/pentaho/pdi/pdi-default/kitchen.sh -file="$DWH_HOME/pdi_repository/dsa/jb_dsa-compare.kjb" -rep=DWH -logfile=$DWH_LOGDIR/dwh-etl.log -level=Minimal -param:PARAM_MAX_NUM_COMPARE_ROWS=0
+# Check if the maximum number of rows to compare per table was specified by the 
+# first argument and that it exists.
+max_num_compare_rows=0    # Compare *all rows of each table
+if [ ! -z "$1" ]; then
+    # I should also check that $1 contains an integer value.
+    max_num_compare_rows=$1
+    echo "A maximum number of $max_num_compare_rows rows will be compared per table"
+fi
+
+/usr/share/pentaho/pdi/pdi-default/kitchen.sh -file="$DWH_HOME/pdi_repository/psa/jb_psa-compare.kjb" -rep=DWH -logfile=$DWH_LOGDIR/dwh-etl.log -level=Minimal -param:PARAM_MAX_NUM_COMPARE_ROWS=$max_num_compare_rows
+/usr/share/pentaho/pdi/pdi-default/kitchen.sh -file="$DWH_HOME/pdi_repository/dsa/jb_dsa-compare.kjb" -rep=DWH -logfile=$DWH_LOGDIR/dwh-etl.log -level=Minimal -param:PARAM_MAX_NUM_COMPARE_ROWS=$max_num_compare_rows
