@@ -464,7 +464,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2018/05/08 14:52:24.196</modified_date>
+    <modified_date>2018/05/25 14:14:55.623</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -581,35 +581,13 @@ This transformation has parameters:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Get the maximum values stored in the "insert_id" &amp; "last_upated_on" columns of the target table that will be updated by this 
+      <note>Get the maximum values stored in the "insert_id" &amp; various timestamp columns of the target table that will be updated by this 
 transformation. This will be used to the select data from the source table that was inserted or modified since the last update 
-to the DSA DB.</note>
+to the target DSA DB.</note>
       <xloc>608</xloc>
       <yloc>192</yloc>
-      <width>696</width>
+      <width>702</width>
       <heigth>49</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>9</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>This step is only for generating the SQL for creating a new table using the "SQL" button of the "Table output" step below. 
-See the transformation /generic/target_update/tmplt_target-update_table-updatable_table for details.</note>
-      <xloc>608</xloc>
-      <yloc>256</yloc>
-      <width>677</width>
-      <heigth>36</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -792,57 +770,6 @@ worry about this potential race condition.</note>
     </attributes>
   </connection>
   <connection>
-    <name>etl_db</name>
-    <server>${QF_ETL_DB_HOST}</server>
-    <type>POSTGRESQL</type>
-    <access>Native</access>
-    <database>${QF_ETL_DB_DATABASE}</database>
-    <port>${QF_ETL_DB_PORT}</port>
-    <username>${QF_ETL_DB_USERNAME}</username>
-    <password>${QF_ETL_DB_PASSWORD}</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
-    <attributes>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>IS_CLUSTERED</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>PORT_NUMBER</code>
-        <attribute>${QF_ETL_DB_PORT}</attribute>
-      </attribute>
-      <attribute>
-        <code>PRESERVE_RESERVED_WORD_CASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>QUOTE_ALL_FIELDS</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>USE_POOLING</code>
-        <attribute>N</attribute>
-      </attribute>
-    </attributes>
-  </connection>
-  <connection>
     <name>logging_db</name>
     <server>${QF_LOGGING_DB_HOST}</server>
     <type>POSTGRESQL</type>
@@ -946,23 +873,18 @@ worry about this potential race condition.</note>
   </connection>
   <order>
     <hop>
-      <from>Get max id &amp; date for target DSA table</from>
-      <to>Write to log: parameters, max id &amp; date</to>
+      <from>Get max id &amp; timestamps for target DSA table</from>
+      <to>Write to log: parameters, max id &amp; timestamps</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Write to log: parameters, max id &amp; date</from>
+      <from>Write to log: parameters, max id &amp; timestamps</from>
       <to>Table input - source PSA tables</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
       <from>Set etl_batch_id_insert = Xform batch ID</from>
       <to>Table output - DSA.schema.table 2</to>
-      <enabled>N</enabled>
-    </hop>
-    <hop>
-      <from>Set max id &amp; date</from>
-      <to>Write to log: parameters, max id &amp; date</to>
       <enabled>N</enabled>
     </hop>
     <hop>
@@ -1292,7 +1214,7 @@ worry about this potential race condition.</note>
     </GUI>
   </step>
   <step>
-    <name>Get max id &amp; date for target DSA table</name>
+    <name>Get max id &amp; timestamps for target DSA table</name>
     <type>TableInput</type>
     <description />
     <distribute>Y</distribute>
@@ -1304,8 +1226,11 @@ worry about this potential race condition.</note>
     </partitioning>
     <connection>dsa_db</connection>
     <sql>SELECT
-    COALESCE(MAX(pedd_id),          ${QF_INSERT_ID_LOWER_BOUND}       ) AS max_target_insert_id 
---,    COALESCE(MAX(last_updated_on), '${QF_LAST_UPDATED_ON_LOWER_BOUND}') AS max_target_last_updated_on 
+    COALESCE(MAX(pedd_id),                ${QF_INSERT_ID_LOWER_BOUND}       ) AS "max_target_insert_id", 
+--  COALESCE(MAX(created_on),            '${QF_LAST_UPDATED_ON_LOWER_BOUND}') AS "max_target_created_on", 
+    COALESCE(MAX(last_updated_on),       '${QF_LAST_UPDATED_ON_LOWER_BOUND}') AS "max_target_last_updated_on", 
+    COALESCE(MAX(peddd_created_on),      '${QF_LAST_UPDATED_ON_LOWER_BOUND}') AS "max_target_peddd_created_on", 
+    COALESCE(MAX(peddd_last_updated_on), '${QF_LAST_UPDATED_ON_LOWER_BOUND}') AS "max_target_peddd_last_updated_on" 
 FROM
     public.obo__passage_event_derived_data_with_rating  -- ${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</sql>
     <limit>0</limit>
@@ -1613,8 +1538,23 @@ FROM
         <update>Y</update>
       </value>
       <value>
+        <name>created_on</name>
+        <rename>created_on</rename>
+        <update>Y</update>
+      </value>
+      <value>
         <name>last_updated_on</name>
         <rename>last_updated_on</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>peddd_created_on</name>
+        <rename>peddd_created_on</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>peddd_last_updated_on</name>
+        <rename>peddd_last_updated_on</rename>
         <update>Y</update>
       </value>
       <value>
@@ -1656,12 +1596,10 @@ FROM
     <displayHeader>Y</displayHeader>
     <limitRows>N</limitRows>
     <limitRowsNumber>0</limitRowsNumber>
-    <logmessage>PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE   = ${PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE}
-PARAM_DYN_DB_CONN_TARGET_DB_DATABASE   = ${PARAM_DYN_DB_CONN_TARGET_DB_DATABASE}
-PARAM_SOURCE_SCHEMA                    = ${PARAM_SOURCE_SCHEMA}
-PARAM_SOURCE_TABLE                     = ${PARAM_SOURCE_TABLE}
-PARAM_TARGET_SCHEMA                    = ${PARAM_TARGET_SCHEMA}
-PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
+    <logmessage>PARAM_SOURCE_SCHEMA = ${PARAM_SOURCE_SCHEMA}
+PARAM_SOURCE_TABLE  = ${PARAM_SOURCE_TABLE}
+PARAM_TARGET_SCHEMA = ${PARAM_TARGET_SCHEMA}
+PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}</logmessage>
     <fields>
       <field>
         <name>current_transformation</name>
@@ -1698,12 +1636,10 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
     <displayHeader>Y</displayHeader>
     <limitRows>N</limitRows>
     <limitRowsNumber>0</limitRowsNumber>
-    <logmessage>PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE   = ${PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE}
-PARAM_DYN_DB_CONN_TARGET_DB_DATABASE   = ${PARAM_DYN_DB_CONN_TARGET_DB_DATABASE}
-PARAM_SOURCE_SCHEMA                    = ${PARAM_SOURCE_SCHEMA}
-PARAM_SOURCE_TABLE                     = ${PARAM_SOURCE_TABLE}
-PARAM_TARGET_SCHEMA                    = ${PARAM_TARGET_SCHEMA}
-PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
+    <logmessage>PARAM_SOURCE_SCHEMA = ${PARAM_SOURCE_SCHEMA}
+PARAM_SOURCE_TABLE  = ${PARAM_SOURCE_TABLE}
+PARAM_TARGET_SCHEMA = ${PARAM_TARGET_SCHEMA}
+PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}</logmessage>
     <fields>
       <field>
         <name>current_transformation</name>
@@ -1740,12 +1676,10 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
     <displayHeader>Y</displayHeader>
     <limitRows>N</limitRows>
     <limitRowsNumber>0</limitRowsNumber>
-    <logmessage>PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE   = ${PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE}
-PARAM_DYN_DB_CONN_TARGET_DB_DATABASE   = ${PARAM_DYN_DB_CONN_TARGET_DB_DATABASE}
-PARAM_SOURCE_SCHEMA                    = ${PARAM_SOURCE_SCHEMA}
-PARAM_SOURCE_TABLE                     = ${PARAM_SOURCE_TABLE}
-PARAM_TARGET_SCHEMA                    = ${PARAM_TARGET_SCHEMA}
-PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
+    <logmessage>PARAM_SOURCE_SCHEMA = ${PARAM_SOURCE_SCHEMA}
+PARAM_SOURCE_TABLE  = ${PARAM_SOURCE_TABLE}
+PARAM_TARGET_SCHEMA = ${PARAM_TARGET_SCHEMA}
+PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}</logmessage>
     <fields>
       <field>
         <name>current_transformation</name>
@@ -1782,12 +1716,10 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
     <displayHeader>Y</displayHeader>
     <limitRows>N</limitRows>
     <limitRowsNumber>0</limitRowsNumber>
-    <logmessage>PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE   = ${PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE}
-PARAM_DYN_DB_CONN_TARGET_DB_DATABASE   = ${PARAM_DYN_DB_CONN_TARGET_DB_DATABASE}
-PARAM_SOURCE_SCHEMA                    = ${PARAM_SOURCE_SCHEMA}
-PARAM_SOURCE_TABLE                     = ${PARAM_SOURCE_TABLE}
-PARAM_TARGET_SCHEMA                    = ${PARAM_TARGET_SCHEMA}
-PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
+    <logmessage>PARAM_SOURCE_SCHEMA = ${PARAM_SOURCE_SCHEMA}
+PARAM_SOURCE_TABLE  = ${PARAM_SOURCE_TABLE}
+PARAM_TARGET_SCHEMA = ${PARAM_TARGET_SCHEMA}
+PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}</logmessage>
     <fields>
       <field>
         <name>current_transformation</name>
@@ -1824,12 +1756,10 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
     <displayHeader>Y</displayHeader>
     <limitRows>N</limitRows>
     <limitRowsNumber>0</limitRowsNumber>
-    <logmessage>PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE   = ${PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE}
-PARAM_DYN_DB_CONN_TARGET_DB_DATABASE   = ${PARAM_DYN_DB_CONN_TARGET_DB_DATABASE}
-PARAM_SOURCE_SCHEMA                    = ${PARAM_SOURCE_SCHEMA}
-PARAM_SOURCE_TABLE                     = ${PARAM_SOURCE_TABLE}
-PARAM_TARGET_SCHEMA                    = ${PARAM_TARGET_SCHEMA}
-PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
+    <logmessage>PARAM_SOURCE_SCHEMA = ${PARAM_SOURCE_SCHEMA}
+PARAM_SOURCE_TABLE  = ${PARAM_SOURCE_TABLE}
+PARAM_TARGET_SCHEMA = ${PARAM_TARGET_SCHEMA}
+PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}</logmessage>
     <fields>
       <field>
         <name>current_transformation</name>
@@ -2172,40 +2102,6 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
     </GUI>
   </step>
   <step>
-    <name>Set max id &amp; date</name>
-    <type>TableInput</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <connection>etl_db</connection>
-    <sql>SELECT
-          ${QF_INSERT_ID_LOWER_BOUND}                      AS max_target_insert_id
---,    CAST('${QF_LAST_UPDATED_ON_LOWER_BOUND}' AS timestamp) AS max_target_last_updated_on
-</sql>
-    <limit>0</limit>
-    <lookup />
-    <execute_each_row>N</execute_each_row>
-    <variables_active>Y</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>544</xloc>
-      <yloc>256</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
     <name>Table input - source PSA tables</name>
     <type>TableInput</type>
     <description />
@@ -2232,7 +2128,10 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
     ardd_4.rate_component_vat        AS "applied_external_fee_noise_vat",
     ardd_3.rate_component_fee_amount AS "applied_external_fee_air",
     ardd_3.rate_component_vat        AS "applied_external_fee_air_vat",
-    GREATEST(pedd.last_updated_on, peddd.last_updated_on) AS "last_updated_on"
+    pedd.created_on, 
+    pedd.last_updated_on, 
+    peddd.created_on                 AS "peddd_created_on",
+    peddd.last_updated_on            AS "peddd_last_updated_on"
 FROM
     public.obo__passage_event_derived_data pedd
 LEFT OUTER JOIN
@@ -2251,10 +2150,23 @@ LEFT OUTER JOIN
     ardd_3.rate_component_fee_type_id=${QF_RATE_COMPONENT_FEE_TYPE_ID_APPLIED_FEE} AND ardd_3.rate_component_fee_category_id=${QF_RATE_COMPONENT_FEE_CATEGORY_ID_EXTERNAL_FEE_AIR}
 WHERE
     ( 
-           pedd.pedd_id          > ?                                 -- Newly INSERTed "pedd" rows,  since the last run.
-        OR pedd.last_updated_on  > '${PARAM_CDC_LAST_LOAD_UTC}'      -- UPDATEd        "pedd" rows,  since the last run.
-        OR peddd.created_on      > '${PARAM_CDC_LAST_LOAD_UTC}'      -- Newly INSERTed "peddd" rows, since the last run.
-        OR peddd.last_updated_on > '${PARAM_CDC_LAST_LOAD_UTC}'      -- UPDATEd        "peddd" rows, since the last run.
+           pedd.pedd_id          > ?      -- Newly INSERTed "pedd" rows,  since the last run.
+        -- The >= comparison operator is used here because timestamps are not unique.
+        -- As a result, these comparisons will always match at least one row:
+        OR pedd.last_updated_on  >= ?    -- UPDATEd        "pedd" rows,  since the last run.
+        OR peddd.created_on      >= ?    -- Newly INSERTed "peddd" rows, since the last run.
+                                         -- This condition is based on peddd.created_on, not peddd.pedd_id because I do not know for sure that peddd rows are
+                                         -- created simultaneously as each pedd row is created. If this is not the case, then the peddd.pedd_id column *cannot*
+                                         -- be used as the "insert_id" column for the peddd table because we cannot assume that the peddd.pedd_id increase
+                                         -- monotonically as the peddd rows are inserted. Therefore, I have been forced to detect newly inserted
+                                         -- peddd rows using the peddd.created_on column. If it can be confirmed that the peddd.pedd_id column *can* be treated
+                                         -- as the "insert_id" column for the peddd table, then it is desirable to base this condition on the peddd.pedd_id
+                                         -- column instead of the peddd.created_on column
+        OR peddd.last_updated_on >= ?    -- UPDATEd        "peddd" rows, since the last run.
+-- Old code:
+--        OR pedd.last_updated_on  > '${PARAM_CDC_LAST_LOAD_UTC}'      -- UPDATEd        "pedd" rows,  since the last run.
+--        OR peddd.created_on      > '${PARAM_CDC_LAST_LOAD_UTC}'      -- Newly INSERTed "peddd" rows, since the last run.
+--        OR peddd.last_updated_on > '${PARAM_CDC_LAST_LOAD_UTC}'      -- UPDATEd        "peddd" rows, since the last run.
     )
     AND pedd.pedd_id  &lt;= ${PARAM_SOURCE_TABLE_MAX_INSERT_ID}          -- To avoid loading rows that are *inserted* after the job starts.
                                                          -- It is not necessary to include a similar condition for the "peddd"
@@ -2276,7 +2188,7 @@ WHERE
 ORDER BY
     pedd.pedd_id</sql>
     <limit>0</limit>
-    <lookup>Write to log: parameters, max id &amp; date</lookup>
+    <lookup>Write to log: parameters, max id &amp; timestamps</lookup>
     <execute_each_row>N</execute_each_row>
     <variables_active>Y</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
@@ -2458,8 +2370,20 @@ ORDER BY
         <rename>applied_external_fee_air_vat</rename>
       </value>
       <value>
+        <name>created_on</name>
+        <rename>created_on</rename>
+      </value>
+      <value>
         <name>last_updated_on</name>
         <rename>last_updated_on</rename>
+      </value>
+      <value>
+        <name>peddd_created_on</name>
+        <rename>peddd_created_on</rename>
+      </value>
+      <value>
+        <name>peddd_last_updated_on</name>
+        <rename>peddd_last_updated_on</rename>
       </value>
       <value>
         <name>etl_batch_id_last_update</name>
@@ -2558,8 +2482,20 @@ ORDER BY
         <rename>applied_external_fee_air_vat</rename>
       </value>
       <value>
+        <name>created_on</name>
+        <rename>created_on</rename>
+      </value>
+      <value>
         <name>last_updated_on</name>
         <rename>last_updated_on</rename>
+      </value>
+      <value>
+        <name>peddd_created_on</name>
+        <rename>peddd_created_on</rename>
+      </value>
+      <value>
+        <name>peddd_last_updated_on</name>
+        <rename>peddd_last_updated_on</rename>
       </value>
       <value>
         <name>etl_batch_id_last_update</name>
@@ -2580,7 +2516,7 @@ ORDER BY
     </GUI>
   </step>
   <step>
-    <name>Write to log: parameters, max id &amp; date</name>
+    <name>Write to log: parameters, max id &amp; timestamps</name>
     <type>WriteToLog</type>
     <description />
     <distribute>Y</distribute>
@@ -2595,12 +2531,19 @@ ORDER BY
     <limitRows>N</limitRows>
     <limitRowsNumber>0</limitRowsNumber>
     <logmessage>tr_dsa-update_table-public.obo__passage_event_derived_data_with_rating:
-PARAM_CDC_LAST_LOAD_UTC    = ${PARAM_CDC_LAST_LOAD_UTC}
-PARAM_CDC_CURRENT_LOAD_UTC = ${PARAM_CDC_CURRENT_LOAD_UTC}
-PARAM_SOURCE_TABLE_MAX_INSERT_ID        = ${PARAM_SOURCE_TABLE_MAX_INSERT_ID}</logmessage>
+PARAM_SOURCE_TABLE_MAX_INSERT_ID = ${PARAM_SOURCE_TABLE_MAX_INSERT_ID}</logmessage>
     <fields>
       <field>
         <name>max_target_insert_id</name>
+      </field>
+      <field>
+        <name>max_target_last_updated_on</name>
+      </field>
+      <field>
+        <name>max_target_peddd_created_on</name>
+      </field>
+      <field>
+        <name>max_target_peddd_last_updated_on</name>
       </field>
     </fields>
     <cluster_schema />
