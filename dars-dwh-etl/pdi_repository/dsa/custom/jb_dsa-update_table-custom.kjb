@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2018/04/18 17:48:17.682</modified_date>
+  <modified_date>2018/05/28 13:35:46.000</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
@@ -19,6 +19,41 @@
       <name>PARAM_CDC_LAST_LOAD_UTC</name>
       <default_value>1970.01.01 00:00:00</default_value>
       <description>Timestamp of last successful load from the source database</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_TARGET_DB_DATABASE</name>
+      <default_value />
+      <description>for target DB "dynamic" database connections</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_TARGET_DB_DRIVER</name>
+      <default_value />
+      <description>for target DB "dynamic" database connections</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_TARGET_DB_HOST</name>
+      <default_value />
+      <description>for target DB "dynamic" database connections</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD</name>
+      <default_value />
+      <description>for target DB "dynamic" database connections</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_TARGET_DB_PORT</name>
+      <default_value />
+      <description>for target DB "dynamic" database connections</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_TARGET_DB_URL</name>
+      <default_value />
+      <description>for target DB "dynamic" database connections</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_TARGET_DB_USERNAME</name>
+      <default_value />
+      <description>for target DB "dynamic" database connections</description>
     </parameter>
     <parameter>
       <name>PARAM_SOURCE_DB_ID</name>
@@ -415,7 +450,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>64</xloc>
-      <yloc>256</yloc>
+      <yloc>352</yloc>
     </entry>
     <entry>
       <name>Log: Parameters</name>
@@ -439,7 +474,7 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>192</xloc>
-      <yloc>256</yloc>
+      <yloc>352</yloc>
     </entry>
     <entry>
       <name>Abort job - Untreated case</name>
@@ -450,7 +485,7 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>192</xloc>
-      <yloc>720</yloc>
+      <yloc>816</yloc>
     </entry>
     <entry>
       <name>Target table = public.obo__passage_event_derived_data_with_rating ?</name>
@@ -472,7 +507,7 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>192</xloc>
-      <yloc>448</yloc>
+      <yloc>544</yloc>
     </entry>
     <entry>
       <name>jb_log_error - Untreated case</name>
@@ -511,7 +546,7 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>192</xloc>
-      <yloc>624</yloc>
+      <yloc>720</yloc>
     </entry>
     <entry>
       <name>Abort job</name>
@@ -522,7 +557,7 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>1</nr>
       <xloc>864</xloc>
-      <yloc>480</yloc>
+      <yloc>576</yloc>
     </entry>
     <entry>
       <name>jb_dsa-update_table-public.obo__passage_event_derived_data_with_rating</name>
@@ -556,7 +591,7 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>608</xloc>
-      <yloc>448</yloc>
+      <yloc>544</yloc>
     </entry>
     <entry>
       <name>jb_update_etl_table_meta_mirror_details</name>
@@ -615,7 +650,7 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>864</xloc>
-      <yloc>416</yloc>
+      <yloc>512</yloc>
     </entry>
     <entry>
       <name>tr_init_table_update_statistics_init_vrbls</name>
@@ -652,7 +687,7 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>192</xloc>
-      <yloc>352</yloc>
+      <yloc>448</yloc>
     </entry>
   </entries>
   <hops>
@@ -734,15 +769,22 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
       <note>This job updates a table in the target DSA DB that is mirrored from a source database using a table-specific CUSTOM algorithm, i.e.,
 a custom job &amp; transformation is used that is specific to the table being updated in the target DSA DB. This job has parameters:
 
-	PARAM_CDC_LAST_LOAD_UTC			Timestamp for when the target DB was most recently updated successfully
-	PARAM_CDC_CURRENT_LOAD_UTC		Timestamp of the current load (no rows after this timestamp will be loaded)
-	PARAM_TABLE_META_ID					Primary key of ${QF_ETL_DB_SCHEMA}.table_meta row for "source" table archived/mirrored to "target" table
-	PARAM_SOURCE_DB_ID					ID the "source" database containing tables will be mirrored to a "target" database
-	PARAM_SOURCE_TABLE_MAX_INSERT_ID	Maximum value of the "insert_id" column for rows to load from the source DB table
-	PARAM_SOURCE_SCHEMA				Not really needed since the job that will be run will be specific for the specified target DB table 
-	PARAM_SOURCE_TABLE					Not really needed since the job that will be run will be specific for the specified target DB table 
-	PARAM_SOURCE_SCHEMA_DOT_TABLE	Not really needed since the job that will be run will be specific for the specified target DB table 
-	PARAM_TARGET_DB_ID					ID of the "target" database to which the "source" DB tables will be archived/mirrored
+	PARAM_CDC_LAST_LOAD_UTC					Timestamp for when the target DB was most recently updated successfully
+	PARAM_CDC_CURRENT_LOAD_UTC				Timestamp of the current load (no rows after this timestamp will be loaded)
+	PARAM_DYN_DB_CONN_TARGET_DB_HOST		for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_PORT		for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_DATABASE	for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_USERNAME	for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD	for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_DRIVER		for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_URL			for target DB "dynamic" database connections
+	PARAM_TABLE_META_ID							Primary key of ${QF_ETL_DB_SCHEMA}.table_meta row for "source" table archived/mirrored to "target" table
+	PARAM_SOURCE_DB_ID							ID the "source" database containing tables will be mirrored to a "target" database
+	PARAM_SOURCE_TABLE_MAX_INSERT_ID			Maximum value of the "insert_id" column for rows to load from the source DB table
+	PARAM_SOURCE_SCHEMA						Not really needed since the job that will be run will be specific for the specified target DB table 
+	PARAM_SOURCE_TABLE							Not really needed since the job that will be run will be specific for the specified target DB table 
+	PARAM_SOURCE_SCHEMA_DOT_TABLE			Not really needed since the job that will be run will be specific for the specified target DB table 
+	PARAM_TARGET_DB_ID							ID of the "target" database to which the "source" DB tables will be archived/mirrored
 	PARAM_TARGET_SCHEMA
 	PARAM_TARGET_TABLE
 	PARAM_TARGET_SCHEMA_DOT_TABLE
@@ -750,8 +792,8 @@ a custom job &amp; transformation is used that is specific to the table being up
 This job acts as a "dispatcher" in that it runs the appropriate job for the table that is specified by this job's parameters.</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>875</width>
-      <heigth>231</heigth>
+      <width>923</width>
+      <heigth>322</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -774,7 +816,7 @@ This job acts as a "dispatcher" in that it runs the appropriate job for the tabl
 	QF_UPDATE_TABLE_NUM_INSERTS
 	QF_UPDATE_TABLE_NUM_UPDATES</note>
       <xloc>336</xloc>
-      <yloc>320</yloc>
+      <yloc>416</yloc>
       <width>553</width>
       <heigth>75</heigth>
       <fontname>Ubuntu</fontname>
@@ -787,6 +829,30 @@ This job acts as a "dispatcher" in that it runs the appropriate job for the tabl
       <backgroundcolorred>255</backgroundcolorred>
       <backgroundcolorgreen>205</backgroundcolorgreen>
       <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Ensure correct values are passed here for parameters:
+
+	PARAM_TARGET_INSERT_ID_COLNAME
+	PARAM_TARGET_LAST_UPDATED_ON_COLNAME</note>
+      <xloc>1008</xloc>
+      <yloc>496</yloc>
+      <width>308</width>
+      <heigth>62</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>255</backgroundcolorgreen>
+      <backgroundcolorblue>0</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
       <bordercolorblue>100</bordercolorblue>
