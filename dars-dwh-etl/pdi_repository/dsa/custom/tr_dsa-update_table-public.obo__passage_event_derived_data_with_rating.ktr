@@ -464,7 +464,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2018/05/27 13:34:46.007</modified_date>
+    <modified_date>2018/05/28 08:43:59.285</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -2138,7 +2138,24 @@ PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}</logmessage>
     -- true of the obo__applied_rating_detail_data rows (because they do not participate 
     -- in the CDC implemented in this algorithm).
     -- the PSA DB that are migrated to the DSA DB (because they are not linked 
-    -- to all of the rows enforced by this query).  
+    -- to all of the rows enforced by this query).
+    -- 
+    -- Note: Event with this extra effort to avoid "late arriving" PSA DB
+    --       obo__applied_rating_detail_data rows (or, equivalently, "early arriving"
+    --       PSA DB obo__passage_event_derived_data (pedd) rows), there is still no 
+    --       mechanism to discover PSA DB obo__applied_rating_detail_data rows that are
+    --       inserted or updated *after" its obo__passage_event_derived_data_with_rating
+    --       row is inserted into the DSA DB. In order to be able to detect this and 
+    --       thereby be able to update an existing obo__passage_event_derived_data_with_rating
+    --       row, the OBO must:
+    --
+    --       1. Support a "last_updated_on" column for the  set the applied_rating_detail_data
+    --          table (assuming rows of this table can be updated). This is necesary so that
+    --          changes to rwows of this table will be propagated to the PSA (archive) DB.
+    --
+    --       2. Update the "last_updated_on" column of the passage_event_derived_data (pedd) or 
+    --          passage_event_derived_data_details (peddd) row for the applied_rating_detail_data
+    --          row that is inserted or updated. 
     SELECT 
         COALESCE(MAX(pedd.pedd_id), ${QF_INSERT_ID_LOWER_BOUND}) AS "max_linked_pedd_id"
     FROM 
@@ -2236,7 +2253,7 @@ WHERE
 --                                                                     -- We do not need to specify similar conditions for the 
 --                                                                     -- "peddd" table.
 ORDER BY
-    pedd.pedd_id</sql>
+    pedd.pedd_id    -- Insert new rows in the order they are created in the source PSA DB</sql>
     <limit>0</limit>
     <lookup>Write to log: parameters, max id &amp; timestamps</lookup>
     <execute_each_row>N</execute_each_row>
