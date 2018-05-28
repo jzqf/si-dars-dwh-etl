@@ -464,7 +464,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2018/05/25 14:14:55.623</modified_date>
+    <modified_date>2018/05/27 13:34:46.007</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -1226,7 +1226,8 @@ worry about this potential race condition.</note>
     </partitioning>
     <connection>dsa_db</connection>
     <sql>SELECT
-    COALESCE(MAX(pedd_id),                ${QF_INSERT_ID_LOWER_BOUND}       ) AS "max_target_insert_id", 
+    COALESCE(MAX(pedd_id),                ${QF_INSERT_ID_LOWER_BOUND}       ) AS "max_target_insert_id_1", 
+    COALESCE(MAX(pedd_id),                ${QF_INSERT_ID_LOWER_BOUND}       ) AS "max_target_insert_id_2", 
 --  COALESCE(MAX(created_on),            '${QF_LAST_UPDATED_ON_LOWER_BOUND}') AS "max_target_created_on", 
     COALESCE(MAX(last_updated_on),       '${QF_LAST_UPDATED_ON_LOWER_BOUND}') AS "max_target_last_updated_on", 
     COALESCE(MAX(peddd_created_on),      '${QF_LAST_UPDATED_ON_LOWER_BOUND}') AS "max_target_peddd_created_on", 
@@ -2113,7 +2114,53 @@ PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}</logmessage>
       <schema_name />
     </partitioning>
     <connection>psa_db</connection>
-    <sql>SELECT
+    <sql>WITH fully_linked_pedd AS 
+(
+    -- This query returns the maximum value of the "pedd_id" column for
+    -- obo__passage_event_derived_data rows that are linked to all possible rows.
+    -- This ensures that we do not try to migrate obo__passage_event_derived_data
+    -- rows from the PSA DB to the DSA DB which are linked to rows of either tables:
+    --
+    --   * obo__passage_event_derived_data_details
+    --   * obo__applied_rating_detail_data
+    --
+    -- in the obo_opr database, but where the obo__passage_event_derived_data_details
+    -- rows and/or the obo__applied_rating_detail_data rows have not yet been migrated
+    -- from the obo_opr database to the PSA DB ("late arriving" related rows). If such 
+    -- obo__passage_event_derived_data rows where not excluded here, the result could be
+    -- that some of the obo__passage_event_derived_data_with_rating rows that are 
+    -- inserted into the DSA DB by this transformation will not have their columns  
+    -- properly defined because the related rows that are need to to define these column
+    -- values are not yet available in the PSA DB. These "missing"related rows will 
+    -- eventually be migrated from the obo_opr databses to the PSA DB (on the next run
+    -- of the ETL job), but there is no way to detect this after the 
+    -- obo__passage_event_derived_data_with_rating row is created (this is particularly
+    -- true of the obo__applied_rating_detail_data rows (because they do not participate 
+    -- in the CDC implemented in this algorithm).
+    -- the PSA DB that are migrated to the DSA DB (because they are not linked 
+    -- to all of the rows enforced by this query).  
+    SELECT 
+        COALESCE(MAX(pedd.pedd_id), ${QF_INSERT_ID_LOWER_BOUND}) AS "max_linked_pedd_id"
+    FROM 
+        public.obo__passage_event_derived_data pedd
+    INNER JOIN
+        public.obo__passage_event_derived_data_details peddd ON peddd.pedd_id=pedd.pedd_id
+    INNER JOIN
+        public.obo__applied_rating_detail_data ardd_1 ON ardd_1.pedd_id=peddd.pedd_id 
+    INNER JOIN
+        public.obo__applied_rating_detail_data ardd_2 ON ardd_2.pedd_id=peddd.pedd_id 
+    INNER JOIN
+        public.obo__applied_rating_detail_data ardd_4 ON ardd_4.pedd_id=peddd.pedd_id 
+    INNER JOIN
+        public.obo__applied_rating_detail_data ardd_3 ON ardd_3.pedd_id=peddd.pedd_id 
+    WHERE
+        pedd.pedd_id > ?      -- Newly INSERTed "pedd" rows,  since the last run.
+        AND ardd_1.rate_component_fee_type_id=${QF_RATE_COMPONENT_FEE_TYPE_ID_APPLIED_FEE} AND ardd_1.rate_component_fee_category_id=${QF_RATE_COMPONENT_FEE_CATEGORY_ID_INFRASTRUCTURE_FEE}
+        AND ardd_2.rate_component_fee_type_id=${QF_RATE_COMPONENT_FEE_TYPE_ID_APPLIED_FEE} AND ardd_2.rate_component_fee_category_id=${QF_RATE_COMPONENT_FEE_CATEGORY_ID_INFRASTRUCTURE_MARKUP_FEE}
+        AND ardd_4.rate_component_fee_type_id=${QF_RATE_COMPONENT_FEE_TYPE_ID_APPLIED_FEE} AND ardd_4.rate_component_fee_category_id=${QF_RATE_COMPONENT_FEE_CATEGORY_ID_EXTERNAL_FEE_NOISE}
+        AND ardd_3.rate_component_fee_type_id=${QF_RATE_COMPONENT_FEE_TYPE_ID_APPLIED_FEE} AND ardd_3.rate_component_fee_category_id=${QF_RATE_COMPONENT_FEE_CATEGORY_ID_EXTERNAL_FEE_AIR}
+)
+SELECT
     pedd.pedd_id,
     pedd.pedd_status_id,
     peddd.applied_axle_tariff_category_id,
@@ -2149,6 +2196,9 @@ LEFT OUTER JOIN
     public.obo__applied_rating_detail_data ardd_3 ON ardd_3.pedd_id=peddd.pedd_id AND 
     ardd_3.rate_component_fee_type_id=${QF_RATE_COMPONENT_FEE_TYPE_ID_APPLIED_FEE} AND ardd_3.rate_component_fee_category_id=${QF_RATE_COMPONENT_FEE_CATEGORY_ID_EXTERNAL_FEE_AIR}
 WHERE
+    -- This condition ensures that "pedd" rows selected here have no "late arriving" 
+    -- rows from its related tables, "peddd" and "obo__applied_rating_detail_data":
+    pedd.pedd_id &lt;= (SELECT max_linked_pedd_id FROM fully_linked_pedd) AND  -- Ensure that the most recent (last, chronologically) source pedd row treated here is "fully" linked to related rows
     ( 
            pedd.pedd_id          > ?      -- Newly INSERTed "pedd" rows,  since the last run.
         -- The >= comparison operator is used here because timestamps are not unique.
@@ -2534,7 +2584,10 @@ ORDER BY
 PARAM_SOURCE_TABLE_MAX_INSERT_ID = ${PARAM_SOURCE_TABLE_MAX_INSERT_ID}</logmessage>
     <fields>
       <field>
-        <name>max_target_insert_id</name>
+        <name>max_target_insert_id_1</name>
+      </field>
+      <field>
+        <name>max_target_insert_id_2</name>
       </field>
       <field>
         <name>max_target_last_updated_on</name>
