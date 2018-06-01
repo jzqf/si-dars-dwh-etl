@@ -444,7 +444,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2018/06/01 10:38:54.856</modified_date>
+    <modified_date>2018/06/01 12:40:11.226</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -931,6 +931,70 @@ However, it may be useful to keep these columns so I have not deleted this step.
     </GUI>
   </step>
   <step>
+    <name>Store compare statistics in new target_table_compare row</name>
+    <type>ExecSQL</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <connection>etl_db</connection>
+    <execute_each_row>Y</execute_each_row>
+    <single_statement>Y</single_statement>
+    <replace_variables>Y</replace_variables>
+    <quoteString>N</quoteString>
+    <sql>INSERT INTO ${QF_ETL_DB_SCHEMA}.target_table_compare (
+    table_meta_id,
+    compared_on,
+    num_rows_equal,
+    num_rows_unequal,
+    num_rows_missing_from_target, 
+    num_rows_extra_in_target
+)
+VALUES (
+    ${PARAM_TABLE_META_ID},
+    now() at time zone 'utc',  -- LOCALTIMESTAMP
+    COALESCE(?, 0),
+    COALESCE(?, 0),
+    COALESCE(?, 0),
+    COALESCE(?, 0)
+)</sql>
+    <set_params>Y</set_params>
+    <insert_field />
+    <update_field />
+    <delete_field />
+    <read_field />
+    <arguments>
+      <argument>
+        <name>compared_rows_equal</name>
+      </argument>
+      <argument>
+        <name>compared_rows_unequal</name>
+      </argument>
+      <argument>
+        <name>compared_rows_missing</name>
+      </argument>
+      <argument>
+        <name>compared_rows_extra</name>
+      </argument>
+    </arguments>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>160</xloc>
+      <yloc>624</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
     <name>Transpose rows -> columns</name>
     <type>Denormaliser</type>
     <description />
@@ -1034,11 +1098,11 @@ However, it may be useful to keep these columns so I have not deleted this step.
     <sql>UPDATE
     ${QF_ETL_DB_SCHEMA}.table_state
 SET
-    last_compared_on=now() at time zone 'utc'  -- LOCALTIMESTAMP
-   ,compared_rows_equal=COALESCE(?, 0)
-   ,compared_rows_unequal=COALESCE(?, 0)
-   ,compared_rows_missing=COALESCE(?, 0)
-   ,compared_rows_extra=COALESCE(?, 0)
+    last_compared_on=now() at time zone 'utc',  -- LOCALTIMESTAMP
+    last_compared_num_rows_equal=COALESCE(?, 0),
+    last_compared_num_rows_unequal=COALESCE(?, 0),
+    last_compared_num_rows_missing_from_target=COALESCE(?, 0),
+    last_compared_num_rows_extra_in_target=COALESCE(?, 0)
 WHERE
     table_state_id=${PARAM_TABLE_META_ID}</sql>
     <set_params>Y</set_params>
@@ -1113,70 +1177,6 @@ WHERE
     <GUI>
       <xloc>160</xloc>
       <yloc>496</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Store compare statistics in new target_table_compare row</name>
-    <type>ExecSQL</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <connection>etl_db</connection>
-    <execute_each_row>Y</execute_each_row>
-    <single_statement>Y</single_statement>
-    <replace_variables>Y</replace_variables>
-    <quoteString>N</quoteString>
-    <sql>INSERT INTO ${QF_ETL_DB_SCHEMA}.target_table_compare (
-    table_meta_id,
-    compared_on,
-    num_rows_equal,
-    num_rows_unequal,
-    num_rows_missing_from_target, 
-    num_rows_extra_in_target
-)
-VALUES (
-    ${PARAM_TABLE_META_ID},
-    now() at time zone 'utc',  -- LOCALTIMESTAMP
-    COALESCE(?, 0),
-    COALESCE(?, 0),
-    COALESCE(?, 0),
-    COALESCE(?, 0)
-)</sql>
-    <set_params>Y</set_params>
-    <insert_field />
-    <update_field />
-    <delete_field />
-    <read_field />
-    <arguments>
-      <argument>
-        <name>compared_rows_equal</name>
-      </argument>
-      <argument>
-        <name>compared_rows_unequal</name>
-      </argument>
-      <argument>
-        <name>compared_rows_missing</name>
-      </argument>
-      <argument>
-        <name>compared_rows_extra</name>
-      </argument>
-    </arguments>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>160</xloc>
-      <yloc>624</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
