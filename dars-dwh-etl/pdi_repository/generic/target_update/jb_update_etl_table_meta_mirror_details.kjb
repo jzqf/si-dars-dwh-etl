@@ -500,21 +500,21 @@
       <sql>UPDATE
     ${QF_ETL_DB_SCHEMA}.table_state
 SET
-    mirror_last_updated_algorithm_id = ${PARAM_TABLE_MIRROR_ALGORITHM_ID},
-    mirror_last_updated_on           = now() at time zone 'utc',  -- LOCALTIMESTAMP
+    target_last_updated_algorithm_id = ${PARAM_TABLE_MIRROR_ALGORITHM_ID},
+    target_last_updated_on           = now() at time zone 'utc',  -- LOCALTIMESTAMP
 
-    mirror_last_updated_insert_id_colname        = NULLIF('${PARAM_TARGET_INSERT_ID_COLNAME}', ''),
-    mirror_last_updated_insert_id_maxvalue       = NULLIF(${QF_TARGET_TABLE_MAX_INSERT_ID}, ${QF_POSITIVE_INTEGER_NOT_SET_VALUE}),
-    mirror_last_updated_last_updated_on_colname  = NULLIF('${PARAM_TARGET_LAST_UPDATED_ON_COLNAME}', ''),
-    mirror_last_updated_last_updated_on_maxvalue = NULLIF(TIMESTAMP '${QF_TARGET_TABLE_MAX_LAST_UPDATED_ON}', TIMESTAMP '${QF_TIMESTAMP_NOT_SET_VALUE}'),
+    target_last_updated_insert_id_colname        = NULLIF('${PARAM_TARGET_INSERT_ID_COLNAME}', ''),
+    target_last_updated_insert_id_maxvalue       = NULLIF(${QF_TARGET_TABLE_MAX_INSERT_ID}, ${QF_POSITIVE_INTEGER_NOT_SET_VALUE}),
+    target_last_updated_last_updated_on_colname  = NULLIF('${PARAM_TARGET_LAST_UPDATED_ON_COLNAME}', ''),
+    target_last_updated_last_updated_on_maxvalue = NULLIF(TIMESTAMP '${QF_TARGET_TABLE_MAX_LAST_UPDATED_ON}', TIMESTAMP '${QF_TIMESTAMP_NOT_SET_VALUE}'),
 
     -- Values that are not set here should be SQL NULL, but it is possible that this is not so. If this occurs,
     -- I may have to check for a guard value and then use NULLIF(&lt;update value>, &lt;guard value>).
-    mirror_last_updated_elapsed_time_millis        = ${QF_UPDATE_TABLE_ELAPSED_MILLISECONDS},
-    mirror_last_updated_num_rows_processed         = ${PARAM_UPDATE_TABLE_NUM_ROWS},
-    mirror_last_updated_num_inserts                = ${PARAM_UPDATE_TABLE_NUM_INSERTS},
-    mirror_last_updated_num_updates                = ${PARAM_UPDATE_TABLE_NUM_UPDATES},
-    mirror_last_updated_num_rows_processed_per_sec = ${QF_UPDATE_TABLE_ROWS_PER_SEC}
+    target_last_updated_elapsed_time_millis        = ${QF_UPDATE_TABLE_ELAPSED_MILLISECONDS},
+    target_last_updated_num_rows_processed         = ${PARAM_UPDATE_TABLE_NUM_ROWS},
+    target_last_updated_num_inserts                = ${PARAM_UPDATE_TABLE_NUM_INSERTS},
+    target_last_updated_num_updates                = ${PARAM_UPDATE_TABLE_NUM_UPDATES},
+    target_last_updated_num_rows_processed_per_sec = ${QF_UPDATE_TABLE_ROWS_PER_SEC}
 
 WHERE
     table_state_id = ${PARAM_TABLE_META_ID}</sql>
