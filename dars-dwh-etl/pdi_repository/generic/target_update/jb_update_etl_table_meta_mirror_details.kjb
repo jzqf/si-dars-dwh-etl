@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2018/05/29 15:54:40.771</modified_date>
+  <modified_date>2018/05/31 14:13:34.012</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_DYN_DB_CONN_TARGET_DB_DATABASE</name>
@@ -527,7 +527,7 @@ WHERE
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>352</xloc>
-      <yloc>832</yloc>
+      <yloc>848</yloc>
     </entry>
     <entry>
       <name>Log - Parameters</name>
@@ -594,8 +594,8 @@ PARAM_UPDATE_TABLE_NUM_UPDATES        = ${PARAM_UPDATE_TABLE_NUM_UPDATES}</logme
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>1</nr>
-      <xloc>352</xloc>
-      <yloc>912</yloc>
+      <xloc>560</xloc>
+      <yloc>848</yloc>
     </entry>
     <entry>
       <name>Abort job</name>
@@ -605,8 +605,8 @@ PARAM_UPDATE_TABLE_NUM_UPDATES        = ${PARAM_UPDATE_TABLE_NUM_UPDATES}</logme
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>352</xloc>
-      <yloc>992</yloc>
+      <xloc>656</xloc>
+      <yloc>848</yloc>
     </entry>
     <entry>
       <name>tr_table_update_statistics_compute</name>
@@ -829,17 +829,105 @@ QF_TARGET_TABLE_MAX_LAST_UPDATED_ON   = ${QF_TARGET_TABLE_MAX_LAST_UPDATED_ON}</
       <xloc>352</xloc>
       <yloc>576</yloc>
     </entry>
+    <entry>
+      <name>Store update details in new target_table_update row</name>
+      <description />
+      <type>SQL</type>
+      <sql>INSERT INTO ${QF_ETL_DB_SCHEMA}.target_table_update (
+    table_meta_id,
+    updated_on,
+    algorithm_id,
+    num_inserts,
+    num_updates,
+    num_rows_processed,
+    elapsed_time_millis,
+    num_rows_processed_per_sec,
+    insert_id_colname, 
+    insert_id_maxvalue,
+    last_updated_on_colname,
+    last_updated_on_maxvalue
+)
+VALUES (
+    ${PARAM_TABLE_META_ID},
+    now() at time zone 'utc',  -- LOCALTIMESTAMP
+    ${PARAM_TABLE_MIRROR_ALGORITHM_ID},
+
+    -- Values that are not set here should be SQL NULL, but it is possible that this is not so. If this occurs,
+    -- I may have to check for a guard value and then use NULLIF(&lt;update value>, &lt;guard value>).
+    ${PARAM_UPDATE_TABLE_NUM_INSERTS},
+    ${PARAM_UPDATE_TABLE_NUM_UPDATES},
+    ${PARAM_UPDATE_TABLE_NUM_ROWS},
+    ${QF_UPDATE_TABLE_ELAPSED_MILLISECONDS},
+    ${QF_UPDATE_TABLE_ROWS_PER_SEC},
+
+    NULLIF('${PARAM_TARGET_INSERT_ID_COLNAME}', ''),
+    NULLIF(${QF_TARGET_TABLE_MAX_INSERT_ID}, ${QF_POSITIVE_INTEGER_NOT_SET_VALUE}),
+    NULLIF('${PARAM_TARGET_LAST_UPDATED_ON_COLNAME}', ''),
+    NULLIF(TIMESTAMP '${QF_TARGET_TABLE_MAX_LAST_UPDATED_ON}', TIMESTAMP '${QF_TIMESTAMP_NOT_SET_VALUE}')
+)</sql>
+      <useVariableSubstitution>T</useVariableSubstitution>
+      <sqlfromfile>F</sqlfromfile>
+      <sqlfilename />
+      <sendOneStatement>F</sendOneStatement>
+      <connection>etl_db</connection>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>352</xloc>
+      <yloc>944</yloc>
+    </entry>
+    <entry>
+      <name>Abort job 2</name>
+      <description />
+      <type>ABORT</type>
+      <message>Aborting ${Internal.Job.Name}</message>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>656</xloc>
+      <yloc>944</yloc>
+    </entry>
+    <entry>
+      <name>jb_log_error 2</name>
+      <description />
+      <type>JOB</type>
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_log_error</jobname>
+      <directory>/generic</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_ERROR_MESSAGE</name>
+          <stream_name />
+          <value>Error inserting target_table_update row in ${Internal.Job.Name} for target table: ${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>1</nr>
+      <xloc>560</xloc>
+      <yloc>944</yloc>
+    </entry>
   </entries>
   <hops>
-    <hop>
-      <from>Update details stored in table_state row</from>
-      <to>jb_log_error</to>
-      <from_nr>0</from_nr>
-      <to_nr>1</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
     <hop>
       <from>jb_log_error</from>
       <to>Abort job</to>
@@ -957,6 +1045,42 @@ QF_TARGET_TABLE_MAX_LAST_UPDATED_ON   = ${QF_TARGET_TABLE_MAX_LAST_UPDATED_ON}</
       <evaluation>Y</evaluation>
       <unconditional>N</unconditional>
     </hop>
+    <hop>
+      <from>Update details stored in table_state row</from>
+      <to>Store update details in new target_table_update row</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Update details stored in table_state row</from>
+      <to>jb_log_error</to>
+      <from_nr>0</from_nr>
+      <to_nr>1</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Store update details in new target_table_update row</from>
+      <to>jb_log_error 2</to>
+      <from_nr>0</from_nr>
+      <to_nr>1</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_log_error 2</from>
+      <to>Abort job 2</to>
+      <from_nr>1</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
   </hops>
   <notepads>
     <notepad>
@@ -1000,17 +1124,17 @@ a source database. This job has parameters:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>This "Abort" is needed so that the the 
+      <note>These "Abort"s are needed so that the
 root calling job will know that 
 execution has failed. It will then direct
 the execution flow to the job that 
 sends out failure e-mails.</note>
-      <xloc>416</xloc>
-      <yloc>960</yloc>
-      <width>232</width>
-      <heigth>80</heigth>
-      <fontname />
-      <fontsize>-1</fontsize>
+      <xloc>720</xloc>
+      <yloc>864</yloc>
+      <width>221</width>
+      <heigth>75</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -1119,6 +1243,31 @@ the specified target table. This value is assigned to the PDI variable:
       <backgroundcolorred>255</backgroundcolorred>
       <backgroundcolorgreen>205</backgroundcolorgreen>
       <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Delete this step after 
+the unused columns of
+etl.table_state are dropped?
+
+Or should we keep those columns?????</note>
+      <xloc>64</xloc>
+      <yloc>816</yloc>
+      <width>274</width>
+      <heigth>95</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>11</fontsize>
+      <fontbold>Y</fontbold>
+      <fontitalic>Y</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>255</fontcolorblue>
+      <backgroundcolorred>173</backgroundcolorred>
+      <backgroundcolorgreen>216</backgroundcolorgreen>
+      <backgroundcolorblue>230</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
       <bordercolorblue>100</bordercolorblue>
