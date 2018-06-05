@@ -659,12 +659,12 @@ that is mirrored from a source database to a target database.</note>
      WHERE
          c.table_meta_id=t.table_meta_id AND c.is_insert_id_column=true
     ), '') AS "target_insert_id_colname",
-    t.mirror_algorithm_id
+    t.update_target_table_algorithm_id
 FROM
     ${QF_ETL_DB_SCHEMA}.table_meta t
 WHERE
     t.target_db_id=${PARAM_TARGET_DB_ID} AND
-    t.compare_tables=true
+    t.compare_target_table=true
 ORDER BY
     t.source_db_id,
     t.source_schema_name,

@@ -644,7 +644,7 @@ that is mirrored from a source database to a target database.</note>
     tm.target_schema_name AS "target_schema",
     tm.target_table_name  AS "target_table",
     tm.target_schema_name || '.' || tm.target_table_name AS "target_schema_dot_table",
-    tm.mirror_algorithm_id,
+    tm.update_target_table_algorithm_id,
     ts.max_insert_id 
 FROM
     ${QF_ETL_DB_SCHEMA}.table_meta tm 
@@ -652,7 +652,7 @@ INNER JOIN
     ${QF_ETL_DB_SCHEMA}.table_state ts ON ts.table_state_id = tm.table_meta_id
 WHERE
     tm.target_db_id=${PARAM_TARGET_DB_ID} AND
-    tm.mirror_tables=true 
+    tm.update_target_table=true 
 ORDER BY
     tm.source_db_id,
     tm.source_schema_name,

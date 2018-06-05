@@ -1172,9 +1172,9 @@ values associated with the execution of the PDI transformation when the target t
 */
 
 var source_table_name = getVariable("PARAM_SOURCE_TABLE", "");
-var mirror_algorithm_id = getVariable("PARAM_MIRROR_ALGORITHM_ID", 0);
+var update_target_table_algorithm_id = getVariable("PARAM_MIRROR_ALGORITHM_ID", 0);
 
-//Alert("PARAM_SOURCE_TABLE, PARAM_MIRROR_ALGORITHM_ID = " + source_table_name + ", " + mirror_algorithm_id);
+//Alert("PARAM_SOURCE_TABLE, PARAM_MIRROR_ALGORITHM_ID = " + source_table_name + ", " + update_target_table_algorithm_id);
 
 /*
   Since all of the fields that are set here have:
@@ -1216,10 +1216,10 @@ if(getVariable("PARAM_SOURCE_INSERT_ID_COLNAME", "").equals(source_column_name))
   include *custom* update algorithms, but that should not be important because
   this metadata will not, in geeneral, be used for custom update algorithms.
 */
-if(getVariable("QF_MIRROR_ALG_INSERT_OR_UPDATE_GENERIC_1", 0).equals(mirror_algorithm_id) || 
-   getVariable("QF_MIRROR_ALG_INSERT_OR_UPDATE_GENERIC_2", 0).equals(mirror_algorithm_id) || 
-   getVariable("QF_MIRROR_ALG_INSERT_OR_UPDATE_GENERIC_3", 0).equals(mirror_algorithm_id) || 
-   getVariable("QF_MIRROR_ALG_COMPARE_GENERIC", 0).equals(mirror_algorithm_id)) {
+if(getVariable("QF_MIRROR_ALG_INSERT_OR_UPDATE_GENERIC_1", 0).equals(update_target_table_algorithm_id) || 
+   getVariable("QF_MIRROR_ALG_INSERT_OR_UPDATE_GENERIC_2", 0).equals(update_target_table_algorithm_id) || 
+   getVariable("QF_MIRROR_ALG_INSERT_OR_UPDATE_GENERIC_3", 0).equals(update_target_table_algorithm_id) || 
+   getVariable("QF_MIRROR_ALG_COMPARE_GENERIC", 0).equals(update_target_table_algorithm_id)) {
     if(is_primary_key_column == false) {
         is_updatable_column = true;
     }
