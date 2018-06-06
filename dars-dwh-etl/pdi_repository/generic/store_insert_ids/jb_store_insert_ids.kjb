@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2018/03/19 14:43:24.812</modified_date>
+  <modified_date>2018/05/11 13:28:19.538</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_TARGET_DB_ID</name>
@@ -359,8 +359,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>208</xloc>
-      <yloc>208</yloc>
+      <xloc>80</xloc>
+      <yloc>192</yloc>
     </entry>
     <entry>
       <name>tr_list_of_source dbs_to_mirror</name>
@@ -397,7 +397,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>208</xloc>
-      <yloc>304</yloc>
+      <yloc>288</yloc>
     </entry>
     <entry>
       <name>jb_store_insert_ids-source_db</name>
@@ -436,18 +436,18 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>208</xloc>
-      <yloc>448</yloc>
+      <yloc>400</yloc>
     </entry>
     <entry>
       <name>Abort job</name>
       <description />
       <type>ABORT</type>
-      <message>Aborting jb_store_insert_ids</message>
+      <message>${QF_ABORT_JOB_MESSAGE}</message>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>32</xloc>
-      <yloc>448</yloc>
+      <yloc>400</yloc>
     </entry>
     <entry>
       <name>Success</name>
@@ -457,7 +457,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>208</xloc>
-      <yloc>640</yloc>
+      <yloc>688</yloc>
     </entry>
     <entry>
       <name>jb_log_error</name>
@@ -496,7 +496,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>32</xloc>
-      <yloc>304</yloc>
+      <yloc>288</yloc>
     </entry>
     <entry>
       <name>Wait for active Xactions to commit</name>
@@ -508,7 +508,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>208</xloc>
-      <yloc>544</yloc>
+      <yloc>592</yloc>
     </entry>
     <entry>
       <name>jb_log_error 2</name>
@@ -547,7 +547,35 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>32</xloc>
-      <yloc>544</yloc>
+      <yloc>592</yloc>
+    </entry>
+    <entry>
+      <name>Log waiting time for Xactions to commit</name>
+      <description />
+      <type>WRITE_TO_LOG</type>
+      <logmessage>${Internal.Job.Name}:
+Waiting ${QF_SOURCE_DB_WAIT_FOR_TRANSACTIONS_TO_COMMIT_SECONDS} seconds for active transactions to commit...</logmessage>
+      <loglevel>Minimal</loglevel>
+      <logsubject />
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>208</xloc>
+      <yloc>496</yloc>
+    </entry>
+    <entry>
+      <name>Log parameters</name>
+      <description />
+      <type>WRITE_TO_LOG</type>
+      <logmessage>Parameters received by ${Internal.Job.Name}:
+PARAM_TARGET_DB_ID = ${PARAM_TARGET_DB_ID}</logmessage>
+      <loglevel>Basic</loglevel>
+      <logsubject />
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>208</xloc>
+      <yloc>192</yloc>
     </entry>
   </entries>
   <hops>
@@ -559,15 +587,6 @@
       <enabled>Y</enabled>
       <evaluation>Y</evaluation>
       <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>START</from>
-      <to>tr_list_of_source dbs_to_mirror</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
     </hop>
     <hop>
       <from>jb_store_insert_ids-source_db</from>
@@ -597,15 +616,6 @@
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>jb_store_insert_ids-source_db</from>
-      <to>Wait for active Xactions to commit</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
       <from>Wait for active Xactions to commit</from>
       <to>Success</to>
       <from_nr>0</from_nr>
@@ -632,6 +642,42 @@
       <evaluation>N</evaluation>
       <unconditional>Y</unconditional>
     </hop>
+    <hop>
+      <from>jb_store_insert_ids-source_db</from>
+      <to>Log waiting time for Xactions to commit</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Log waiting time for Xactions to commit</from>
+      <to>Wait for active Xactions to commit</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>START</from>
+      <to>Log parameters</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>Log parameters</from>
+      <to>tr_list_of_source dbs_to_mirror</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
   </hops>
   <notepads>
     <notepad>
@@ -649,10 +695,10 @@ This transformation has a single parameter:
 	PARAM_TARGET_DB_ID			ID of the "target" database to which the "source" DB tables will be archived/mirrored</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>744</width>
-      <heigth>178</heigth>
+      <width>697</width>
+      <heigth>166</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -673,11 +719,11 @@ This transformation takes a single parameter:
 
 	PARAM_TARGET_DB_ID</note>
       <xloc>336</xloc>
-      <yloc>288</yloc>
-      <width>493</width>
-      <heigth>80</heigth>
+      <yloc>272</yloc>
+      <width>471</width>
+      <heigth>75</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -692,18 +738,18 @@ This transformation takes a single parameter:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Update "${QF_ETL_DB_SCHEMA}.table_state.max_insert_id foreach table that is being archived/mirrored from the 
-specified "source" DB. This sub-job is:
+      <note>Update "${QF_ETL_DB_SCHEMA}.table_state.max_insert_id foreach table that is being
+archived/mirrored from the specified "source" DB. This sub-job is:
 
 	1.	RUN ONCE FOR EACH "SOURCE" DB BEING ARCHIVED/MIRRORED.
 
 	2.	Passed the IDs of the "source" DB and "target" DB.</note>
       <xloc>336</xloc>
-      <yloc>400</yloc>
-      <width>679</width>
-      <heigth>94</heigth>
+      <yloc>368</yloc>
+      <width>481</width>
+      <heigth>88</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -722,11 +768,11 @@ specified "source" DB. This sub-job is:
 that were started earlier and that will insert a row of a table with an "insert_id" column, but
 which are not yet committed.</note>
       <xloc>336</xloc>
-      <yloc>528</yloc>
-      <width>541</width>
-      <heigth>52</heigth>
+      <yloc>592</yloc>
+      <width>511</width>
+      <heigth>49</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>

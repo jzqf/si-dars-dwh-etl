@@ -20,12 +20,12 @@
       </parameter>
       <parameter>
         <name>PARAM_SOURCE_SCHEMA</name>
-        <default_value>obo</default_value>
+        <default_value>public</default_value>
         <description>Name of schema containing the "main" source table to mirror to target table</description>
       </parameter>
       <parameter>
         <name>PARAM_SOURCE_TABLE</name>
-        <default_value>passage_event_derived_data</default_value>
+        <default_value>obo__passage_event_derived_data</default_value>
         <description>Name of the "main" source table to mirror to target table</description>
       </parameter>
       <parameter>
@@ -464,7 +464,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2018/04/14 13:54:10.132</modified_date>
+    <modified_date>2018/05/28 11:13:17.015</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -475,8 +475,8 @@
 It is important to sort these rows chronologically (by either the "insert_id" or "inserted_on" columns) so that if this 
 transformation fails in the middle somewhere and if this transaction does not run in a single transaction, then next time 
 this transformation is executed, we can start again where we left off (by computing, e.g., MAX(insert_id) for the DSA table).</note>
-      <xloc>496</xloc>
-      <yloc>336</yloc>
+      <xloc>608</xloc>
+      <yloc>320</yloc>
       <width>688</width>
       <heigth>75</heigth>
       <fontname>Ubuntu</fontname>
@@ -506,8 +506,8 @@ IMPORTANT:	A primary key constraint (or at least a "unique" constraint on the pr
 For benchmark results I obtained testing the speed of various INSERT/UPDATE algorithms, see: 
 
 	/development/jeffreyz/tests/cdc_timestamps/tr_TEST_mirror_update-passage.passage-table_output</note>
-      <xloc>640</xloc>
-      <yloc>688</yloc>
+      <xloc>736</xloc>
+      <yloc>944</yloc>
       <width>588</width>
       <heigth>153</heigth>
       <fontname>Ubuntu</fontname>
@@ -528,8 +528,8 @@ For benchmark results I obtained testing the speed of various INSERT/UPDATE algo
     <notepad>
       <note>Get batch ID for current transformation. This will be stored in the DSA table for auditing/logging.
 It *must* be named "etl_batch_id_insert" here because we do not specify the table / stream fields in the "Table output" step.</note>
-      <xloc>496</xloc>
-      <yloc>432</yloc>
+      <xloc>608</xloc>
+      <yloc>416</yloc>
       <width>696</width>
       <heigth>36</heigth>
       <fontname>Ubuntu</fontname>
@@ -581,35 +581,13 @@ This transformation has parameters:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Get the maximum values stored in the "insert_id" &amp; "last_upated_on" columns of the target table that will be updated by this 
+      <note>Get the maximum values stored in the "insert_id" &amp; various timestamp columns of the target table that will be updated by this 
 transformation. This will be used to the select data from the source table that was inserted or modified since the last update 
-to the DSA DB.</note>
-      <xloc>496</xloc>
-      <yloc>208</yloc>
-      <width>696</width>
+to the target DSA DB.</note>
+      <xloc>608</xloc>
+      <yloc>192</yloc>
+      <width>702</width>
       <heigth>49</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>9</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>This step is only for generating the SQL for creating a new table using the "SQL" button of the "Table output" step below. 
-See the transformation /generic/target_update/tmplt_target-update_table-updatable_table for details.</note>
-      <xloc>496</xloc>
-      <yloc>272</yloc>
-      <width>677</width>
-      <heigth>36</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -637,8 +615,8 @@ column(s) is
 order for error 
 handling to be 
 triggered here!</note>
-      <xloc>1024</xloc>
-      <yloc>496</yloc>
+      <xloc>1168</xloc>
+      <yloc>480</yloc>
       <width>108</width>
       <heigth>164</heigth>
       <fontname>Ubuntu</fontname>
@@ -665,7 +643,7 @@ handling to an "Update" step. But it
 is *faster* for a *remote* target 
 database!</note>
       <xloc>0</xloc>
-      <yloc>576</yloc>
+      <yloc>832</yloc>
       <width>219</width>
       <heigth>101</heigth>
       <fontname>Ubuntu</fontname>
@@ -688,8 +666,8 @@ database!</note>
 This algorithm appears to be fastest for both local and remote target 
 databases. But because of the potential race condition described 
 above, be careful that it is only used where this in not an issue.</note>
-      <xloc>160</xloc>
-      <yloc>880</yloc>
+      <xloc>272</xloc>
+      <yloc>1120</yloc>
       <width>392</width>
       <heigth>62</heigth>
       <fontname>Ubuntu</fontname>
@@ -718,10 +696,10 @@ the target table can theoretically be modified between
 the time that we create the "insert_if_null" field here 
 and we execute the INSERTs or UPDATEs below, but for
 the current use case, this job is the only way that the 
-target table can be modified so we do not need to 
+target table can be modified so we do *not* need to 
 worry about this potential race condition.</note>
-      <xloc>432</xloc>
-      <yloc>496</yloc>
+      <xloc>544</xloc>
+      <yloc>480</yloc>
       <width>317</width>
       <heigth>166</heigth>
       <fontname>Ubuntu</fontname>
@@ -768,57 +746,6 @@ worry about this potential race condition.</note>
       <attribute>
         <code>PORT_NUMBER</code>
         <attribute>${QF_DSA_DB_PORT}</attribute>
-      </attribute>
-      <attribute>
-        <code>PRESERVE_RESERVED_WORD_CASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>QUOTE_ALL_FIELDS</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>USE_POOLING</code>
-        <attribute>N</attribute>
-      </attribute>
-    </attributes>
-  </connection>
-  <connection>
-    <name>etl_db</name>
-    <server>${QF_ETL_DB_HOST}</server>
-    <type>POSTGRESQL</type>
-    <access>Native</access>
-    <database>${QF_ETL_DB_DATABASE}</database>
-    <port>${QF_ETL_DB_PORT}</port>
-    <username>${QF_ETL_DB_USERNAME}</username>
-    <password>${QF_ETL_DB_PASSWORD}</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
-    <attributes>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>IS_CLUSTERED</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>PORT_NUMBER</code>
-        <attribute>${QF_ETL_DB_PORT}</attribute>
       </attribute>
       <attribute>
         <code>PRESERVE_RESERVED_WORD_CASE</code>
@@ -946,23 +873,18 @@ worry about this potential race condition.</note>
   </connection>
   <order>
     <hop>
-      <from>Get max id &amp; date for target DSA table</from>
-      <to>Write to log: parameters, max id &amp; date</to>
+      <from>Get max id &amp; timestamps for target DSA table</from>
+      <to>Write to log: parameters, max id &amp; timestamps</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Write to log: parameters, max id &amp; date</from>
+      <from>Write to log: parameters, max id &amp; timestamps</from>
       <to>Table input - source PSA tables</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
       <from>Set etl_batch_id_insert = Xform batch ID</from>
       <to>Table output - DSA.schema.table 2</to>
-      <enabled>N</enabled>
-    </hop>
-    <hop>
-      <from>Set max id &amp; date</from>
-      <to>Write to log: parameters, max id &amp; date</to>
       <enabled>N</enabled>
     </hop>
     <hop>
@@ -1015,9 +937,284 @@ worry about this potential race condition.</note>
       <to>Update - DSA.schema.table 2</to>
       <enabled>N</enabled>
     </hop>
+    <hop>
+      <from>Compute number of rows updated</from>
+      <to>Set QF_UPDATE_TABLE_NUM_UPDATES</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Compute number of rows processed</from>
+      <to>Set QF_UPDATE_TABLE_NUM_ROWS</to>
+      <enabled>N</enabled>
+    </hop>
+    <hop>
+      <from>Insert / Update- DSA.schema.table</from>
+      <to>Compute number of rows processed</to>
+      <enabled>N</enabled>
+    </hop>
+    <hop>
+      <from>Update - DSA.schema.table</from>
+      <to>Compute number of rows updated</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Compute number of rows inserted</from>
+      <to>Set QF_UPDATE_TABLE_NUM_INSERTS</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Table output - DSA.schema.table</from>
+      <to>Compute number of rows inserted</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Compute number of rows updated 2</from>
+      <to>Set QF_UPDATE_TABLE_NUM_UPDATES 2</to>
+      <enabled>N</enabled>
+    </hop>
+    <hop>
+      <from>Update - DSA.schema.table 2</from>
+      <to>Compute number of rows updated 2</to>
+      <enabled>N</enabled>
+    </hop>
+    <hop>
+      <from>Compute number of rows processed 2</from>
+      <to>Set QF_UPDATE_TABLE_NUM_ROWS 2</to>
+      <enabled>N</enabled>
+    </hop>
+    <hop>
+      <from>Table input - source PSA tables</from>
+      <to>Compute number of rows processed 2</to>
+      <enabled>N</enabled>
+    </hop>
+    <hop>
+      <from>Set QF_UPDATE_TABLE_NUM_INSERTS</from>
+      <to>Get transformation name</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Get transformation name</from>
+      <to>Log number of rows inserted</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Set QF_UPDATE_TABLE_NUM_UPDATES</from>
+      <to>Get transformation name 2</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Get transformation name 2</from>
+      <to>Log number of rows updated</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Set QF_UPDATE_TABLE_NUM_ROWS</from>
+      <to>Get transformation name 3</to>
+      <enabled>N</enabled>
+    </hop>
+    <hop>
+      <from>Get transformation name 3</from>
+      <to>Log number of rows processed</to>
+      <enabled>N</enabled>
+    </hop>
+    <hop>
+      <from>Set QF_UPDATE_TABLE_NUM_ROWS 2</from>
+      <to>Get transformation name 4</to>
+      <enabled>N</enabled>
+    </hop>
+    <hop>
+      <from>Get transformation name 4</from>
+      <to>Log number of rows processed 2</to>
+      <enabled>N</enabled>
+    </hop>
+    <hop>
+      <from>Set QF_UPDATE_TABLE_NUM_UPDATES 2</from>
+      <to>Get transformation name 5</to>
+      <enabled>N</enabled>
+    </hop>
+    <hop>
+      <from>Get transformation name 5</from>
+      <to>Log number of rows updated 2</to>
+      <enabled>N</enabled>
+    </hop>
   </order>
   <step>
-    <name>Get max id &amp; date for target DSA table</name>
+    <name>Compute number of rows inserted</name>
+    <type>MemoryGroupBy</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <give_back_row>Y</give_back_row>
+    <group>
+      </group>
+    <fields>
+      <field>
+        <aggregate>num_rows_inserted</aggregate>
+        <subject />
+        <type>COUNT_ANY</type>
+        <valuefield />
+      </field>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>336</xloc>
+      <yloc>864</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Compute number of rows processed</name>
+    <type>MemoryGroupBy</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <give_back_row>Y</give_back_row>
+    <group>
+      </group>
+    <fields>
+      <field>
+        <aggregate>num_rows</aggregate>
+        <subject />
+        <type>COUNT_ANY</type>
+        <valuefield />
+      </field>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>96</xloc>
+      <yloc>576</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Compute number of rows processed 2</name>
+    <type>MemoryGroupBy</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <give_back_row>Y</give_back_row>
+    <group>
+      </group>
+    <fields>
+      <field>
+        <aggregate>num_rows</aggregate>
+        <subject />
+        <type>COUNT_ANY</type>
+        <valuefield />
+      </field>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>816</xloc>
+      <yloc>688</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Compute number of rows updated</name>
+    <type>MemoryGroupBy</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <give_back_row>Y</give_back_row>
+    <group>
+      </group>
+    <fields>
+      <field>
+        <aggregate>num_rows_updated</aggregate>
+        <subject />
+        <type>COUNT_ANY</type>
+        <valuefield />
+      </field>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>560</xloc>
+      <yloc>864</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Compute number of rows updated 2</name>
+    <type>MemoryGroupBy</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <give_back_row>Y</give_back_row>
+    <group>
+      </group>
+    <fields>
+      <field>
+        <aggregate>num_rows_updated</aggregate>
+        <subject />
+        <type>COUNT_ANY</type>
+        <valuefield />
+      </field>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1056</xloc>
+      <yloc>688</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Get max id &amp; timestamps for target DSA table</name>
     <type>TableInput</type>
     <description />
     <distribute>Y</distribute>
@@ -1029,8 +1226,12 @@ worry about this potential race condition.</note>
     </partitioning>
     <connection>dsa_db</connection>
     <sql>SELECT
-    COALESCE(MAX(pedd_id),          ${QF_INSERT_ID_LOWER_BOUND}       ) AS max_target_insert_id 
---,    COALESCE(MAX(last_updated_on), '${QF_LAST_UPDATED_ON_LOWER_BOUND}') AS max_target_last_updated_on 
+    COALESCE(MAX(pedd_id),                ${QF_INSERT_ID_LOWER_BOUND}       ) AS "max_target_insert_id_1", 
+    COALESCE(MAX(pedd_id),                ${QF_INSERT_ID_LOWER_BOUND}       ) AS "max_target_insert_id_2", 
+--  COALESCE(MAX(created_on),            '${QF_LAST_UPDATED_ON_LOWER_BOUND}') AS "max_target_created_on", 
+    COALESCE(MAX(last_updated_on),       '${QF_LAST_UPDATED_ON_LOWER_BOUND}') AS "max_target_last_updated_on", 
+    COALESCE(MAX(peddd_created_on),      '${QF_LAST_UPDATED_ON_LOWER_BOUND}') AS "max_target_peddd_created_on", 
+    COALESCE(MAX(peddd_last_updated_on), '${QF_LAST_UPDATED_ON_LOWER_BOUND}') AS "max_target_peddd_last_updated_on" 
 FROM
     public.obo__passage_event_derived_data_with_rating  -- ${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</sql>
     <limit>0</limit>
@@ -1046,8 +1247,158 @@ FROM
       </output>
     </remotesteps>
     <GUI>
+      <xloc>448</xloc>
+      <yloc>208</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Get transformation name</name>
+    <type>SystemInfo</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <field>
+        <name>current_transformation</name>
+        <type>transformation name</type>
+      </field>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
       <xloc>336</xloc>
-      <yloc>224</yloc>
+      <yloc>992</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Get transformation name 2</name>
+    <type>SystemInfo</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <field>
+        <name>current_transformation</name>
+        <type>transformation name</type>
+      </field>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>560</xloc>
+      <yloc>992</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Get transformation name 3</name>
+    <type>SystemInfo</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <field>
+        <name>current_transformation</name>
+        <type>transformation name</type>
+      </field>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>96</xloc>
+      <yloc>704</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Get transformation name 4</name>
+    <type>SystemInfo</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <field>
+        <name>current_transformation</name>
+        <type>transformation name</type>
+      </field>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>816</xloc>
+      <yloc>816</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Get transformation name 5</name>
+    <type>SystemInfo</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <field>
+        <name>current_transformation</name>
+        <type>transformation name</type>
+      </field>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1056</xloc>
+      <yloc>816</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1089,8 +1440,8 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>336</xloc>
-      <yloc>592</yloc>
+      <xloc>448</xloc>
+      <yloc>576</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1188,8 +1539,23 @@ FROM
         <update>Y</update>
       </value>
       <value>
+        <name>created_on</name>
+        <rename>created_on</rename>
+        <update>Y</update>
+      </value>
+      <value>
         <name>last_updated_on</name>
         <rename>last_updated_on</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>peddd_created_on</name>
+        <rename>peddd_created_on</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>peddd_last_updated_on</name>
+        <rename>peddd_last_updated_on</rename>
         <update>Y</update>
       </value>
       <value>
@@ -1217,6 +1583,206 @@ FROM
     </GUI>
   </step>
   <step>
+    <name>Log number of rows inserted</name>
+    <type>WriteToLog</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <loglevel>log_level_minimal</loglevel>
+    <displayHeader>Y</displayHeader>
+    <limitRows>N</limitRows>
+    <limitRowsNumber>0</limitRowsNumber>
+    <logmessage>PARAM_SOURCE_SCHEMA = ${PARAM_SOURCE_SCHEMA}
+PARAM_SOURCE_TABLE  = ${PARAM_SOURCE_TABLE}
+PARAM_TARGET_SCHEMA = ${PARAM_TARGET_SCHEMA}
+PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}</logmessage>
+    <fields>
+      <field>
+        <name>current_transformation</name>
+      </field>
+      <field>
+        <name>num_rows_inserted</name>
+      </field>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>336</xloc>
+      <yloc>1056</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Log number of rows processed</name>
+    <type>WriteToLog</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <loglevel>log_level_minimal</loglevel>
+    <displayHeader>Y</displayHeader>
+    <limitRows>N</limitRows>
+    <limitRowsNumber>0</limitRowsNumber>
+    <logmessage>PARAM_SOURCE_SCHEMA = ${PARAM_SOURCE_SCHEMA}
+PARAM_SOURCE_TABLE  = ${PARAM_SOURCE_TABLE}
+PARAM_TARGET_SCHEMA = ${PARAM_TARGET_SCHEMA}
+PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}</logmessage>
+    <fields>
+      <field>
+        <name>current_transformation</name>
+      </field>
+      <field>
+        <name>num_rows</name>
+      </field>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>96</xloc>
+      <yloc>768</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Log number of rows processed 2</name>
+    <type>WriteToLog</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <loglevel>log_level_minimal</loglevel>
+    <displayHeader>Y</displayHeader>
+    <limitRows>N</limitRows>
+    <limitRowsNumber>0</limitRowsNumber>
+    <logmessage>PARAM_SOURCE_SCHEMA = ${PARAM_SOURCE_SCHEMA}
+PARAM_SOURCE_TABLE  = ${PARAM_SOURCE_TABLE}
+PARAM_TARGET_SCHEMA = ${PARAM_TARGET_SCHEMA}
+PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}</logmessage>
+    <fields>
+      <field>
+        <name>current_transformation</name>
+      </field>
+      <field>
+        <name>num_rows</name>
+      </field>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>816</xloc>
+      <yloc>880</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Log number of rows updated</name>
+    <type>WriteToLog</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <loglevel>log_level_minimal</loglevel>
+    <displayHeader>Y</displayHeader>
+    <limitRows>N</limitRows>
+    <limitRowsNumber>0</limitRowsNumber>
+    <logmessage>PARAM_SOURCE_SCHEMA = ${PARAM_SOURCE_SCHEMA}
+PARAM_SOURCE_TABLE  = ${PARAM_SOURCE_TABLE}
+PARAM_TARGET_SCHEMA = ${PARAM_TARGET_SCHEMA}
+PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}</logmessage>
+    <fields>
+      <field>
+        <name>current_transformation</name>
+      </field>
+      <field>
+        <name>num_rows_updated</name>
+      </field>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>560</xloc>
+      <yloc>1056</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Log number of rows updated 2</name>
+    <type>WriteToLog</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <loglevel>log_level_minimal</loglevel>
+    <displayHeader>Y</displayHeader>
+    <limitRows>N</limitRows>
+    <limitRowsNumber>0</limitRowsNumber>
+    <logmessage>PARAM_SOURCE_SCHEMA = ${PARAM_SOURCE_SCHEMA}
+PARAM_SOURCE_TABLE  = ${PARAM_SOURCE_TABLE}
+PARAM_TARGET_SCHEMA = ${PARAM_TARGET_SCHEMA}
+PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}</logmessage>
+    <fields>
+      <field>
+        <name>current_transformation</name>
+      </field>
+      <field>
+        <name>num_rows_updated</name>
+      </field>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1056</xloc>
+      <yloc>880</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
     <name>Perform INSERT</name>
     <type>Dummy</type>
     <description />
@@ -1235,8 +1801,8 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>240</xloc>
-      <yloc>688</yloc>
+      <xloc>336</xloc>
+      <yloc>672</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1259,8 +1825,8 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>432</xloc>
-      <yloc>688</yloc>
+      <xloc>560</xloc>
+      <yloc>672</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1289,7 +1855,172 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>240</xloc>
+      <xloc>336</xloc>
+      <yloc>736</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Set QF_UPDATE_TABLE_NUM_INSERTS</name>
+    <type>SetVariable</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <field>
+        <field_name>num_rows_inserted</field_name>
+        <variable_name>QF_UPDATE_TABLE_NUM_INSERTS</variable_name>
+        <variable_type>ROOT_JOB</variable_type>
+        <default_value />
+      </field>
+    </fields>
+    <use_formatting>Y</use_formatting>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>336</xloc>
+      <yloc>928</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Set QF_UPDATE_TABLE_NUM_ROWS</name>
+    <type>SetVariable</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <field>
+        <field_name>num_rows</field_name>
+        <variable_name>QF_UPDATE_TABLE_NUM_ROWS</variable_name>
+        <variable_type>ROOT_JOB</variable_type>
+        <default_value />
+      </field>
+    </fields>
+    <use_formatting>Y</use_formatting>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>96</xloc>
+      <yloc>640</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Set QF_UPDATE_TABLE_NUM_ROWS 2</name>
+    <type>SetVariable</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <field>
+        <field_name>num_rows</field_name>
+        <variable_name>QF_UPDATE_TABLE_NUM_ROWS</variable_name>
+        <variable_type>ROOT_JOB</variable_type>
+        <default_value />
+      </field>
+    </fields>
+    <use_formatting>Y</use_formatting>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>816</xloc>
+      <yloc>752</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Set QF_UPDATE_TABLE_NUM_UPDATES</name>
+    <type>SetVariable</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <field>
+        <field_name>num_rows_updated</field_name>
+        <variable_name>QF_UPDATE_TABLE_NUM_UPDATES</variable_name>
+        <variable_type>ROOT_JOB</variable_type>
+        <default_value />
+      </field>
+    </fields>
+    <use_formatting>Y</use_formatting>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>560</xloc>
+      <yloc>928</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Set QF_UPDATE_TABLE_NUM_UPDATES 2</name>
+    <type>SetVariable</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <field>
+        <field_name>num_rows_updated</field_name>
+        <variable_name>QF_UPDATE_TABLE_NUM_UPDATES</variable_name>
+        <variable_type>ROOT_JOB</variable_type>
+        <default_value />
+      </field>
+    </fields>
+    <use_formatting>Y</use_formatting>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1056</xloc>
       <yloc>752</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1319,8 +2050,8 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>336</xloc>
-      <yloc>432</yloc>
+      <xloc>448</xloc>
+      <yloc>416</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1366,42 +2097,8 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>336</xloc>
-      <yloc>512</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Set max id &amp; date</name>
-    <type>TableInput</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <connection>etl_db</connection>
-    <sql>SELECT
-          ${QF_INSERT_ID_LOWER_BOUND}                      AS max_target_insert_id
---,    CAST('${QF_LAST_UPDATED_ON_LOWER_BOUND}' AS timestamp) AS max_target_last_updated_on
-</sql>
-    <limit>0</limit>
-    <lookup />
-    <execute_each_row>N</execute_each_row>
-    <variables_active>Y</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>432</xloc>
-      <yloc>272</yloc>
+      <xloc>448</xloc>
+      <yloc>496</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1417,7 +2114,85 @@ FROM
       <schema_name />
     </partitioning>
     <connection>psa_db</connection>
-    <sql>SELECT
+    <sql>WITH fully_linked_pedd AS 
+(
+    -- Note: The extra CDC effort that is implemented and described here is necessary because on the 
+    --       most recent run of the ETL job that updates the PSA DB, the final rows that were inserted 
+    --       into the tables that are used to maintain the DSA DB table being treated here, i.e.,
+    --
+    --         obo__passage_event_derived_data
+    --         obo__passage_event_derived_data_details
+    --         obo__applied_rating_detail_data
+    -- 
+    --       may not correspond to precisely the same point in time. Currently, this is not possible
+    --       to ensure since, among other things, the OBO table applied_rating_detail_data does not
+    --       have a "created_on" or a "last_updated_on" column. As a result of this, the 
+    --       obo__applied_rating_detail_data rows PSA DB that are related to the final or final few
+    --       rows of the obo__passage_event_derived_data PSA DB table may not yet be present in the 
+    --       PSA DB, although they will be migrated to the PSA DB on the *next* run of the ETL job.
+    -- 
+    -- This query returns the maximum value of the "pedd_id" column for
+    -- obo__passage_event_derived_data rows that are linked to all possible rows.
+    -- This ensures that we do not try to migrate obo__passage_event_derived_data
+    -- rows from the PSA DB to the DSA DB which are linked to rows of either tables:
+    --
+    --   obo__passage_event_derived_data_details
+    --   obo__applied_rating_detail_data
+    --
+    -- in the obo_opr database, but where the obo__passage_event_derived_data_details
+    -- rows and/or the obo__applied_rating_detail_data rows have not yet been migrated
+    -- from the obo_opr database to the PSA DB ("late arriving" related rows). If such 
+    -- obo__passage_event_derived_data rows where not excluded here, the result could be
+    -- that some of the obo__passage_event_derived_data_with_rating rows that are 
+    -- inserted into the DSA DB by this transformation will not have their columns  
+    -- properly defined because the related rows that are need to to define these column
+    -- values are not yet available in the PSA DB. These "missing"related rows will 
+    -- eventually be migrated from the obo_opr databses to the PSA DB (on the next run
+    -- of the ETL job), but there is no way to detect this after the 
+    -- obo__passage_event_derived_data_with_rating row is created (this is particularly
+    -- true of the obo__applied_rating_detail_data rows (because they do not participate 
+    -- in the CDC implemented in this algorithm).
+    -- the PSA DB that are migrated to the DSA DB (because they are not linked 
+    -- to all of the rows enforced by this query).
+    --
+    -- Note: Even with this extra effort to avoid "late arriving" PSA DB
+    --       obo__applied_rating_detail_data rows (or, equivalently, "early arriving"
+    --       PSA DB obo__passage_event_derived_data (pedd) rows), there is still no 
+    --       mechanism to discover PSA DB obo__applied_rating_detail_data rows that are
+    --       inserted or updated *after" its obo__passage_event_derived_data_with_rating
+    --       row is inserted into the DSA DB. In order to be able to detect this and 
+    --       thereby be able to update an existing obo__passage_event_derived_data_with_rating
+    --       row, the OBO must:
+    --
+    --       1. Support a "last_updated_on" column for the  set the applied_rating_detail_data
+    --          table (assuming rows of this table can be updated). This is necesary so that
+    --          changes to rwows of this table will be propagated to the PSA (archive) DB.
+    --
+    --       2. Update the "last_updated_on" column of the passage_event_derived_data (pedd) or 
+    --          passage_event_derived_data_details (peddd) row for the applied_rating_detail_data
+    --          row that is inserted or updated. 
+    SELECT 
+        COALESCE(MAX(pedd.pedd_id), ${QF_INSERT_ID_LOWER_BOUND}) AS "max_linked_pedd_id"
+    FROM 
+        public.obo__passage_event_derived_data pedd
+    INNER JOIN
+        public.obo__passage_event_derived_data_details peddd ON peddd.pedd_id=pedd.pedd_id
+    INNER JOIN
+        public.obo__applied_rating_detail_data ardd_1 ON ardd_1.pedd_id=peddd.pedd_id 
+    INNER JOIN
+        public.obo__applied_rating_detail_data ardd_2 ON ardd_2.pedd_id=peddd.pedd_id 
+    INNER JOIN
+        public.obo__applied_rating_detail_data ardd_4 ON ardd_4.pedd_id=peddd.pedd_id 
+    INNER JOIN
+        public.obo__applied_rating_detail_data ardd_3 ON ardd_3.pedd_id=peddd.pedd_id 
+    WHERE
+        pedd.pedd_id > ?      -- Newly INSERTed "pedd" rows,  since the last run.
+        AND ardd_1.rate_component_fee_type_id=${QF_RATE_COMPONENT_FEE_TYPE_ID_APPLIED_FEE} AND ardd_1.rate_component_fee_category_id=${QF_RATE_COMPONENT_FEE_CATEGORY_ID_INFRASTRUCTURE_FEE}
+        AND ardd_2.rate_component_fee_type_id=${QF_RATE_COMPONENT_FEE_TYPE_ID_APPLIED_FEE} AND ardd_2.rate_component_fee_category_id=${QF_RATE_COMPONENT_FEE_CATEGORY_ID_INFRASTRUCTURE_MARKUP_FEE}
+        AND ardd_4.rate_component_fee_type_id=${QF_RATE_COMPONENT_FEE_TYPE_ID_APPLIED_FEE} AND ardd_4.rate_component_fee_category_id=${QF_RATE_COMPONENT_FEE_CATEGORY_ID_EXTERNAL_FEE_NOISE}
+        AND ardd_3.rate_component_fee_type_id=${QF_RATE_COMPONENT_FEE_TYPE_ID_APPLIED_FEE} AND ardd_3.rate_component_fee_category_id=${QF_RATE_COMPONENT_FEE_CATEGORY_ID_EXTERNAL_FEE_AIR}
+)
+SELECT
     pedd.pedd_id,
     pedd.pedd_status_id,
     peddd.applied_axle_tariff_category_id,
@@ -1432,7 +2207,10 @@ FROM
     ardd_4.rate_component_vat        AS "applied_external_fee_noise_vat",
     ardd_3.rate_component_fee_amount AS "applied_external_fee_air",
     ardd_3.rate_component_vat        AS "applied_external_fee_air_vat",
-    GREATEST(pedd.last_updated_on, peddd.last_updated_on) AS "last_updated_on"
+    pedd.created_on, 
+    pedd.last_updated_on, 
+    peddd.created_on                 AS "peddd_created_on",
+    peddd.last_updated_on            AS "peddd_last_updated_on"
 FROM
     public.obo__passage_event_derived_data pedd
 LEFT OUTER JOIN
@@ -1450,28 +2228,49 @@ LEFT OUTER JOIN
     public.obo__applied_rating_detail_data ardd_3 ON ardd_3.pedd_id=peddd.pedd_id AND 
     ardd_3.rate_component_fee_type_id=${QF_RATE_COMPONENT_FEE_TYPE_ID_APPLIED_FEE} AND ardd_3.rate_component_fee_category_id=${QF_RATE_COMPONENT_FEE_CATEGORY_ID_EXTERNAL_FEE_AIR}
 WHERE
+    -- This condition ensures that "pedd" rows selected here have no "late arriving" 
+    -- rows from its related tables, "peddd" and "obo__applied_rating_detail_data":
+    pedd.pedd_id &lt;= (SELECT max_linked_pedd_id FROM fully_linked_pedd) AND  -- Ensure that the most recent (last, chronologically) source pedd row treated here is "fully" linked to related rows
     ( 
-           pedd.pedd_id          > ?                                 -- Newly INSERTed "pedd" rows,  since the last run.
-        OR pedd.last_updated_on  > '${PARAM_CDC_LAST_LOAD_UTC}'      -- UPDATEd        "pedd" rows,  since the last run.
-        OR peddd.created_on      > '${PARAM_CDC_LAST_LOAD_UTC}'      -- Newly INSERTed "peddd" rows, since the last run.
-        OR peddd.last_updated_on > '${PARAM_CDC_LAST_LOAD_UTC}'      -- UPDATEd        "peddd" rows, since the last run.
+           pedd.pedd_id          > ?      -- Newly INSERTed "pedd" rows,  since the last run.
+        -- The >= comparison operator is used here because timestamps are not unique.
+        -- As a result, these comparisons will always match at least one row:
+        OR pedd.last_updated_on  >= ?    -- UPDATEd        "pedd" rows,  since the last run.
+        OR peddd.created_on      >= ?    -- Newly INSERTed "peddd" rows, since the last run.
+                                         -- This condition is based on peddd.created_on, not peddd.pedd_id because I do not know for sure that peddd rows are
+                                         -- created simultaneously as each pedd row is created. If this is not the case, then the peddd.pedd_id column *cannot*
+                                         -- be used as the "insert_id" column for the peddd table because we cannot assume that the peddd.pedd_id increase
+                                         -- monotonically as the peddd rows are inserted. Therefore, I have been forced to detect newly inserted
+                                         -- peddd rows using the peddd.created_on column. If it can be confirmed that the peddd.pedd_id column *can* be treated
+                                         -- as the "insert_id" column for the peddd table, then it is desirable to base this condition on the peddd.pedd_id
+                                         -- column instead of the peddd.created_on column
+        OR peddd.last_updated_on >= ?    -- UPDATEd        "peddd" rows, since the last run.
+-- Old code:
+--        OR pedd.last_updated_on  > '${PARAM_CDC_LAST_LOAD_UTC}'      -- UPDATEd        "pedd" rows,  since the last run.
+--        OR peddd.created_on      > '${PARAM_CDC_LAST_LOAD_UTC}'      -- Newly INSERTed "peddd" rows, since the last run.
+--        OR peddd.last_updated_on > '${PARAM_CDC_LAST_LOAD_UTC}'      -- UPDATEd        "peddd" rows, since the last run.
     )
     AND pedd.pedd_id  &lt;= ${PARAM_SOURCE_TABLE_MAX_INSERT_ID}          -- To avoid loading rows that are *inserted* after the job starts.
                                                          -- It is not necessary to include a similar condition for the "peddd"
                                                          -- table because it will necessarily be satisfied, due to 
                                                          -- the one-to-one relation between the "pedd" &amp; "peddd" tables.
-    AND (
-            pedd.last_updated_on IS NULL OR                          -- Rows that have been inserted but not modified.
-            pedd.last_updated_on &lt;= '${PARAM_CDC_CURRENT_LOAD_UTC}'  -- Do not load rows that are *modified* after the job starts.
-                                                                     -- These restrictions are meant to avoid setting a foreign 
-                                                                     -- key to a row that is not yet inserted into the target DSA.
-                                                                     -- We do not need to specify similar conditions for the 
-                                                                     -- "peddd" table.
-    ) 
+-- This condition is commented out because it is not needed and leads to problems if used.
+-- For details, see the comments in the step that creates the SELECT statement for the source table
+-- in transformation:
+--
+--   /generic/target_update/tr_target-update_table-updatable_table
+--
+--    AND (
+--            pedd.last_updated_on IS NULL OR                          -- Rows that have been inserted but not modified.
+--            pedd.last_updated_on &lt;= '${PARAM_CDC_CURRENT_LOAD_UTC}'  -- Do not load rows that are *modified* after the job starts.
+--    )                                                                -- These restrictions are meant to avoid setting a foreign 
+--                                                                     -- key to a row that is not yet inserted into the target DSA.
+--                                                                     -- We do not need to specify similar conditions for the 
+--                                                                     -- "peddd" table.
 ORDER BY
-    pedd.pedd_id</sql>
+    pedd.pedd_id    -- Insert new rows in the order they are created in the source PSA DB</sql>
     <limit>0</limit>
-    <lookup>Write to log: parameters, max id &amp; date</lookup>
+    <lookup>Write to log: parameters, max id &amp; timestamps</lookup>
     <execute_each_row>N</execute_each_row>
     <variables_active>Y</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
@@ -1483,8 +2282,8 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>336</xloc>
-      <yloc>368</yloc>
+      <xloc>448</xloc>
+      <yloc>352</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1526,8 +2325,8 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>240</xloc>
-      <yloc>816</yloc>
+      <xloc>336</xloc>
+      <yloc>800</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1569,8 +2368,8 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>912</xloc>
-      <yloc>512</yloc>
+      <xloc>1056</xloc>
+      <yloc>496</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1653,8 +2452,20 @@ ORDER BY
         <rename>applied_external_fee_air_vat</rename>
       </value>
       <value>
+        <name>created_on</name>
+        <rename>created_on</rename>
+      </value>
+      <value>
         <name>last_updated_on</name>
         <rename>last_updated_on</rename>
+      </value>
+      <value>
+        <name>peddd_created_on</name>
+        <rename>peddd_created_on</rename>
+      </value>
+      <value>
+        <name>peddd_last_updated_on</name>
+        <rename>peddd_last_updated_on</rename>
       </value>
       <value>
         <name>etl_batch_id_last_update</name>
@@ -1669,8 +2480,8 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>432</xloc>
-      <yloc>816</yloc>
+      <xloc>560</xloc>
+      <yloc>800</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1753,8 +2564,20 @@ ORDER BY
         <rename>applied_external_fee_air_vat</rename>
       </value>
       <value>
+        <name>created_on</name>
+        <rename>created_on</rename>
+      </value>
+      <value>
         <name>last_updated_on</name>
         <rename>last_updated_on</rename>
+      </value>
+      <value>
+        <name>peddd_created_on</name>
+        <rename>peddd_created_on</rename>
+      </value>
+      <value>
+        <name>peddd_last_updated_on</name>
+        <rename>peddd_last_updated_on</rename>
       </value>
       <value>
         <name>etl_batch_id_last_update</name>
@@ -1769,13 +2592,13 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>912</xloc>
-      <yloc>608</yloc>
+      <xloc>1056</xloc>
+      <yloc>592</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Write to log: parameters, max id &amp; date</name>
+    <name>Write to log: parameters, max id &amp; timestamps</name>
     <type>WriteToLog</type>
     <description />
     <distribute>Y</distribute>
@@ -1790,12 +2613,22 @@ ORDER BY
     <limitRows>N</limitRows>
     <limitRowsNumber>0</limitRowsNumber>
     <logmessage>tr_dsa-update_table-public.obo__passage_event_derived_data_with_rating:
-PARAM_CDC_LAST_LOAD_UTC    = ${PARAM_CDC_LAST_LOAD_UTC}
-PARAM_CDC_CURRENT_LOAD_UTC = ${PARAM_CDC_CURRENT_LOAD_UTC}
-PARAM_SOURCE_TABLE_MAX_INSERT_ID        = ${PARAM_SOURCE_TABLE_MAX_INSERT_ID}</logmessage>
+PARAM_SOURCE_TABLE_MAX_INSERT_ID = ${PARAM_SOURCE_TABLE_MAX_INSERT_ID}</logmessage>
     <fields>
       <field>
-        <name>max_target_insert_id</name>
+        <name>max_target_insert_id_1</name>
+      </field>
+      <field>
+        <name>max_target_insert_id_2</name>
+      </field>
+      <field>
+        <name>max_target_last_updated_on</name>
+      </field>
+      <field>
+        <name>max_target_peddd_created_on</name>
+      </field>
+      <field>
+        <name>max_target_peddd_last_updated_on</name>
       </field>
     </fields>
     <cluster_schema />
@@ -1806,8 +2639,8 @@ PARAM_SOURCE_TABLE_MAX_INSERT_ID        = ${PARAM_SOURCE_TABLE_MAX_INSERT_ID}</l
       </output>
     </remotesteps>
     <GUI>
-      <xloc>336</xloc>
-      <yloc>288</yloc>
+      <xloc>448</xloc>
+      <yloc>272</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1827,7 +2660,7 @@ PARAM_SOURCE_TABLE_MAX_INSERT_ID        = ${PARAM_SOURCE_TABLE_MAX_INSERT_ID}</l
     <error>
       <source_step>Table output - DSA.schema.table 2</source_step>
       <target_step>Update - DSA.schema.table 2</target_step>
-      <is_enabled>Y</is_enabled>
+      <is_enabled>N</is_enabled>
       <nr_valuename />
       <descriptions_valuename />
       <fields_valuename />

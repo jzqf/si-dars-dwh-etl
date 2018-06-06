@@ -1,6 +1,6 @@
 <transformation>
   <info>
-    <name>tr_list_of_tables_to_mirror</name>
+    <name>tr_table_update_statistics_compute</name>
     <description />
     <extended_description />
     <trans_version />
@@ -9,9 +9,24 @@
     <directory>/generic/target_update</directory>
     <parameters>
       <parameter>
-        <name>PARAM_TARGET_DB_ID</name>
-        <default_value>-1</default_value>
-        <description>ID of the "target" database to which the "source" DB tables will be archived/mirrored</description>
+        <name>PARAM_UPDATE_TABLE_NUM_INSERTS</name>
+        <default_value />
+        <description>Number of rows inserted into the target table by the ETL job</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_UPDATE_TABLE_NUM_ROWS</name>
+        <default_value />
+        <description>Number of rows processed by the ETL job (in case this number cannot be broken down into inserts &amp; updates)</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_UPDATE_TABLE_NUM_UPDATES</name>
+        <default_value />
+        <description>Number of rows of the target table updated by the ETL job</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_UPDATE_TABLE_START_MILLISECONDS</name>
+        <default_value />
+        <description>Timer start value for updating a table</description>
       </parameter>
     </parameters>
     <log>
@@ -46,7 +61,7 @@
           <id>LINES_READ</id>
           <enabled>Y</enabled>
           <name>LINES_READ</name>
-          <subject>Copy rows to result</subject>
+          <subject />
         </field>
         <field>
           <id>LINES_WRITTEN</id>
@@ -420,7 +435,7 @@
     <feedback_size>50000</feedback_size>
     <using_thread_priorities>Y</using_thread_priorities>
     <shared_objects_file />
-    <capture_step_performance>Y</capture_step_performance>
+    <capture_step_performance>N</capture_step_performance>
     <step_performance_capturing_delay>1000</step_performance_capturing_delay>
     <step_performance_capturing_size_limit>100</step_performance_capturing_size_limit>
     <dependencies>
@@ -432,48 +447,30 @@
     <clusterschemas>
     </clusterschemas>
     <created_user>-</created_user>
-    <created_date>2016/04/03 09:57:16.279</created_date>
+    <created_date>2016/04/05 11:01:03.994</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2018/05/30 09:28:06.638</modified_date>
+    <modified_date>2018/05/09 15:40:32.139</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>This transformation creates a stream that contains details of each table from one or more "source" database(s) that will be archived/mirrored 
-to a table in a "target" database. Each row of the stream corresponds to a single such table pair.
+      <note>This job computes the "update statistics" for a table that was just updated. This transformation sets the PDI variables (to be accessed in the calling job):
 
-This stream is copied to the "result" of this transformation so that it can be used elsewhere in another job.
+	QF_UPDATE_TABLE_ROWS_PER_SEC
+	QF_UPDATE_TABLE_INSERTS_PER_SEC		&lt;- No, I do not compute this
+	QF_UPDATE_TABLE_UPDATES_PER_SEC	&lt;- No, I do not compute this
 
-This transformation has parameter:
+ This job has parameters:
 
-	PARAM_TARGET_DB_ID			ID of the "target" database to which the "source" DB tables will be archived/mirrored</note>
+	PARAM_UPDATE_TABLE_START_MILLISECONDS	Timer start value for updating a table
+	PARAM_UPDATE_TABLE_NUM_ROWS			Number of rows processed by the ETL job (in case this number cannot be broken down into inserts &amp; updates)
+	PARAM_UPDATE_TABLE_NUM_INSERTS		Number of rows inserted into the target table by the ETL job
+	PARAM_UPDATE_TABLE_NUM_UPDATES		Number of rows of the target table updated by the ETL job</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>788</width>
-      <heigth>114</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>9</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Each row of the stream created by this step specifies a table 
-that is mirrored from a source database to a target database.</note>
-      <xloc>16</xloc>
-      <yloc>224</yloc>
-      <width>344</width>
-      <heigth>36</heigth>
+      <width>900</width>
+      <heigth>166</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -490,57 +487,6 @@ that is mirrored from a source database to a target database.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
   </notepads>
-  <connection>
-    <name>etl_db</name>
-    <server>${QF_ETL_DB_HOST}</server>
-    <type>POSTGRESQL</type>
-    <access>Native</access>
-    <database>${QF_ETL_DB_DATABASE}</database>
-    <port>${QF_ETL_DB_PORT}</port>
-    <username>${QF_ETL_DB_USERNAME}</username>
-    <password>${QF_ETL_DB_PASSWORD}</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
-    <attributes>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>IS_CLUSTERED</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>PORT_NUMBER</code>
-        <attribute>${QF_ETL_DB_PORT}</attribute>
-      </attribute>
-      <attribute>
-        <code>PRESERVE_RESERVED_WORD_CASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>QUOTE_ALL_FIELDS</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>USE_POOLING</code>
-        <attribute>N</attribute>
-      </attribute>
-    </attributes>
-  </connection>
   <connection>
     <name>logging_db</name>
     <server>${QF_LOGGING_DB_HOST}</server>
@@ -594,14 +540,19 @@ that is mirrored from a source database to a target database.</note>
   </connection>
   <order>
     <hop>
-      <from>Load list of tables to mirror</from>
-      <to>Copy rows to result</to>
+      <from>Generate single dummy row</from>
+      <to>Log parameters</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Log parameters</from>
+      <to>JavaScript - Set PDI variables</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Copy rows to result</name>
-    <type>RowsToResult</type>
+    <name>Generate single dummy row</name>
+    <type>RowGenerator</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -610,6 +561,25 @@ that is mirrored from a source database to a target database.</note>
       <method>none</method>
       <schema_name />
     </partitioning>
+    <fields>
+      <field>
+        <name>rownum</name>
+        <type>Integer</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <nullif>1</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+    </fields>
+    <limit>1</limit>
+    <never_ending>N</never_ending>
+    <interval_in_ms>5000</interval_in_ms>
+    <row_time_field>now</row_time_field>
+    <last_time_field>FiveSecondsAgo</last_time_field>
     <cluster_schema />
     <remotesteps>
       <input>
@@ -618,14 +588,14 @@ that is mirrored from a source database to a target database.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>544</xloc>
-      <yloc>160</yloc>
+      <xloc>176</xloc>
+      <yloc>192</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Load list of tables to mirror</name>
-    <type>TableInput</type>
+    <name>JavaScript - Set PDI variables</name>
+    <type>ScriptValueMod</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -634,34 +604,72 @@ that is mirrored from a source database to a target database.</note>
       <method>none</method>
       <schema_name />
     </partitioning>
-    <connection>etl_db</connection>
-    <sql>SELECT
-    tm.table_meta_id,
-    tm.source_db_id,
-    tm.source_schema_name AS "source_schema",
-    tm.source_table_name AS "source_table",
-    tm.source_schema_name || '.' || tm.source_table_name AS "source_schema_dot_table",
-    tm.target_schema_name AS "target_schema",
-    tm.target_table_name  AS "target_table",
-    tm.target_schema_name || '.' || tm.target_table_name AS "target_schema_dot_table",
-    tm.mirror_algorithm_id,
-    ts.max_insert_id 
-FROM
-    ${QF_ETL_DB_SCHEMA}.table_meta tm 
-INNER JOIN
-    ${QF_ETL_DB_SCHEMA}.table_state ts ON ts.table_state_id = tm.table_meta_id
-WHERE
-    tm.target_db_id=${PARAM_TARGET_DB_ID} AND
-    tm.mirror_tables=true 
-ORDER BY
-    tm.source_db_id,
-    tm.source_schema_name,
-    tm.source_table_name</sql>
-    <limit>0</limit>
-    <lookup />
-    <execute_each_row>N</execute_each_row>
-    <variables_active>Y</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
+    <compatible>N</compatible>
+    <optimizationLevel>9</optimizationLevel>
+    <jsScripts>
+      <jsScript>
+        <jsScript_type>0</jsScript_type>
+        <jsScript_name>Set PDI variable</jsScript_name>
+        <jsScript_script>// Set variable with scope "root job". The variable will be valid
+// in the root job and all the child jobs and transformations.
+// Possible scopes:
+//   "s": system-wide
+//   "r": up to the root job
+//   "p": up to the parent job
+//   "g": up to the grandparent job
+
+now_millis = Date.now();
+
+not_set_value = getVariable("QF_POSITIVE_INTEGER_NOT_SET_VALUE", "-1");
+
+// Get parameter values:
+start_millis = getVariable("PARAM_UPDATE_TABLE_START_MILLISECONDS", not_set_value);
+num_rows     = getVariable("PARAM_UPDATE_TABLE_NUM_ROWS"          , not_set_value);
+num_inserts  = getVariable("PARAM_UPDATE_TABLE_NUM_INSERTS"       , not_set_value);
+num_updates  = getVariable("PARAM_UPDATE_TABLE_NUM_UPDATES"       , not_set_value);
+
+// Inititalize in case any or all of the PDI variables are not set:
+elapsed_millis      = setVariable("QF_UPDATE_TABLE_ELAPSED_MILLISECONDS", null, "r");
+num_rows_per_sec    = setVariable("QF_UPDATE_TABLE_ROWS_PER_SEC"        , null, "r");
+//num_inserts_per_sec = setVariable("QF_UPDATE_TABLE_INSERTS_PER_SEC"     , null, "r");
+//num_updates_per_sec = setVariable("QF_UPDATE_TABLE_UPDATES_PER_SEC"     , null, "r");
+
+if (start_millis != not_set_value) {
+    elapsed_millis = now_millis - start_millis;
+    if(elapsed_millis) {
+        if(num_rows != not_set_value) {
+            num_rows_per_sec    = num_rows * 1000/elapsed_millis;
+        } else if (num_inserts != not_set_value &amp;&amp; num_updates != not_set_value) {
+            //num_rows = parseInt(num_inserts, 10) + parseInt(num_updates, 10);
+            //num_rows_per_sec    = num_rows * 1000/elapsed_millis;
+            num_rows_per_sec    = (parseInt(num_inserts, 10) + parseInt(num_updates, 10)) * 1000/elapsed_millis;
+            //Alert("num_rows = "+num_rows+"\nelapsed_millis = "+elapsed_millis+"\nnum_rows_per_sec = "+num_rows_per_sec);
+        } else if (num_inserts != not_set_value) {
+            num_rows_per_sec    = num_inserts * 1000/elapsed_millis;
+        } else if (num_updates != not_set_value) {
+            num_rows_per_sec    = num_updates * 1000/elapsed_millis;
+        }
+        //if(num_rows != not_set_value) {
+        //    num_rows_per_sec    = num_rows*1000    / elapsed_millis;
+        //}
+        //if(num_inserts != not_set_value) {
+        //    num_inserts_per_sec = num_inserts*1000 / elapsed_millis;
+        //}
+        //if(num_updates != not_set_value) {
+        //    num_updates_per_sec = num_updates*1000 / elapsed_millis;
+        //}
+    }
+}
+
+// Set the variables that will be accessed in the calling job.:
+setVariable("QF_UPDATE_TABLE_ELAPSED_MILLISECONDS", elapsed_millis    , "r");
+setVariable("QF_UPDATE_TABLE_ROWS_PER_SEC"        , num_rows_per_sec  , "r");
+//setVariable("QF_UPDATE_TABLE_INSERTS_PER_SEC"     , num_inserts_per_sec, "r");
+//setVariable("QF_UPDATE_TABLE_UPDATES_PER_SEC"     , num_updates_per_sec, "r");
+</jsScript_script>
+      </jsScript>
+    </jsScripts>
+    <fields>    </fields>
     <cluster_schema />
     <remotesteps>
       <input>
@@ -670,8 +678,43 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>160</yloc>
+      <xloc>176</xloc>
+      <yloc>352</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Log parameters</name>
+    <type>WriteToLog</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <loglevel>log_level_basic</loglevel>
+    <displayHeader>Y</displayHeader>
+    <limitRows>N</limitRows>
+    <limitRowsNumber>0</limitRowsNumber>
+    <logmessage>Parameters passed to tr_table_update_statistics_compute:
+PARAM_UPDATE_TABLE_START_MILLISECONDS = ${PARAM_UPDATE_TABLE_START_MILLISECONDS}
+PARAM_UPDATE_TABLE_NUM_ROWS           = ${PARAM_UPDATE_TABLE_NUM_ROWS}
+PARAM_UPDATE_TABLE_NUM_INSERTS        = ${PARAM_UPDATE_TABLE_NUM_INSERTS}
+PARAM_UPDATE_TABLE_NUM_UPDATES        = ${PARAM_UPDATE_TABLE_NUM_UPDATES}</logmessage>
+    <fields>
+      </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>176</xloc>
+      <yloc>272</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

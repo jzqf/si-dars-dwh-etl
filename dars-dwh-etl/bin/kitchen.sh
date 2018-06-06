@@ -42,7 +42,6 @@ LOCK_DIR="/tmp/dars-qfree-etl.lock"
 PDI_REPOSITORY=$DWH_HOME/pdi_repository
 JOB_DIR=$PDI_REPOSITORY
 LOG_FILE=$DWH_LOGDIR/${app.name}.log
-LOG_LEVEL=Basic
 
 log_error()
 {
@@ -79,6 +78,12 @@ if [ ! -z "$1" ]; then
     fi
 else
     log_error "No job specified"
+fi
+
+# The logging level can optionally be passed as the second argument.
+LOG_LEVEL=Basic    # default if no logging level specified
+if [ -n "$2" ]; then
+    LOG_LEVEL=$2
 fi
 
 # Remove the lock directory.

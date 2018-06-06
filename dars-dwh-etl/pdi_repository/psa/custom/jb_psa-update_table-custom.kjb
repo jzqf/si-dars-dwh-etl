@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2018/03/20 12:32:11.360</modified_date>
+  <modified_date>2018/05/29 16:09:01.701</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
@@ -21,9 +21,39 @@
       <description>Timestamp of last successful load from the source database</description>
     </parameter>
     <parameter>
-      <name>PARAM_SOURCE_TABLE_MAX_INSERT_ID</name>
+      <name>PARAM_DYN_DB_CONN_TARGET_DB_DATABASE</name>
       <default_value />
-      <description>Maximum value of the "insert_id" column for rows to load from the source DB table</description>
+      <description>for target DB "dynamic" database connections</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_TARGET_DB_DRIVER</name>
+      <default_value />
+      <description>for target DB "dynamic" database connections</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_TARGET_DB_HOST</name>
+      <default_value />
+      <description>for target DB "dynamic" database connections</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD</name>
+      <default_value />
+      <description>for target DB "dynamic" database connections</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_TARGET_DB_PORT</name>
+      <default_value />
+      <description>for target DB "dynamic" database connections</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_TARGET_DB_URL</name>
+      <default_value />
+      <description>for target DB "dynamic" database connections</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_TARGET_DB_USERNAME</name>
+      <default_value />
+      <description>for target DB "dynamic" database connections</description>
     </parameter>
     <parameter>
       <name>PARAM_SOURCE_DB_ID</name>
@@ -44,6 +74,11 @@
       <name>PARAM_SOURCE_TABLE</name>
       <default_value />
       <description />
+    </parameter>
+    <parameter>
+      <name>PARAM_SOURCE_TABLE_MAX_INSERT_ID</name>
+      <default_value />
+      <description>Maximum value of the "insert_id" column for rows to load from the source DB table</description>
     </parameter>
     <parameter>
       <name>PARAM_TABLE_META_ID</name>
@@ -414,8 +449,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>32</xloc>
-      <yloc>272</yloc>
+      <xloc>64</xloc>
+      <yloc>352</yloc>
     </entry>
     <entry>
       <name>Log: Parameters</name>
@@ -438,8 +473,8 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>160</xloc>
-      <yloc>272</yloc>
+      <xloc>192</xloc>
+      <yloc>352</yloc>
     </entry>
     <entry>
       <name>Abort job - Untreated case</name>
@@ -449,8 +484,8 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>160</xloc>
-      <yloc>656</yloc>
+      <xloc>192</xloc>
+      <yloc>816</yloc>
     </entry>
     <entry>
       <name>Target table = obo.passage_with_images ?</name>
@@ -471,8 +506,8 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>160</xloc>
-      <yloc>384</yloc>
+      <xloc>192</xloc>
+      <yloc>544</yloc>
     </entry>
     <entry>
       <name>jb_log_error - Untreated case</name>
@@ -510,8 +545,8 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>160</xloc>
-      <yloc>560</yloc>
+      <xloc>192</xloc>
+      <yloc>720</yloc>
     </entry>
     <entry>
       <name>Abort job</name>
@@ -521,8 +556,8 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>1</nr>
-      <xloc>736</xloc>
-      <yloc>416</yloc>
+      <xloc>768</xloc>
+      <yloc>576</yloc>
     </entry>
     <entry>
       <name>jb_psa-update_table-obo.passage_with_images</name>
@@ -555,8 +590,8 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>480</xloc>
-      <yloc>384</yloc>
+      <xloc>512</xloc>
+      <yloc>544</yloc>
     </entry>
     <entry>
       <name>jb_update_etl_table_meta_mirror_details</name>
@@ -589,13 +624,80 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
           <stream_name />
           <value>${QF_MIRROR_ALG_CUSTOM}</value>
         </parameter>
+        <parameter>
+          <name>PARAM_UPDATE_TABLE_START_MILLISECONDS</name>
+          <stream_name />
+          <value>${QF_UPDATE_TABLE_START_MILLISECONDS}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_UPDATE_TABLE_NUM_ROWS</name>
+          <stream_name />
+          <value>${QF_UPDATE_TABLE_NUM_ROWS}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_UPDATE_TABLE_NUM_INSERTS</name>
+          <stream_name />
+          <value>${QF_UPDATE_TABLE_NUM_INSERTS}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_UPDATE_TABLE_NUM_UPDATES</name>
+          <stream_name />
+          <value>${QF_UPDATE_TABLE_NUM_UPDATES}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_INSERT_ID_COLNAME</name>
+          <stream_name />
+          <value>passage_with_images_id</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_LAST_UPDATED_ON_COLNAME</name>
+          <stream_name />
+          <value>last_updated_on</value>
+        </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>736</xloc>
-      <yloc>352</yloc>
+      <xloc>768</xloc>
+      <yloc>512</yloc>
+    </entry>
+    <entry>
+      <name>tr_table_update_statistics_init_vrbls</name>
+      <description />
+      <type>TRANS</type>
+      <specification_method>rep_name</specification_method>
+      <trans_object_id />
+      <filename />
+      <transname>tr_table_update_statistics_init_vrbls</transname>
+      <directory>/generic/target_update</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <clear_rows>N</clear_rows>
+      <clear_files>N</clear_files>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Basic</loglevel>
+      <cluster>N</cluster>
+      <slave_server_name />
+      <set_append_logfile>N</set_append_logfile>
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <create_parent_folder>N</create_parent_folder>
+      <logging_remote_work>N</logging_remote_work>
+      <run_configuration>Pentaho local</run_configuration>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+      </parameters>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>192</xloc>
+      <yloc>448</yloc>
     </entry>
   </entries>
   <hops>
@@ -627,15 +729,6 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>Log: Parameters</from>
-      <to>Target table = obo.passage_with_images ?</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
       <from>jb_psa-update_table-obo.passage_with_images</from>
       <to>Abort job</to>
       <from_nr>0</from_nr>
@@ -662,21 +755,46 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
       <evaluation>Y</evaluation>
       <unconditional>N</unconditional>
     </hop>
+    <hop>
+      <from>Log: Parameters</from>
+      <to>tr_table_update_statistics_init_vrbls</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>tr_table_update_statistics_init_vrbls</from>
+      <to>Target table = obo.passage_with_images ?</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
   </hops>
   <notepads>
     <notepad>
       <note>This job updates a table in the target PSA DB that is mirrored from a source database using a table-specific CUSTOM algorithm, i.e.,
 a custom job &amp; transformation is used that is specific to the table being updated in the target PSA DB. This job has parameters:
 
-	PARAM_CDC_LAST_LOAD_UTC				Timestamp for when the target DB was most recently updated successfully
-	PARAM_CDC_CURRENT_LOAD_UTC			Timestamp of the current load (no rows after this timestamp will be loaded)
-	PARAM_TABLE_META_ID					Primary key of ${QF_ETL_DB_SCHEMA}.table_meta row for "source" table archived/mirrored to "target" table
-	PARAM_SOURCE_DB_ID						ID the "source" database containing tables will be mirrored to a "target" database
-	PARAM_SOURCE_TABLE_MAX_INSERT_ID					Maximum value of the "insert_id" column for rows to load from the source DB table
-	PARAM_SOURCE_SCHEMA					Not really needed since the job that will be run will be specific for the specified target DB table 
-	PARAM_SOURCE_TABLE					Not really needed since the job that will be run will be specific for the specified target DB table 
-	PARAM_SOURCE_SCHEMA_DOT_TABLE		Not really needed since the job that will be run will be specific for the specified target DB table 
-	PARAM_TARGET_DB_ID						ID of the "target" database to which the "source" DB tables will be archived/mirrored
+	PARAM_CDC_LAST_LOAD_UTC					Timestamp for when the target DB was most recently updated successfully
+	PARAM_CDC_CURRENT_LOAD_UTC				Timestamp of the current load (no rows after this timestamp will be loaded)
+	PARAM_DYN_DB_CONN_TARGET_DB_HOST		for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_PORT		for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_DATABASE	for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_USERNAME	for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD	for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_DRIVER		for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_URL			for target DB "dynamic" database connections
+	PARAM_TABLE_META_ID							Primary key of ${QF_ETL_DB_SCHEMA}.table_meta row for "source" table archived/mirrored to "target" table
+	PARAM_SOURCE_DB_ID							ID the "source" database containing tables will be mirrored to a "target" database
+	PARAM_SOURCE_TABLE_MAX_INSERT_ID			Maximum value of the "insert_id" column for rows to load from the source DB table
+	PARAM_SOURCE_SCHEMA						Not really needed since the job that will be run will be specific for the specified target DB table 
+	PARAM_SOURCE_TABLE							Not really needed since the job that will be run will be specific for the specified target DB table 
+	PARAM_SOURCE_SCHEMA_DOT_TABLE			Not really needed since the job that will be run will be specific for the specified target DB table 
+	PARAM_TARGET_DB_ID							ID of the "target" database to which the "source" DB tables will be archived/mirrored
 	PARAM_TARGET_SCHEMA
 	PARAM_TARGET_TABLE
 	PARAM_TARGET_SCHEMA_DOT_TABLE
@@ -684,10 +802,10 @@ a custom job &amp; transformation is used that is specific to the table being up
 This job acts as a "dispatcher" in that it runs the appropriate job for the table that is specified by this job's parameters.</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>937</width>
-      <heigth>248</heigth>
+      <width>923</width>
+      <heigth>322</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -701,5 +819,70 @@ This job acts as a "dispatcher" in that it runs the appropriate job for the tabl
       <bordercolorblue>100</bordercolorblue>
       <drawshadow>Y</drawshadow>
     </notepad>
+    <notepad>
+      <note>Initialize the PDI variables that will record the "update statistic" in the two update transformations:
+	QF_UPDATE_TABLE_START_MILLISECONDS
+	QF_UPDATE_TABLE_NUM_ROWS
+	QF_UPDATE_TABLE_NUM_INSERTS
+	QF_UPDATE_TABLE_NUM_UPDATES</note>
+      <xloc>336</xloc>
+      <yloc>416</yloc>
+      <width>553</width>
+      <heigth>75</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Ensure correct values are passed here for parameters:
+
+	PARAM_TARGET_INSERT_ID_COLNAME
+	PARAM_TARGET_LAST_UPDATED_ON_COLNAME</note>
+      <xloc>912</xloc>
+      <yloc>496</yloc>
+      <width>308</width>
+      <heigth>62</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>255</backgroundcolorgreen>
+      <backgroundcolorblue>0</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
   </notepads>
+  <attributes>
+    <group>
+      <name>METASTORE.pentaho</name>
+      <attribute>
+        <key>Default Run Configuration</key>
+        <value>{"namespace":"pentaho","id":"Default Run Configuration","name":"Default Run Configuration","description":"Defines a default run configuration","metaStoreName":null}</value>
+      </attribute>
+    </group>
+    <group>
+      <name>{"_":"Embedded MetaStore Elements","namespace":"pentaho","type":"Default Run Configuration"}</name>
+      <attribute>
+        <key>Pentaho local</key>
+        <value>{"children":[{"children":[],"id":"server","value":null},{"children":[],"id":"clustered","value":"N"},{"children":[],"id":"name","value":"Pentaho local"},{"children":[],"id":"description","value":null},{"children":[],"id":"readOnly","value":"Y"},{"children":[],"id":"sendResources","value":"N"},{"children":[],"id":"logRemoteExecutionLocally","value":"N"},{"children":[],"id":"remote","value":"N"},{"children":[],"id":"local","value":"Y"},{"children":[],"id":"showTransformations","value":"N"}],"id":"Pentaho local","value":null,"name":"Pentaho local","owner":null,"ownerPermissionsList":[]}</value>
+      </attribute>
+    </group>
+  </attributes>
 </job>
