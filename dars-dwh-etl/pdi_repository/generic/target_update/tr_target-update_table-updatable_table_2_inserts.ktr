@@ -589,7 +589,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2018/05/15 10:11:03.374</modified_date>
+    <modified_date>2018/06/06 09:18:00.722</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -848,42 +848,10 @@ SELECT
     'FROM '    ||
         '${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE} ' ||
     'WHERE '  ||
-    '( '      ||
-
-    '    ${PARAM_SOURCE_INSERT_ID_COLNAME}       >    ${PARAM_TARGET_TABLE_MAX_INSERT_ID} '         ||  -- newly INSERTed rows, since the last run
- --   ' OR ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} >= ''${PARAM_TARGET_TABLE_MAX_LAST_UPDATED_ON}'' ' ||  -- UPDATEd rows, since the last run. 
-                                                                                 -- This condition is needed to be able to select rows that
-                                                                                 -- are modified during a period when the table is being treated as an insert-only
-                                                                                 -- table (not a likely scenario, but it is a possibility).
-                                                                                 -- Because ">=" is used here, not ">", this will include a least one row that was
-                                                                                 -- updated on the previous run (assuming that there was at least one row updated).
-                                                                                 -- This/these rows will have:
-                                                                                 --   ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} = ${PARAM_TARGET_TABLE_MAX_LAST_UPDATED_ON}.
-                                                                                 -- The reason why ">=" is used is in case there were one or more rows that were *not* 
-                                                                                 -- updated on the previous run, but which have: 
-                                                                                 --   ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} = ${PARAM_TARGET_TABLE_MAX_LAST_UPDATED_ON}.
-                                                                                 -- This can occur
-                                                                                 -- because of the finite resolution of timestamp values. As a result, more than one
-                                                                                 -- row can have the *same* value of ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME}, but not all of
-                                                                                 -- them were loaded and treated on the previous run, i.e., the cutoff imposed by
-                                                                                 -- the condition ${PARAM_SOURCE_INSERT_ID_COLNAME} &lt;= ${PARAM_SOURCE_TABLE_MAX_INSERT_ID} or
-                                                                                 -- ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} &lt;= '${PARAM_CDC_CURRENT_LOAD_UTC}' loaded some,                                                                                 -- but not all, of the rows with this value of ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME}.
-    ') ' || 
+    '    ${PARAM_SOURCE_INSERT_ID_COLNAME}   >  ${PARAM_TARGET_TABLE_MAX_INSERT_ID} ' ||  -- newly INSERTed rows, since the last run
     'AND ${PARAM_SOURCE_INSERT_ID_COLNAME}   &lt;= ${PARAM_SOURCE_TABLE_MAX_INSERT_ID} ' ||  -- to avoid loading rows that are *inserted* after the job starts
-
--- This condition is commented out because it is not needed and leads to problems if used.
--- For details, see the comments in the step that creates the SELECT statement for the source table
--- in transformation:
---
---   /generic/target_update/tr_target-update_table-updatable_table
---
---    'AND ( ' ||
---            '${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} IS NULL OR ' ||                             -- rows that have been inserted but not modified
---            '${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} &lt;= ''${PARAM_CDC_CURRENT_LOAD_UTC}'' ' ||   -- to avoid loading rows that are *modified* after the job starts
---        ') ' ||
-
     'ORDER BY ' ||
-        '${PARAM_SOURCE_INSERT_ID_COLNAME}'
+        '${PARAM_SOURCE_INSERT_ID_COLNAME}'                                               -- So that we will continue where we left off in case of an abort
     AS "select_source_rows_sql" 
 FROM
     select_list</sql>
@@ -994,13 +962,6 @@ ORDER BY
         <source_field>source_col_length</source_field>
       </mapping>
       <mapping>
-        <target_step_name>Map column names</target_step_name>
-        <target_attribute_key>FIELD_PRECISION</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Source/target column mapping metadata</source_step>
-        <source_field>source_col_precision</source_field>
-      </mapping>
-      <mapping>
         <target_step_name>Table input -  source_db.schema.table</target_step_name>
         <target_attribute_key>SQL</target_attribute_key>
         <target_detail>N</target_detail>
@@ -1009,17 +970,24 @@ ORDER BY
       </mapping>
       <mapping>
         <target_step_name>Map column names</target_step_name>
-        <target_attribute_key>FIELD_RENAME</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Source/target column mapping metadata</source_step>
-        <source_field>target_col_name</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Map column names</target_step_name>
         <target_attribute_key>FIELD_NAME</target_attribute_key>
         <target_detail>Y</target_detail>
         <source_step>Source/target column mapping metadata</source_step>
         <source_field>source_col_name</source_field>
+      </mapping>
+      <mapping>
+        <target_step_name>Map column names</target_step_name>
+        <target_attribute_key>FIELD_PRECISION</target_attribute_key>
+        <target_detail>Y</target_detail>
+        <source_step>Source/target column mapping metadata</source_step>
+        <source_field>source_col_precision</source_field>
+      </mapping>
+      <mapping>
+        <target_step_name>Map column names</target_step_name>
+        <target_attribute_key>FIELD_RENAME</target_attribute_key>
+        <target_detail>Y</target_detail>
+        <source_step>Source/target column mapping metadata</source_step>
+        <source_field>target_col_name</source_field>
       </mapping>
     </mappings>
     <cluster_schema />

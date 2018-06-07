@@ -464,7 +464,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2018/05/28 11:13:17.015</modified_date>
+    <modified_date>2018/06/06 10:09:55.500</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -506,8 +506,8 @@ IMPORTANT:	A primary key constraint (or at least a "unique" constraint on the pr
 For benchmark results I obtained testing the speed of various INSERT/UPDATE algorithms, see: 
 
 	/development/jeffreyz/tests/cdc_timestamps/tr_TEST_mirror_update-passage.passage-table_output</note>
-      <xloc>736</xloc>
-      <yloc>944</yloc>
+      <xloc>896</xloc>
+      <yloc>928</yloc>
       <width>588</width>
       <heigth>153</heigth>
       <fontname>Ubuntu</fontname>
@@ -615,8 +615,8 @@ column(s) is
 order for error 
 handling to be 
 triggered here!</note>
-      <xloc>1168</xloc>
-      <yloc>480</yloc>
+      <xloc>1328</xloc>
+      <yloc>464</yloc>
       <width>108</width>
       <heigth>164</heigth>
       <fontname>Ubuntu</fontname>
@@ -702,6 +702,36 @@ worry about this potential race condition.</note>
       <yloc>480</yloc>
       <width>317</width>
       <heigth>166</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Sort rows by pedd.last_updated_on
+so that we can recover (restart at 
+the point where we go to) in the 
+event that this transformation dies
+while it is running. This assumes 
+that this last_updated_on column
+is set when *any* change is
+made in the opo_opr DB that
+affects the pedd in some way,
+which is probably not the case.</note>
+      <xloc>656</xloc>
+      <yloc>688</yloc>
+      <width>203</width>
+      <heigth>140</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -893,11 +923,6 @@ worry about this potential race condition.</note>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Set insert_if_null flag field</from>
-      <to>INSERT or UPDATE?</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>Set etl_batch_id_insert = Xform batch ID</from>
       <to>Set insert_if_null flag field</to>
       <enabled>Y</enabled>
@@ -910,11 +935,6 @@ worry about this potential race condition.</note>
     <hop>
       <from>INSERT or UPDATE?</from>
       <to>Perform UPDATE</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Perform UPDATE</from>
-      <to>Update - DSA.schema.table</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
@@ -1037,6 +1057,31 @@ worry about this potential race condition.</note>
       <to>Log number of rows updated 2</to>
       <enabled>N</enabled>
     </hop>
+    <hop>
+      <from>Set insert_if_null flag field</from>
+      <to>Debug stream</to>
+      <enabled>N</enabled>
+    </hop>
+    <hop>
+      <from>Debug stream</from>
+      <to>INSERT or UPDATE?</to>
+      <enabled>N</enabled>
+    </hop>
+    <hop>
+      <from>Set insert_if_null flag field</from>
+      <to>INSERT or UPDATE?</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Perform UPDATE</from>
+      <to>Sort by pedd.last_updated_on</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Sort by pedd.last_updated_on</from>
+      <to>Update - DSA.schema.table</to>
+      <enabled>Y</enabled>
+    </hop>
   </order>
   <step>
     <name>Compute number of rows inserted</name>
@@ -1138,8 +1183,8 @@ worry about this potential race condition.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>816</xloc>
-      <yloc>688</yloc>
+      <xloc>976</xloc>
+      <yloc>672</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1208,8 +1253,89 @@ worry about this potential race condition.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1056</xloc>
-      <yloc>688</yloc>
+      <xloc>1216</xloc>
+      <yloc>672</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Debug stream</name>
+    <type>TextFileOutput</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <separator>;</separator>
+    <enclosure>"</enclosure>
+    <enclosure_forced>N</enclosure_forced>
+    <enclosure_fix_disabled>N</enclosure_fix_disabled>
+    <header>Y</header>
+    <footer>N</footer>
+    <format>UNIX</format>
+    <compression>None</compression>
+    <encoding>UTF-8</encoding>
+    <endedLine />
+    <fileNameInField>N</fileNameInField>
+    <fileNameField />
+    <create_parent_folder>N</create_parent_folder>
+    <file>
+      <name>/tmp/debug-psa.obo__passage_event_derived_data_with_rating</name>
+      <is_command>N</is_command>
+      <servlet_output>N</servlet_output>
+      <do_not_open_new_file_init>N</do_not_open_new_file_init>
+      <extention>csv</extention>
+      <append>N</append>
+      <split>N</split>
+      <haspartno>N</haspartno>
+      <add_date>Y</add_date>
+      <add_time>Y</add_time>
+      <SpecifyFormat>N</SpecifyFormat>
+      <date_time_format />
+      <add_to_result_filenames>Y</add_to_result_filenames>
+      <pad>N</pad>
+      <fast_dump>N</fast_dump>
+      <splitevery>0</splitevery>
+    </file>
+    <fields>
+      <field>
+        <name>pedd_id</name>
+        <type>Integer</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <nullif />
+        <trim_type>none</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>insert_if_null</name>
+        <type>Integer</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <nullif />
+        <trim_type>none</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>320</xloc>
+      <yloc>544</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1367,8 +1493,8 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>816</xloc>
-      <yloc>816</yloc>
+      <xloc>976</xloc>
+      <yloc>800</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1397,8 +1523,8 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1056</xloc>
-      <yloc>816</yloc>
+      <xloc>1216</xloc>
+      <yloc>800</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1697,8 +1823,8 @@ PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>816</xloc>
-      <yloc>880</yloc>
+      <xloc>976</xloc>
+      <yloc>864</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1777,8 +1903,8 @@ PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1056</xloc>
-      <yloc>880</yloc>
+      <xloc>1216</xloc>
+      <yloc>864</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1954,8 +2080,8 @@ PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>816</xloc>
-      <yloc>752</yloc>
+      <xloc>976</xloc>
+      <yloc>736</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -2020,8 +2146,8 @@ PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1056</xloc>
-      <yloc>752</yloc>
+      <xloc>1216</xloc>
+      <yloc>736</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -2216,15 +2342,19 @@ FROM
 LEFT OUTER JOIN
     public.obo__passage_event_derived_data_details peddd ON peddd.pedd_id=pedd.pedd_id  -- one-to-one relations, but we cannot be sure that a "peddd" row has been created yet
 LEFT OUTER JOIN
+    -- This must match only *one* obo__applied_rating_detail_data row or this algorithm will have problems:
     public.obo__applied_rating_detail_data ardd_1 ON ardd_1.pedd_id=peddd.pedd_id AND 
     ardd_1.rate_component_fee_type_id=${QF_RATE_COMPONENT_FEE_TYPE_ID_APPLIED_FEE} AND ardd_1.rate_component_fee_category_id=${QF_RATE_COMPONENT_FEE_CATEGORY_ID_INFRASTRUCTURE_FEE}
 LEFT OUTER JOIN
+    -- This must match only *one* obo__applied_rating_detail_data row or this algorithm will have problems:
     public.obo__applied_rating_detail_data ardd_2 ON ardd_2.pedd_id=peddd.pedd_id AND 
     ardd_2.rate_component_fee_type_id=${QF_RATE_COMPONENT_FEE_TYPE_ID_APPLIED_FEE} AND ardd_2.rate_component_fee_category_id=${QF_RATE_COMPONENT_FEE_CATEGORY_ID_INFRASTRUCTURE_MARKUP_FEE}
 LEFT OUTER JOIN
+    -- This must match only *one* obo__applied_rating_detail_data row or this algorithm will have problems:
     public.obo__applied_rating_detail_data ardd_4 ON ardd_4.pedd_id=peddd.pedd_id AND 
     ardd_4.rate_component_fee_type_id=${QF_RATE_COMPONENT_FEE_TYPE_ID_APPLIED_FEE} AND ardd_4.rate_component_fee_category_id=${QF_RATE_COMPONENT_FEE_CATEGORY_ID_EXTERNAL_FEE_NOISE}
 LEFT OUTER JOIN
+    -- This must match only *one* obo__applied_rating_detail_data row or this algorithm will have problems:
     public.obo__applied_rating_detail_data ardd_3 ON ardd_3.pedd_id=peddd.pedd_id AND 
     ardd_3.rate_component_fee_type_id=${QF_RATE_COMPONENT_FEE_TYPE_ID_APPLIED_FEE} AND ardd_3.rate_component_fee_category_id=${QF_RATE_COMPONENT_FEE_CATEGORY_ID_EXTERNAL_FEE_AIR}
 WHERE
@@ -2368,8 +2498,8 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1056</xloc>
-      <yloc>496</yloc>
+      <xloc>1216</xloc>
+      <yloc>480</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -2592,8 +2722,8 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1056</xloc>
-      <yloc>592</yloc>
+      <xloc>1216</xloc>
+      <yloc>576</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -2641,6 +2771,47 @@ PARAM_SOURCE_TABLE_MAX_INSERT_ID = ${PARAM_SOURCE_TABLE_MAX_INSERT_ID}</logmessa
     <GUI>
       <xloc>448</xloc>
       <yloc>272</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Sort by pedd.last_updated_on</name>
+    <type>SortRows</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>out</prefix>
+    <sort_size>1000000</sort_size>
+    <free_memory />
+    <compress>N</compress>
+    <compress_variable />
+    <unique_rows>N</unique_rows>
+    <fields>
+      <field>
+        <name>last_updated_on</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>560</xloc>
+      <yloc>736</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

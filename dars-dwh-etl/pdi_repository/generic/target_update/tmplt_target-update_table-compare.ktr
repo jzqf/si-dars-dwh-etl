@@ -534,7 +534,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2018/05/11 13:09:53.685</modified_date>
+    <modified_date>2018/06/05 16:42:18.160</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -567,8 +567,8 @@ appropriately.</note>
     </notepad>
     <notepad>
       <note>This transformation updates the target DB mirror of a table from the source DB. This is a generic algorithm that can work with *any* table, as long as it has the necessary 
-metadata defined. However, it should not be used to treat tables whose row count can grow very large because *all* of the rows fro the target table must be streamed 
-through this transformation. Hence, it is best suited as an alternative to the "truncate-reload" algorithm, especially when it is necessary to retain rows of the targert table 
+metadata defined. However, it should not be used to treat tables whose row count can grow very large because *all* of the rows from the target table must be streamed 
+through this transformation. Hence, it is best suited as an alternative to the "truncate-reload" algorithm, especially when it is necessary to retain rows of the target table 
 that have been deleted from the source table. This transformation has parameters:
 
 	PARAM_DYN_DB_CONN_SOURCE_DB_HOST		for source DB "dynamic" database connections
@@ -594,7 +594,7 @@ that have been deleted from the source table. This transformation has parameters
 	PARAM_TARGET_TABLE							Name of target table to update</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>945</width>
+      <width>941</width>
       <heigth>348</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
@@ -684,11 +684,12 @@ behaviour retains rows of the target table that have been deleted from the sourc
 potentially either insert, update or delete rows of the target table.
 
 I decided to use, instead a "Table Output" and an "Update" step so that
-I can assign either "etl_batch_id_insert" or "etl_batch_id_last_update".</note>
+I canavoid setting "etl_batch_id_last_update" when performing 
+inserts by the "Table Output" step.</note>
       <xloc>480</xloc>
       <yloc>1296</yloc>
       <width>397</width>
-      <heigth>75</heigth>
+      <heigth>88</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -896,17 +897,38 @@ injected -></note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>There is no point adding an option so that rows
-that have been deleted from the source table 
-are deleted from the target table. If that 
-behaviour is desired, then use the "truncate-
-reload" algorithm, not this "compare tables" 
-algorithm. The "truncate-reload" algorithm will
-be much faster.</note>
+      <note>If I were to implement deleting rows from the
+target table that have been deleted from the
+source table, then this algorithm would 
+implement the same functionality as my
+"truncate-reload" algorithm. 
+
+The "truncate-reload" algorithm will be much 
+faster for cases where the number of rows in
+the target table does not grow without bound.
+
+However, for cases where the target table 
+does ground continually, it might be useful to
+implemented the deletion of target rows here.
+If so, then either a "Delete" step can be used 
+here or *all* rows of the stream can, instead, 
+be processed by a "Synchronize after merge"
+step. Either way, I should probably implement
+this new functionality as a new, separate 
+algorithm.
+
+Using a "Delete" step will provide the
+advantage that the deletion of rows can be 
+logged separately from inserts and updates.
+The "Delete" step will need metadata injected
+into it, but thi will be simple because the 
+"Delete" step is configured similarly to the
+"Update" step which I already support in this
+template transformation.</note>
       <xloc>112</xloc>
       <yloc>848</yloc>
-      <width>286</width>
-      <heigth>108</heigth>
+      <width>284</width>
+      <heigth>402</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
