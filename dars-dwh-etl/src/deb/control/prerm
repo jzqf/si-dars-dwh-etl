@@ -1,1 +1,31 @@
 #!/bin/sh
+
+set -e
+
+# for details, see http://www.debian.org/doc/debian-policy/ or
+# the debian-policy package ch 6.5 http://www.debian.org/doc/debian-policy/ch-maintainerscripts.html#s-mscriptsinstact
+
+case "$1" in
+
+    deconfigure)
+        echo "### prerm deconfigure ###"
+        ;;
+
+    failed-upgrade)
+        echo "### prerm failed-upgrade ###"
+        ;;
+
+    remove|upgrade)
+        echo "### prerm remove|upgrade ###"
+        ;;
+
+    *)
+        echo "### prerm default ###"
+        echo "prerm called with unknown argument \`$1'" >&2
+        exit 1
+        ;;
+
+esac
+
+echo "### prerm done ###"
+exit 0
