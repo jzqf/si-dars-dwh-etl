@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2018/06/12 15:33:33.805</modified_date>
+  <modified_date>2018/06/12 16:20:56.879</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE</name>
@@ -677,26 +677,6 @@ QF_ETL_STATE_REGISTER_FQ_TABLE_NAME    = ${QF_ETL_STATE_REGISTER_FQ_TABLE_NAME}<
       <yloc>528</yloc>
     </entry>
     <entry>
-      <name>Do nothing</name>
-      <description />
-      <type>SPECIAL</type>
-      <start>N</start>
-      <dummy>Y</dummy>
-      <repeat>N</repeat>
-      <schedulerType>0</schedulerType>
-      <intervalSeconds>0</intervalSeconds>
-      <intervalMinutes>60</intervalMinutes>
-      <hour>12</hour>
-      <minutes>0</minutes>
-      <weekDay>1</weekDay>
-      <DayOfMonth>1</DayOfMonth>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>160</xloc>
-      <yloc>528</yloc>
-    </entry>
-    <entry>
       <name>tr_etl_state_register-update</name>
       <description />
       <type>TRANS</type>
@@ -748,6 +728,16 @@ QF_ETL_STATE_REGISTER_FQ_TABLE_NAME    = ${QF_ETL_STATE_REGISTER_FQ_TABLE_NAME}<
       <xloc>352</xloc>
       <yloc>720</yloc>
     </entry>
+    <entry>
+      <name>Success</name>
+      <description />
+      <type>SUCCESS</type>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>32</xloc>
+      <yloc>528</yloc>
+    </entry>
   </entries>
   <hops>
     <hop>
@@ -787,15 +777,6 @@ QF_ETL_STATE_REGISTER_FQ_TABLE_NAME    = ${QF_ETL_STATE_REGISTER_FQ_TABLE_NAME}<
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>QF_ETL_STATE_REGISTER_FQ_TABLE_NAME is set?</from>
-      <to>Do nothing</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
       <from>jb_log_error</from>
       <to>Abort job</to>
       <from_nr>1</from_nr>
@@ -818,6 +799,15 @@ QF_ETL_STATE_REGISTER_FQ_TABLE_NAME    = ${QF_ETL_STATE_REGISTER_FQ_TABLE_NAME}<
       <to>jb_log_error</to>
       <from_nr>0</from_nr>
       <to_nr>1</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>QF_ETL_STATE_REGISTER_FQ_TABLE_NAME is set?</from>
+      <to>Success</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>N</evaluation>
       <unconditional>N</unconditional>
@@ -980,6 +970,31 @@ different target tables. </note>
       <yloc>704</yloc>
       <width>475</width>
       <heigth>62</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>If there is no "ETL state register" table 
+specified, there is nothing to do. It is 
+important to execute a "Success" job 
+entry here; otherwise, the entire ETL 
+job will abort.</note>
+      <xloc>16</xloc>
+      <yloc>576</yloc>
+      <width>225</width>
+      <heigth>75</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
