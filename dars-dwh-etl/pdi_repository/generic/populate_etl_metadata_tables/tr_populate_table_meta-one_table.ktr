@@ -84,6 +84,16 @@
         <description>Row "age" in seconds after which rows of the source table can be "marked rows for deletion"</description>
       </parameter>
       <parameter>
+        <name>PARAM_SOURCE_DB_ETL_STATE_REGISTER_SCHEMA_NAME</name>
+        <default_value />
+        <description>Name the schema in the "source" DB that contains the "etl state register" table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_SOURCE_DB_ETL_STATE_REGISTER_TABLE_NAME</name>
+        <default_value />
+        <description>Name of the table in the "source" DB acting as the "etl state register" table</description>
+      </parameter>
+      <parameter>
         <name>PARAM_SOURCE_DB_ID</name>
         <default_value />
         <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
@@ -544,7 +554,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2018/03/19 14:37:54.289</modified_date>
+    <modified_date>2018/06/11 14:18:46.498</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -557,33 +567,35 @@ This transformation has parameters:
 
 	PARAM_SOURCE_DB_ID									ID the "source" database containing the table for generating table metadata
 	PARAM_SOURCE_SCHEMA								Name of schema containing source table for generating table metadata
-	PARAM_SOURCE_TABLE								Name of source table for generating table metatdata
+	PARAM_SOURCE_TABLE									Name of source table for generating table metatdata
 	PARAM_TARGET_DB_ID									ID of the "target" database to which the "source" DB tables will be archived/mirrored
 	PARAM_TARGET_SCHEMA								Name of schema in the "target" DB ontaining the target table.
 	PARAM_TARGET_TABLE									Name of the table in the "target" DB that the "source" table will be archived/mirrored to
-	PARAM_SOURCE_INSERT_ID_COLNAME							Name of column that acts as the "insert_id" column
-	PARAM_SOURCE_LAST_UPDATED_ON_COLNAME					Name of column that acts as the "last_updated_on" column
+	PARAM_SOURCE_INSERT_ID_COLNAME					Name of column that acts as the "insert_id" column
+	PARAM_SOURCE_LAST_UPDATED_ON_COLNAME			Name of column that acts as the "last_updated_on" column
 	PARAM_IS_STATIC_SUPPORT_TABLE						"Y" if the source table is a "static support table"
-	PARAM_CAN_INSERT_ROWS							"Y" if, under normal operation, rows can be inserted into the source table
-	PARAM_CAN_UPDATE_ROWS							"Y" if, under normal operation, rows can be updated in the source table
-	PARAM_CAN_DELETE_ROWS							"Y" if, under normal operation, rows can be deleted from the source table
-	PARAM_MIRROR_ALGORITHM_ID						ID of the "mirror" algorithm for archiving/mirroring rows from the source table to the target table
-	PARAM_MIRROR_TABLES								"Y" if archiving/mirroring is enabled for the source/target table pair
+	PARAM_CAN_INSERT_ROWS								"Y" if, under normal operation, rows can be inserted into the source table
+	PARAM_CAN_UPDATE_ROWS								"Y" if, under normal operation, rows can be updated in the source table
+	PARAM_CAN_DELETE_ROWS								"Y" if, under normal operation, rows can be deleted from the source table
+	PARAM_MIRROR_ALGORITHM_ID							ID of the "mirror" algorithm for archiving/mirroring rows from the source table to the target table
+	PARAM_MIRROR_TABLES									"Y" if archiving/mirroring is enabled for the source/target table pair
 	PARAM_COMPARE_TABLES								"Y" id "comparing" is enabled for the source/target table pair
-	PARAM_MARK_ROWS_FOR_DELETION_ALGORITHM_ID	ID of the "mark rows for deletion" algorithm to use for the source table
-	PARAM_DELETE_MARKED_ROWS_ALGORITHM_ID		ID of the "delete marked rows" algorithm to use for the source table
-	PARAM_MARK_ROWS_FOR_DELETION					"Y" if "mark rows for deletion" processing is enabled for the source table
-	PARAM_DELETE_MARKED_ROWS						"Y" if "delete marked rows" processing is enabled for the source table
-	PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS		Row "age" in seconds after which rows of the source table can be "marked rows for deletion"
+	PARAM_MARK_ROWS_FOR_DELETION_ALGORITHM_ID		ID of the "mark rows for deletion" algorithm to use for the source table
+	PARAM_DELETE_MARKED_ROWS_ALGORITHM_ID			ID of the "delete marked rows" algorithm to use for the source table
+	PARAM_MARK_ROWS_FOR_DELETION						"Y" if "mark rows for deletion" processing is enabled for the source table
+	PARAM_DELETE_MARKED_ROWS							"Y" if "delete marked rows" processing is enabled for the source table
+	PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS			Row "age" in seconds after which rows of the source table can be "marked rows for deletion"
 	PARAM_CAN_DELETE_ROW_SCHEMA_NAME				Name of the schema containing the "can delete row" table
-	PARAM_CAN_DELETE_ROW_TABLE_NAME				Name of the "can delete row" table
-	PARAM_DELETE_MARKED_ROWS_TABLE_ORDER		Integer value for setting the order that tables are processed by the default the "delete marked rows" algorithm</note>
+	PARAM_CAN_DELETE_ROW_TABLE_NAME					Name of the "can delete row" table
+	PARAM_DELETE_MARKED_ROWS_TABLE_ORDER			Integer value for setting the order that tables are processed by the default the "delete marked rows" algorithm
+	PARAM_SOURCE_DB_ETL_STATE_REGISTER_SCHEMA_NAME	Name the schema in the "source" DB that contains the "etl state register" table
+	PARAM_SOURCE_DB_ETL_STATE_REGISTER_TABLE_NAME	Name of the table in the "source" DB acting as the "etl state register" table</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>1023</width>
-      <heigth>402</heigth>
+      <width>984</width>
+      <heigth>400</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -601,11 +613,11 @@ This transformation has parameters:
       <note>Create a single stream row using the parameter values passed to this transformation
 for the field/column values.</note>
       <xloc>224</xloc>
-      <yloc>432</yloc>
-      <width>506</width>
-      <heigth>38</heigth>
+      <yloc>416</yloc>
+      <width>472</width>
+      <heigth>36</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -620,51 +632,28 @@ for the field/column values.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Duplicate fields "source_schema_name" &amp; "source_table_name" to "target_schema_name" &amp; 
-"target_table_name". This assumes that the schema &amp; table names in the target database are
-identical to the schema &amp; table names in the source database.</note>
-      <xloc>304</xloc>
-      <yloc>496</yloc>
-      <width>552</width>
-      <heigth>52</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>mirror_tables=N							The source table will *not* be archived/mirrored to the target DB
-mark_rows_for_deletion=N					The source table will not have rows "marked for deletion"
-delete_marked_rows=N						The source table will *not* have "marked rows deleted from it
-compare_tables=N							The source DB table will *not* be compared with the target DB table
-											when a "compare" is performed (must enable manually)
-can_insert_rows=Y							The source DB table can have rows inserted into it
+      <note>update_target_table=N					The source table will *not* be archived/mirrored to the target DB
+mark_rows_for_deletion=N				The source table will not have rows "marked for deletion"
+delete_marked_rows=N					The source table will *not* have "marked rows deleted from it
+compare_target_table=N					The source DB table will *not* be compared with the target DB table
+										when a "compare" is performed (must enable manually)
+can_insert_rows=Y						The source DB table can have rows inserted into it
 can_update_rows=N						The source DB table can have rows updated
-can_delete_rows=N							The source DB table will never have rows deleted from it
-is_static_support_table=N					The source table is *not* a "static support table"
-mirror_algorithm_id=1						The generic update algorithm for insert-only tables will be used to 
-												mirror the source table to the target DB
+can_delete_rows=N						The source DB table will never have rows deleted from it
+is_static_support_table=N				The source table is *not* a "static support table"
+update_target_table_algorithm_id=1		The generic update algorithm for insert-only tables will be used to 
+										mirror the source table to the target DB
 mark_rows_for_deletion_algorithm_id=1	Generic "mark rows for deletion" algorithm will be used
 delete_marked_rows_algorithm_id=1		Generic "delete marked rows" algorithm will be used
 
 THIS STEP IS NO LONGER NEEDED NOW THAT I SPECIFY VALUES FOR *ALL* COLUMNS OF THE "table_meta"
 TABLE IN AN INITIAL "Data Grid" STEP.</note>
       <xloc>288</xloc>
-      <yloc>720</yloc>
-      <width>675</width>
-      <heigth>234</heigth>
+      <yloc>608</yloc>
+      <width>630</width>
+      <heigth>218</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -683,11 +672,11 @@ TABLE IN AN INITIAL "Data Grid" STEP.</note>
 that contains the value MAX(table_meta_id)+1. This value
 will be used as the primary key for the new row. </note>
       <xloc>496</xloc>
-      <yloc>640</yloc>
-      <width>351</width>
-      <heigth>52</heigth>
+      <yloc>528</yloc>
+      <width>329</width>
+      <heigth>49</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -705,11 +694,11 @@ will be used as the primary key for the new row. </note>
       <note>Table "table_state" contains state information for each source/target table pair. It has a one-to-one relation
 to the table_meta table.</note>
       <xloc>224</xloc>
-      <yloc>1072</yloc>
-      <width>638</width>
-      <heigth>38</heigth>
+      <yloc>912</yloc>
+      <width>600</width>
+      <heigth>36</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -727,11 +716,32 @@ to the table_meta table.</note>
       <note>Table "table_meta" contains metadata for each source/target table pair. It has a one-to-one relation
 to the table_state table.</note>
       <xloc>224</xloc>
-      <yloc>976</yloc>
-      <width>593</width>
-      <heigth>38</heigth>
+      <yloc>848</yloc>
+      <width>556</width>
+      <heigth>36</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>In order to write SQL NULL values to strig-type columns of the table_meta row, the string value passed to this transformation must be "&lt;null>".</note>
+      <xloc>224</xloc>
+      <yloc>480</yloc>
+      <width>793</width>
+      <heigth>23</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -850,11 +860,6 @@ to the table_state table.</note>
   </connection>
   <order>
     <hop>
-      <from>Create row from parameters</from>
-      <to>Duplicate schema &amp; table name fields</to>
-      <enabled>N</enabled>
-    </hop>
-    <hop>
       <from>Get MAX(table_meta_id)+1 from table_meta</from>
       <to>Join Rows (cartesian product)</to>
       <enabled>Y</enabled>
@@ -881,18 +886,13 @@ to the table_state table.</note>
     </hop>
     <hop>
       <from>Create row from parameters</from>
-      <to>Replace blank strings with NULL</to>
+      <to>Replace "&lt;null>" strings with NULL</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Replace blank strings with NULL</from>
+      <from>Replace "&lt;null>" strings with NULL</from>
       <to>Join Rows (cartesian product)</to>
       <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Duplicate schema &amp; table name fields</from>
-      <to>Replace blank strings with NULL</to>
-      <enabled>N</enabled>
     </hop>
   </order>
   <step>
@@ -908,7 +908,7 @@ to the table_state table.</note>
     </partitioning>
     <fields>
       <field>
-        <name>mirror_tables</name>
+        <name>update_target_table</name>
         <type>Boolean</type>
         <format />
         <currency />
@@ -944,7 +944,7 @@ to the table_state table.</note>
         <set_empty_string>N</set_empty_string>
       </field>
       <field>
-        <name>compare_tables</name>
+        <name>compare_target_table</name>
         <type>Boolean</type>
         <format />
         <currency />
@@ -1004,7 +1004,7 @@ to the table_state table.</note>
         <set_empty_string>N</set_empty_string>
       </field>
       <field>
-        <name>mirror_algorithm_id</name>
+        <name>update_target_table_algorithm_id</name>
         <type>Integer</type>
         <format />
         <currency />
@@ -1049,7 +1049,7 @@ to the table_state table.</note>
     </remotesteps>
     <GUI>
       <xloc>176</xloc>
-      <yloc>816</yloc>
+      <yloc>704</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1186,7 +1186,7 @@ to the table_state table.</note>
         <trim_type>none</trim_type>
       </field>
       <field>
-        <name>mirror_algorithm_id</name>
+        <name>update_target_table_algorithm_id</name>
         <variable>${PARAM_MIRROR_ALGORITHM_ID}</variable>
         <type>Integer</type>
         <format />
@@ -1222,7 +1222,7 @@ to the table_state table.</note>
         <trim_type>none</trim_type>
       </field>
       <field>
-        <name>mirror_tables</name>
+        <name>update_target_table</name>
         <variable>${PARAM_MIRROR_TABLES}</variable>
         <type>Boolean</type>
         <format />
@@ -1258,7 +1258,7 @@ to the table_state table.</note>
         <trim_type>none</trim_type>
       </field>
       <field>
-        <name>compare_tables</name>
+        <name>compare_target_table</name>
         <variable>${PARAM_COMPARE_TABLES}</variable>
         <type>Boolean</type>
         <format />
@@ -1317,6 +1317,30 @@ to the table_state table.</note>
         <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
+      <field>
+        <name>source_db_etl_state_register_schema_name</name>
+        <variable>${PARAM_SOURCE_DB_ETL_STATE_REGISTER_SCHEMA_NAME}</variable>
+        <type>String</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>80</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>source_db_etl_state_register_table_name</name>
+        <variable>${PARAM_SOURCE_DB_ETL_STATE_REGISTER_TABLE_NAME}</variable>
+        <type>String</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>80</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
     </fields>
     <cluster_schema />
     <remotesteps>
@@ -1327,54 +1351,7 @@ to the table_state table.</note>
     </remotesteps>
     <GUI>
       <xloc>80</xloc>
-      <yloc>432</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Duplicate schema &amp; table name fields</name>
-    <type>SelectValues</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <fields>
-      <field>
-        <name>source_db_id</name>
-      </field>
-      <field>
-        <name>source_schema_name</name>
-      </field>
-      <field>
-        <name>source_table_name</name>
-      </field>
-      <field>
-        <name>source_schema_name</name>
-        <rename>target_schema_name</rename>
-      </field>
-      <field>
-        <name>source_table_name</name>
-        <rename>target_table_name</rename>
-      </field>
-      <field>
-        <name>target_db_id</name>
-      </field>
-      <select_unspecified>N</select_unspecified>
-    </fields>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>176</xloc>
-      <yloc>512</yloc>
+      <yloc>416</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1409,7 +1386,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>336</xloc>
-      <yloc>656</yloc>
+      <yloc>544</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1452,7 +1429,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>80</xloc>
-      <yloc>976</yloc>
+      <yloc>848</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1499,7 +1476,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>80</xloc>
-      <yloc>1072</yloc>
+      <yloc>912</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1535,12 +1512,12 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>80</xloc>
-      <yloc>656</yloc>
+      <yloc>544</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Replace blank strings with NULL</name>
+    <name>Replace "&lt;null>" strings with NULL</name>
     <type>NullIf</type>
     <description />
     <distribute>Y</distribute>
@@ -1553,11 +1530,19 @@ FROM
     <fields>
       <field>
         <name>can_delete_row_schema_name</name>
-        <value />
+        <value>&lt;null></value>
       </field>
       <field>
         <name>can_delete_row_table_name</name>
-        <value />
+        <value>&lt;null></value>
+      </field>
+      <field>
+        <name>source_db_etl_state_register_schema_name</name>
+        <value>&lt;null></value>
+      </field>
+      <field>
+        <name>source_db_etl_state_register_table_name</name>
+        <value>&lt;null></value>
       </field>
     </fields>
     <cluster_schema />
@@ -1569,7 +1554,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>80</xloc>
-      <yloc>576</yloc>
+      <yloc>480</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

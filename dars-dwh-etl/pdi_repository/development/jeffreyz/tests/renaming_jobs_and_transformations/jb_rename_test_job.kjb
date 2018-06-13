@@ -1,81 +1,25 @@
 <job>
-  <name>jb_log_error</name>
-  <description />
+  <name>jb_rename_test_job</name>
+  <description>Some description</description>
   <extended_description />
   <job_version />
-  <job_status>0</job_status>
-  <directory>/generic</directory>
+  <job_status>1</job_status>
+  <directory>/development/jeffreyz/tests/renaming_jobs_and_transformations</directory>
   <created_user>-</created_user>
-  <created_date>2016/04/07 18:30:04.780</created_date>
+  <created_date>2018/06/12 08:24:05.759</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2018/05/28 10:52:25.182</modified_date>
+  <modified_date>2018/06/12 08:36:13.271</modified_date>
   <parameters>
-    <parameter>
-      <name>PARAM_ERROR_MESSAGE</name>
-      <default_value />
-      <description />
-    </parameter>
-  </parameters>
-  <connection>
-    <name>logging_db</name>
-    <server>${QF_LOGGING_DB_HOST}</server>
-    <type>POSTGRESQL</type>
-    <access>Native</access>
-    <database>${QF_LOGGING_DB_DATABASE}</database>
-    <port>${QF_LOGGING_DB_PORT}</port>
-    <username>${QF_LOGGING_DB_USERNAME}</username>
-    <password>${QF_LOGGING_DB_PASSWORD}</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
-    <attributes>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>IS_CLUSTERED</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>PORT_NUMBER</code>
-        <attribute>${QF_LOGGING_DB_PORT}</attribute>
-      </attribute>
-      <attribute>
-        <code>PRESERVE_RESERVED_WORD_CASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>QUOTE_ALL_FIELDS</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>USE_POOLING</code>
-        <attribute>N</attribute>
-      </attribute>
-    </attributes>
-  </connection>
+    </parameters>
   <slaveservers>
     </slaveservers>
   <job-log-table>
-    <connection>${QF_LOGGING_DB_CONNECTION}</connection>
-    <schema>${QF_LOG_JOB_SCHEMA}</schema>
-    <table>${QF_LOG_JOB_TABLE}</table>
+    <connection />
+    <schema />
+    <table />
     <size_limit_lines />
     <interval />
-    <timeout_days>${QF_LOG_JOB_TIMEOUT_IN_DAYS}</timeout_days>
+    <timeout_days />
     <field>
       <id>ID_JOB</id>
       <enabled>Y</enabled>
@@ -183,10 +127,10 @@
     </field>
   </job-log-table>
   <jobentry-log-table>
-    <connection>${QF_LOGGING_DB_CONNECTION}</connection>
-    <schema>${QF_LOG_JOBENTRY_SCHEMA}</schema>
-    <table>${QF_LOG_JOBENTRY_TABLE}</table>
-    <timeout_days>${QF_LOG_JOBENTRY_TIMEOUT_IN_DAYS}</timeout_days>
+    <connection />
+    <schema />
+    <table />
+    <timeout_days />
     <field>
       <id>ID_BATCH</id>
       <enabled>Y</enabled>
@@ -274,10 +218,10 @@
     </field>
   </jobentry-log-table>
   <channel-log-table>
-    <connection>${QF_LOGGING_DB_CONNECTION}</connection>
-    <schema>${QF_LOG_CHANNEL_SCHEMA}</schema>
-    <table>${QF_LOG_CHANNEL_TABLE}</table>
-    <timeout_days>${QF_LOG_CHANNEL_TIMEOUT_IN_DAYS}</timeout_days>
+    <connection />
+    <schema />
+    <table />
+    <timeout_days />
     <field>
       <id>ID_BATCH</id>
       <enabled>Y</enabled>
@@ -359,47 +303,44 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>16</xloc>
-      <yloc>144</yloc>
+      <xloc>160</xloc>
+      <yloc>48</yloc>
     </entry>
     <entry>
-      <name>Log error</name>
+      <name>Success</name>
       <description />
-      <type>WRITE_TO_LOG</type>
-      <logmessage>Error: ${PARAM_ERROR_MESSAGE}</logmessage>
-      <loglevel>Error</loglevel>
-      <logsubject />
+      <type>SUCCESS</type>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>160</xloc>
-      <yloc>144</yloc>
+      <yloc>208</yloc>
     </entry>
     <entry>
-      <name>Set QF_MAIL_MSG_QFREE_BODY_FAILURE_EXTRA_INFO</name>
+      <name>DUMMY</name>
       <description />
-      <type>SET_VARIABLES</type>
-      <replacevars>Y</replacevars>
-      <filename />
-      <file_variable_type>JVM</file_variable_type>
-      <fields>
-        <field>
-          <variable_name>QF_MAIL_MSG_QFREE_BODY_FAILURE_EXTRA_INFO</variable_name>
-          <variable_value>${PARAM_ERROR_MESSAGE}</variable_value>
-          <variable_type>ROOT_JOB</variable_type>
-        </field>
-      </fields>
+      <type>SPECIAL</type>
+      <start>N</start>
+      <dummy>Y</dummy>
+      <repeat>N</repeat>
+      <schedulerType>0</schedulerType>
+      <intervalSeconds>0</intervalSeconds>
+      <intervalMinutes>60</intervalMinutes>
+      <hour>12</hour>
+      <minutes>0</minutes>
+      <weekDay>1</weekDay>
+      <DayOfMonth>1</DayOfMonth>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>416</xloc>
-      <yloc>144</yloc>
+      <xloc>160</xloc>
+      <yloc>128</yloc>
     </entry>
   </entries>
   <hops>
     <hop>
       <from>START</from>
-      <to>Log error</to>
+      <to>DUMMY</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -407,42 +348,15 @@
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>Log error</from>
-      <to>Set QF_MAIL_MSG_QFREE_BODY_FAILURE_EXTRA_INFO</to>
+      <from>DUMMY</from>
+      <to>Success</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
+      <unconditional>Y</unconditional>
     </hop>
   </hops>
   <notepads>
-    <notepad>
-      <note>This job writes a message to the log and also assigns this message to the variable 
-QF_MAIL_MSG_QFREE_BODY_FAILURE_EXTRA_INFO, which can be displayed in e-mails
-sent to Q-Free recipients.
-
-This job has the parameter:
-
-	PARAM_ERROR_MESSAGE</note>
-      <xloc>0</xloc>
-      <yloc>0</yloc>
-      <width>483</width>
-      <heigth>101</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>9</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
   </notepads>
 </job>

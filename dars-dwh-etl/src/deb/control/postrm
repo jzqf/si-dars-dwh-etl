@@ -1,1 +1,42 @@
 #!/bin/sh
+
+set -e
+
+# for details, see http://www.debian.org/doc/debian-policy/ or
+# the debian-policy package ch 6.5 http://www.debian.org/doc/debian-policy/ch-maintainerscripts.html#s-mscriptsinstact
+
+case "$1" in
+    abort-install)
+        echo "### postrm abort-install ###"
+        ;;
+
+    abort-upgrade)
+        echo "### postrm abort-upgrade ###"
+        ;;
+
+    disappear)
+        echo "### postrm disappear ###"
+        ;;
+
+    failed-upgrade)
+        echo "### postrm failed-upgrade ###"
+        ;;
+
+    purge|remove)
+        echo "### postrm purge|remove ###"
+        ;;
+
+    upgrade)
+        echo "### postrm upgrade ###"
+        ;;
+
+    *)
+        echo "### postrm default ###"
+        echo "postrm called with unknown argument \`$1'" >&2
+        exit 1
+        ;;
+
+esac
+
+echo "### postrm done ###"
+exit 0

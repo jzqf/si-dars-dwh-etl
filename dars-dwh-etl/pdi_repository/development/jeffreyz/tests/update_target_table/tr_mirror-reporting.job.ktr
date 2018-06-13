@@ -1,12 +1,12 @@
 <transformation>
   <info>
-    <name>tr_mirror-reporting.job_parameter_value</name>
+    <name>tr_mirror-reporting.job</name>
     <description/>
     <extended_description/>
     <trans_version/>
     <trans_type>Normal</trans_type>
     <trans_status>0</trans_status>
-    <directory>&#x2f;development&#x2f;jeffreyz&#x2f;tests&#x2f;mirror_tables</directory>
+    <directory>&#x2f;development&#x2f;jeffreyz&#x2f;tests&#x2f;update_target_table</directory>
     <parameters>
     </parameters>
     <log>
@@ -16,7 +16,7 @@
 <size_limit_lines/>
 <interval/>
 <timeout_days>&#x24;&#x7b;QF_LOG_TRANS_TIMEOUT_IN_DAYS&#x7d;</timeout_days>
-<field><id>ID_BATCH</id><enabled>Y</enabled><name>ID_BATCH</name></field><field><id>CHANNEL_ID</id><enabled>Y</enabled><name>CHANNEL_ID</name></field><field><id>TRANSNAME</id><enabled>Y</enabled><name>TRANSNAME</name></field><field><id>STATUS</id><enabled>Y</enabled><name>STATUS</name></field><field><id>LINES_READ</id><enabled>Y</enabled><name>LINES_READ</name><subject>Table output - DWH</subject></field><field><id>LINES_WRITTEN</id><enabled>Y</enabled><name>LINES_WRITTEN</name><subject>Table output - DWH</subject></field><field><id>LINES_UPDATED</id><enabled>Y</enabled><name>LINES_UPDATED</name><subject>Table output - DWH</subject></field><field><id>LINES_INPUT</id><enabled>Y</enabled><name>LINES_INPUT</name><subject>Table input -  Source DB&#x3a; reporting.job_parameter_value</subject></field><field><id>LINES_OUTPUT</id><enabled>Y</enabled><name>LINES_OUTPUT</name><subject>Table output - DWH</subject></field><field><id>LINES_REJECTED</id><enabled>Y</enabled><name>LINES_REJECTED</name><subject>Table output - DWH</subject></field><field><id>ERRORS</id><enabled>Y</enabled><name>ERRORS</name></field><field><id>STARTDATE</id><enabled>Y</enabled><name>STARTDATE</name></field><field><id>ENDDATE</id><enabled>Y</enabled><name>ENDDATE</name></field><field><id>LOGDATE</id><enabled>Y</enabled><name>LOGDATE</name></field><field><id>DEPDATE</id><enabled>Y</enabled><name>DEPDATE</name></field><field><id>REPLAYDATE</id><enabled>Y</enabled><name>REPLAYDATE</name></field><field><id>LOG_FIELD</id><enabled>Y</enabled><name>LOG_FIELD</name></field><field><id>EXECUTING_SERVER</id><enabled>N</enabled><name>EXECUTING_SERVER</name></field><field><id>EXECUTING_USER</id><enabled>N</enabled><name>EXECUTING_USER</name></field><field><id>CLIENT</id><enabled>N</enabled><name>CLIENT</name></field></trans-log-table>
+<field><id>ID_BATCH</id><enabled>Y</enabled><name>ID_BATCH</name></field><field><id>CHANNEL_ID</id><enabled>Y</enabled><name>CHANNEL_ID</name></field><field><id>TRANSNAME</id><enabled>Y</enabled><name>TRANSNAME</name></field><field><id>STATUS</id><enabled>Y</enabled><name>STATUS</name></field><field><id>LINES_READ</id><enabled>Y</enabled><name>LINES_READ</name><subject>Table output - DWH</subject></field><field><id>LINES_WRITTEN</id><enabled>Y</enabled><name>LINES_WRITTEN</name><subject>Table output - DWH</subject></field><field><id>LINES_UPDATED</id><enabled>Y</enabled><name>LINES_UPDATED</name><subject>Table output - DWH</subject></field><field><id>LINES_INPUT</id><enabled>Y</enabled><name>LINES_INPUT</name><subject>Table input -  Source DB&#x3a; reporting.job</subject></field><field><id>LINES_OUTPUT</id><enabled>Y</enabled><name>LINES_OUTPUT</name><subject>Table output - DWH</subject></field><field><id>LINES_REJECTED</id><enabled>Y</enabled><name>LINES_REJECTED</name><subject>Table output - DWH</subject></field><field><id>ERRORS</id><enabled>Y</enabled><name>ERRORS</name></field><field><id>STARTDATE</id><enabled>Y</enabled><name>STARTDATE</name></field><field><id>ENDDATE</id><enabled>Y</enabled><name>ENDDATE</name></field><field><id>LOGDATE</id><enabled>Y</enabled><name>LOGDATE</name></field><field><id>DEPDATE</id><enabled>Y</enabled><name>DEPDATE</name></field><field><id>REPLAYDATE</id><enabled>Y</enabled><name>REPLAYDATE</name></field><field><id>LOG_FIELD</id><enabled>Y</enabled><name>LOG_FIELD</name></field><field><id>EXECUTING_SERVER</id><enabled>N</enabled><name>EXECUTING_SERVER</name></field><field><id>EXECUTING_USER</id><enabled>N</enabled><name>EXECUTING_USER</name></field><field><id>CLIENT</id><enabled>N</enabled><name>CLIENT</name></field></trans-log-table>
 <perf-log-table><connection>${QF_LOGGING_DB_CONNECTION}</connection>
 <schema>&#x24;&#x7b;QF_LOG_TRANSPERF_SCHEMA&#x7d;</schema>
 <table>&#x24;&#x7b;QF_LOG_TRANSPERF_TABLE&#x7d;</table>
@@ -68,7 +68,7 @@
   <created_user>-</created_user>
   <created_date>2016&#x2f;04&#x2f;03 09&#x3a;57&#x3a;16.279</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2016&#x2f;04&#x2f;05 15&#x3a;10&#x3a;48.969</modified_date>
+  <modified_date>2016&#x2f;04&#x2f;07 15&#x3a;01&#x3a;34.161</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA&#x3d;</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -274,10 +274,10 @@
   </connection>
   <order>
   <hop> <from>Select values</from><to>PostgreSQL Bulk Loader -DWH</to><enabled>Y</enabled> </hop>
-  <hop> <from>Create copy of max_target_insert_id</from><to>Table input -  Source DB&#x3a; reporting.job_parameter_value</to><enabled>Y</enabled> </hop>
+  <hop> <from>Create copy of max_target_insert_id</from><to>Table input -  Source DB&#x3a; reporting.job</to><enabled>Y</enabled> </hop>
   <hop> <from>Table input - DWH DB&#x3a; Get max ID for CDC</from><to>Write to log&#x3a; max_target_insert_id</to><enabled>Y</enabled> </hop>
   <hop> <from>Write to log&#x3a; max_target_insert_id</from><to>Create copy of max_target_insert_id</to><enabled>Y</enabled> </hop>
-  <hop> <from>Table input -  Source DB&#x3a; reporting.job_parameter_value</from><to>Get System Info - transformation batch ID</to><enabled>Y</enabled> </hop>
+  <hop> <from>Table input -  Source DB&#x3a; reporting.job</from><to>Get System Info - transformation batch ID</to><enabled>Y</enabled> </hop>
   <hop> <from>Get System Info - transformation batch ID</from><to>Table output - DWH</to><enabled>Y</enabled> </hop>
   <hop> <from>Get System Info - transformation batch ID</from><to>Select values</to><enabled>N</enabled> </hop>
   </order>
@@ -352,7 +352,7 @@
            </partitioning>
     <connection>dsa_db</connection>
     <schema>reporting</schema>
-    <table>job_parameter_value</table>
+    <table>job</table>
     <load_action>INSERT</load_action>
     <PsqlPath>&#x24;&#x7b;QF_POSTGRESQL_BULK_LOADER_PSQL_PATH&#x7d;</PsqlPath>
     <dbname_override/>
@@ -360,53 +360,83 @@
     <delimiter>&#x3b;</delimiter>
     <stop_on_error>N</stop_on_error>
       <mapping>
-        <stream_name>job_parameter_value_id</stream_name>
-        <field_name>job_parameter_value_id</field_name>
-        <date_mask/>
-      </mapping>
-      <mapping>
-        <stream_name>boolean_value</stream_name>
-        <field_name>boolean_value</field_name>
+        <stream_name>job_id</stream_name>
+        <field_name>job_id</field_name>
         <date_mask/>
       </mapping>
       <mapping>
         <stream_name>created_on</stream_name>
         <field_name>created_on</field_name>
-        <date_mask>DATE</date_mask>
-      </mapping>
-      <mapping>
-        <stream_name>date_value</stream_name>
-        <field_name>date_value</field_name>
-        <date_mask>DATE</date_mask>
-      </mapping>
-      <mapping>
-        <stream_name>datetime_value</stream_name>
-        <field_name>datetime_value</field_name>
         <date_mask/>
       </mapping>
       <mapping>
-        <stream_name>float_value</stream_name>
-        <field_name>float_value</field_name>
+        <stream_name>document</stream_name>
+        <field_name>document</field_name>
         <date_mask/>
       </mapping>
       <mapping>
-        <stream_name>integer_value</stream_name>
-        <field_name>integer_value</field_name>
+        <stream_name>email_address</stream_name>
+        <field_name>email_address</field_name>
         <date_mask/>
       </mapping>
       <mapping>
-        <stream_name>string_value</stream_name>
-        <field_name>string_value</field_name>
+        <stream_name>encoded</stream_name>
+        <field_name>encoded</field_name>
         <date_mask/>
       </mapping>
       <mapping>
-        <stream_name>time_value</stream_name>
-        <field_name>time_value</field_name>
-        <date_mask>DATE</date_mask>
+        <stream_name>file_name</stream_name>
+        <field_name>file_name</field_name>
+        <date_mask/>
       </mapping>
       <mapping>
-        <stream_name>job_parameter_id</stream_name>
-        <field_name>job_parameter_id</field_name>
+        <stream_name>job_status_remarks</stream_name>
+        <field_name>job_status_remarks</field_name>
+        <date_mask/>
+      </mapping>
+      <mapping>
+        <stream_name>job_status_set_at</stream_name>
+        <field_name>job_status_set_at</field_name>
+        <date_mask/>
+      </mapping>
+      <mapping>
+        <stream_name>report_emailed_at</stream_name>
+        <field_name>report_emailed_at</field_name>
+        <date_mask/>
+      </mapping>
+      <mapping>
+        <stream_name>report_ran_at</stream_name>
+        <field_name>report_ran_at</field_name>
+        <date_mask/>
+      </mapping>
+      <mapping>
+        <stream_name>url</stream_name>
+        <field_name>url</field_name>
+        <date_mask/>
+      </mapping>
+      <mapping>
+        <stream_name>document_format_id</stream_name>
+        <field_name>document_format_id</field_name>
+        <date_mask/>
+      </mapping>
+      <mapping>
+        <stream_name>job_status_id</stream_name>
+        <field_name>job_status_id</field_name>
+        <date_mask/>
+      </mapping>
+      <mapping>
+        <stream_name>report_version_id</stream_name>
+        <field_name>report_version_id</field_name>
+        <date_mask/>
+      </mapping>
+      <mapping>
+        <stream_name>role_id</stream_name>
+        <field_name>role_id</field_name>
+        <date_mask/>
+      </mapping>
+      <mapping>
+        <stream_name>subscription_id</stream_name>
+        <field_name>subscription_id</field_name>
         <date_mask/>
       </mapping>
       <mapping>
@@ -417,7 +447,7 @@
      <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
       <xloc>288</xloc>
-      <yloc>720</yloc>
+      <yloc>704</yloc>
       <draw>Y</draw>
       </GUI>
     </step>
@@ -449,8 +479,8 @@
         <grouping_symbol/>
         <currency_symbol/>
         <storage_type/>
-      </meta>      <meta>        <name>date_value</name>
-        <rename>date_value</rename>
+      </meta>      <meta>        <name>job_status_set_at</name>
+        <rename>job_status_set_at</rename>
         <type>Date</type>
         <length>-2</length>
         <precision>-2</precision>
@@ -464,8 +494,38 @@
         <grouping_symbol/>
         <currency_symbol/>
         <storage_type/>
-      </meta>      <meta>        <name>boolean_value</name>
-        <rename>boolean_value</rename>
+      </meta>      <meta>        <name>report_emailed_at</name>
+        <rename>report_emailed_at</rename>
+        <type>Date</type>
+        <length>-2</length>
+        <precision>-2</precision>
+        <conversion_mask/>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>      <meta>        <name>report_ran_at</name>
+        <rename>report_ran_at</rename>
+        <type>Date</type>
+        <length>-2</length>
+        <precision>-2</precision>
+        <conversion_mask/>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>      <meta>        <name>encoded</name>
+        <rename>encoded</rename>
         <type>String</type>
         <length>-2</length>
         <precision>-2</precision>
@@ -488,7 +548,7 @@
     </step>
 
   <step>
-    <name>Table input -  Source DB&#x3a; reporting.job_parameter_value</name>
+    <name>Table input -  Source DB&#x3a; reporting.job</name>
     <type>TableInput</type>
     <description/>
     <distribute>N</distribute>
@@ -499,7 +559,7 @@
            <schema_name/>
            </partitioning>
     <connection>obo_opr_db</connection>
-    <sql>SELECT&#xa;    job_parameter_value_id,&#xa;    boolean_value,&#xa;    created_on,&#xa;    date_value,&#xa;    datetime_value,&#xa;    float_value,&#xa;    integer_value,&#xa;    string_value,&#xa;    time_value,&#xa;    job_parameter_id&#xa;FROM&#xa;    reporting.job_parameter_value&#xa;WHERE&#xa;    job_parameter_value_id &#x3e; &#x3f; OR &#x3f; IS NULL&#xa;</sql>
+    <sql>SELECT&#xa;  job_id&#xa;, created_on&#xa;, document&#xa;, email_address&#xa;, encoded&#xa;, file_name&#xa;, job_status_remarks&#xa;, job_status_set_at&#xa;, report_emailed_at&#xa;, report_ran_at&#xa;, url&#xa;, document_format_id&#xa;, job_status_id&#xa;, report_version_id&#xa;, role_id&#xa;, subscription_id&#xa;FROM&#xa;    reporting.job&#xa;WHERE&#xa;    job_id &#x3e; &#x3f; OR &#x3f; IS NULL</sql>
     <limit>0</limit>
     <lookup>Create copy of max_target_insert_id</lookup>
     <execute_each_row>N</execute_each_row>
@@ -525,7 +585,7 @@
            <schema_name/>
            </partitioning>
     <connection>dsa_db</connection>
-    <sql>SELECT&#xa;    MAX&#x28;job_parameter_value_id&#x29; AS max_target_insert_id&#xa;FROM&#xa;    reporting.job_parameter_value</sql>
+    <sql>SELECT&#xa;    MAX&#x28;job_id&#x29; AS max_target_insert_id&#xa;FROM&#xa;    reporting.job</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
@@ -552,7 +612,7 @@
            </partitioning>
     <connection>dsa_db</connection>
     <schema>reporting</schema>
-    <table>job_parameter_value</table>
+    <table>job</table>
     <commit>1000</commit>
     <truncate>N</truncate>
     <ignore_errors>N</ignore_errors>
@@ -569,44 +629,68 @@
     <return_field/>
     <fields>
         <field>
-          <column_name>job_parameter_value_id</column_name>
-          <stream_name>job_parameter_value_id</stream_name>
-        </field>
-        <field>
-          <column_name>boolean_value</column_name>
-          <stream_name>boolean_value</stream_name>
+          <column_name>job_id</column_name>
+          <stream_name>job_id</stream_name>
         </field>
         <field>
           <column_name>created_on</column_name>
           <stream_name>created_on</stream_name>
         </field>
         <field>
-          <column_name>date_value</column_name>
-          <stream_name>date_value</stream_name>
+          <column_name>document</column_name>
+          <stream_name>document</stream_name>
         </field>
         <field>
-          <column_name>datetime_value</column_name>
-          <stream_name>datetime_value</stream_name>
+          <column_name>email_address</column_name>
+          <stream_name>email_address</stream_name>
         </field>
         <field>
-          <column_name>float_value</column_name>
-          <stream_name>float_value</stream_name>
+          <column_name>encoded</column_name>
+          <stream_name>encoded</stream_name>
         </field>
         <field>
-          <column_name>integer_value</column_name>
-          <stream_name>integer_value</stream_name>
+          <column_name>file_name</column_name>
+          <stream_name>file_name</stream_name>
         </field>
         <field>
-          <column_name>string_value</column_name>
-          <stream_name>string_value</stream_name>
+          <column_name>job_status_remarks</column_name>
+          <stream_name>job_status_remarks</stream_name>
         </field>
         <field>
-          <column_name>time_value</column_name>
-          <stream_name>time_value</stream_name>
+          <column_name>job_status_set_at</column_name>
+          <stream_name>job_status_set_at</stream_name>
         </field>
         <field>
-          <column_name>job_parameter_id</column_name>
-          <stream_name>job_parameter_id</stream_name>
+          <column_name>report_emailed_at</column_name>
+          <stream_name>report_emailed_at</stream_name>
+        </field>
+        <field>
+          <column_name>report_ran_at</column_name>
+          <stream_name>report_ran_at</stream_name>
+        </field>
+        <field>
+          <column_name>url</column_name>
+          <stream_name>url</stream_name>
+        </field>
+        <field>
+          <column_name>document_format_id</column_name>
+          <stream_name>document_format_id</stream_name>
+        </field>
+        <field>
+          <column_name>job_status_id</column_name>
+          <stream_name>job_status_id</stream_name>
+        </field>
+        <field>
+          <column_name>report_version_id</column_name>
+          <stream_name>report_version_id</stream_name>
+        </field>
+        <field>
+          <column_name>role_id</column_name>
+          <stream_name>role_id</stream_name>
+        </field>
+        <field>
+          <column_name>subscription_id</column_name>
+          <stream_name>subscription_id</stream_name>
         </field>
         <field>
           <column_name>etl_batch_id_insert</column_name>

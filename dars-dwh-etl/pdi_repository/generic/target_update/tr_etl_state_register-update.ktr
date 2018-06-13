@@ -1,6 +1,6 @@
 <transformation>
   <info>
-    <name>tr_init_table_update_statistics_init_vrbls</name>
+    <name>tr_etl_state_register-update</name>
     <description />
     <extended_description />
     <trans_version />
@@ -8,6 +8,86 @@
     <trans_status>0</trans_status>
     <directory>/generic/target_update</directory>
     <parameters>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE</name>
+        <default_value />
+        <description>for source DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER</name>
+        <default_value />
+        <description>for source DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_HOST</name>
+        <default_value />
+        <description>for source DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD</name>
+        <default_value />
+        <description>for source DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_PORT</name>
+        <default_value />
+        <description>for source DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_URL</name>
+        <default_value />
+        <description>for source DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME</name>
+        <default_value />
+        <description>for source DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_ETL_STATE_REGISTER_FQ_TABLE_NAME</name>
+        <default_value />
+        <description>Fully qualified name (schema.table) of the "ETL state register" table in the source DB</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_ETL_STATE_REGISTER_SCHEMA_NAME</name>
+        <default_value />
+        <description>Name of schema in the source DB containing the "ETL state register" table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_ETL_STATE_REGISTER_TABLE_NAME</name>
+        <default_value />
+        <description>Name of the "ETL state register" table in the source DB</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_INSERT_ID_COLNAME</name>
+        <default_value />
+        <description>Name of column acting as "insert_id" column of target table - DONOT PROVIDE A DEFAULT VALUE BECAUSE WE NEED TO DETECT WHEN A VALUE IS NOT PASSED!</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_LAST_UPDATED_ON_COLNAME</name>
+        <default_value />
+        <description>Name of "last_updated_on" timestamp column of target table - DONOT PROVIDE A DEFAULT VALUE BECAUSE WE NEED TO DETECT WHEN A VALUE IS NOT PASSED!</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_SCHEMA</name>
+        <default_value />
+        <description>Name of schema containing target table to update</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_TABLE</name>
+        <default_value />
+        <description>Name of target table to update</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_TABLE_MAX_INSERT_ID</name>
+        <default_value />
+        <description>Maximum value written to the "insert_id" column of the target table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_TABLE_MAX_LAST_UPDATED_ON</name>
+        <default_value />
+        <description>Maximum value written to the "last_updated_on" column of the target table</description>
+      </parameter>
     </parameters>
     <log>
       <trans-log-table>
@@ -415,7 +495,7 @@
     <feedback_size>50000</feedback_size>
     <using_thread_priorities>Y</using_thread_priorities>
     <shared_objects_file />
-    <capture_step_performance>N</capture_step_performance>
+    <capture_step_performance>Y</capture_step_performance>
     <step_performance_capturing_delay>1000</step_performance_capturing_delay>
     <step_performance_capturing_size_limit>100</step_performance_capturing_size_limit>
     <dependencies>
@@ -427,45 +507,38 @@
     <clusterschemas>
     </clusterschemas>
     <created_user>-</created_user>
-    <created_date>2016/04/05 11:01:03.994</created_date>
+    <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2018/04/18 10:45:15.487</modified_date>
+    <modified_date>2018/06/12 15:08:32.696</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>This transformation initializes the PDI variables:
+      <note>This transformation updates the "ETL state register". It writes to this register the maximum values for the "insert_id" and "last_updated_on"
+columns of the target table that was just updated. It also writes the names of these columns since these column names can vary for different
+target tables. This job has parameters:
 
-	QF_UPDATE_TABLE_START_MILLISECONDS	= number of milliseconds since January 1, 1970
-	QF_UPDATE_TABLE_NUM_ROWS			= ${QF_POSITIVE_INTEGER_NOT_SET_VALUE} (= -1)
-	QF_UPDATE_TABLE_NUM_INSERTS		= ${QF_POSITIVE_INTEGER_NOT_SET_VALUE} (= -1)
-	QF_UPDATE_TABLE_NUM_UPDATES		= ${QF_POSITIVE_INTEGER_NOT_SET_VALUE} (= -1)</note>
+	PARAM_DYN_DB_CONN_SOURCE_DB_HOST		for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_PORT		for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE	for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME	for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD	for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER		for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_URL			for source DB "dynamic" database connections
+	PARAM_TARGET_SCHEMA						Name of schema containing target table to update
+	PARAM_TARGET_TABLE							Name of target table to update
+	PARAM_TARGET_INSERT_ID_COLNAME			Name of column acting as "insert_id"  timestamp column of target table
+	PARAM_TARGET_LAST_UPDATED_ON_COLNAME	Name of "last_updated_on" timestamp column of target table
+	PARAM_TARGET_TABLE_MAX_INSERT_ID			Maximum value written to the "insert_id" column of the target table
+	PARAM_TARGET_TABLE_MAX_LAST_UPDATED_ON	Maximum value written to the "last_updated_on" column of the target table
+	PARAM_ETL_STATE_REGISTER_SCHEMA_NAME		Name of schema in the source DB containing the "ETL state register" table
+	PARAM_ETL_STATE_REGISTER_TABLE_NAME		Name of the "ETL state register" table in the source DB
+	PARAM_ETL_STATE_REGISTER_FQ_TABLE_NAME	Fully qualified name (schema.table) of the "ETL state register" table in the source DB</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>556</width>
-      <heigth>88</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>9</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Cannot reliably access the new values of variables set in the same transaction.</note>
-      <xloc>285</xloc>
-      <yloc>276</yloc>
-      <width>435</width>
-      <heigth>23</heigth>
+      <width>788</width>
+      <heigth>270</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -482,6 +555,57 @@
       <drawshadow>Y</drawshadow>
     </notepad>
   </notepads>
+  <connection>
+    <name>generic_source_db</name>
+    <server>${PARAM_DYN_DB_CONN_SOURCE_DB_HOST}</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>${PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE}</database>
+    <port>${PARAM_DYN_DB_CONN_SOURCE_DB_PORT}</port>
+    <username>${PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME}</username>
+    <password>${PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD}</password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>${PARAM_DYN_DB_CONN_SOURCE_DB_PORT}</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
   <connection>
     <name>logging_db</name>
     <server>${QF_LOGGING_DB_HOST}</server>
@@ -535,19 +659,19 @@
   </connection>
   <order>
     <hop>
-      <from>JavaScript - Set PDI variables</from>
-      <to>Log variables just set</to>
-      <enabled>N</enabled>
+      <from>Create row to write to "ETL state register"</from>
+      <to>Log "ETL state register" details</to>
+      <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Generate single dummy row</from>
-      <to>JavaScript - Set PDI variables</to>
+      <from>Log "ETL state register" details</from>
+      <to>Update the "ETL state register"</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Generate single dummy row</name>
-    <type>RowGenerator</type>
+    <name>Create row to write to "ETL state register"</name>
+    <type>TableInput</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -556,25 +680,20 @@
       <method>none</method>
       <schema_name />
     </partitioning>
-    <fields>
-      <field>
-        <name>rownum</name>
-        <type>Integer</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif>1</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-    </fields>
-    <limit>1</limit>
-    <never_ending>N</never_ending>
-    <interval_in_ms>5000</interval_in_ms>
-    <row_time_field>now</row_time_field>
-    <last_time_field>FiveSecondsAgo</last_time_field>
+    <connection>generic_source_db</connection>
+    <sql>SELECT
+    '${PARAM_TARGET_SCHEMA}' AS "schema_name", 
+    '${PARAM_TARGET_TABLE}'  AS "table_name", 
+    NULLIF('${PARAM_TARGET_INSERT_ID_COLNAME}'                  , ''                                       ) AS "dwh_last_updated_insert_id_colname", 
+    NULLIF(${PARAM_TARGET_TABLE_MAX_INSERT_ID}                  , ${QF_POSITIVE_INTEGER_NOT_SET_VALUE}     ) AS "dwh_last_updated_insert_id_maxvalue", 
+    NULLIF('${PARAM_TARGET_LAST_UPDATED_ON_COLNAME}'            , ''                                       ) AS "dwh_last_updated_last_updated_on_colname", 
+    NULLIF(TIMESTAMP '${PARAM_TARGET_TABLE_MAX_LAST_UPDATED_ON}', TIMESTAMP '${QF_TIMESTAMP_NOT_SET_VALUE}') AS "dwh_last_updated_last_updated_on_maxvalue", 
+    ${QF_JOB_BATCH_ID} AS "etl_job_id" </sql>
+    <limit>0</limit>
+    <lookup />
+    <execute_each_row>N</execute_each_row>
+    <variables_active>Y</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
     <cluster_schema />
     <remotesteps>
       <input>
@@ -583,58 +702,13 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>176</xloc>
-      <yloc>112</yloc>
+      <xloc>144</xloc>
+      <yloc>304</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>JavaScript - Set PDI variables</name>
-    <type>ScriptValueMod</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <compatible>N</compatible>
-    <optimizationLevel>9</optimizationLevel>
-    <jsScripts>
-      <jsScript>
-        <jsScript_type>0</jsScript_type>
-        <jsScript_name>Set PDI variable</jsScript_name>
-        <jsScript_script>// Set variable with scope "root job". The variable will be valid
-// in the root job and all the child jobs and transformations.
-// Possible scopes:
-//   "s": system-wide
-//   "r": up to the root job
-//   "p": up to the parent job
-//   "g": up to the grandparent job
-setVariable("QF_UPDATE_TABLE_START_MILLISECONDS", Date.now()                                            , "r");
-setVariable("QF_UPDATE_TABLE_NUM_ROWS"          , getVariable("QF_POSITIVE_INTEGER_NOT_SET_VALUE", "-1"), "r");
-setVariable("QF_UPDATE_TABLE_NUM_INSERTS"       , getVariable("QF_POSITIVE_INTEGER_NOT_SET_VALUE", "-1"), "r");
-setVariable("QF_UPDATE_TABLE_NUM_UPDATES"       , getVariable("QF_POSITIVE_INTEGER_NOT_SET_VALUE", "-1"), "r");
-</jsScript_script>
-      </jsScript>
-    </jsScripts>
-    <fields>    </fields>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>176</xloc>
-      <yloc>192</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Log variables just set</name>
+    <name>Log "ETL state register" details</name>
     <type>WriteToLog</type>
     <description />
     <distribute>Y</distribute>
@@ -648,14 +722,43 @@ setVariable("QF_UPDATE_TABLE_NUM_UPDATES"       , getVariable("QF_POSITIVE_INTEG
     <displayHeader>Y</displayHeader>
     <limitRows>N</limitRows>
     <limitRowsNumber>0</limitRowsNumber>
-    <logmessage>tr_init_table_update_statistics_init_vrbls:
-QF_UPDATE_TABLE_START_MILLISECONDS = ${QF_UPDATE_TABLE_START_MILLISECONDS}
-QF_UPDATE_TABLE_NUM_ROWS           = ${QF_UPDATE_TABLE_NUM_ROWS}
-QF_UPDATE_TABLE_NUM_INSERTS        = ${QF_UPDATE_TABLE_NUM_INSERTS}
-QF_UPDATE_TABLE_NUM_UPDATES        = ${QF_UPDATE_TABLE_NUM_UPDATES}</logmessage>
+    <logmessage>PARAM_DYN_DB_CONN_SOURCE_DB_HOST       = ${PARAM_DYN_DB_CONN_SOURCE_DB_HOST}
+PARAM_DYN_DB_CONN_SOURCE_DB_PORT       = ${PARAM_DYN_DB_CONN_SOURCE_DB_PORT}
+PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE   = ${PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE}
+PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME   = ${PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME}
+PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD   = ${PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD}
+PARAM_DYN_DB_CONN_SOURCE_DB_URL        = ${PARAM_DYN_DB_CONN_SOURCE_DB_URL}
+PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER     = ${PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER}
+PARAM_TARGET_SCHEMA                    = ${PARAM_TARGET_SCHEMA}
+PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}
+PARAM_TARGET_INSERT_ID_COLNAME         = ${PARAM_TARGET_INSERT_ID_COLNAME}
+PARAM_TARGET_TABLE_MAX_INSERT_ID       = ${PARAM_TARGET_TABLE_MAX_INSERT_ID}
+PARAM_TARGET_LAST_UPDATED_ON_COLNAME   = ${PARAM_TARGET_LAST_UPDATED_ON_COLNAME}
+PARAM_TARGET_TABLE_MAX_LAST_UPDATED_ON = ${PARAM_TARGET_TABLE_MAX_LAST_UPDATED_ON}
+PARAM_ETL_STATE_REGISTER_FQ_TABLE_NAME = ${PARAM_ETL_STATE_REGISTER_FQ_TABLE_NAME}
+PARAM_ETL_STATE_REGISTER_SCHEMA_NAME   = ${PARAM_ETL_STATE_REGISTER_SCHEMA_NAME}
+PARAM_ETL_STATE_REGISTER_TABLE_NAME    = ${PARAM_ETL_STATE_REGISTER_TABLE_NAME}</logmessage>
     <fields>
       <field>
-        <name>rownum</name>
+        <name>schema_name</name>
+      </field>
+      <field>
+        <name>table_name</name>
+      </field>
+      <field>
+        <name>dwh_last_updated_insert_id_colname</name>
+      </field>
+      <field>
+        <name>dwh_last_updated_insert_id_maxvalue</name>
+      </field>
+      <field>
+        <name>dwh_last_updated_last_updated_on_colname</name>
+      </field>
+      <field>
+        <name>dwh_last_updated_last_updated_on_maxvalue</name>
+      </field>
+      <field>
+        <name>etl_job_id</name>
       </field>
     </fields>
     <cluster_schema />
@@ -666,8 +769,86 @@ QF_UPDATE_TABLE_NUM_UPDATES        = ${QF_UPDATE_TABLE_NUM_UPDATES}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>176</xloc>
-      <yloc>272</yloc>
+      <xloc>144</xloc>
+      <yloc>384</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Update the "ETL state register"</name>
+    <type>InsertUpdate</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <connection>generic_source_db</connection>
+    <commit>1</commit>
+    <update_bypassed>N</update_bypassed>
+    <lookup>
+      <schema>${PARAM_ETL_STATE_REGISTER_SCHEMA_NAME}</schema>
+      <table>${PARAM_ETL_STATE_REGISTER_TABLE_NAME}</table>
+      <key>
+        <name>schema_name</name>
+        <field>schema_name</field>
+        <condition>=</condition>
+        <name2 />
+      </key>
+      <key>
+        <name>table_name</name>
+        <field>table_name</field>
+        <condition>=</condition>
+        <name2 />
+      </key>
+      <value>
+        <name>schema_name</name>
+        <rename>schema_name</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>table_name</name>
+        <rename>table_name</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>dwh_last_updated_insert_id_colname</name>
+        <rename>dwh_last_updated_insert_id_colname</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>dwh_last_updated_insert_id_maxvalue</name>
+        <rename>dwh_last_updated_insert_id_maxvalue</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>dwh_last_updated_last_updated_on_colname</name>
+        <rename>dwh_last_updated_last_updated_on_colname</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>dwh_last_updated_last_updated_on_maxvalue</name>
+        <rename>dwh_last_updated_last_updated_on_maxvalue</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>etl_job_id</name>
+        <rename>etl_job_id</rename>
+        <update>Y</update>
+      </value>
+    </lookup>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>144</xloc>
+      <yloc>464</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

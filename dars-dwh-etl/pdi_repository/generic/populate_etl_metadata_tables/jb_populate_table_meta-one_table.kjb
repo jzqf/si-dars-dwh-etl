@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2018/03/19 14:14:23.505</modified_date>
+  <modified_date>2018/06/11 14:48:11.937</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CAN_DELETE_ROWS</name>
@@ -86,6 +86,16 @@
       <description>Row "age" in seconds after which rows of the source table can be "marked rows for deletion"</description>
     </parameter>
     <parameter>
+      <name>PARAM_SOURCE_DB_ETL_STATE_REGISTER_SCHEMA_NAME</name>
+      <default_value />
+      <description>Name the schema in the "source" DB that contains the "etl state register" table</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_SOURCE_DB_ETL_STATE_REGISTER_TABLE_NAME</name>
+      <default_value />
+      <description>Name of the table in the "source" DB acting as the "etl state register" table</description>
+    </parameter>
+    <parameter>
       <name>PARAM_SOURCE_DB_ID</name>
       <default_value />
       <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
@@ -118,7 +128,7 @@
     <parameter>
       <name>PARAM_TARGET_SCHEMA</name>
       <default_value />
-      <description>Name of schema cin the "target" DB ontaining the target table </description>
+      <description>Name of schema in the "target" DB ontaining the target table </description>
     </parameter>
     <parameter>
       <name>PARAM_TARGET_TABLE</name>
@@ -469,7 +479,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>32</xloc>
+      <xloc>16</xloc>
       <yloc>496</yloc>
     </entry>
     <entry>
@@ -516,42 +526,44 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>320</xloc>
+      <xloc>304</xloc>
       <yloc>832</yloc>
     </entry>
     <entry>
       <name>Log parameters</name>
       <description />
       <type>WRITE_TO_LOG</type>
-      <logmessage>PARAM_SOURCE_DB_ID                        = ${PARAM_SOURCE_DB_ID}
-PARAM_SOURCE_SCHEMA                       = ${PARAM_SOURCE_SCHEMA}
-PARAM_SOURCE_TABLE                        = ${PARAM_SOURCE_TABLE}
-PARAM_TARGET_DB_ID                        = ${PARAM_TARGET_DB_ID}
-PARAM_TARGET_SCHEMA                       = ${PARAM_TARGET_SCHEMA}
-PARAM_TARGET_TABLE                        = ${PARAM_TARGET_TABLE}
-PARAM_SOURCE_INSERT_ID_COLNAME                   = ${PARAM_SOURCE_INSERT_ID_COLNAME}
-PARAM_SOURCE_LAST_UPDATED_ON_COLNAME             = ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME}
-PARAM_IS_STATIC_SUPPORT_TABLE             = ${PARAM_IS_STATIC_SUPPORT_TABLE}
-PARAM_CAN_INSERT_ROWS                     = ${PARAM_CAN_INSERT_ROWS}
-PARAM_CAN_UPDATE_ROWS                     = ${PARAM_CAN_UPDATE_ROWS}
-PARAM_CAN_DELETE_ROWS                     = ${PARAM_CAN_DELETE_ROWS}
-PARAM_MIRROR_ALGORITHM_ID                 = ${PARAM_MIRROR_ALGORITHM_ID}
-PARAM_MIRROR_TABLES                       = ${PARAM_MIRROR_TABLES}
-PARAM_COMPARE_TABLES                      = ${PARAM_COMPARE_TABLES}
-PARAM_MARK_ROWS_FOR_DELETION_ALGORITHM_ID = ${PARAM_MARK_ROWS_FOR_DELETION_ALGORITHM_ID}
-PARAM_DELETE_MARKED_ROWS_ALGORITHM_ID     = ${PARAM_DELETE_MARKED_ROWS_ALGORITHM_ID}
-PARAM_MARK_ROWS_FOR_DELETION              = ${PARAM_MARK_ROWS_FOR_DELETION}
-PARAM_DELETE_MARKED_ROWS                  = ${PARAM_DELETE_MARKED_ROWS}
-PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS     = ${PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS}
-PARAM_CAN_DELETE_ROW_SCHEMA_NAME          = ${PARAM_CAN_DELETE_ROW_SCHEMA_NAME}
-PARAM_CAN_DELETE_ROW_TABLE_NAME           = ${PARAM_CAN_DELETE_ROW_TABLE_NAME}
-PARAM_DELETE_MARKED_ROWS_TABLE_ORDER      = ${PARAM_DELETE_MARKED_ROWS_TABLE_ORDER}</logmessage>
+      <logmessage>PARAM_SOURCE_DB_ID                             = ${PARAM_SOURCE_DB_ID}
+PARAM_SOURCE_SCHEMA                            = ${PARAM_SOURCE_SCHEMA}
+PARAM_SOURCE_TABLE                             = ${PARAM_SOURCE_TABLE}
+PARAM_TARGET_DB_ID                             = ${PARAM_TARGET_DB_ID}
+PARAM_TARGET_SCHEMA                            = ${PARAM_TARGET_SCHEMA}
+PARAM_TARGET_TABLE                             = ${PARAM_TARGET_TABLE}
+PARAM_SOURCE_INSERT_ID_COLNAME                 = ${PARAM_SOURCE_INSERT_ID_COLNAME}
+PARAM_SOURCE_LAST_UPDATED_ON_COLNAME           = ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME}
+PARAM_IS_STATIC_SUPPORT_TABLE                  = ${PARAM_IS_STATIC_SUPPORT_TABLE}
+PARAM_CAN_INSERT_ROWS                          = ${PARAM_CAN_INSERT_ROWS}
+PARAM_CAN_UPDATE_ROWS                          = ${PARAM_CAN_UPDATE_ROWS}
+PARAM_CAN_DELETE_ROWS                          = ${PARAM_CAN_DELETE_ROWS}
+PARAM_MIRROR_ALGORITHM_ID                      = ${PARAM_MIRROR_ALGORITHM_ID}
+PARAM_MIRROR_TABLES                            = ${PARAM_MIRROR_TABLES}
+PARAM_COMPARE_TABLES                           = ${PARAM_COMPARE_TABLES}
+PARAM_MARK_ROWS_FOR_DELETION_ALGORITHM_ID      = ${PARAM_MARK_ROWS_FOR_DELETION_ALGORITHM_ID}
+PARAM_DELETE_MARKED_ROWS_ALGORITHM_ID          = ${PARAM_DELETE_MARKED_ROWS_ALGORITHM_ID}
+PARAM_MARK_ROWS_FOR_DELETION                   = ${PARAM_MARK_ROWS_FOR_DELETION}
+PARAM_DELETE_MARKED_ROWS                       = ${PARAM_DELETE_MARKED_ROWS}
+PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS          = ${PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS}
+PARAM_CAN_DELETE_ROW_SCHEMA_NAME               = ${PARAM_CAN_DELETE_ROW_SCHEMA_NAME}
+PARAM_CAN_DELETE_ROW_TABLE_NAME                = ${PARAM_CAN_DELETE_ROW_TABLE_NAME}
+PARAM_DELETE_MARKED_ROWS_TABLE_ORDER           = ${PARAM_DELETE_MARKED_ROWS_TABLE_ORDER}
+PARAM_SOURCE_DB_ETL_STATE_REGISTER_SCHEMA_NAME = ${PARAM_SOURCE_DB_ETL_STATE_REGISTER_SCHEMA_NAME}
+PARAM_SOURCE_DB_ETL_STATE_REGISTER_TABLE_NAME  = ${PARAM_SOURCE_DB_ETL_STATE_REGISTER_TABLE_NAME}</logmessage>
       <loglevel>Basic</loglevel>
       <logsubject>Parameters received by ${Internal.Job.Name}</logsubject>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>144</xloc>
+      <xloc>128</xloc>
       <yloc>496</yloc>
     </entry>
     <entry>
@@ -566,7 +578,7 @@ PARAM_DELETE_MARKED_ROWS_TABLE_ORDER      = ${PARAM_DELETE_MARKED_ROWS_TABLE_ORD
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
-      <clear_rows>Y</clear_rows>
+      <clear_rows>N</clear_rows>
       <clear_files>N</clear_files>
       <set_logfile>N</set_logfile>
       <logfile />
@@ -588,8 +600,8 @@ PARAM_DELETE_MARKED_ROWS_TABLE_ORDER      = ${PARAM_DELETE_MARKED_ROWS_TABLE_ORD
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>320</xloc>
-      <yloc>960</yloc>
+      <xloc>304</xloc>
+      <yloc>944</yloc>
     </entry>
     <entry>
       <name>tr_populate_column_meta-one_table</name>
@@ -601,8 +613,8 @@ PARAM_DELETE_MARKED_ROWS_TABLE_ORDER      = ${PARAM_DELETE_MARKED_ROWS_TABLE_ORD
       <transname>tr_populate_column_meta-one_table</transname>
       <directory>${Internal.Entry.Current.Directory}</directory>
       <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>Y</params_from_previous>
-      <exec_per_row>Y</exec_per_row>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
       <clear_rows>N</clear_rows>
       <clear_files>N</clear_files>
       <set_logfile>N</set_logfile>
@@ -658,15 +670,15 @@ PARAM_DELETE_MARKED_ROWS_TABLE_ORDER      = ${PARAM_DELETE_MARKED_ROWS_TABLE_ORD
         </parameter>
         <parameter>
           <name>PARAM_TABLE_META_ID</name>
-          <stream_name>table_meta_id</stream_name>
-          <value />
+          <stream_name />
+          <value>${QF_TABLE_META_ID}</value>
         </parameter>
       </parameters>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>320</xloc>
-      <yloc>1056</yloc>
+      <xloc>304</xloc>
+      <yloc>1040</yloc>
     </entry>
     <entry>
       <name>jb_log_error</name>
@@ -692,6 +704,7 @@ PARAM_DELETE_MARKED_ROWS_TABLE_ORDER      = ${PARAM_DELETE_MARKED_ROWS_TABLE_ORD
       <expand_remote_job>N</expand_remote_job>
       <create_parent_folder>N</create_parent_folder>
       <pass_export>N</pass_export>
+      <run_configuration />
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
         <parameter>
@@ -704,8 +717,8 @@ PARAM_DELETE_MARKED_ROWS_TABLE_ORDER      = ${PARAM_DELETE_MARKED_ROWS_TABLE_ORD
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>96</xloc>
-      <yloc>1056</yloc>
+      <xloc>80</xloc>
+      <yloc>1040</yloc>
     </entry>
     <entry>
       <name>Abort job</name>
@@ -715,8 +728,8 @@ PARAM_DELETE_MARKED_ROWS_TABLE_ORDER      = ${PARAM_DELETE_MARKED_ROWS_TABLE_ORD
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>96</xloc>
-      <yloc>960</yloc>
+      <xloc>80</xloc>
+      <yloc>944</yloc>
     </entry>
     <entry>
       <name>jb_set_dynamic_db_connection_variables</name>
@@ -742,6 +755,7 @@ PARAM_DELETE_MARKED_ROWS_TABLE_ORDER      = ${PARAM_DELETE_MARKED_ROWS_TABLE_ORD
       <expand_remote_job>N</expand_remote_job>
       <create_parent_folder>N</create_parent_folder>
       <pass_export>N</pass_export>
+      <run_configuration />
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
         <parameter>
@@ -754,7 +768,7 @@ PARAM_DELETE_MARKED_ROWS_TABLE_ORDER      = ${PARAM_DELETE_MARKED_ROWS_TABLE_ORD
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>320</xloc>
+      <xloc>304</xloc>
       <yloc>704</yloc>
     </entry>
     <entry>
@@ -774,7 +788,7 @@ PARAM_DELETE_MARKED_ROWS_TABLE_ORDER      = ${PARAM_DELETE_MARKED_ROWS_TABLE_ORD
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>624</xloc>
+      <xloc>608</xloc>
       <yloc>496</yloc>
     </entry>
     <entry>
@@ -796,7 +810,7 @@ PARAM_DELETE_MARKED_ROWS_TABLE_ORDER      = ${PARAM_DELETE_MARKED_ROWS_TABLE_ORD
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>320</xloc>
+      <xloc>304</xloc>
       <yloc>496</yloc>
     </entry>
     <entry>
@@ -816,7 +830,7 @@ PARAM_DELETE_MARKED_ROWS_TABLE_ORDER      = ${PARAM_DELETE_MARKED_ROWS_TABLE_ORD
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>624</xloc>
+      <xloc>608</xloc>
       <yloc>592</yloc>
     </entry>
     <entry>
@@ -838,7 +852,7 @@ PARAM_DELETE_MARKED_ROWS_TABLE_ORDER      = ${PARAM_DELETE_MARKED_ROWS_TABLE_ORD
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>320</xloc>
+      <xloc>304</xloc>
       <yloc>592</yloc>
     </entry>
     <entry>
@@ -848,8 +862,8 @@ PARAM_DELETE_MARKED_ROWS_TABLE_ORDER      = ${PARAM_DELETE_MARKED_ROWS_TABLE_ORD
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>320</xloc>
-      <yloc>1152</yloc>
+      <xloc>304</xloc>
+      <yloc>1136</yloc>
     </entry>
   </entries>
   <hops>
@@ -971,24 +985,6 @@ PARAM_DELETE_MARKED_ROWS_TABLE_ORDER      = ${PARAM_DELETE_MARKED_ROWS_TABLE_ORD
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>jb_set_dynamic_db_connection_variables</from>
-      <to>tr_populate_table_meta-one_table</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>tr_populate_table_meta-get_table_meta_id</from>
-      <to>tr_populate_column_meta-one_table</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
       <from>tr_populate_column_meta-one_table</from>
       <to>Success</to>
       <from_nr>0</from_nr>
@@ -1006,6 +1002,24 @@ PARAM_DELETE_MARKED_ROWS_TABLE_ORDER      = ${PARAM_DELETE_MARKED_ROWS_TABLE_ORD
       <evaluation>N</evaluation>
       <unconditional>N</unconditional>
     </hop>
+    <hop>
+      <from>jb_set_dynamic_db_connection_variables</from>
+      <to>tr_populate_table_meta-one_table</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>tr_populate_table_meta-get_table_meta_id</from>
+      <to>tr_populate_column_meta-one_table</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
   </hops>
   <notepads>
     <notepad>
@@ -1019,35 +1033,37 @@ This job has parameters:
 
 	PARAM_SOURCE_DB_ID									ID the "source" database containing the table for generating table metadata
 	PARAM_SOURCE_SCHEMA								Name of schema containing source table for generating table metadata
-	PARAM_SOURCE_TABLE								Name of source table for generating table metatdata
+	PARAM_SOURCE_TABLE									Name of source table for generating table metatdata
 	PARAM_TARGET_DB_ID									ID of the "target" database to which the "source" DB tables will be archived/mirrored
 	PARAM_TARGET_SCHEMA								Name of schema in the "target" DB ontaining the target table.
 															If blank, PARAM_SOURCE_SCHEMA will be used instead.
 	PARAM_TARGET_TABLE									Name of the table in the "target" DB that the "source" table will be archived/mirrored to
 															If blank, PARAM_SOURCE_TABLE will be used instead.
 	PARAM_SOURCE_INSERT_ID_COLNAME					Name of the source table column that acts as the "insert_id" column
-	PARAM_SOURCE_LAST_UPDATED_ON_COLNAME		Name of the source table column that acts as the "last_updated_on" column
+	PARAM_SOURCE_LAST_UPDATED_ON_COLNAME			Name of the source table column that acts as the "last_updated_on" column
 	PARAM_IS_STATIC_SUPPORT_TABLE						"Y" if the source table is a "static support table"
-	PARAM_CAN_INSERT_ROWS							"Y" if, under normal operation, rows can be inserted into the source table
-	PARAM_CAN_UPDATE_ROWS							"Y" if, under normal operation, rows can be updated in the source table
-	PARAM_CAN_DELETE_ROWS							"Y" if, under normal operation, rows can be deleted from the source table
-	PARAM_MIRROR_ALGORITHM_ID						ID of the "mirror" algorithm for archiving/mirroring rows from the source table to the target table
-	PARAM_MIRROR_TABLES								"Y" if archiving/mirroring is enabled for the source/target table pair
+	PARAM_CAN_INSERT_ROWS								"Y" if, under normal operation, rows can be inserted into the source table
+	PARAM_CAN_UPDATE_ROWS								"Y" if, under normal operation, rows can be updated in the source table
+	PARAM_CAN_DELETE_ROWS								"Y" if, under normal operation, rows can be deleted from the source table
+	PARAM_MIRROR_ALGORITHM_ID							ID of the "mirror" algorithm for archiving/mirroring rows from the source table to the target table
+	PARAM_MIRROR_TABLES									"Y" if archiving/mirroring is enabled for the source/target table pair
 	PARAM_COMPARE_TABLES								"Y" id "comparing" is enabled for the source/target table pair
-	PARAM_MARK_ROWS_FOR_DELETION_ALGORITHM_ID	ID of the "mark rows for deletion" algorithm to use for the source table
-	PARAM_DELETE_MARKED_ROWS_ALGORITHM_ID		ID of the "delete marked rows" algorithm to use for the source table
-	PARAM_MARK_ROWS_FOR_DELETION					"Y" if "mark rows for deletion" processing is enabled for the source table
-	PARAM_DELETE_MARKED_ROWS						"Y" if "delete marked rows" processing is enabled for the source table
-	PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS		Row "age" in seconds after which rows of the source table can be "marked rows for deletion"
+	PARAM_MARK_ROWS_FOR_DELETION_ALGORITHM_ID		ID of the "mark rows for deletion" algorithm to use for the source table
+	PARAM_DELETE_MARKED_ROWS_ALGORITHM_ID			ID of the "delete marked rows" algorithm to use for the source table
+	PARAM_MARK_ROWS_FOR_DELETION						"Y" if "mark rows for deletion" processing is enabled for the source table
+	PARAM_DELETE_MARKED_ROWS							"Y" if "delete marked rows" processing is enabled for the source table
+	PARAM_ROW_CAN_BE_DELETED_FROM_SECONDS			Row "age" in seconds after which rows of the source table can be "marked rows for deletion"
 	PARAM_CAN_DELETE_ROW_SCHEMA_NAME				Name of the schema containing the "can delete row" table
-	PARAM_CAN_DELETE_ROW_TABLE_NAME				Name of the "can delete row" table
-	PARAM_DELETE_MARKED_ROWS_TABLE_ORDER		Integer value for setting the order that tables are processed by the default the "delete marked rows" algorithm</note>
+	PARAM_CAN_DELETE_ROW_TABLE_NAME					Name of the "can delete row" table
+	PARAM_DELETE_MARKED_ROWS_TABLE_ORDER			Integer value for setting the order that tables are processed by the default the "delete marked rows" algorithm
+	PARAM_SOURCE_DB_ETL_STATE_REGISTER_SCHEMA_NAME	Name the schema in the "source" DB that contains the "etl state register" table
+	PARAM_SOURCE_DB_ETL_STATE_REGISTER_TABLE_NAME	Name of the table in the "source" DB acting as the "etl state register" table</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>1023</width>
-      <heigth>472</heigth>
+      <width>984</width>
+      <heigth>465</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -1063,14 +1079,15 @@ This job has parameters:
     </notepad>
     <notepad>
       <note>Get the value of "table_meta_id" for the new ${QF_ETL_DB_SCHEMA}.table_meta row just created.
-This is placed in the stream and then copied to the "Result set" so that it can
-be accessed by the next transformation.</note>
-      <xloc>480</xloc>
-      <yloc>960</yloc>
-      <width>584</width>
-      <heigth>52</heigth>
+This value is assigned to the PDI variable:
+
+	QF_TABLE_META_ID.</note>
+      <xloc>448</xloc>
+      <yloc>944</yloc>
+      <width>553</width>
+      <heigth>62</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -1095,12 +1112,12 @@ is selected for this job entry, two of the parameters are explicitly passed as:
 This is because the values for these variables are modified in this job if they are passed
 to this job as "". If this is done, it seems that their *original* blank values are passed to 
 sub-transformation here unless the parameters are explicitly passed as shown.</note>
-      <xloc>480</xloc>
+      <xloc>448</xloc>
       <yloc>784</yloc>
-      <width>591</width>
-      <heigth>150</heigth>
+      <width>554</width>
+      <heigth>140</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -1115,15 +1132,16 @@ sub-transformation here unless the parameters are explicitly passed as shown.</n
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Create a set of default ${QF_ETL_DB_SCHEMA}.column_meta rows
-for the ${QF_ETL_DB_SCHEMA}.table_meta row just created, one
-for each row of the table in the source DB.</note>
-      <xloc>480</xloc>
-      <yloc>1040</yloc>
-      <width>398</width>
-      <heigth>52</heigth>
+      <note>Create a set of default ${QF_ETL_DB_SCHEMA}.column_meta rows for the ${QF_ETL_DB_SCHEMA}.table_meta
+row just created, one for each column of the table in the source DB. 
+
+This transformation is passed the value of the PDI variable QF_TABLE_META_ID as a parameter.</note>
+      <xloc>448</xloc>
+      <yloc>1024</yloc>
+      <width>615</width>
+      <heigth>62</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -1145,12 +1163,12 @@ for each row of the table in the source DB.</note>
 based on a single parameter:
 
 	PARAM_DB_ID = ${PARAM_SOURCE_DB_ID}</note>
-      <xloc>480</xloc>
+      <xloc>448</xloc>
       <yloc>656</yloc>
-      <width>289</width>
-      <heigth>108</heigth>
+      <width>275</width>
+      <heigth>101</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -1177,7 +1195,7 @@ based on a single parameter:
       <name>{"_":"Embedded MetaStore Elements","namespace":"pentaho","type":"Default Run Configuration"}</name>
       <attribute>
         <key>Pentaho local</key>
-        <value>{"children":[{"children":[],"id":"server","value":null},{"children":[],"id":"clustered","value":"N"},{"children":[],"id":"name","value":"Pentaho local"},{"children":[],"id":"description","value":null},{"children":[],"id":"readOnly","value":"Y"},{"children":[],"id":"sendResources","value":"N"},{"children":[],"id":"logRemoteExecutionLocally","value":"N"},{"children":[],"id":"remote","value":"N"},{"children":[],"id":"local","value":"Y"},{"children":[],"id":"showTransformations","value":"N"}],"id":"Pentaho local","value":null,"name":"Pentaho local","owner":null,"ownerPermissionsList":[]}</value>
+        <value>{"children":[{"children":[],"id":"server","value":null},{"children":[],"id":"clustered","value":"N"},{"children":[],"id":"name","value":"Pentaho local"},{"children":[],"id":"description","value":null},{"children":[],"id":"pentaho","value":"N"},{"children":[],"id":"readOnly","value":"Y"},{"children":[],"id":"sendResources","value":"N"},{"children":[],"id":"logRemoteExecutionLocally","value":"N"},{"children":[],"id":"remote","value":"N"},{"children":[],"id":"local","value":"Y"},{"children":[],"id":"showTransformations","value":"N"}],"id":"Pentaho local","value":null,"name":"Pentaho local","owner":null,"ownerPermissionsList":[]}</value>
       </attribute>
     </group>
   </attributes>
