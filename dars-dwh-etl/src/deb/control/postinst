@@ -12,7 +12,54 @@ INST_LOG=${APP_DIR}/logs/[[app.name]]_install.log
 
 case "$1" in
 
+    abort-deconfigure)
+        echo "### postinst abort-deconfigure ###"
+        ;;
+
+    abort-remove)
+        echo "### postinst abort-remove ###"
+        ;;
+
+    abort-upgrade)
+        echo "### postinst abort-upgrade ###"
+        ;;
+	
 	configure)
+	        echo "### postinst configure ###"
+
+	        echo "Determining Deployment Environment"
+
+	        # Expect Hostnames structured like si01-prd-0401, si01-stg-04cl etc'
+	        # Note: Regex specified in this form as trouble was had with shorter single braket versions
+	        regex="([[:alpha:]][[:alpha:]])([[:digit:]][[:digit:]])-([[:alnum:]]+)-([[:digit:]][[:digit:]])([[:alnum:]][[:alnum:]])"
+	        # For development test environments of type (trdci0909)
+	        regexDEV="(trdci)[[:digit:]][[:digit:]][[:digit:]][[:digit:]]"
+
+	        this_hostname=$(hostname)
+	        echo "hostname (${this_hostname})"
+	        echo "regex (${regex})"
+	        echo "regex (${regexDEV})"
+
+	        if [[ $this_hostname =~ $regex ]] || [[ $this_hostname =~ $regexDEV ]]
+	        then
+	            solution_instance="${BASH_REMATCH[1]}${BASH_REMATCH[2]}"
+	            solution_environment="${BASH_REMATCH[3]}"
+	            cluster_id="${BASH_REMATCH[4]}"
+	            node_id="${BASH_REMATCH[5]}"
+	        else
+	            echo "FAILURE: Unable to determine environment" >&2
+	            exit 1
+	        fi
+
+	        this_clustername="${solution_instance}-${solution_environment}-${cluster_id}cl.${solution_instance}.q-free.com"
+	        this_nodename="${this_hostname}"
+
+	        echo "Solution(${solution_instance})"
+	        echo "Environment(${solution_environment})"
+	        echo "ClusterID(${cluster_id})"
+	        echo "NodeID(${node_id})"
+	        echo "This NodeName(${this_nodename})"
+	        echo "This ClusterName(${this_clustername})"
 
 		# Install customer-specific configuration properties file:
 		DATE=`date +%Y-%m-%d:%H:%M:%S`
@@ -70,16 +117,16 @@ case "$1" in
 		# is defined when merge_configuration_files.jar is executed,
 		sudo -iu [[app.user]] java -jar ${APP_DIR}/lib/merge_configuration_files.jar
 
-		;;
+        ;;
 
-	abort-upgrade|abort-deconfigure|abort-remove)
-		;;
+    *)
+        echo "### postinst default ###"
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 1
+        ;;
 
-	*)
-		echo "$0 called with unknown argument \`$1'" >&2
-		exit 1
-		;;
 esac
 
-#DEBHELPER#
+echo "### postinst done ###"
 exit 0
+
