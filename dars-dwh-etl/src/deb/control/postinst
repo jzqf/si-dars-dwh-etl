@@ -103,18 +103,27 @@ case "$1" in
 		else
 			echo "$DATE - SKIPPED: creation of: /home/[[app.user]]/.profile for user [[app.user]], ALREADY EXISTS" >> $INST_LOG
 		fi
-		
+
+		# Install logrotate configuration for this application's log file. The name of the configuration file is set to
+		# [[app.name]], which should be relatively unique.
+		DATE=`date +%Y-%m-%d:%H:%M:%S`
+		if [ ! -e /etc/logrotate.d/[[app.name]] ]; then
+			cp  ${APP_DIR}/templates/[[app.name]].logrotate /etc/logrotate.d/[[app.name]]
+			echo "$DATE - INFO: Created logrotate configuration: /etc/logrotate.d/[[app.name]]" >> $INST_LOG
+		else
+			echo "$DATE - SKIPPED: creation of logrotate configuration: /etc/logrotate.d/[[app.name]], ALREADY EXISTS" >> $INST_LOG
+		fi
+
 		# Merge the properties in the two local settings files:
 		#   ${CONF_DIR}/dwh-qfree.properties
 		#   ${CONF_DIR}/dwh.properties
-		# into the main settings file that is installed when this package is 
-		# installed (thus overwriting the current version that has site-specific
-		# settings). This will restore the site-specific settings:
+		# into the main settings file that is installed when this package is installed:
 		#   ${APP_DIR}/pdi_config/.kettle/kettle.properties
+		# This will restore the site-specific settings, as specified in the dwh-qfree.properties & dwh.properties files.
 		DATE=`date +%Y-%m-%d:%H:%M:%S`
 		echo "$DATE - INFO:Merging local settings files into ${APP_DIR}/pdi_config/.kettle/kettle.properties." >> $INST_LOG
 		# The "-i" option here ensures that the KETTLE_HOME environment variable
-		# is defined when merge_configuration_files.jar is executed,
+		# is defined when merge_configuration_files.jar is executed:
 		sudo -iu [[app.user]] java -jar ${APP_DIR}/lib/merge_configuration_files.jar
 
         ;;
