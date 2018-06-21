@@ -15,12 +15,12 @@
       </parameter>
       <parameter>
         <name>PARAM_SOURCE_SCHEMA</name>
-        <default_value>passage</default_value>
+        <default_value />
         <description>Name of schema containing source table to mirror to target table</description>
       </parameter>
       <parameter>
         <name>PARAM_SOURCE_TABLE</name>
-        <default_value>image</default_value>
+        <default_value />
         <description>Name of source table to mirror to target table</description>
       </parameter>
       <parameter>
@@ -449,30 +449,31 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2018/03/19 14:34:57.158</modified_date>
+    <modified_date>2018/06/11 13:20:03.011</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
       <note>This transformation obtains the value of the primary key of a row of the ${QF_ETL_DB_SCHEMA}.table_meta table that corresponds to
-the values of the parameters passed to this transformation.
+the values of the parameters passed to this transformation. This value is then assigned to the PDI variablr:
 
-The stream from this transformation is copied to the "result" of this transformation. This result set can be used in
-the parent job to execute a sub-job once for each row in this stream.
+	QF_TABLE_META_ID
+
+The value of this variable is passed as a parameter to a sub-transformation in the calling job.
 
 This transformation has parameters:
 
-	PARAM_SOURCE_DB_ID			ID the "source" database containing the table for retrieving the "table_meta_id" value
-	PARAM_SOURCE_SCHEMA		Name of schema containing source table for retrieving the "table_meta_id" value
+	PARAM_SOURCE_DB_ID		ID the "source" database containing the table for retrieving the "table_meta_id" value
+	PARAM_SOURCE_SCHEMA	Name of schema containing source table for retrieving the "table_meta_id" value
 	PARAM_SOURCE_TABLE		Name of source table  for retrieving the "table_meta_id" value
-	PARAM_TARGET_DB_ID			ID of the "target" database to which the "source" DB tables will be archived/mirrored</note>
+	PARAM_TARGET_DB_ID		ID of the "target" database to which the "source" DB tables will be archived/mirrored</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>794</width>
-      <heigth>178</heigth>
+      <width>746</width>
+      <heigth>179</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -488,17 +489,18 @@ This transformation has parameters:
     </notepad>
     <notepad>
       <note>Retrieve the value of the primary key, table_meta_id, of the row
-of the ${QF_ETL_DB_SCHEMA}.table_meta table that corresponds to the values of
-the parameters passed to this transformation. The stream
-created by this step consists of a single row with a single field:
+of the ${QF_ETL_DB_SCHEMA}.table_meta table that corresponds
+to the values of the parameters passed to this transformation. 
+The stream created by this step consists of a single row with a 
+single field:
 
 	table_meta_id</note>
       <xloc>0</xloc>
       <yloc>192</yloc>
-      <width>490</width>
-      <heigth>94</heigth>
+      <width>371</width>
+      <heigth>101</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -513,15 +515,16 @@ created by this step consists of a single row with a single field:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Execution will reach this Abort entry if the parameters passed
-to this transformation do not correspond to an existing 
-${QF_ETL_DB_SCHEMA}.table_meta row. This Abort will warn the user of problem.</note>
-      <xloc>224</xloc>
-      <yloc>480</yloc>
-      <width>491</width>
-      <heigth>52</heigth>
+      <note>Execution will reach this Abort entry if the parameters 
+passed to this transformation do not correspond to an 
+existing ${QF_ETL_DB_SCHEMA}.table_meta row. 
+This Abort will warn the user of problem.</note>
+      <xloc>304</xloc>
+      <yloc>496</yloc>
+      <width>313</width>
+      <heigth>62</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -645,11 +648,6 @@ ${QF_ETL_DB_SCHEMA}.table_meta row. This Abort will warn the user of problem.</n
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Write to log: table_meta_id</from>
-      <to>Copy rows to result</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>Table input - Get table_meta_id</from>
       <to>Detect empty stream</to>
       <enabled>Y</enabled>
@@ -657,6 +655,11 @@ ${QF_ETL_DB_SCHEMA}.table_meta row. This Abort will warn the user of problem.</n
     <hop>
       <from>Detect empty stream</from>
       <to>Abort: No table_meta row found</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Write to log: table_meta_id</from>
+      <to>Set variable QF_TABLE_META_ID</to>
       <enabled>Y</enabled>
     </hop>
   </order>
@@ -683,32 +686,8 @@ ${QF_ETL_DB_SCHEMA}.table_meta row. This Abort will warn the user of problem.</n
       </output>
     </remotesteps>
     <GUI>
-      <xloc>384</xloc>
-      <yloc>416</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Copy rows to result</name>
-    <type>RowsToResult</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>624</xloc>
-      <yloc>304</yloc>
+      <xloc>432</xloc>
+      <yloc>432</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -731,8 +710,8 @@ ${QF_ETL_DB_SCHEMA}.table_meta row. This Abort will warn the user of problem.</n
       </output>
     </remotesteps>
     <GUI>
-      <xloc>160</xloc>
-      <yloc>416</yloc>
+      <xloc>144</xloc>
+      <yloc>432</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -771,8 +750,8 @@ WHERE
       </output>
     </remotesteps>
     <GUI>
-      <xloc>160</xloc>
-      <yloc>304</yloc>
+      <xloc>144</xloc>
+      <yloc>320</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -809,8 +788,41 @@ PARAM_TARGET_DB_ID  = ${PARAM_TARGET_DB_ID}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>384</xloc>
-      <yloc>304</yloc>
+      <xloc>432</xloc>
+      <yloc>320</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Set variable QF_TABLE_META_ID</name>
+    <type>SetVariable</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <field>
+        <field_name>table_meta_id</field_name>
+        <variable_name>QF_TABLE_META_ID</variable_name>
+        <variable_type>ROOT_JOB</variable_type>
+        <default_value />
+      </field>
+    </fields>
+    <use_formatting>Y</use_formatting>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>624</xloc>
+      <yloc>320</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
