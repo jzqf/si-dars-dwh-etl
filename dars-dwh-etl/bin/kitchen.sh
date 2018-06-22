@@ -122,7 +122,7 @@ if mkdir "${LOCK_DIR}" &>/dev/null; then
     trap "cleanup" EXIT SIGHUP SIGINT SIGQUIT SIGTERM ERR
 
     # Use the PDI Kitchen utility to execute the job:
-    /usr/share/pentaho/pdi/pdi-default/kitchen.sh -file="$JOB_DIR/$1" \
+    /opt/qfree/dwh_etl/data-integration/kitchen.sh -file="$JOB_DIR/$1" \
         -rep=DWH -logfile=$LOG_FILE -level=$LOG_LEVEL
 
 else
