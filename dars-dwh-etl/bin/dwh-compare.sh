@@ -40,5 +40,5 @@ if [ ! -z "$1" ]; then
     echo "A maximum number of $max_num_compare_rows rows will be compared per table"
 fi
 
-/usr/share/pentaho/pdi/pdi-default/kitchen.sh -file="$DWH_HOME/pdi_repository/psa/jb_psa-compare.kjb" -rep=DWH -logfile=$DWH_LOGDIR/dwh-etl.log -level=Minimal -param:PARAM_MAX_NUM_COMPARE_ROWS=$max_num_compare_rows
-/usr/share/pentaho/pdi/pdi-default/kitchen.sh -file="$DWH_HOME/pdi_repository/dsa/jb_dsa-compare.kjb" -rep=DWH -logfile=$DWH_LOGDIR/dwh-etl.log -level=Minimal -param:PARAM_MAX_NUM_COMPARE_ROWS=$max_num_compare_rows
+/opt/qfree/dwh_etl/data-integration/kitchen.sh -file="$DWH_HOME/pdi_repository/psa/jb_psa-compare.kjb" -rep=DWH -logfile=$DWH_LOGDIR/dwh-etl.log -level=Minimal -param:PARAM_MAX_NUM_COMPARE_ROWS=$max_num_compare_rows
+/opt/qfree/dwh_etl/data-integration/kitchen.sh -file="$DWH_HOME/pdi_repository/dsa/jb_dsa-compare.kjb" -rep=DWH -logfile=$DWH_LOGDIR/dwh-etl.log -level=Minimal -param:PARAM_MAX_NUM_COMPARE_ROWS=$max_num_compare_rows
