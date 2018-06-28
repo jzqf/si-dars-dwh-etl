@@ -464,7 +464,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2018/06/06 10:09:55.500</modified_date>
+    <modified_date>2018/06/26 13:33:18.637</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -1284,7 +1284,6 @@ which is probably not the case.</note>
     <create_parent_folder>N</create_parent_folder>
     <file>
       <name>/tmp/debug-psa.obo__passage_event_derived_data_with_rating</name>
-      <is_command>N</is_command>
       <servlet_output>N</servlet_output>
       <do_not_open_new_file_init>N</do_not_open_new_file_init>
       <extention>csv</extention>
@@ -2229,6 +2228,47 @@ PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}</logmessage>
     </GUI>
   </step>
   <step>
+    <name>Sort by pedd.last_updated_on</name>
+    <type>SortRows</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>out</prefix>
+    <sort_size>1000000</sort_size>
+    <free_memory />
+    <compress>N</compress>
+    <compress_variable />
+    <unique_rows>N</unique_rows>
+    <fields>
+      <field>
+        <name>last_updated_on</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>560</xloc>
+      <yloc>736</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
     <name>Table input - source PSA tables</name>
     <type>TableInput</type>
     <description />
@@ -2297,6 +2337,17 @@ PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}</logmessage>
     --       2. Update the "last_updated_on" column of the passage_event_derived_data (pedd) or 
     --          passage_event_derived_data_details (peddd) row for the applied_rating_detail_data
     --          row that is inserted or updated. 
+    --
+    -- This composite index greatly speeds up the execution of this CTE
+    -- for the case when there are an enormous number of database rows to process.
+    -- Testing shows that for a case where on the *first* run of this transformation,
+    -- i.e., ?=-1, where there were approximately 100 million
+    -- obo__passage_event_derived_data rows, the execution time was reduced from
+    -- approximately 5 hr 17 min to 2 hr 22 min. On subequent runs, where a larger
+    -- value of the ? parameter would eliminate many rows from the query, the 
+    -- execution time will presumably be much less. This index may also speed up the 
+    -- main query below, but I have not performaed tests to confirm this.
+    --CREATE INDEX IF NOT EXISTS ix_obo__ardd_rate_component_fee_type_category_id ON obo__applied_rating_detail_data (rate_component_fee_type_id, rate_component_fee_category_id);
     SELECT 
         COALESCE(MAX(pedd.pedd_id), ${QF_INSERT_ID_LOWER_BOUND}) AS "max_linked_pedd_id"
     FROM 
@@ -2358,9 +2409,16 @@ LEFT OUTER JOIN
     public.obo__applied_rating_detail_data ardd_3 ON ardd_3.pedd_id=peddd.pedd_id AND 
     ardd_3.rate_component_fee_type_id=${QF_RATE_COMPONENT_FEE_TYPE_ID_APPLIED_FEE} AND ardd_3.rate_component_fee_category_id=${QF_RATE_COMPONENT_FEE_CATEGORY_ID_EXTERNAL_FEE_AIR}
 WHERE
-    -- This condition ensures that "pedd" rows selected here have no "late arriving" 
-    -- rows from its related tables, "peddd" and "obo__applied_rating_detail_data":
-    pedd.pedd_id &lt;= (SELECT max_linked_pedd_id FROM fully_linked_pedd) AND  -- Ensure that the most recent (last, chronologically) source pedd row treated here is "fully" linked to related rows
+    pedd.pedd_id &lt;= LEAST(
+                           -- This condition ensures that "pedd" rows selected here have no "late arriving" 
+                           -- rows from its related tables, "peddd" and "obo__applied_rating_detail_data":
+                          (SELECT max_linked_pedd_id FROM fully_linked_pedd),  -- Ensure that the most recent (last, chronologically) source pedd row treated here is "fully" linked to related rows
+                          -- To avoid loading rows that are *inserted* after the job starts.
+                          -- It is not necessary to include a similar condition for the "peddd"
+                          -- table because it will necessarily be satisfied, due to 
+                          -- the one-to-one relation between the "pedd" &amp; "peddd" tables.
+                          ${PARAM_SOURCE_TABLE_MAX_INSERT_ID}
+                         ) AND
     ( 
            pedd.pedd_id          > ?      -- Newly INSERTed "pedd" rows,  since the last run.
         -- The >= comparison operator is used here because timestamps are not unique.
@@ -2380,10 +2438,11 @@ WHERE
 --        OR peddd.created_on      > '${PARAM_CDC_LAST_LOAD_UTC}'      -- Newly INSERTed "peddd" rows, since the last run.
 --        OR peddd.last_updated_on > '${PARAM_CDC_LAST_LOAD_UTC}'      -- UPDATEd        "peddd" rows, since the last run.
     )
-    AND pedd.pedd_id  &lt;= ${PARAM_SOURCE_TABLE_MAX_INSERT_ID}          -- To avoid loading rows that are *inserted* after the job starts.
-                                                         -- It is not necessary to include a similar condition for the "peddd"
-                                                         -- table because it will necessarily be satisfied, due to 
-                                                         -- the one-to-one relation between the "pedd" &amp; "peddd" tables.
+-- Old code (notw incorporated in the "LEAST( , )" expression above):
+--    AND pedd.pedd_id  &lt;= ${PARAM_SOURCE_TABLE_MAX_INSERT_ID}          -- To avoid loading rows that are *inserted* after the job starts.
+--                                                                      -- It is not necessary to include a similar condition for the "peddd"
+--                                                                      -- table because it will necessarily be satisfied, due to 
+--                                                                      -- the one-to-one relation between the "pedd" &amp; "peddd" tables.
 -- This condition is commented out because it is not needed and leads to problems if used.
 -- For details, see the comments in the step that creates the SELECT statement for the source table
 -- in transformation:
@@ -2771,47 +2830,6 @@ PARAM_SOURCE_TABLE_MAX_INSERT_ID = ${PARAM_SOURCE_TABLE_MAX_INSERT_ID}</logmessa
     <GUI>
       <xloc>448</xloc>
       <yloc>272</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Sort by pedd.last_updated_on</name>
-    <type>SortRows</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <directory>%%java.io.tmpdir%%</directory>
-    <prefix>out</prefix>
-    <sort_size>1000000</sort_size>
-    <free_memory />
-    <compress>N</compress>
-    <compress_variable />
-    <unique_rows>N</unique_rows>
-    <fields>
-      <field>
-        <name>last_updated_on</name>
-        <ascending>Y</ascending>
-        <case_sensitive>N</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <presorted>N</presorted>
-      </field>
-    </fields>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>560</xloc>
-      <yloc>736</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
