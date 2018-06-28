@@ -31,73 +31,73 @@ public class MergeProperties {
 		 * Determine if this application is being run to generate a new version
 		 * of the file kettle.properties for release to a customer, or for
 		 * local development.
-		 * 
-		 * If this application is being run without arguments, it will generate 
+		 *
+		 * If this application is being run without arguments, it will generate
 		 * a new version of the file:
-		 * 
+		 *
 		 *   $KETTLE_HOME/.kettle/kettle.properties
-		 * 
+		 *
 		 * by merging both of the files, separately:
-		 * 
+		 *
 		 *   $DWH_HOME/conf/dwh-qfree.properties
 		 *   $DWH_HOME/conf/dwh.properties
-		 * 
-		 * with the existing copy of 
-		 * 
+		 *
+		 * with the existing copy of
+		 *
 		 *   $KETTLE_HOME/.kettle/kettle.properties .
-		 *   
+		 *
 		 * During development, $KETTLE_HOME/.kettle/kettle.properties resolves
 		 * to:
-		 * 
+		 *
 		 *    /opt/qfree/dwh_etl/development/.kettle/kettle.properties
-		 * 
+		 *
 		 * but for the customer (where the KETTLE_HOME environemnt variable is
 		 * defined differently), this resolves to:
-		 * 
+		 *
 		 *    /opt/qfree/dwh_etl/pdi_config/.kettle/kettle.properties
-		 * 
+		 *
 		 * During *development*, this will merge the *development* versions of
-		 * dwh-qfree.properties & dwh.properties with the *development* version 
-		 * of kettle.properties. However, if the *customer* performs this same 
-		 * action, it will merge the customer's copies of dwh-qfree.properties & 
-		 * dwh.properties with the customer's one and only copy of 
+		 * dwh-qfree.properties & dwh.properties with the *development* version
+		 * of kettle.properties. However, if the *customer* performs this same
+		 * action, it will merge the customer's copies of dwh-qfree.properties &
+		 * dwh.properties with the customer's one and only copy of
 		 * kettle.properties.
-		 * 
-		 * 
+		 *
+		 *
 		 * This application also accepts a single optional argument:
-		 * 
+		 *
 		 *   defaults
-		 * 
+		 *
 		 * The "defaults" argument is only used during development. If it is
-		 * passed to this application, then this application will merge a 
+		 * passed to this application, then this application will merge a
 		 * *different* set of dwh-qfree.properties & dwh.properties files with a
-		 * *different* kettle.properties file. In particular, it will generate 
+		 * *different* kettle.properties file. In particular, it will generate
 		 * a new version of the file:
-		 * 
+		 *
 		 *   $KETTLE_HOME_DEFAULTS/.kettle/kettle.properties
-		 * 
+		 *
 		 * by merging the files:
-		 * 
+		 *
 		 *   $DWH_HOME/templates/dwh-qfree.properties
 		 *   $DWH_HOME/templates/dwh.properties
-		 * 
-		 * with the existing copy of 
-		 * 
+		 *
+		 * with the existing copy of
+		 *
 		 *   $KETTLE_HOME_DEFAULTS/.kettle/kettle.properties .
-		 * 
-		 * During development (the only time that this option will be used), 
+		 *
+		 * During development (the only time that this option will be used),
 		 * this updates the copy of kettle.properties that will be packaged and
-		 * sent to the customer with the copies of dwh-qfree.properties & 
+		 * sent to the customer with the copies of dwh-qfree.properties &
 		 * dwh.properties that contain default values that also will be packaged
-		 * and sent to the customer. These copies of dwh-qfree.properties & 
+		 * and sent to the customer. These copies of dwh-qfree.properties &
 		 * dwh.properties should not contain any hostnames, passwords, e-mail
-		 * addresses, etc., that are not appropriate for a customer's 
+		 * addresses, etc., that are not appropriate for a customer's
 		 * environment.
 		 */
 
 		boolean showVersion = (args.length > 0) && SHOW_VERSION_ARG.equals(args[0]);
 		if (showVersion) {
-
+            System.out.println("MergeProperties ### -v switch detected, printing version only");
 
 			Properties configProperties = new Properties();
 			InputStream input = null;
@@ -115,7 +115,7 @@ public class MergeProperties {
 
 				// Get the version and print it out
 				String appVersion = configProperties.getProperty("app.version");
-				System.out.println(appVersion);
+				System.out.println("MergeProperties ### App version: " + appVersion);
 
 			} catch (IOException ex) {
 				ex.printStackTrace();
@@ -130,6 +130,8 @@ public class MergeProperties {
 			}
 
 		} else {
+
+            System.out.println("MergeProperties ### Running config merge");
 
 			//	System.out.println("args.length = " + args.length);
 			boolean mergeDefaultProperties = (args.length > 0) && UPDATE_DEFAULTS_ARG.equals(args[0]);
@@ -197,7 +199,7 @@ public class MergeProperties {
 				//	}
 
 				/*
-				 * Read in the customer's installation-specific (local) properties 
+				 * Read in the customer's installation-specific (local) properties
 				 * file.
 				 */
 				if (mergeDefaultProperties) {
@@ -213,7 +215,7 @@ public class MergeProperties {
 				//	}
 
 				/*
-				 * Merge the installation-specific Q-Free properties into 
+				 * Merge the installation-specific Q-Free properties into
 				 * kettle.properties.
 				 */
 				//				System.out.println(String.format("About to merge %s Q-Free properties",
@@ -232,7 +234,7 @@ public class MergeProperties {
 				}
 
 				/*
-				 * Merge the installation-specific customer properties into 
+				 * Merge the installation-specific customer properties into
 				 * kettle.properties.
 				 */
 				for (String key : customerProperties.stringPropertyNames()) {
@@ -259,7 +261,7 @@ public class MergeProperties {
 				/*
 				 * Write the updated/merged kettle.properties file to the file
 				 * system, overwriting the current file that was loaded above.
-				 * 
+				 *
 				 * However, we create a backup of kettle.properties first, in case
 				 * updating the current file runs into problems for some reason.
 				 */
@@ -270,14 +272,12 @@ public class MergeProperties {
 				kettleProperties.store(out, null);
 				out.close();
 				//Files.deleteIfExists(kettlePropertiesBackupPath);   Don't delete the backup file
-
+                System.out.println("MergeProperties ### Done");
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-
 		}
 	}
-
 }
