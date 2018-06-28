@@ -2,15 +2,6 @@
 
 set -e
 
-# Where the ETL definition will be installed:
-APP_DIR=[[app.rootDir]]/[[app.user]]
-
-# Where the configuration files will be deployed:
-CONF_DIR=${APP_DIR}/conf
-
-# Install log filename:
-INST_LOG=${APP_DIR}/logs/[[app.name]]_install.log
-
 case "$1" in
 
     abort-deconfigure)
@@ -61,72 +52,6 @@ case "$1" in
 	        echo "NodeID(${node_id})"
 	        echo "This NodeName(${this_nodename})"
 	        echo "This ClusterName(${this_clustername})"
-
-		# Install customer-specific configuration properties file:
-		DATE=`date +%Y-%m-%d:%H:%M:%S`
-		if [ ! -e ${CONF_DIR}/dwh.properties ]; then
-			cp ${APP_DIR}/templates/dwh.properties ${CONF_DIR}/dwh.properties
-			chown [[app.user]]:[[app.group]] ${CONF_DIR}/dwh.properties
-			chmod 666 ${CONF_DIR}/dwh.properties
-			echo "$DATE - INFO: Created DWH config: ${CONF_DIR}/dwh.properties." >> $INST_LOG
-		else
-			echo "$DATE - SKIPPED: creation of DWH config: ${CONF_DIR}/dwh.properties, ALREADY EXISTS" >> $INST_LOG
-		fi
-
-		# Install Q-Free-specific configuration properties file:
-		DATE=`date +%Y-%m-%d:%H:%M:%S`
-		if [ ! -e ${CONF_DIR}/dwh-qfree.properties ]; then
-			cp  ${APP_DIR}/templates/dwh-qfree.properties ${CONF_DIR}/dwh-qfree.properties
-			chown [[app.user]]:[[app.group]] ${CONF_DIR}/dwh-qfree.properties
-			chmod 640 ${CONF_DIR}/dwh-qfree.properties
-			echo "$DATE - INFO: Created Q-Free DWH specific props: ${CONF_DIR}/dwh-qfree.properties" >> $INST_LOG
-		else
-			echo "$DATE - SKIPPED: creation of Q-Free DWH specific props: ${CONF_DIR}/dwh-qfree.properties, ALREADY EXISTS" >> $INST_LOG
-		fi
-
-		# Install cron-job for user [[app.user]]. The name of the file is set to
-		# [[app.name]], which should be relatively unique.
-		DATE=`date +%Y-%m-%d:%H:%M:%S`
-		if [ ! -e /etc/cron.d/[[app.name]] ]; then
-			cp  ${APP_DIR}/templates/[[app.name]].cron /etc/cron.d/[[app.name]]
-			echo "$DATE - INFO: Created [[app.name]] execution cron job: /etc/cron.d/[[app.name]]" >> $INST_LOG
-		else
-			echo "$DATE - SKIPPED: creation of [[app.name]] execution cron job: /etc/cron.d/[[app.name]], ALREADY EXISTS" >> $INST_LOG
-		fi
-
-		# Ensure that the appropriate environment variables get set for the 
-		# [[app.user]] Linux account.
-		DATE=`date +%Y-%m-%d:%H:%M:%S`
-		if [ ! -e /home/[[app.user]]/.profile ]; then
-			cp  ${APP_DIR}/templates/[[app.name]].env /home/[[app.user]]/.profile
-			chown [[app.user]]:[[app.group]] /home/[[app.user]]/.profile
-			echo "$DATE - INFO: Created /home/[[app.user]]/.profile for user [[app.user]]." >> $INST_LOG
-		else
-			echo "$DATE - SKIPPED: creation of: /home/[[app.user]]/.profile for user [[app.user]], ALREADY EXISTS" >> $INST_LOG
-		fi
-
-		# Install logrotate configuration for this application's log file. The name of the configuration file is set to
-		# [[app.name]], which should be relatively unique.
-		DATE=`date +%Y-%m-%d:%H:%M:%S`
-		if [ ! -e /etc/logrotate.d/[[app.name]] ]; then
-			cp  ${APP_DIR}/templates/[[app.name]].logrotate /etc/logrotate.d/[[app.name]]
-			echo "$DATE - INFO: Created logrotate configuration: /etc/logrotate.d/[[app.name]]" >> $INST_LOG
-		else
-			echo "$DATE - SKIPPED: creation of logrotate configuration: /etc/logrotate.d/[[app.name]], ALREADY EXISTS" >> $INST_LOG
-		fi
-
-		# Merge the properties in the two local settings files:
-		#   ${CONF_DIR}/dwh-qfree.properties
-		#   ${CONF_DIR}/dwh.properties
-		# into the main settings file that is installed when this package is installed:
-		#   ${APP_DIR}/pdi_config/.kettle/kettle.properties
-		# This will restore the site-specific settings, as specified in the dwh-qfree.properties & dwh.properties files.
-		DATE=`date +%Y-%m-%d:%H:%M:%S`
-		echo "$DATE - INFO:Merging local settings files into ${APP_DIR}/pdi_config/.kettle/kettle.properties." >> $INST_LOG
-		# The "-i" option here ensures that the KETTLE_HOME environment variable
-		# is defined when merge_configuration_files.jar is executed:
-		sudo -iu [[app.user]] java -jar ${APP_DIR}/lib/merge_configuration_files.jar
-
         ;;
 
     *)

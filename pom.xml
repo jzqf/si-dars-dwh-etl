@@ -260,7 +260,6 @@
                                         <path>${app.rootDir}/${app.user}/logs/oldlogs</path>
                                         <path>${app.rootDir}/${app.user}/pdi_config</path>
                                         <path>${app.rootDir}/${app.user}/pdi_repository</path>
-                                        <path>${app.rootDir}/${app.user}/templates/</path>
                                     </paths>
                                     <mapper>
                                         <type>perm</type>
@@ -451,23 +450,12 @@
                                 </data>
 
                                 <data>
-                                    <src>${basedir}/templates</src>
-                                    <type>directory</type>
-                                    <includes>*.properties</includes>	<!-- dwh-qfree.properties, dwh.properties -->
-                                    <mapper>
-                                        <type>perm</type>
-                                        <prefix>${app.rootDir}/${app.user}/templates</prefix>
-                                        <user>${app.user}</user>
-                                        <group>${app.group}</group>
-                                        <filemode>644</filemode>
-                                    </mapper>
-                                </data>
-                                <data>
                                     <src>${project.build.directory}/generated-templates/${app.name}.cron</src>
                                     <type>file</type>
+                                    <dst>${app.name}</dst>
                                     <mapper>
                                         <type>perm</type>
-                                        <prefix>${app.rootDir}/${app.user}/templates</prefix>
+                                        <prefix>/etc/cron.d/</prefix>
                                         <user>${app.user}</user>
                                         <group>${app.group}</group>
                                         <filemode>644</filemode>
@@ -476,20 +464,22 @@
                                 <data>
                                     <src>${project.build.directory}/generated-templates/${app.name}.env</src>
                                     <type>file</type>
+                                    <dst>${app.name}-env.sh</dst>
                                     <mapper>
                                         <type>perm</type>
-                                        <prefix>${app.rootDir}/${app.user}/templates</prefix>
+                                        <prefix>${app.rootDir}/${app.user}/bin</prefix>
                                         <user>${app.user}</user>
                                         <group>${app.group}</group>
-                                        <filemode>644</filemode>
+                                        <filemode>755</filemode>
                                     </mapper>
                                 </data>
                                 <data>
                                     <src>${project.build.directory}/generated-templates/${app.name}.logrotate</src>
                                     <type>file</type>
+                                    <dst>${app.name}</dst>
                                     <mapper>
                                         <type>perm</type>
-                                        <prefix>${app.rootDir}/${app.user}/templates</prefix>
+                                        <prefix>/etc/logrotate.d/</prefix>
                                         <user>${app.user}</user>
                                         <group>${app.group}</group>
                                         <filemode>644</filemode>
