@@ -3,14 +3,6 @@
 # This is a wrapper script for executing whatever scripts are necessary for 
 # comparing the "data warehouse" databases with their source databases.
 #
-# THIS IS NOT CORRECT FOR THIS SCRIPT, BUT I WILL LEAVE IT HERE FOR NOW:
-# A wrapper script is used, rather than scheduling each wrapped script
-# individually, so that these wrapped scripts cannot inadvertently be scheduled
-# to run simultaneously. The script $DWH_HOME/bin/kitchen.sh, which is used to
-# run each ETL shell script, implements a locking mechanism that allows only a
-# single copy of the kitchen.sh script to run at a time. Using a wrapper
-# script, as done here, prevents this from occurring.
-#
 # This script should be scheduled to run according to a sensible periodic
 # schedule. Although any scheduler can be used for this purpose, the simplest is
 # to used the built-in "cron" utility, which is provided by all flavors of 
@@ -31,11 +23,11 @@
 # Author:   Jeffrey Zelt
 # Changes:  Initial version
 
-# Check if the maximum number of rows to compare per table was specified by the 
-# first argument and that it exists.
+# Check if the first arguments exists. If so, it represents the maximum number 
+# of rows to compare per table.
 max_num_compare_rows=0    # Compare *all rows of each table
 if [ ! -z "$1" ]; then
-    # I should also check that $1 contains an integer value.
+    # TODO: I should also check that $1 contains an integer value.
     max_num_compare_rows=$1
     echo "A maximum number of $max_num_compare_rows rows will be compared per table"
 fi
