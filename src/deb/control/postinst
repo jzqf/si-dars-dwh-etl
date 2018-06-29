@@ -52,6 +52,17 @@ case "$1" in
 	        echo "NodeID(${node_id})"
 	        echo "This NodeName(${this_nodename})"
 	        echo "This ClusterName(${this_clustername})"
+
+        # Merge the properties in the two local settings files:
+        #   conf/dwh-qfree.properties
+        #   conf/dwh.properties
+        # into the main settings file that is installed when this package is installed:
+        #   pdi_config/.kettle/kettle.properties
+        # This will restore the site-specific settings, as specified in the dwh-qfree.properties & dwh.properties files.
+        DATE=`date +%Y-%m-%d:%H:%M:%S`
+        echo "$DATE - INFO:Merging local settings files into ${app.rootDir}/${app.user}/pdi_config/.kettle/kettle.properties."
+        su - ${app.user} -c "${app.rootDir}/${app.user}/bin/merge-config.sh >> ${app.rootDir}/${app.user}/logs/merge-config.log" -s /bin/bash 
+        echo "Configuration file merge tool done"
         ;;
 
     *)
