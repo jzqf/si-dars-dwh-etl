@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TimeZone;
 
 public class MergeProperties {
 
@@ -130,8 +131,11 @@ public class MergeProperties {
 			}
 
 		} else {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+            sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+            String now = sdf.format(new Date());
 
-            System.out.println("MergeProperties ### Running config merge");
+            System.out.println("MergeProperties ### Running config merge ### " + now);
 
 			//	System.out.println("args.length = " + args.length);
 			boolean mergeDefaultProperties = (args.length > 0) && UPDATE_DEFAULTS_ARG.equals(args[0]);
@@ -255,9 +259,6 @@ public class MergeProperties {
 					System.out.println(String.format("%s=%s", key, kettleProperties.getProperty(key, "")));
 				}
 
-				//String now = new SimpleDateFormat("dd-MM-yyyy_HH:mm:ss").format(new Date());
-				String now = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-
 				/*
 				 * Write the updated/merged kettle.properties file to the file
 				 * system, overwriting the current file that was loaded above.
@@ -273,6 +274,7 @@ public class MergeProperties {
 				out.close();
 				//Files.deleteIfExists(kettlePropertiesBackupPath);   Don't delete the backup file
                 System.out.println("MergeProperties ### Done");
+                System.out.println();
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
