@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2018/06/11 14:48:11.937</modified_date>
+  <modified_date>2018/08/10 15:03:57.348</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CAN_DELETE_ROWS</name>
@@ -527,7 +527,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>304</xloc>
-      <yloc>832</yloc>
+      <yloc>864</yloc>
     </entry>
     <entry>
       <name>Log parameters</name>
@@ -565,43 +565,6 @@ PARAM_SOURCE_DB_ETL_STATE_REGISTER_TABLE_NAME  = ${PARAM_SOURCE_DB_ETL_STATE_REG
       <nr>0</nr>
       <xloc>128</xloc>
       <yloc>496</yloc>
-    </entry>
-    <entry>
-      <name>tr_populate_table_meta-get_table_meta_id</name>
-      <description />
-      <type>TRANS</type>
-      <specification_method>rep_name</specification_method>
-      <trans_object_id />
-      <filename />
-      <transname>tr_populate_table_meta-get_table_meta_id</transname>
-      <directory>${Internal.Entry.Current.Directory}</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <clear_rows>N</clear_rows>
-      <clear_files>N</clear_files>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Basic</loglevel>
-      <cluster>N</cluster>
-      <slave_server_name />
-      <set_append_logfile>N</set_append_logfile>
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <create_parent_folder>N</create_parent_folder>
-      <logging_remote_work>N</logging_remote_work>
-      <run_configuration>Pentaho local</run_configuration>
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-      </parameters>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>304</xloc>
-      <yloc>944</yloc>
     </entry>
     <entry>
       <name>tr_populate_column_meta-one_table</name>
@@ -877,15 +840,6 @@ PARAM_SOURCE_DB_ETL_STATE_REGISTER_TABLE_NAME  = ${PARAM_SOURCE_DB_ETL_STATE_REG
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>tr_populate_table_meta-one_table</from>
-      <to>tr_populate_table_meta-get_table_meta_id</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
       <from>jb_log_error</from>
       <to>Abort job</to>
       <from_nr>0</from_nr>
@@ -905,15 +859,6 @@ PARAM_SOURCE_DB_ETL_STATE_REGISTER_TABLE_NAME  = ${PARAM_SOURCE_DB_ETL_STATE_REG
     </hop>
     <hop>
       <from>tr_populate_table_meta-one_table</from>
-      <to>Abort job</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>tr_populate_table_meta-get_table_meta_id</from>
       <to>Abort job</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -1012,7 +957,7 @@ PARAM_SOURCE_DB_ETL_STATE_REGISTER_TABLE_NAME  = ${PARAM_SOURCE_DB_ETL_STATE_REG
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>tr_populate_table_meta-get_table_meta_id</from>
+      <from>tr_populate_table_meta-one_table</from>
       <to>tr_populate_column_meta-one_table</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -1078,44 +1023,24 @@ This job has parameters:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Get the value of "table_meta_id" for the new ${QF_ETL_DB_SCHEMA}.table_meta row just created.
-This value is assigned to the PDI variable:
-
-	QF_TABLE_META_ID.</note>
-      <xloc>448</xloc>
-      <yloc>944</yloc>
-      <width>553</width>
-      <heigth>62</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>9</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
       <note>Create a new ${QF_ETL_DB_SCHEMA}.table_meta row using the values of the parameters passed to
-this job. Even though the option "Pass parameter values to sub transformation"
-is selected for this job entry, two of the parameters are explicitly passed as:
+this job. The value of the primary key of this new row is also assigned to the PDI variable:
+
+	QF_TABLE_META_ID.
+
+Even though the option "Pass parameter values to sub transformation" is selected for this job entry, 
+two of the parameters are explicitly passed as:
 
 	PARAM_TARGET_SCHEMA	= ${PARAM_TARGET_SCHEMA}
 	PARAM_TARGET_TABLE		= ${PARAM_TARGET_TABLE}
 
-This is because the values for these variables are modified in this job if they are passed
-to this job as "". If this is done, it seems that their *original* blank values are passed to 
-sub-transformation here unless the parameters are explicitly passed as shown.</note>
+This is because the values for these variables are modified in this job if they are passed to this job as 
+"". If this is done, it seems that their *original* blank values are passed to sub-transformation here 
+unless the parameters are explicitly passed as shown.</note>
       <xloc>448</xloc>
       <yloc>784</yloc>
-      <width>554</width>
-      <heigth>140</heigth>
+      <width>561</width>
+      <heigth>192</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>

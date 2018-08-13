@@ -554,7 +554,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2018/06/11 14:18:46.498</modified_date>
+    <modified_date>2018/08/10 15:08:13.612</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -694,7 +694,7 @@ will be used as the primary key for the new row. </note>
       <note>Table "table_state" contains state information for each source/target table pair. It has a one-to-one relation
 to the table_meta table.</note>
       <xloc>224</xloc>
-      <yloc>912</yloc>
+      <yloc>1040</yloc>
       <width>600</width>
       <heigth>36</heigth>
       <fontname>Ubuntu</fontname>
@@ -740,6 +740,32 @@ to the table_state table.</note>
       <yloc>480</yloc>
       <width>793</width>
       <heigth>23</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Set the PDI variable:
+
+	QF_TABLE_META_ID
+
+to the value of the primary key of the ${QF_ETL_DB_SCHEMA}.table_meta table row that was just created. The value of
+this variable will be passed as a parameter to a sub-transformation in the calling code.</note>
+      <xloc>224</xloc>
+      <yloc>928</yloc>
+      <width>663</width>
+      <heigth>88</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -875,11 +901,6 @@ to the table_state table.</note>
       <enabled>N</enabled>
     </hop>
     <hop>
-      <from>Insert new table_meta row</from>
-      <to>Insert new table_state row</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>Join Rows (cartesian product)</from>
       <to>Insert new table_meta row</to>
       <enabled>Y</enabled>
@@ -892,6 +913,21 @@ to the table_state table.</note>
     <hop>
       <from>Replace "&lt;null>" strings with NULL</from>
       <to>Join Rows (cartesian product)</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Write to log: table_meta_id</from>
+      <to>Set variable QF_TABLE_META_ID</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Insert new table_meta row</from>
+      <to>Write to log: table_meta_id</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Set variable QF_TABLE_META_ID</from>
+      <to>Insert new table_state row</to>
       <enabled>Y</enabled>
     </hop>
   </order>
@@ -1476,7 +1512,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>80</xloc>
-      <yloc>912</yloc>
+      <yloc>1040</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1555,6 +1591,79 @@ FROM
     <GUI>
       <xloc>80</xloc>
       <yloc>480</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Set variable QF_TABLE_META_ID</name>
+    <type>SetVariable</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <field>
+        <field_name>table_meta_id</field_name>
+        <variable_name>QF_TABLE_META_ID</variable_name>
+        <variable_type>ROOT_JOB</variable_type>
+        <default_value />
+      </field>
+    </fields>
+    <use_formatting>Y</use_formatting>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>80</xloc>
+      <yloc>976</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Write to log: table_meta_id</name>
+    <type>WriteToLog</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <loglevel>log_level_basic</loglevel>
+    <displayHeader>Y</displayHeader>
+    <limitRows>N</limitRows>
+    <limitRowsNumber>0</limitRowsNumber>
+    <logmessage>tr_populate_table_meta-one_table:
+PARAM_SOURCE_DB_ID  = ${PARAM_SOURCE_DB_ID}
+PARAM_SOURCE_SCHEMA = ${PARAM_SOURCE_SCHEMA}
+PARAM_SOURCE_TABLE  = ${PARAM_SOURCE_TABLE}
+PARAM_TARGET_DB_ID  = ${PARAM_TARGET_DB_ID}
+PARAM_TARGET_SCHEMA = ${PARAM_TARGET_SCHEMA}
+PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}</logmessage>
+    <fields>
+      <field>
+        <name>table_meta_id</name>
+      </field>
+    </fields>
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>80</xloc>
+      <yloc>912</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
