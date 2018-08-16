@@ -1,0 +1,37 @@
+#!/bin/bash
+
+set -e
+
+case "$1" in
+
+    abort-upgrade)
+        echo "### preinst abort-upgrade ###"
+        ;;
+
+    install|upgrade)
+        echo "### preinst install|upgrade ###"
+
+        # Create the ssl-cert system group for cert ownership
+        if ! getent group ssl-cert >/dev/null; then
+            addgroup --quiet --system --force-badname ssl-cert
+        fi
+
+        # Create App user if it doesn't exist.
+        # UID and GID are QFR fixed allocations
+        if ! id ${app.user} > /dev/null 2>&1 ; then
+            adduser ${app.user} --uid=${app.UID} --shell=/bin/false --home=${app.rootDir}/${app.user} --disabled-password --system --ingroup qfree
+            adduser ${app.user} ssl-cert
+
+        fi
+        ;;
+
+    *)
+        echo "### preinst default ###"
+        echo "preinst called with unknown argument \`$1'" >&2
+        exit 1
+        ;;
+
+esac
+
+echo "### preinst done ###"
+exit 0
