@@ -3908,7 +3908,7 @@ ALTER TABLE ONLY etl.table_state
 
 -- ----------- Add A Version Control Helper (Stolen from Report Server)
 CREATE TABLE etl.configuration (
-    configuration_id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    configuration_id uuid DEFAULT etl.uuid_generate_v4() NOT NULL,
     boolean_value boolean,
     bytea_value bytea,
     created_on timestamp without time zone NOT NULL,
