@@ -1,3 +1,5 @@
+SET search_path TO etl,public;
+
 --
 -- Name: cdc_timestamps; Type: TABLE; Schema: etl; Owner: qfree_admin
 --
