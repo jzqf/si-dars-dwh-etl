@@ -24,4 +24,7 @@
 # Author:   Jeffrey Zelt
 # Changes:  Initial version
 
+# Include environment variables
+source ${app.rootDir}/${app.user}/bin/${app.name}-env.sh
+
 $DWH_HOME/bin/kitchen.sh /psa/jb_psa-compare.kjb Minimal
