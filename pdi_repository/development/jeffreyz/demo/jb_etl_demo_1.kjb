@@ -1,86 +1,24 @@
 <job>
-  <name>jb_init</name>
-  <description>Perform initialization details when a job start</description>
-  <extended_description>This should always be one of the first the first job entries of jobs. It performs initialization details appropriate for *any* job.</extended_description>
+  <name>jb_etl_demo_1</name>
+  <description />
+  <extended_description />
   <job_version />
-  <job_status>0</job_status>
-  <directory>/generic</directory>
+  <directory>/development/jeffreyz/demo</directory>
   <created_user>-</created_user>
-  <created_date>2016/03/19 16:57:33.672</created_date>
+  <created_date>2018/10/03 15:56:36.890</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2018/10/04 08:40:25.659</modified_date>
+  <modified_date>2018/10/05 14:35:47.184</modified_date>
   <parameters>
-    <parameter>
-      <name>PARAM_CURRENT_JOB_NAME</name>
-      <default_value />
-      <description>Name of the job that is executed by the "parent" job</description>
-    </parameter>
-    <parameter>
-      <name>PARAM_PARENT_JOB_NAME</name>
-      <default_value />
-      <description>Name of the top level job of the main ETL job being executed</description>
-    </parameter>
-  </parameters>
-  <connection>
-    <name>logging_db</name>
-    <server>${QF_LOGGING_DB_HOST}</server>
-    <type>POSTGRESQL</type>
-    <access>Native</access>
-    <database>${QF_LOGGING_DB_DATABASE}</database>
-    <port>${QF_LOGGING_DB_PORT}</port>
-    <username>${QF_LOGGING_DB_USERNAME}</username>
-    <password>${QF_LOGGING_DB_PASSWORD}</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
-    <attributes>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>IS_CLUSTERED</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>PORT_NUMBER</code>
-        <attribute>${QF_LOGGING_DB_PORT}</attribute>
-      </attribute>
-      <attribute>
-        <code>PRESERVE_RESERVED_WORD_CASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>QUOTE_ALL_FIELDS</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>USE_POOLING</code>
-        <attribute>N</attribute>
-      </attribute>
-    </attributes>
-  </connection>
+    </parameters>
   <slaveservers>
     </slaveservers>
   <job-log-table>
-    <connection>${QF_LOGGING_DB_CONNECTION}</connection>
-    <schema>${QF_LOG_JOB_SCHEMA}</schema>
-    <table>${QF_LOG_JOB_TABLE}</table>
+    <connection />
+    <schema />
+    <table />
     <size_limit_lines />
     <interval />
-    <timeout_days>${QF_LOG_JOB_TIMEOUT_IN_DAYS}</timeout_days>
+    <timeout_days />
     <field>
       <id>ID_JOB</id>
       <enabled>Y</enabled>
@@ -188,10 +126,10 @@
     </field>
   </job-log-table>
   <jobentry-log-table>
-    <connection>${QF_LOGGING_DB_CONNECTION}</connection>
-    <schema>${QF_LOG_JOBENTRY_SCHEMA}</schema>
-    <table>${QF_LOG_JOBENTRY_TABLE}</table>
-    <timeout_days>${QF_LOG_JOBENTRY_TIMEOUT_IN_DAYS}</timeout_days>
+    <connection />
+    <schema />
+    <table />
+    <timeout_days />
     <field>
       <id>ID_BATCH</id>
       <enabled>Y</enabled>
@@ -279,10 +217,10 @@
     </field>
   </jobentry-log-table>
   <channel-log-table>
-    <connection>${QF_LOGGING_DB_CONNECTION}</connection>
-    <schema>${QF_LOG_CHANNEL_SCHEMA}</schema>
-    <table>${QF_LOG_CHANNEL_TABLE}</table>
-    <timeout_days>${QF_LOG_CHANNEL_TIMEOUT_IN_DAYS}</timeout_days>
+    <connection />
+    <schema />
+    <table />
+    <timeout_days />
     <field>
       <id>ID_BATCH</id>
       <enabled>Y</enabled>
@@ -344,7 +282,7 @@
       <name>ROOT_CHANNEL_ID</name>
     </field>
   </channel-log-table>
-  <pass_batchid>Y</pass_batchid>
+  <pass_batchid>N</pass_batchid>
   <shared_objects_file />
   <entries>
     <entry>
@@ -364,64 +302,18 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>320</xloc>
-      <yloc>208</yloc>
+      <xloc>384</xloc>
+      <yloc>96</yloc>
     </entry>
     <entry>
-      <name>Success</name>
-      <description />
-      <type>SUCCESS</type>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>320</xloc>
-      <yloc>688</yloc>
-    </entry>
-    <entry>
-      <name>Write To Log - PDI environment</name>
-      <description />
-      <type>WRITE_TO_LOG</type>
-      <logmessage>Q-Free DWH ETL code version   = ${QF_ETL_CODE_VERSION}
-Internal.Kettle.Version       = ${Internal.Kettle.Version}
-Internal.Kettle.Build.Version = ${Internal.Kettle.Build.Version}
-Internal.Kettle.Build.Date    = ${Internal.Kettle.Build.Date}
-Java                          = ${java.specification.vendor}, ${java.specification.version}
-    runtime                   = ${java.runtime.name}, ${java.runtime.version}
-    class path                = ${java.class.path}
-    home                      = ${java.home}
-OS                            = ${os.name}, ${os.arch}, ${os.version}
-User                          = ${user.name}
-    home                      = ${user.home}
-    directory                 = ${user.dir}
-    time zone                 = ${user.timezone}</logmessage>
-      <loglevel>Minimal</loglevel>
-      <logsubject />
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>320</xloc>
-      <yloc>464</yloc>
-    </entry>
-    <entry>
-      <name>Abort job 1</name>
-      <description />
-      <type>ABORT</type>
-      <message>${QF_ABORT_JOB_MESSAGE}. Error logging PDI environment variables in jb_init</message>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>32</xloc>
-      <yloc>464</yloc>
-    </entry>
-    <entry>
-      <name>tr_set_job_batch_id_variable</name>
+      <name>tr_etl_demo_1</name>
       <description />
       <type>TRANS</type>
       <specification_method>rep_name</specification_method>
       <trans_object_id />
       <filename />
-      <transname>tr_set_job_batch_id_variable</transname>
-      <directory>/generic</directory>
+      <transname>tr_etl_demo_1</transname>
+      <directory>${Internal.Entry.Current.Directory}</directory>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
@@ -440,167 +332,205 @@ User                          = ${user.name}
       <follow_abort_remote>N</follow_abort_remote>
       <create_parent_folder>N</create_parent_folder>
       <logging_remote_work>N</logging_remote_work>
-      <run_configuration />
+      <run_configuration>Pentaho local</run_configuration>
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
       </parameters>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>320</xloc>
-      <yloc>576</yloc>
+      <xloc>384</xloc>
+      <yloc>304</yloc>
     </entry>
     <entry>
-      <name>Abort job 2</name>
+      <name>Success</name>
+      <description />
+      <type>SUCCESS</type>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>608</xloc>
+      <yloc>416</yloc>
+    </entry>
+    <entry>
+      <name>jb_init</name>
+      <description />
+      <type>JOB</type>
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_init</jobname>
+      <directory>/generic</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <run_configuration>Pentaho local</run_configuration>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_PARENT_JOB_NAME</name>
+          <stream_name />
+          <value>${Internal.Job.Name}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_CURRENT_JOB_NAME</name>
+          <stream_name />
+          <value>${Internal.Job.Name}</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>384</xloc>
+      <yloc>192</yloc>
+    </entry>
+    <entry>
+      <name>jb_send_default_email_job_notification - Success</name>
+      <description />
+      <type>JOB</type>
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_send_default_email_job_notification</jobname>
+      <directory>/generic/email</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <run_configuration>Pentaho local</run_configuration>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_JOB_BATCH_ID</name>
+          <stream_name />
+          <value>${QF_JOB_BATCH_ID}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_JOB_NAME</name>
+          <stream_name />
+          <value>${Internal.Job.Name}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_SUCCESS</name>
+          <stream_name />
+          <value>true</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>608</xloc>
+      <yloc>304</yloc>
+    </entry>
+    <entry>
+      <name>jb_send_default_email_job_notification - Failure</name>
+      <description />
+      <type>JOB</type>
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_send_default_email_job_notification</jobname>
+      <directory>/generic/email</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <run_configuration>Pentaho local</run_configuration>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_JOB_BATCH_ID</name>
+          <stream_name />
+          <value>${QF_JOB_BATCH_ID}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_JOB_NAME</name>
+          <stream_name />
+          <value>${Internal.Job.Name}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_SUCCESS</name>
+          <stream_name />
+          <value>false</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>144</xloc>
+      <yloc>304</yloc>
+    </entry>
+    <entry>
+      <name>Abort job</name>
       <description />
       <type>ABORT</type>
-      <message>${QF_ABORT_JOB_MESSAGE}. Error assigning parent job batch ID to variable QF_JOB_BATCH_ID in tr_set_job_batch_id_variable</message>
+      <message />
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>32</xloc>
-      <yloc>576</yloc>
-    </entry>
-    <entry>
-      <name>Initialize QF_MAIL_MSG_QFREE_BODY_FAILURE_EXTRA_INFO</name>
-      <description />
-      <type>SET_VARIABLES</type>
-      <replacevars>N</replacevars>
-      <filename />
-      <file_variable_type>JVM</file_variable_type>
-      <fields>
-        <field>
-          <variable_name>QF_MAIL_MSG_QFREE_BODY_FAILURE_EXTRA_INFO</variable_name>
-          <variable_value>An error occurred but was not caught</variable_value>
-          <variable_type>ROOT_JOB</variable_type>
-        </field>
-      </fields>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>320</xloc>
-      <yloc>368</yloc>
-    </entry>
-    <entry>
-      <name>jb_log_error 1</name>
-      <description />
-      <type>JOB</type>
-      <specification_method>rep_name</specification_method>
-      <job_object_id />
-      <filename />
-      <jobname>jb_log_error</jobname>
-      <directory>/generic</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Nothing</loglevel>
-      <slave_server_name />
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <expand_remote_job>N</expand_remote_job>
-      <create_parent_folder>N</create_parent_folder>
-      <pass_export>N</pass_export>
-      <run_configuration />
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-        <parameter>
-          <name>PARAM_ERROR_MESSAGE</name>
-          <stream_name />
-          <value>Error logging PDI environment variables in jb_init</value>
-        </parameter>
-      </parameters>
-      <set_append_logfile>N</set_append_logfile>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>160</xloc>
-      <yloc>464</yloc>
-    </entry>
-    <entry>
-      <name>jb_log_error 2</name>
-      <description />
-      <type>JOB</type>
-      <specification_method>rep_name</specification_method>
-      <job_object_id />
-      <filename />
-      <jobname>jb_log_error</jobname>
-      <directory>/generic</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Nothing</loglevel>
-      <slave_server_name />
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <expand_remote_job>N</expand_remote_job>
-      <create_parent_folder>N</create_parent_folder>
-      <pass_export>N</pass_export>
-      <run_configuration />
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-        <parameter>
-          <name>PARAM_ERROR_MESSAGE</name>
-          <stream_name />
-          <value>Error assigning parent job batch ID to variable QF_JOB_BATCH_ID in tr_set_job_batch_id_variable</value>
-        </parameter>
-      </parameters>
-      <set_append_logfile>N</set_append_logfile>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>160</xloc>
-      <yloc>576</yloc>
-    </entry>
-    <entry>
-      <name>jb_set_job_name_vrbl</name>
-      <description />
-      <type>JOB</type>
-      <specification_method>rep_name</specification_method>
-      <job_object_id />
-      <filename />
-      <jobname>jb_set_job_name_vrbl</jobname>
-      <directory>${Internal.Entry.Current.Directory}</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Nothing</loglevel>
-      <slave_server_name />
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <expand_remote_job>N</expand_remote_job>
-      <create_parent_folder>N</create_parent_folder>
-      <pass_export>N</pass_export>
-      <run_configuration />
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-      </parameters>
-      <set_append_logfile>N</set_append_logfile>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>320</xloc>
-      <yloc>288</yloc>
+      <xloc>144</xloc>
+      <yloc>416</yloc>
     </entry>
   </entries>
   <hops>
     <hop>
-      <from>Write To Log - PDI environment</from>
-      <to>tr_set_job_batch_id_variable</to>
+      <from>START</from>
+      <to>jb_init</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>jb_init</from>
+      <to>tr_etl_demo_1</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>tr_etl_demo_1</from>
+      <to>jb_send_default_email_job_notification - Success</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -608,26 +538,17 @@ User                          = ${user.name}
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>tr_set_job_batch_id_variable</from>
+      <from>jb_send_default_email_job_notification - Success</from>
       <to>Success</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Initialize QF_MAIL_MSG_QFREE_BODY_FAILURE_EXTRA_INFO</from>
-      <to>Write To Log - PDI environment</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>Write To Log - PDI environment</from>
-      <to>jb_log_error 1</to>
+      <from>tr_etl_demo_1</from>
+      <to>jb_send_default_email_job_notification - Failure</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -635,134 +556,23 @@ User                          = ${user.name}
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>jb_log_error 1</from>
-      <to>Abort job 1</to>
+      <from>jb_send_default_email_job_notification - Failure</from>
+      <to>Abort job</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>tr_set_job_batch_id_variable</from>
-      <to>jb_log_error 2</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
       <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>jb_log_error 2</from>
-      <to>Abort job 2</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>START</from>
-      <to>jb_set_job_name_vrbl</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>jb_set_job_name_vrbl</from>
-      <to>Initialize QF_MAIL_MSG_QFREE_BODY_FAILURE_EXTRA_INFO</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
     </hop>
   </hops>
   <notepads>
     <notepad>
-      <note>Write to the log the values of many of the PDI variables, 
-which might make debugging easier if a problem occurs.</note>
-      <xloc>448</xloc>
-      <yloc>464</yloc>
-      <width>320</width>
-      <heigth>36</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>9</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Assign the parent batch ID to the variable QF_JOB_BATCH_ID.</note>
-      <xloc>448</xloc>
-      <yloc>576</yloc>
-      <width>350</width>
-      <heigth>23</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>9</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>This job should be the first entry for any job run via kitchen.sh, especially one that includes e-mail notifications.
+      <note>PDI demo for Bjørn Tore.
 
-"Pass batch ID?" is selected for this job so that the batch ID is passed to tr_set_job_batch_id_variable, which 
-assigns this value to QF_JOB_BATCH_ID.
-
-The parent of this job should also have the setting "Pass batch ID?" selected so that QF_JOB_BATCH_ID will 
-be assigned the batch ID of the root job.
-
-This job has parameters:
-
-	PARAM_PARENT_JOB_NAME		Name of the top level job of the main ETL job being executed
-	PARAM_CURRENT_JOB_NAME	Name of the job that is executed by the "parent" job</note>
+Date:	09.10.2018</note>
       <xloc>16</xloc>
       <yloc>0</yloc>
-      <width>618</width>
-      <heigth>166</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>9</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>This job sets the PDI variable QF_JOB_NAME. This variable can 
-be passed as a parameter to jobs/transformations that send 
-notification emails to indicate which job the email refers to.</note>
-      <xloc>448</xloc>
-      <yloc>288</yloc>
-      <width>353</width>
+      <width>147</width>
       <heigth>49</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
@@ -780,4 +590,20 @@ notification emails to indicate which job the email refers to.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
   </notepads>
+  <attributes>
+    <group>
+      <name>METASTORE.pentaho</name>
+      <attribute>
+        <key>Default Run Configuration</key>
+        <value>{"namespace":"pentaho","id":"Default Run Configuration","name":"Default Run Configuration","description":"Defines a default run configuration","metaStoreName":null}</value>
+      </attribute>
+    </group>
+    <group>
+      <name>{"_":"Embedded MetaStore Elements","namespace":"pentaho","type":"Default Run Configuration"}</name>
+      <attribute>
+        <key>Pentaho local</key>
+        <value>{"children":[{"children":[],"id":"server","value":null},{"children":[],"id":"clustered","value":"N"},{"children":[],"id":"name","value":"Pentaho local"},{"children":[],"id":"description","value":null},{"children":[],"id":"pentaho","value":"N"},{"children":[],"id":"readOnly","value":"Y"},{"children":[],"id":"sendResources","value":"N"},{"children":[],"id":"logRemoteExecutionLocally","value":"N"},{"children":[],"id":"remote","value":"N"},{"children":[],"id":"local","value":"Y"},{"children":[],"id":"showTransformations","value":"N"}],"id":"Pentaho local","value":null,"name":"Pentaho local","owner":null,"ownerPermissionsList":[]}</value>
+      </attribute>
+    </group>
+  </attributes>
 </job>
