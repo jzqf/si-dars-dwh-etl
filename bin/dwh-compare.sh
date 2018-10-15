@@ -35,5 +35,5 @@ fi
 # Include environment variables
 source ${app.rootDir}/${app.user}/bin/${app.name}-env.sh
 
-/opt/qfree/dwh_etl/data-integration/kitchen.sh -file="$DWH_HOME/pdi_repository/psa/jb_psa-compare.kjb" -rep=DWH -logfile=$DWH_LOGDIR/dwh-etl.log -level=Minimal -param:PARAM_MAX_NUM_COMPARE_ROWS=$max_num_compare_rows
-/opt/qfree/dwh_etl/data-integration/kitchen.sh -file="$DWH_HOME/pdi_repository/dsa/jb_dsa-compare.kjb" -rep=DWH -logfile=$DWH_LOGDIR/dwh-etl.log -level=Minimal -param:PARAM_MAX_NUM_COMPARE_ROWS=$max_num_compare_rows
+/opt/qfree/dwh_etl/data-integration/kitchen.sh -rep=DWH -dir="/psa" -job="jb_psa-compare" -logfile=$DWH_LOGDIR/dwh-etl.log -level=Minimal -param:PARAM_MAX_NUM_COMPARE_ROWS=$max_num_compare_rows
+/opt/qfree/dwh_etl/data-integration/kitchen.sh -rep=DWH -dir="/dsa" -job="jb_dsa-compare" -logfile=$DWH_LOGDIR/dwh-etl.log -level=Minimal -param:PARAM_MAX_NUM_COMPARE_ROWS=$max_num_compare_rows

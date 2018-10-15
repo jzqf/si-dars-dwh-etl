@@ -28,4 +28,4 @@
 # Author:   Jeffrey Zelt
 # Changes:  Initial version
 
-$DWH_HOME/bin/kitchen.sh /psa/jb_psa-mark_rows_for_deletion.kjb
+$DWH_HOME/bin/kitchen.sh /psa jb_psa-mark_rows_for_deletion

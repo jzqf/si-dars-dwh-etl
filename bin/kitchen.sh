@@ -15,33 +15,49 @@
 #export DWH_LOGDIR=$DWH_HOME/logs
 #export KETTLE_HOME=$DWH_HOME/pdi_config
 #
+# Parameters:
+#
+#   $1: Path to PDI job relative to the "DWH" repository. Path should start with
+#       a slash. A trailing slash is optional.
+#
+#   $2: Name of PDI job without the file extension ".kjb".
+#
+#   $3: Logging level. Optional. Default is "Basic".
+#
 # Version history:
 #
 # Version:  1.0
 # Updated:  2017.05.29
 # Author:   Jeffrey Zelt
 # Changes:  Initial version
+#
+# Version:  1.1
+# Updated:  2017.05.29
+# Author:   Jeffrey Zelt
+# Changes:  Now use kitchen.sh parameters "-dir" & "-job" instead of "-file".
 
-IFS='
-'  # explicitly set IFS for security reasons (space, tab, newline)
+IFS=" 	
+"  # explicitly set IFS for security reasons (space, tab, newline)
 
 # PATH will be set, if necessary, in ~${app.user}/.profile
 #
 #export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 PROGRAM=$(basename $0)
-VERSION=1.0
+VERSION=1.1
 #USAGE="$PROGRAM [OPTIONS] JOB"  <- I plan to add options for this script
 USAGE="$PROGRAM JOB"
+
+REPO_DIR=$1
+JOB=$2
 
 # Lock directory to ensure only one copy of a DWH script is running at any time.
 # Currently, each DARS ETL project should use this same lock directory so that
 # no two script from *any* ETL project will run concurrently.
 LOCK_DIR="/tmp/dars-qfree-etl.lock"
 
-PDI_REPOSITORY=$DWH_HOME/pdi_repository
-JOB_DIR=$PDI_REPOSITORY
-LOG_FILE=$DWH_LOGDIR/${app.name}.log
+#LOG_FILE=$DWH_LOGDIR/${app.name}.log
+LOG_FILE=$DWH_LOGDIR/zzzzzzzzzzzzzzzzzzzzzzzzz.log
 
 log_error()
 {
@@ -71,19 +87,17 @@ usage()
     #  (Use option -h for help)\n"
 }
 
-# Check that a job was specified by the first argument and that it exists.
-if [ ! -z "$1" ]; then
-    if [ ! -f "$JOB_DIR/$1" ]; then
-        log_error "The specified job '$1' does not exist"
-    fi
+# Check that a job was specified by the first argument.
+if [ ! -z "$JOB" ]; then
+    :
 else
     log_error "No job specified"
 fi
 
-# The logging level can optionally be passed as the second argument.
+# The logging level can optionally be passed as the third argument.
 LOG_LEVEL=Basic    # default if no logging level specified
-if [ -n "$2" ]; then
-    LOG_LEVEL=$2
+if [ -n "$3" ]; then
+    LOG_LEVEL=$3
 fi
 
 # Remove the lock directory.
@@ -96,7 +110,7 @@ fi
 #should have been reported on the first invocation when the directory was
 # removed.
 function cleanup {
-	if [ -d $LOCK_DIR ]; then
+    if [ -d $LOCK_DIR ]; then
         if rmdir $LOCK_DIR; then
             log_info "Finished. Lock '$LOCK_DIR' removed."
         else
@@ -122,8 +136,7 @@ if mkdir "${LOCK_DIR}" &>/dev/null; then
     trap "cleanup" EXIT SIGHUP SIGINT SIGQUIT SIGTERM ERR
 
     # Use the PDI Kitchen utility to execute the job:
-    /opt/qfree/dwh_etl/data-integration/kitchen.sh -file="$JOB_DIR/$1" \
-        -rep=DWH -logfile=$LOG_FILE -level=$LOG_LEVEL
+    /opt/qfree/dwh_etl/data-integration/kitchen.sh -rep=DWH -dir=$REPO_DIR -job="$JOB" -logfile=$LOG_FILE -level=$LOG_LEVEL
 
 else
     log_error "Could not create lock directory '$LOCK_DIR'"
