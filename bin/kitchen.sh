@@ -56,8 +56,7 @@ JOB=$2
 # no two script from *any* ETL project will run concurrently.
 LOCK_DIR="/tmp/dars-qfree-etl.lock"
 
-#LOG_FILE=$DWH_LOGDIR/${app.name}.log
-LOG_FILE=$DWH_LOGDIR/zzzzzzzzzzzzzzzzzzzzzzzzz.log
+LOG_FILE=$DWH_LOGDIR/${app.name}.log
 
 log_error()
 {
