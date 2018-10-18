@@ -1,16 +1,15 @@
 <transformation>
   <info>
-    <name>tmplt_target-update_table-insert_only_table</name>
+    <name>tr_tmplt_target-update_table-insert_only_table</name>
     <description />
     <extended_description />
     <trans_version />
     <trans_type>Normal</trans_type>
-    <trans_status>0</trans_status>
-    <directory>/generic/target_update</directory>
+    <directory>/development/jeffreyz/demo</directory>
     <parameters>
       <parameter>
         <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
-        <default_value>1900.01.01 00:00:00</default_value>
+        <default_value>2100.01.01 00:00:00</default_value>
         <description>Timestamp of the current load (no rows after this timestamp will be loaded)</description>
       </parameter>
       <parameter>
@@ -20,8 +19,8 @@
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE</name>
-        <default_value />
-        <description />
+        <default_value>obo_opr</default_value>
+        <description>for source DB "dynamic" database connections</description>
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER</name>
@@ -30,18 +29,18 @@
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_HOST</name>
-        <default_value />
-        <description />
+        <default_value>localhost</default_value>
+        <description>for source DB "dynamic" database connections</description>
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD</name>
-        <default_value />
-        <description />
+        <default_value>qfree_admin</default_value>
+        <description>for source DB "dynamic" database connections</description>
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_PORT</name>
-        <default_value />
-        <description />
+        <default_value>5432</default_value>
+        <description>for source DB "dynamic" database connections</description>
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_URL</name>
@@ -50,12 +49,12 @@
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME</name>
-        <default_value />
-        <description />
+        <default_value>qfree_admin</default_value>
+        <description>for source DB "dynamic" database connections</description>
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_TARGET_DB_DATABASE</name>
-        <default_value />
+        <default_value>dwh_psa_obo</default_value>
         <description>for target DB "dynamic" database connections</description>
       </parameter>
       <parameter>
@@ -65,17 +64,17 @@
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_TARGET_DB_HOST</name>
-        <default_value />
+        <default_value>localhost</default_value>
         <description>for target DB "dynamic" database connections</description>
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD</name>
-        <default_value />
+        <default_value>tgt_db_password</default_value>
         <description>for target DB "dynamic" database connections</description>
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_TARGET_DB_PORT</name>
-        <default_value />
+        <default_value>5432</default_value>
         <description>for target DB "dynamic" database connections</description>
       </parameter>
       <parameter>
@@ -85,63 +84,78 @@
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_TARGET_DB_USERNAME</name>
-        <default_value />
+        <default_value>tgt_db_username</default_value>
         <description>for target DB "dynamic" database connections</description>
       </parameter>
       <parameter>
+        <name>PARAM_SOURCE_DB_ID</name>
+        <default_value>2</default_value>
+        <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
+      </parameter>
+      <parameter>
         <name>PARAM_SOURCE_INSERTED_ON_COLNAME</name>
-        <default_value>inserted_on</default_value>
+        <default_value />
         <description>Name of column acting as "inserted_on" timestamp column of source table</description>
       </parameter>
       <parameter>
         <name>PARAM_SOURCE_INSERT_ID_COLNAME</name>
-        <default_value>insert_id</default_value>
+        <default_value>road_scheme_id</default_value>
         <description>Name of column acting as "insert_id" column of source table</description>
       </parameter>
       <parameter>
         <name>PARAM_SOURCE_SCHEMA</name>
-        <default_value>passage</default_value>
+        <default_value>public</default_value>
         <description>Name of schema containing source table to mirror to target table</description>
       </parameter>
       <parameter>
         <name>PARAM_SOURCE_TABLE</name>
-        <default_value>image</default_value>
+        <default_value>road_scheme_validity</default_value>
         <description>Name of source table to mirror to target table</description>
       </parameter>
       <parameter>
         <name>PARAM_SOURCE_TABLE_MAX_INSERT_ID</name>
-        <default_value>0</default_value>
+        <default_value>100000</default_value>
         <description>Maximum value of the "insert_id" column for rows to load from the source DB table</description>
       </parameter>
       <parameter>
+        <name>PARAM_TABLE_META_ID</name>
+        <default_value>199</default_value>
+        <description>Primary key of ${QF_ETL_DB_SCHEMA}.table_meta row for "source" table from which rows will be deleted</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_DB_ID</name>
+        <default_value>10</default_value>
+        <description>ID of the "target" database to which "source" DB tables will be archived/mirrored</description>
+      </parameter>
+      <parameter>
         <name>PARAM_TARGET_INSERTED_ON_COLNAME</name>
-        <default_value>inserted_on</default_value>
+        <default_value />
         <description>Name of column acting as "inserted_on" timestamp column of target table</description>
       </parameter>
       <parameter>
         <name>PARAM_TARGET_INSERT_ID_COLNAME</name>
-        <default_value>insert_id</default_value>
+        <default_value>road_scheme_id</default_value>
         <description>Name of column acting as "insert_id" column of target table</description>
       </parameter>
       <parameter>
         <name>PARAM_TARGET_SCHEMA</name>
-        <default_value>passage</default_value>
+        <default_value>obo</default_value>
         <description>Name of schema containing target table to update</description>
       </parameter>
       <parameter>
         <name>PARAM_TARGET_TABLE</name>
-        <default_value>image</default_value>
+        <default_value>road_scheme_validity</default_value>
         <description>Name of target table to update</description>
       </parameter>
     </parameters>
     <log>
       <trans-log-table>
-        <connection>${QF_LOGGING_DB_CONNECTION}</connection>
-        <schema>${QF_LOG_TRANS_SCHEMA}</schema>
-        <table>${QF_LOG_TRANS_TABLE}</table>
+        <connection />
+        <schema />
+        <table />
         <size_limit_lines />
         <interval />
-        <timeout_days>${QF_LOG_TRANS_TIMEOUT_IN_DAYS}</timeout_days>
+        <timeout_days />
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -166,37 +180,37 @@
           <id>LINES_READ</id>
           <enabled>Y</enabled>
           <name>LINES_READ</name>
-          <subject>Table output - target_db.schema.table</subject>
+          <subject />
         </field>
         <field>
           <id>LINES_WRITTEN</id>
           <enabled>Y</enabled>
           <name>LINES_WRITTEN</name>
-          <subject>Table output - target_db.schema.table</subject>
+          <subject />
         </field>
         <field>
           <id>LINES_UPDATED</id>
           <enabled>Y</enabled>
           <name>LINES_UPDATED</name>
-          <subject>Table output - target_db.schema.table</subject>
+          <subject />
         </field>
         <field>
           <id>LINES_INPUT</id>
           <enabled>Y</enabled>
           <name>LINES_INPUT</name>
-          <subject>Table input -  source_db.schema.table</subject>
+          <subject />
         </field>
         <field>
           <id>LINES_OUTPUT</id>
           <enabled>Y</enabled>
           <name>LINES_OUTPUT</name>
-          <subject>Table output - target_db.schema.table</subject>
+          <subject />
         </field>
         <field>
           <id>LINES_REJECTED</id>
           <enabled>Y</enabled>
           <name>LINES_REJECTED</name>
-          <subject>Table output - target_db.schema.table</subject>
+          <subject />
         </field>
         <field>
           <id>ERRORS</id>
@@ -250,11 +264,11 @@
         </field>
       </trans-log-table>
       <perf-log-table>
-        <connection>${QF_LOGGING_DB_CONNECTION}</connection>
-        <schema>${QF_LOG_TRANSPERF_SCHEMA}</schema>
-        <table>${QF_LOG_TRANSPERF_TABLE}</table>
+        <connection />
+        <schema />
+        <table />
         <interval />
-        <timeout_days>${QF_LOG_TRANSPERF_TIMEOUT_IN_DAYS}</timeout_days>
+        <timeout_days />
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -332,10 +346,10 @@
         </field>
       </perf-log-table>
       <channel-log-table>
-        <connection>${QF_LOGGING_DB_CONNECTION}</connection>
-        <schema>${QF_LOG_CHANNEL_SCHEMA}</schema>
-        <table>${QF_LOG_CHANNEL_TABLE}</table>
-        <timeout_days>${QF_LOG_CHANNEL_TIMEOUT_IN_DAYS}</timeout_days>
+        <connection />
+        <schema />
+        <table />
+        <timeout_days />
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -398,10 +412,10 @@
         </field>
       </channel-log-table>
       <step-log-table>
-        <connection>${QF_LOGGING_DB_CONNECTION}</connection>
-        <schema>${QF_LOG_TRANSSTEP_SCHEMA}</schema>
-        <table>${QF_LOG_TRANSSTEP_TABLE}</table>
-        <timeout_days>${QF_LOG_TRANSSTEP_TIMEOUT_IN_DAYS}</timeout_days>
+        <connection />
+        <schema />
+        <table />
+        <timeout_days />
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -474,10 +488,10 @@
         </field>
       </step-log-table>
       <metrics-log-table>
-        <connection>${QF_LOGGING_DB_CONNECTION}</connection>
-        <schema>${QF_LOG_TRANSMETRICS_SCHEMA}</schema>
-        <table>${QF_LOG_TRANSMETRICS_TABLE}</table>
-        <timeout_days>${QF_LOG_TRANSMETRICS_TIMEOUT_IN_DAYS}</timeout_days>
+        <connection />
+        <schema />
+        <table />
+        <timeout_days />
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -540,7 +554,7 @@
     <feedback_size>50000</feedback_size>
     <using_thread_priorities>Y</using_thread_priorities>
     <shared_objects_file />
-    <capture_step_performance>Y</capture_step_performance>
+    <capture_step_performance>N</capture_step_performance>
     <step_performance_capturing_delay>1000</step_performance_capturing_delay>
     <step_performance_capturing_size_limit>100</step_performance_capturing_size_limit>
     <dependencies>
@@ -552,9 +566,9 @@
     <clusterschemas>
     </clusterschemas>
     <created_user>-</created_user>
-    <created_date>2016/04/03 09:57:16.279</created_date>
+    <created_date>2018/10/17 14:19:22.494</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2018/10/17 13:13:01.403</modified_date>
+    <modified_date>2018/10/17 14:31:27.008</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -1057,57 +1071,6 @@ passed to it in the normal fashion because it is a normal transformation (all me
       </attribute>
     </attributes>
   </connection>
-  <connection>
-    <name>logging_db</name>
-    <server>${QF_LOGGING_DB_HOST}</server>
-    <type>POSTGRESQL</type>
-    <access>Native</access>
-    <database>${QF_LOGGING_DB_DATABASE}</database>
-    <port>${QF_LOGGING_DB_PORT}</port>
-    <username>${QF_LOGGING_DB_USERNAME}</username>
-    <password>${QF_LOGGING_DB_PASSWORD}</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
-    <attributes>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>IS_CLUSTERED</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>PORT_NUMBER</code>
-        <attribute>${QF_LOGGING_DB_PORT}</attribute>
-      </attribute>
-      <attribute>
-        <code>PRESERVE_RESERVED_WORD_CASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>QUOTE_ALL_FIELDS</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>USE_POOLING</code>
-        <attribute>N</attribute>
-      </attribute>
-    </attributes>
-  </connection>
   <order>
     <hop>
       <from>Get max ID for CDC: target_db.schema.table</from>
@@ -1314,6 +1277,42 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       <schema_name />
     </partitioning>
     <fields>
+      <field>
+        <name>dsrcdalm_id</name>
+        <rename />
+      </field>
+      <field>
+        <name>pe_dsrc_data_id</name>
+        <rename />
+      </field>
+      <field>
+        <name>lookup_timestamp</name>
+        <rename />
+      </field>
+      <field>
+        <name>data_sequence_id</name>
+        <rename />
+      </field>
+      <field>
+        <name>rse_actionlist_type_id</name>
+        <rename>rse_actionlist_type_id</rename>
+      </field>
+      <field>
+        <name>listed</name>
+        <rename />
+      </field>
+      <field>
+        <name>rse_actionlist_item_id</name>
+        <rename />
+      </field>
+      <field>
+        <name>rse_max_list_item_id</name>
+        <rename />
+      </field>
+      <field>
+        <name>rse_reason_code</name>
+        <rename />
+      </field>
       <select_unspecified>N</select_unspecified>
     </fields>
     <cluster_schema />
@@ -1437,20 +1436,11 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       <schema_name />
     </partitioning>
     <connection>generic_source_db</connection>
-    <sql>-- This statement is commented out because the SQL statement is, 
--- instead, injected via ETL Metadata Injection:
---
---SELECT
---    *
---FROM
---    ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
---WHERE
---    ${PARAM_SOURCE_INSERT_ID_COLNAME} > ? AND                                -- newly INSERTed rows
---  --${PARAM_SOURCE_INSERTED_ON_COLNAME} >  '${PARAM_CDC_LAST_LOAD_UTC}' AND  -- alternate condition, instead of the previous line
---    ${PARAM_SOURCE_INSERT_ID_COLNAME}   &lt;=  ${PARAM_SOURCE_TABLE_MAX_INSERT_ID}           -- to avoid loading rows that are inserted after the job starts
---  --${PARAM_SOURCE_INSERTED_ON_COLNAME} &lt;= '${PARAM_CDC_CURRENT_LOAD_UTC}'   -- alternate condition, instead of the previous line 
---ORDER BY
---    ${PARAM_SOURCE_INSERT_ID_COLNAME}</sql>
+    <sql>SELECT 
+    dsrcdalm_id,pe_dsrc_data_id,lookup_timestamp,data_sequence_id,rse_actionlist_type_id,listed,rse_actionlist_item_id,rse_max_list_item_id,rse_reason_code 
+FROM 
+    public.dsrc_data_actionlist_matches 
+WHERE dsrcdalm_id > ? AND dsrcdalm_id &lt;=  2062352 ORDER BY dsrcdalm_id</sql>
     <limit>0</limit>
     <lookup>Write to log: parameters, max_target_insert_id</lookup>
     <execute_each_row>N</execute_each_row>
