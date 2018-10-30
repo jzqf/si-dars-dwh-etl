@@ -411,14 +411,14 @@
       <attributes_kjc />
     </entry>
     <entry>
-      <name>jb_psa-populate_metadata_tables</name>
+      <name>jb_psa-repopulate_metadata_tables</name>
       <description />
       <type>JOB</type>
       <attributes />
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
-      <jobname>jb_psa-populate_metadata_tables</jobname>
+      <jobname>jb_psa-repopulate_metadata_tables</jobname>
       <directory>/psa</directory>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -489,14 +489,14 @@
       <attributes_kjc />
     </entry>
     <entry>
-      <name>jb_dsa-populate_metadata_tables</name>
+      <name>jb_dsa-repopulate_metadata_tables</name>
       <description />
       <type>JOB</type>
       <attributes />
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
-      <jobname>jb_dsa-populate_metadata_tables</jobname>
+      <jobname>jb_dsa-repopulate_metadata_tables</jobname>
       <directory>/dsa</directory>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -552,7 +552,7 @@
     </hop>
     <hop>
       <from>Delete DSA data from ETL DB</from>
-      <to>jb_psa-populate_metadata_tables</to>
+      <to>jb_psa-repopulate_metadata_tables</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -560,8 +560,8 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>jb_psa-populate_metadata_tables</from>
-      <to>jb_dsa-populate_metadata_tables</to>
+      <from>jb_psa-repopulate_metadata_tables</from>
+      <to>jb_dsa-repopulate_metadata_tables</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -624,8 +624,8 @@ be necessary after the data models of any of the source or target DBs associated
 It is not strictly necessary to execute these two SQL scripts here in this job because 
 these scripts are executed in:
 
-	jb_psa-populate_metadata_tables
-	jb_dsa-populate_metadata_tables , 
+	jb_psa-repopulate_metadata_tables
+	jb_dsa-repopulate_metadata_tables , 
 
 which are both executed below. The advantage of executing these two scripts here 
 *before* the subjobs are executed below is that when the subjobs are executed below, 
