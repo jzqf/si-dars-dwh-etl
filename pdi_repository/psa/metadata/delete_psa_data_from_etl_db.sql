@@ -41,4 +41,3 @@ SELECT COUNT(*) FROM etl.column_meta cm           INNER JOIN etl.table_meta tm O
 SELECT COUNT(*) FROM etl.table_state ts           INNER JOIN etl.table_meta tm ON ts.table_state_id=tm.table_meta_id WHERE tm.source_db_id IN (2, 4, 6) AND tm.target_db_id=10;
 SELECT COUNT(*) FROM etl.target_table_update ttu  INNER JOIN etl.table_meta tm ON ttu.table_meta_id=tm.table_meta_id WHERE tm.source_db_id IN (2, 4, 6) AND tm.target_db_id=10;
 SELECT COUNT(*) FROM etl.target_table_compare ttc INNER JOIN etl.table_meta tm ON ttc.table_meta_id=tm.table_meta_id WHERE tm.source_db_id IN (2, 4, 6) AND tm.target_db_id=10;
-

@@ -8,14 +8,60 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2018/08/10 14:05:01.593</modified_date>
+  <modified_date>2018/10/30 10:35:21.701</modified_date>
   <parameters>
-    <parameter>
-      <name>PARAM_FILENAME</name>
-      <default_value>/home/jeffreyz/git/si-dars-dwh-etl/pdi_repository/dsa/metadata/dsa_metadata.csv</default_value>
-      <description>Absolute path to CSV file that will be used to populate the metadata tables</description>
-    </parameter>
-  </parameters>
+    </parameters>
+  <connection>
+    <name>etl_db</name>
+    <server>${QF_ETL_DB_HOST}</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>${QF_ETL_DB_DATABASE}</database>
+    <port>${QF_ETL_DB_PORT}</port>
+    <username>${QF_ETL_DB_USERNAME}</username>
+    <password>${QF_ETL_DB_PASSWORD}</password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>${QF_ETL_DB_PORT}</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
   <connection>
     <name>logging_db</name>
     <server>${QF_LOGGING_DB_HOST}</server>
@@ -346,6 +392,7 @@
       <name>START</name>
       <description />
       <type>SPECIAL</type>
+      <attributes />
       <start>Y</start>
       <dummy>N</dummy>
       <repeat>N</repeat>
@@ -359,13 +406,15 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>144</xloc>
-      <yloc>192</yloc>
+      <xloc>16</xloc>
+      <yloc>144</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>jb_target-populate_metadata_tables</name>
       <description />
       <type>JOB</type>
+      <attributes />
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
@@ -386,48 +435,327 @@
       <expand_remote_job>N</expand_remote_job>
       <create_parent_folder>N</create_parent_folder>
       <pass_export>N</pass_export>
-      <run_configuration />
+      <run_configuration>Pentaho local</run_configuration>
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_FILENAME</name>
+          <stream_name />
+          <value>${KETTLE_HOME}/${QF_PATH_TO_REPO_FROM_KETTLE_HOME}/dsa/metadata/dsa_metadata.csv</value>
+        </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>144</xloc>
-      <yloc>288</yloc>
+      <yloc>240</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>Delete DSA data from ETL DB</name>
+      <description />
+      <type>SQL</type>
+      <attributes />
+      <sql />
+      <useVariableSubstitution>F</useVariableSubstitution>
+      <sqlfromfile>T</sqlfromfile>
+      <sqlfilename>${KETTLE_HOME}/${QF_PATH_TO_REPO_FROM_KETTLE_HOME}/dsa/metadata/delete_dsa_data_from_etl_db.sql</sqlfilename>
+      <sendOneStatement>T</sendOneStatement>
+      <connection>etl_db</connection>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>144</xloc>
+      <yloc>144</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>Adjust default metadata for "core" tables</name>
+      <description />
+      <type>SQL</type>
+      <attributes />
+      <sql />
+      <useVariableSubstitution>F</useVariableSubstitution>
+      <sqlfromfile>T</sqlfromfile>
+      <sqlfilename>${KETTLE_HOME}/${QF_PATH_TO_REPO_FROM_KETTLE_HOME}/dsa/metadata/adjust_default_metadata/adjust_default_metadata-core_tables.sql</sqlfilename>
+      <sendOneStatement>T</sendOneStatement>
+      <connection>etl_db</connection>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>144</xloc>
+      <yloc>336</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>Adjust default metadata for "monitoring" tables</name>
+      <description />
+      <type>SQL</type>
+      <attributes />
+      <sql />
+      <useVariableSubstitution>F</useVariableSubstitution>
+      <sqlfromfile>T</sqlfromfile>
+      <sqlfilename>${KETTLE_HOME}/${QF_PATH_TO_REPO_FROM_KETTLE_HOME}/dsa/metadata/adjust_default_metadata/adjust_default_metadata-mon_tables.sql</sqlfilename>
+      <sendOneStatement>T</sendOneStatement>
+      <connection>etl_db</connection>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>144</xloc>
+      <yloc>432</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>Adjust default metadata for "OBO" tables</name>
+      <description />
+      <type>SQL</type>
+      <attributes />
+      <sql />
+      <useVariableSubstitution>F</useVariableSubstitution>
+      <sqlfromfile>T</sqlfromfile>
+      <sqlfilename>${KETTLE_HOME}/${QF_PATH_TO_REPO_FROM_KETTLE_HOME}/dsa/metadata/adjust_default_metadata/adjust_default_metadata-obo_tables.sql</sqlfilename>
+      <sendOneStatement>T</sendOneStatement>
+      <connection>etl_db</connection>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>144</xloc>
+      <yloc>528</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>Adjust default metadata for "ODMS" tables</name>
+      <description />
+      <type>SQL</type>
+      <attributes />
+      <sql />
+      <useVariableSubstitution>F</useVariableSubstitution>
+      <sqlfromfile>T</sqlfromfile>
+      <sqlfilename>${KETTLE_HOME}/${QF_PATH_TO_REPO_FROM_KETTLE_HOME}/dsa/metadata/adjust_default_metadata/adjust_default_metadata-odms_tables.sql</sqlfilename>
+      <sendOneStatement>T</sendOneStatement>
+      <connection>etl_db</connection>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>144</xloc>
+      <yloc>624</yloc>
+      <attributes_kjc />
     </entry>
   </entries>
   <hops>
     <hop>
       <from>START</from>
-      <to>jb_target-populate_metadata_tables</to>
+      <to>Delete DSA data from ETL DB</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>Y</evaluation>
       <unconditional>Y</unconditional>
     </hop>
+    <hop>
+      <from>Delete DSA data from ETL DB</from>
+      <to>jb_target-populate_metadata_tables</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_target-populate_metadata_tables</from>
+      <to>Adjust default metadata for "core" tables</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Adjust default metadata for "core" tables</from>
+      <to>Adjust default metadata for "monitoring" tables</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Adjust default metadata for "monitoring" tables</from>
+      <to>Adjust default metadata for "OBO" tables</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Adjust default metadata for "OBO" tables</from>
+      <to>Adjust default metadata for "ODMS" tables</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
   </hops>
   <notepads>
     <notepad>
-      <note>This job writes default rows to the tables:
+      <note>This job deletes all existing data from the ETL DB for the DSA DB and then  inserts new rows into the tables:
 
 	${QF_ETL_DB_SCHEMA}.table_meta
 	${QF_ETL_DB_SCHEMA}.table_state
 	${QF_ETL_DB_SCHEMA}.column_meta
 
-using the initial metadata supplied by the tr_populate_metadata_tables-get_list_of_tables transformation.
-
-This job has one parameter:
-
-	PARAM_FILENAME	Absolute path to CSV file that will be used to populate the metadata tables</note>
+This job should be run when a new creation or upgrade script needs to be generated for the ETL DB. This will normally 
+be necessary after the data models of any of the source or target DBs associated with the DARS DWH are modified.</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>635</width>
-      <heigth>164</heigth>
+      <width>661</width>
+      <heigth>114</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Caution:	Do not run this job unless you really know what you are doing.
+		This job deletes data from the ETL DB that is configured in 
+		kettle.properties and then inserts new data. Therefore, ensure that:
+
+		1.	You really do want to replaces existing rows in the ETL DB.
+
+		2.	kettle.properties contains the database connection parameters 
+			for the particular instance of the ETL DB you want to modify. 
+			Normally, this will be the ETL DB on host "localhost".</note>
+      <xloc>672</xloc>
+      <yloc>0</yloc>
+      <width>433</width>
+      <heigth>127</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>255</backgroundcolorgreen>
+      <backgroundcolorblue>0</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Insert metadata for the DSA DB into the ETL DB. This includes metadata that is 
+configured for each table in the CSV file whose path is specified as a parameter
+for this sub-job, as well as *default* metadata that is extracted for each source 
+database using the "information_schema". </note>
+      <xloc>304</xloc>
+      <yloc>224</yloc>
+      <width>446</width>
+      <heigth>62</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Adjust the default metadata just inserted for the "core" DB tables to
+override default metadata extracted from the "information_schema".</note>
+      <xloc>304</xloc>
+      <yloc>336</yloc>
+      <width>392</width>
+      <heigth>36</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Adjust the default metadata just inserted for the "monitoring" DB tables to
+override default metadata extracted from the "information_schema".</note>
+      <xloc>304</xloc>
+      <yloc>432</yloc>
+      <width>424</width>
+      <heigth>36</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Adjust the default metadata just inserted for the "OBO" DB tables to
+override default metadata extracted from the "information_schema".</note>
+      <xloc>304</xloc>
+      <yloc>528</yloc>
+      <width>392</width>
+      <heigth>36</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Adjust the default metadata just inserted for the "ODMS" DB tables to
+override default metadata extracted from the "information_schema".</note>
+      <xloc>304</xloc>
+      <yloc>624</yloc>
+      <width>397</width>
+      <heigth>36</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -454,7 +782,7 @@ This job has one parameter:
       <name>{"_":"Embedded MetaStore Elements","namespace":"pentaho","type":"Default Run Configuration"}</name>
       <attribute>
         <key>Pentaho local</key>
-        <value>{"children":[{"children":[],"id":"server","value":null},{"children":[],"id":"clustered","value":"N"},{"children":[],"id":"name","value":"Pentaho local"},{"children":[],"id":"description","value":null},{"children":[],"id":"readOnly","value":"Y"},{"children":[],"id":"sendResources","value":"N"},{"children":[],"id":"logRemoteExecutionLocally","value":"N"},{"children":[],"id":"remote","value":"N"},{"children":[],"id":"local","value":"Y"},{"children":[],"id":"showTransformations","value":"N"}],"id":"Pentaho local","value":null,"name":"Pentaho local","owner":null,"ownerPermissionsList":[]}</value>
+        <value>{"children":[{"children":[],"id":"server","value":null},{"children":[],"id":"clustered","value":"N"},{"children":[],"id":"name","value":"Pentaho local"},{"children":[],"id":"description","value":null},{"children":[],"id":"pentaho","value":"N"},{"children":[],"id":"readOnly","value":"Y"},{"children":[],"id":"sendResources","value":"N"},{"children":[],"id":"logRemoteExecutionLocally","value":"N"},{"children":[],"id":"remote","value":"N"},{"children":[],"id":"local","value":"Y"},{"children":[],"id":"showTransformations","value":"N"}],"id":"Pentaho local","value":null,"name":"Pentaho local","owner":null,"ownerPermissionsList":[]}</value>
       </attribute>
     </group>
   </attributes>
