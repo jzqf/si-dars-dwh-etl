@@ -1,81 +1,24 @@
 <job>
-  <name>jb_dsa-populate_metadata_tables</name>
+  <name>jb_log_InternalJobRepositoryDirectory</name>
   <description />
   <extended_description />
   <job_version />
-  <job_status>0</job_status>
-  <directory>/dsa</directory>
+  <directory>/development/jeffreyz/tests</directory>
   <created_user>-</created_user>
-  <created_date>2016/04/03 14:57:58.609</created_date>
+  <created_date>2018/10/24 15:34:58.831</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2018/08/10 14:05:01.593</modified_date>
+  <modified_date>2018/10/24 15:40:12.528</modified_date>
   <parameters>
-    <parameter>
-      <name>PARAM_FILENAME</name>
-      <default_value>/home/jeffreyz/git/si-dars-dwh-etl/pdi_repository/dsa/metadata/dsa_metadata.csv</default_value>
-      <description>Absolute path to CSV file that will be used to populate the metadata tables</description>
-    </parameter>
-  </parameters>
-  <connection>
-    <name>logging_db</name>
-    <server>${QF_LOGGING_DB_HOST}</server>
-    <type>POSTGRESQL</type>
-    <access>Native</access>
-    <database>${QF_LOGGING_DB_DATABASE}</database>
-    <port>${QF_LOGGING_DB_PORT}</port>
-    <username>${QF_LOGGING_DB_USERNAME}</username>
-    <password>${QF_LOGGING_DB_PASSWORD}</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
-    <attributes>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>IS_CLUSTERED</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>PORT_NUMBER</code>
-        <attribute>${QF_LOGGING_DB_PORT}</attribute>
-      </attribute>
-      <attribute>
-        <code>PRESERVE_RESERVED_WORD_CASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>QUOTE_ALL_FIELDS</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>USE_POOLING</code>
-        <attribute>N</attribute>
-      </attribute>
-    </attributes>
-  </connection>
+    </parameters>
   <slaveservers>
     </slaveservers>
   <job-log-table>
-    <connection>${QF_LOGGING_DB_CONNECTION}</connection>
-    <schema>${QF_LOG_JOB_SCHEMA}</schema>
-    <table>${QF_LOG_JOB_TABLE}</table>
+    <connection />
+    <schema />
+    <table />
     <size_limit_lines />
     <interval />
-    <timeout_days>${QF_LOG_JOB_TIMEOUT_IN_DAYS}</timeout_days>
+    <timeout_days />
     <field>
       <id>ID_JOB</id>
       <enabled>Y</enabled>
@@ -183,10 +126,10 @@
     </field>
   </job-log-table>
   <jobentry-log-table>
-    <connection>${QF_LOGGING_DB_CONNECTION}</connection>
-    <schema>${QF_LOG_JOBENTRY_SCHEMA}</schema>
-    <table>${QF_LOG_JOBENTRY_TABLE}</table>
-    <timeout_days>${QF_LOG_JOBENTRY_TIMEOUT_IN_DAYS}</timeout_days>
+    <connection />
+    <schema />
+    <table />
+    <timeout_days />
     <field>
       <id>ID_BATCH</id>
       <enabled>Y</enabled>
@@ -274,10 +217,10 @@
     </field>
   </jobentry-log-table>
   <channel-log-table>
-    <connection>${QF_LOGGING_DB_CONNECTION}</connection>
-    <schema>${QF_LOG_CHANNEL_SCHEMA}</schema>
-    <table>${QF_LOG_CHANNEL_TABLE}</table>
-    <timeout_days>${QF_LOG_CHANNEL_TIMEOUT_IN_DAYS}</timeout_days>
+    <connection />
+    <schema />
+    <table />
+    <timeout_days />
     <field>
       <id>ID_BATCH</id>
       <enabled>Y</enabled>
@@ -339,11 +282,25 @@
       <name>ROOT_CHANNEL_ID</name>
     </field>
   </channel-log-table>
-  <pass_batchid>Y</pass_batchid>
+  <pass_batchid>N</pass_batchid>
   <shared_objects_file />
   <entries>
     <entry>
-      <name>START</name>
+      <name>Write to log</name>
+      <description />
+      <type>WRITE_TO_LOG</type>
+      <logmessage>Internal.Job.Repository.Directory = ${Internal.Job.Repository.Directory}
+DWH_HOME = ${DWH_HOME}</logmessage>
+      <loglevel />
+      <logsubject />
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>192</xloc>
+      <yloc>144</yloc>
+    </entry>
+    <entry>
+      <name>Start</name>
       <description />
       <type>SPECIAL</type>
       <start>Y</start>
@@ -359,49 +316,14 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>144</xloc>
-      <yloc>192</yloc>
-    </entry>
-    <entry>
-      <name>jb_target-populate_metadata_tables</name>
-      <description />
-      <type>JOB</type>
-      <specification_method>rep_name</specification_method>
-      <job_object_id />
-      <filename />
-      <jobname>jb_target-populate_metadata_tables</jobname>
-      <directory>/generic/populate_etl_metadata_tables</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Nothing</loglevel>
-      <slave_server_name />
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <expand_remote_job>N</expand_remote_job>
-      <create_parent_folder>N</create_parent_folder>
-      <pass_export>N</pass_export>
-      <run_configuration />
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-      </parameters>
-      <set_append_logfile>N</set_append_logfile>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>144</xloc>
-      <yloc>288</yloc>
+      <xloc>192</xloc>
+      <yloc>48</yloc>
     </entry>
   </entries>
   <hops>
     <hop>
-      <from>START</from>
-      <to>jb_target-populate_metadata_tables</to>
+      <from>Start</from>
+      <to>Write to log</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -410,52 +332,5 @@
     </hop>
   </hops>
   <notepads>
-    <notepad>
-      <note>This job writes default rows to the tables:
-
-	${QF_ETL_DB_SCHEMA}.table_meta
-	${QF_ETL_DB_SCHEMA}.table_state
-	${QF_ETL_DB_SCHEMA}.column_meta
-
-using the initial metadata supplied by the tr_populate_metadata_tables-get_list_of_tables transformation.
-
-This job has one parameter:
-
-	PARAM_FILENAME	Absolute path to CSV file that will be used to populate the metadata tables</note>
-      <xloc>0</xloc>
-      <yloc>0</yloc>
-      <width>635</width>
-      <heigth>164</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
   </notepads>
-  <attributes>
-    <group>
-      <name>METASTORE.pentaho</name>
-      <attribute>
-        <key>Default Run Configuration</key>
-        <value>{"namespace":"pentaho","id":"Default Run Configuration","name":"Default Run Configuration","description":"Defines a default run configuration","metaStoreName":null}</value>
-      </attribute>
-    </group>
-    <group>
-      <name>{"_":"Embedded MetaStore Elements","namespace":"pentaho","type":"Default Run Configuration"}</name>
-      <attribute>
-        <key>Pentaho local</key>
-        <value>{"children":[{"children":[],"id":"server","value":null},{"children":[],"id":"clustered","value":"N"},{"children":[],"id":"name","value":"Pentaho local"},{"children":[],"id":"description","value":null},{"children":[],"id":"readOnly","value":"Y"},{"children":[],"id":"sendResources","value":"N"},{"children":[],"id":"logRemoteExecutionLocally","value":"N"},{"children":[],"id":"remote","value":"N"},{"children":[],"id":"local","value":"Y"},{"children":[],"id":"showTransformations","value":"N"}],"id":"Pentaho local","value":null,"name":"Pentaho local","owner":null,"ownerPermissionsList":[]}</value>
-      </attribute>
-    </group>
-  </attributes>
 </job>

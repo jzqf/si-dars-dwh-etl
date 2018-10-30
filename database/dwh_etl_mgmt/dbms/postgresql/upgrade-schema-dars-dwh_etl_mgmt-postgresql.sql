@@ -40,7 +40,7 @@ ALTER TABLE IF EXISTS ONLY etl.table_state_old          RENAME CONSTRAINT fk_tab
 --
 
 CREATE TABLE etl.column_meta (
-    column_meta_id smallint NOT NULL,
+    column_meta_id integer NOT NULL,
     table_meta_id smallint NOT NULL,
     source_column_name character varying(80),
     target_column_name character varying(80),
