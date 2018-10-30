@@ -1,16 +1,67 @@
 <job>
-  <name>jb_dwh-update</name>
+  <name>jb_dwh-repopulate_metadata_tables</name>
   <description />
   <extended_description />
   <job_version />
-  <job_status>1</job_status>
+  <job_status>0</job_status>
   <directory>/</directory>
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2018/10/30 12:42:15.163</modified_date>
+  <modified_date>2018/10/30 11:12:03.458</modified_date>
   <parameters>
     </parameters>
+  <connection>
+    <name>etl_db</name>
+    <server>${QF_ETL_DB_HOST}</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>${QF_ETL_DB_DATABASE}</database>
+    <port>${QF_ETL_DB_PORT}</port>
+    <username>${QF_ETL_DB_USERNAME}</username>
+    <password>${QF_ETL_DB_PASSWORD}</password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>${QF_ETL_DB_PORT}</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
   <connection>
     <name>logging_db</name>
     <server>${QF_LOGGING_DB_HOST}</server>
@@ -355,19 +406,19 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>224</xloc>
+      <xloc>16</xloc>
       <yloc>144</yloc>
       <attributes_kjc />
     </entry>
     <entry>
-      <name>jb_psa-update</name>
+      <name>jb_psa-populate_metadata_tables</name>
       <description />
       <type>JOB</type>
       <attributes />
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
-      <jobname>jb_psa-update</jobname>
+      <jobname>jb_psa-populate_metadata_tables</jobname>
       <directory>/psa</directory>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -387,49 +438,65 @@
       <run_configuration>Pentaho local</run_configuration>
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_FILENAME</name>
+          <stream_name />
+          <value>${KETTLE_HOME}/${QF_PATH_TO_REPO_FROM_KETTLE_HOME}/psa/metadata/psa_metadata.csv</value>
+        </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>224</xloc>
+      <xloc>144</xloc>
+      <yloc>336</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>Delete PSA data from ETL DB</name>
+      <description />
+      <type>SQL</type>
+      <attributes />
+      <sql />
+      <useVariableSubstitution>F</useVariableSubstitution>
+      <sqlfromfile>T</sqlfromfile>
+      <sqlfilename>${KETTLE_HOME}/${QF_PATH_TO_REPO_FROM_KETTLE_HOME}/psa/metadata/delete_psa_data_from_etl_db.sql</sqlfilename>
+      <sendOneStatement>T</sendOneStatement>
+      <connection>etl_db</connection>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>144</xloc>
+      <yloc>144</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>Delete DSA data from ETL DB</name>
+      <description />
+      <type>SQL</type>
+      <attributes />
+      <sql />
+      <useVariableSubstitution>F</useVariableSubstitution>
+      <sqlfromfile>T</sqlfromfile>
+      <sqlfilename>${KETTLE_HOME}/${QF_PATH_TO_REPO_FROM_KETTLE_HOME}/dsa/metadata/delete_dsa_data_from_etl_db.sql</sqlfilename>
+      <sendOneStatement>T</sendOneStatement>
+      <connection>etl_db</connection>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>144</xloc>
       <yloc>240</yloc>
       <attributes_kjc />
     </entry>
     <entry>
-      <name>Success</name>
-      <description />
-      <type>SUCCESS</type>
-      <attributes />
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>224</xloc>
-      <yloc>432</yloc>
-      <attributes_kjc />
-    </entry>
-    <entry>
-      <name>Abort job</name>
-      <description />
-      <type>ABORT</type>
-      <attributes />
-      <message>Job ${Internal.Job.Name} failed updating the PSA. See log and e-mail sent.</message>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>96</xloc>
-      <yloc>240</yloc>
-      <attributes_kjc />
-    </entry>
-    <entry>
-      <name>jb_dsa-update</name>
+      <name>jb_dsa-populate_metadata_tables</name>
       <description />
       <type>JOB</type>
       <attributes />
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
-      <jobname>jb_dsa-update</jobname>
+      <jobname>jb_dsa-populate_metadata_tables</jobname>
       <directory>/dsa</directory>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -449,33 +516,25 @@
       <run_configuration>Pentaho local</run_configuration>
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_FILENAME</name>
+          <stream_name />
+          <value>${KETTLE_HOME}/${QF_PATH_TO_REPO_FROM_KETTLE_HOME}/psa/metadata/psa_metadata.csv</value>
+        </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>224</xloc>
-      <yloc>336</yloc>
-      <attributes_kjc />
-    </entry>
-    <entry>
-      <name>Abort job 2</name>
-      <description />
-      <type>ABORT</type>
-      <attributes />
-      <message>Job ${Internal.Job.Name} failed updating the DSA. See log and e-mail sent.</message>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>96</xloc>
-      <yloc>336</yloc>
+      <xloc>144</xloc>
+      <yloc>432</yloc>
       <attributes_kjc />
     </entry>
   </entries>
   <hops>
     <hop>
       <from>START</from>
-      <to>jb_psa-update</to>
+      <to>Delete PSA data from ETL DB</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -483,17 +542,8 @@
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>jb_psa-update</from>
-      <to>Abort job</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>jb_psa-update</from>
-      <to>jb_dsa-update</to>
+      <from>Delete PSA data from ETL DB</from>
+      <to>Delete DSA data from ETL DB</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -501,8 +551,8 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>jb_dsa-update</from>
-      <to>Success</to>
+      <from>Delete DSA data from ETL DB</from>
+      <to>jb_psa-populate_metadata_tables</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -510,28 +560,29 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>jb_dsa-update</from>
-      <to>Abort job 2</to>
+      <from>jb_psa-populate_metadata_tables</from>
+      <to>jb_dsa-populate_metadata_tables</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
-      <evaluation>N</evaluation>
+      <evaluation>Y</evaluation>
       <unconditional>N</unconditional>
     </hop>
   </hops>
   <notepads>
     <notepad>
-      <note>This is a top-level job that updates both the PSA and the DSA databases.
+      <note>This job deletes all existing data from the ETL DB for the DWH (PSA+DSA) and then  inserts new rows into the tables:
 
-"Pass batch ID?" is selected for this job so that the batch ID is passed to tr_set_job_batch_id_variable via jb_init, which assigns 
-this value to QF_JOB_BATCH_ID.
+	${QF_ETL_DB_SCHEMA}.table_meta
+	${QF_ETL_DB_SCHEMA}.table_state
+	${QF_ETL_DB_SCHEMA}.column_meta
 
-If this job has a parent, the setting "Pass batch ID?" should also be set for the parent *if* it is desired that QF_JOB_BATCH_ID
-should be assigned the batch ID of the root job (not this job). This may vary from case to case.</note>
+This job should be run when a new creation or upgrade script needs to be generated for the ETL DB. This will normally 
+be necessary after the data models of any of the source or target DBs associated with the DARS DWH are modified.</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>697</width>
-      <heigth>101</heigth>
+      <width>661</width>
+      <heigth>114</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -548,31 +599,10 @@ should be assigned the batch ID of the root job (not this job). This may vary fr
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Update the PSA.</note>
-      <xloc>320</xloc>
-      <yloc>240</yloc>
-      <width>99</width>
-      <heigth>23</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>9</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Update the DSA.</note>
-      <xloc>320</xloc>
+      <note>Delete old metadata and insert new metadata for the PSA DB into the ETL DB.</note>
+      <xloc>272</xloc>
       <yloc>336</yloc>
-      <width>101</width>
+      <width>441</width>
       <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
@@ -590,35 +620,102 @@ should be assigned the batch ID of the root job (not this job). This may vary fr
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>IMPORTANT:
+      <note>These two job entries delete all existing metadata for the PSA &amp; DSA from the ETL DB.
+It is not strictly necessary to execute these two SQL scripts here in this job because 
+these scripts are executed in:
 
-Do not execute this job because testing indicates that this job consumes 
-excessive resources. This  seems to occur when the second sub-job, 
-"jb_dsa-update" executes. Therefore, the problem may be causes by 
-running my PDI job "jb_target-update" twice in a row within the same job. 
+	jb_psa-populate_metadata_tables
+	jb_dsa-populate_metadata_tables , 
 
-I encountered a situation running this job in Spoon where it aborted.
-A message was displayed that the GC overhead limit was exceeded. 
- Running "top" in a bash shell also indicated that this second sub-job, 
-"jb_ssa-update", used a larger percentage of the available CPU that the 
-first sub-job, "jb_psa-update". This occurred with PDI v8.1.0.5-632 and 
-logging level= "Basic".
-
-Could it be that "jb_target-update" consumes resources in some way that 
-are not released after it finishes?</note>
-      <xloc>720</xloc>
-      <yloc>0</yloc>
-      <width>416</width>
-      <heigth>218</heigth>
+which are both executed below. The advantage of executing these two scripts here 
+*before* the subjobs are executed below is that when the subjobs are executed below, 
+the primary keys assigned to new metadata rows inserted into the ETL DB will start 
+from the value 1 instead of continually growing larger each time this job is run.</note>
+      <xloc>272</xloc>
+      <yloc>144</yloc>
+      <width>492</width>
+      <heigth>153</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
-      <fontcolorred>255</fontcolorred>
-      <fontcolorgreen>255</fontcolorgreen>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
       <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>0</backgroundcolorred>
-      <backgroundcolorgreen>0</backgroundcolorgreen>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Delete old metadata and insert new metadata for the DSA DB into the ETL DB.</note>
+      <xloc>272</xloc>
+      <yloc>432</yloc>
+      <width>443</width>
+      <heigth>23</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Adjust the default metadata just inserted for the "ODMS" DB tables to
+override default metadata extracted from the "information_schema".</note>
+      <xloc>304</xloc>
+      <yloc>624</yloc>
+      <width>397</width>
+      <heigth>36</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Caution:	Do not run this job unless you really know what you are doing.
+		This job deletes data from the ETL DB that is configured in 
+		kettle.properties and then inserts new data. Therefore, ensure that:
+
+		1.	You really do want to replaces existing rows in the ETL DB.
+
+		2.	kettle.properties contains the database connection parameters 
+			for the particular instance of the ETL DB you want to modify. 
+			Normally, this will be the ETL DB on host "localhost".</note>
+      <xloc>672</xloc>
+      <yloc>0</yloc>
+      <width>433</width>
+      <heigth>127</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>255</backgroundcolorgreen>
       <backgroundcolorblue>0</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
