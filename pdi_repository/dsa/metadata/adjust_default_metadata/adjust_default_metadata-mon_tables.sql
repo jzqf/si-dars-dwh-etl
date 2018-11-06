@@ -56,10 +56,12 @@ WHERE
             'dcs_id', 
             'source_hostname', 
             'source_component_name',
+            'created_on',
             'last_updated_on')
      OR tm.source_table_name='mon__managed_objects' AND cm.source_column_name NOT IN (
             'managed_object_id', 
             'managed_object_name', 
+            'created_on',
             'last_updated_on')
      OR tm.source_table_name='mon__alarms' AND cm.source_column_name NOT IN (
             'alarm_id', 
