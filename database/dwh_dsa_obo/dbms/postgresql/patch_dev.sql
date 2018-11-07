@@ -145,9 +145,17 @@ CREATE TABLE public.obo__passage_event (
     control_point_event_capture_category_id    SMALLINT                    not null,
     charged_road_section_id                    BIGINT                      not null,
     obu_count                                  SMALLINT                    not null,    -- new column
+    vehicle_image_count                        smallint                    not null,    -- new column
     detected_scheme_liability_category_id      SMALLINT                    not null,
     detected_scheme_compliance_category_id     SMALLINT                    not null,
     detected_scheme_compliance_sub_category_id SMALLINT                    not null,
+    detected_axle_tariff_category_id           smallint                    null,         -- new column
+    detected_lpn_country_code                  character varying(2)        null,         -- new column
+    detected_lpn_number                        character varying(14)       null,         -- new column
+    declared_axle_tariff_category_id           smallint                    null,         -- new column
+    declared_euro_emission_class_id            smallint                    null,         -- new column
+    declared_lpn_country_code                  character varying(2)        null,         -- new column
+    declared_lpn_number                        character varying(14)       null,         -- new column
     etl_batch_id_insert                        BIGINT                      not null,
     etl_batch_id_last_update                   BIGINT                      null,
     CONSTRAINT pk_obo__passage_event PRIMARY KEY (passage_event_id)

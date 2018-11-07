@@ -224,6 +224,12 @@ UPDATE etl.column_meta cm SET target_column_name='road_scheme_validity_id' FROM 
 --
 -- Table-specific adjustments:
 --
+-- obo__passage_events:
+--
+-- Both the obo_opr & dwh_psa_db databases have a column named 
+-- "scheme_compliance_sub_category_id", where it should have been named
+-- "detected_scheme_compliance_sub_category_id". The DSA uses the "correct" 
+-- name.
 UPDATE etl.column_meta cm SET target_column_name='detected_scheme_compliance_sub_category_id' FROM etl.table_meta tm WHERE 
     cm.table_meta_id=tm.table_meta_id AND 
     tm.source_table_name='obo__passage_events' AND cm.source_column_name='scheme_compliance_sub_category_id' AND
@@ -359,9 +365,18 @@ WHERE
             'control_point_event_capture_category_id', 
             'charged_road_section_id', 
             'obu_count',
+            'vehicle_image_count',
             'detected_scheme_liability_category_id', 
             'detected_scheme_compliance_category_id', 
-            'scheme_compliance_sub_category_id')
+            'scheme_compliance_sub_category_id',    -- This column is named "detected_scheme_compliance_sub_category_id" in the DSA
+            'detected_axle_tariff_category_id',
+            'detected_lpn_country_code',
+            'detected_lpn_number',
+            'declared_axle_tariff_category_id',
+            'declared_euro_emission_class_id',
+            'declared_lpn_country_code',
+            'declared_lpn_number'
+            )
      OR tm.source_table_name='obo__passage_event_derived_data' AND tm.target_table_name='obo__passage_event_derived_data_with_rating' AND cm.source_column_name NOT IN (
             -- Many additional etl.column_meta rows are created above for "custom" 
             -- (de-normalized) columns of this target table.
