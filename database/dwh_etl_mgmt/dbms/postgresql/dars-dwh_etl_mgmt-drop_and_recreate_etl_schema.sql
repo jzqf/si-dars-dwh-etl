@@ -9,50 +9,14 @@ SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
-SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET row_security = off;
 
-ALTER TABLE ONLY etl.table_state DROP CONSTRAINT fk_tablestate_tablemeta;
-ALTER TABLE ONLY etl.target_table_update DROP CONSTRAINT fk_etl_targettableupdate_tablemeta;
-ALTER TABLE ONLY etl.target_table_compare DROP CONSTRAINT fk_etl_targettablecompare_tablemeta;
-ALTER TABLE ONLY etl.column_meta DROP CONSTRAINT fk_columnmeta_tablemeta;
-DROP INDEX etl.idx_log_transformations_2;
-DROP INDEX etl.idx_log_transformations_1;
-DROP INDEX etl.idx_log_jobs_2;
-DROP INDEX etl.idx_log_jobs_1;
-DROP INDEX etl.idx_log_job_entries_1;
-ALTER TABLE ONLY etl.table_meta DROP CONSTRAINT uq_etl_tablemeta_targetdb_targetschema_targettable;
-ALTER TABLE ONLY etl.column_meta DROP CONSTRAINT uq_etl_columnmeta_tablemetaid_targetcolumnname;
-ALTER TABLE ONLY etl.target_table_update DROP CONSTRAINT pk_etl_targettableupdate;
-ALTER TABLE ONLY etl.target_table_compare DROP CONSTRAINT pk_etl_targettablecompare;
-ALTER TABLE ONLY etl.table_state DROP CONSTRAINT pk_etl_table_state;
-ALTER TABLE ONLY etl.table_meta DROP CONSTRAINT pk_etl_table_meta;
-ALTER TABLE ONLY etl.column_meta DROP CONSTRAINT pk_etl_column_meta;
-ALTER TABLE ONLY etl.cdc_timestamps DROP CONSTRAINT pk_etl_cdc_timestamps;
-ALTER TABLE etl.target_table_update ALTER COLUMN target_table_update_id DROP DEFAULT;
-ALTER TABLE etl.target_table_compare ALTER COLUMN target_table_compare_id DROP DEFAULT;
-DROP SEQUENCE etl.target_table_update_target_table_update_id_seq;
-DROP TABLE etl.target_table_update;
-DROP SEQUENCE etl.target_table_compare_target_table_compare_id_seq;
-DROP TABLE etl.target_table_compare;
-DROP TABLE etl.table_state;
-DROP TABLE etl.table_meta;
-DROP TABLE etl.log_transformations;
-DROP TABLE etl.log_transformation_steps;
-DROP TABLE etl.log_transformation_performance;
-DROP TABLE etl.log_transformation_metrics;
-DROP TABLE etl.log_jobs;
-DROP TABLE etl.log_job_entries;
-DROP TABLE etl.log_channel;
-DROP TABLE etl.configuration;
-DROP TABLE etl.column_meta;
-DROP TABLE etl.cdc_timestamps;
-DROP EXTENSION "uuid-ossp";
-DROP EXTENSION plpgsql;
-DROP SCHEMA public;
-DROP SCHEMA etl;
+SET search_path = etl, pg_catalog;
+
+DROP SCHEMA IF EXISTS etl CASCADE;
+
 --
 -- Name: etl; Type: SCHEMA; Schema: -; Owner: qfree_admin
 --
@@ -61,35 +25,6 @@ CREATE SCHEMA etl;
 
 
 ALTER SCHEMA etl OWNER TO qfree_admin;
-
---
--- Name: public; Type: SCHEMA; Schema: -; Owner: postgres
---
-
-CREATE SCHEMA public;
-
-
-ALTER SCHEMA public OWNER TO postgres;
-
---
--- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: postgres
---
-
-COMMENT ON SCHEMA public IS 'standard public schema';
-
-
---
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
---
-
-CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
-
-
---
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
---
-
-COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
 --
@@ -146,32 +81,6 @@ CREATE TABLE etl.column_meta (
 
 
 ALTER TABLE etl.column_meta OWNER TO qfree_admin;
-
---
--- Name: configuration; Type: TABLE; Schema: etl; Owner: qfree_admin
---
-
-CREATE TABLE etl.configuration (
-    configuration_id uuid DEFAULT etl.uuid_generate_v4() NOT NULL,
-    boolean_value boolean,
-    bytea_value bytea,
-    created_on timestamp without time zone NOT NULL,
-    date_value date,
-    datetime_value timestamp without time zone,
-    double_value double precision,
-    float_value real,
-    integer_value integer,
-    long_value bigint,
-    param_name character varying(64) NOT NULL,
-    param_type character varying(16) NOT NULL,
-    string_value character varying(1000),
-    text_value text,
-    time_value time without time zone,
-    role_id uuid
-);
-
-
-ALTER TABLE etl.configuration OWNER TO qfree_admin;
 
 --
 -- Name: log_channel; Type: TABLE; Schema: etl; Owner: qfree_admin
@@ -3235,13 +3144,6 @@ INSERT INTO etl.column_meta (column_meta_id, table_meta_id, source_column_name, 
 
 
 --
--- Data for Name: configuration; Type: TABLE DATA; Schema: etl; Owner: qfree_admin
---
-
-INSERT INTO etl.configuration (configuration_id, boolean_value, bytea_value, created_on, date_value, datetime_value, double_value, float_value, integer_value, long_value, param_name, param_type, string_value, text_value, time_value, role_id) VALUES ('3aaa6ca9-1f23-4a40-8b95-007dcadc4637', NULL, NULL, '2018-10-01 12:42:09.231208', NULL, NULL, NULL, NULL, 4, NULL, 'DB_VERSION', 'INTEGER', '4', NULL, NULL, NULL);
-
-
---
 -- Data for Name: log_channel; Type: TABLE DATA; Schema: etl; Owner: qfree_admin
 --
 
@@ -4262,16 +4164,6 @@ ALTER TABLE ONLY etl.target_table_update
 
 ALTER TABLE ONLY etl.table_state
     ADD CONSTRAINT fk_tablestate_tablemeta FOREIGN KEY (table_state_id) REFERENCES etl.table_meta(table_meta_id);
-
-
---
--- Name: SCHEMA public; Type: ACL; Schema: -; Owner: postgres
---
-
-REVOKE ALL ON SCHEMA public FROM PUBLIC;
-REVOKE ALL ON SCHEMA public FROM postgres;
-GRANT ALL ON SCHEMA public TO postgres;
-GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
 --
