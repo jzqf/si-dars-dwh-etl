@@ -224,6 +224,12 @@ UPDATE etl.column_meta cm SET target_column_name='road_scheme_validity_id' FROM 
 --
 -- Table-specific adjustments:
 --
+-- obo__passage_events:
+--
+-- Both the obo_opr & dwh_psa_db databases have a column named 
+-- "scheme_compliance_sub_category_id", where it should have been named
+-- "detected_scheme_compliance_sub_category_id". The DSA uses the "correct" 
+-- name.
 UPDATE etl.column_meta cm SET target_column_name='detected_scheme_compliance_sub_category_id' FROM etl.table_meta tm WHERE 
     cm.table_meta_id=tm.table_meta_id AND 
     tm.source_table_name='obo__passage_events' AND cm.source_column_name='scheme_compliance_sub_category_id' AND
@@ -257,7 +263,10 @@ WHERE
             'analysis_result_id', 
             'analysis_result_type_id', 
             'pedd_id', 
+            'licence_plate_country_code',
             'licence_plate_number', 
+            'scheme_liability_category_id',
+            'axle_tariff_category_id',
             'last_updated_on')
      OR tm.source_table_name='obo__applied_rating_detail_data' AND cm.source_column_name NOT IN (
             'ardd_id', 
@@ -279,7 +288,12 @@ WHERE
             'compliance_case_id', 
             'compliance_case_type_id', 
             'compliance_case_status_id', 
+            'registered_on',
             'last_updated_on')
+     OR tm.source_table_name='obo__control_point_event_capture_category' AND cm.source_column_name NOT IN (
+            'control_point_event_capture_category_id', 
+            'enum_name', 
+            'description')
      OR tm.source_table_name='obo__control_point_status' AND cm.source_column_name NOT IN (
             'control_point_status_id', 
             'enum_name', 
@@ -350,9 +364,19 @@ WHERE
             'control_point_id',
             'control_point_event_capture_category_id', 
             'charged_road_section_id', 
+            'obu_count',
+            'vehicle_image_count',
             'detected_scheme_liability_category_id', 
             'detected_scheme_compliance_category_id', 
-            'scheme_compliance_sub_category_id')
+            'scheme_compliance_sub_category_id',    -- This column is named "detected_scheme_compliance_sub_category_id" in the DSA
+            'detected_axle_tariff_category_id',
+            'detected_lpn_country_code',
+            'detected_lpn_number',
+            'declared_axle_tariff_category_id',
+            'declared_euro_emission_class_id',
+            'declared_lpn_country_code',
+            'declared_lpn_number'
+            )
      OR tm.source_table_name='obo__passage_event_derived_data' AND tm.target_table_name='obo__passage_event_derived_data_with_rating' AND cm.source_column_name NOT IN (
             -- Many additional etl.column_meta rows are created above for "custom" 
             -- (de-normalized) columns of this target table.
@@ -368,9 +392,16 @@ WHERE
             'last_updated_on')
      OR tm.source_table_name='obo__passage_event_derived_data_details' AND cm.source_column_name NOT IN (
             'pedd_id', 
+            'created_on', 
+            'passage_event_timestamp',
+            'obu_present',
+            'applied_scheme_liability_category_id',
             'applied_axle_tariff_category_id', 
             'applied_euro_emission_class_id', 
             'applied_lpn_country', 
+            'applied_lpn_number',
+            'applied_payment_means_pan',
+            'applied_obuid',
             'base_rate_total', 
             'last_updated_on')
      OR tm.source_table_name='obo__passage_event_dsrc_data' AND cm.source_column_name NOT IN (
@@ -408,6 +439,10 @@ WHERE
             'rate_component_fee_type_id', 
             'enum_name', 
             'description')
+     OR tm.source_table_name='obo__rate_modification_category' AND cm.source_column_name NOT IN (
+            'rate_modification_category_id', 
+            'enum_name', 
+            'description')
      OR tm.source_table_name='obo__road_scheme_status' AND cm.source_column_name NOT IN (
             'road_scheme_status_id', 
             'enum_name', 
@@ -425,7 +460,8 @@ WHERE
             'road_section_identifier', 
             'description', 
             'tollable_distance', 
-            'charged_object_identifier')
+            'charged_object_identifier',
+            'alternative_identifier')
      OR tm.source_table_name='obo__road_segments' AND cm.source_column_name NOT IN (
             'road_segment_id', 
             'road_id', 
