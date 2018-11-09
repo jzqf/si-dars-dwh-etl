@@ -48,7 +48,7 @@ CREATE TABLE public.obo__analysis_results (
     etl_batch_id_insert          BIGINT               not null,
     etl_batch_id_last_update     BIGINT               null
 );
-ALTER TABLE ONLY public.obo__analysis_results ADD CONSTRAINT pk_obo__analysis_results PRIMARY KEY (pedd_id);
+ALTER TABLE ONLY public.obo__analysis_results ADD CONSTRAINT pk_obo__analysis_results PRIMARY KEY (analysis_result_id);
 CREATE INDEX ix_obo__analysis_results_last_updated_on ON public.obo__analysis_results (last_updated_on);
 --
 ---- This is an alternate way to add the new columns to the table, but the added sophistication is not needed:
@@ -77,7 +77,7 @@ CREATE INDEX ix_obo__analysis_results_last_updated_on ON public.obo__analysis_re
 --    etl_batch_id_insert          BIGINT               not null,
 --    etl_batch_id_last_update     BIGINT               null
 --);
---ALTER TABLE ONLY public.obo__analysis_results ADD CONSTRAINT pk_obo__analysis_results PRIMARY KEY (pedd_id);
+--ALTER TABLE ONLY public.obo__analysis_results ADD CONSTRAINT pk_obo__analysis_results PRIMARY KEY (analysis_result_id);
 --INSERT INTO public.obo__analysis_results (
 --    analysis_result_id,
 --    analysis_result_type_id,
