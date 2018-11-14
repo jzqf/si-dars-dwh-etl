@@ -1,6 +1,6 @@
 <transformation>
   <info>
-    <name>tr_create_job_summary_file</name>
+    <name>tr_set_job_summary_sql_vrbl</name>
     <description />
     <extended_description />
     <trans_version />
@@ -9,9 +9,9 @@
     <directory>/generic/create_job_summary_file</directory>
     <parameters>
       <parameter>
-        <name>PARAM_JOB_SUMMARY_SQL</name>
+        <name>PARAM_REPO_PATH_TO_JOB_SUMMARY_SQL</name>
         <default_value />
-        <description>The SQL query to run to generate the job summary</description>
+        <description>Path within the PDI repository to the SQL script to run to generate the SQL summary</description>
       </parameter>
     </parameters>
     <log>
@@ -434,23 +434,48 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2018/11/14 15:28:35.846</modified_date>
+    <modified_date>2018/11/14 15:18:16.040</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>This transformation creates a "job summary" file that can, e.g., be attached to an email. 
+      <note>This transformation sets PDI variable:
 
-This job has parameters:
+	QF_JOB_SUMMARY_SQL
 
-	PARAM_JOB_SUMMARY_SQL		The SQL query to run to generate the job summary</note>
+This variable will contain the SQL to execute in order to generate a "job summary". This transfomation has parameter:
+
+	PARAM_REPO_PATH_TO_JOB_SUMMARY_SQL	Path within the PDI repository to the SQL script to run to generate the SQL summary</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>506</width>
-      <heigth>75</heigth>
+      <width>813</width>
+      <heigth>108</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>9</fontsize>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Set PDI variable:
+
+	QF_JOB_SUMMARY_SQL</note>
+      <xloc>288</xloc>
+      <yloc>336</yloc>
+      <width>181</width>
+      <heigth>52</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -465,57 +490,6 @@ This job has parameters:
       <drawshadow>Y</drawshadow>
     </notepad>
   </notepads>
-  <connection>
-    <name>etl_db</name>
-    <server>${QF_ETL_DB_HOST}</server>
-    <type>POSTGRESQL</type>
-    <access>Native</access>
-    <database>${QF_ETL_DB_DATABASE}</database>
-    <port>${QF_ETL_DB_PORT}</port>
-    <username>${QF_ETL_DB_USERNAME}</username>
-    <password>${QF_ETL_DB_PASSWORD}</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
-    <attributes>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>IS_CLUSTERED</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>PORT_NUMBER</code>
-        <attribute>${QF_ETL_DB_PORT}</attribute>
-      </attribute>
-      <attribute>
-        <code>PRESERVE_RESERVED_WORD_CASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>QUOTE_ALL_FIELDS</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>USE_POOLING</code>
-        <attribute>N</attribute>
-      </attribute>
-    </attributes>
-  </connection>
   <connection>
     <name>logging_db</name>
     <server>${QF_LOGGING_DB_HOST}</server>
@@ -569,14 +543,19 @@ This job has parameters:
   </connection>
   <order>
     <hop>
-      <from>Run "job summary" SQL squery</from>
-      <to>Save stream from "job summary" query as CSV file</to>
+      <from>Load SQL query in memory</from>
+      <to>Write sql_query field to log</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Write sql_query field to log</from>
+      <to>Set QF_JOB_SUMMARY_SQL</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Run "job summary" SQL squery</name>
-    <type>TableInput</type>
+    <name>Set QF_JOB_SUMMARY_SQL</name>
+    <type>SetVariable</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -585,13 +564,15 @@ This job has parameters:
       <method>none</method>
       <schema_name />
     </partitioning>
-    <connection>etl_db</connection>
-    <sql>${PARAM_JOB_SUMMARY_SQL}</sql>
-    <limit>0</limit>
-    <lookup />
-    <execute_each_row>N</execute_each_row>
-    <variables_active>Y</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
+    <fields>
+      <field>
+        <field_name>sql_query</field_name>
+        <variable_name>QF_JOB_SUMMARY_SQL</variable_name>
+        <variable_type>ROOT_JOB</variable_type>
+        <default_value />
+      </field>
+    </fields>
+    <use_formatting>Y</use_formatting>
     <attributes />
     <cluster_schema />
     <remotesteps>
@@ -601,53 +582,31 @@ This job has parameters:
       </output>
     </remotesteps>
     <GUI>
-      <xloc>160</xloc>
-      <yloc>96</yloc>
+      <xloc>144</xloc>
+      <yloc>352</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Save stream from "job summary" query as CSV file</name>
-    <type>TextFileOutput</type>
+    <name>Write sql_query field to log</name>
+    <type>WriteToLog</type>
     <description />
-    <distribute>Y</distribute>
+    <distribute>N</distribute>
     <custom_distribution />
     <copies>1</copies>
     <partitioning>
       <method>none</method>
       <schema_name />
     </partitioning>
-    <separator>;</separator>
-    <enclosure>"</enclosure>
-    <enclosure_forced>N</enclosure_forced>
-    <enclosure_fix_disabled>N</enclosure_fix_disabled>
-    <header>Y</header>
-    <footer>N</footer>
-    <format>UNIX</format>
-    <compression>None</compression>
-    <encoding>UTF-8</encoding>
-    <endedLine />
-    <fileNameInField>N</fileNameInField>
-    <fileNameField />
-    <create_parent_folder>N</create_parent_folder>
-    <file>
-      <name>/tmp/job_summary</name>
-      <servlet_output>N</servlet_output>
-      <do_not_open_new_file_init>N</do_not_open_new_file_init>
-      <extention>csv</extention>
-      <append>N</append>
-      <split>N</split>
-      <haspartno>N</haspartno>
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <SpecifyFormat>N</SpecifyFormat>
-      <date_time_format />
-      <add_to_result_filenames>Y</add_to_result_filenames>
-      <pad>N</pad>
-      <fast_dump>N</fast_dump>
-      <splitevery>0</splitevery>
-    </file>
+    <loglevel>log_level_minimal</loglevel>
+    <displayHeader>Y</displayHeader>
+    <limitRows>N</limitRows>
+    <limitRowsNumber>0</limitRowsNumber>
+    <logmessage />
     <fields>
+      <field>
+        <name>sql_query</name>
+      </field>
     </fields>
     <attributes />
     <cluster_schema />
@@ -658,8 +617,73 @@ This job has parameters:
       </output>
     </remotesteps>
     <GUI>
-      <xloc>160</xloc>
-      <yloc>176</yloc>
+      <xloc>144</xloc>
+      <yloc>240</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Load SQL query in memory</name>
+    <type>LoadFileInput</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <include>N</include>
+    <include_field />
+    <rownum>N</rownum>
+    <addresultfile>N</addresultfile>
+    <IsIgnoreEmptyFile>N</IsIgnoreEmptyFile>
+    <IsIgnoreMissingPath>N</IsIgnoreMissingPath>
+    <rownum_field />
+    <encoding>UTF-8</encoding>
+    <file>
+      <name>${KETTLE_HOME}/${QF_PATH_TO_REPO_FROM_KETTLE_HOME}/${PARAM_REPO_PATH_TO_JOB_SUMMARY_SQL}</name>
+      <filemask />
+      <exclude_filemask />
+      <file_required>N</file_required>
+      <include_subfolders>N</include_subfolders>
+    </file>
+    <fields>
+      <field>
+        <name>sql_query</name>
+        <element_type>content</element_type>
+        <type>String</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+        <repeat>N</repeat>
+      </field>
+    </fields>
+    <limit>0</limit>
+    <IsInFields>N</IsInFields>
+    <DynamicFilenameField />
+    <shortFileFieldName />
+    <pathFieldName />
+    <hiddenFieldName />
+    <lastModificationTimeFieldName />
+    <uriNameFieldName />
+    <rootUriNameFieldName />
+    <extensionFieldName />
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>144</xloc>
+      <yloc>144</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

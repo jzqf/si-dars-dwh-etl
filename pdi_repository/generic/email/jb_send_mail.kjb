@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/03/23 15:37:11.315</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2018/04/21 11:00:54.946</modified_date>
+  <modified_date>2018/11/14 14:58:31.060</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_MAIL_MSG_ADDRESS_BCC</name>
@@ -59,6 +59,11 @@
       <name>PARAM_MAIL_MSG_SUBJECT</name>
       <default_value />
       <description />
+    </parameter>
+    <parameter>
+      <name>PARAM_REPO_PATH_TO_JOB_SUMMARY_SQL</name>
+      <default_value />
+      <description>Path within the PDI repository to the SQL script to run to generate the SQL summary</description>
     </parameter>
   </parameters>
   <connection>
@@ -391,6 +396,7 @@
       <name>START</name>
       <description />
       <type>SPECIAL</type>
+      <attributes />
       <start>Y</start>
       <dummy>N</dummy>
       <repeat>N</repeat>
@@ -406,21 +412,25 @@
       <nr>0</nr>
       <xloc>16</xloc>
       <yloc>288</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>Success</name>
       <description />
       <type>SUCCESS</type>
+      <attributes />
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>416</xloc>
-      <yloc>896</yloc>
+      <yloc>832</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>Use Authentication?</name>
       <description />
       <type>SIMPLE_EVAL</type>
+      <attributes />
       <valuetype>variable</valuetype>
       <fieldname>QF_MAIL_SERVER_USE_AUTHENTICATION</fieldname>
       <variablename>QF_MAIL_SERVER_USE_AUTHENTICATION</variablename>
@@ -437,12 +447,14 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>240</xloc>
-      <yloc>512</yloc>
+      <yloc>576</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>Secure authentication?</name>
       <description />
       <type>SIMPLE_EVAL</type>
+      <attributes />
       <valuetype>variable</valuetype>
       <fieldname />
       <variablename>QF_MAIL_SERVER_SECURE_CONNECTION_TYPE</variablename>
@@ -459,12 +471,14 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>496</xloc>
-      <yloc>512</yloc>
+      <yloc>576</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>Mail - No authentication</name>
       <description />
       <type>MAIL</type>
+      <attributes />
       <server>${QF_MAIL_SERVER_HOST}</server>
       <port>${QF_MAIL_SERVER_PORT}</port>
       <destination>${PARAM_MAIL_MSG_ADDRESS_TO}</destination>
@@ -477,7 +491,7 @@
       <contact_person>${PARAM_MAIL_MSG_CONTACT_PERSON}</contact_person>
       <contact_phone>${PARAM_MAIL_MSG_CONTACT_PHONE}</contact_phone>
       <comment>${PARAM_MAIL_MSG_BODY}</comment>
-      <include_files>N</include_files>
+      <include_files>Y</include_files>
       <zip_files>N</zip_files>
       <zip_name />
       <use_auth>N</use_auth>
@@ -493,7 +507,9 @@
       <sensitivity>normal</sensitivity>
       <secureconnectiontype>SSL</secureconnectiontype>
       <replyToAddresses>${PARAM_MAIL_MSG_REPLY_TO_ADDRESS}</replyToAddresses>
-      <filetypes>      </filetypes>
+      <filetypes>
+        <filetype>GENERAL</filetype>
+      </filetypes>
       <embeddedimages>
       </embeddedimages>
       <parallel>N</parallel>
@@ -501,11 +517,13 @@
       <nr>0</nr>
       <xloc>96</xloc>
       <yloc>736</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>Use SSL?</name>
       <description />
       <type>SIMPLE_EVAL</type>
+      <attributes />
       <valuetype>variable</valuetype>
       <fieldname />
       <variablename>QF_MAIL_SERVER_SECURE_CONNECTION_TYPE</variablename>
@@ -522,12 +540,14 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>592</xloc>
-      <yloc>624</yloc>
+      <yloc>656</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>Email address specified?</name>
       <description />
       <type>SIMPLE_EVAL</type>
+      <attributes />
       <valuetype>variable</valuetype>
       <fieldname>${QF_MAIL_MSG_CUST_ADDRESS_TO}</fieldname>
       <variablename>${PARAM_MAIL_MSG_ADDRESS_TO}</variablename>
@@ -545,11 +565,13 @@
       <nr>0</nr>
       <xloc>240</xloc>
       <yloc>288</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>SMTP server specified?</name>
       <description />
       <type>SIMPLE_EVAL</type>
+      <attributes />
       <valuetype>variable</valuetype>
       <fieldname>${QF_MAIL_SERVER_HOST}</fieldname>
       <variablename>${QF_MAIL_SERVER_HOST}</variablename>
@@ -566,22 +588,26 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>240</xloc>
-      <yloc>400</yloc>
+      <yloc>384</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>Success - Email not sent</name>
       <description />
       <type>SUCCESS</type>
+      <attributes />
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>496</xloc>
       <yloc>352</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>Mail - Authentication, no security</name>
       <description />
       <type>MAIL</type>
+      <attributes />
       <server>${QF_MAIL_SERVER_HOST}</server>
       <port>${QF_MAIL_SERVER_PORT}</port>
       <destination>${PARAM_MAIL_MSG_ADDRESS_TO}</destination>
@@ -594,7 +620,7 @@
       <contact_person>${PARAM_MAIL_MSG_CONTACT_PERSON}</contact_person>
       <contact_phone>${PARAM_MAIL_MSG_CONTACT_PHONE}</contact_phone>
       <comment>${PARAM_MAIL_MSG_BODY}</comment>
-      <include_files>N</include_files>
+      <include_files>Y</include_files>
       <zip_files>N</zip_files>
       <zip_name />
       <use_auth>Y</use_auth>
@@ -610,7 +636,9 @@
       <sensitivity>normal</sensitivity>
       <secureconnectiontype>SSL</secureconnectiontype>
       <replyToAddresses>${PARAM_MAIL_MSG_REPLY_TO_ADDRESS}</replyToAddresses>
-      <filetypes>      </filetypes>
+      <filetypes>
+        <filetype>GENERAL</filetype>
+      </filetypes>
       <embeddedimages>
       </embeddedimages>
       <parallel>N</parallel>
@@ -618,11 +646,13 @@
       <nr>0</nr>
       <xloc>304</xloc>
       <yloc>736</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>Mail - TLS authentication</name>
       <description />
       <type>MAIL</type>
+      <attributes />
       <server>${QF_MAIL_SERVER_HOST}</server>
       <port>${QF_MAIL_SERVER_PORT}</port>
       <destination>${PARAM_MAIL_MSG_ADDRESS_TO}</destination>
@@ -635,7 +665,7 @@
       <contact_person>${PARAM_MAIL_MSG_CONTACT_PERSON}</contact_person>
       <contact_phone>${PARAM_MAIL_MSG_CONTACT_PHONE}</contact_phone>
       <comment>${PARAM_MAIL_MSG_BODY}</comment>
-      <include_files>N</include_files>
+      <include_files>Y</include_files>
       <zip_files>N</zip_files>
       <zip_name />
       <use_auth>Y</use_auth>
@@ -651,7 +681,9 @@
       <sensitivity>normal</sensitivity>
       <secureconnectiontype>TLS</secureconnectiontype>
       <replyToAddresses>${PARAM_MAIL_MSG_REPLY_TO_ADDRESS}</replyToAddresses>
-      <filetypes>      </filetypes>
+      <filetypes>
+        <filetype>GENERAL</filetype>
+      </filetypes>
       <embeddedimages>
       </embeddedimages>
       <parallel>N</parallel>
@@ -659,11 +691,13 @@
       <nr>0</nr>
       <xloc>512</xloc>
       <yloc>736</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>Mail - SSL authentication</name>
       <description />
       <type>MAIL</type>
+      <attributes />
       <server>${QF_MAIL_SERVER_HOST}</server>
       <port>${QF_MAIL_SERVER_PORT}</port>
       <destination>${PARAM_MAIL_MSG_ADDRESS_TO}</destination>
@@ -676,7 +710,7 @@
       <contact_person>${PARAM_MAIL_MSG_CONTACT_PERSON}</contact_person>
       <contact_phone>${PARAM_MAIL_MSG_CONTACT_PHONE}</contact_phone>
       <comment>${PARAM_MAIL_MSG_BODY}</comment>
-      <include_files>N</include_files>
+      <include_files>Y</include_files>
       <zip_files>N</zip_files>
       <zip_name />
       <use_auth>Y</use_auth>
@@ -692,7 +726,9 @@
       <sensitivity>normal</sensitivity>
       <secureconnectiontype>SSL</secureconnectiontype>
       <replyToAddresses>${PARAM_MAIL_MSG_REPLY_TO_ADDRESS}</replyToAddresses>
-      <filetypes>      </filetypes>
+      <filetypes>
+        <filetype>GENERAL</filetype>
+      </filetypes>
       <embeddedimages>
       </embeddedimages>
       <parallel>N</parallel>
@@ -700,11 +736,13 @@
       <nr>0</nr>
       <xloc>704</xloc>
       <yloc>736</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>Write To Log - PARAM_JOB_BATCH_ID</name>
       <description />
       <type>WRITE_TO_LOG</type>
+      <attributes />
       <logmessage>==========================================
 
 PARAM_JOB_BATCH_ID = ${PARAM_JOB_BATCH_ID}
@@ -717,22 +755,25 @@ PARAM_JOB_BATCH_ID = ${PARAM_JOB_BATCH_ID}
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>128</xloc>
-      <yloc>544</yloc>
+      <yloc>608</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>Log parameters</name>
       <description />
       <type>WRITE_TO_LOG</type>
-      <logmessage>PARAM_MAIL_MSG_ADDRESS_TO       = ${PARAM_MAIL_MSG_ADDRESS_TO}
-PARAM_MAIL_MSG_ADDRESS_CC       = ${PARAM_MAIL_MSG_ADDRESS_CC}
-PARAM_MAIL_MSG_ADDRESS_BCC      = ${PARAM_MAIL_MSG_ADDRESS_BCC}
-PARAM_MAIL_MSG_CONTACT_PERSON   = ${PARAM_MAIL_MSG_CONTACT_PERSON}
-PARAM_MAIL_MSG_CONTACT_PHONE    = ${PARAM_MAIL_MSG_CONTACT_PHONE}
-PARAM_MAIL_MSG_REPLY_TO_ADDRESS = ${PARAM_MAIL_MSG_REPLY_TO_ADDRESS}
-PARAM_MAIL_MSG_SENDER_ADDRESS   = ${PARAM_MAIL_MSG_SENDER_ADDRESS}
-PARAM_MAIL_MSG_SENDER_NAME      = ${PARAM_MAIL_MSG_SENDER_NAME}
-PARAM_MAIL_MSG_SUBJECT          = ${PARAM_MAIL_MSG_SUBJECT}
-PARAM_MAIL_MSG_BODY             = ${PARAM_MAIL_MSG_BODY}</logmessage>
+      <attributes />
+      <logmessage>PARAM_MAIL_MSG_ADDRESS_TO          = ${PARAM_MAIL_MSG_ADDRESS_TO}
+PARAM_MAIL_MSG_ADDRESS_CC          = ${PARAM_MAIL_MSG_ADDRESS_CC}
+PARAM_MAIL_MSG_ADDRESS_BCC         = ${PARAM_MAIL_MSG_ADDRESS_BCC}
+PARAM_MAIL_MSG_CONTACT_PERSON      = ${PARAM_MAIL_MSG_CONTACT_PERSON}
+PARAM_MAIL_MSG_CONTACT_PHONE       = ${PARAM_MAIL_MSG_CONTACT_PHONE}
+PARAM_MAIL_MSG_REPLY_TO_ADDRESS    = ${PARAM_MAIL_MSG_REPLY_TO_ADDRESS}
+PARAM_MAIL_MSG_SENDER_ADDRESS      = ${PARAM_MAIL_MSG_SENDER_ADDRESS}
+PARAM_MAIL_MSG_SENDER_NAME         = ${PARAM_MAIL_MSG_SENDER_NAME}
+PARAM_MAIL_MSG_SUBJECT             = ${PARAM_MAIL_MSG_SUBJECT}
+PARAM_MAIL_MSG_BODY                = ${PARAM_MAIL_MSG_BODY}
+PARAM_REPO_PATH_TO_JOB_SUMMARY_SQL = ${PARAM_REPO_PATH_TO_JOB_SUMMARY_SQL}</logmessage>
       <loglevel>Minimal</loglevel>
       <logsubject>Parameters received by ${Internal.Job.Name}</logsubject>
       <parallel>N</parallel>
@@ -740,6 +781,68 @@ PARAM_MAIL_MSG_BODY             = ${PARAM_MAIL_MSG_BODY}</logmessage>
       <nr>0</nr>
       <xloc>96</xloc>
       <yloc>288</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>Job summary SQL script specified?</name>
+      <description />
+      <type>SIMPLE_EVAL</type>
+      <attributes />
+      <valuetype>variable</valuetype>
+      <fieldname>${QF_MAIL_SERVER_HOST}</fieldname>
+      <variablename>${PARAM_REPO_PATH_TO_JOB_SUMMARY_SQL}</variablename>
+      <fieldtype>string</fieldtype>
+      <mask />
+      <comparevalue />
+      <minvalue />
+      <maxvalue />
+      <successcondition>different</successcondition>
+      <successnumbercondition>equal</successnumbercondition>
+      <successbooleancondition>false</successbooleancondition>
+      <successwhenvarset>N</successwhenvarset>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>240</xloc>
+      <yloc>480</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>jb_create_job_summary_file</name>
+      <description />
+      <type>JOB</type>
+      <attributes />
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_create_job_summary_file</jobname>
+      <directory>/generic/create_job_summary_file</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <run_configuration>Pentaho local</run_configuration>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>496</xloc>
+      <yloc>480</yloc>
+      <attributes_kjc />
     </entry>
   </entries>
   <hops>
@@ -773,15 +876,6 @@ PARAM_MAIL_MSG_BODY             = ${PARAM_MAIL_MSG_BODY}</logmessage>
     <hop>
       <from>Email address specified?</from>
       <to>SMTP server specified?</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>SMTP server specified?</from>
-      <to>Use Authentication?</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -905,16 +999,53 @@ PARAM_MAIL_MSG_BODY             = ${PARAM_MAIL_MSG_BODY}</logmessage>
       <evaluation>N</evaluation>
       <unconditional>Y</unconditional>
     </hop>
+    <hop>
+      <from>SMTP server specified?</from>
+      <to>Job summary SQL script specified?</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Job summary SQL script specified?</from>
+      <to>Use Authentication?</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Job summary SQL script specified?</from>
+      <to>jb_create_job_summary_file</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_create_job_summary_file</from>
+      <to>Use Authentication?</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
   </hops>
   <notepads>
     <notepad>
-      <note>An email is not sent unless both the 
-recipient address and the SMTP server 
-is specified.</note>
-      <xloc>416</xloc>
-      <yloc>400</yloc>
-      <width>224</width>
-      <heigth>49</heigth>
+      <note>An email is not sent unless 
+*both* the recipient 
+address *and* the SMTP 
+server is specified.</note>
+      <xloc>16</xloc>
+      <yloc>368</yloc>
+      <width>157</width>
+      <heigth>62</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -949,11 +1080,35 @@ This job has parameters:
 	PARAM_MAIL_MSG_REPLY_TO_ADDRESS		
 	PARAM_MAIL_MSG_SENDER_ADDRESS		
 	PARAM_MAIL_MSG_SENDER_NAME		
-	PARAM_MAIL_MSG_SUBJECT		</note>
+	PARAM_MAIL_MSG_SUBJECT		
+	PARAM_REPO_PATH_TO_JOB_SUMMARY_SQL	Path within the PDI repository to the SQL script to run to generate the SQL summary</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>698</width>
-      <heigth>257</heigth>
+      <width>763</width>
+      <heigth>270</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>The CSV file created here will 
+be attached to the email that 
+is sent below.</note>
+      <xloc>592</xloc>
+      <yloc>480</yloc>
+      <width>175</width>
+      <heigth>49</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -970,4 +1125,20 @@ This job has parameters:
       <drawshadow>Y</drawshadow>
     </notepad>
   </notepads>
+  <attributes>
+    <group>
+      <name>METASTORE.pentaho</name>
+      <attribute>
+        <key>Default Run Configuration</key>
+        <value>{"namespace":"pentaho","id":"Default Run Configuration","name":"Default Run Configuration","description":"Defines a default run configuration","metaStoreName":null}</value>
+      </attribute>
+    </group>
+    <group>
+      <name>{"_":"Embedded MetaStore Elements","namespace":"pentaho","type":"Default Run Configuration"}</name>
+      <attribute>
+        <key>Pentaho local</key>
+        <value>{"children":[{"children":[],"id":"server","value":null},{"children":[],"id":"clustered","value":"N"},{"children":[],"id":"name","value":"Pentaho local"},{"children":[],"id":"description","value":null},{"children":[],"id":"pentaho","value":"N"},{"children":[],"id":"readOnly","value":"Y"},{"children":[],"id":"sendResources","value":"N"},{"children":[],"id":"logRemoteExecutionLocally","value":"N"},{"children":[],"id":"remote","value":"N"},{"children":[],"id":"local","value":"Y"},{"children":[],"id":"showTransformations","value":"N"}],"id":"Pentaho local","value":null,"name":"Pentaho local","owner":null,"ownerPermissionsList":[]}</value>
+      </attribute>
+    </group>
+  </attributes>
 </job>
