@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2018/11/14 15:34:56.128</modified_date>
+  <modified_date>2018/11/15 13:53:22.255</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_JOB_BATCH_ID</name>
@@ -381,7 +381,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>240</xloc>
-      <yloc>144</yloc>
+      <yloc>128</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -405,7 +405,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>240</xloc>
-      <yloc>240</yloc>
+      <yloc>320</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -497,7 +497,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>112</xloc>
-      <yloc>336</yloc>
+      <yloc>416</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -581,7 +581,7 @@
         <parameter>
           <name>PARAM_REPO_PATH_TO_JOB_SUMMARY_SQL</name>
           <stream_name />
-          <value>${PARAM_REPO_PATH_TO_JOB_SUMMARY_SQL_CUSTOMER}</value>
+          <value>${PARAM_REPO_PATH_TO_JOB_SUMMARY_SQL_QFREE}</value>
         </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
@@ -589,7 +589,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>368</xloc>
-      <yloc>336</yloc>
+      <yloc>416</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -673,7 +673,7 @@
         <parameter>
           <name>PARAM_REPO_PATH_TO_JOB_SUMMARY_SQL</name>
           <stream_name />
-          <value>${PARAM_REPO_PATH_TO_JOB_SUMMARY_SQL_QFREE}</value>
+          <value>${PARAM_REPO_PATH_TO_JOB_SUMMARY_SQL_CUSTOMER}</value>
         </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
@@ -681,7 +681,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>112</xloc>
-      <yloc>448</yloc>
+      <yloc>528</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -773,20 +773,31 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>368</xloc>
-      <yloc>448</yloc>
+      <yloc>528</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>Log parameters</name>
+      <description />
+      <type>WRITE_TO_LOG</type>
+      <attributes />
+      <logmessage>PARAM_JOB_BATCH_ID                          = ${PARAM_JOB_BATCH_ID}
+PARAM_JOB_NAME                              = ${PARAM_JOB_NAME}
+PARAM_SUCCESS                               = ${PARAM_SUCCESS}
+PARAM_REPO_PATH_TO_JOB_SUMMARY_SQL_CUSTOMER = ${PARAM_REPO_PATH_TO_JOB_SUMMARY_SQL_CUSTOMER}
+PARAM_REPO_PATH_TO_JOB_SUMMARY_SQL_QFREE    = ${PARAM_REPO_PATH_TO_JOB_SUMMARY_SQL_QFREE}
+</logmessage>
+      <loglevel>Minimal</loglevel>
+      <logsubject>Parameters received by ${Internal.Job.Name}</logsubject>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>240</xloc>
+      <yloc>224</yloc>
       <attributes_kjc />
     </entry>
   </entries>
   <hops>
-    <hop>
-      <from>START</from>
-      <to>PARAM_SUCCESS = true? 1</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
     <hop>
       <from>PARAM_SUCCESS = true? 1</from>
       <to>jb_send_mail - to Q-Free - Success</to>
@@ -823,6 +834,24 @@
       <evaluation>Y</evaluation>
       <unconditional>N</unconditional>
     </hop>
+    <hop>
+      <from>START</from>
+      <to>Log parameters</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>Log parameters</from>
+      <to>PARAM_SUCCESS = true? 1</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
   </hops>
   <notepads>
     <notepad>
@@ -830,7 +859,7 @@
 default Q-Free address. Most details are 
 passed to the job via parameters.</note>
       <xloc>496</xloc>
-      <yloc>336</yloc>
+      <yloc>416</yloc>
       <width>237</width>
       <heigth>49</heigth>
       <fontname>Ubuntu</fontname>
@@ -881,7 +910,7 @@ This job has three parameters:
 default customer address. Most details are 
 passed to the job via parameters.</note>
       <xloc>496</xloc>
-      <yloc>448</yloc>
+      <yloc>528</yloc>
       <width>246</width>
       <heigth>49</heigth>
       <fontname>Ubuntu</fontname>
