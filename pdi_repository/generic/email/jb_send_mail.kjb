@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/03/23 15:37:11.315</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2018/11/15 13:49:17.093</modified_date>
+  <modified_date>2018/11/16 12:21:47.710</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_JOB_BATCH_ID</name>
@@ -609,8 +609,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>496</xloc>
-      <yloc>368</yloc>
+      <xloc>528</xloc>
+      <yloc>416</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -776,30 +776,6 @@ PARAM_REPO_PATH_TO_JOB_SUMMARY_SQL = ${PARAM_REPO_PATH_TO_JOB_SUMMARY_SQL}</logm
       <attributes_kjc />
     </entry>
     <entry>
-      <name>Job summary SQL script specified?</name>
-      <description />
-      <type>SIMPLE_EVAL</type>
-      <attributes />
-      <valuetype>variable</valuetype>
-      <fieldname>${QF_MAIL_SERVER_HOST}</fieldname>
-      <variablename>${PARAM_REPO_PATH_TO_JOB_SUMMARY_SQL}</variablename>
-      <fieldtype>string</fieldtype>
-      <mask />
-      <comparevalue />
-      <minvalue />
-      <maxvalue />
-      <successcondition>different</successcondition>
-      <successnumbercondition>equal</successnumbercondition>
-      <successbooleancondition>false</successbooleancondition>
-      <successwhenvarset>N</successwhenvarset>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>240</xloc>
-      <yloc>608</yloc>
-      <attributes_kjc />
-    </entry>
-    <entry>
       <name>jb_create_job_summary_file</name>
       <description />
       <type>JOB</type>
@@ -832,7 +808,7 @@ PARAM_REPO_PATH_TO_JOB_SUMMARY_SQL = ${PARAM_REPO_PATH_TO_JOB_SUMMARY_SQL}</logm
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>496</xloc>
+      <xloc>528</xloc>
       <yloc>608</yloc>
       <attributes_kjc />
     </entry>
@@ -845,6 +821,30 @@ PARAM_REPO_PATH_TO_JOB_SUMMARY_SQL = ${PARAM_REPO_PATH_TO_JOB_SUMMARY_SQL}</logm
       <specify_wildcard>Y</specify_wildcard>
       <wildcard />
       <wildcardexclude>${QF_JOB_SUMMARY_FILE_FULL_PATH}</wildcardexclude>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>528</xloc>
+      <yloc>512</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>Full path of job summary file to create is specified?</name>
+      <description />
+      <type>SIMPLE_EVAL</type>
+      <attributes />
+      <valuetype>variable</valuetype>
+      <fieldname>${QF_MAIL_SERVER_HOST}</fieldname>
+      <variablename>${QF_JOB_SUMMARY_FILE_FULL_PATH}</variablename>
+      <fieldtype>string</fieldtype>
+      <mask />
+      <comparevalue />
+      <minvalue />
+      <maxvalue />
+      <successcondition>different</successcondition>
+      <successnumbercondition>equal</successnumbercondition>
+      <successbooleancondition>false</successbooleancondition>
+      <successwhenvarset>N</successwhenvarset>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
@@ -990,24 +990,6 @@ PARAM_REPO_PATH_TO_JOB_SUMMARY_SQL = ${PARAM_REPO_PATH_TO_JOB_SUMMARY_SQL}</logm
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>Job summary SQL script specified?</from>
-      <to>Use Authentication?</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Job summary SQL script specified?</from>
-      <to>jb_create_job_summary_file</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
       <from>jb_create_job_summary_file</from>
       <to>Use Authentication?</to>
       <from_nr>0</from_nr>
@@ -1017,7 +999,25 @@ PARAM_REPO_PATH_TO_JOB_SUMMARY_SQL = ${PARAM_REPO_PATH_TO_JOB_SUMMARY_SQL}</logm
       <unconditional>Y</unconditional>
     </hop>
     <hop>
+      <from>Delete existing job summary file, if one exists</from>
+      <to>jb_create_job_summary_file</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
       <from>SMTP server specified?</from>
+      <to>Full path of job summary file to create is specified?</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Full path of job summary file to create is specified?</from>
       <to>Delete existing job summary file, if one exists</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -1026,13 +1026,13 @@ PARAM_REPO_PATH_TO_JOB_SUMMARY_SQL = ${PARAM_REPO_PATH_TO_JOB_SUMMARY_SQL}</logm
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Delete existing job summary file, if one exists</from>
-      <to>Job summary SQL script specified?</to>
+      <from>Full path of job summary file to create is specified?</from>
+      <to>Use Authentication?</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
     </hop>
   </hops>
   <notepads>
@@ -1103,13 +1103,11 @@ This job has parameters:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>The CSV file created here will 
-be attached to the email that 
-is sent below.</note>
-      <xloc>592</xloc>
-      <yloc>608</yloc>
-      <width>175</width>
-      <heigth>49</heigth>
+      <note>If a job summary CSV file created here, it will be attached to the email that is sent below.</note>
+      <xloc>688</xloc>
+      <yloc>624</yloc>
+      <width>495</width>
+      <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -1126,15 +1124,20 @@ is sent below.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>We may have just sent a notification e-mail to a Q-Free employee 
-that has a job summary file attached. If so, we delete that file 
-here before sending another e-mail, e.g., to a customer employee.
-If a job summary files should be attached to this e-maul, it will be
-created below.</note>
-      <xloc>400</xloc>
-      <yloc>496</yloc>
-      <width>374</width>
-      <heigth>75</heigth>
+      <note>We may have just sent a notification e-mail, e.g., to a Q-Free employee, that had a 
+job summary file attached. If so, we delete that file here before sending another 
+e-mail, e.g., to a customer employee. If we do *not* delete the existing file, and 
+then if we also do *not* create a new job summary file below (because the 
+configuration settings specify that one should not be created) then the *existing* 
+file on disc will get attached to the current email. This deletion is only attempted
+if a full path to the file is specified. 
+
+For some reason, this step did not work if executed from  jb_create_job_summary_file, 
+so I execute it here instead (as well as the "Simple evaluation" step before it).</note>
+      <xloc>688</xloc>
+      <yloc>464</yloc>
+      <width>487</width>
+      <heigth>140</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>

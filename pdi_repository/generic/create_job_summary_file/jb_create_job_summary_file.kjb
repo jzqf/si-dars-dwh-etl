@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/03/23 15:37:11.315</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2018/11/15 14:26:40.395</modified_date>
+  <modified_date>2018/11/16 12:12:51.426</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_REPO_PATH_TO_JOB_SUMMARY_SQL</name>
@@ -546,15 +546,6 @@
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>Log parameters</from>
-      <to>Job summary SQL script specified?</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
       <from>Job summary SQL script specified?</from>
       <to>Success</to>
       <from_nr>0</from_nr>
@@ -573,12 +564,30 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
+      <from>QF_JOB_SUMMARY_SQL is not blank?</from>
+      <to>Success 2</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Log parameters</from>
+      <to>Job summary SQL script specified?</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
       <from>tr_set_job_summary_sql_vrbl</from>
       <to>QF_JOB_SUMMARY_SQL is not blank?</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
+      <evaluation>N</evaluation>
       <unconditional>Y</unconditional>
     </hop>
     <hop>
@@ -588,15 +597,6 @@
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>QF_JOB_SUMMARY_SQL is not blank?</from>
-      <to>Success 2</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
       <unconditional>N</unconditional>
     </hop>
   </hops>
@@ -628,8 +628,8 @@ This job has parameter:
     </notepad>
     <notepad>
       <note>The CSV file created here will be attached to the email that is sent in calling code.</note>
-      <xloc>256</xloc>
-      <yloc>496</yloc>
+      <xloc>288</xloc>
+      <yloc>480</yloc>
       <width>458</width>
       <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
@@ -653,7 +653,7 @@ This job has parameter:
 	QF_JOB_SUMMARY_SQL
 
 This will contain the SQL to execute in order to generate a "job summary".</note>
-      <xloc>256</xloc>
+      <xloc>288</xloc>
       <yloc>288</yloc>
       <width>416</width>
       <heigth>75</heigth>
@@ -673,11 +673,12 @@ This will contain the SQL to execute in order to generate a "job summary".</note
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>No query has been specified. There is nothing to do.</note>
+      <note>No query has been specified. There is nothing to do.
+We do not create a job summary file.</note>
       <xloc>416</xloc>
       <yloc>208</yloc>
       <width>297</width>
-      <heigth>23</heigth>
+      <heigth>36</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
