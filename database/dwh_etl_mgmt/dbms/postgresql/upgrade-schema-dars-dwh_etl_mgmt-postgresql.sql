@@ -4322,4 +4322,4 @@ CREATE TABLE IF NOT EXISTS etl.configuration (
 -- version number will be updated whenever the data model changes *or* Q-Free
 -- supplied content changes (rows are created, updated or deleted).
 INSERT INTO etl.configuration (param_name, role_id, param_type, integer_value, string_value , created_on)
-    VALUES ('DB_VERSION', null, 'INTEGER', 5, '5', current_timestamp AT TIME ZONE 'UTC') ON CONFLICT DO NOTHING;
+    VALUES ('DB_VERSION', null, 'INTEGER', 4, '4', current_timestamp AT TIME ZONE 'UTC') ON CONFLICT DO NOTHING;

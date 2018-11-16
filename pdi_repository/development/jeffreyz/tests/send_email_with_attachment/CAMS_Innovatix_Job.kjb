@@ -1,76 +1,25 @@
 <job>
-  <name>jb_psa-update</name>
+  <name>CAMS_Innovatix_Job</name>
   <description />
   <extended_description />
   <job_version />
-  <job_status>1</job_status>
-  <directory>/psa</directory>
-  <created_user>-</created_user>
-  <created_date>2016/04/03 14:57:58.609</created_date>
-  <modified_user>-</modified_user>
-  <modified_date>2018/11/15 14:00:46.561</modified_date>
+  <job_status>0</job_status>
+  <directory>/development/jeffreyz/tests/send_email_with_attachment</directory>
+  <created_user>admin</created_user>
+  <created_date>2008/06/27 14:36:36.000</created_date>
+  <modified_user>admin</modified_user>
+  <modified_date>2018/11/14 13:48:43.420</modified_date>
   <parameters>
     </parameters>
-  <connection>
-    <name>logging_db</name>
-    <server>${QF_LOGGING_DB_HOST}</server>
-    <type>POSTGRESQL</type>
-    <access>Native</access>
-    <database>${QF_LOGGING_DB_DATABASE}</database>
-    <port>${QF_LOGGING_DB_PORT}</port>
-    <username>${QF_LOGGING_DB_USERNAME}</username>
-    <password>${QF_LOGGING_DB_PASSWORD}</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
-    <attributes>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>IS_CLUSTERED</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>PORT_NUMBER</code>
-        <attribute>${QF_LOGGING_DB_PORT}</attribute>
-      </attribute>
-      <attribute>
-        <code>PRESERVE_RESERVED_WORD_CASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>QUOTE_ALL_FIELDS</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>USE_POOLING</code>
-        <attribute>N</attribute>
-      </attribute>
-    </attributes>
-  </connection>
   <slaveservers>
     </slaveservers>
   <job-log-table>
-    <connection>${QF_LOGGING_DB_CONNECTION}</connection>
-    <schema>${QF_LOG_JOB_SCHEMA}</schema>
-    <table>${QF_LOG_JOB_TABLE}</table>
+    <connection />
+    <schema />
+    <table />
     <size_limit_lines />
     <interval />
-    <timeout_days>${QF_LOG_JOB_TIMEOUT_IN_DAYS}</timeout_days>
+    <timeout_days />
     <field>
       <id>ID_JOB</id>
       <enabled>Y</enabled>
@@ -78,7 +27,7 @@
     </field>
     <field>
       <id>CHANNEL_ID</id>
-      <enabled>Y</enabled>
+      <enabled>N</enabled>
       <name>CHANNEL_ID</name>
     </field>
     <field>
@@ -118,7 +67,7 @@
     </field>
     <field>
       <id>LINES_REJECTED</id>
-      <enabled>Y</enabled>
+      <enabled>N</enabled>
       <name>LINES_REJECTED</name>
     </field>
     <field>
@@ -178,10 +127,10 @@
     </field>
   </job-log-table>
   <jobentry-log-table>
-    <connection>${QF_LOGGING_DB_CONNECTION}</connection>
-    <schema>${QF_LOG_JOBENTRY_SCHEMA}</schema>
-    <table>${QF_LOG_JOBENTRY_TABLE}</table>
-    <timeout_days>${QF_LOG_JOBENTRY_TIMEOUT_IN_DAYS}</timeout_days>
+    <connection />
+    <schema />
+    <table />
+    <timeout_days />
     <field>
       <id>ID_BATCH</id>
       <enabled>Y</enabled>
@@ -269,10 +218,10 @@
     </field>
   </jobentry-log-table>
   <channel-log-table>
-    <connection>${QF_LOGGING_DB_CONNECTION}</connection>
-    <schema>${QF_LOG_CHANNEL_SCHEMA}</schema>
-    <table>${QF_LOG_CHANNEL_TABLE}</table>
-    <timeout_days>${QF_LOG_CHANNEL_TIMEOUT_IN_DAYS}</timeout_days>
+    <connection />
+    <schema />
+    <table />
+    <timeout_days />
     <field>
       <id>ID_BATCH</id>
       <enabled>Y</enabled>
@@ -334,12 +283,12 @@
       <name>ROOT_CHANNEL_ID</name>
     </field>
   </channel-log-table>
-  <pass_batchid>Y</pass_batchid>
+  <pass_batchid>N</pass_batchid>
   <shared_objects_file />
   <entries>
     <entry>
       <name>START</name>
-      <description />
+      <description>Special entries</description>
       <type>SPECIAL</type>
       <attributes />
       <start>Y</start>
@@ -355,97 +304,138 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>96</xloc>
-      <yloc>144</yloc>
+      <xloc>100</xloc>
+      <yloc>120</yloc>
       <attributes_kjc />
     </entry>
     <entry>
-      <name>jb_target-update</name>
-      <description />
-      <type>JOB</type>
+      <name>create_csv_file</name>
+      <description>Transformation</description>
+      <type>TRANS</type>
       <attributes />
       <specification_method>rep_name</specification_method>
-      <job_object_id />
+      <trans_object_id />
       <filename />
-      <jobname>jb_target-update</jobname>
-      <directory>/generic/target_update</directory>
+      <transname>create_csv_file</transname>
+      <directory>${Internal.Entry.Current.Directory}</directory>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
+      <clear_rows>N</clear_rows>
+      <clear_files>N</clear_files>
       <set_logfile>N</set_logfile>
       <logfile />
       <logext />
       <add_date>N</add_date>
       <add_time>N</add_time>
       <loglevel>Nothing</loglevel>
+      <cluster>N</cluster>
       <slave_server_name />
+      <set_append_logfile>N</set_append_logfile>
       <wait_until_finished>Y</wait_until_finished>
       <follow_abort_remote>N</follow_abort_remote>
-      <expand_remote_job>N</expand_remote_job>
       <create_parent_folder>N</create_parent_folder>
-      <pass_export>N</pass_export>
+      <logging_remote_work>N</logging_remote_work>
       <run_configuration>Pentaho local</run_configuration>
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
-        <parameter>
-          <name>PARAM_TARGET_DB_ID</name>
-          <stream_name />
-          <value>${QF_DB_ID_PSA}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_REPO_PATH_TO_JOB_SUMMARY_SQL_CUSTOMER</name>
-          <stream_name />
-          <value>${QF_JOB_SUMMARY_REPO_PATH_TO_SQL_SCRIPT_PSA_CUSTOMER}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_REPO_PATH_TO_JOB_SUMMARY_SQL_QFREE</name>
-          <stream_name />
-          <value>${QF_JOB_SUMMARY_REPO_PATH_TO_SQL_SCRIPT_PSA_QFREE}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_PARENT_JOB_NAME</name>
-          <stream_name />
-          <value>${Internal.Job.Name}</value>
-        </parameter>
       </parameters>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>200</xloc>
+      <yloc>120</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>Mail 1</name>
+      <description>Mail</description>
+      <type>MAIL</type>
+      <attributes />
+      <server>smtp.q-free.com</server>
+      <port>25</port>
+      <destination>jeffreyz@q-free.com</destination>
+      <destinationCc />
+      <destinationBCc />
+      <replyto>jeffreyz@q-free.com</replyto>
+      <replytoname />
+      <subject>This is the email subject</subject>
+      <include_date>Y</include_date>
+      <contact_person />
+      <contact_phone />
+      <comment>This is the email body</comment>
+      <include_files>Y</include_files>
+      <zip_files>N</zip_files>
+      <zip_name />
+      <use_auth>N</use_auth>
+      <use_secure_auth>N</use_secure_auth>
+      <auth_user />
+      <auth_password>OBF:</auth_password>
+      <only_comment>Y</only_comment>
+      <use_HTML>N</use_HTML>
+      <use_Priority>N</use_Priority>
+      <encoding>UTF-8</encoding>
+      <priority>normal</priority>
+      <importance>normal</importance>
+      <sensitivity>normal</sensitivity>
+      <secureconnectiontype>SSL</secureconnectiontype>
+      <replyToAddresses />
+      <filetypes>
+        <filetype>GENERAL</filetype>
+      </filetypes>
+      <embeddedimages>
+      </embeddedimages>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>400</xloc>
+      <yloc>120</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>Get_Set_File</name>
+      <description>Transformation</description>
+      <type>TRANS</type>
+      <attributes />
+      <specification_method>rep_name</specification_method>
+      <trans_object_id />
+      <filename />
+      <transname>Get_Set_File</transname>
+      <directory>/development/jeffreyz/tests/send_email_with_attachment</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <clear_rows>N</clear_rows>
+      <clear_files>N</clear_files>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <cluster>N</cluster>
+      <slave_server_name />
       <set_append_logfile>N</set_append_logfile>
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <create_parent_folder>N</create_parent_folder>
+      <logging_remote_work>N</logging_remote_work>
+      <run_configuration>Pentaho local</run_configuration>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+      </parameters>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>96</xloc>
-      <yloc>240</yloc>
-      <attributes_kjc />
-    </entry>
-    <entry>
-      <name>Success</name>
-      <description />
-      <type>SUCCESS</type>
-      <attributes />
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>160</xloc>
-      <yloc>336</yloc>
-      <attributes_kjc />
-    </entry>
-    <entry>
-      <name>Abort job</name>
-      <description />
-      <type>ABORT</type>
-      <attributes />
-      <message>Job ${Internal.Job.Name} failed. See log and e-mail sent.</message>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>32</xloc>
-      <yloc>336</yloc>
+      <xloc>300</xloc>
+      <yloc>120</yloc>
       <attributes_kjc />
     </entry>
   </entries>
   <hops>
     <hop>
       <from>START</from>
-      <to>jb_target-update</to>
+      <to>create_csv_file</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -453,8 +443,8 @@
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>jb_target-update</from>
-      <to>Success</to>
+      <from>create_csv_file</from>
+      <to>Get_Set_File</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -462,69 +452,16 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>jb_target-update</from>
-      <to>Abort job</to>
+      <from>Get_Set_File</from>
+      <to>Mail 1</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
-      <evaluation>N</evaluation>
+      <evaluation>Y</evaluation>
       <unconditional>N</unconditional>
     </hop>
   </hops>
   <notepads>
-    <notepad>
-      <note>This is a top-level job that updates the PSA database.
-
-"Pass batch ID?" is selected for this job so that the batch ID is passed to tr_set_job_batch_id_variable via jb_init, which assigns 
-this value to QF_JOB_BATCH_ID.
-
-If this job has a parent, the setting "Pass batch ID?" should also be set for the parent *if* it is desired that QF_JOB_BATCH_ID
-should be assigned the batch ID of the root job (not this job). This may vary from case to case.</note>
-      <xloc>0</xloc>
-      <yloc>0</yloc>
-      <width>697</width>
-      <heigth>101</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>9</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>jb_target-update is passed the parameters:
-
-	PARAM_TARGET_DB_ID 									= ${QF_DB_ID_PSA}
-	PARAM_PARENT_JOB_NAME								= ${Internal.Job.Name}
-	PARAM_REPO_PATH_TO_JOB_SUMMARY_SQL_CUSTOMER	= ${QF_JOB_SUMMARY_REPO_PATH_TO_SQL_SCRIPT_PSA_CUSTOMER}
-	PARAM_REPO_PATH_TO_JOB_SUMMARY_SQL_QFREE		= ${QF_JOB_SUMMARY_REPO_PATH_TO_SQL_SCRIPT_PSA_QFREE}</note>
-      <xloc>192</xloc>
-      <yloc>208</yloc>
-      <width>615</width>
-      <heigth>88</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>9</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
   </notepads>
   <attributes>
     <group>
