@@ -28,4 +28,4 @@ ORDER BY
     tm.target_db_id,
     tm.source_db_id,
     tm.source_schema_name,
-    tm.source_table_name;
+    tm.source_table_name

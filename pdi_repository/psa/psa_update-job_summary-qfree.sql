@@ -1,3 +1,30 @@
+-- Casting to VARCHAR(80) here avoids an apparent PDI bug which causes the 
+-- following Java exception to be thrown:
+--
+--     java.lang.OutOfMemoryError: Requested array size exceeds VM limit
+--
+--SELECT
+--    tblId,
+--    src,
+--    CAST(srcSch   AS VARCHAR(80)),
+--    CAST(srcTable AS VARCHAR(80)),
+--    tgt,
+--    CAST(tgtSch   AS VARCHAR(80)),
+--    CAST(tgtTable AS VARCHAR(80)),
+--    mir,
+--    alg,
+--    target_last_updated_on,
+--    r,
+--    i,
+--    u,
+--    millis,
+--    "r/s",
+--    CAST(iIdCol AS VARCHAR(80)),
+--    max_iId,
+--    CAST(luoCol AS VARCHAR(80)),
+--    max_luo
+--FROM
+--    etl.psa_last_update_summary()
 SELECT
     tm.table_meta_id AS "tblId",
     tm.source_db_id AS "src",
@@ -28,4 +55,4 @@ ORDER BY
     tm.target_db_id,
     tm.source_db_id,
     tm.source_schema_name,
-    tm.source_table_name;
+    tm.source_table_name
