@@ -262,6 +262,7 @@ WHERE
      OR tm.source_table_name='obo__analysis_results' AND cm.source_column_name NOT IN (
             'analysis_result_id', 
             'analysis_result_type_id', 
+            'passage_event_id', 
             'pedd_id', 
             'licence_plate_country_code',
             'licence_plate_number', 
@@ -393,7 +394,10 @@ WHERE
      OR tm.source_table_name='obo__passage_event_derived_data_details' AND cm.source_column_name NOT IN (
             'pedd_id', 
             'created_on', 
-            'passage_event_timestamp',
+            'last_updated_on', 
+            'passage_event_type_id', 
+            'passage_event_timestamp', 
+            'control_point_id', 
             'obu_present',
             'applied_scheme_liability_category_id',
             'applied_axle_tariff_category_id', 
@@ -402,8 +406,7 @@ WHERE
             'applied_lpn_number',
             'applied_payment_means_pan',
             'applied_obuid',
-            'base_rate_total', 
-            'last_updated_on')
+            'base_rate_total')
      OR tm.source_table_name='obo__passage_event_dsrc_data' AND cm.source_column_name NOT IN (
             'pe_dsrc_data_id', 
             'passage_event_id', 

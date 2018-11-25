@@ -39,11 +39,12 @@ DROP TABLE   public.obo__analysis_results;
 CREATE TABLE public.obo__analysis_results (
     analysis_result_id           BIGINT               not null,
     analysis_result_type_id      SMALLINT             not null,
+    passage_event_id             BIGINT               not null, -- new column
     pedd_id                      BIGINT               null,
-    licence_plate_country_code   VARCHAR(2)           null,    -- new column
+    licence_plate_country_code   VARCHAR(2)           null,     -- new column
     licence_plate_number         VARCHAR(14)          null,
-    scheme_liability_category_id SMALLINT             null,    -- new column
-    axle_tariff_category_id      SMALLINT             null,    -- new column
+    scheme_liability_category_id SMALLINT             null,     -- new column
+    axle_tariff_category_id      SMALLINT             null,     -- new column
     last_updated_on              TIMESTAMP            not null,
     etl_batch_id_insert          BIGINT               not null,
     etl_batch_id_last_update     BIGINT               null
@@ -57,6 +58,7 @@ CREATE INDEX ix_obo__analysis_results_last_updated_on ON public.obo__analysis_re
 ---- This block of SQL effectively patches the structure of the
 ---- obo__analysis_results table as follows:
 ----
+----     ALTER TABLE public.obo__analysis_results ADD COLUMN passage_event_id             bigint not null;
 ----     ALTER TABLE public.obo__analysis_results ADD COLUMN licence_plate_country_code   character varying(2);
 ----     ALTER TABLE public.obo__analysis_results ADD COLUMN scheme_liability_category_id smallint;
 ----     ALTER TABLE public.obo__analysis_results ADD COLUMN axle_tariff_category_id      smallint;
@@ -68,11 +70,12 @@ CREATE INDEX ix_obo__analysis_results_last_updated_on ON public.obo__analysis_re
 --CREATE TABLE public.obo__analysis_results (
 --    analysis_result_id           BIGINT               not null,
 --    analysis_result_type_id      SMALLINT             not null,
+--    passage_event_id             BIGINT               not null, -- new column
 --    pedd_id                      BIGINT               null,
---    licence_plate_country_code   VARCHAR(2)           null,    -- new column
+--    licence_plate_country_code   VARCHAR(2)           null,     -- new column
 --    licence_plate_number         VARCHAR(14)          null,
---    scheme_liability_category_id SMALLINT             null,    -- new column
---    axle_tariff_category_id      SMALLINT             null,    -- new column
+--    scheme_liability_category_id SMALLINT             null,     -- new column
+--    axle_tariff_category_id      SMALLINT             null,     -- new column
 --    last_updated_on              TIMESTAMP            not null,
 --    etl_batch_id_insert          BIGINT               not null,
 --    etl_batch_id_last_update     BIGINT               null
@@ -81,6 +84,7 @@ CREATE INDEX ix_obo__analysis_results_last_updated_on ON public.obo__analysis_re
 --INSERT INTO public.obo__analysis_results (
 --    analysis_result_id,
 --    analysis_result_type_id,
+--    passage_event_id,                -- new column
 --    pedd_id,
 --    licence_plate_country_code,      -- new column
 --    licence_plate_number,
@@ -93,6 +97,7 @@ CREATE INDEX ix_obo__analysis_results_last_updated_on ON public.obo__analysis_re
 --SELECT
 --    analysis_result_id,
 --    analysis_result_type_id,
+--    null,                            -- new column  <- Not allowed because of "NOT NULL" column constraint
 --    pedd_id,
 --    null,                            -- new column
 --    licence_plate_number,
@@ -167,9 +172,12 @@ DROP TABLE   public.obo__passage_event_derived_data_details;
 CREATE TABLE public.obo__passage_event_derived_data_details (
     pedd_id                              BIGINT                      not null,
     created_on                           timestamp without time zone not null,    -- new column
+    last_updated_on                      timestamp without time zone not null,
+    passage_event_type_id                SMALLINT                    not null,    -- new column
     passage_event_timestamp              timestamp without time zone not null,    -- new column
+    control_point_id                     SMALLINT                    not null,    -- new column
     obu_present                          boolean                     not null,    -- new column
-    applied_scheme_liability_category_id smallint                    not null,    -- new column
+    applied_scheme_liability_category_id SMALLINT                    not null,    -- new column
     applied_axle_tariff_category_id      SMALLINT                    not null,
     applied_euro_emission_class_id       SMALLINT                    not null,
     applied_lpn_country                  character varying(2)        null,
@@ -177,83 +185,11 @@ CREATE TABLE public.obo__passage_event_derived_data_details (
     applied_payment_means_pan            character varying(19)       null,        -- new column
     applied_obuid                        character varying(15)       null,        -- new column
     base_rate_total                      INTEGER                     not null,
-    last_updated_on                      timestamp without time zone not null,
     etl_batch_id_insert                  BIGINT                      not null,
     etl_batch_id_last_update             BIGINT                      null
 );
 ALTER TABLE ONLY public.obo__passage_event_derived_data_details ADD CONSTRAINT pk_obo__passage_event_derived_data_details PRIMARY KEY (pedd_id);
 CREATE INDEX ix_obo__passage_event_derived_data_details_last_updated_on ON public.obo__passage_event_derived_data_details (last_updated_on);
---
----- This is an alternate way to add the new columns to the table, but the added sophistication is not needed:
---
---TRUNCATE public.obo__passage_event_derived_data_details;  -- So that the new columns will be define properly, even for old/existing rows
----- This block of SQL effectively patches the structure of the
----- obo__passage_event_derived_data_details table as follows:
-----
-----     ALTER TABLE public.obo__passage_event_derived_data_details ADD COLUMN passage_event_timestamp              timestamp without time zone not null;
-----     ALTER TABLE public.obo__passage_event_derived_data_details ADD COLUMN obu_present                          boolean                     not null;
-----     ALTER TABLE public.obo__passage_event_derived_data_details ADD COLUMN applied_scheme_liability_category_id smallint                    not null;
-----     ALTER TABLE public.obo__passage_event_derived_data_details ADD COLUMN applied_lpn_number                   character varying(14);
-----     ALTER TABLE public.obo__passage_event_derived_data_details ADD COLUMN applied_payment_means_pan            character varying(19);
-----     ALTER TABLE public.obo__passage_event_derived_data_details ADD COLUMN applied_obuid                        character varying(15);
-----
---ALTER TABLE public.obo__passage_event_derived_data_details DROP CONSTRAINT IF EXISTS pk_obo__pe_derived_dd;
---DROP INDEX IF EXISTS ix_obo__passage_event_derived_data_details_01;
---SELECT COUNT(*) AS "obo__passage_event_derived_data_details rows (before)" FROM public.obo__passage_event_derived_data_details;
---ALTER TABLE public.obo__passage_event_derived_data_details RENAME TO tmp_obo__passage_event_derived_data_details;
---CREATE TABLE public.obo__passage_event_derived_data_details (
---    pedd_id                              BIGINT                      not null,
---    passage_event_timestamp              timestamp without time zone not null,    -- new column
---    obu_present                          boolean                     not null,    -- new column
---    applied_scheme_liability_category_id smallint                    not null,    -- new column
---    applied_axle_tariff_category_id      SMALLINT                    not null,
---    applied_euro_emission_class_id       SMALLINT                    not null,
---    applied_lpn_country                  character varying(2)        null,
---    applied_lpn_number                   character varying(14)       null,        -- new column
---    applied_payment_means_pan            character varying(19)       null,        -- new column
---    applied_obuid                        character varying(15)       null,        -- new column
---    base_rate_total                      INTEGER                     not null,
---    last_updated_on                      TIMESTAMP                   not null,
---    etl_batch_id_insert                  BIGINT                      not null,
---    etl_batch_id_last_update             BIGINT                      null
---);
---ALTER TABLE ONLY public.obo__passage_event_derived_data_details ADD CONSTRAINT pk_obo__passage_event_derived_data_details PRIMARY KEY (pedd_id);
---INSERT INTO public.obo__passage_event_derived_data_details (
---    pedd_id,
---    passage_event_timestamp,                 -- new column
---    obu_present,                             -- new column
---    applied_scheme_liability_category_id,    -- new column
---    applied_axle_tariff_category_id,
---    applied_euro_emission_class_id,
---    applied_lpn_country,
---    applied_lpn_number,                       -- new column
---    applied_payment_means_pan,                -- new column
---    applied_obuid,                            -- new column
---    base_rate_total,
---    last_updated_on,
---    etl_batch_id_insert,
---    etl_batch_id_last_update
---)
---SELECT
---   pedd_id,
---   null,                                     -- new column
---   null,                                     -- new column
---   null,                                     -- new column
---   applied_axle_tariff_category_id,
---   applied_euro_emission_class_id,
---   applied_lpn_country,
---   null,                                     -- new column
---   null,                                     -- new column
---   null,                                     -- new column
---   base_rate_total,
---   last_updated_on,
---   etl_batch_id_insert,
---   etl_batch_id_last_update
---FROM
---    public.tmp_obo__passage_event_derived_data_details;
---CREATE INDEX ix_obo__passage_event_derived_data_details_last_updated_on ON public.obo__passage_event_derived_data_details (last_updated_on);
---SELECT COUNT(*) AS "obo__passage_event_derived_data_details rows (after)" FROM public.obo__passage_event_derived_data_details;
---DROP TABLE public.tmp_obo__passage_event_derived_data_details;  -- should only be executed if there were no errors above
 
 
 -- New table added to DSA.
