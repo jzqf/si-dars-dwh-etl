@@ -2,7 +2,13 @@
 --
 -- While the SQL in the file can be executed for testing during development, it
 -- must be integrated elsewhere for updating the dwh_dsa_obo installation script
--- or upgrade script.
+-- or upgrade script, e.g., in the scripts:
+--
+--   si-dars-solution/env-init/dev2/trdci0912/postgres/initialise/03.dbms_databases/03.etl_mgmt/003.create-schema-etl_mgmt-postgresql.sql
+--   si-dars-solution/env-init/prd/si01-prd-08cl/postgres/initialise/03.dbms_databases/03.etl_mgmt/003.create-schema-etl_mgmt-postgresql.sql
+--   si-dars-solution/env-init/qfr/si01-qfr-08cl/postgres/initialise/03.dbms_databases/03.etl_mgmt/003.create-schema-etl_mgmt-postgresql.sql
+--   si-dars-solution/env-init/stg/si01-stg-08cl/postgres/initialise/03.dbms_databases/03.etl_mgmt/003.create-schema-etl_mgmt-postgresql.sql
+--   si-dars-solution/env-init/uat/si01-uat-08cl/postgres/initialise/03.dbms_databases/03.etl_mgmt/003.create-schema-etl_mgmt-postgresql.sql
 
 
 -- Drop table and recreate the table with new columns:
@@ -17,7 +23,7 @@ CREATE TABLE public.mon__data_collection_source (
     etl_batch_id_last_update BIGINT               null
 );
 ALTER TABLE ONLY public.mon__data_collection_source ADD CONSTRAINT pk_mon__data_collection_source PRIMARY KEY (dcs_id);
-CREATE INDEX ix_mon__data_collection_source_last_updated_on ON public.mon__data_collection_source (last_updated_on);
+CREATE INDEX ix_mon__data_collection_source_01 ON public.mon__data_collection_source (last_updated_on);
 
 
 -- Drop table and recreate the table with new columns:
@@ -31,7 +37,7 @@ CREATE TABLE public.mon__managed_objects (
     etl_batch_id_last_update BIGINT               null
 );
 ALTER TABLE ONLY public.mon__managed_objects ADD CONSTRAINT pk_mon__managed_objects PRIMARY KEY (managed_object_id);
-CREATE INDEX ix_mon__managed_objects_last_updated_on ON public.mon__managed_objects (last_updated_on);
+CREATE INDEX ix_mon__managed_object_01 ON public.mon__managed_objects (last_updated_on);
 
 
 -- Drop table and recreate the table with new columns:
@@ -50,7 +56,12 @@ CREATE TABLE public.obo__analysis_results (
     etl_batch_id_last_update     BIGINT               null
 );
 ALTER TABLE ONLY public.obo__analysis_results ADD CONSTRAINT pk_obo__analysis_results PRIMARY KEY (analysis_result_id);
-CREATE INDEX ix_obo__analysis_results_last_updated_on ON public.obo__analysis_results (last_updated_on);
+CREATE INDEX ix_obo__analysis_results_01 ON public.obo__analysis_results (last_updated_on);
+-- Requested by Bjørn Tore 2018.11.26:
+CREATE INDEX ix_obo__analysis_results_02 on public.obo__analysis_results (
+    analysis_result_type_id,
+    scheme_liability_category_id
+);
 --
 ---- This is an alternate way to add the new columns to the table, but the added sophistication is not needed:
 --
@@ -108,7 +119,11 @@ CREATE INDEX ix_obo__analysis_results_last_updated_on ON public.obo__analysis_re
 --    etl_batch_id_last_update
 --FROM
 --    public.tmp_obo__analysis_results;
---CREATE INDEX ix_obo__analysis_results_last_updated_on ON public.obo__analysis_results (last_updated_on);
+--CREATE INDEX ix_obo__analysis_results_01 ON public.obo__analysis_results (last_updated_on);
+--CREATE INDEX ix_obo__analysis_results_02 on public.obo__analysis_results (
+--    analysis_result_type_id,
+--    scheme_liability_category_id
+--);
 --SELECT COUNT(*) AS "obo__analysis_results rows (after)" FROM public.obo__analysis_results;
 --DROP TABLE public.tmp_obo__analysis_results;  -- should only be executed if there were no errors above
 
@@ -123,19 +138,19 @@ CREATE TABLE public.obo__compliance_case_register (
     last_updated_on           TIMESTAMP            not null,
     etl_batch_id_insert       BIGINT               not null,
     etl_batch_id_last_update  BIGINT               null,
-    CONSTRAINT pk_obo__compliance_case_register PRIMARY KEY (compliance_case_id)
+    CONSTRAINT PK_OBO__COMPLIANCE_CASE_REGIST PRIMARY KEY (compliance_case_id)
 );
-CREATE INDEX ix_obo__compliance_case_register_last_updated_on ON public.obo__compliance_case_register (last_updated_on);
+CREATE INDEX ix_obo__compliance_case_register_01 ON public.obo__compliance_case_register (last_updated_on);
 
 
 -- New table added to DSA.
-CREATE TABLE  public.obo__control_point_event_capture_category (
+CREATE TABLE IF NOT EXISTS public.obo__control_point_event_capture_category (
     control_point_event_capture_category_id SMALLINT             not null,
     enum_name                               VARCHAR(30)          not null,
     description                             VARCHAR(50)          not null,
     etl_batch_id_insert                     BIGINT               not null,
     etl_batch_id_last_update                BIGINT               null,
-    CONSTRAINT pk_obo__control_point_event_capture_category PRIMARY KEY (control_point_event_capture_category_id)
+    CONSTRAINT PK_OBO__CONTROL_POINT_EVENT_CA PRIMARY KEY (control_point_event_capture_category_id)
 );
 
 
@@ -165,6 +180,9 @@ CREATE TABLE public.obo__passage_event (
     etl_batch_id_last_update                   BIGINT                      null,
     CONSTRAINT pk_obo__passage_event PRIMARY KEY (passage_event_id)
 );
+CREATE INDEX ix_obo__passage_event_01 ON public.obo__passage_event (
+    passage_event_timestamp
+);
 
 
 -- Drop table and recreate the table with new columns:
@@ -188,18 +206,33 @@ CREATE TABLE public.obo__passage_event_derived_data_details (
     etl_batch_id_insert                  BIGINT                      not null,
     etl_batch_id_last_update             BIGINT                      null
 );
-ALTER TABLE ONLY public.obo__passage_event_derived_data_details ADD CONSTRAINT pk_obo__passage_event_derived_data_details PRIMARY KEY (pedd_id);
-CREATE INDEX ix_obo__passage_event_derived_data_details_last_updated_on ON public.obo__passage_event_derived_data_details (last_updated_on);
+ALTER TABLE ONLY public.obo__passage_event_derived_data_details ADD CONSTRAINT PK_OBO__PE_DERIVED_DD PRIMARY KEY (pedd_id);
+CREATE INDEX ix_obo__passage_event_derived_data_details_01 ON public.obo__passage_event_derived_data_details (last_updated_on);
+
+
+-- Requested by Bjørn Tore 2018.11.26:
+CREATE INDEX IF NOT EXISTS ix_obo__passage_event_rse_logic_data_01 ON public.obo__passage_event_rse_logic_data (
+    rse_compliance_check_axles_check_id
+);
+CREATE INDEX IF NOT EXISTS ix_obo__passage_event_rse_logic_data_02 ON public.obo__passage_event_rse_logic_data (
+    passage_event_id
+);
+
+
+-- Requested by Bjørn Tore 2018.11.26:
+CREATE INDEX IF NOT EXISTS ix_obo__passage_event_01 on public.obo__passage_event (
+    passage_event_timestamp
+);
 
 
 -- New table added to DSA.
-CREATE TABLE  public.obo__rate_modification_category (
+CREATE TABLE IF NOT EXISTS public.obo__rate_modification_category (
     rate_modification_category_id SMALLINT             not null,
     enum_name                     VARCHAR(30)          not null,
     description                   VARCHAR(50)          not null,
     etl_batch_id_insert           BIGINT               not null,
     etl_batch_id_last_update      BIGINT               null,
-    CONSTRAINT pk_obo__rate_modification_category PRIMARY KEY (rate_modification_category_id)
+    CONSTRAINT PK_OBO__RATE_MODIFICATION_CATE PRIMARY KEY (rate_modification_category_id)
 );
 
 
@@ -216,5 +249,5 @@ CREATE TABLE public.obo__road_section (
    alternative_identifier    VARCHAR(1024)        null,        -- new column
    etl_batch_id_insert       BIGINT               not null,
    etl_batch_id_last_update  BIGINT               null,
-   CONSTRAINT pk_obo__road_section PRIMARY KEY (road_section_id)
+   CONSTRAINT PK_OBO__ROAD_SECTION PRIMARY KEY (road_section_id)
 );
