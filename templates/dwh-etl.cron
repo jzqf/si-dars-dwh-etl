@@ -1,5 +1,8 @@
 SHELL=/bin/sh
 PATH=/usr/local/bin:/bin:/usr/bin
 
-# Uncommenting below line will enable scheduled runs of DWH ETL process.
-#0 2 * * *	${app.user} "${app.rootDir}/${app.user}/bin/dwh-update.sh"
+# Uncommenting the line below will enable scheduled runs of DWH ETL process.
+# The redirection "1> /dev/null" stops stdout from being sent to the ${app.user} 
+# account in an email, but it still appears in the log file in the 
+# ${app.rootDir}/${app.user}/logs/ directory.
+#0 2 * * *	${app.user} "${app.rootDir}/${app.user}/bin/dwh-update.sh" 1> /dev/null
