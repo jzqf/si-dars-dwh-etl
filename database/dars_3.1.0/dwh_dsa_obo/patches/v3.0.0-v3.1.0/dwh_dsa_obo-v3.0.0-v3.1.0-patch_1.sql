@@ -180,6 +180,7 @@ CREATE TABLE public.obo__passage_event (
     etl_batch_id_last_update                   BIGINT                      null,
     CONSTRAINT pk_obo__passage_event PRIMARY KEY (passage_event_id)
 );
+-- Requested by Bjørn Tore 2018.11.26:
 CREATE INDEX ix_obo__passage_event_01 ON public.obo__passage_event (
     passage_event_timestamp
 );
@@ -216,12 +217,6 @@ CREATE INDEX IF NOT EXISTS ix_obo__passage_event_rse_logic_data_01 ON public.obo
 );
 CREATE INDEX IF NOT EXISTS ix_obo__passage_event_rse_logic_data_02 ON public.obo__passage_event_rse_logic_data (
     passage_event_id
-);
-
-
--- Requested by Bjørn Tore 2018.11.26:
-CREATE INDEX IF NOT EXISTS ix_obo__passage_event_01 on public.obo__passage_event (
-    passage_event_timestamp
 );
 
 
