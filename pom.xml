@@ -209,22 +209,11 @@
                  file "merge_configuration_files.jar" is generated before it is
                  packaged in the Debian package.
             -->
+
+
+
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <configuration>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                    <finalName>merge_configuration_files</finalName>
-                    <appendAssemblyId>false</appendAssemblyId>	<!-- Suppress "-jar-with-dependencies.jar" suffix in JAR name -->
-                    <attach>false</attach>						<!-- This avoids a Maven warning during build -->
-                    <archive>
-                        <manifest>
-                            <!-- MainClass in manifest to make an executable jar -->
-                            <mainClass>com.qfree.bo.dars.dwh.MergeProperties</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
                 <executions>
                     <execution>
                         <id>make-assembly</id>	<!-- this is used for inheritance merges -->
@@ -232,6 +221,32 @@
                         <goals>
                             <goal>single</goal>
                         </goals>
+                        <configuration>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+                            <finalName>merge_configuration_files</finalName>
+                            <appendAssemblyId>false</appendAssemblyId>	<!-- Suppress "-jar-with-dependencies.jar" suffix in JAR name -->
+                            <attach>false</attach>						<!-- This avoids a Maven warning during build -->
+                            <archive>
+                                <manifest>
+                                    <!-- MainClass in manifest to make an executable jar -->
+                                    <mainClass>com.qfree.bo.dars.dwh.MergeProperties</mainClass>
+                                </manifest>
+                            </archive>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>make-db-zip</id>	<!-- this is used for inheritance merges -->
+                        <phase>package</phase>	<!-- bind to the packaging phase -->
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>src/assembly/database.xml</descriptor>
+                            </descriptors>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -503,8 +518,7 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
-
     </build>
+
 </project>
