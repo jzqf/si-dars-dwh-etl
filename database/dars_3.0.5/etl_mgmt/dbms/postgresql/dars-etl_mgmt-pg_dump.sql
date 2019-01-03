@@ -1,10 +1,117 @@
-SET search_path TO etl,public;
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.5.14
+-- Dumped by pg_dump version 9.5.14
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+ALTER TABLE ONLY etl.table_state DROP CONSTRAINT fk_tablestate_tablemeta;
+ALTER TABLE ONLY etl.target_table_update DROP CONSTRAINT fk_etl_targettableupdate_tablemeta;
+ALTER TABLE ONLY etl.target_table_compare DROP CONSTRAINT fk_etl_targettablecompare_tablemeta;
+ALTER TABLE ONLY etl.column_meta DROP CONSTRAINT fk_columnmeta_tablemeta;
+DROP INDEX etl.idx_log_transformations_2;
+DROP INDEX etl.idx_log_transformations_1;
+DROP INDEX etl.idx_log_jobs_2;
+DROP INDEX etl.idx_log_jobs_1;
+DROP INDEX etl.idx_log_job_entries_1;
+ALTER TABLE ONLY etl.table_meta DROP CONSTRAINT uq_etl_tablemeta_targetdb_targetschema_targettable;
+ALTER TABLE ONLY etl.column_meta DROP CONSTRAINT uq_etl_columnmeta_tablemetaid_targetcolumnname;
+ALTER TABLE ONLY etl.target_table_update DROP CONSTRAINT pk_etl_targettableupdate;
+ALTER TABLE ONLY etl.target_table_compare DROP CONSTRAINT pk_etl_targettablecompare;
+ALTER TABLE ONLY etl.table_state DROP CONSTRAINT pk_etl_table_state;
+ALTER TABLE ONLY etl.table_meta DROP CONSTRAINT pk_etl_table_meta;
+ALTER TABLE ONLY etl.column_meta DROP CONSTRAINT pk_etl_column_meta;
+ALTER TABLE ONLY etl.cdc_timestamps DROP CONSTRAINT pk_etl_cdc_timestamps;
+ALTER TABLE etl.target_table_update ALTER COLUMN target_table_update_id DROP DEFAULT;
+ALTER TABLE etl.target_table_compare ALTER COLUMN target_table_compare_id DROP DEFAULT;
+DROP SEQUENCE etl.target_table_update_target_table_update_id_seq;
+DROP TABLE etl.target_table_update;
+DROP SEQUENCE etl.target_table_compare_target_table_compare_id_seq;
+DROP TABLE etl.target_table_compare;
+DROP TABLE etl.table_state;
+DROP TABLE etl.table_meta;
+DROP TABLE etl.log_transformations;
+DROP TABLE etl.log_transformation_steps;
+DROP TABLE etl.log_transformation_performance;
+DROP TABLE etl.log_transformation_metrics;
+DROP TABLE etl.log_jobs;
+DROP TABLE etl.log_job_entries;
+DROP TABLE etl.log_channel;
+DROP TABLE etl.configuration;
+DROP TABLE etl.column_meta;
+DROP TABLE etl.cdc_timestamps;
+DROP FUNCTION etl.psa_last_update_summary();
+DROP EXTENSION "uuid-ossp";
+DROP EXTENSION plpgsql;
+DROP SCHEMA public;
+DROP SCHEMA etl;
+--
+-- Name: etl; Type: SCHEMA; Schema: -; Owner: qfree_admin
+--
+
+CREATE SCHEMA etl;
+
+
+ALTER SCHEMA etl OWNER TO qfree_admin;
+
+--
+-- Name: public; Type: SCHEMA; Schema: -; Owner: postgres
+--
+
+CREATE SCHEMA public;
+
+
+ALTER SCHEMA public OWNER TO postgres;
+
+--
+-- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: postgres
+--
+
+COMMENT ON SCHEMA public IS 'standard public schema';
+
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+--
+-- Name: uuid-ossp; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA etl;
+
+
+--
+-- Name: EXTENSION "uuid-ossp"; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UUIDs)';
+
 
 --
 -- Name: psa_last_update_summary(); Type: FUNCTION; Schema: etl; Owner: qfree_admin
 --
 
-CREATE OR REPLACE FUNCTION etl.psa_last_update_summary() RETURNS TABLE(tblid smallint, src smallint, srcsch character varying, srctable character varying, tgt smallint, tgtsch character varying, tgttable character varying, mir boolean, alg smallint, target_last_updated_on timestamp without time zone, r integer, i integer, u integer, millis integer, "r/s" real, iidcol character varying, max_iid bigint, luocol character varying, max_luo timestamp without time zone)
+CREATE FUNCTION etl.psa_last_update_summary() RETURNS TABLE(tblid smallint, src smallint, srcsch character varying, srctable character varying, tgt smallint, tgtsch character varying, tgttable character varying, mir boolean, alg smallint, target_last_updated_on timestamp without time zone, r integer, i integer, u integer, millis integer, "r/s" real, iidcol character varying, max_iid bigint, luocol character varying, max_luo timestamp without time zone)
     LANGUAGE plpgsql
     AS $$
 BEGIN
@@ -43,49 +150,7 @@ ORDER BY
 END; $$;
 
 
-
---
--- Name: dsa_last_update_summary(); Type: FUNCTION; Schema: etl; Owner: qfree_admin
---
-
-CREATE OR REPLACE FUNCTION etl.dsa_last_update_summary() RETURNS TABLE(tblid smallint, src smallint, srcsch character varying, srctable character varying, tgt smallint, tgtsch character varying, tgttable character varying, mir boolean, alg smallint, target_last_updated_on timestamp without time zone, r integer, i integer, u integer, millis integer, "r/s" real, iidcol character varying, max_iid bigint, luocol character varying, max_luo timestamp without time zone)
-    LANGUAGE plpgsql
-    AS $$
-BEGIN
-RETURN QUERY 
-SELECT
-    tm.table_meta_id AS "tblId",
-    tm.source_db_id AS "src",
-    tm.source_schema_name AS "srcSch",
-    tm.source_table_name AS "srcTable",
-    tm.target_db_id AS "tgt",
-    tm.target_schema_name AS "tgtSch",
-    tm.target_table_name AS "tgtTable",
-    tm.update_target_table AS "mir",
-    ts.target_last_updated_algorithm_id AS "alg",
-    ts.target_last_updated_on AS "target_last_updated_on",
-    ts.target_last_updated_num_rows_processed AS "r",
-    ts.target_last_updated_num_inserts AS "i",
-    ts.target_last_updated_num_updates AS "u",
-    ts.target_last_updated_elapsed_time_millis AS "millis",
-    ts.target_last_updated_num_rows_processed_per_sec AS "r/s",                 --<- Limit to 2 decimal places?
-    ts.target_last_updated_insert_id_colname AS "iIdCol",
-    ts.target_last_updated_insert_id_maxvalue AS "max_iId",
-    ts.target_last_updated_last_updated_on_colname AS "luoCol",
-    ts.target_last_updated_last_updated_on_maxvalue AS "max_luo"
-FROM
-    etl.table_meta tm
-INNER JOIN
-    etl.table_state ts ON ts.table_state_id=tm.table_meta_id
-WHERE
-    tm.target_db_id=20  -- DSA DB
-ORDER BY
-    tm.target_db_id,
-    tm.source_db_id,
-    tm.source_schema_name,
-    tm.source_table_name ;
-END; $$;
-
+ALTER FUNCTION etl.psa_last_update_summary() OWNER TO qfree_admin;
 
 SET default_tablespace = '';
 
@@ -101,6 +166,8 @@ CREATE TABLE etl.cdc_timestamps (
     current_load timestamp without time zone DEFAULT '1970-01-01 00:00:00'::timestamp without time zone NOT NULL
 );
 
+
+ALTER TABLE etl.cdc_timestamps OWNER TO qfree_admin;
 
 --
 -- Name: column_meta; Type: TABLE; Schema: etl; Owner: qfree_admin
@@ -124,6 +191,34 @@ CREATE TABLE etl.column_meta (
 );
 
 
+ALTER TABLE etl.column_meta OWNER TO qfree_admin;
+
+--
+-- Name: configuration; Type: TABLE; Schema: etl; Owner: qfree_admin
+--
+
+CREATE TABLE etl.configuration (
+    configuration_id uuid DEFAULT etl.uuid_generate_v4() NOT NULL,
+    boolean_value boolean,
+    bytea_value bytea,
+    created_on timestamp without time zone NOT NULL,
+    date_value date,
+    datetime_value timestamp without time zone,
+    double_value double precision,
+    float_value real,
+    integer_value integer,
+    long_value bigint,
+    param_name character varying(64) NOT NULL,
+    param_type character varying(16) NOT NULL,
+    string_value character varying(1000),
+    text_value text,
+    time_value time without time zone,
+    role_id uuid
+);
+
+
+ALTER TABLE etl.configuration OWNER TO qfree_admin;
+
 --
 -- Name: log_channel; Type: TABLE; Schema: etl; Owner: qfree_admin
 --
@@ -143,6 +238,8 @@ CREATE TABLE etl.log_channel (
     root_channel_id character varying(255)
 );
 
+
+ALTER TABLE etl.log_channel OWNER TO qfree_admin;
 
 --
 -- Name: log_job_entries; Type: TABLE; Schema: etl; Owner: qfree_admin
@@ -166,6 +263,8 @@ CREATE TABLE etl.log_job_entries (
     nr_result_files bigint
 );
 
+
+ALTER TABLE etl.log_job_entries OWNER TO qfree_admin;
 
 --
 -- Name: log_jobs; Type: TABLE; Schema: etl; Owner: qfree_admin
@@ -192,6 +291,8 @@ CREATE TABLE etl.log_jobs (
 );
 
 
+ALTER TABLE etl.log_jobs OWNER TO qfree_admin;
+
 --
 -- Name: log_transformation_metrics; Type: TABLE; Schema: etl; Owner: qfree_admin
 --
@@ -208,6 +309,8 @@ CREATE TABLE etl.log_transformation_metrics (
     metrics_value bigint
 );
 
+
+ALTER TABLE etl.log_transformation_metrics OWNER TO qfree_admin;
 
 --
 -- Name: log_transformation_performance; Type: TABLE; Schema: etl; Owner: qfree_admin
@@ -232,6 +335,8 @@ CREATE TABLE etl.log_transformation_performance (
 );
 
 
+ALTER TABLE etl.log_transformation_performance OWNER TO qfree_admin;
+
 --
 -- Name: log_transformation_steps; Type: TABLE; Schema: etl; Owner: qfree_admin
 --
@@ -252,6 +357,8 @@ CREATE TABLE etl.log_transformation_steps (
     errors bigint
 );
 
+
+ALTER TABLE etl.log_transformation_steps OWNER TO qfree_admin;
 
 --
 -- Name: log_transformations; Type: TABLE; Schema: etl; Owner: qfree_admin
@@ -277,6 +384,8 @@ CREATE TABLE etl.log_transformations (
     log_field text
 );
 
+
+ALTER TABLE etl.log_transformations OWNER TO qfree_admin;
 
 --
 -- Name: table_meta; Type: TABLE; Schema: etl; Owner: qfree_admin
@@ -311,6 +420,8 @@ CREATE TABLE etl.table_meta (
 );
 
 
+ALTER TABLE etl.table_meta OWNER TO qfree_admin;
+
 --
 -- Name: table_state; Type: TABLE; Schema: etl; Owner: qfree_admin
 --
@@ -337,6 +448,8 @@ CREATE TABLE etl.table_state (
 );
 
 
+ALTER TABLE etl.table_state OWNER TO qfree_admin;
+
 --
 -- Name: target_table_compare; Type: TABLE; Schema: etl; Owner: qfree_admin
 --
@@ -352,6 +465,8 @@ CREATE TABLE etl.target_table_compare (
 );
 
 
+ALTER TABLE etl.target_table_compare OWNER TO qfree_admin;
+
 --
 -- Name: target_table_compare_target_table_compare_id_seq; Type: SEQUENCE; Schema: etl; Owner: qfree_admin
 --
@@ -363,6 +478,8 @@ CREATE SEQUENCE etl.target_table_compare_target_table_compare_id_seq
     NO MAXVALUE
     CACHE 1;
 
+
+ALTER TABLE etl.target_table_compare_target_table_compare_id_seq OWNER TO qfree_admin;
 
 --
 -- Name: target_table_compare_target_table_compare_id_seq; Type: SEQUENCE OWNED BY; Schema: etl; Owner: qfree_admin
@@ -392,6 +509,8 @@ CREATE TABLE etl.target_table_update (
 );
 
 
+ALTER TABLE etl.target_table_update OWNER TO qfree_admin;
+
 --
 -- Name: target_table_update_target_table_update_id_seq; Type: SEQUENCE; Schema: etl; Owner: qfree_admin
 --
@@ -403,6 +522,8 @@ CREATE SEQUENCE etl.target_table_update_target_table_update_id_seq
     NO MAXVALUE
     CACHE 1;
 
+
+ALTER TABLE etl.target_table_update_target_table_update_id_seq OWNER TO qfree_admin;
 
 --
 -- Name: target_table_update_target_table_update_id_seq; Type: SEQUENCE OWNED BY; Schema: etl; Owner: qfree_admin
@@ -3160,6 +3281,13 @@ INSERT INTO etl.column_meta (column_meta_id, table_meta_id, source_column_name, 
 
 
 --
+-- Data for Name: configuration; Type: TABLE DATA; Schema: etl; Owner: qfree_admin
+--
+
+INSERT INTO etl.configuration (configuration_id, boolean_value, bytea_value, created_on, date_value, datetime_value, double_value, float_value, integer_value, long_value, param_name, param_type, string_value, text_value, time_value, role_id) VALUES ('3aaa6ca9-1f23-4a40-8b95-007dcadc4637', NULL, NULL, '2018-10-01 12:42:09.231208', NULL, NULL, NULL, NULL, 4, NULL, 'DB_VERSION', 'INTEGER', '4', NULL, NULL, NULL);
+
+
+--
 -- Data for Name: log_channel; Type: TABLE DATA; Schema: etl; Owner: qfree_admin
 --
 
@@ -4182,30 +4310,17 @@ ALTER TABLE ONLY etl.table_state
     ADD CONSTRAINT fk_tablestate_tablemeta FOREIGN KEY (table_state_id) REFERENCES etl.table_meta(table_meta_id);
 
 
-    
--- ----------- Add A Version Control Helper (Stolen from Report Server)
-CREATE TABLE IF NOT EXISTS etl.configuration (
-    configuration_id uuid DEFAULT etl.uuid_generate_v4() NOT NULL,
-    boolean_value boolean,
-    bytea_value bytea,
-    created_on timestamp without time zone NOT NULL,
-    date_value date,
-    datetime_value timestamp without time zone,
-    double_value double precision,
-    float_value real,
-    integer_value integer,
-    long_value bigint,
-    param_name character varying(64) NOT NULL,
-    param_type character varying(16) NOT NULL,
-    string_value character varying(1000),
-    text_value text,
-    time_value time without time zone,
-    role_id uuid
-);
+--
+-- Name: SCHEMA public; Type: ACL; Schema: -; Owner: postgres
+--
 
--- Create a global configuration record that contains the current database 
--- version. This will get updated at the database is upgraded over time. This
--- version number will be updated whenever the data model changes *or* Q-Free
--- supplied content changes (records are created, updated or deleted).
-INSERT INTO etl.configuration (param_name, role_id, param_type, integer_value, string_value , created_on)
-    VALUES ('DB_VERSION', null, 'INTEGER', 5, '5', current_timestamp AT TIME ZONE 'UTC') ON CONFLICT DO NOTHING;
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- PostgreSQL database dump complete
+--
+

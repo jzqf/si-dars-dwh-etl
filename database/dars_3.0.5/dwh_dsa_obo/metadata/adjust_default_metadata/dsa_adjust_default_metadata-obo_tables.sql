@@ -416,6 +416,7 @@ WHERE
      OR tm.source_table_name='obo__passage_event_rse_logic_data' AND cm.source_column_name NOT IN (
             'perseld_id', 
             'passage_event_id', 
+            'rse_passage_type_id', 
             'rse_compliance_check_axles_check_id')
      OR tm.source_table_name='obo__passage_event_type' AND cm.source_column_name NOT IN (
             'passage_event_type_id', 

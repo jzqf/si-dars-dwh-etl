@@ -180,11 +180,6 @@ ALTER TABLE ONLY etl.target_table_compare ALTER COLUMN target_table_compare_id S
 ALTER TABLE ONLY etl.target_table_update ALTER COLUMN target_table_update_id SET DEFAULT nextval('etl.target_table_update_target_table_update_id_seq'::regclass);
 
 
---
--- Data for Name: cdc_timestamps; Type: TABLE DATA; Schema: etl; Owner: qfree_admin
---
-
-
 
 --
 -- Data for Name: column_meta; Type: TABLE DATA; Schema: etl; Owner: qfree_admin
@@ -3785,6 +3780,13 @@ INSERT INTO etl.table_state (table_state_id, target_last_updated_on, target_last
 --
 
 
+
+--
+-- Data for Name: target_table_update; Type: TABLE DATA; Schema: etl; Owner: qfree_admin
+--
+
+
+
 --
 -- Name: pk_etl_column_meta; Type: CONSTRAINT; Schema: etl; Owner: qfree_admin
 --
@@ -4296,7 +4298,7 @@ FROM
 --    column_meta.table_meta_id      = olddata.table_meta_id_new AND
 --    column_meta.target_column_name = olddata.target_column_name;
 
-    
+
 -- ----------- Add A Version Control Helper (Stolen from Report Server)
 CREATE TABLE IF NOT EXISTS etl.configuration (
     configuration_id uuid DEFAULT etl.uuid_generate_v4() NOT NULL,
@@ -4322,4 +4324,4 @@ CREATE TABLE IF NOT EXISTS etl.configuration (
 -- version number will be updated whenever the data model changes *or* Q-Free
 -- supplied content changes (records are created, updated or deleted).
 INSERT INTO etl.configuration (param_name, role_id, param_type, integer_value, string_value , created_on)
-    VALUES ('DB_VERSION', null, 'INTEGER', 4, '4', current_timestamp AT TIME ZONE 'UTC') ON CONFLICT DO NOTHING;
+    VALUES ('DB_VERSION', null, 'INTEGER', 5, '5', current_timestamp AT TIME ZONE 'UTC') ON CONFLICT DO NOTHING;

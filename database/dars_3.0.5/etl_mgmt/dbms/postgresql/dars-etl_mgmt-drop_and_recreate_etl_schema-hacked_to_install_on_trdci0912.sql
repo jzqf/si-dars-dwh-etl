@@ -1,10 +1,51 @@
-SET search_path TO etl,public;
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.5.14
+-- Dumped by pg_dump version 9.5.14
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET search_path = etl, pg_catalog;
+
+DROP SCHEMA IF EXISTS etl CASCADE;
+
+--
+-- Name: etl; Type: SCHEMA; Schema: -; Owner: qfree_admin
+--
+
+CREATE SCHEMA etl;
+
+
+ALTER SCHEMA etl OWNER TO qfree_etl;
+
+
+--
+-- Name: uuid-ossp; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA etl;
+
+
+--
+-- Name: EXTENSION "uuid-ossp"; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UUIDs)';
+
 
 --
 -- Name: psa_last_update_summary(); Type: FUNCTION; Schema: etl; Owner: qfree_admin
 --
 
-CREATE OR REPLACE FUNCTION etl.psa_last_update_summary() RETURNS TABLE(tblid smallint, src smallint, srcsch character varying, srctable character varying, tgt smallint, tgtsch character varying, tgttable character varying, mir boolean, alg smallint, target_last_updated_on timestamp without time zone, r integer, i integer, u integer, millis integer, "r/s" real, iidcol character varying, max_iid bigint, luocol character varying, max_luo timestamp without time zone)
+CREATE FUNCTION etl.psa_last_update_summary() RETURNS TABLE(tblid smallint, src smallint, srcsch character varying, srctable character varying, tgt smallint, tgtsch character varying, tgttable character varying, mir boolean, alg smallint, target_last_updated_on timestamp without time zone, r integer, i integer, u integer, millis integer, "r/s" real, iidcol character varying, max_iid bigint, luocol character varying, max_luo timestamp without time zone)
     LANGUAGE plpgsql
     AS $$
 BEGIN
@@ -43,12 +84,14 @@ ORDER BY
 END; $$;
 
 
+ALTER FUNCTION etl.psa_last_update_summary() OWNER TO qfree_etl;
+
 
 --
 -- Name: dsa_last_update_summary(); Type: FUNCTION; Schema: etl; Owner: qfree_admin
 --
 
-CREATE OR REPLACE FUNCTION etl.dsa_last_update_summary() RETURNS TABLE(tblid smallint, src smallint, srcsch character varying, srctable character varying, tgt smallint, tgtsch character varying, tgttable character varying, mir boolean, alg smallint, target_last_updated_on timestamp without time zone, r integer, i integer, u integer, millis integer, "r/s" real, iidcol character varying, max_iid bigint, luocol character varying, max_luo timestamp without time zone)
+CREATE FUNCTION etl.dsa_last_update_summary() RETURNS TABLE(tblid smallint, src smallint, srcsch character varying, srctable character varying, tgt smallint, tgtsch character varying, tgttable character varying, mir boolean, alg smallint, target_last_updated_on timestamp without time zone, r integer, i integer, u integer, millis integer, "r/s" real, iidcol character varying, max_iid bigint, luocol character varying, max_luo timestamp without time zone)
     LANGUAGE plpgsql
     AS $$
 BEGIN
@@ -87,6 +130,8 @@ ORDER BY
 END; $$;
 
 
+ALTER FUNCTION etl.dsa_last_update_summary() OWNER TO qfree_etl;
+
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -101,6 +146,8 @@ CREATE TABLE etl.cdc_timestamps (
     current_load timestamp without time zone DEFAULT '1970-01-01 00:00:00'::timestamp without time zone NOT NULL
 );
 
+
+ALTER TABLE etl.cdc_timestamps OWNER TO qfree_etl;
 
 --
 -- Name: column_meta; Type: TABLE; Schema: etl; Owner: qfree_admin
@@ -124,6 +171,8 @@ CREATE TABLE etl.column_meta (
 );
 
 
+ALTER TABLE etl.column_meta OWNER TO qfree_etl;
+
 --
 -- Name: log_channel; Type: TABLE; Schema: etl; Owner: qfree_admin
 --
@@ -143,6 +192,8 @@ CREATE TABLE etl.log_channel (
     root_channel_id character varying(255)
 );
 
+
+ALTER TABLE etl.log_channel OWNER TO qfree_etl;
 
 --
 -- Name: log_job_entries; Type: TABLE; Schema: etl; Owner: qfree_admin
@@ -166,6 +217,8 @@ CREATE TABLE etl.log_job_entries (
     nr_result_files bigint
 );
 
+
+ALTER TABLE etl.log_job_entries OWNER TO qfree_etl;
 
 --
 -- Name: log_jobs; Type: TABLE; Schema: etl; Owner: qfree_admin
@@ -192,6 +245,8 @@ CREATE TABLE etl.log_jobs (
 );
 
 
+ALTER TABLE etl.log_jobs OWNER TO qfree_etl;
+
 --
 -- Name: log_transformation_metrics; Type: TABLE; Schema: etl; Owner: qfree_admin
 --
@@ -208,6 +263,8 @@ CREATE TABLE etl.log_transformation_metrics (
     metrics_value bigint
 );
 
+
+ALTER TABLE etl.log_transformation_metrics OWNER TO qfree_etl;
 
 --
 -- Name: log_transformation_performance; Type: TABLE; Schema: etl; Owner: qfree_admin
@@ -232,6 +289,8 @@ CREATE TABLE etl.log_transformation_performance (
 );
 
 
+ALTER TABLE etl.log_transformation_performance OWNER TO qfree_etl;
+
 --
 -- Name: log_transformation_steps; Type: TABLE; Schema: etl; Owner: qfree_admin
 --
@@ -252,6 +311,8 @@ CREATE TABLE etl.log_transformation_steps (
     errors bigint
 );
 
+
+ALTER TABLE etl.log_transformation_steps OWNER TO qfree_etl;
 
 --
 -- Name: log_transformations; Type: TABLE; Schema: etl; Owner: qfree_admin
@@ -277,6 +338,8 @@ CREATE TABLE etl.log_transformations (
     log_field text
 );
 
+
+ALTER TABLE etl.log_transformations OWNER TO qfree_etl;
 
 --
 -- Name: table_meta; Type: TABLE; Schema: etl; Owner: qfree_admin
@@ -311,6 +374,8 @@ CREATE TABLE etl.table_meta (
 );
 
 
+ALTER TABLE etl.table_meta OWNER TO qfree_etl;
+
 --
 -- Name: table_state; Type: TABLE; Schema: etl; Owner: qfree_admin
 --
@@ -337,6 +402,8 @@ CREATE TABLE etl.table_state (
 );
 
 
+ALTER TABLE etl.table_state OWNER TO qfree_etl;
+
 --
 -- Name: target_table_compare; Type: TABLE; Schema: etl; Owner: qfree_admin
 --
@@ -352,6 +419,8 @@ CREATE TABLE etl.target_table_compare (
 );
 
 
+ALTER TABLE etl.target_table_compare OWNER TO qfree_etl;
+
 --
 -- Name: target_table_compare_target_table_compare_id_seq; Type: SEQUENCE; Schema: etl; Owner: qfree_admin
 --
@@ -363,6 +432,8 @@ CREATE SEQUENCE etl.target_table_compare_target_table_compare_id_seq
     NO MAXVALUE
     CACHE 1;
 
+
+ALTER TABLE etl.target_table_compare_target_table_compare_id_seq OWNER TO qfree_etl;
 
 --
 -- Name: target_table_compare_target_table_compare_id_seq; Type: SEQUENCE OWNED BY; Schema: etl; Owner: qfree_admin
@@ -392,6 +463,8 @@ CREATE TABLE etl.target_table_update (
 );
 
 
+ALTER TABLE etl.target_table_update OWNER TO qfree_etl;
+
 --
 -- Name: target_table_update_target_table_update_id_seq; Type: SEQUENCE; Schema: etl; Owner: qfree_admin
 --
@@ -403,6 +476,8 @@ CREATE SEQUENCE etl.target_table_update_target_table_update_id_seq
     NO MAXVALUE
     CACHE 1;
 
+
+ALTER TABLE etl.target_table_update_target_table_update_id_seq OWNER TO qfree_etl;
 
 --
 -- Name: target_table_update_target_table_update_id_seq; Type: SEQUENCE OWNED BY; Schema: etl; Owner: qfree_admin
@@ -4180,32 +4255,3 @@ ALTER TABLE ONLY etl.target_table_update
 
 ALTER TABLE ONLY etl.table_state
     ADD CONSTRAINT fk_tablestate_tablemeta FOREIGN KEY (table_state_id) REFERENCES etl.table_meta(table_meta_id);
-
-
-    
--- ----------- Add A Version Control Helper (Stolen from Report Server)
-CREATE TABLE IF NOT EXISTS etl.configuration (
-    configuration_id uuid DEFAULT etl.uuid_generate_v4() NOT NULL,
-    boolean_value boolean,
-    bytea_value bytea,
-    created_on timestamp without time zone NOT NULL,
-    date_value date,
-    datetime_value timestamp without time zone,
-    double_value double precision,
-    float_value real,
-    integer_value integer,
-    long_value bigint,
-    param_name character varying(64) NOT NULL,
-    param_type character varying(16) NOT NULL,
-    string_value character varying(1000),
-    text_value text,
-    time_value time without time zone,
-    role_id uuid
-);
-
--- Create a global configuration record that contains the current database 
--- version. This will get updated at the database is upgraded over time. This
--- version number will be updated whenever the data model changes *or* Q-Free
--- supplied content changes (records are created, updated or deleted).
-INSERT INTO etl.configuration (param_name, role_id, param_type, integer_value, string_value , created_on)
-    VALUES ('DB_VERSION', null, 'INTEGER', 5, '5', current_timestamp AT TIME ZONE 'UTC') ON CONFLICT DO NOTHING;

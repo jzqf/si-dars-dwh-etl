@@ -211,6 +211,20 @@ ALTER TABLE ONLY public.obo__passage_event_derived_data_details ADD CONSTRAINT P
 CREATE INDEX ix_obo__passage_event_derived_data_details_01 ON public.obo__passage_event_derived_data_details (last_updated_on);
 
 
+-- https://issues.q-free.com/browse/QFC-BODARS-2618:
+--
+-- Drop table and recreate the table with the new columns:
+DROP TABLE   public.obo__passage_event_rse_logic_data;
+CREATE TABLE public.obo__passage_event_rse_logic_data (
+    perseld_id                           bigint                      not null,
+    passage_event_id                     bigint                      not null,
+    rse_passage_type_id                  smallint                    null,        -- new column
+    rse_compliance_check_axles_check_id  smallint                    null,
+    etl_batch_id_insert                  BIGINT                      not null,
+    etl_batch_id_last_update             BIGINT                      null         -- new column
+);
+ALTER TABLE ONLY public.obo__passage_event_rse_logic_data ADD CONSTRAINT pk_obo__passage_event_rse_logi PRIMARY KEY (perseld_id);
+--
 -- Requested by Bjørn Tore 2018.11.26:
 CREATE INDEX IF NOT EXISTS ix_obo__passage_event_rse_logic_data_01 ON public.obo__passage_event_rse_logic_data (
     rse_compliance_check_axles_check_id
