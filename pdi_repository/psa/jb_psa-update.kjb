@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2018/03/30 13:05:12.909</modified_date>
+  <modified_date>2018/11/15 14:00:46.561</modified_date>
   <parameters>
     </parameters>
   <connection>
@@ -341,6 +341,7 @@
       <name>START</name>
       <description />
       <type>SPECIAL</type>
+      <attributes />
       <start>Y</start>
       <dummy>N</dummy>
       <repeat>N</repeat>
@@ -354,13 +355,15 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>224</xloc>
+      <xloc>96</xloc>
       <yloc>144</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>jb_target-update</name>
       <description />
       <type>JOB</type>
+      <attributes />
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
@@ -381,12 +384,23 @@
       <expand_remote_job>N</expand_remote_job>
       <create_parent_folder>N</create_parent_folder>
       <pass_export>N</pass_export>
+      <run_configuration>Pentaho local</run_configuration>
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
         <parameter>
           <name>PARAM_TARGET_DB_ID</name>
           <stream_name />
           <value>${QF_DB_ID_PSA}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_REPO_PATH_TO_JOB_SUMMARY_SQL_CUSTOMER</name>
+          <stream_name />
+          <value>${QF_JOB_SUMMARY_REPO_PATH_TO_SQL_SCRIPT_PSA_CUSTOMER}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_REPO_PATH_TO_JOB_SUMMARY_SQL_QFREE</name>
+          <stream_name />
+          <value>${QF_JOB_SUMMARY_REPO_PATH_TO_SQL_SCRIPT_PSA_QFREE}</value>
         </parameter>
         <parameter>
           <name>PARAM_PARENT_JOB_NAME</name>
@@ -398,29 +412,34 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>224</xloc>
+      <xloc>96</xloc>
       <yloc>240</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>Success</name>
       <description />
       <type>SUCCESS</type>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>288</xloc>
-      <yloc>336</yloc>
-    </entry>
-    <entry>
-      <name>Abort job</name>
-      <description />
-      <type>ABORT</type>
-      <message>Job ${Internal.Job.Name} failed. See log and e-mail sent.</message>
+      <attributes />
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>160</xloc>
       <yloc>336</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>Abort job</name>
+      <description />
+      <type>ABORT</type>
+      <attributes />
+      <message>Job ${Internal.Job.Name} failed. See log and e-mail sent.</message>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>32</xloc>
+      <yloc>336</yloc>
+      <attributes_kjc />
     </entry>
   </entries>
   <hops>
@@ -483,12 +502,14 @@ should be assigned the batch ID of the root job (not this job). This may vary fr
     <notepad>
       <note>jb_target-update is passed the parameters:
 
-	PARAM_TARGET_DB_ID 		= ${QF_DB_ID_PSA}
-	PARAM_PARENT_JOB_NAME	= ${Internal.Job.Name}</note>
-      <xloc>336</xloc>
-      <yloc>224</yloc>
-      <width>328</width>
-      <heigth>62</heigth>
+	PARAM_TARGET_DB_ID 									= ${QF_DB_ID_PSA}
+	PARAM_PARENT_JOB_NAME								= ${Internal.Job.Name}
+	PARAM_REPO_PATH_TO_JOB_SUMMARY_SQL_CUSTOMER	= ${QF_JOB_SUMMARY_REPO_PATH_TO_SQL_SCRIPT_PSA_CUSTOMER}
+	PARAM_REPO_PATH_TO_JOB_SUMMARY_SQL_QFREE		= ${QF_JOB_SUMMARY_REPO_PATH_TO_SQL_SCRIPT_PSA_QFREE}</note>
+      <xloc>192</xloc>
+      <yloc>208</yloc>
+      <width>615</width>
+      <heigth>88</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -517,7 +538,7 @@ should be assigned the batch ID of the root job (not this job). This may vary fr
       <name>{"_":"Embedded MetaStore Elements","namespace":"pentaho","type":"Default Run Configuration"}</name>
       <attribute>
         <key>Pentaho local</key>
-        <value>{"children":[{"children":[],"id":"server","value":null},{"children":[],"id":"clustered","value":"N"},{"children":[],"id":"name","value":"Pentaho local"},{"children":[],"id":"description","value":null},{"children":[],"id":"readOnly","value":"Y"},{"children":[],"id":"sendResources","value":"N"},{"children":[],"id":"logRemoteExecutionLocally","value":"N"},{"children":[],"id":"remote","value":"N"},{"children":[],"id":"local","value":"Y"},{"children":[],"id":"showTransformations","value":"N"}],"id":"Pentaho local","value":null,"name":"Pentaho local","owner":null,"ownerPermissionsList":[]}</value>
+        <value>{"children":[{"children":[],"id":"server","value":null},{"children":[],"id":"clustered","value":"N"},{"children":[],"id":"name","value":"Pentaho local"},{"children":[],"id":"description","value":null},{"children":[],"id":"pentaho","value":"N"},{"children":[],"id":"readOnly","value":"Y"},{"children":[],"id":"sendResources","value":"N"},{"children":[],"id":"logRemoteExecutionLocally","value":"N"},{"children":[],"id":"remote","value":"N"},{"children":[],"id":"local","value":"Y"},{"children":[],"id":"showTransformations","value":"N"}],"id":"Pentaho local","value":null,"name":"Pentaho local","owner":null,"ownerPermissionsList":[]}</value>
       </attribute>
     </group>
   </attributes>

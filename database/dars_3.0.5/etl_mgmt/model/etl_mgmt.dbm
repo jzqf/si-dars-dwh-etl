@@ -1,0 +1,905 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+CAUTION: Do not modify this file unless you know what you are doing.
+         Unexpected results may occur if the code is changed deliberately.
+-->
+<dbmodel pgmodeler-ver="0.8.2" last-position="0,0" last-zoom="1"
+	 default-schema="public" default-owner="postgres">
+<role name="adam"
+      superuser="true"
+      createdb="true"
+      createrole="true"
+      inherit="true"
+      login="true"
+      encrypted="true"
+      password="********">
+</role>
+
+<role name="adam_rpt"
+      inherit="true"
+      login="true"
+      encrypted="true"
+      password="********">
+	<comment><![CDATA[This is an adam type user for the data warehouse]]></comment>
+</role>
+
+<role name="dbtest"
+      inherit="true"
+      login="true"
+      encrypted="true"
+      password="********">
+</role>
+
+<role name="etl"
+      inherit="true"
+      login="true"
+      encrypted="true"
+      password="********">
+</role>
+
+<role name="jeffreyz"
+      createdb="true"
+      inherit="true"
+      login="true"
+      encrypted="true"
+      password="********">
+</role>
+
+<role name="pdi"
+      inherit="true"
+      login="true"
+      encrypted="true"
+      password="********">
+</role>
+
+<role name="report_server_app"
+      inherit="true"
+      login="true"
+      encrypted="true"
+      password="********">
+</role>
+
+<role name="reportserver"
+      superuser="true"
+      createdb="true"
+      createrole="true"
+      inherit="true"
+      login="true"
+      encrypted="true"
+      password="********">
+</role>
+
+<role name="qfree_admin"
+      inherit="true"
+      login="true"
+      encrypted="true"
+      password="********">
+</role>
+
+<role name="qfree_obo_role"
+      inherit="true"
+      login="true"
+      encrypted="true"
+      password="********">
+</role>
+
+<role name="qfree_odms_role"
+      inherit="true"
+      login="true"
+      encrypted="true"
+      password="********">
+</role>
+
+<role name="qfree_sm_rw_role"
+      inherit="true"
+      login="true"
+      encrypted="true"
+      password="********">
+</role>
+
+<role name="qfree_sm_ro_role"
+      inherit="true"
+      login="true"
+      encrypted="true"
+      password="********">
+</role>
+
+<role name="qfree_bi_ro_role"
+      inherit="true"
+      login="true"
+      encrypted="true"
+      password="********">
+</role>
+
+<role name="qfree_mon_cen_role"
+      inherit="true"
+      encrypted="true"
+      password="********">
+</role>
+
+<role name="qfree_netxms"
+      inherit="true"
+      login="true"
+      encrypted="true"
+      password="********">
+</role>
+
+<role name="qfree_rw_role"
+      inherit="true"
+      encrypted="true"
+      password="********">
+</role>
+
+<role name="qfree_bi_rw_role"
+      encrypted="true"
+      password="********">
+</role>
+
+<database name="dwh_etl_db" encoding="UTF8" lc-collate="en_US" lc-ctype="en_US">
+	<role name="qfree_admin"/>
+	<tablespace name="pg_default"/>
+</database>
+
+<schema name="public" rect-visible="true" fill-color="#e1e1e1" sql-disabled="true">
+</schema>
+
+<schema name="etl" rect-visible="true" fill-color="#ffff7f">
+	<role name="qfree_admin"/>
+</schema>
+
+<table name="cdc_timestamps">
+	<schema name="etl"/>
+	<role name="qfree_admin"/>
+	<position x="100" y="863"/>
+	<column name="target_db_id" not-null="true">
+		<type name="smallint"/>
+	</column>
+	<column name="last_successful_load" not-null="true" default-value="'1970-01-01 00:00:00'::timestamp without time zone">
+		<type name="timestamp"/>
+	</column>
+	<column name="current_load" not-null="true" default-value="'1970-01-01 00:00:00'::timestamp without time zone">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="pk_etl_cdc_timestamps" type="pk-constr" table="etl.cdc_timestamps">
+		<columns names="target_db_id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="column_meta">
+	<schema name="etl"/>
+	<role name="qfree_admin"/>
+	<position x="600" y="43"/>
+	<column name="column_meta_id" not-null="true">
+		<type name="smallint"/>
+	</column>
+	<column name="table_meta_id" not-null="true">
+		<type name="smallint"/>
+	</column>
+	<column name="source_column_name">
+		<type name="character varying" length="80"/>
+	</column>
+	<column name="target_column_name">
+		<type name="character varying" length="80"/>
+	</column>
+	<column name="is_primary_key_column" not-null="true" default-value="false">
+		<type name="boolean"/>
+	</column>
+	<column name="primary_key_column_order">
+		<type name="smallint"/>
+	</column>
+	<column name="is_insert_id_column" not-null="true" default-value="false">
+		<type name="boolean"/>
+	</column>
+	<column name="is_inserted_on_column" not-null="true" default-value="false">
+		<type name="boolean"/>
+	</column>
+	<column name="is_last_updated_on_column" not-null="true" default-value="false">
+		<type name="boolean"/>
+	</column>
+	<column name="is_row_can_be_deleted_from_column" not-null="true" default-value="false">
+		<type name="boolean"/>
+	</column>
+	<column name="is_can_delete_row_column" not-null="true" default-value="false">
+		<type name="boolean"/>
+	</column>
+	<column name="is_updatable_column" not-null="true" default-value="false">
+		<type name="boolean"/>
+	</column>
+	<column name="mirror_column" not-null="true" default-value="false">
+		<type name="boolean"/>
+	</column>
+	<column name="compare_column" not-null="true" default-value="false">
+		<type name="boolean"/>
+	</column>
+	<constraint name="pk_etl_column_meta" type="pk-constr" table="etl.column_meta">
+		<columns names="column_meta_id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="uq_etl_columnmeta_tablemetaid_targetcolumnname" type="uq-constr" table="etl.column_meta">
+		<columns names="table_meta_id,target_column_name" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="log_channel">
+	<schema name="etl"/>
+	<role name="qfree_admin"/>
+	<position x="1040" y="740"/>
+	<column name="id_batch">
+		<type name="integer"/>
+	</column>
+	<column name="channel_id">
+		<type name="character varying" length="255"/>
+	</column>
+	<column name="log_date">
+		<type name="timestamp"/>
+	</column>
+	<column name="logging_object_type">
+		<type name="character varying" length="255"/>
+	</column>
+	<column name="object_name">
+		<type name="character varying" length="255"/>
+	</column>
+	<column name="object_copy">
+		<type name="character varying" length="255"/>
+	</column>
+	<column name="repository_directory">
+		<type name="character varying" length="255"/>
+	</column>
+	<column name="filename">
+		<type name="character varying" length="255"/>
+	</column>
+	<column name="object_id">
+		<type name="character varying" length="255"/>
+	</column>
+	<column name="object_revision">
+		<type name="character varying" length="255"/>
+	</column>
+	<column name="parent_channel_id">
+		<type name="character varying" length="255"/>
+	</column>
+	<column name="root_channel_id">
+		<type name="character varying" length="255"/>
+	</column>
+</table>
+
+<table name="log_job_entries">
+	<schema name="etl"/>
+	<role name="qfree_admin"/>
+	<position x="1400" y="40"/>
+	<column name="id_batch">
+		<type name="integer"/>
+	</column>
+	<column name="channel_id">
+		<type name="character varying" length="255"/>
+	</column>
+	<column name="log_date">
+		<type name="timestamp"/>
+	</column>
+	<column name="transname">
+		<type name="character varying" length="255"/>
+	</column>
+	<column name="stepname">
+		<type name="character varying" length="255"/>
+	</column>
+	<column name="lines_read">
+		<type name="bigint"/>
+	</column>
+	<column name="lines_written">
+		<type name="bigint"/>
+	</column>
+	<column name="lines_updated">
+		<type name="bigint"/>
+	</column>
+	<column name="lines_input">
+		<type name="bigint"/>
+	</column>
+	<column name="lines_output">
+		<type name="bigint"/>
+	</column>
+	<column name="lines_rejected">
+		<type name="bigint"/>
+	</column>
+	<column name="errors">
+		<type name="bigint"/>
+	</column>
+	<column name="result">
+		<type name="boolean"/>
+	</column>
+	<column name="nr_result_rows">
+		<type name="bigint"/>
+	</column>
+	<column name="nr_result_files">
+		<type name="bigint"/>
+	</column>
+</table>
+
+<table name="log_jobs">
+	<schema name="etl"/>
+	<role name="qfree_admin"/>
+	<position x="1120" y="40"/>
+	<column name="id_job">
+		<type name="integer"/>
+	</column>
+	<column name="channel_id">
+		<type name="character varying" length="255"/>
+	</column>
+	<column name="jobname">
+		<type name="character varying" length="255"/>
+	</column>
+	<column name="status">
+		<type name="character varying" length="15"/>
+	</column>
+	<column name="lines_read">
+		<type name="bigint"/>
+	</column>
+	<column name="lines_written">
+		<type name="bigint"/>
+	</column>
+	<column name="lines_updated">
+		<type name="bigint"/>
+	</column>
+	<column name="lines_input">
+		<type name="bigint"/>
+	</column>
+	<column name="lines_output">
+		<type name="bigint"/>
+	</column>
+	<column name="lines_rejected">
+		<type name="bigint"/>
+	</column>
+	<column name="errors">
+		<type name="bigint"/>
+	</column>
+	<column name="startdate">
+		<type name="timestamp"/>
+	</column>
+	<column name="enddate">
+		<type name="timestamp"/>
+	</column>
+	<column name="logdate">
+		<type name="timestamp"/>
+	</column>
+	<column name="depdate">
+		<type name="timestamp"/>
+	</column>
+	<column name="replaydate">
+		<type name="timestamp"/>
+	</column>
+	<column name="log_field">
+		<type name="text"/>
+	</column>
+</table>
+
+<table name="log_transformation_metrics">
+	<schema name="etl"/>
+	<role name="qfree_admin"/>
+	<position x="1360" y="960"/>
+	<column name="id_batch">
+		<type name="integer"/>
+	</column>
+	<column name="channel_id">
+		<type name="character varying" length="255"/>
+	</column>
+	<column name="log_date">
+		<type name="timestamp"/>
+	</column>
+	<column name="metrics_date">
+		<type name="timestamp"/>
+	</column>
+	<column name="metrics_code">
+		<type name="character varying" length="255"/>
+	</column>
+	<column name="metrics_description">
+		<type name="character varying" length="255"/>
+	</column>
+	<column name="metrics_subject">
+		<type name="character varying" length="255"/>
+	</column>
+	<column name="metrics_type">
+		<type name="character varying" length="255"/>
+	</column>
+	<column name="metrics_value">
+		<type name="bigint"/>
+	</column>
+</table>
+
+<table name="log_transformation_performance">
+	<schema name="etl"/>
+	<role name="qfree_admin"/>
+	<position x="1360" y="680"/>
+	<column name="id_batch">
+		<type name="integer"/>
+	</column>
+	<column name="seq_nr">
+		<type name="integer"/>
+	</column>
+	<column name="logdate">
+		<type name="timestamp"/>
+	</column>
+	<column name="transname">
+		<type name="character varying" length="255"/>
+	</column>
+	<column name="stepname">
+		<type name="character varying" length="255"/>
+	</column>
+	<column name="step_copy">
+		<type name="integer"/>
+	</column>
+	<column name="lines_read">
+		<type name="bigint"/>
+	</column>
+	<column name="lines_written">
+		<type name="bigint"/>
+	</column>
+	<column name="lines_updated">
+		<type name="bigint"/>
+	</column>
+	<column name="lines_input">
+		<type name="bigint"/>
+	</column>
+	<column name="lines_output">
+		<type name="bigint"/>
+	</column>
+	<column name="lines_rejected">
+		<type name="bigint"/>
+	</column>
+	<column name="errors">
+		<type name="bigint"/>
+	</column>
+	<column name="input_buffer_rows">
+		<type name="bigint"/>
+	</column>
+	<column name="output_buffer_rows">
+		<type name="bigint"/>
+	</column>
+</table>
+
+<table name="log_transformation_steps">
+	<schema name="etl"/>
+	<role name="qfree_admin"/>
+	<position x="1400" y="360"/>
+	<column name="id_batch">
+		<type name="integer"/>
+	</column>
+	<column name="channel_id">
+		<type name="character varying" length="255"/>
+	</column>
+	<column name="log_date">
+		<type name="timestamp"/>
+	</column>
+	<column name="transname">
+		<type name="character varying" length="255"/>
+	</column>
+	<column name="stepname">
+		<type name="character varying" length="255"/>
+	</column>
+	<column name="step_copy">
+		<type name="smallint"/>
+	</column>
+	<column name="lines_read">
+		<type name="bigint"/>
+	</column>
+	<column name="lines_written">
+		<type name="bigint"/>
+	</column>
+	<column name="lines_updated">
+		<type name="bigint"/>
+	</column>
+	<column name="lines_input">
+		<type name="bigint"/>
+	</column>
+	<column name="lines_output">
+		<type name="bigint"/>
+	</column>
+	<column name="lines_rejected">
+		<type name="bigint"/>
+	</column>
+	<column name="errors">
+		<type name="bigint"/>
+	</column>
+</table>
+
+<table name="log_transformations">
+	<schema name="etl"/>
+	<role name="qfree_admin"/>
+	<position x="1120" y="360"/>
+	<column name="id_batch">
+		<type name="integer"/>
+	</column>
+	<column name="channel_id">
+		<type name="character varying" length="255"/>
+	</column>
+	<column name="transname">
+		<type name="character varying" length="255"/>
+	</column>
+	<column name="status">
+		<type name="character varying" length="15"/>
+	</column>
+	<column name="lines_read">
+		<type name="bigint"/>
+	</column>
+	<column name="lines_written">
+		<type name="bigint"/>
+	</column>
+	<column name="lines_updated">
+		<type name="bigint"/>
+	</column>
+	<column name="lines_input">
+		<type name="bigint"/>
+	</column>
+	<column name="lines_output">
+		<type name="bigint"/>
+	</column>
+	<column name="lines_rejected">
+		<type name="bigint"/>
+	</column>
+	<column name="errors">
+		<type name="bigint"/>
+	</column>
+	<column name="startdate">
+		<type name="timestamp"/>
+	</column>
+	<column name="enddate">
+		<type name="timestamp"/>
+	</column>
+	<column name="logdate">
+		<type name="timestamp"/>
+	</column>
+	<column name="depdate">
+		<type name="timestamp"/>
+	</column>
+	<column name="replaydate">
+		<type name="timestamp"/>
+	</column>
+	<column name="log_field">
+		<type name="text"/>
+	</column>
+</table>
+
+<table name="table_meta">
+	<schema name="etl"/>
+	<role name="qfree_admin"/>
+	<position x="20" y="60"/>
+	<column name="table_meta_id" not-null="true">
+		<type name="smallint"/>
+	</column>
+	<column name="source_db_id" not-null="true">
+		<type name="smallint"/>
+	</column>
+	<column name="source_schema_name" not-null="true">
+		<type name="character varying" length="80"/>
+	</column>
+	<column name="source_table_name" not-null="true">
+		<type name="character varying" length="80"/>
+	</column>
+	<column name="target_db_id" not-null="true">
+		<type name="smallint"/>
+	</column>
+	<column name="target_schema_name" not-null="true">
+		<type name="character varying" length="80"/>
+	</column>
+	<column name="target_table_name" not-null="true">
+		<type name="character varying" length="80"/>
+	</column>
+	<column name="can_insert_rows" not-null="true" default-value="true">
+		<type name="boolean"/>
+	</column>
+	<column name="can_update_rows" not-null="true" default-value="false">
+		<type name="boolean"/>
+	</column>
+	<column name="can_delete_rows" not-null="true" default-value="false">
+		<type name="boolean"/>
+	</column>
+	<column name="is_static_support_table" not-null="true" default-value="false">
+		<type name="boolean"/>
+	</column>
+	<column name="row_can_be_deleted_from_seconds">
+		<type name="integer"/>
+	</column>
+	<column name="can_delete_row_schema_name">
+		<type name="character varying" length="80"/>
+	</column>
+	<column name="can_delete_row_table_name">
+		<type name="character varying" length="80"/>
+	</column>
+	<column name="delete_marked_rows_table_order">
+		<type name="smallint"/>
+	</column>
+	<column name="mark_rows_for_deletion_algorithm_id" not-null="true" default-value="0">
+		<type name="smallint"/>
+	</column>
+	<column name="delete_marked_rows_algorithm_id" not-null="true" default-value="0">
+		<type name="smallint"/>
+	</column>
+	<column name="update_target_table_algorithm_id" not-null="true" default-value="0">
+		<type name="smallint"/>
+	</column>
+	<column name="update_target_table" not-null="true" default-value="false">
+		<type name="boolean"/>
+	</column>
+	<column name="mark_rows_for_deletion" not-null="true" default-value="false">
+		<type name="boolean"/>
+	</column>
+	<column name="delete_marked_rows" not-null="true" default-value="false">
+		<type name="boolean"/>
+	</column>
+	<column name="compare_target_table" not-null="true" default-value="false">
+		<type name="boolean"/>
+	</column>
+	<column name="source_db_etl_state_register_schema_name">
+		<type name="character varying" length="80"/>
+	</column>
+	<column name="source_db_etl_state_register_table_name">
+		<type name="character varying" length="80"/>
+	</column>
+	<constraint name="row_can_be_deleted_from_seconds_positive" type="ck-constr" table="etl.table_meta">
+			<expression><![CDATA[(row_can_be_deleted_from_seconds >= 0)]]></expression>
+	</constraint>
+	<constraint name="pk_etl_table_meta" type="pk-constr" table="etl.table_meta">
+		<columns names="table_meta_id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="uq_etl_tablemeta_sourcedb_sourceschema_sourcetable" type="uq-constr" table="etl.table_meta">
+		<columns names="source_db_id,source_schema_name,source_table_name" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="uq_etl_tablemeta_targetdb_targetschema_targettable" type="uq-constr" table="etl.table_meta">
+		<columns names="target_db_id,target_schema_name,target_table_name" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="table_state">
+	<schema name="etl"/>
+	<role name="qfree_admin"/>
+	<position x="20" y="443"/>
+	<column name="table_state_id" not-null="true">
+		<type name="smallint"/>
+	</column>
+	<column name="target_last_updated_on">
+		<type name="timestamp"/>
+	</column>
+	<column name="target_last_updated_algorithm_id">
+		<type name="smallint"/>
+	</column>
+	<column name="target_last_updated_elapsed_time_millis">
+		<type name="integer"/>
+	</column>
+	<column name="target_last_updated_num_inserts">
+		<type name="integer"/>
+	</column>
+	<column name="target_last_updated_num_updates">
+		<type name="integer"/>
+	</column>
+	<column name="target_last_updated_num_rows_processed">
+		<type name="integer"/>
+	</column>
+	<column name="target_last_updated_num_rows_processed_per_sec">
+		<type name="real"/>
+	</column>
+	<column name="target_last_updated_insert_id_colname">
+		<type name="character varying" length="80"/>
+	</column>
+	<column name="target_last_updated_insert_id_maxvalue">
+		<type name="bigint"/>
+	</column>
+	<column name="target_last_updated_last_updated_on_colname">
+		<type name="character varying" length="80"/>
+	</column>
+	<column name="target_last_updated_last_updated_on_maxvalue">
+		<type name="timestamp"/>
+	</column>
+	<column name="last_compared_on">
+		<type name="timestamp"/>
+	</column>
+	<column name="last_compared_num_rows_equal">
+		<type name="integer"/>
+	</column>
+	<column name="last_compared_num_rows_unequal">
+		<type name="integer"/>
+	</column>
+	<column name="last_compared_num_rows_missing_from_target">
+		<type name="integer"/>
+	</column>
+	<column name="last_compared_num_rows_extra_in_target">
+		<type name="integer"/>
+	</column>
+	<column name="max_insert_id">
+		<type name="bigint"/>
+	</column>
+	<constraint name="pk_etl_table_state" type="pk-constr" table="etl.table_state">
+		<columns names="table_state_id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="target_table_compare_target_table_compare_id_seq"
+	 start="1" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="etl"/>
+	<role name="qfree_admin"/>
+</sequence>
+
+<table name="target_table_compare">
+	<schema name="etl"/>
+	<role name="qfree_admin"/>
+	<position x="620" y="583"/>
+	<column name="target_table_compare_id" not-null="true" sequence="etl.target_table_compare_target_table_compare_id_seq">
+		<type name="integer"/>
+	</column>
+	<column name="table_meta_id" not-null="true">
+		<type name="smallint"/>
+	</column>
+	<column name="compared_on">
+		<type name="timestamp"/>
+	</column>
+	<column name="num_rows_equal">
+		<type name="integer"/>
+	</column>
+	<column name="num_rows_unequal">
+		<type name="integer"/>
+	</column>
+	<column name="num_rows_missing_from_target">
+		<type name="integer"/>
+	</column>
+	<column name="num_rows_extra_in_target">
+		<type name="integer"/>
+	</column>
+	<constraint name="pk_etl_targettablecompare" type="pk-constr" table="etl.target_table_compare">
+		<columns names="target_table_compare_id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="target_table_update_target_table_update_id_seq"
+	 start="1" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="etl"/>
+	<role name="qfree_admin"/>
+</sequence>
+
+<table name="target_table_update">
+	<schema name="etl"/>
+	<role name="qfree_admin"/>
+	<position x="620" y="320"/>
+	<column name="target_table_update_id" not-null="true" sequence="etl.target_table_update_target_table_update_id_seq">
+		<type name="integer"/>
+	</column>
+	<column name="table_meta_id" not-null="true">
+		<type name="smallint"/>
+	</column>
+	<column name="created_on">
+		<type name="timestamp"/>
+	</column>
+	<column name="algorithm_id">
+		<type name="smallint"/>
+	</column>
+	<column name="elapsed_time_millis">
+		<type name="integer"/>
+	</column>
+	<column name="num_inserts">
+		<type name="integer"/>
+	</column>
+	<column name="num_updates">
+		<type name="integer"/>
+	</column>
+	<column name="num_rows_processed">
+		<type name="integer"/>
+	</column>
+	<column name="num_rows_processed_per_sec">
+		<type name="real"/>
+	</column>
+	<column name="insert_id_colname">
+		<type name="character varying" length="80"/>
+	</column>
+	<column name="insert_id_maxvalue">
+		<type name="bigint"/>
+	</column>
+	<column name="last_updated_on_colname">
+		<type name="character varying" length="80"/>
+	</column>
+	<column name="last_updated_on_maxvalue">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="pk_etl_targettableupdate" type="pk-constr" table="etl.target_table_update">
+		<columns names="target_table_update_id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<index name="idx_log_job_entries_1" table="etl.log_job_entries"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="id_batch"/>
+		</idxelement>
+</index>
+
+<index name="idx_log_jobs_1" table="etl.log_jobs"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="id_job"/>
+		</idxelement>
+</index>
+
+<index name="idx_log_jobs_2" table="etl.log_jobs"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="errors"/>
+		</idxelement>
+		<idxelement use-sorting="false">
+			<column name="status"/>
+		</idxelement>
+		<idxelement use-sorting="false">
+			<column name="jobname"/>
+		</idxelement>
+</index>
+
+<index name="idx_log_transformations_1" table="etl.log_transformations"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="id_batch"/>
+		</idxelement>
+</index>
+
+<index name="idx_log_transformations_2" table="etl.log_transformations"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="errors"/>
+		</idxelement>
+		<idxelement use-sorting="false">
+			<column name="status"/>
+		</idxelement>
+		<idxelement use-sorting="false">
+			<column name="transname"/>
+		</idxelement>
+</index>
+
+<constraint name="fk_columnmeta_tablemeta" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="etl.table_meta" table="etl.column_meta">
+	<columns names="table_meta_id" ref-type="src-columns"/>
+	<columns names="table_meta_id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_tablestate_tablemeta" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="etl.table_meta" table="etl.table_state">
+	<columns names="table_state_id" ref-type="src-columns"/>
+	<columns names="table_meta_id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_etl_targettablecompare_tablemeta" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="etl.table_meta" table="etl.target_table_compare">
+	<columns names="table_meta_id" ref-type="src-columns"/>
+	<columns names="table_meta_id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_etl_targettableupdate_tablemeta" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="etl.table_meta" table="etl.target_table_update">
+	<columns names="table_meta_id" ref-type="src-columns"/>
+	<columns names="table_meta_id" ref-type="dst-columns"/>
+</constraint>
+
+<relationship name="rel_column_meta_table_meta" type="relfk"
+	 custom-color="#02522e"
+	 src-table="etl.column_meta"
+	 dst-table="etl.table_meta"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_table_state_table_meta" type="relfk"
+	 custom-color="#ba7d71"
+	 src-table="etl.table_state"
+	 dst-table="etl.table_meta"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_target_table_compare_table_meta" type="relfk"
+	 custom-color="#99f36d"
+	 src-table="etl.target_table_compare"
+	 dst-table="etl.table_meta"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_target_table_update_table_meta" type="relfk"
+	 custom-color="#7f7005"
+	 src-table="etl.target_table_update"
+	 dst-table="etl.table_meta"
+	 src-required="false" dst-required="false"/>
+
+</dbmodel>

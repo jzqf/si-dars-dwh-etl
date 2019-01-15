@@ -18,4 +18,4 @@
 # Include environment variables
 source ${app.rootDir}/${app.user}/bin/${app.name}-env.sh
 
-$DWH_HOME/bin/kitchen.sh /dsa/jb_dsa-update.kjb Minimal
+$DWH_HOME/bin/kitchen.sh /dsa jb_dsa-update Minimal

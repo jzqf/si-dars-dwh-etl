@@ -1,81 +1,25 @@
 <job>
-  <name>jb_dsa-populate_metadata_tables</name>
+  <name>CAMS_Innovatix_Job</name>
   <description />
   <extended_description />
   <job_version />
   <job_status>0</job_status>
-  <directory>/dsa</directory>
-  <created_user>-</created_user>
-  <created_date>2016/04/03 14:57:58.609</created_date>
-  <modified_user>-</modified_user>
-  <modified_date>2018/08/10 14:05:01.593</modified_date>
+  <directory>/development/jeffreyz/tests/send_email_with_attachment</directory>
+  <created_user>admin</created_user>
+  <created_date>2008/06/27 14:36:36.000</created_date>
+  <modified_user>admin</modified_user>
+  <modified_date>2018/11/14 13:48:43.420</modified_date>
   <parameters>
-    <parameter>
-      <name>PARAM_FILENAME</name>
-      <default_value>/home/jeffreyz/git/si-dars-dwh-etl/pdi_repository/dsa/metadata/dsa_metadata.csv</default_value>
-      <description>Absolute path to CSV file that will be used to populate the metadata tables</description>
-    </parameter>
-  </parameters>
-  <connection>
-    <name>logging_db</name>
-    <server>${QF_LOGGING_DB_HOST}</server>
-    <type>POSTGRESQL</type>
-    <access>Native</access>
-    <database>${QF_LOGGING_DB_DATABASE}</database>
-    <port>${QF_LOGGING_DB_PORT}</port>
-    <username>${QF_LOGGING_DB_USERNAME}</username>
-    <password>${QF_LOGGING_DB_PASSWORD}</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
-    <attributes>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>IS_CLUSTERED</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>PORT_NUMBER</code>
-        <attribute>${QF_LOGGING_DB_PORT}</attribute>
-      </attribute>
-      <attribute>
-        <code>PRESERVE_RESERVED_WORD_CASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>QUOTE_ALL_FIELDS</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>USE_POOLING</code>
-        <attribute>N</attribute>
-      </attribute>
-    </attributes>
-  </connection>
+    </parameters>
   <slaveservers>
     </slaveservers>
   <job-log-table>
-    <connection>${QF_LOGGING_DB_CONNECTION}</connection>
-    <schema>${QF_LOG_JOB_SCHEMA}</schema>
-    <table>${QF_LOG_JOB_TABLE}</table>
+    <connection />
+    <schema />
+    <table />
     <size_limit_lines />
     <interval />
-    <timeout_days>${QF_LOG_JOB_TIMEOUT_IN_DAYS}</timeout_days>
+    <timeout_days />
     <field>
       <id>ID_JOB</id>
       <enabled>Y</enabled>
@@ -83,7 +27,7 @@
     </field>
     <field>
       <id>CHANNEL_ID</id>
-      <enabled>Y</enabled>
+      <enabled>N</enabled>
       <name>CHANNEL_ID</name>
     </field>
     <field>
@@ -123,7 +67,7 @@
     </field>
     <field>
       <id>LINES_REJECTED</id>
-      <enabled>Y</enabled>
+      <enabled>N</enabled>
       <name>LINES_REJECTED</name>
     </field>
     <field>
@@ -183,10 +127,10 @@
     </field>
   </job-log-table>
   <jobentry-log-table>
-    <connection>${QF_LOGGING_DB_CONNECTION}</connection>
-    <schema>${QF_LOG_JOBENTRY_SCHEMA}</schema>
-    <table>${QF_LOG_JOBENTRY_TABLE}</table>
-    <timeout_days>${QF_LOG_JOBENTRY_TIMEOUT_IN_DAYS}</timeout_days>
+    <connection />
+    <schema />
+    <table />
+    <timeout_days />
     <field>
       <id>ID_BATCH</id>
       <enabled>Y</enabled>
@@ -274,10 +218,10 @@
     </field>
   </jobentry-log-table>
   <channel-log-table>
-    <connection>${QF_LOGGING_DB_CONNECTION}</connection>
-    <schema>${QF_LOG_CHANNEL_SCHEMA}</schema>
-    <table>${QF_LOG_CHANNEL_TABLE}</table>
-    <timeout_days>${QF_LOG_CHANNEL_TIMEOUT_IN_DAYS}</timeout_days>
+    <connection />
+    <schema />
+    <table />
+    <timeout_days />
     <field>
       <id>ID_BATCH</id>
       <enabled>Y</enabled>
@@ -339,13 +283,14 @@
       <name>ROOT_CHANNEL_ID</name>
     </field>
   </channel-log-table>
-  <pass_batchid>Y</pass_batchid>
+  <pass_batchid>N</pass_batchid>
   <shared_objects_file />
   <entries>
     <entry>
       <name>START</name>
-      <description />
+      <description>Special entries</description>
       <type>SPECIAL</type>
+      <attributes />
       <start>Y</start>
       <dummy>N</dummy>
       <repeat>N</repeat>
@@ -359,88 +304,164 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>144</xloc>
-      <yloc>192</yloc>
+      <xloc>100</xloc>
+      <yloc>120</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
-      <name>jb_target-populate_metadata_tables</name>
-      <description />
-      <type>JOB</type>
+      <name>create_csv_file</name>
+      <description>Transformation</description>
+      <type>TRANS</type>
+      <attributes />
       <specification_method>rep_name</specification_method>
-      <job_object_id />
+      <trans_object_id />
       <filename />
-      <jobname>jb_target-populate_metadata_tables</jobname>
-      <directory>/generic/populate_etl_metadata_tables</directory>
+      <transname>create_csv_file</transname>
+      <directory>${Internal.Entry.Current.Directory}</directory>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
+      <clear_rows>N</clear_rows>
+      <clear_files>N</clear_files>
       <set_logfile>N</set_logfile>
       <logfile />
       <logext />
       <add_date>N</add_date>
       <add_time>N</add_time>
       <loglevel>Nothing</loglevel>
+      <cluster>N</cluster>
       <slave_server_name />
+      <set_append_logfile>N</set_append_logfile>
       <wait_until_finished>Y</wait_until_finished>
       <follow_abort_remote>N</follow_abort_remote>
-      <expand_remote_job>N</expand_remote_job>
       <create_parent_folder>N</create_parent_folder>
-      <pass_export>N</pass_export>
-      <run_configuration />
+      <logging_remote_work>N</logging_remote_work>
+      <run_configuration>Pentaho local</run_configuration>
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
       </parameters>
-      <set_append_logfile>N</set_append_logfile>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>144</xloc>
-      <yloc>288</yloc>
+      <xloc>200</xloc>
+      <yloc>120</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>Mail 1</name>
+      <description>Mail</description>
+      <type>MAIL</type>
+      <attributes />
+      <server>smtp.q-free.com</server>
+      <port>25</port>
+      <destination>jeffreyz@q-free.com</destination>
+      <destinationCc />
+      <destinationBCc />
+      <replyto>jeffreyz@q-free.com</replyto>
+      <replytoname />
+      <subject>This is the email subject</subject>
+      <include_date>Y</include_date>
+      <contact_person />
+      <contact_phone />
+      <comment>This is the email body</comment>
+      <include_files>Y</include_files>
+      <zip_files>N</zip_files>
+      <zip_name />
+      <use_auth>N</use_auth>
+      <use_secure_auth>N</use_secure_auth>
+      <auth_user />
+      <auth_password>OBF:</auth_password>
+      <only_comment>Y</only_comment>
+      <use_HTML>N</use_HTML>
+      <use_Priority>N</use_Priority>
+      <encoding>UTF-8</encoding>
+      <priority>normal</priority>
+      <importance>normal</importance>
+      <sensitivity>normal</sensitivity>
+      <secureconnectiontype>SSL</secureconnectiontype>
+      <replyToAddresses />
+      <filetypes>
+        <filetype>GENERAL</filetype>
+      </filetypes>
+      <embeddedimages>
+      </embeddedimages>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>400</xloc>
+      <yloc>120</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>Get_Set_File</name>
+      <description>Transformation</description>
+      <type>TRANS</type>
+      <attributes />
+      <specification_method>rep_name</specification_method>
+      <trans_object_id />
+      <filename />
+      <transname>Get_Set_File</transname>
+      <directory>/development/jeffreyz/tests/send_email_with_attachment</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <clear_rows>N</clear_rows>
+      <clear_files>N</clear_files>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <cluster>N</cluster>
+      <slave_server_name />
+      <set_append_logfile>N</set_append_logfile>
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <create_parent_folder>N</create_parent_folder>
+      <logging_remote_work>N</logging_remote_work>
+      <run_configuration>Pentaho local</run_configuration>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+      </parameters>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>300</xloc>
+      <yloc>120</yloc>
+      <attributes_kjc />
     </entry>
   </entries>
   <hops>
     <hop>
       <from>START</from>
-      <to>jb_target-populate_metadata_tables</to>
+      <to>create_csv_file</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>Y</evaluation>
       <unconditional>Y</unconditional>
     </hop>
+    <hop>
+      <from>create_csv_file</from>
+      <to>Get_Set_File</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Get_Set_File</from>
+      <to>Mail 1</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
   </hops>
   <notepads>
-    <notepad>
-      <note>This job writes default rows to the tables:
-
-	${QF_ETL_DB_SCHEMA}.table_meta
-	${QF_ETL_DB_SCHEMA}.table_state
-	${QF_ETL_DB_SCHEMA}.column_meta
-
-using the initial metadata supplied by the tr_populate_metadata_tables-get_list_of_tables transformation.
-
-This job has one parameter:
-
-	PARAM_FILENAME	Absolute path to CSV file that will be used to populate the metadata tables</note>
-      <xloc>0</xloc>
-      <yloc>0</yloc>
-      <width>635</width>
-      <heigth>164</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
   </notepads>
   <attributes>
     <group>
@@ -454,7 +475,7 @@ This job has one parameter:
       <name>{"_":"Embedded MetaStore Elements","namespace":"pentaho","type":"Default Run Configuration"}</name>
       <attribute>
         <key>Pentaho local</key>
-        <value>{"children":[{"children":[],"id":"server","value":null},{"children":[],"id":"clustered","value":"N"},{"children":[],"id":"name","value":"Pentaho local"},{"children":[],"id":"description","value":null},{"children":[],"id":"readOnly","value":"Y"},{"children":[],"id":"sendResources","value":"N"},{"children":[],"id":"logRemoteExecutionLocally","value":"N"},{"children":[],"id":"remote","value":"N"},{"children":[],"id":"local","value":"Y"},{"children":[],"id":"showTransformations","value":"N"}],"id":"Pentaho local","value":null,"name":"Pentaho local","owner":null,"ownerPermissionsList":[]}</value>
+        <value>{"children":[{"children":[],"id":"server","value":null},{"children":[],"id":"clustered","value":"N"},{"children":[],"id":"name","value":"Pentaho local"},{"children":[],"id":"description","value":null},{"children":[],"id":"pentaho","value":"N"},{"children":[],"id":"readOnly","value":"Y"},{"children":[],"id":"sendResources","value":"N"},{"children":[],"id":"logRemoteExecutionLocally","value":"N"},{"children":[],"id":"remote","value":"N"},{"children":[],"id":"local","value":"Y"},{"children":[],"id":"showTransformations","value":"N"}],"id":"Pentaho local","value":null,"name":"Pentaho local","owner":null,"ownerPermissionsList":[]}</value>
       </attribute>
     </group>
   </attributes>

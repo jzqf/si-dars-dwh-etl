@@ -27,4 +27,4 @@
 # Include environment variables
 source ${app.rootDir}/${app.user}/bin/${app.name}-env.sh
 
-$DWH_HOME/bin/kitchen.sh /psa/jb_psa-compare.kjb Minimal
+$DWH_HOME/bin/kitchen.sh /psa jb_psa-compare Minimal

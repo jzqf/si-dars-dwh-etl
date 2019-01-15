@@ -564,7 +564,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2018/06/06 09:56:00.170</modified_date>
+    <modified_date>2018/11/30 15:02:46.962</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -930,16 +930,21 @@ triggered here!</note>
     </notepad>
     <notepad>
       <note>IMPORTANT:	In order for this algorithm to recover after an abort during 
-			execution, it will be necessary to add a "Sort rows" step just before 
+			execution, it will be necessary to insert a "Sort rows" step just before 
 			the "Update" step that sorts the rows on the "last_updated_on" 
 			column. This is so that the updates will continue at the point where 
 			the abort occurred the next time that the ETL job is run. This will
 			require that the "last_updated_on" column name is injected into
-			this "Sort rows" step via ETL metadata injection.</note>
+			this "Sort rows" step via ETL metadata injection.
+
+			Rather than implementing these changes, perhaps this algorithm 
+			should simply be abandoned?  Inserting a "Sort rows" step before 
+			the "Update" step will potentially require a lot of rows to be
+			written to disk, which will cause a slowdown.</note>
       <xloc>496</xloc>
       <yloc>1408</yloc>
-      <width>583</width>
-      <heigth>129</heigth>
+      <width>596</width>
+      <heigth>214</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>11</fontsize>
       <fontbold>Y</fontbold>
@@ -1264,6 +1269,7 @@ triggered here!</note>
         <valuefield />
       </field>
     </fields>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1299,6 +1305,7 @@ triggered here!</note>
         <valuefield />
       </field>
     </fields>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1335,6 +1342,7 @@ FROM
     <execute_each_row>N</execute_each_row>
     <variables_active>Y</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1365,6 +1373,7 @@ FROM
         <type>transformation name</type>
       </field>
     </fields>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1395,6 +1404,7 @@ FROM
         <type>transformation name</type>
       </field>
     </fields>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1437,6 +1447,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
         <name>num_rows</name>
       </field>
     </fields>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1479,6 +1490,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
         <name>num_rows_updated</name>
       </field>
     </fields>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1506,6 +1518,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
     <fields>
       <select_unspecified>N</select_unspecified>
     </fields>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1539,6 +1552,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       </field>
     </fields>
     <use_formatting>Y</use_formatting>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1572,6 +1586,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       </field>
     </fields>
     <use_formatting>Y</use_formatting>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1602,6 +1617,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
         <type>batch ID</type>
       </field>
     </fields>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1632,6 +1648,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
         <type>batch ID</type>
       </field>
     </fields>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1665,6 +1682,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
     <execute_each_row>N</execute_each_row>
     <variables_active>Y</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1730,6 +1748,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
     <execute_each_row>N</execute_each_row>
     <variables_active>Y</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1773,6 +1792,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
     <return_field />
     <fields>
     </fields>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1807,6 +1827,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       <schema>${PARAM_TARGET_SCHEMA}</schema>
       <table>${PARAM_TARGET_TABLE}</table>
     </lookup>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1871,6 +1892,7 @@ PARAM_TARGET_LAST_UPDATED_ON_COLNAME = ${PARAM_TARGET_LAST_UPDATED_ON_COLNAME}</
         <name>max_target_last_updated_on</name>
       </field>
     </fields>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1901,4 +1923,5 @@ PARAM_TARGET_LAST_UPDATED_ON_COLNAME = ${PARAM_TARGET_LAST_UPDATED_ON_COLNAME}</
   <slave-step-copy-partition-distribution>
   </slave-step-copy-partition-distribution>
   <slave_transformation>N</slave_transformation>
+  <attributes />
 </transformation>
