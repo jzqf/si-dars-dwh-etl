@@ -50,18 +50,19 @@ DROP TABLE etl.configuration;
 DROP TABLE etl.column_meta;
 DROP TABLE etl.cdc_timestamps;
 DROP FUNCTION etl.psa_last_update_summary();
+DROP FUNCTION etl.dsa_last_update_summary();
 DROP EXTENSION "uuid-ossp";
 DROP EXTENSION plpgsql;
 DROP SCHEMA public;
 DROP SCHEMA etl;
 --
--- Name: etl; Type: SCHEMA; Schema: -; Owner: qfree_admin
+-- Name: etl; Type: SCHEMA; Schema: -; Owner: qfree_etl
 --
 
 CREATE SCHEMA etl;
 
 
-ALTER SCHEMA etl OWNER TO qfree_admin;
+ALTER SCHEMA etl OWNER TO qfree_etl;
 
 --
 -- Name: public; Type: SCHEMA; Schema: -; Owner: postgres
@@ -108,7 +109,52 @@ COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UU
 
 
 --
--- Name: psa_last_update_summary(); Type: FUNCTION; Schema: etl; Owner: qfree_admin
+-- Name: dsa_last_update_summary(); Type: FUNCTION; Schema: etl; Owner: qfree_etl
+--
+
+CREATE FUNCTION etl.dsa_last_update_summary() RETURNS TABLE(tblid smallint, src smallint, srcsch character varying, srctable character varying, tgt smallint, tgtsch character varying, tgttable character varying, mir boolean, alg smallint, target_last_updated_on timestamp without time zone, r integer, i integer, u integer, millis integer, "r/s" real, iidcol character varying, max_iid bigint, luocol character varying, max_luo timestamp without time zone)
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+RETURN QUERY 
+SELECT
+tm.table_meta_id AS "tblId",
+tm.source_db_id AS "src",
+tm.source_schema_name AS "srcSch",
+tm.source_table_name AS "srcTable",
+tm.target_db_id AS "tgt",
+tm.target_schema_name AS "tgtSch",
+tm.target_table_name AS "tgtTable",
+tm.update_target_table AS "mir",
+ts.target_last_updated_algorithm_id AS "alg",
+ts.target_last_updated_on AS "target_last_updated_on",
+ts.target_last_updated_num_rows_processed AS "r",
+ts.target_last_updated_num_inserts AS "i",
+ts.target_last_updated_num_updates AS "u",
+ts.target_last_updated_elapsed_time_millis AS "millis",
+ts.target_last_updated_num_rows_processed_per_sec AS "r/s",                 --<- Limit to 2 decimal places?
+ts.target_last_updated_insert_id_colname AS "iIdCol",
+ts.target_last_updated_insert_id_maxvalue AS "max_iId",
+ts.target_last_updated_last_updated_on_colname AS "luoCol",
+ts.target_last_updated_last_updated_on_maxvalue AS "max_luo"
+FROM
+etl.table_meta tm
+INNER JOIN
+etl.table_state ts ON ts.table_state_id=tm.table_meta_id
+WHERE
+tm.target_db_id=20  -- DSA DB
+ORDER BY
+tm.target_db_id,
+tm.source_db_id,
+tm.source_schema_name,
+tm.source_table_name ;
+END; $$;
+
+
+ALTER FUNCTION etl.dsa_last_update_summary() OWNER TO qfree_etl;
+
+--
+-- Name: psa_last_update_summary(); Type: FUNCTION; Schema: etl; Owner: qfree_etl
 --
 
 CREATE FUNCTION etl.psa_last_update_summary() RETURNS TABLE(tblid smallint, src smallint, srcsch character varying, srctable character varying, tgt smallint, tgtsch character varying, tgttable character varying, mir boolean, alg smallint, target_last_updated_on timestamp without time zone, r integer, i integer, u integer, millis integer, "r/s" real, iidcol character varying, max_iid bigint, luocol character varying, max_luo timestamp without time zone)
@@ -117,40 +163,40 @@ CREATE FUNCTION etl.psa_last_update_summary() RETURNS TABLE(tblid smallint, src 
 BEGIN
 RETURN QUERY 
 SELECT
-    tm.table_meta_id AS "tblId",
-    tm.source_db_id AS "src",
-    tm.source_schema_name AS "srcSch",
-    tm.source_table_name AS "srcTable",
-    tm.target_db_id AS "tgt",
-    tm.target_schema_name AS "tgtSch",
-    tm.target_table_name AS "tgtTable",
-    tm.update_target_table AS "mir",
-    ts.target_last_updated_algorithm_id AS "alg",
-    ts.target_last_updated_on AS "target_last_updated_on",
-    ts.target_last_updated_num_rows_processed AS "r",
-    ts.target_last_updated_num_inserts AS "i",
-    ts.target_last_updated_num_updates AS "u",
-    ts.target_last_updated_elapsed_time_millis AS "millis",
-    ts.target_last_updated_num_rows_processed_per_sec AS "r/s",                 --<- Limit to 2 decimal places?
-    ts.target_last_updated_insert_id_colname AS "iIdCol",
-    ts.target_last_updated_insert_id_maxvalue AS "max_iId",
-    ts.target_last_updated_last_updated_on_colname AS "luoCol",
-    ts.target_last_updated_last_updated_on_maxvalue AS "max_luo"
+tm.table_meta_id AS "tblId",
+tm.source_db_id AS "src",
+tm.source_schema_name AS "srcSch",
+tm.source_table_name AS "srcTable",
+tm.target_db_id AS "tgt",
+tm.target_schema_name AS "tgtSch",
+tm.target_table_name AS "tgtTable",
+tm.update_target_table AS "mir",
+ts.target_last_updated_algorithm_id AS "alg",
+ts.target_last_updated_on AS "target_last_updated_on",
+ts.target_last_updated_num_rows_processed AS "r",
+ts.target_last_updated_num_inserts AS "i",
+ts.target_last_updated_num_updates AS "u",
+ts.target_last_updated_elapsed_time_millis AS "millis",
+ts.target_last_updated_num_rows_processed_per_sec AS "r/s",                 --<- Limit to 2 decimal places?
+ts.target_last_updated_insert_id_colname AS "iIdCol",
+ts.target_last_updated_insert_id_maxvalue AS "max_iId",
+ts.target_last_updated_last_updated_on_colname AS "luoCol",
+ts.target_last_updated_last_updated_on_maxvalue AS "max_luo"
 FROM
-    etl.table_meta tm
+etl.table_meta tm
 INNER JOIN
-    etl.table_state ts ON ts.table_state_id=tm.table_meta_id
+etl.table_state ts ON ts.table_state_id=tm.table_meta_id
 WHERE
-    tm.target_db_id=10  -- PSA DB
+tm.target_db_id=10  -- PSA DB
 ORDER BY
-    tm.target_db_id,
-    tm.source_db_id,
-    tm.source_schema_name,
-    tm.source_table_name ;
+tm.target_db_id,
+tm.source_db_id,
+tm.source_schema_name,
+tm.source_table_name ;
 END; $$;
 
 
-ALTER FUNCTION etl.psa_last_update_summary() OWNER TO qfree_admin;
+ALTER FUNCTION etl.psa_last_update_summary() OWNER TO qfree_etl;
 
 SET default_tablespace = '';
 
@@ -4311,6 +4357,17 @@ ALTER TABLE ONLY etl.table_state
 
 
 --
+-- Name: SCHEMA etl; Type: ACL; Schema: -; Owner: qfree_etl
+--
+
+REVOKE ALL ON SCHEMA etl FROM PUBLIC;
+REVOKE ALL ON SCHEMA etl FROM qfree_etl;
+GRANT ALL ON SCHEMA etl TO qfree_etl;
+GRANT USAGE ON SCHEMA etl TO qfree_sm_ro_role;
+GRANT USAGE ON SCHEMA etl TO qfree_sm_rw_role;
+
+
+--
 -- Name: SCHEMA public; Type: ACL; Schema: -; Owner: postgres
 --
 
@@ -4318,6 +4375,52 @@ REVOKE ALL ON SCHEMA public FROM PUBLIC;
 REVOKE ALL ON SCHEMA public FROM postgres;
 GRANT ALL ON SCHEMA public TO postgres;
 GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: etl; Owner: qfree_admin
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA etl REVOKE ALL ON SEQUENCES  FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA etl REVOKE ALL ON SEQUENCES  FROM qfree_admin;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA etl GRANT SELECT,USAGE ON SEQUENCES  TO qfree_rw_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA etl GRANT SELECT,USAGE ON SEQUENCES  TO qfree_etl_mgmt_role;
+
+
+--
+-- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: etl; Owner: qfree_admin
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA etl REVOKE ALL ON TABLES  FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA etl REVOKE ALL ON TABLES  FROM qfree_admin;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA etl GRANT SELECT ON TABLES  TO qfree_sm_ro_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA etl GRANT SELECT ON TABLES  TO qfree_bi_ro_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA etl GRANT SELECT,INSERT,DELETE,UPDATE ON TABLES  TO qfree_rw_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA etl GRANT SELECT,INSERT,DELETE,UPDATE ON TABLES  TO qfree_etl_mgmt_role;
+
+
+--
+-- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: public; Owner: qfree_admin
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA public REVOKE ALL ON SEQUENCES  FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA public REVOKE ALL ON SEQUENCES  FROM qfree_admin;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA public GRANT SELECT ON SEQUENCES  TO qfree_sm_ro_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA public GRANT SELECT,USAGE ON SEQUENCES  TO qfree_rw_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA public GRANT SELECT,USAGE ON SEQUENCES  TO qfree_bi_rw_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA public GRANT SELECT,USAGE ON SEQUENCES  TO qfree_etl_mgmt_role;
+
+
+--
+-- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: public; Owner: qfree_admin
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA public REVOKE ALL ON TABLES  FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA public REVOKE ALL ON TABLES  FROM qfree_admin;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA public GRANT SELECT ON TABLES  TO qfree_sm_ro_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA public GRANT SELECT ON TABLES  TO qfree_bi_ro_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA public GRANT SELECT,INSERT,DELETE,UPDATE ON TABLES  TO qfree_rw_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA public GRANT SELECT,INSERT,DELETE,UPDATE ON TABLES  TO qfree_etl_mgmt_role;
 
 
 --
