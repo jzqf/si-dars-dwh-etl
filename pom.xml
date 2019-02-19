@@ -1,97 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<parent>
-		<groupId>com.qfree.bo.dars</groupId>
-		<artifactId>dars-pom</artifactId>
-        <version>1.7.0-SNAPSHOT</version>
-	</parent>
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>com.qfree.bo.dars</groupId>
+        <artifactId>dars-pom</artifactId>
+        <version>1.6.1</version>
+    </parent>
 
-	<modelVersion>4.0.0</modelVersion>
-	<artifactId>dars-dwh-etl</artifactId>
-	<version>1.10.0-SNAPSHOT</version>
-	<name>DARS OBO DWH Framework</name>
-	<description>ETL framework for DARS OBO data warehouse</description>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>dars-dwh-etl</artifactId>
+    <version>1.10.0-SNAPSHOT</version>
+    <name>DARS OBO DWH Framework</name>
+    <description>ETL framework for DARS OBO data warehouse</description>
 
-	<properties>
-		<app.rootDir>/opt/qfree</app.rootDir>
-		<app.name>dwh-etl</app.name>	<!-- artifactId without the "dars-" prefix -->
-		<app.user>dwh_etl</app.user>
-		<app.UID>530</app.UID>
-		<app.group>qfree</app.group>
-	</properties>
+    <properties>
+        <app.rootDir>/opt/qfree</app.rootDir>
+        <app.name>dwh-etl</app.name>	<!-- artifactId without the "dars-" prefix -->
+        <app.user>dwh_etl</app.user>
+        <app.UID>530</app.UID>
+        <app.group>qfree</app.group>
+    </properties>
 
-	<build>
-		<plugins>
+    <build>
+        <plugins>
 
-			<!--
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<executions>
-					<execution>
-						<goals>
-							<goal>test-jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			-->
+            <!--
+            <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <executions>
+                            <execution>
+                                    <goals>
+                                            <goal>test-jar</goal>
+                                    </goals>
+                            </execution>
+                    </executions>
+            </plugin>
+            -->
 
-			<plugin>
-				<artifactId>maven-resources-plugin</artifactId>
-				<configuration>
-				<!-- This issue no longer exists, so it is no longer necessary to use
-				     \${line.separator} in properties files. With earlier versions of
-				     PDI, it was necessary to use "${line.separator}" to represent a
-				     line break (used in email templates). For some reason, using "\n"
-				     did not work properly. Now, it seems that "\n" can be use without
-				     introducing any problems, so all occurrences of "${line.separator}"
-				     have been eliminated.
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <configuration>
+                    <!-- This issue no longer exists, so it is no longer necessary to use
+                                     \${line.separator} in properties files. With earlier versions of
+                                     PDI, it was necessary to use "${line.separator}" to represent a
+                                     line break (used in email templates). For some reason, using "\n"
+                                     did not work properly. Now, it seems that "\n" can be use without
+                                     introducing any problems, so all occurrences of "${line.separator}"
+                                     have been eliminated.
 
-				     However, I will leave this block here for the time being in case
-				     this issue reappears in some form. Eventually, this block,
-				     including the element <escapeString>\</escapeString>, can be deleted.
+                                     However, I will leave this block here for the time being in case
+                                     this issue reappears in some form. Eventually, this block,
+                                     including the element <escapeString>\</escapeString>, can be deleted.
 
-				     Description of problem that no longer exists:
+                                     Description of problem that no longer exists:
 
-				     Setting the "escape string" was necessary in order to include the
-				     references that represent newline characters in the kettle.properties
-				     file.
+                                     Setting the "escape string" was necessary in order to include the
+                                     references that represent newline characters in the kettle.properties
+                                     file.
 
-				     If "${line.separator}" is used in kettle.properties, then
-				     "maven-resources-plugin" will replace such occurrences with newline
-				     characters when it filters the file, which is not allowed for Java
-				     property values. The reference "${line.separator}" evaluates to a
-				     newline character when processed by *either* Maven *or* PDI.
+                                     If "${line.separator}" is used in kettle.properties, then
+                                     "maven-resources-plugin" will replace such occurrences with newline
+                                     characters when it filters the file, which is not allowed for Java
+                                     property values. The reference "${line.separator}" evaluates to a
+                                     newline character when processed by *either* Maven *or* PDI.
 
-				     By escaping these references as "\${line.separator}", Maven will
-				     replace these references with "${line.separator}", which PDI will
-				     treat as newlines, as intended. In this way, no line breaks are
-				     introduced when "maven-resources-plugin" filters the file
-				     kettle.properties.
+                                     By escaping these references as "\${line.separator}", Maven will
+                                     replace these references with "${line.separator}", which PDI will
+                                     treat as newlines, as intended. In this way, no line breaks are
+                                     introduced when "maven-resources-plugin" filters the file
+                                     kettle.properties.
 
-				     This trick is only needed because I filter kettle.properties with
-				     "maven-resources-plugin". The reason I do this is so that the line:
+                                     This trick is only needed because I filter kettle.properties with
+                                     "maven-resources-plugin". The reason I do this is so that the line:
 
-				         QF_ETL_CODE_VERSION=${project.version}
+                                         QF_ETL_CODE_VERSION=${project.version}
 
-				     will have ${project.version} replaced with the Maven project
-				     version so that it can be displayed when the ETL code is run.
+                                     will have ${project.version} replaced with the Maven project
+                                     version so that it can be displayed when the ETL code is run.
 
-				     PDI is supposed to also support an alternate syntax for variable
-				     references, "%%variable%%", which would be a better way to hide
-				     newline references from "maven-resources-plugin" during filtering,
-				     but I was not able to get this syntax to work when a PDI job is
-				     run.
+                                     PDI is supposed to also support an alternate syntax for variable
+                                     references, "%%variable%%", which would be a better way to hide
+                                     newline references from "maven-resources-plugin" during filtering,
+                                     but I was not able to get this syntax to work when a PDI job is
+                                     run.
 
-				     The files dwh.properties & dwh-qfree.properties also contain
-				     "\${line.separator}" references, even though these files are not
-				     filtered by "maven-resources-plugin". However, after running
-				     merge_configuration_files.jar, these references will make their
-				     way into kettle.properties, so the references are also escaped
-				     in dwh.properties & dwh-qfree.properties.
+                                     The files dwh.properties & dwh-qfree.properties also contain
+                                     "\${line.separator}" references, even though these files are not
+                                     filtered by "maven-resources-plugin". However, after running
+                                     merge_configuration_files.jar, these references will make their
+                                     way into kettle.properties, so the references are also escaped
+                                     in dwh.properties & dwh-qfree.properties.
 
                          However, when merge_configuration_files.jar is executed on an
                          installation *after* the Debian package has been installed, this
