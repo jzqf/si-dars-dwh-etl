@@ -1,5 +1,13 @@
+-- These details must be addressed if Kym does not merge his git feature branch:
+--
+--     feature/QFC-BODARS-3296_etl-cdc-extension
+--
+-- in project:
+--
+--     si-dars-pdm-obo
+--
 
-PLACE ALL SQL CPODE BELOW IN A SEPARATE SCRIPT. IF IT IS NECESSARY, CHECK IT
+PLACE ALL SQL CODE BELOW IN A SEPARATE SCRIPT. IF IT IS NECESSARY, CHECK IT
 ALSO IN WHEN i CREATE THE "SCRATCHPAD" JIRA. I.E., BJØRN TORE WILL MERGE IN 
 *TWO* SCRIPTS:
 

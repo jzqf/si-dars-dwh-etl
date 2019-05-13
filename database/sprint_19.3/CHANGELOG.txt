@@ -1,3 +1,6 @@
+The format of this file is not optimal. It is not easy to get a quick overview
+of these changes. Perhaps I should present these details differently?
+
 *	Added column named:
 
 	*	svc_lvl_impact_domain_id
@@ -48,14 +51,7 @@
 	*	obo__passage_event_vehicle_data
 	*	obo__passage_events
 
-
-
-
-
-
-To Do:
-
-*	Add following tables to dwh_dsa_db database:
+*	Added the following tables to dwh_dsa_db database:
 
 	*	obo__svc_lvl_event_category
 	*	obo__svc_lvl_event_impact_register
@@ -66,67 +62,8 @@ To Do:
 	*	obo__svc_lvl_impact_domain
 	*	obo__svc_lvl_impact_type
 
-*	Add following tables to dsa_metadata.csv *and* to dwh_dsa_db patch:
+*	Added a column named "cdc_timestamp" to dwh_dsa_db database tables:
 
-	*	obo__svc_lvl_event_category
-	*	obo__svc_lvl_event_impact_register
-	*	obo__svc_lvl_event_log
-	*	obo__svc_lvl_event_register
-	*	obo__svc_lvl_event_status
-	*	obo__svc_lvl_event_type
-	*	obo__svc_lvl_impact_domain
-	*	obo__svc_lvl_impact_type
-
-*	Treat "variant"columns in both datatbases:
-
-	|	PSA
-	*	DSA
-
-	*	This includes:
-	
-		*	mon__* tables
-		*	obo__* tables
-		*	odms__* tables
-		*	non xxx__* tables ?
-
-*	Check that the "updateable" ETL algorithm is used for updating both the:
-
-	|	PSA
-	*	DSA
-	
-	for the operational database tables:
-	
-	*	passage_event_dsrc_data
-	*	passage_event_vehicle_data
-	*	passage_events
-	
-	*	The "last updated on" column must be: "cdc_timestamp".
-	
-	Both the ETL algorithm and the "last updated on" column for each table must
-	be set in:
-	
-		|	psa_metadata.csv !
-		*	dsa_metadata.csv !
-	
-	*	Make sure *existing* rows in the source and target tables for all of 
-		these databases are treated correctly. This will be determined by what
-		value Kym assigns to these "cdc_timestamp" columns for *existing* rows
-		in the operational database tables.
-		
-		*	 must also assign values to the "cdc_timestamp" columns for 
-			*existing* rows for tables in both the PSA & DSA DBs. Can I use
-			this choice to ensure that existing rows are treated correctly?
-			
-			Should I attempt to update all rows? In this case, it will, in fact
-			be fastest to truncate the PSA & DSA tables that have this column.
-			How long will it take to reload these tables the next time that the
-			ETL job runs? If this is only for supporting anonymization,
-			then it may not be necessary to truncate these tables because they
-			will be "corrected" when the rows are anonymized.
-			
-			How about if I set the "cdc_timestamp" columns for all existing rows
-			I the PSA & DSA to the current UTC timestamp when the patch upgrade
-			is executed or, perhaps, even to one day into the future in order
-			to trigger updating all existing rows if Kym assigns a more recent
-			timestamp to this colum for the operational database rows???????????????????????????????????????????????????????????????????????????????
-			
+	*	obo__passage_event_dsrc_data
+	*	obo__passage_event_vehicle_data
+	*	obo__passage_events
