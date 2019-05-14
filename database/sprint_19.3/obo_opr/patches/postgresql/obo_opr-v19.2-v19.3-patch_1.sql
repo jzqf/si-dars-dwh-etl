@@ -1,7 +1,7 @@
 
--- Kym should handle the cration of these indexes. These three commented-out SQL
--- commands are here only as a reminder that this should be performed as part
--- of the 19.3 release.
+-- Kym should handle the creation of these indexes. These three commented-out 
+-- SQL commands are here only as a reminder that this should be performed as 
+-- part of the 19.3 release.
 --CREATE INDEX CONCURRENTLY IF NOT EXISTS ix_passage_event_dsrc_data_03    ON passage_event_dsrc_data (cdc_timestamp);
 --CREATE INDEX CONCURRENTLY IF NOT EXISTS ix_passage_event_vehicle_data_02 ON passage_event_vehicle_data (cdc_timestamp);
 --CREATE INDEX CONCURRENTLY IF NOT EXISTS ix_passage_events_03             ON passage_events (cdc_timestamp);

@@ -18,7 +18,7 @@
 -- obo_opr:
 
 
--- New table added to PSA:
+-- New table added to DSA:
 CREATE TABLE public.obo__svc_lvl_event_category (
    svc_lvl_event_category_id SMALLINT             not null,
    enum_name                 VARCHAR(30)          not null,
@@ -28,7 +28,7 @@ CREATE TABLE public.obo__svc_lvl_event_category (
    constraint PK_OBO__SVC_LVL_EVENT_CATEGORY primary key (svc_lvl_event_category_id)
 );
 
--- New table added to PSA:
+-- New table added to DSA:
 CREATE TABLE public.obo__svc_lvl_event_impact_register (
    sleir_id                 BIGINT               not null,
    svc_lvl_event_id         BIGINT               not null,
@@ -42,7 +42,7 @@ CREATE TABLE public.obo__svc_lvl_event_impact_register (
    constraint PK_OBO__SVC_LVL_EVENT_IMPACT_R primary key (sleir_id)
 );
 
--- New table added to PSA:
+-- New table added to DSA:
 CREATE TABLE public.obo__svc_lvl_event_log (
    slelog_id                BIGINT               not null,
    svc_lvl_event_id         BIGINT               not null,
@@ -55,7 +55,7 @@ CREATE TABLE public.obo__svc_lvl_event_log (
    constraint pk_obo__svc_lvl_event_log primary key (slelog_id)
 );
 
--- New table added to PSA:
+-- New table added to DSA:
 CREATE TABLE public.obo__svc_lvl_event_register (
    svc_lvl_event_id               BIGINT               not null,
    svc_lvl_event_type_id          SMALLINT             not null,
@@ -77,7 +77,7 @@ CREATE TABLE public.obo__svc_lvl_event_register (
 );
 CREATE INDEX IF NOT EXISTS ix_obo__svc_lvl_event_reg_01 ON public.obo__svc_lvl_event_register (last_updated_on);
 
--- New table added to PSA:
+-- New table added to DSA:
 CREATE TABLE public.obo__svc_lvl_event_status (
    svc_lvl_event_status_id  SMALLINT             not null,
    enum_name                VARCHAR(30)          not null,
@@ -87,7 +87,7 @@ CREATE TABLE public.obo__svc_lvl_event_status (
    constraint PK_OBO__SVC_LVL_EVENT_STATUS primary key (svc_lvl_event_status_id)
 );
 
--- New table added to PSA:
+-- New table added to DSA:
 CREATE TABLE public.obo__svc_lvl_event_type (
    svc_lvl_event_type_id    SMALLINT             not null,
    enum_name                VARCHAR(30)          not null,
@@ -97,7 +97,7 @@ CREATE TABLE public.obo__svc_lvl_event_type (
    constraint PK_OBO__SVC_LVL_EVENT_TYPE primary key (svc_lvl_event_type_id)
 );
 
--- New table added to PSA:
+-- New table added to DSA:
 CREATE TABLE public.obo__svc_lvl_impact_domain (
    svc_lvl_impact_domain_id  SMALLINT             not null,
    enum_name                 VARCHAR(30)          not null,
@@ -107,7 +107,7 @@ CREATE TABLE public.obo__svc_lvl_impact_domain (
    constraint pk_obo__svc_lvl_impact_domain primary key (svc_lvl_impact_domain_id)
 );
 
--- New table added to PSA:
+-- New table added to DSA:
 CREATE TABLE public.obo__svc_lvl_impact_type (
    svc_lvl_impact_type_id   SMALLINT             not null,
    enum_name                VARCHAR(30)          not null,
