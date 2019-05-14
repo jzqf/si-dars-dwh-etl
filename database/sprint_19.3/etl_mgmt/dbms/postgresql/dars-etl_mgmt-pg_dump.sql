@@ -1,8 +1,119 @@
 --
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.5.16
+-- Dumped by pg_dump version 9.5.16
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+ALTER TABLE ONLY etl.table_state DROP CONSTRAINT fk_tablestate_tablemeta;
+ALTER TABLE ONLY etl.target_table_update DROP CONSTRAINT fk_etl_targettableupdate_tablemeta;
+ALTER TABLE ONLY etl.target_table_compare DROP CONSTRAINT fk_etl_targettablecompare_tablemeta;
+ALTER TABLE ONLY etl.column_meta DROP CONSTRAINT fk_columnmeta_tablemeta;
+DROP INDEX etl.idx_log_transformations_2;
+DROP INDEX etl.idx_log_transformations_1;
+DROP INDEX etl.idx_log_jobs_2;
+DROP INDEX etl.idx_log_jobs_1;
+DROP INDEX etl.idx_log_job_entries_1;
+ALTER TABLE ONLY etl.table_meta DROP CONSTRAINT uq_etl_tablemeta_targetdb_targetschema_targettable;
+ALTER TABLE ONLY etl.column_meta DROP CONSTRAINT uq_etl_columnmeta_tablemetaid_targetcolumnname;
+ALTER TABLE ONLY etl.target_table_update DROP CONSTRAINT pk_etl_targettableupdate;
+ALTER TABLE ONLY etl.target_table_compare DROP CONSTRAINT pk_etl_targettablecompare;
+ALTER TABLE ONLY etl.table_state DROP CONSTRAINT pk_etl_table_state;
+ALTER TABLE ONLY etl.table_meta DROP CONSTRAINT pk_etl_table_meta;
+ALTER TABLE ONLY etl.configuration DROP CONSTRAINT pk_etl_configuration;
+ALTER TABLE ONLY etl.column_meta DROP CONSTRAINT pk_etl_column_meta;
+ALTER TABLE ONLY etl.cdc_timestamps DROP CONSTRAINT pk_etl_cdc_timestamps;
+ALTER TABLE etl.target_table_update ALTER COLUMN target_table_update_id DROP DEFAULT;
+ALTER TABLE etl.target_table_compare ALTER COLUMN target_table_compare_id DROP DEFAULT;
+DROP SEQUENCE etl.target_table_update_target_table_update_id_seq;
+DROP TABLE etl.target_table_update;
+DROP SEQUENCE etl.target_table_compare_target_table_compare_id_seq;
+DROP TABLE etl.target_table_compare;
+DROP TABLE etl.table_state;
+DROP TABLE etl.table_meta;
+DROP TABLE etl.log_transformations;
+DROP TABLE etl.log_transformation_steps;
+DROP TABLE etl.log_transformation_performance;
+DROP TABLE etl.log_transformation_metrics;
+DROP TABLE etl.log_jobs;
+DROP TABLE etl.log_job_entries;
+DROP TABLE etl.log_channel;
+DROP TABLE etl.configuration;
+DROP TABLE etl.column_meta;
+DROP TABLE etl.cdc_timestamps;
+DROP FUNCTION etl.psa_last_update_summary();
+DROP FUNCTION etl.dsa_last_update_summary();
+DROP EXTENSION "uuid-ossp";
+DROP EXTENSION plpgsql;
+DROP SCHEMA public;
+DROP SCHEMA etl;
+--
+-- Name: etl; Type: SCHEMA; Schema: -; Owner: qfree_etl
+--
+
+CREATE SCHEMA etl;
+
+
+ALTER SCHEMA etl OWNER TO qfree_etl;
+
+--
+-- Name: public; Type: SCHEMA; Schema: -; Owner: postgres
+--
+
+CREATE SCHEMA public;
+
+
+ALTER SCHEMA public OWNER TO postgres;
+
+--
+-- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: postgres
+--
+
+COMMENT ON SCHEMA public IS 'standard public schema';
+
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+--
+-- Name: uuid-ossp; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA etl;
+
+
+--
+-- Name: EXTENSION "uuid-ossp"; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UUIDs)';
+
+
+--
 -- Name: dsa_last_update_summary(); Type: FUNCTION; Schema: etl; Owner: qfree_etl
 --
 
-CREATE OR REPLACE FUNCTION etl.dsa_last_update_summary() RETURNS TABLE(tblid smallint, src smallint, srcsch character varying, srctable character varying, tgt smallint, tgtsch character varying, tgttable character varying, mir boolean, alg smallint, target_last_updated_on timestamp without time zone, r integer, i integer, u integer, millis integer, "r/s" real, iidcol character varying, max_iid bigint, luocol character varying, max_luo timestamp without time zone)
+CREATE FUNCTION etl.dsa_last_update_summary() RETURNS TABLE(tblid smallint, src smallint, srcsch character varying, srctable character varying, tgt smallint, tgtsch character varying, tgttable character varying, mir boolean, alg smallint, target_last_updated_on timestamp without time zone, r integer, i integer, u integer, millis integer, "r/s" real, iidcol character varying, max_iid bigint, luocol character varying, max_luo timestamp without time zone)
     LANGUAGE plpgsql
     AS $$
 BEGIN
@@ -41,11 +152,13 @@ tm.source_table_name ;
 END; $$;
 
 
+ALTER FUNCTION etl.dsa_last_update_summary() OWNER TO qfree_etl;
+
 --
 -- Name: psa_last_update_summary(); Type: FUNCTION; Schema: etl; Owner: qfree_etl
 --
 
-CREATE OR REPLACE FUNCTION etl.psa_last_update_summary() RETURNS TABLE(tblid smallint, src smallint, srcsch character varying, srctable character varying, tgt smallint, tgtsch character varying, tgttable character varying, mir boolean, alg smallint, target_last_updated_on timestamp without time zone, r integer, i integer, u integer, millis integer, "r/s" real, iidcol character varying, max_iid bigint, luocol character varying, max_luo timestamp without time zone)
+CREATE FUNCTION etl.psa_last_update_summary() RETURNS TABLE(tblid smallint, src smallint, srcsch character varying, srctable character varying, tgt smallint, tgtsch character varying, tgttable character varying, mir boolean, alg smallint, target_last_updated_on timestamp without time zone, r integer, i integer, u integer, millis integer, "r/s" real, iidcol character varying, max_iid bigint, luocol character varying, max_luo timestamp without time zone)
     LANGUAGE plpgsql
     AS $$
 BEGIN
@@ -84,6 +197,12 @@ tm.source_table_name ;
 END; $$;
 
 
+ALTER FUNCTION etl.psa_last_update_summary() OWNER TO qfree_etl;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
 --
 -- Name: cdc_timestamps; Type: TABLE; Schema: etl; Owner: qfree_admin
 --
@@ -94,6 +213,8 @@ CREATE TABLE etl.cdc_timestamps (
     current_load timestamp without time zone DEFAULT '1970-01-01 00:00:00'::timestamp without time zone NOT NULL
 );
 
+
+ALTER TABLE etl.cdc_timestamps OWNER TO qfree_admin;
 
 --
 -- Name: column_meta; Type: TABLE; Schema: etl; Owner: qfree_admin
@@ -117,11 +238,13 @@ CREATE TABLE etl.column_meta (
 );
 
 
+ALTER TABLE etl.column_meta OWNER TO qfree_admin;
+
 --
 -- Name: configuration; Type: TABLE; Schema: etl; Owner: qfree_admin
 --
 
-CREATE TABLE IF NOT EXISTS etl.configuration (
+CREATE TABLE etl.configuration (
     configuration_id uuid DEFAULT etl.uuid_generate_v4() NOT NULL,
     boolean_value boolean,
     bytea_value bytea,
@@ -140,6 +263,8 @@ CREATE TABLE IF NOT EXISTS etl.configuration (
     role_id uuid
 );
 
+
+ALTER TABLE etl.configuration OWNER TO qfree_admin;
 
 --
 -- Name: log_channel; Type: TABLE; Schema: etl; Owner: qfree_admin
@@ -160,6 +285,8 @@ CREATE TABLE etl.log_channel (
     root_channel_id character varying(255)
 );
 
+
+ALTER TABLE etl.log_channel OWNER TO qfree_admin;
 
 --
 -- Name: log_job_entries; Type: TABLE; Schema: etl; Owner: qfree_admin
@@ -183,6 +310,8 @@ CREATE TABLE etl.log_job_entries (
     nr_result_files bigint
 );
 
+
+ALTER TABLE etl.log_job_entries OWNER TO qfree_admin;
 
 --
 -- Name: log_jobs; Type: TABLE; Schema: etl; Owner: qfree_admin
@@ -209,6 +338,8 @@ CREATE TABLE etl.log_jobs (
 );
 
 
+ALTER TABLE etl.log_jobs OWNER TO qfree_admin;
+
 --
 -- Name: log_transformation_metrics; Type: TABLE; Schema: etl; Owner: qfree_admin
 --
@@ -225,6 +356,8 @@ CREATE TABLE etl.log_transformation_metrics (
     metrics_value bigint
 );
 
+
+ALTER TABLE etl.log_transformation_metrics OWNER TO qfree_admin;
 
 --
 -- Name: log_transformation_performance; Type: TABLE; Schema: etl; Owner: qfree_admin
@@ -249,6 +382,8 @@ CREATE TABLE etl.log_transformation_performance (
 );
 
 
+ALTER TABLE etl.log_transformation_performance OWNER TO qfree_admin;
+
 --
 -- Name: log_transformation_steps; Type: TABLE; Schema: etl; Owner: qfree_admin
 --
@@ -269,6 +404,8 @@ CREATE TABLE etl.log_transformation_steps (
     errors bigint
 );
 
+
+ALTER TABLE etl.log_transformation_steps OWNER TO qfree_admin;
 
 --
 -- Name: log_transformations; Type: TABLE; Schema: etl; Owner: qfree_admin
@@ -294,6 +431,8 @@ CREATE TABLE etl.log_transformations (
     log_field text
 );
 
+
+ALTER TABLE etl.log_transformations OWNER TO qfree_admin;
 
 --
 -- Name: table_meta; Type: TABLE; Schema: etl; Owner: qfree_admin
@@ -328,6 +467,8 @@ CREATE TABLE etl.table_meta (
 );
 
 
+ALTER TABLE etl.table_meta OWNER TO qfree_admin;
+
 --
 -- Name: table_state; Type: TABLE; Schema: etl; Owner: qfree_admin
 --
@@ -354,6 +495,8 @@ CREATE TABLE etl.table_state (
 );
 
 
+ALTER TABLE etl.table_state OWNER TO qfree_admin;
+
 --
 -- Name: target_table_compare; Type: TABLE; Schema: etl; Owner: qfree_admin
 --
@@ -369,6 +512,8 @@ CREATE TABLE etl.target_table_compare (
 );
 
 
+ALTER TABLE etl.target_table_compare OWNER TO qfree_admin;
+
 --
 -- Name: target_table_compare_target_table_compare_id_seq; Type: SEQUENCE; Schema: etl; Owner: qfree_admin
 --
@@ -380,6 +525,8 @@ CREATE SEQUENCE etl.target_table_compare_target_table_compare_id_seq
     NO MAXVALUE
     CACHE 1;
 
+
+ALTER TABLE etl.target_table_compare_target_table_compare_id_seq OWNER TO qfree_admin;
 
 --
 -- Name: target_table_compare_target_table_compare_id_seq; Type: SEQUENCE OWNED BY; Schema: etl; Owner: qfree_admin
@@ -409,6 +556,8 @@ CREATE TABLE etl.target_table_update (
 );
 
 
+ALTER TABLE etl.target_table_update OWNER TO qfree_admin;
+
 --
 -- Name: target_table_update_target_table_update_id_seq; Type: SEQUENCE; Schema: etl; Owner: qfree_admin
 --
@@ -420,6 +569,8 @@ CREATE SEQUENCE etl.target_table_update_target_table_update_id_seq
     NO MAXVALUE
     CACHE 1;
 
+
+ALTER TABLE etl.target_table_update_target_table_update_id_seq OWNER TO qfree_admin;
 
 --
 -- Name: target_table_update_target_table_update_id_seq; Type: SEQUENCE OWNED BY; Schema: etl; Owner: qfree_admin
@@ -3251,7 +3402,7 @@ INSERT INTO etl.column_meta (column_meta_id, table_meta_id, source_column_name, 
 -- Data for Name: configuration; Type: TABLE DATA; Schema: etl; Owner: qfree_admin
 --
 
-INSERT INTO etl.configuration (configuration_id, boolean_value, bytea_value, created_on, date_value, datetime_value, double_value, float_value, integer_value, long_value, param_name, param_type, string_value, text_value, time_value, role_id) VALUES ('3aaa6ca9-1f23-4a40-8b95-007dcadc4637', NULL, NULL, current_timestamp, NULL, NULL, NULL, NULL, 7, NULL, 'DB_VERSION', 'INTEGER', '7', NULL, NULL, NULL);
+INSERT INTO etl.configuration (configuration_id, boolean_value, bytea_value, created_on, date_value, datetime_value, double_value, float_value, integer_value, long_value, param_name, param_type, string_value, text_value, time_value, role_id) VALUES ('3aaa6ca9-1f23-4a40-8b95-007dcadc4637', NULL, NULL, '2019-04-26 15:51:33.472569', NULL, NULL, NULL, NULL, 6, NULL, 'DB_VERSION', 'INTEGER', '6', NULL, NULL, NULL);
 
 
 --
@@ -4303,4 +4454,280 @@ ALTER TABLE ONLY etl.target_table_update
 
 ALTER TABLE ONLY etl.table_state
     ADD CONSTRAINT fk_tablestate_tablemeta FOREIGN KEY (table_state_id) REFERENCES etl.table_meta(table_meta_id);
+
+
+--
+-- Name: SCHEMA etl; Type: ACL; Schema: -; Owner: qfree_etl
+--
+
+REVOKE ALL ON SCHEMA etl FROM PUBLIC;
+REVOKE ALL ON SCHEMA etl FROM qfree_etl;
+GRANT ALL ON SCHEMA etl TO qfree_etl;
+GRANT USAGE ON SCHEMA etl TO qfree_sm_ro_role;
+GRANT USAGE ON SCHEMA etl TO qfree_sm_rw_role;
+
+
+--
+-- Name: SCHEMA public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- Name: TABLE cdc_timestamps; Type: ACL; Schema: etl; Owner: qfree_admin
+--
+
+REVOKE ALL ON TABLE etl.cdc_timestamps FROM PUBLIC;
+REVOKE ALL ON TABLE etl.cdc_timestamps FROM qfree_admin;
+GRANT ALL ON TABLE etl.cdc_timestamps TO qfree_admin;
+GRANT SELECT ON TABLE etl.cdc_timestamps TO qfree_sm_ro_role;
+GRANT SELECT ON TABLE etl.cdc_timestamps TO qfree_bi_ro_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.cdc_timestamps TO qfree_rw_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.cdc_timestamps TO qfree_etl_mgmt_role;
+
+
+--
+-- Name: TABLE column_meta; Type: ACL; Schema: etl; Owner: qfree_admin
+--
+
+REVOKE ALL ON TABLE etl.column_meta FROM PUBLIC;
+REVOKE ALL ON TABLE etl.column_meta FROM qfree_admin;
+GRANT ALL ON TABLE etl.column_meta TO qfree_admin;
+GRANT SELECT ON TABLE etl.column_meta TO qfree_sm_ro_role;
+GRANT SELECT ON TABLE etl.column_meta TO qfree_bi_ro_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.column_meta TO qfree_rw_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.column_meta TO qfree_etl_mgmt_role;
+
+
+--
+-- Name: TABLE configuration; Type: ACL; Schema: etl; Owner: qfree_admin
+--
+
+REVOKE ALL ON TABLE etl.configuration FROM PUBLIC;
+REVOKE ALL ON TABLE etl.configuration FROM qfree_admin;
+GRANT ALL ON TABLE etl.configuration TO qfree_admin;
+GRANT SELECT ON TABLE etl.configuration TO qfree_sm_ro_role;
+GRANT SELECT ON TABLE etl.configuration TO qfree_bi_ro_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.configuration TO qfree_rw_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.configuration TO qfree_etl_mgmt_role;
+
+
+--
+-- Name: TABLE log_channel; Type: ACL; Schema: etl; Owner: qfree_admin
+--
+
+REVOKE ALL ON TABLE etl.log_channel FROM PUBLIC;
+REVOKE ALL ON TABLE etl.log_channel FROM qfree_admin;
+GRANT ALL ON TABLE etl.log_channel TO qfree_admin;
+GRANT SELECT ON TABLE etl.log_channel TO qfree_sm_ro_role;
+GRANT SELECT ON TABLE etl.log_channel TO qfree_bi_ro_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.log_channel TO qfree_rw_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.log_channel TO qfree_etl_mgmt_role;
+
+
+--
+-- Name: TABLE log_job_entries; Type: ACL; Schema: etl; Owner: qfree_admin
+--
+
+REVOKE ALL ON TABLE etl.log_job_entries FROM PUBLIC;
+REVOKE ALL ON TABLE etl.log_job_entries FROM qfree_admin;
+GRANT ALL ON TABLE etl.log_job_entries TO qfree_admin;
+GRANT SELECT ON TABLE etl.log_job_entries TO qfree_sm_ro_role;
+GRANT SELECT ON TABLE etl.log_job_entries TO qfree_bi_ro_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.log_job_entries TO qfree_rw_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.log_job_entries TO qfree_etl_mgmt_role;
+
+
+--
+-- Name: TABLE log_jobs; Type: ACL; Schema: etl; Owner: qfree_admin
+--
+
+REVOKE ALL ON TABLE etl.log_jobs FROM PUBLIC;
+REVOKE ALL ON TABLE etl.log_jobs FROM qfree_admin;
+GRANT ALL ON TABLE etl.log_jobs TO qfree_admin;
+GRANT SELECT ON TABLE etl.log_jobs TO qfree_sm_ro_role;
+GRANT SELECT ON TABLE etl.log_jobs TO qfree_bi_ro_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.log_jobs TO qfree_rw_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.log_jobs TO qfree_etl_mgmt_role;
+
+
+--
+-- Name: TABLE log_transformation_metrics; Type: ACL; Schema: etl; Owner: qfree_admin
+--
+
+REVOKE ALL ON TABLE etl.log_transformation_metrics FROM PUBLIC;
+REVOKE ALL ON TABLE etl.log_transformation_metrics FROM qfree_admin;
+GRANT ALL ON TABLE etl.log_transformation_metrics TO qfree_admin;
+GRANT SELECT ON TABLE etl.log_transformation_metrics TO qfree_sm_ro_role;
+GRANT SELECT ON TABLE etl.log_transformation_metrics TO qfree_bi_ro_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.log_transformation_metrics TO qfree_rw_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.log_transformation_metrics TO qfree_etl_mgmt_role;
+
+
+--
+-- Name: TABLE log_transformation_performance; Type: ACL; Schema: etl; Owner: qfree_admin
+--
+
+REVOKE ALL ON TABLE etl.log_transformation_performance FROM PUBLIC;
+REVOKE ALL ON TABLE etl.log_transformation_performance FROM qfree_admin;
+GRANT ALL ON TABLE etl.log_transformation_performance TO qfree_admin;
+GRANT SELECT ON TABLE etl.log_transformation_performance TO qfree_sm_ro_role;
+GRANT SELECT ON TABLE etl.log_transformation_performance TO qfree_bi_ro_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.log_transformation_performance TO qfree_rw_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.log_transformation_performance TO qfree_etl_mgmt_role;
+
+
+--
+-- Name: TABLE log_transformation_steps; Type: ACL; Schema: etl; Owner: qfree_admin
+--
+
+REVOKE ALL ON TABLE etl.log_transformation_steps FROM PUBLIC;
+REVOKE ALL ON TABLE etl.log_transformation_steps FROM qfree_admin;
+GRANT ALL ON TABLE etl.log_transformation_steps TO qfree_admin;
+GRANT SELECT ON TABLE etl.log_transformation_steps TO qfree_sm_ro_role;
+GRANT SELECT ON TABLE etl.log_transformation_steps TO qfree_bi_ro_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.log_transformation_steps TO qfree_rw_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.log_transformation_steps TO qfree_etl_mgmt_role;
+
+
+--
+-- Name: TABLE log_transformations; Type: ACL; Schema: etl; Owner: qfree_admin
+--
+
+REVOKE ALL ON TABLE etl.log_transformations FROM PUBLIC;
+REVOKE ALL ON TABLE etl.log_transformations FROM qfree_admin;
+GRANT ALL ON TABLE etl.log_transformations TO qfree_admin;
+GRANT SELECT ON TABLE etl.log_transformations TO qfree_sm_ro_role;
+GRANT SELECT ON TABLE etl.log_transformations TO qfree_bi_ro_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.log_transformations TO qfree_rw_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.log_transformations TO qfree_etl_mgmt_role;
+
+
+--
+-- Name: TABLE table_meta; Type: ACL; Schema: etl; Owner: qfree_admin
+--
+
+REVOKE ALL ON TABLE etl.table_meta FROM PUBLIC;
+REVOKE ALL ON TABLE etl.table_meta FROM qfree_admin;
+GRANT ALL ON TABLE etl.table_meta TO qfree_admin;
+GRANT SELECT ON TABLE etl.table_meta TO qfree_sm_ro_role;
+GRANT SELECT ON TABLE etl.table_meta TO qfree_bi_ro_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.table_meta TO qfree_rw_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.table_meta TO qfree_etl_mgmt_role;
+
+
+--
+-- Name: TABLE table_state; Type: ACL; Schema: etl; Owner: qfree_admin
+--
+
+REVOKE ALL ON TABLE etl.table_state FROM PUBLIC;
+REVOKE ALL ON TABLE etl.table_state FROM qfree_admin;
+GRANT ALL ON TABLE etl.table_state TO qfree_admin;
+GRANT SELECT ON TABLE etl.table_state TO qfree_sm_ro_role;
+GRANT SELECT ON TABLE etl.table_state TO qfree_bi_ro_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.table_state TO qfree_rw_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.table_state TO qfree_etl_mgmt_role;
+
+
+--
+-- Name: TABLE target_table_compare; Type: ACL; Schema: etl; Owner: qfree_admin
+--
+
+REVOKE ALL ON TABLE etl.target_table_compare FROM PUBLIC;
+REVOKE ALL ON TABLE etl.target_table_compare FROM qfree_admin;
+GRANT ALL ON TABLE etl.target_table_compare TO qfree_admin;
+GRANT SELECT ON TABLE etl.target_table_compare TO qfree_sm_ro_role;
+GRANT SELECT ON TABLE etl.target_table_compare TO qfree_bi_ro_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.target_table_compare TO qfree_rw_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.target_table_compare TO qfree_etl_mgmt_role;
+
+
+--
+-- Name: SEQUENCE target_table_compare_target_table_compare_id_seq; Type: ACL; Schema: etl; Owner: qfree_admin
+--
+
+REVOKE ALL ON SEQUENCE etl.target_table_compare_target_table_compare_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE etl.target_table_compare_target_table_compare_id_seq FROM qfree_admin;
+GRANT ALL ON SEQUENCE etl.target_table_compare_target_table_compare_id_seq TO qfree_admin;
+GRANT SELECT,USAGE ON SEQUENCE etl.target_table_compare_target_table_compare_id_seq TO qfree_rw_role;
+GRANT SELECT,USAGE ON SEQUENCE etl.target_table_compare_target_table_compare_id_seq TO qfree_etl_mgmt_role;
+
+
+--
+-- Name: TABLE target_table_update; Type: ACL; Schema: etl; Owner: qfree_admin
+--
+
+REVOKE ALL ON TABLE etl.target_table_update FROM PUBLIC;
+REVOKE ALL ON TABLE etl.target_table_update FROM qfree_admin;
+GRANT ALL ON TABLE etl.target_table_update TO qfree_admin;
+GRANT SELECT ON TABLE etl.target_table_update TO qfree_sm_ro_role;
+GRANT SELECT ON TABLE etl.target_table_update TO qfree_bi_ro_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.target_table_update TO qfree_rw_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.target_table_update TO qfree_etl_mgmt_role;
+
+
+--
+-- Name: SEQUENCE target_table_update_target_table_update_id_seq; Type: ACL; Schema: etl; Owner: qfree_admin
+--
+
+REVOKE ALL ON SEQUENCE etl.target_table_update_target_table_update_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE etl.target_table_update_target_table_update_id_seq FROM qfree_admin;
+GRANT ALL ON SEQUENCE etl.target_table_update_target_table_update_id_seq TO qfree_admin;
+GRANT SELECT,USAGE ON SEQUENCE etl.target_table_update_target_table_update_id_seq TO qfree_rw_role;
+GRANT SELECT,USAGE ON SEQUENCE etl.target_table_update_target_table_update_id_seq TO qfree_etl_mgmt_role;
+
+
+--
+-- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: etl; Owner: qfree_admin
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA etl REVOKE ALL ON SEQUENCES  FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA etl REVOKE ALL ON SEQUENCES  FROM qfree_admin;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA etl GRANT SELECT,USAGE ON SEQUENCES  TO qfree_rw_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA etl GRANT SELECT,USAGE ON SEQUENCES  TO qfree_etl_mgmt_role;
+
+
+--
+-- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: etl; Owner: qfree_admin
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA etl REVOKE ALL ON TABLES  FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA etl REVOKE ALL ON TABLES  FROM qfree_admin;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA etl GRANT SELECT ON TABLES  TO qfree_sm_ro_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA etl GRANT SELECT ON TABLES  TO qfree_bi_ro_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA etl GRANT SELECT,INSERT,DELETE,UPDATE ON TABLES  TO qfree_rw_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA etl GRANT SELECT,INSERT,DELETE,UPDATE ON TABLES  TO qfree_etl_mgmt_role;
+
+
+--
+-- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: public; Owner: qfree_admin
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA public REVOKE ALL ON SEQUENCES  FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA public REVOKE ALL ON SEQUENCES  FROM qfree_admin;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA public GRANT SELECT ON SEQUENCES  TO qfree_sm_ro_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA public GRANT SELECT,USAGE ON SEQUENCES  TO qfree_rw_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA public GRANT SELECT,USAGE ON SEQUENCES  TO qfree_bi_rw_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA public GRANT SELECT,USAGE ON SEQUENCES  TO qfree_etl_mgmt_role;
+
+
+--
+-- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: public; Owner: qfree_admin
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA public REVOKE ALL ON TABLES  FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA public REVOKE ALL ON TABLES  FROM qfree_admin;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA public GRANT SELECT ON TABLES  TO qfree_sm_ro_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA public GRANT SELECT ON TABLES  TO qfree_bi_ro_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA public GRANT SELECT,INSERT,DELETE,UPDATE ON TABLES  TO qfree_rw_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA public GRANT SELECT,INSERT,DELETE,UPDATE ON TABLES  TO qfree_etl_mgmt_role;
+
+
+--
+-- PostgreSQL database dump complete
+--
 
