@@ -74,7 +74,7 @@ CREATE INDEX ix_obo__analysis_results_02 on public.obo__analysis_results (
 ----     ALTER TABLE public.obo__analysis_results ADD COLUMN scheme_liability_category_id smallint;
 ----     ALTER TABLE public.obo__analysis_results ADD COLUMN axle_tariff_category_id      smallint;
 ----
---ALTER TABLE public.obo__analysis_results DROP CONSTRAINT IF EXISTS obo__analysis_results;
+--ALTER TABLE public.obo__analysis_results DROP CONSTRAINT IF EXISTS pk_obo__analysis_results;
 --DROP INDEX IF EXISTS ix_obo__analysis_results_01;
 --SELECT COUNT(*) AS "obo__analysis_results rows (before)" FROM public.obo__analysis_results;
 --ALTER TABLE public.obo__analysis_results RENAME TO tmp_obo__analysis_results;
