@@ -254,6 +254,7 @@ WHERE
     (
         tm.source_table_name='obo__analysis_queue' AND cm.source_column_name NOT IN (
             'analysis_queue_id', 
+            'analysis_queue_status_id',
             'analysis_queue_type_id', 
             'analysis_request_id', 
             'pedd_id')
@@ -264,11 +265,13 @@ WHERE
      OR tm.source_table_name='obo__analysis_results' AND cm.source_column_name NOT IN (
             'analysis_result_id', 
             'analysis_result_type_id', 
+            'analysis_result_status_id', 
             'passage_event_id', 
             'pedd_id', 
             'licence_plate_country_code',
             'licence_plate_number', 
             'scheme_liability_category_id',
+            'scheme_compliance_category_id', 
             'axle_tariff_category_id',
             'last_updated_on')
      OR tm.source_table_name='obo__applied_rating_detail_data' AND cm.source_column_name NOT IN (
@@ -349,10 +352,24 @@ WHERE
             'euro_emissions_class_id', 
             'enum_name', 
             'description')
+     OR tm.source_table_name='obo__image' AND cm.source_column_name NOT IN (
+            'image_id', 
+            'image_type_id', 
+            'vehicle_image_id', 
+            'image_encoding_type_id', 
+            'image_width', 
+            'image_height', 
+            'image_data_size', 
+            'file_id')
+     OR tm.source_table_name='obo__image_view' AND cm.source_column_name NOT IN (
+            'image_view_id', 
+            'enum_name', 
+            'description')
      OR tm.source_table_name='obo__obu_register' AND cm.source_column_name NOT IN (
             'obu_register_id', 
             'obu_register_status_id', 
             'manufacturer_id', 
+            'equipment_obu_id', 
             'first_seen_on', 
             'last_seen_on')
      OR tm.source_table_name='obo__obu_register_status' AND cm.source_column_name NOT IN (
@@ -392,12 +409,16 @@ WHERE
             'pedd_id', 
             'pedd_status_id', 
             'passage_event_id', 
+            'passage_event_timestamp', 
+            'external_reference_timestamp', 
             'created_on', 
             'last_updated_on')
      OR tm.source_table_name='obo__passage_event_derived_data_details' AND cm.source_column_name NOT IN (
             'pedd_id', 
             'created_on', 
+            'identified_as_duplicate', 
             'last_updated_on', 
+            'passage_event_id', 
             'passage_event_type_id', 
             'passage_event_timestamp', 
             'control_point_id', 
@@ -409,7 +430,8 @@ WHERE
             'applied_lpn_number',
             'applied_payment_means_pan',
             'applied_obuid',
-            'base_rate_total')
+            'base_rate_total',
+            'rate_modification_category_id')
      OR tm.source_table_name='obo__passage_event_dsrc_data' AND cm.source_column_name NOT IN (
             'pe_dsrc_data_id', 
             'passage_event_id', 
@@ -417,6 +439,14 @@ WHERE
             'equipment_obu_id',
             'payment_means_pan',
             'cdc_timestamp')
+     OR tm.source_table_name='obo__passage_event_image_data' AND cm.source_column_name NOT IN (
+            'peid_id', 
+            'pe_vehicle_data_id', 
+            'passage_event_id', 
+            'data_sequence_id', 
+            'camera_id', 
+            'capture_timestamp', 
+            'captured_vehicle_image_view_id')
      OR tm.source_table_name='obo__passage_event_rse_logic_data' AND cm.source_column_name NOT IN (
             'perseld_id', 
             'passage_event_id', 
