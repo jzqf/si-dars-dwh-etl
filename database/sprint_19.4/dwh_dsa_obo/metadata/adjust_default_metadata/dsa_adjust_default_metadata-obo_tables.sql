@@ -252,7 +252,21 @@ WHERE
     --
     -- Tables that are not explicitly listed here will have *all* columns mirrored and compared.
     (
-        tm.source_table_name='obo__analysis_queue' AND cm.source_column_name NOT IN (
+        tm.source_table_name='obo__analysis_detailed_results' AND cm.source_column_name NOT IN (
+            'analysis_detailed_result_id', 
+            'analysis_result_id', 
+            'licence_plate_is_visible', 
+            'licence_plate_is_human_readable', 
+            'licence_plate_is_obscured', 
+            'licence_plate_is_missing', 
+            'licence_plate_is_tampered', 
+            'licence_plate_is_dirty', 
+            'licence_plate_is_bad_condition', 
+            'image_is_poor_quality', 
+            'image_is_weather_affected', 
+            'image_is_mispositioned', 
+            'image_is_miscorrelated')
+    OR  tm.source_table_name='obo__analysis_queue' AND cm.source_column_name NOT IN (
             'analysis_queue_id', 
             'analysis_queue_status_id',
             'analysis_queue_type_id', 
@@ -384,6 +398,7 @@ WHERE
             'control_point_id',
             'control_point_event_capture_category_id', 
             'charged_road_section_id', 
+            'obu_present',
             'obu_count',
             'vehicle_image_count',
             'detected_scheme_liability_category_id', 
@@ -417,6 +432,7 @@ WHERE
             'pedd_id', 
             'created_on', 
             'identified_as_duplicate', 
+            'identified_as_miscorrelated',
             'last_updated_on', 
             'passage_event_id', 
             'passage_event_type_id', 
@@ -451,6 +467,7 @@ WHERE
             'perseld_id', 
             'passage_event_id', 
             'rse_passage_type_id', 
+            'rse_compliance_check_dsrc_check_id',
             'rse_compliance_check_axles_check_id')
      OR tm.source_table_name='obo__passage_event_type' AND cm.source_column_name NOT IN (
             'passage_event_type_id', 
