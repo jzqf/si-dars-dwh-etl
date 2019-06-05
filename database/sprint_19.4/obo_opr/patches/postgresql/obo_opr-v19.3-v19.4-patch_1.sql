@@ -13,5 +13,7 @@ SET
 WHERE
 	schema_name='public' AND 
 	(
-	    table_name='obo__passage_event_derived_data'
+	    table_name='obo__analysis_detailed_results'          OR
+	    table_name='obo__passage_event_derived_data'         OR
+	    table_name='obo__passage_event_derived_data_details'
 	);

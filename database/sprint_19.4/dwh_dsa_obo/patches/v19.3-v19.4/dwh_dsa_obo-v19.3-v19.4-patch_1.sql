@@ -20,6 +20,27 @@
 
 
 -- New table added to DSA:
+CREATE TABLE IF NOT EXISTS public.obo__analysis_detailed_results (
+   analysis_detailed_result_id     BIGINT               not null,
+   analysis_result_id              BIGINT               not null,
+   licence_plate_is_visible        BOOLEAN              null,
+   licence_plate_is_human_readable BOOLEAN              null,
+   licence_plate_is_obscured       BOOLEAN              null,
+   licence_plate_is_missing        BOOLEAN              null,
+   licence_plate_is_tampered       BOOLEAN              null,
+   licence_plate_is_dirty          BOOLEAN              null,
+   licence_plate_is_bad_condition  BOOLEAN              null,
+   image_is_poor_quality           BOOLEAN              null,
+   image_is_weather_affected       BOOLEAN              null,
+   image_is_mispositioned          BOOLEAN              null,
+   image_is_miscorrelated          BOOLEAN              null,
+   etl_batch_id_insert             BIGINT               not null,
+   etl_batch_id_last_update        BIGINT               null,
+   CONSTRAINT PK_OBO__ANALYSIS_DETAILED_RESU PRIMARY KEY (analysis_detailed_result_id)
+);
+
+
+-- New table added to DSA:
 CREATE TABLE IF NOT EXISTS public.obo__image (
    image_id                 BIGINT               not null,
    image_type_id            SMALLINT             not null,
@@ -102,6 +123,10 @@ CREATE INDEX ix_obo__analysis_results_02 ON obo__analysis_results (
     analysis_result_type_id,
     scheme_liability_category_id
 );
+CREATE INDEX ix_obo__analysis_results_03 ON obo__analysis_results (
+    passage_event_id
+);
+
 
 -- Drop table and then recreate the table with one new column. 
 -- This table will be refilled the next time the ETL job runs:
@@ -122,6 +147,39 @@ CREATE INDEX ix_obo__obu_register_01 ON obo__obu_register (
 );
 
 
+-- Drop table and then recreate the table with one new column. 
+-- This table will be refilled the next time the ETL job runs:
+DROP TABLE   public.obo__passage_event;
+CREATE TABLE public.obo__passage_event (
+   passage_event_id                           BIGINT               not null,
+   passage_event_type_id                      SMALLINT             not null,
+   data_arrival_timestamp                     TIMESTAMP            not null,
+   passage_event_timestamp                    TIMESTAMP            not null,
+   control_point_id                           SMALLINT             not null,
+   control_point_event_capture_category_id    SMALLINT             not null,
+   charged_road_section_id                    BIGINT               not null,
+   obu_present                                BOOLEAN              not null,    -- new column
+   obu_count                                  SMALLINT             not null,
+   vehicle_image_count                        SMALLINT             not null,
+   detected_scheme_liability_category_id      SMALLINT             not null,
+   detected_scheme_compliance_category_id     SMALLINT             not null,
+   detected_scheme_compliance_sub_category_id SMALLINT             not null,
+   detected_axle_tariff_category_id           SMALLINT             null,
+   detected_lpn_country_code                  VARCHAR(2)           null,
+   detected_lpn_number                        VARCHAR(14)          null,
+   declared_axle_tariff_category_id           SMALLINT             null,
+   declared_euro_emission_class_id            SMALLINT             null,
+   declared_lpn_country_code                  VARCHAR(2)           null,
+   declared_lpn_number                        VARCHAR(14)          null,
+   cdc_timestamp                              TIMESTAMP            null,
+   etl_batch_id_insert                        BIGINT               not null,
+   etl_batch_id_last_update                   BIGINT               null,
+   CONSTRAINT pk_obo__passage_event PRIMARY KEY (passage_event_id)
+);
+CREATE INDEX ix_obo__passage_event_01 ON public.obo__passage_event (passage_event_timestamp);
+CREATE INDEX ix_obo__passage_event_02 ON public.obo__passage_event (cdc_timestamp);
+CREATE INDEX ix_obo__passage_event_03 ON obo__passage_event (control_point_id);
+
 -- Drop table and then recreate the table with two new columns. 
 -- This table will be refilled the next time the ETL job runs:
 DROP TABLE   public.obo__passage_event_derived_data;
@@ -140,7 +198,9 @@ CREATE TABLE public.obo__passage_event_derived_data (
 CREATE INDEX ix_obo__passage_event_derived_data_01 ON obo__passage_event_derived_data (
     last_updated_on
 );
-
+CREATE INDEX ix_obo__passage_event_derived_data_02 ON obo__passage_event_derived_data (
+    passage_event_id
+);
 
 -- Drop table and then recreate the table with three new columns. 
 -- This table will be refilled the next time the ETL job runs:
@@ -149,6 +209,7 @@ CREATE TABLE public.obo__passage_event_derived_data_details (
    pedd_id                              BIGINT               not null,
    created_on                           TIMESTAMP            not null,
    identified_as_duplicate              BOOLEAN              not null,   -- new column
+   identified_as_miscorrelated          BOOLEAN              null,       -- New column. NOT NULL in obo_opr PDM doc, but will be NULL in _patched_ DB
    last_updated_on                      TIMESTAMP            not null,
    passage_event_id                     BIGINT               null,       -- new column
    passage_event_type_id                SMALLINT             not null,
@@ -168,9 +229,24 @@ CREATE TABLE public.obo__passage_event_derived_data_details (
    etl_batch_id_last_update             BIGINT               null,
    CONSTRAINT PK_OBO__PE_DERIVED_DD PRIMARY KEY (pedd_id)
 );
-CREATE INDEX ix_obo__passage_event_derived_data_details_01 ON obo__passage_event_derived_data_details (
-    last_updated_on
+CREATE INDEX ix_obo__passage_event_derived_data_details_01 ON obo__passage_event_derived_data_details (last_updated_on);
+
+
+-- Drop table and then recreate the table with three new columns. 
+-- This table will be refilled the next time the ETL job runs:
+DROP TABLE   public.obo__passage_event_rse_logic_data;
+CREATE TABLE public.obo__passage_event_rse_logic_data (
+   perseld_id                          BIGINT               not null,
+   passage_event_id                    BIGINT               not null,
+   rse_passage_type_id                 SMALLINT             null,
+   rse_compliance_check_dsrc_check_id  SMALLINT             null,   -- new column
+   rse_compliance_check_axles_check_id SMALLINT             null,
+   etl_batch_id_insert                 BIGINT               not null,
+   etl_batch_id_last_update            BIGINT               null,
+   CONSTRAINT PK_OBO__PASSAGE_EVENT_RSE_LOGI PRIMARY KEY (perseld_id)
 );
+CREATE INDEX ix_obo__passage_event_rse_logic_data_01 ON obo__passage_event_rse_logic_data (rse_compliance_check_axles_check_id);
+CREATE INDEX ix_obo__passage_event_rse_logic_data_02 ON obo__passage_event_rse_logic_data (passage_event_id);
 
 
 -- It does not matter if these constraints were already dropped. "Re-dropping"
