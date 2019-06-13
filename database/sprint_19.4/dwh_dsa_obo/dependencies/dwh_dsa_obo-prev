@@ -1,0 +1,29 @@
+0.15.3
+
+It was necessary to generate an installation zip file artifact for this version
+of the database by the following procedure:
+
+1.	Check out tag 0.15.3 for the project si-dars-pdm-dwh
+
+2.	Run Kym's VB script in PowerDesigner to generate new/updated build files.
+	I should have done this after updating the .pdm file for this database and
+	before committing the changes, but I did not know about this procedure then.
+
+3.	Run "mvn clean install" on the si-dars-pdm-dwh project. This generated an
+	artifact named:
+
+		dars-pdm-dwh-dsa_obo-0.15.3-database.zip ,
+
+	which is the same name as the 0.15.3 artifact that can be downloaded from 
+	the Q-Free Nexus server, but its content is different.
+
+4.	Fix two problems in the wipe-install script that was generated for this 
+	database and packaged in the zip file. This script is:
+	
+		create-schema-dars-pdm-dwh-dsa_obo-postgresql.sql
+	
+	The changes were:
+	
+	a.	Fix the syntax of a CREATE INDEX command.
+	b.	Comment out everything to do with a stored procedure that is not used
+		and for which the SQL had a syntax error in it.
