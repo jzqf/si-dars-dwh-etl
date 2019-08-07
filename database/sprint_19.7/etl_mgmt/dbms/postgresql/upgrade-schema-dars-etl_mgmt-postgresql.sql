@@ -1,4 +1,38 @@
 
+-- Get rid of old tables from previous upgrade. The order of these deletions
+-- is important in order to avoid foreign key constraint violations.
+DROP TABLE IF EXISTS etl.column_meta_old;
+DROP TABLE IF EXISTS etl.table_state_old;
+DROP TABLE IF EXISTS etl.target_table_compare_old;
+DROP TABLE IF EXISTS etl.target_table_update_old;
+DROP TABLE IF EXISTS etl.table_meta_old;
+
+
+-- Rename the tables that will be "patched" in this script. New versions of 
+-- these tables are created and patched below.
+ALTER TABLE IF EXISTS etl.column_meta          RENAME TO column_meta_old;
+ALTER TABLE IF EXISTS etl.table_state          RENAME TO table_state_old;
+ALTER TABLE IF EXISTS etl.target_table_compare RENAME TO target_table_compare_old;
+ALTER TABLE IF EXISTS etl.target_table_update  RENAME TO target_table_update_old;
+ALTER TABLE IF EXISTS etl.table_meta           RENAME TO table_meta_old;
+
+
+-- Rename existing constraints that apply to the tables that were just renamed
+-- so that new constraints with these names can be created below for the new
+-- tables created below.
+ALTER TABLE IF EXISTS ONLY etl.column_meta_old          RENAME CONSTRAINT pk_etl_column_meta                                 TO pk_etl_column_meta_old;
+ALTER TABLE IF EXISTS ONLY etl.table_meta_old           RENAME CONSTRAINT pk_etl_table_meta                                  TO pk_etl_table_meta_old;
+ALTER TABLE IF EXISTS ONLY etl.table_state_old          RENAME CONSTRAINT pk_etl_table_state                                 TO pk_etl_table_state_old;
+ALTER TABLE IF EXISTS ONLY etl.target_table_compare_old RENAME CONSTRAINT pk_etl_targettablecompare                          TO pk_etl_targettablecompare_old;
+ALTER TABLE IF EXISTS ONLY etl.target_table_update_old  RENAME CONSTRAINT pk_etl_targettableupdate                           TO pk_etl_targettableupdate_old;
+ALTER TABLE IF EXISTS ONLY etl.column_meta_old          RENAME CONSTRAINT uq_etl_columnmeta_tablemetaid_targetcolumnname     TO uq_etl_columnmeta_tablemetaid_targetcolumnname_old;
+ALTER TABLE IF EXISTS ONLY etl.table_meta_old           RENAME CONSTRAINT uq_etl_tablemeta_targetdb_targetschema_targettable TO uq_etl_tablemeta_targetdb_targetschema_targettable_old;
+ALTER TABLE IF EXISTS ONLY etl.column_meta_old          RENAME CONSTRAINT fk_columnmeta_tablemeta                            TO fk_columnmeta_tablemeta_old;
+ALTER TABLE IF EXISTS ONLY etl.target_table_compare_old RENAME CONSTRAINT fk_etl_targettablecompare_tablemeta                TO fk_etl_targettablecompare_tablemeta_old;
+ALTER TABLE IF EXISTS ONLY etl.target_table_update_old  RENAME CONSTRAINT fk_etl_targettableupdate_tablemeta                 TO fk_etl_targettableupdate_tablemeta_old;
+ALTER TABLE IF EXISTS ONLY etl.table_state_old          RENAME CONSTRAINT fk_tablestate_tablemeta                            TO fk_tablestate_tablemeta_old;
+
+
 --
 -- Name: dsa_last_update_summary(); Type: FUNCTION; Schema: etl; Owner: qfree_etl
 --
@@ -86,17 +120,6 @@ END; $$;
 
 
 --
--- Name: cdc_timestamps; Type: TABLE; Schema: etl; Owner: qfree_admin
---
-
-CREATE TABLE etl.cdc_timestamps (
-    target_db_id smallint NOT NULL,
-    last_successful_load timestamp without time zone DEFAULT '1970-01-01 00:00:00'::timestamp without time zone NOT NULL,
-    current_load timestamp without time zone DEFAULT '1970-01-01 00:00:00'::timestamp without time zone NOT NULL
-);
-
-
---
 -- Name: column_meta; Type: TABLE; Schema: etl; Owner: qfree_admin
 --
 
@@ -122,6 +145,7 @@ CREATE TABLE etl.column_meta (
 -- Name: configuration; Type: TABLE; Schema: etl; Owner: qfree_admin
 --
 
+DROP TABLE IF EXISTS etl.configuration;
 CREATE TABLE IF NOT EXISTS etl.configuration (
     configuration_id uuid DEFAULT etl.uuid_generate_v4() NOT NULL,
     boolean_value boolean,
@@ -140,160 +164,8 @@ CREATE TABLE IF NOT EXISTS etl.configuration (
     time_value time without time zone,
     role_id uuid
 );
-
-
---
--- Name: log_channel; Type: TABLE; Schema: etl; Owner: qfree_admin
---
-
-CREATE TABLE etl.log_channel (
-    id_batch integer,
-    channel_id character varying(255),
-    log_date timestamp without time zone,
-    logging_object_type character varying(255),
-    object_name character varying(255),
-    object_copy character varying(255),
-    repository_directory character varying(255),
-    filename character varying(255),
-    object_id character varying(255),
-    object_revision character varying(255),
-    parent_channel_id character varying(255),
-    root_channel_id character varying(255)
-);
-
-
---
--- Name: log_job_entries; Type: TABLE; Schema: etl; Owner: qfree_admin
---
-
-CREATE TABLE etl.log_job_entries (
-    id_batch integer,
-    channel_id character varying(255),
-    log_date timestamp without time zone,
-    transname character varying(255),
-    stepname character varying(255),
-    lines_read bigint,
-    lines_written bigint,
-    lines_updated bigint,
-    lines_input bigint,
-    lines_output bigint,
-    lines_rejected bigint,
-    errors bigint,
-    result boolean,
-    nr_result_rows bigint,
-    nr_result_files bigint
-);
-
-
---
--- Name: log_jobs; Type: TABLE; Schema: etl; Owner: qfree_admin
---
-
-CREATE TABLE etl.log_jobs (
-    id_job integer,
-    channel_id character varying(255),
-    jobname character varying(255),
-    status character varying(15),
-    lines_read bigint,
-    lines_written bigint,
-    lines_updated bigint,
-    lines_input bigint,
-    lines_output bigint,
-    lines_rejected bigint,
-    errors bigint,
-    startdate timestamp without time zone,
-    enddate timestamp without time zone,
-    logdate timestamp without time zone,
-    depdate timestamp without time zone,
-    replaydate timestamp without time zone,
-    log_field text
-);
-
-
---
--- Name: log_transformation_metrics; Type: TABLE; Schema: etl; Owner: qfree_admin
---
-
-CREATE TABLE etl.log_transformation_metrics (
-    id_batch integer,
-    channel_id character varying(255),
-    log_date timestamp without time zone,
-    metrics_date timestamp without time zone,
-    metrics_code character varying(255),
-    metrics_description character varying(255),
-    metrics_subject character varying(255),
-    metrics_type character varying(255),
-    metrics_value bigint
-);
-
-
---
--- Name: log_transformation_performance; Type: TABLE; Schema: etl; Owner: qfree_admin
---
-
-CREATE TABLE etl.log_transformation_performance (
-    id_batch integer,
-    seq_nr integer,
-    logdate timestamp without time zone,
-    transname character varying(255),
-    stepname character varying(255),
-    step_copy integer,
-    lines_read bigint,
-    lines_written bigint,
-    lines_updated bigint,
-    lines_input bigint,
-    lines_output bigint,
-    lines_rejected bigint,
-    errors bigint,
-    input_buffer_rows bigint,
-    output_buffer_rows bigint
-);
-
-
---
--- Name: log_transformation_steps; Type: TABLE; Schema: etl; Owner: qfree_admin
---
-
-CREATE TABLE etl.log_transformation_steps (
-    id_batch integer,
-    channel_id character varying(255),
-    log_date timestamp without time zone,
-    transname character varying(255),
-    stepname character varying(255),
-    step_copy smallint,
-    lines_read bigint,
-    lines_written bigint,
-    lines_updated bigint,
-    lines_input bigint,
-    lines_output bigint,
-    lines_rejected bigint,
-    errors bigint
-);
-
-
---
--- Name: log_transformations; Type: TABLE; Schema: etl; Owner: qfree_admin
---
-
-CREATE TABLE etl.log_transformations (
-    id_batch integer,
-    channel_id character varying(255),
-    transname character varying(255),
-    status character varying(15),
-    lines_read bigint,
-    lines_written bigint,
-    lines_updated bigint,
-    lines_input bigint,
-    lines_output bigint,
-    lines_rejected bigint,
-    errors bigint,
-    startdate timestamp without time zone,
-    enddate timestamp without time zone,
-    logdate timestamp without time zone,
-    depdate timestamp without time zone,
-    replaydate timestamp without time zone,
-    log_field text
-);
+ALTER TABLE ONLY etl.configuration
+    ADD CONSTRAINT pk_etl_configuration PRIMARY KEY (configuration_id);
 
 
 --
@@ -371,18 +243,6 @@ CREATE TABLE etl.target_table_compare (
 
 
 --
--- Name: target_table_compare_target_table_compare_id_seq; Type: SEQUENCE; Schema: etl; Owner: qfree_admin
---
-
-CREATE SEQUENCE etl.target_table_compare_target_table_compare_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
 -- Name: target_table_compare_target_table_compare_id_seq; Type: SEQUENCE OWNED BY; Schema: etl; Owner: qfree_admin
 --
 
@@ -408,18 +268,6 @@ CREATE TABLE etl.target_table_update (
     last_updated_on_colname character varying(80),
     last_updated_on_maxvalue timestamp without time zone
 );
-
-
---
--- Name: target_table_update_target_table_update_id_seq; Type: SEQUENCE; Schema: etl; Owner: qfree_admin
---
-
-CREATE SEQUENCE etl.target_table_update_target_table_update_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
 
 
 --
@@ -4200,49 +4048,12 @@ INSERT INTO etl.table_state (table_state_id, target_last_updated_on, target_last
 --
 
 
-
---
--- Name: target_table_compare_target_table_compare_id_seq; Type: SEQUENCE SET; Schema: etl; Owner: qfree_admin
---
-
-SELECT pg_catalog.setval('etl.target_table_compare_target_table_compare_id_seq', 3969, true);
-
-
---
--- Data for Name: target_table_update; Type: TABLE DATA; Schema: etl; Owner: qfree_admin
---
-
-
-
---
--- Name: target_table_update_target_table_update_id_seq; Type: SEQUENCE SET; Schema: etl; Owner: qfree_admin
---
-
-SELECT pg_catalog.setval('etl.target_table_update_target_table_update_id_seq', 28548, true);
-
-
---
--- Name: pk_etl_cdc_timestamps; Type: CONSTRAINT; Schema: etl; Owner: qfree_admin
---
-
-ALTER TABLE ONLY etl.cdc_timestamps
-    ADD CONSTRAINT pk_etl_cdc_timestamps PRIMARY KEY (target_db_id);
-
-
 --
 -- Name: pk_etl_column_meta; Type: CONSTRAINT; Schema: etl; Owner: qfree_admin
 --
 
 ALTER TABLE ONLY etl.column_meta
     ADD CONSTRAINT pk_etl_column_meta PRIMARY KEY (column_meta_id);
-
-
---
--- Name: pk_etl_configuration; Type: CONSTRAINT; Schema: etl; Owner: qfree_admin
---
-
-ALTER TABLE ONLY etl.configuration
-    ADD CONSTRAINT pk_etl_configuration PRIMARY KEY (configuration_id);
 
 
 --
@@ -4294,41 +4105,6 @@ ALTER TABLE ONLY etl.table_meta
 
 
 --
--- Name: idx_log_job_entries_1; Type: INDEX; Schema: etl; Owner: qfree_admin
---
-
-CREATE INDEX idx_log_job_entries_1 ON etl.log_job_entries USING btree (id_batch);
-
-
---
--- Name: idx_log_jobs_1; Type: INDEX; Schema: etl; Owner: qfree_admin
---
-
-CREATE INDEX idx_log_jobs_1 ON etl.log_jobs USING btree (id_job);
-
-
---
--- Name: idx_log_jobs_2; Type: INDEX; Schema: etl; Owner: qfree_admin
---
-
-CREATE INDEX idx_log_jobs_2 ON etl.log_jobs USING btree (errors, status, jobname);
-
-
---
--- Name: idx_log_transformations_1; Type: INDEX; Schema: etl; Owner: qfree_admin
---
-
-CREATE INDEX idx_log_transformations_1 ON etl.log_transformations USING btree (id_batch);
-
-
---
--- Name: idx_log_transformations_2; Type: INDEX; Schema: etl; Owner: qfree_admin
---
-
-CREATE INDEX idx_log_transformations_2 ON etl.log_transformations USING btree (errors, status, transname);
-
-
---
 -- Name: fk_columnmeta_tablemeta; Type: FK CONSTRAINT; Schema: etl; Owner: qfree_admin
 --
 
@@ -4358,4 +4134,428 @@ ALTER TABLE ONLY etl.target_table_update
 
 ALTER TABLE ONLY etl.table_state
     ADD CONSTRAINT fk_tablestate_tablemeta FOREIGN KEY (table_state_id) REFERENCES etl.table_meta(table_meta_id);
+
+
+-- Update each new (empty) etl.table_state row that matches a row of the copy of
+-- the "old" data, etl.table_state_old. Some etl.table_state_old rows may not 
+-- match an etl.table_state row because tables can be removed from a source
+-- database.
+WITH olddata AS (
+    SELECT
+        tm.table_meta_id AS "table_meta_id_new",
+--        tso.table_state_id,
+        tso.target_last_updated_on,
+        tso.target_last_updated_algorithm_id,
+        tso.target_last_updated_elapsed_time_millis,
+        tso.target_last_updated_num_inserts,
+        tso.target_last_updated_num_updates,
+        tso.target_last_updated_num_rows_processed,
+        tso.target_last_updated_num_rows_processed_per_sec,
+        tso.target_last_updated_insert_id_colname,
+        tso.target_last_updated_insert_id_maxvalue,
+        tso.target_last_updated_last_updated_on_colname,
+        tso.target_last_updated_last_updated_on_maxvalue,
+        tso.last_compared_on,
+        tso.last_compared_num_rows_equal,
+        tso.last_compared_num_rows_unequal,
+        tso.last_compared_num_rows_missing_from_target,
+        tso.last_compared_num_rows_extra_in_target,
+        tso.max_insert_id
+    FROM
+        etl.table_state_old tso
+    INNER JOIN
+        -- Join to the row of the "old" table_meta table that corresponds to the 
+        -- "old" table_state data so that we will have access to the values of:
+        --     target_db_id
+        --     target_schema_name
+        --     target_table_name
+        -- from the "old" data. These three values will be used in the next join 
+        -- to join to the row of the "new" table_meta table to get access to its 
+        -- value of table_meta_id, which is also equal to the "new" value of
+        -- table_state_id from the "new" table_state table.
+        etl.table_meta_old tmo ON tmo.table_meta_id=tso.table_state_id
+    INNER JOIN
+        -- Join to the row of the "new" table_meta table that corresponds to the 
+        -- same values of values of:
+        --     target_db_id
+        --     target_schema_name
+        --     target_table_name
+        -- (which form an alternate key) from the "old" data so that we will
+        -- have access to the value of table_meta_id from the "new" data.
+        etl.table_meta tm ON (tm.target_db_id=tmo.target_db_id AND tm.target_schema_name=tmo.target_schema_name AND tm.target_table_name=tmo.target_table_name)
+)
+UPDATE etl.table_state SET (
+--    table_state_id,
+    target_last_updated_on,
+    target_last_updated_algorithm_id,
+    target_last_updated_elapsed_time_millis,
+    target_last_updated_num_inserts,
+    target_last_updated_num_updates,
+    target_last_updated_num_rows_processed,
+    target_last_updated_num_rows_processed_per_sec,
+    target_last_updated_insert_id_colname,
+    target_last_updated_insert_id_maxvalue,
+    target_last_updated_last_updated_on_colname,
+    target_last_updated_last_updated_on_maxvalue,
+    last_compared_on,
+    last_compared_num_rows_equal,
+    last_compared_num_rows_unequal,
+    last_compared_num_rows_missing_from_target,
+    last_compared_num_rows_extra_in_target,
+    max_insert_id
+) = (
+--    olddata.table_state_id,
+    olddata.target_last_updated_on,
+    olddata.target_last_updated_algorithm_id,
+    olddata.target_last_updated_elapsed_time_millis,
+    olddata.target_last_updated_num_inserts,
+    olddata.target_last_updated_num_updates,
+    olddata.target_last_updated_num_rows_processed,
+    olddata.target_last_updated_num_rows_processed_per_sec,
+    olddata.target_last_updated_insert_id_colname,
+    olddata.target_last_updated_insert_id_maxvalue,
+    olddata.target_last_updated_last_updated_on_colname,
+    olddata.target_last_updated_last_updated_on_maxvalue,
+    olddata.last_compared_on,
+    olddata.last_compared_num_rows_equal,
+    olddata.last_compared_num_rows_unequal,
+    olddata.last_compared_num_rows_missing_from_target,
+    olddata.last_compared_num_rows_extra_in_target,
+    olddata.max_insert_id
+)
+FROM
+    olddata
+WHERE
+    table_state.table_state_id=olddata.table_meta_id_new;
+
+
+-- Insert one row into the "new" target_table_update table for *each* row of the
+-- "old" target_table_update table, but assigning a new value to the
+-- "table_meta_id" column in order to link the new row to the appropriate row of 
+-- the "new" table_meta table. Rows of the "old" target_table_update table that 
+-- correspond to source tables that have been dropped will not be processed and 
+-- these rows will be deleted when the "old" target_table_update table is
+-- dropped.
+WITH olddata AS (
+    SELECT
+--        ttuo.target_table_update_id,
+--        ttuo.table_meta_id AS "table_meta_id_old",
+        tm.table_meta_id AS "table_meta_id_new",
+        ttuo.created_on,
+        ttuo.algorithm_id,
+        ttuo.elapsed_time_millis,
+        ttuo.num_inserts,
+        ttuo.num_updates,
+        ttuo.num_rows_processed,
+        ttuo.num_rows_processed_per_sec,
+        ttuo.insert_id_colname,
+        ttuo.insert_id_maxvalue,
+        ttuo.last_updated_on_colname,
+        ttuo.last_updated_on_maxvalue
+    FROM
+        etl.target_table_update_old ttuo
+    INNER JOIN
+        -- Join to the row of the "old" table_meta table that corresponds to the 
+        -- "old" target_table_update data so that we will have access to the 
+        -- values of:
+        --     target_db_id
+        --     target_schema_name
+        --     target_table_name
+        -- from the "old" data. These three values will be used in the next join 
+        -- to join to the row of the "new" table_meta table to get access to its 
+        -- value of table_meta_id so that the new target_table_update row that
+        -- we insert below will be linked to the appropriate "new" table_meta
+        -- row.
+        etl.table_meta_old tmo ON tmo.table_meta_id=ttuo.table_meta_id
+    INNER JOIN
+        -- Join to the row of the "new" table_meta table that corresponds to the 
+        -- same values of values of:
+        --     target_db_id
+        --     target_schema_name
+        --     target_table_name
+        -- (which form an alternate key) from the "old" data so that we will
+        -- have access to the value of table_meta_id from the "new" data.
+        etl.table_meta tm ON (tm.target_db_id=tmo.target_db_id AND tm.target_schema_name=tmo.target_schema_name AND tm.target_table_name=tmo.target_table_name)
+)
+INSERT INTO etl.target_table_update (
+--    target_table_update_id,  -- Value assigned from a sequence via column DEFAULT setting
+    table_meta_id,
+    created_on,
+    algorithm_id,
+    elapsed_time_millis,
+    num_inserts,
+    num_updates,
+    num_rows_processed,
+    num_rows_processed_per_sec,
+    insert_id_colname,
+    insert_id_maxvalue,
+    last_updated_on_colname,
+    last_updated_on_maxvalue
+)
+SELECT
+    table_meta_id_new,
+    created_on,
+    algorithm_id,
+    elapsed_time_millis,
+    num_inserts,
+    num_updates,
+    num_rows_processed,
+    num_rows_processed_per_sec,
+    insert_id_colname,
+    insert_id_maxvalue,
+    last_updated_on_colname,
+    last_updated_on_maxvalue
+FROM
+    olddata;
+
+
+-- Insert one row into the "new" target_table_compare table for *each* row of
+-- the "old" target_table_compare table, but assigning a new value to the
+-- "table_meta_id" column in order to link the new row to the appropriate row of 
+-- the "new" table_meta table. Rows of the "old" target_table_compare table that 
+-- correspond to source tables that have been dropped will not be processed and 
+-- these rows will be deleted when the "old" target_table_compare table is
+-- dropped.
+WITH olddata AS (
+    SELECT
+--        ttco.target_table_compare_id,
+--        ttco.table_meta_id AS "table_meta_id_old",
+        tm.table_meta_id AS "table_meta_id_new",
+        ttco.compared_on,
+        ttco.num_rows_equal,
+        ttco.num_rows_unequal,
+        ttco.num_rows_missing_from_target,
+        ttco.num_rows_extra_in_target
+    FROM
+        etl.target_table_compare_old ttco
+    INNER JOIN
+        -- Join to the row of the "old" table_meta table that corresponds to the 
+        -- "old" target_table_compare data so that we will have access to the 
+        -- values of:
+        --     target_db_id
+        --     target_schema_name
+        --     target_table_name
+        -- from the "old" data. These three values will be used in the next join 
+        -- to join to the row of the "new" table_meta table to get access to its 
+        -- value of table_meta_id so that the new target_table_compare row that
+        -- we insert below will be linked to the appropriate "new" table_meta
+        -- row.
+        etl.table_meta_old tmo ON tmo.table_meta_id=ttco.table_meta_id
+    INNER JOIN
+        -- Join to the row of the "new" table_meta table that corresponds to the 
+        -- same values of values of:
+        --     target_db_id
+        --     target_schema_name
+        --     target_table_name
+        -- (which form an alternate key) from the "old" data so that we will
+        -- have access to the value of table_meta_id from the "new" data.
+        etl.table_meta tm ON (tm.target_db_id=tmo.target_db_id AND tm.target_schema_name=tmo.target_schema_name AND tm.target_table_name=tmo.target_table_name)
+)
+INSERT INTO etl.target_table_compare (
+--    target_table_compare_id,  -- Value assigned from a sequence via column DEFAULT setting
+    table_meta_id,
+    compared_on,
+    num_rows_equal,
+    num_rows_unequal,
+    num_rows_missing_from_target,
+    num_rows_extra_in_target
+)
+SELECT
+    table_meta_id_new,
+    compared_on,
+    num_rows_equal,
+    num_rows_unequal,
+    num_rows_missing_from_target,
+    num_rows_extra_in_target
+FROM
+    olddata;
+
+
+-- The code below for migrating the etl.table_meta and etl.column_meta *data*
+-- during an "upgrade install" may be commented out if we want to ensure that
+-- new metadata is always used, i.e., updates made in an environment between
+-- installs are discarded.
+ 
+---- Update each new etl.table_meta row that matches a row of the "old" data
+---- stored in the table etl.table_meta_old. Some etl.table_meta_old rows may not 
+---- match an etl.table_meta row because tables can be removed from a source
+---- database, in which case there will no longer be a matching table_meta row.
+--WITH olddata AS (
+--    SELECT
+--        tmo.table_meta_id,
+--        tmo.source_db_id,
+--        tmo.source_schema_name,
+--        tmo.source_table_name,
+--        tmo.target_db_id,
+--        tmo.target_schema_name,
+--        tmo.target_table_name,
+--        tmo.can_insert_rows,
+--        tmo.can_update_rows,
+--        tmo.can_delete_rows,
+--        tmo.is_static_support_table,
+--        tmo.row_can_be_deleted_from_seconds,
+--        tmo.can_delete_row_schema_name,
+--        tmo.can_delete_row_table_name,
+--        tmo.delete_marked_rows_table_order,
+--        tmo.mark_rows_for_deletion_algorithm_id,
+--        tmo.delete_marked_rows_algorithm_id,
+--        tmo.update_target_table_algorithm_id,
+--        tmo.update_target_table,
+--        tmo.mark_rows_for_deletion,
+--        tmo.delete_marked_rows,
+--        tmo.compare_target_table,
+--        tmo.source_db_etl_state_register_schema_name,
+--        tmo.source_db_etl_state_register_table_name
+--    FROM
+--        etl.table_meta_old tmo
+--)
+--UPDATE etl.table_meta SET (
+----    table_meta_id,
+--    source_db_id,
+--    source_schema_name,
+--    source_table_name,
+--    target_db_id,
+--    target_schema_name,
+--    target_table_name,
+--    can_insert_rows,
+--    can_update_rows,
+--    can_delete_rows,
+--    is_static_support_table,
+--    row_can_be_deleted_from_seconds,
+--    can_delete_row_schema_name,
+--    can_delete_row_table_name,
+--    delete_marked_rows_table_order,
+--    mark_rows_for_deletion_algorithm_id,
+--    delete_marked_rows_algorithm_id,
+--    update_target_table_algorithm_id,
+--    update_target_table,
+--    mark_rows_for_deletion,
+--    delete_marked_rows,
+--    compare_target_table,
+--    source_db_etl_state_register_schema_name,
+--    source_db_etl_state_register_table_name
+--) = (
+----    olddata.table_meta_id,
+--    olddata.source_db_id,
+--    olddata.source_schema_name,
+--    olddata.source_table_name,
+--    olddata.target_db_id,
+--    olddata.target_schema_name,
+--    olddata.target_table_name,
+--    olddata.can_insert_rows,
+--    olddata.can_update_rows,
+--    olddata.can_delete_rows,
+--    olddata.is_static_support_table,
+--    olddata.row_can_be_deleted_from_seconds,
+--    olddata.can_delete_row_schema_name,
+--    olddata.can_delete_row_table_name,
+--    olddata.delete_marked_rows_table_order,
+--    olddata.mark_rows_for_deletion_algorithm_id,
+--    olddata.delete_marked_rows_algorithm_id,
+--    olddata.update_target_table_algorithm_id,
+--    olddata.update_target_table,
+--    olddata.mark_rows_for_deletion,
+--    olddata.delete_marked_rows,
+--    olddata.compare_target_table,
+--    olddata.source_db_etl_state_register_schema_name,
+--    olddata.source_db_etl_state_register_table_name
+--)
+--FROM
+--    olddata
+--WHERE
+--    -- Columns:
+--    --     target_db_id
+--    --     target_schema_name
+--    --     target_table_name
+--    -- form an alternate key for the table_meta table.
+--    table_meta.target_db_id       = olddata.target_db_id       AND 
+--    table_meta.target_schema_name = olddata.target_schema_name AND 
+--    table_meta.target_table_name  = olddata.target_table_name;
+--
+--
+---- Update each new etl.column_meta row that matches a row of the copy of
+---- the "old" data, etl.column_meta_old. Some etl.column_meta_old rows may not 
+---- match an etl.column_meta row because tables and columns can be removed from 
+---- a source database, in which case there will no longer be a matching 
+---- table_meta and/or column_meta row.
+--WITH olddata AS (
+--    SELECT
+--        tm.table_meta_id AS "table_meta_id_new",
+----        cmo.column_meta_id,
+----        cmo.table_meta_id,
+--        cmo.source_column_name,
+--        cmo.target_column_name,
+--        cmo.is_primary_key_column,
+--        cmo.primary_key_column_order,
+--        cmo.is_insert_id_column,
+--        cmo.is_inserted_on_column,
+--        cmo.is_last_updated_on_column,
+--        cmo.is_row_can_be_deleted_from_column,
+--        cmo.is_can_delete_row_column,
+--        cmo.is_updatable_column,
+--        cmo.mirror_column,
+--        cmo.compare_column
+--    FROM
+--        etl.column_meta_old cmo
+--    INNER JOIN
+--        -- Join to the row of the "old" table_meta table that corresponds to the 
+--        -- "old" column_meta data so that we will have access to the values of:
+--        --     target_db_id
+--        --     target_schema_name
+--        --     target_table_name
+--        -- from the "old" data. These three values will be used in the next join 
+--        -- to join to the row of the "new" table_meta table to get access to its 
+--        -- value of table_meta_id, which is also equal to the "new" value of
+--        -- column_meta_id from the "new" column_meta table.
+--        etl.table_meta_old tmo ON tmo.table_meta_id=cmo.table_meta_id
+--    INNER JOIN
+--        -- Join to the row of the "new" table_meta table that corresponds to the 
+--        -- same values of values of:
+--        --     target_db_id
+--        --     target_schema_name
+--        --     target_table_name
+--        -- (which form an alternate key) from the "old" data so that we will
+--        -- have access to the value of table_meta_id from the "new" data.
+--        etl.table_meta tm ON (tm.target_db_id=tmo.target_db_id AND tm.target_schema_name=tmo.target_schema_name AND tm.target_table_name=tmo.target_table_name)
+--)
+--UPDATE etl.column_meta SET (
+----    column_meta_id,
+--    table_meta_id,
+--    source_column_name,
+--    target_column_name,
+--    is_primary_key_column,
+--    primary_key_column_order,
+--    is_insert_id_column,
+--    is_inserted_on_column,
+--    is_last_updated_on_column,
+--    is_row_can_be_deleted_from_column,
+--    is_can_delete_row_column,
+--    is_updatable_column,
+--    mirror_column,
+--    compare_column
+--) = (
+----    olddata.column_meta_id,
+--    olddata.table_meta_id_new,
+--    olddata.source_column_name,
+--    olddata.target_column_name,
+--    olddata.is_primary_key_column,
+--    olddata.primary_key_column_order,
+--    olddata.is_insert_id_column,
+--    olddata.is_inserted_on_column,
+--    olddata.is_last_updated_on_column,
+--    olddata.is_row_can_be_deleted_from_column,
+--    olddata.is_can_delete_row_column,
+--    olddata.is_updatable_column,
+--    olddata.mirror_column,
+--    olddata.compare_column
+--)
+--FROM
+--    olddata
+--WHERE
+--    -- Columns:
+--    --     table_meta_id
+--    --     target_column_name
+--    -- form an alternate key for the column_meta table.
+--    column_meta.table_meta_id      = olddata.table_meta_id_new AND
+--    column_meta.target_column_name = olddata.target_column_name;
 
