@@ -459,7 +459,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2018/05/22 09:51:15.597</modified_date>
+    <modified_date>2019/08/14 16:00:13.459</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -665,6 +665,54 @@ for the variables to the log.</note>
       <bordercolorblue>100</bordercolorblue>
       <drawshadow>Y</drawshadow>
     </notepad>
+    <notepad>
+      <note>No error is raised if there is no "inserted_id" column 
+because this transformation is now called from 
+jb_target-update_table-truncate_reload so that the 
+maximum value of this column, if it exists for a table 
+treated with the truncate-reload algorithm, will get 
+written to the "ETL state register".</note>
+      <xloc>256</xloc>
+      <yloc>784</yloc>
+      <width>299</width>
+      <heigth>88</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>255</backgroundcolorgreen>
+      <backgroundcolorblue>0</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>I need to document somewhere that the other ETL algorithms that *need* an "insert_id" column to exist will no longer abort 
+if if such a column is not defined in the ETL metadata. </note>
+      <xloc>592</xloc>
+      <yloc>800</yloc>
+      <width>697</width>
+      <heigth>36</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>255</fontcolorred>
+      <fontcolorgreen>255</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>0</backgroundcolorred>
+      <backgroundcolorgreen>0</backgroundcolorgreen>
+      <backgroundcolorblue>0</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
   </notepads>
   <connection>
     <name>etl_db</name>
@@ -777,7 +825,7 @@ for the variables to the log.</note>
     <hop>
       <from>Validate "source_insert_id_col_name"</from>
       <to>Set QF_*_INSERT_ID_COLNAME vrbls</to>
-      <enabled>Y</enabled>
+      <enabled>N</enabled>
     </hop>
     <hop>
       <from>Write "*_insert_id_col_name" fields to log</from>
@@ -787,12 +835,7 @@ for the variables to the log.</note>
     <hop>
       <from>Write "*_insert_id_col_name" fields to log</from>
       <to>Validate "source_insert_id_col_name"</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Detect empty stream</from>
-      <to>Abort - No "insert_id" column name</to>
-      <enabled>Y</enabled>
+      <enabled>N</enabled>
     </hop>
     <hop>
       <from>Get "inserted_on" column name for source table</from>
@@ -824,6 +867,21 @@ for the variables to the log.</note>
       <to>Abort - No "inserted_on" column name</to>
       <enabled>N</enabled>
     </hop>
+    <hop>
+      <from>Detect empty stream</from>
+      <to>Set QF_*_INSERT_ID_COLNAME vrbls to blank/null</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Write "*_insert_id_col_name" fields to log</from>
+      <to>Set QF_*_INSERT_ID_COLNAME vrbls</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Set QF_*_INSERT_ID_COLNAME vrbls to blank/null</from>
+      <to>Abort - No "insert_id" column name</to>
+      <enabled>N</enabled>
+    </hop>
   </order>
   <step>
     <name>Abort - No "insert_id" column name</name>
@@ -839,7 +897,8 @@ for the variables to the log.</note>
     <row_threshold>0</row_threshold>
     <message>tr_set_inserted_colnames_vrbls: No "insert_id" column defined for source table: ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</message>
     <always_log_rows>Y</always_log_rows>
-    <abort_with_error>Y</abort_with_error>
+    <abort_option>ABORT_WITH_ERROR</abort_option>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -867,7 +926,8 @@ for the variables to the log.</note>
     <row_threshold>0</row_threshold>
     <message>tr_set_inserted_colnames_vrbls: No "inserted_on" column defined for source table: ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</message>
     <always_log_rows>Y</always_log_rows>
-    <abort_with_error>Y</abort_with_error>
+    <abort_option>ABORT_WITH_ERROR</abort_option>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -892,6 +952,7 @@ for the variables to the log.</note>
       <method>none</method>
       <schema_name />
     </partitioning>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -916,6 +977,7 @@ for the variables to the log.</note>
       <method>none</method>
       <schema_name />
     </partitioning>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -956,6 +1018,7 @@ ORDER BY
     <execute_each_row>N</execute_each_row>
     <variables_active>Y</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -996,6 +1059,7 @@ ORDER BY
     <execute_each_row>N</execute_each_row>
     <variables_active>Y</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1035,6 +1099,7 @@ ORDER BY
       </field>
     </fields>
     <use_formatting>Y</use_formatting>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1074,6 +1139,7 @@ ORDER BY
       </field>
     </fields>
     <use_formatting>Y</use_formatting>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1113,6 +1179,7 @@ ORDER BY
       </field>
     </fields>
     <use_formatting>Y</use_formatting>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1196,6 +1263,7 @@ ORDER BY
       <sourcing_field />
       <allowed_value />
     </validator_field>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1204,7 +1272,7 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>128</xloc>
+      <xloc>80</xloc>
       <yloc>448</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1233,6 +1301,7 @@ ORDER BY
         <name>target_insert_id_col_name</name>
       </field>
     </fields>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1270,6 +1339,7 @@ ORDER BY
         <name>target_inserted_on_col_name</name>
       </field>
     </fields>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1307,6 +1377,7 @@ ORDER BY
         <name>target_inserted_on_col_name</name>
       </field>
     </fields>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1320,9 +1391,50 @@ ORDER BY
       <draw>Y</draw>
     </GUI>
   </step>
+  <step>
+    <name>Set QF_*_INSERT_ID_COLNAME vrbls to blank/null</name>
+    <type>SetVariable</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <field>
+        <field_name>source_insert_id_col_name</field_name>
+        <variable_name>QF_SOURCE_INSERT_ID_COLNAME</variable_name>
+        <variable_type>ROOT_JOB</variable_type>
+        <default_value />
+      </field>
+      <field>
+        <field_name>target_insert_id_col_name</field_name>
+        <variable_name>QF_TARGET_INSERT_ID_COLNAME</variable_name>
+        <variable_type>ROOT_JOB</variable_type>
+        <default_value />
+      </field>
+    </fields>
+    <use_formatting>Y</use_formatting>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>384</xloc>
+      <yloc>528</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
   <step_error_handling>
   </step_error_handling>
   <slave-step-copy-partition-distribution>
   </slave-step-copy-partition-distribution>
   <slave_transformation>N</slave_transformation>
+  <attributes />
 </transformation>
