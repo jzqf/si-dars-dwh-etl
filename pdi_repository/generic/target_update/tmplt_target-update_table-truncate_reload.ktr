@@ -529,14 +529,14 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2018/12/10 13:07:56.020</modified_date>
+    <modified_date>2019/08/29 15:53:36.929</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
       <note>Load the data from the source DB table that will be moved to the target DB table.</note>
-      <xloc>320</xloc>
+      <xloc>496</xloc>
       <yloc>352</yloc>
       <width>461</width>
       <heigth>23</heigth>
@@ -557,8 +557,8 @@
     </notepad>
     <notepad>
       <note>Insert the new rows into the target DB table.</note>
-      <xloc>320</xloc>
-      <yloc>544</yloc>
+      <xloc>496</xloc>
+      <yloc>640</yloc>
       <width>258</width>
       <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
@@ -580,7 +580,7 @@
       <note>Get batch ID for current transformation. This will be stored in the target DB table for auditing/logging.
 This step *must* come after the "Map column names" step because the metadata injected into that step
 does not include this column/field.</note>
-      <xloc>320</xloc>
+      <xloc>496</xloc>
       <yloc>480</yloc>
       <width>582</width>
       <heigth>49</heigth>
@@ -651,19 +651,19 @@ This transformation has parameters:
 		appropriate parameter values, to create this new copy. Steps 2-5 below must be performed with the *new* 
 		transformation that has had all metadata injected.
 
-	2.	Disable the hop to the "Table output" step below.
+	2.	Disable the hop to the "Table output" step.
 
 	3.	Preview the "Set etl_batch_id_insert..." step, providing appropriate values for all parameters. Ensure that the 
 		expected rows are displayed.
 
-	4.	Re-enable the hop to the "Table output" step below.
+	4.	Re-enable the hop to the "Table output" step.
 
 	5.	Double-click the "Table output" step and then click the "SQL" button to generate the appropriete SQL to create 
 		the table. The schema and table names that you specified in step 3 above will be used to generate the SQL DDL 
 		commands for that table. Before executing the SQL, modify it where appropriate. For example, replace "UNKNOWN" 
 		for timestamp columns with "timestamp without time zone" or "bytea", primary key constraint, ...</note>
-      <xloc>640</xloc>
-      <yloc>560</yloc>
+      <xloc>752</xloc>
+      <yloc>688</yloc>
       <width>707</width>
       <heigth>244</heigth>
       <fontname>Ubuntu</fontname>
@@ -683,7 +683,7 @@ This transformation has parameters:
     </notepad>
     <notepad>
       <note>Select and possibly rename fields (table column names), as appropriate.</note>
-      <xloc>320</xloc>
+      <xloc>496</xloc>
       <yloc>416</yloc>
       <width>399</width>
       <heigth>23</heigth>
@@ -704,7 +704,7 @@ This transformation has parameters:
     </notepad>
     <notepad>
       <note>Metadata injected -></note>
-      <xloc>16</xloc>
+      <xloc>208</xloc>
       <yloc>416</yloc>
       <width>124</width>
       <heigth>23</heigth>
@@ -757,7 +757,7 @@ passed to it in the normal fashion because it is a normal transformation (all me
     </notepad>
     <notepad>
       <note>Metadata injected -></note>
-      <xloc>16</xloc>
+      <xloc>208</xloc>
       <yloc>352</yloc>
       <width>124</width>
       <heigth>23</heigth>
@@ -780,10 +780,77 @@ passed to it in the normal fashion because it is a normal transformation (all me
       <note>Set PDI variable:
 
 	QF_UPDATE_TABLE_NUM_INSERTS</note>
-      <xloc>320</xloc>
-      <yloc>672</yloc>
+      <xloc>496</xloc>
+      <yloc>768</yloc>
       <width>226</width>
       <heigth>49</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>The progress-related fields must be removed here because the "Table output" step attempts to write 
+*all* fields to the target table. Alternatively, we would not need to remove the progress-related
+fields here if we injected into the "Table output" step the fields that shall  be written.</note>
+      <xloc>496</xloc>
+      <yloc>576</yloc>
+      <width>570</width>
+      <heigth>49</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>This stream logs progress statistics every 
+QF_ETL_PROGRESS_INTERVAL_ROWS rows 
+that are processed by this algorithm.</note>
+      <xloc>0</xloc>
+      <yloc>832</yloc>
+      <width>249</width>
+      <heigth>49</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>This stream implements the ETL algorithm.</note>
+      <xloc>256</xloc>
+      <yloc>960</yloc>
+      <width>244</width>
+      <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -960,11 +1027,6 @@ passed to it in the normal fashion because it is a normal transformation (all me
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Set etl_batch_id_insert = Xform batch ID</from>
-      <to>Table output - target_db.schema.table</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>Table input -  source_db.schema.table</from>
       <to>Map column names</to>
       <enabled>Y</enabled>
@@ -972,11 +1034,6 @@ passed to it in the normal fashion because it is a normal transformation (all me
     <hop>
       <from>Compute number of rows inserted</from>
       <to>Set QF_UPDATE_TABLE_NUM_INSERTS</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Table output - target_db.schema.table</from>
-      <to>Compute number of rows inserted</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
@@ -989,7 +1046,133 @@ passed to it in the normal fashion because it is a normal transformation (all me
       <to>Log number of rows inserted</to>
       <enabled>Y</enabled>
     </hop>
+    <hop>
+      <from>Table output - target_db.schema.table</from>
+      <to>Compute number of rows inserted</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Set etl_batch_id_insert = Xform batch ID</from>
+      <to>Select row to log progress</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Set etl_batch_id_insert = Xform batch ID</from>
+      <to>Remove progress-related fields</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Remove progress-related fields</from>
+      <to>Table output - target_db.schema.table</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Select row to log progress</from>
+      <to>Discard rows</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Select row to log progress</from>
+      <to>Set row time in ms</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Set row time in ms</from>
+      <to>Get progress_milliseconds for prevous row</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Get progress_milliseconds for prevous row</from>
+      <to>Compute progress stats</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Compute progress stats</from>
+      <to>Log progress</to>
+      <enabled>Y</enabled>
+    </hop>
   </order>
+  <step>
+    <name>Compute progress stats</name>
+    <type>ScriptValueMod</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <compatible>N</compatible>
+    <optimizationLevel>9</optimizationLevel>
+    <jsScripts>
+      <jsScript>
+        <jsScript_type>0</jsScript_type>
+        <jsScript_name>Script 1</jsScript_name>
+        <jsScript_script>//Script here
+
+var prev_progress_milliseconds;  // input field
+var progress_milliseconds;  // input field
+
+var progress_interval_milliseconds = null;  // output field
+var progress_rows_per_second = null;  // output field
+
+if (prev_progress_milliseconds) {
+    progress_interval_milliseconds = progress_milliseconds - prev_progress_milliseconds;
+    if (progress_interval_milliseconds) {
+        progress_rows_per_second = ((parseInt(getVariable("QF_ETL_PROGRESS_INTERVAL_ROWS", "-1")) * 1000) / progress_interval_milliseconds);
+    }
+}</jsScript_script>
+      </jsScript>
+    </jsScripts>
+    <fields>
+      <field>
+        <name>prev_progress_milliseconds</name>
+        <rename>prev_progress_milliseconds</rename>
+        <type>Integer</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+      <field>
+        <name>progress_milliseconds</name>
+        <rename>progress_milliseconds</rename>
+        <type>Integer</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+      <field>
+        <name>progress_interval_milliseconds</name>
+        <rename>progress_interval_milliseconds</rename>
+        <type>Integer</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+      <field>
+        <name>progress_rows_per_second</name>
+        <rename>progress_rows_per_second</rename>
+        <type>Number</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+    </fields>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>96</xloc>
+      <yloc>704</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
   <step>
     <name>Compute number of rows inserted</name>
     <type>MemoryGroupBy</type>
@@ -1021,8 +1204,68 @@ passed to it in the normal fashion because it is a normal transformation (all me
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>608</yloc>
+      <xloc>352</xloc>
+      <yloc>704</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Discard rows</name>
+    <type>Dummy</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>192</xloc>
+      <yloc>544</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Get progress_milliseconds for prevous row</name>
+    <type>AnalyticQuery</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <group>
+      </group>
+    <fields>
+      <field>
+        <aggregate>prev_progress_milliseconds</aggregate>
+        <subject>progress_milliseconds</subject>
+        <type>LAG</type>
+        <valuefield>1</valuefield>
+      </field>
+    </fields>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>96</xloc>
+      <yloc>640</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1052,8 +1295,8 @@ passed to it in the normal fashion because it is a normal transformation (all me
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>736</yloc>
+      <xloc>352</xloc>
+      <yloc>832</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1095,8 +1338,58 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>800</yloc>
+      <xloc>352</xloc>
+      <yloc>896</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Log progress</name>
+    <type>WriteToLog</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <loglevel>log_level_basic</loglevel>
+    <displayHeader>Y</displayHeader>
+    <limitRows>N</limitRows>
+    <limitRowsNumber>0</limitRowsNumber>
+    <logmessage>${PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE}.${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE} -> ${PARAM_DYN_DB_CONN_TARGET_DB_DATABASE}.${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</logmessage>
+    <fields>
+      <field>
+        <name>row_num</name>
+      </field>
+      <field>
+        <name>num_rows</name>
+      </field>
+      <field>
+        <name>progress_milliseconds</name>
+      </field>
+      <field>
+        <name>prev_progress_milliseconds</name>
+      </field>
+      <field>
+        <name>progress_interval_milliseconds</name>
+      </field>
+      <field>
+        <name>progress_rows_per_second</name>
+      </field>
+    </fields>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>96</xloc>
+      <yloc>768</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1123,8 +1416,89 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
+      <xloc>352</xloc>
       <yloc>416</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Remove progress-related fields</name>
+    <type>SelectValues</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <select_unspecified>N</select_unspecified>
+      <remove>
+        <name>row_num</name>
+      </remove>
+      <remove>
+        <name>num_rows</name>
+      </remove>
+      <remove>
+        <name>log_row</name>
+      </remove>
+    </fields>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>352</xloc>
+      <yloc>576</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Select row to log progress</name>
+    <type>FilterRows</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <send_true_to>Set row time in ms</send_true_to>
+    <send_false_to>Discard rows</send_false_to>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <leftvalue>log_row</leftvalue>
+        <function>=</function>
+        <rightvalue />
+        <value>
+          <name>constant</name>
+          <type>Integer</type>
+          <text>0</text>
+          <length>-1</length>
+          <precision>0</precision>
+          <isnull>N</isnull>
+          <mask>#</mask>
+        </value>
+      </condition>
+    </compare>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>96</xloc>
+      <yloc>480</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1157,8 +1531,8 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>672</yloc>
+      <xloc>352</xloc>
+      <yloc>768</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1166,7 +1540,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
     <name>Set etl_batch_id_insert = Xform batch ID</name>
     <type>SystemInfo</type>
     <description />
-    <distribute>Y</distribute>
+    <distribute>N</distribute>
     <custom_distribution />
     <copies>1</copies>
     <partitioning>
@@ -1188,8 +1562,54 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
+      <xloc>352</xloc>
       <yloc>480</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Set row time in ms</name>
+    <type>ScriptValueMod</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <compatible>N</compatible>
+    <optimizationLevel>9</optimizationLevel>
+    <jsScripts>
+      <jsScript>
+        <jsScript_type>0</jsScript_type>
+        <jsScript_name>Script 1</jsScript_name>
+        <jsScript_script>//Script here
+
+var progress_milliseconds = Date.now();</jsScript_script>
+      </jsScript>
+    </jsScripts>
+    <fields>
+      <field>
+        <name>progress_milliseconds</name>
+        <rename>progress_milliseconds</rename>
+        <type>Integer</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+    </fields>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>96</xloc>
+      <yloc>576</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1226,7 +1646,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
+      <xloc>352</xloc>
       <yloc>352</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1270,8 +1690,8 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>544</yloc>
+      <xloc>352</xloc>
+      <yloc>640</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
