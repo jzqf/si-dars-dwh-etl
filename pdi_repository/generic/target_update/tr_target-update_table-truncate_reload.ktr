@@ -810,28 +810,28 @@ so I have now cleared this setting.</note>
 UNION ALL
 
     SELECT 
-        'row_num'  AS "source_col_name",
+        'current_row_num'  AS "source_col_name",
         NULL       AS "source_col_length",
         -1         AS "source_col_precision",
-        'row_num'  AS "target_col_name",
+        'current_row_num'  AS "target_col_name",
         10000      AS "column_meta_id"
 
 UNION ALL
 
     SELECT 
-        'num_rows' AS "source_col_name",
+        'num_rows_to_process' AS "source_col_name",
         NULL       AS "source_col_length",
         -1         AS "source_col_precision",
-        'num_rows' AS "target_col_name",
+        'num_rows_to_process' AS "target_col_name",
         10001      AS "column_meta_id"
 
 UNION ALL
 
     SELECT 
-        'log_row' AS "source_col_name",
+        'update_progress' AS "source_col_name",
         NULL       AS "source_col_length",
         -1         AS "source_col_precision",
-        'log_row' AS "target_col_name",
+        'update_progress' AS "target_col_name",
         10002      AS "column_meta_id"
 )
 SELECT 
@@ -967,7 +967,7 @@ ORDER BY
 SELECT
     -- Create SELECT statement:
     'SELECT ' || CAST(select_list.str_value AS VARCHAR) || 
-    ', row_number() OVER () AS "row_num", COUNT(*) OVER () AS "num_rows", MOD (row_number() OVER ()-1, ${QF_ETL_PROGRESS_INTERVAL_ROWS}) AS "log_row"' ||  -- 3 special rows for monitoring progress
+    ', row_number() OVER () AS "current_row_num", COUNT(*) OVER () AS "num_rows_to_process", MOD (row_number() OVER ()-1, ${QF_ETL_PROGRESS_INTERVAL_ROWS}) AS "update_progress"' ||  -- 3 special rows for monitoring progress
     ' FROM ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE} '
     AS "select_source_rows_sql" 
 FROM

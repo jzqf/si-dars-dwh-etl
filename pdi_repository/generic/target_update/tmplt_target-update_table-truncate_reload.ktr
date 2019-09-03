@@ -529,7 +529,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2019/08/29 15:53:36.929</modified_date>
+    <modified_date>2019/09/03 13:31:18.468</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -1093,6 +1093,42 @@ that are processed by this algorithm.</note>
     </hop>
   </order>
   <step>
+    <name>Compute number of rows inserted</name>
+    <type>MemoryGroupBy</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <give_back_row>Y</give_back_row>
+    <group>
+      </group>
+    <fields>
+      <field>
+        <aggregate>num_rows_inserted</aggregate>
+        <subject />
+        <type>COUNT_ANY</type>
+        <valuefield />
+      </field>
+    </fields>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>352</xloc>
+      <yloc>704</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
     <name>Compute progress stats</name>
     <type>ScriptValueMod</type>
     <description />
@@ -1169,42 +1205,6 @@ if (prev_progress_milliseconds) {
     </remotesteps>
     <GUI>
       <xloc>96</xloc>
-      <yloc>704</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Compute number of rows inserted</name>
-    <type>MemoryGroupBy</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <give_back_row>Y</give_back_row>
-    <group>
-      </group>
-    <fields>
-      <field>
-        <aggregate>num_rows_inserted</aggregate>
-        <subject />
-        <type>COUNT_ANY</type>
-        <valuefield />
-      </field>
-    </fields>
-    <attributes />
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>352</xloc>
       <yloc>704</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1354,17 +1354,17 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       <method>none</method>
       <schema_name />
     </partitioning>
-    <loglevel>log_level_basic</loglevel>
+    <loglevel>log_level_minimal</loglevel>
     <displayHeader>Y</displayHeader>
     <limitRows>N</limitRows>
     <limitRowsNumber>0</limitRowsNumber>
     <logmessage>${PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE}.${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE} -> ${PARAM_DYN_DB_CONN_TARGET_DB_DATABASE}.${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</logmessage>
     <fields>
       <field>
-        <name>row_num</name>
+        <name>current_row_num</name>
       </field>
       <field>
-        <name>num_rows</name>
+        <name>num_rows_to_process</name>
       </field>
       <field>
         <name>progress_milliseconds</name>
@@ -1435,13 +1435,13 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
     <fields>
       <select_unspecified>N</select_unspecified>
       <remove>
-        <name>row_num</name>
+        <name>current_row_num</name>
       </remove>
       <remove>
-        <name>num_rows</name>
+        <name>num_rows_to_process</name>
       </remove>
       <remove>
-        <name>log_row</name>
+        <name>update_progress</name>
       </remove>
     </fields>
     <attributes />
@@ -1474,7 +1474,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
     <compare>
       <condition>
         <negated>N</negated>
-        <leftvalue>log_row</leftvalue>
+        <leftvalue>update_progress</leftvalue>
         <function>=</function>
         <rightvalue />
         <value>
