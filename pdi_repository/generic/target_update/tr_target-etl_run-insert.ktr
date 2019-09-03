@@ -1,6 +1,6 @@
 <transformation>
   <info>
-    <name>tr_target-target_table_update-insert</name>
+    <name>tr_target-etl_run-insert</name>
     <description />
     <extended_description />
     <trans_version />
@@ -9,19 +9,14 @@
     <directory>/generic/target_update</directory>
     <parameters>
       <parameter>
-        <name>PARAM_ETL_RUN_ID</name>
-        <default_value />
-        <description>Primary key of ${QF_ETL_DB_SCHEMA}.etl_run row for the current run of the ETL job</description>
+        <name>PARAM_JOB_BATCH_ID</name>
+        <default_value>-1</default_value>
+        <description>PDI-specific value to correlate with entries in PDI log tables</description>
       </parameter>
       <parameter>
-        <name>PARAM_TABLE_META_ID</name>
-        <default_value>220</default_value>
-        <description>Primary key of ${QF_ETL_DB_SCHEMA}.table_meta row for "source" table archived/mirrored to "target" table</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_UPDATE_ALGORITHM_ID</name>
-        <default_value />
-        <description>ID of the algorithm to use for updating the target table from the source table</description>
+        <name>PARAM_TARGET_DB_ID</name>
+        <default_value>-1</default_value>
+        <description>ID of the "target" database to which the "source" DB tables will be archived/mirrored</description>
       </parameter>
     </parameters>
     <log>
@@ -444,23 +439,22 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2019/09/03 15:39:23.332</modified_date>
+    <modified_date>2019/09/03 15:33:07.206</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>This transformation INSERTs a row into the ${QF_ETL_DB_SCHEMA}.target_table_update table for a  specified table from the source database.
+      <note>This transformation INSERTs a row into the ${QF_ETL_DB_SCHEMA}.etl_run table.
 
-This transformation has parameters:
+This job has parameters:
 
-	PARAM_ETL_RUN_ID								Primary key of ${QF_ETL_DB_SCHEMA}.etl_run row for the current run of the ETL job
-	PARAM_TABLE_META_ID							Primary key of ${QF_ETL_DB_SCHEMA}.table_meta row for "source" table archived/mirrored to "target" table
-	PARAM_UPDATE_ALGORITHM_ID					ID of the algorithm to use for updating the target table from the source table</note>
+	PARAM_JOB_BATCH_ID		PDI-specific value to correlate with entries in PDI log tables
+	PARAM_TARGET_DB_ID		ID of the "target" database to which the "source" DB tables will be archived/mirrored</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>923</width>
-      <heigth>101</heigth>
+      <width>671</width>
+      <heigth>88</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -478,7 +472,7 @@ This transformation has parameters:
     </notepad>
     <notepad>
       <note>Create a single stream row using the parameter values passed to this transformation for the field/column values.</note>
-      <xloc>256</xloc>
+      <xloc>240</xloc>
       <yloc>128</yloc>
       <width>627</width>
       <heigth>23</heigth>
@@ -498,12 +492,12 @@ This transformation has parameters:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Add a constant field to the stream named "target_table_update_id"
-that contains the value MAX(target_table_update_id)+1. This value
+      <note>Add a constant field to the stream named etl_run_id"
+that contains the value MAX(etl_run_id)+1. This value
 will be used as the primary key for the new row. </note>
-      <xloc>544</xloc>
+      <xloc>528</xloc>
       <yloc>192</yloc>
-      <width>381</width>
+      <width>303</width>
       <heigth>49</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
@@ -523,35 +517,13 @@ will be used as the primary key for the new row. </note>
     <notepad>
       <note>Set the PDI variable:
 
-	QF_TARGET_TABLE_UPDATE_ID
+	QF_ETL_RUN_ID
 
-to the value of the primary key of the ${QF_ETL_DB_SCHEMA}.target_table_update table row that was just created.</note>
-      <xloc>256</xloc>
-      <yloc>512</yloc>
-      <width>644</width>
+to the value of the primary key of the ${QF_ETL_DB_SCHEMA}.etl_run table row that was just created.</note>
+      <xloc>240</xloc>
+      <yloc>432</yloc>
+      <width>570</width>
       <heigth>75</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>9</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Add a constant fields to the stream that contain the names of the 
-"insert_id" and "last_updated_on" columns for the table.</note>
-      <xloc>544</xloc>
-      <yloc>288</yloc>
-      <width>373</width>
-      <heigth>36</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -672,38 +644,28 @@ to the value of the primary key of the ${QF_ETL_DB_SCHEMA}.target_table_update t
   </connection>
   <order>
     <hop>
-      <from>Get next value for target_table_update primary key</from>
-      <to>Join Rows (cartesian product) 1</to>
+      <from>Get next value for etl_run primary key</from>
+      <to>Join Rows (cartesian product)</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Write to log: target_table_update fields</from>
-      <to>Set variable QF_TARGET_TABLE_UPDATE_ID</to>
+      <from>Write to log: etl_run fields</from>
+      <to>Set variable QF_ETL_RUN_ID</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Insert new target_table_update row</from>
-      <to>Write to log: target_table_update fields</to>
+      <from>Insert new etl_run row</from>
+      <to>Write to log: etl_run fields</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
       <from>Create row from parameters</from>
-      <to>Join Rows (cartesian product) 1</to>
+      <to>Join Rows (cartesian product)</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Join Rows (cartesian product) 1</from>
-      <to>Join Rows (cartesian product) 2</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Join Rows (cartesian product) 2</from>
-      <to>Insert new target_table_update row</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Get "insert_id" &amp; "last_updated_on" column names</from>
-      <to>Join Rows (cartesian product) 2</to>
+      <from>Join Rows (cartesian product)</from>
+      <to>Insert new etl_run row</to>
       <enabled>Y</enabled>
     </hop>
   </order>
@@ -720,8 +682,8 @@ to the value of the primary key of the ${QF_ETL_DB_SCHEMA}.target_table_update t
     </partitioning>
     <fields>
       <field>
-        <name>etl_run_id</name>
-        <variable>${PARAM_ETL_RUN_ID}</variable>
+        <name>pdi_job_batch_id</name>
+        <variable>${PARAM_JOB_BATCH_ID}</variable>
         <type>Integer</type>
         <format />
         <currency />
@@ -732,20 +694,8 @@ to the value of the primary key of the ${QF_ETL_DB_SCHEMA}.target_table_update t
         <trim_type>none</trim_type>
       </field>
       <field>
-        <name>table_meta_id</name>
-        <variable>${PARAM_TABLE_META_ID}</variable>
-        <type>Integer</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>-1</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>algorithm_id</name>
-        <variable>${PARAM_UPDATE_ALGORITHM_ID}</variable>
+        <name>progress_target_db_id</name>
+        <variable>${PARAM_TARGET_DB_ID}</variable>
         <type>Integer</type>
         <format />
         <currency />
@@ -765,51 +715,13 @@ to the value of the primary key of the ${QF_ETL_DB_SCHEMA}.target_table_update t
       </output>
     </remotesteps>
     <GUI>
-      <xloc>112</xloc>
+      <xloc>96</xloc>
       <yloc>128</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Get "insert_id" &amp; "last_updated_on" column names</name>
-    <type>TableInput</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <connection>etl_db</connection>
-    <sql>SELECT 
-    (SELECT source_column_name FROM etl.column_meta cm WHERE cm.table_meta_id=tm.table_meta_id AND cm.is_insert_id_column=true) AS "insert_id_colname", 
-    (SELECT source_column_name FROM etl.column_meta cm WHERE cm.table_meta_id=tm.table_meta_id AND cm.is_last_updated_on_column=true) AS "last_updated_on_colname" 
-FROM 
-    ${QF_ETL_DB_SCHEMA}.table_meta tm
-WHERE
-    table_meta_id=${PARAM_TABLE_META_ID}</sql>
-    <limit>0</limit>
-    <lookup />
-    <execute_each_row>N</execute_each_row>
-    <variables_active>Y</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <attributes />
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>368</xloc>
-      <yloc>288</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Get next value for target_table_update primary key</name>
+    <name>Get next value for etl_run primary key</name>
     <type>TableInput</type>
     <description />
     <distribute>Y</distribute>
@@ -822,9 +734,9 @@ WHERE
     <connection>etl_db</connection>
     <sql>SELECT 
     -- COALESCE used in case the table is empty.
-    COALESCE(MAX(target_table_update_id), 0)+1 AS "target_table_update_id" 
+    COALESCE(MAX(etl_run_id), 0)+1 AS "etl_run_id" 
 FROM 
-    ${QF_ETL_DB_SCHEMA}.target_table_update</sql>
+    ${QF_ETL_DB_SCHEMA}.etl_run</sql>
     <limit>0</limit>
     <lookup />
     <execute_each_row>N</execute_each_row>
@@ -839,13 +751,13 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>368</xloc>
+      <xloc>352</xloc>
       <yloc>208</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Insert new target_table_update row</name>
+    <name>Insert new etl_run row</name>
     <type>TableOutput</type>
     <description />
     <distribute>Y</distribute>
@@ -857,7 +769,7 @@ FROM
     </partitioning>
     <connection>etl_db</connection>
     <schema>${QF_ETL_DB_SCHEMA}</schema>
-    <table>target_table_update</table>
+    <table>etl_run</table>
     <commit>1</commit>
     <truncate>N</truncate>
     <ignore_errors>N</ignore_errors>
@@ -883,87 +795,50 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>112</xloc>
-      <yloc>368</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Join Rows (cartesian product) 1</name>
-    <type>JoinRows</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <directory>%%java.io.tmpdir%%</directory>
-    <prefix>out</prefix>
-    <cache_size>500</cache_size>
-    <main>Add sequence - column_meta_id</main>
-    <compare>
-      <condition>
-        <negated>N</negated>
-        <leftvalue />
-        <function>=</function>
-        <rightvalue />
-      </condition>
-    </compare>
-    <attributes />
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>112</xloc>
-      <yloc>208</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Join Rows (cartesian product) 2</name>
-    <type>JoinRows</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <directory>%%java.io.tmpdir%%</directory>
-    <prefix>out</prefix>
-    <cache_size>500</cache_size>
-    <main>Add sequence - column_meta_id</main>
-    <compare>
-      <condition>
-        <negated>N</negated>
-        <leftvalue />
-        <function>=</function>
-        <rightvalue />
-      </condition>
-    </compare>
-    <attributes />
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>112</xloc>
+      <xloc>96</xloc>
       <yloc>288</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Set variable QF_TARGET_TABLE_UPDATE_ID</name>
+    <name>Join Rows (cartesian product)</name>
+    <type>JoinRows</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>out</prefix>
+    <cache_size>500</cache_size>
+    <main>Add sequence - column_meta_id</main>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <leftvalue />
+        <function>=</function>
+        <rightvalue />
+      </condition>
+    </compare>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>96</xloc>
+      <yloc>208</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Set variable QF_ETL_RUN_ID</name>
     <type>SetVariable</type>
     <description />
     <distribute>Y</distribute>
@@ -975,8 +850,8 @@ FROM
     </partitioning>
     <fields>
       <field>
-        <field_name>target_table_update_id</field_name>
-        <variable_name>QF_TARGET_TABLE_UPDATE_ID</variable_name>
+        <field_name>etl_run_id</field_name>
+        <variable_name>QF_ETL_RUN_ID</variable_name>
         <variable_type>ROOT_JOB</variable_type>
         <default_value />
       </field>
@@ -991,13 +866,13 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>112</xloc>
-      <yloc>528</yloc>
+      <xloc>96</xloc>
+      <yloc>448</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Write to log: target_table_update fields</name>
+    <name>Write to log: etl_run fields</name>
     <type>WriteToLog</type>
     <description />
     <distribute>Y</distribute>
@@ -1014,22 +889,13 @@ FROM
     <logmessage />
     <fields>
       <field>
-        <name>target_table_update_id</name>
-      </field>
-      <field>
         <name>etl_run_id</name>
       </field>
       <field>
-        <name>table_meta_id</name>
+        <name>pdi_job_batch_id</name>
       </field>
       <field>
-        <name>algorithm_id</name>
-      </field>
-      <field>
-        <name>insert_id_colname</name>
-      </field>
-      <field>
-        <name>last_updated_on_colname</name>
+        <name>progress_target_db_id</name>
       </field>
     </fields>
     <attributes />
@@ -1041,8 +907,8 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>112</xloc>
-      <yloc>448</yloc>
+      <xloc>96</xloc>
+      <yloc>368</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
