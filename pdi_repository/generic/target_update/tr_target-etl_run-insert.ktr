@@ -8,16 +8,6 @@
     <trans_status>0</trans_status>
     <directory>/generic/target_update</directory>
     <parameters>
-      <parameter>
-        <name>PARAM_JOB_BATCH_ID</name>
-        <default_value>-1</default_value>
-        <description>PDI-specific value to correlate with entries in PDI log tables</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_TARGET_DB_ID</name>
-        <default_value>-1</default_value>
-        <description>ID of the "target" database to which the "source" DB tables will be archived/mirrored</description>
-      </parameter>
     </parameters>
     <log>
       <trans-log-table>
@@ -439,22 +429,17 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2019/09/03 15:33:07.206</modified_date>
+    <modified_date>2019/09/04 11:03:04.596</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>This transformation INSERTs a row into the ${QF_ETL_DB_SCHEMA}.etl_run table.
-
-This job has parameters:
-
-	PARAM_JOB_BATCH_ID		PDI-specific value to correlate with entries in PDI log tables
-	PARAM_TARGET_DB_ID		ID of the "target" database to which the "source" DB tables will be archived/mirrored</note>
+      <note>This transformation INSERTs a row into the ${QF_ETL_DB_SCHEMA}.etl_run table.</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>671</width>
-      <heigth>88</heigth>
+      <width>456</width>
+      <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -471,10 +456,10 @@ This job has parameters:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Create a single stream row using the parameter values passed to this transformation for the field/column values.</note>
+      <note>Create a single stream row containing the top-level PDI "job batch id".</note>
       <xloc>240</xloc>
-      <yloc>128</yloc>
-      <width>627</width>
+      <yloc>48</yloc>
+      <width>393</width>
       <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
@@ -495,8 +480,8 @@ This job has parameters:
       <note>Add a constant field to the stream named etl_run_id"
 that contains the value MAX(etl_run_id)+1. This value
 will be used as the primary key for the new row. </note>
-      <xloc>528</xloc>
-      <yloc>192</yloc>
+      <xloc>464</xloc>
+      <yloc>112</yloc>
       <width>303</width>
       <heigth>49</heigth>
       <fontname>Ubuntu</fontname>
@@ -521,7 +506,7 @@ will be used as the primary key for the new row. </note>
 
 to the value of the primary key of the ${QF_ETL_DB_SCHEMA}.etl_run table row that was just created.</note>
       <xloc>240</xloc>
-      <yloc>432</yloc>
+      <yloc>352</yloc>
       <width>570</width>
       <heigth>75</heigth>
       <fontname>Ubuntu</fontname>
@@ -659,67 +644,16 @@ to the value of the primary key of the ${QF_ETL_DB_SCHEMA}.etl_run table row tha
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Create row from parameters</from>
-      <to>Join Rows (cartesian product)</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>Join Rows (cartesian product)</from>
       <to>Insert new etl_run row</to>
       <enabled>Y</enabled>
     </hop>
+    <hop>
+      <from>Get system info</from>
+      <to>Join Rows (cartesian product)</to>
+      <enabled>Y</enabled>
+    </hop>
   </order>
-  <step>
-    <name>Create row from parameters</name>
-    <type>GetVariable</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <fields>
-      <field>
-        <name>pdi_job_batch_id</name>
-        <variable>${PARAM_JOB_BATCH_ID}</variable>
-        <type>Integer</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>-1</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>progress_target_db_id</name>
-        <variable>${PARAM_TARGET_DB_ID}</variable>
-        <type>Integer</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <length>-1</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-    </fields>
-    <attributes />
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>96</xloc>
-      <yloc>128</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
   <step>
     <name>Get next value for etl_run primary key</name>
     <type>TableInput</type>
@@ -751,8 +685,8 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>352</xloc>
-      <yloc>208</yloc>
+      <xloc>336</xloc>
+      <yloc>128</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -796,7 +730,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>96</xloc>
-      <yloc>288</yloc>
+      <yloc>208</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -833,7 +767,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>96</xloc>
-      <yloc>208</yloc>
+      <yloc>128</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -867,7 +801,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>96</xloc>
-      <yloc>448</yloc>
+      <yloc>368</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -894,8 +828,36 @@ FROM
       <field>
         <name>pdi_job_batch_id</name>
       </field>
+    </fields>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>96</xloc>
+      <yloc>288</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Get system info</name>
+    <type>SystemInfo</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
       <field>
-        <name>progress_target_db_id</name>
+        <name>pdi_job_batch_id</name>
+        <type>job batch ID</type>
       </field>
     </fields>
     <attributes />
@@ -908,7 +870,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>96</xloc>
-      <yloc>368</yloc>
+      <yloc>48</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
