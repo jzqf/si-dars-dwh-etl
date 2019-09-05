@@ -1,5 +1,5 @@
 <job>
-  <name>jb_target-etl_run-init</name>
+  <name>jb_target-etl_run-end</name>
   <description />
   <extended_description />
   <job_version />
@@ -8,9 +8,19 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2019/09/04 15:44:06.373</modified_date>
+  <modified_date>2019/09/04 16:23:30.650</modified_date>
   <parameters>
-    </parameters>
+    <parameter>
+      <name>PARAM_ETL_RUN_ID</name>
+      <default_value />
+      <description>Primary key for the ${QF_ETL_DB_SCHEMA}.etl_run row for the current "run"</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_SUCCESS</name>
+      <default_value />
+      <description>true if the run ended without any errors detected.</description>
+    </parameter>
+  </parameters>
   <connection>
     <name>etl_db</name>
     <server>${QF_ETL_DB_HOST}</server>
@@ -407,91 +417,36 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>272</xloc>
-      <yloc>96</yloc>
+      <yloc>112</yloc>
       <attributes_kjc />
     </entry>
     <entry>
-      <name>jb_log_error</name>
-      <description />
-      <type>JOB</type>
-      <attributes />
-      <specification_method>rep_name</specification_method>
-      <job_object_id />
-      <filename />
-      <jobname>jb_log_error</jobname>
-      <directory>/generic</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Nothing</loglevel>
-      <slave_server_name />
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <expand_remote_job>N</expand_remote_job>
-      <create_parent_folder>N</create_parent_folder>
-      <pass_export>N</pass_export>
-      <run_configuration>Pentaho local</run_configuration>
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-        <parameter>
-          <name>PARAM_ERROR_MESSAGE</name>
-          <stream_name />
-          <value>Error caught in ${Internal.Job.Name} when inserting etl_run row in tr_target-etl_run-insert</value>
-        </parameter>
-      </parameters>
-      <set_append_logfile>N</set_append_logfile>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>1</nr>
-      <xloc>128</xloc>
-      <yloc>288</yloc>
-      <attributes_kjc />
-    </entry>
-    <entry>
-      <name>Abort job</name>
-      <description />
-      <type>ABORT</type>
-      <attributes />
-      <message>Aborting from ${Internal.Job.Name} with PARAM_TARGET_DB_ID=${PARAM_TARGET_DB_ID}</message>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>16</xloc>
-      <yloc>288</yloc>
-      <attributes_kjc />
-    </entry>
-    <entry>
-      <name>Close open etl.run rows</name>
+      <name>Finalize the etl.run row for successful run</name>
       <description />
       <type>SQL</type>
       <attributes />
       <sql>UPDATE 
     ${QF_ETL_DB_SCHEMA}.etl_run 
 SET 
-     run_ended_at_utc=TIMESTAMP '${QF_ETL_RUN_ENDED_AT_TIMESTAMP_UNKNOWN}'
- --  ,progress_source_db_id=NULL,
- --   progress_source_schema_name=NULL,
- --   progress_source_table_name=NULL,
- --   progress_source_column_name_insert_id=NULL,
- --   progress_source_column_name_last_updated_on=NULL,
- --   progress_target_db_id=NULL,
- --   progress_target_schema_name=NULL,
- --   progress_target_table_name=NULL,
- --   progress_etl_operation=NULL,
- --   progress_insert_id=NULL,
- --   progress_last_updated_on=NULL,
- --   progress_rows_processed_per_update=NULL,
- --   progress_rows_processed =NULL,
- --   progress_rows_to_process_remaining=NULL,
- --   progress_rows_processed_per_second=NULL,
- --   progress_updated_at_utc=NULL
+     run_ended_at_utc=now() at time zone 'utc',
+     progress_source_db_id=NULL,
+     progress_source_schema_name=NULL,
+     progress_source_table_name=NULL,
+     progress_source_column_name_insert_id=NULL,
+     progress_source_column_name_last_updated_on=NULL,
+     progress_target_db_id=NULL,
+     progress_target_schema_name=NULL,
+     progress_target_table_name=NULL,
+     progress_etl_operation=NULL,
+     progress_insert_id=NULL,
+     progress_last_updated_on=NULL,
+     progress_rows_processed_per_update=NULL,
+     progress_rows_processed =NULL,
+     progress_rows_to_process_remaining=NULL,
+     progress_rows_processed_per_second=NULL,
+     progress_updated_at_utc=NULL
 WHERE
-    run_ended_at_utc IS NULL</sql>
+     etl_run_id=${PARAM_ETL_RUN_ID}</sql>
       <useVariableSubstitution>T</useVariableSubstitution>
       <sqlfromfile>F</sqlfromfile>
       <sqlfilename />
@@ -500,23 +455,25 @@ WHERE
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>272</xloc>
-      <yloc>192</yloc>
+      <xloc>416</xloc>
+      <yloc>304</yloc>
       <attributes_kjc />
     </entry>
     <entry>
-      <name>Log etl_run row created</name>
+      <name>Log etl_run row finalized for failure</name>
       <description />
       <type>WRITE_TO_LOG</type>
       <attributes />
-      <logmessage>${QF_ETL_DB_SCHEMA}.etl_run row inserted for current ETL run.</logmessage>
-      <loglevel>Minimal</loglevel>
+      <logmessage>Run failed! 
+PARAM_ETL_RUN_ID = ${PARAM_ETL_RUN_ID}
+${QF_ETL_DB_SCHEMA}.etl_run row finalized.</logmessage>
+      <loglevel>Error</loglevel>
       <logsubject>${Internal.Job.Name}</logsubject>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>272</xloc>
-      <yloc>384</yloc>
+      <xloc>128</xloc>
+      <yloc>416</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -528,70 +485,77 @@ WHERE
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>272</xloc>
-      <yloc>480</yloc>
+      <yloc>512</yloc>
       <attributes_kjc />
     </entry>
     <entry>
-      <name>tr_target-etl_run-insert</name>
+      <name>PARAM_SUCCESS = true?</name>
       <description />
-      <type>TRANS</type>
+      <type>SIMPLE_EVAL</type>
       <attributes />
-      <specification_method>rep_name</specification_method>
-      <trans_object_id />
-      <filename />
-      <transname>tr_target-etl_run-insert</transname>
-      <directory>/generic/target_update</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <clear_rows>N</clear_rows>
-      <clear_files>N</clear_files>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Basic</loglevel>
-      <cluster>N</cluster>
-      <slave_server_name />
-      <set_append_logfile>N</set_append_logfile>
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <create_parent_folder>N</create_parent_folder>
-      <logging_remote_work>N</logging_remote_work>
-      <run_configuration>Pentaho local</run_configuration>
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-      </parameters>
+      <valuetype>variable</valuetype>
+      <fieldname />
+      <variablename>${PARAM_SUCCESS}</variablename>
+      <fieldtype>string</fieldtype>
+      <mask />
+      <comparevalue>true</comparevalue>
+      <minvalue />
+      <maxvalue />
+      <successcondition>equal</successcondition>
+      <successnumbercondition>equal</successnumbercondition>
+      <successbooleancondition>false</successbooleancondition>
+      <successwhenvarset>N</successwhenvarset>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>272</xloc>
-      <yloc>288</yloc>
+      <yloc>208</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>Finalize the etl.run row for failed run</name>
+      <description />
+      <type>SQL</type>
+      <attributes />
+      <sql>UPDATE 
+    ${QF_ETL_DB_SCHEMA}.etl_run 
+SET 
+     run_ended_at_utc=now() at time zone 'utc'
+WHERE
+    etl_run_id=${PARAM_ETL_RUN_ID}</sql>
+      <useVariableSubstitution>T</useVariableSubstitution>
+      <sqlfromfile>F</sqlfromfile>
+      <sqlfilename />
+      <sendOneStatement>F</sendOneStatement>
+      <connection>etl_db</connection>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>128</xloc>
+      <yloc>304</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>Log etl_run row finalized for success</name>
+      <description />
+      <type>WRITE_TO_LOG</type>
+      <attributes />
+      <logmessage>Successful run.
+PARAM_ETL_RUN_ID = ${PARAM_ETL_RUN_ID}
+${QF_ETL_DB_SCHEMA}.etl_run row finalized.</logmessage>
+      <loglevel>Minimal</loglevel>
+      <logsubject>${Internal.Job.Name}</logsubject>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>416</xloc>
+      <yloc>416</yloc>
       <attributes_kjc />
     </entry>
   </entries>
   <hops>
     <hop>
-      <from>jb_log_error</from>
-      <to>Abort job</to>
-      <from_nr>1</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>START</from>
-      <to>Close open etl.run rows</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>Log etl_run row created</from>
+      <from>Log etl_run row finalized for failure</from>
       <to>Success</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -600,17 +564,17 @@ WHERE
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>Close open etl.run rows</from>
-      <to>tr_target-etl_run-insert</to>
+      <from>START</from>
+      <to>PARAM_SUCCESS = true?</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
-      <evaluation>N</evaluation>
+      <evaluation>Y</evaluation>
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>tr_target-etl_run-insert</from>
-      <to>Log etl_run row created</to>
+      <from>PARAM_SUCCESS = true?</from>
+      <to>Finalize the etl.run row for successful run</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -618,74 +582,54 @@ WHERE
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>tr_target-etl_run-insert</from>
-      <to>jb_log_error</to>
+      <from>PARAM_SUCCESS = true?</from>
+      <to>Finalize the etl.run row for failed run</to>
       <from_nr>0</from_nr>
-      <to_nr>1</to_nr>
+      <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>N</evaluation>
       <unconditional>N</unconditional>
     </hop>
+    <hop>
+      <from>Finalize the etl.run row for failed run</from>
+      <to>Log etl_run row finalized for failure</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>Finalize the etl.run row for successful run</from>
+      <to>Log etl_run row finalized for success</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>Log etl_run row finalized for success</from>
+      <to>Success</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
   </hops>
   <notepads>
     <notepad>
-      <note>This job performs initialization details for an ETL run, such as creating a new ${QF_ETL_DB_SCHEMA}.etl_run 
-row.
+      <note>This job performs cleanup details for an ETL run.
 
-"Pass batch ID?" is selected for this job so that the top-level job batch ID is passed to tr_target-etl_run-insert.</note>
+This job has the parameters:
+
+	PARAM_ETL_RUN_ID		Primary key of the row of ${QF_ETL_DB_SCHEMA}.etl_run for the current ETL run
+	PARAM_SUCCESS			true if the run ended without any errors detected.</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>608</width>
-      <heigth>62</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>9</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>If there are any ${QF_ETL_DB_SCHEMA}.etl_run rows that have no value for column "run_ended_at_utc", 
-this column is assigned a flag value that indicates the row is no longer active, but we do not know when 
-the run ended. Such rows are probably associated with runs that aborted badly such that the cleanup
-code in jb_target-etl_run-end did not run.</note>
-      <xloc>368</xloc>
-      <yloc>176</yloc>
-      <width>588</width>
-      <heigth>62</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>9</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Insert ${QF_ETL_DB_SCHEMA}.etl_run row for the current ETL run and set the PDI variable:
-
-	QF_ETL_RUN_ID
-
-to the value of the primary key of this ${QF_ETL_DB_SCHEMA}.etl_run row.</note>
-      <xloc>368</xloc>
-      <yloc>272</yloc>
-      <width>511</width>
-      <heigth>75</heigth>
+      <width>627</width>
+      <heigth>88</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
