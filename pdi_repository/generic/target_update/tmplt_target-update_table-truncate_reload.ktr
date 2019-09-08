@@ -89,6 +89,11 @@
         <description>for target DB "dynamic" database connections</description>
       </parameter>
       <parameter>
+        <name>PARAM_ETL_RUN_ID</name>
+        <default_value />
+        <description>Primary key for the ${QF_ETL_DB_SCHEMA}.etl_run row for the current "run"</description>
+      </parameter>
+      <parameter>
         <name>PARAM_SOURCE_SCHEMA</name>
         <default_value>passage</default_value>
         <description>Name of schema containing source table to mirror to target table</description>
@@ -107,6 +112,11 @@
         <name>PARAM_TARGET_TABLE</name>
         <default_value>image</default_value>
         <description>Name of target table to update</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_TABLE_UPDATE_ID</name>
+        <default_value />
+        <description>Primary key of ${QF_ETL_DB_SCHEMA}.target_table_update row to be updated by this job for progress and summary statistics</description>
       </parameter>
     </parameters>
     <log>
@@ -529,7 +539,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2019/09/03 13:31:18.468</modified_date>
+    <modified_date>2019/09/08 11:45:27.487</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -537,7 +547,7 @@
     <notepad>
       <note>Load the data from the source DB table that will be moved to the target DB table.</note>
       <xloc>496</xloc>
-      <yloc>352</yloc>
+      <yloc>384</yloc>
       <width>461</width>
       <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
@@ -558,7 +568,7 @@
     <notepad>
       <note>Insert the new rows into the target DB table.</note>
       <xloc>496</xloc>
-      <yloc>640</yloc>
+      <yloc>672</yloc>
       <width>258</width>
       <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
@@ -581,7 +591,7 @@
 This step *must* come after the "Map column names" step because the metadata injected into that step
 does not include this column/field.</note>
       <xloc>496</xloc>
-      <yloc>480</yloc>
+      <yloc>512</yloc>
       <width>582</width>
       <heigth>49</heigth>
       <fontname>Ubuntu</fontname>
@@ -604,6 +614,8 @@ does not include this column/field.</note>
 that can work with *any* table,  as long as it is insert-only and it has the necessary  "insert_id" &amp; "inserted_on" columns. 
 This transformation has parameters:
 
+	PARAM_ETL_RUN_ID								Primary key for the ${QF_ETL_DB_SCHEMA}.etl_run row for the current "run"
+	PARAM_TARGET_TABLE_UPDATE_ID				Primary key of ${QF_ETL_DB_SCHEMA}.target_table_update row to be updated by this job for progress and summary statistics
 	PARAM_CDC_LAST_LOAD_UTC					Timestamp for when the target DB was most recently updated successfully
 	PARAM_CDC_CURRENT_LOAD_UTC				Used so that a consistent max timestamp is used for all ETL operations
 	PARAM_DYN_DB_CONN_TARGET_DB_HOST		for target DB "dynamic" database connections
@@ -626,8 +638,8 @@ This transformation has parameters:
 	PARAM_TARGET_TABLE							Name of target table to update (not currently used)</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>734</width>
-      <heigth>322</heigth>
+      <width>1013</width>
+      <heigth>348</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -663,7 +675,7 @@ This transformation has parameters:
 		commands for that table. Before executing the SQL, modify it where appropriate. For example, replace "UNKNOWN" 
 		for timestamp columns with "timestamp without time zone" or "bytea", primary key constraint, ...</note>
       <xloc>752</xloc>
-      <yloc>688</yloc>
+      <yloc>864</yloc>
       <width>707</width>
       <heigth>244</heigth>
       <fontname>Ubuntu</fontname>
@@ -684,7 +696,7 @@ This transformation has parameters:
     <notepad>
       <note>Select and possibly rename fields (table column names), as appropriate.</note>
       <xloc>496</xloc>
-      <yloc>416</yloc>
+      <yloc>448</yloc>
       <width>399</width>
       <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
@@ -705,7 +717,7 @@ This transformation has parameters:
     <notepad>
       <note>Metadata injected -></note>
       <xloc>208</xloc>
-      <yloc>416</yloc>
+      <yloc>448</yloc>
       <width>124</width>
       <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
@@ -758,7 +770,7 @@ passed to it in the normal fashion because it is a normal transformation (all me
     <notepad>
       <note>Metadata injected -></note>
       <xloc>208</xloc>
-      <yloc>352</yloc>
+      <yloc>384</yloc>
       <width>124</width>
       <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
@@ -781,7 +793,7 @@ passed to it in the normal fashion because it is a normal transformation (all me
 
 	QF_UPDATE_TABLE_NUM_INSERTS</note>
       <xloc>496</xloc>
-      <yloc>768</yloc>
+      <yloc>800</yloc>
       <width>226</width>
       <heigth>49</heigth>
       <fontname>Ubuntu</fontname>
@@ -804,7 +816,7 @@ passed to it in the normal fashion because it is a normal transformation (all me
 *all* fields to the target table. Alternatively, we would not need to remove the progress-related
 fields here if we injected into the "Table output" step the fields that shall  be written.</note>
       <xloc>496</xloc>
-      <yloc>576</yloc>
+      <yloc>608</yloc>
       <width>570</width>
       <heigth>49</heigth>
       <fontname>Ubuntu</fontname>
@@ -823,12 +835,12 @@ fields here if we injected into the "Table output" step the fields that shall  b
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>This stream logs progress statistics every 
-QF_ETL_PROGRESS_INTERVAL_ROWS rows 
-that are processed by this algorithm.</note>
+      <note>This stream logs progress statistics every
+QF_ETL_PROGRESS_INTERVAL_ROWS 
+rows that are processed by this algorithm.</note>
       <xloc>0</xloc>
-      <yloc>832</yloc>
-      <width>249</width>
+      <yloc>992</yloc>
+      <width>240</width>
       <heigth>49</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
@@ -848,7 +860,7 @@ that are processed by this algorithm.</note>
     <notepad>
       <note>This stream implements the ETL algorithm.</note>
       <xloc>256</xloc>
-      <yloc>960</yloc>
+      <yloc>992</yloc>
       <width>244</width>
       <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
@@ -1053,11 +1065,6 @@ that are processed by this algorithm.</note>
     </hop>
     <hop>
       <from>Set etl_batch_id_insert = Xform batch ID</from>
-      <to>Select row to log progress</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Set etl_batch_id_insert = Xform batch ID</from>
       <to>Remove progress-related fields</to>
       <enabled>Y</enabled>
     </hop>
@@ -1067,28 +1074,43 @@ that are processed by this algorithm.</note>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Select row to log progress</from>
+      <from>Select rows for progress monitoring</from>
       <to>Discard rows</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Select row to log progress</from>
-      <to>Set row time in ms</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
       <from>Set row time in ms</from>
       <to>Get progress_milliseconds for prevous row</to>
-      <enabled>Y</enabled>
+      <enabled>N</enabled>
     </hop>
     <hop>
       <from>Get progress_milliseconds for prevous row</from>
       <to>Compute progress stats</to>
-      <enabled>Y</enabled>
+      <enabled>N</enabled>
     </hop>
     <hop>
       <from>Compute progress stats</from>
       <to>Log progress</to>
+      <enabled>N</enabled>
+    </hop>
+    <hop>
+      <from>Set etl_batch_id_insert = Xform batch ID</from>
+      <to>Select rows for progress monitoring</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Select rows for progress monitoring</from>
+      <to>Select fields for progress monitoring</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Select fields for progress monitoring</from>
+      <to>Set row time in ms</to>
+      <enabled>N</enabled>
+    </hop>
+    <hop>
+      <from>Select fields for progress monitoring</from>
+      <to>tr_log_table_progress</to>
       <enabled>Y</enabled>
     </hop>
   </order>
@@ -1124,7 +1146,7 @@ that are processed by this algorithm.</note>
     </remotesteps>
     <GUI>
       <xloc>352</xloc>
-      <yloc>704</yloc>
+      <yloc>736</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1205,7 +1227,7 @@ if (prev_progress_milliseconds) {
     </remotesteps>
     <GUI>
       <xloc>96</xloc>
-      <yloc>704</yloc>
+      <yloc>832</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1230,7 +1252,7 @@ if (prev_progress_milliseconds) {
     </remotesteps>
     <GUI>
       <xloc>192</xloc>
-      <yloc>544</yloc>
+      <yloc>576</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1265,7 +1287,7 @@ if (prev_progress_milliseconds) {
     </remotesteps>
     <GUI>
       <xloc>96</xloc>
-      <yloc>640</yloc>
+      <yloc>768</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1296,7 +1318,7 @@ if (prev_progress_milliseconds) {
     </remotesteps>
     <GUI>
       <xloc>352</xloc>
-      <yloc>832</yloc>
+      <yloc>864</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1339,7 +1361,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
     </remotesteps>
     <GUI>
       <xloc>352</xloc>
-      <yloc>896</yloc>
+      <yloc>928</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1389,7 +1411,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
     </remotesteps>
     <GUI>
       <xloc>96</xloc>
-      <yloc>768</yloc>
+      <yloc>896</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1417,7 +1439,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
     </remotesteps>
     <GUI>
       <xloc>352</xloc>
-      <yloc>416</yloc>
+      <yloc>448</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1454,12 +1476,12 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
     </remotesteps>
     <GUI>
       <xloc>352</xloc>
-      <yloc>576</yloc>
+      <yloc>608</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Select row to log progress</name>
+    <name>Select rows for progress monitoring</name>
     <type>FilterRows</type>
     <description />
     <distribute>Y</distribute>
@@ -1469,7 +1491,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       <method>none</method>
       <schema_name />
     </partitioning>
-    <send_true_to>Set row time in ms</send_true_to>
+    <send_true_to>Select fields for progress monitoring</send_true_to>
     <send_false_to>Discard rows</send_false_to>
     <compare>
       <condition>
@@ -1498,7 +1520,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
     </remotesteps>
     <GUI>
       <xloc>96</xloc>
-      <yloc>480</yloc>
+      <yloc>512</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1532,7 +1554,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
     </remotesteps>
     <GUI>
       <xloc>352</xloc>
-      <yloc>768</yloc>
+      <yloc>800</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1563,7 +1585,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
     </remotesteps>
     <GUI>
       <xloc>352</xloc>
-      <yloc>480</yloc>
+      <yloc>512</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1609,7 +1631,7 @@ var progress_milliseconds = Date.now();</jsScript_script>
     </remotesteps>
     <GUI>
       <xloc>96</xloc>
-      <yloc>576</yloc>
+      <yloc>704</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1647,7 +1669,7 @@ var progress_milliseconds = Date.now();</jsScript_script>
     </remotesteps>
     <GUI>
       <xloc>352</xloc>
-      <yloc>352</yloc>
+      <yloc>384</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1691,7 +1713,112 @@ var progress_milliseconds = Date.now();</jsScript_script>
     </remotesteps>
     <GUI>
       <xloc>352</xloc>
-      <yloc>640</yloc>
+      <yloc>672</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Select fields for progress monitoring</name>
+    <type>SelectValues</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <field>
+        <name>current_row_num</name>
+        <rename />
+      </field>
+      <field>
+        <name>num_rows_to_process</name>
+        <rename />
+      </field>
+      <field>
+        <name>update_progress</name>
+        <rename />
+      </field>
+      <select_unspecified>N</select_unspecified>
+    </fields>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>96</xloc>
+      <yloc>608</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>tr_log_table_progress</name>
+    <type>SimpleMapping</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <specification_method>rep_name</specification_method>
+    <trans_object_id />
+    <trans_name>tr_log_table_progress</trans_name>
+    <filename />
+    <directory_path>/generic</directory_path>
+    <mappings>
+      <input>
+        <mapping>
+          <input_step />
+          <output_step />
+          <main_path>Y</main_path>
+          <rename_on_output>Y</rename_on_output>
+          <description />
+          <connector>
+            <parent>current_row_num</parent>
+            <child>current_row_num</child>
+          </connector>
+          <connector>
+            <parent>num_rows_to_process</parent>
+            <child>num_rows_to_process</child>
+          </connector>
+          <connector>
+            <parent>progress_milliseconds</parent>
+            <child>progress_milliseconds</child>
+          </connector>
+        </mapping>
+      </input>
+      <output>
+        <mapping>
+          <input_step />
+          <output_step />
+          <main_path>Y</main_path>
+          <rename_on_output>N</rename_on_output>
+          <description />
+        </mapping>
+      </output>
+      <parameters>
+        <inherit_all_vars>Y</inherit_all_vars>
+      </parameters>
+    </mappings>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>160</xloc>
+      <yloc>720</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
