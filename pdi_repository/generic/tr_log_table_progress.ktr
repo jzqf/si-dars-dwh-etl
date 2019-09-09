@@ -9,6 +9,11 @@
     <directory>/generic</directory>
     <parameters>
       <parameter>
+        <name>PARAM_ETL_OPERATION</name>
+        <default_value />
+        <description>ETL operation currently being performed, e.g., "insert"  or "update"</description>
+      </parameter>
+      <parameter>
         <name>PARAM_ETL_RUN_ID</name>
         <default_value />
         <description>Primary key for the ${QF_ETL_DB_SCHEMA}.etl_run row for the current "run"</description>
@@ -479,7 +484,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2019/09/08 11:28:16.705</modified_date>
+    <modified_date>2019/09/09 12:56:22.273</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -487,12 +492,13 @@
     <notepad>
       <note>This transformation logs progress while streaming rows by ETL algorithms.
 
-This transformation has been written be executed via a "Simple mapping (sub-transformation)" step.
+This transformation has been written be executed via a "Simple mapping (sub-transformation)" step from ETL algorithms that stream rows.
 
 This transformation has parameters:
 
 PARAM_ETL_RUN_ID						Primary key for the ${QF_ETL_DB_SCHEMA}.etl_run row for the current "run"
 PARAM_TARGET_TABLE_UPDATE_ID		Primary key of ${QF_ETL_DB_SCHEMA}.target_table_update row to be updated by this job for progress and summary statistics
+PARAM_ETL_OPERATION					ETL operation currently being performed, e.g., "insert"  or "update"
 PARAM_SOURCE_DB_DATABASE			Name of source DB
 PARAM_SOURCE_DB_ID					ID the "source" database containing tables will be mirrored to a "target" database
 PARAM_SOURCE_SCHEMA				Name of schema containing source table to mirror to target table
@@ -504,72 +510,7 @@ PARAM_TARGET_TABLE					Name of target table to update</note>
       <xloc>16</xloc>
       <yloc>0</yloc>
       <width>941</width>
-      <heigth>218</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>9</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Count the number of rows that are identical, missing, different or unexpected.
-There will be a separate row for each of these values.</note>
-      <xloc>320</xloc>
-      <yloc>400</yloc>
-      <width>441</width>
-      <heigth>36</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>9</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>The row numbers computed in the previous step (one value per row) are 
-transposed here so that there is one value per COLUMN.</note>
-      <xloc>320</xloc>
-      <yloc>464</yloc>
-      <width>411</width>
-      <heigth>36</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>9</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Needed for the "Group by" step.</note>
-      <xloc>320</xloc>
-      <yloc>336</yloc>
-      <width>189</width>
-      <heigth>23</heigth>
+      <heigth>231</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -589,7 +530,7 @@ transposed here so that there is one value per COLUMN.</note>
       <note>This lists all the stream fields that this transformation will accept at the point where it is executed via a 
 "Simple mapping (sub-transformation)" step.</note>
       <xloc>320</xloc>
-      <yloc>272</yloc>
+      <yloc>256</yloc>
       <width>576</width>
       <heigth>36</heigth>
       <fontname>Ubuntu</fontname>
@@ -607,7 +548,101 @@ transposed here so that there is one value per COLUMN.</note>
       <bordercolorblue>100</bordercolorblue>
       <drawshadow>Y</drawshadow>
     </notepad>
+    <notepad>
+      <note>Update the etl.etl_run row with progress details</note>
+      <xloc>720</xloc>
+      <yloc>704</yloc>
+      <width>274</width>
+      <heigth>23</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>I use a "Select values" step to convert Javascript "null" vales to SQL NULLs. For some reason I was not able to do this 
+with a "Null if" step.</note>
+      <xloc>311</xloc>
+      <yloc>580</yloc>
+      <width>644</width>
+      <heigth>36</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
   </notepads>
+  <connection>
+    <name>etl_db</name>
+    <server>${QF_ETL_DB_HOST}</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>${QF_ETL_DB_DATABASE}</database>
+    <port>${QF_ETL_DB_PORT}</port>
+    <username>${QF_ETL_DB_USERNAME}</username>
+    <password>${QF_ETL_DB_PASSWORD}</password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>${QF_ETL_DB_PORT}</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
   <connection>
     <name>logging_db</name>
     <server>${QF_LOGGING_DB_HOST}</server>
@@ -661,11 +696,6 @@ transposed here so that there is one value per COLUMN.</note>
   </connection>
   <order>
     <hop>
-      <from>Compute progress stats</from>
-      <to>Log progress</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>Get progress_milliseconds for prevous row</from>
       <to>Compute progress stats</to>
       <enabled>Y</enabled>
@@ -681,14 +711,69 @@ transposed here so that there is one value per COLUMN.</note>
       <enabled>Y</enabled>
     </hop>
     <hop>
+      <from>Create etl.target_table_progress row?</from>
+      <to>Do NOT update etl.etl_run row with progress details</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
       <from>Log progress</from>
+      <to>Create etl.target_table_progress row?</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Check for shutdown request?</from>
+      <to>Check for shutdown request</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Check for shutdown request?</from>
+      <to>Do NOT check for shutdown request</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Do NOT update etl.etl_run row with progress details</from>
+      <to>Check for shutdown request?</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Do NOT check for shutdown request</from>
       <to>Mapping output specification</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Check for shutdown request</from>
+      <to>Mapping output specification</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Insert etl.target_table_progress row with progress details</from>
+      <to>Log etl.target_table_progress row INSERT</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Log etl.target_table_progress row INSERT</from>
+      <to>Check for shutdown request?</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Create etl.target_table_progress row?</from>
+      <to>Insert etl.target_table_progress row with progress details</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Compute progress stats</from>
+      <to>Convert Javascript nulls to SQL NULLs</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Convert Javascript nulls to SQL NULLs</from>
+      <to>Log progress</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Mapping input specification</name>
-    <type>MappingInput</type>
+    <name>Check for shutdown request</name>
+    <type>WriteToLog</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -697,26 +782,57 @@ transposed here so that there is one value per COLUMN.</note>
       <method>none</method>
       <schema_name />
     </partitioning>
+    <loglevel>log_level_minimal</loglevel>
+    <displayHeader>Y</displayHeader>
+    <limitRows>N</limitRows>
+    <limitRowsNumber>0</limitRowsNumber>
+    <logmessage />
     <fields>
       <field>
         <name>current_row_num</name>
-        <type>Integer</type>
-        <length>-1</length>
-        <precision>-1</precision>
       </field>
       <field>
         <name>num_rows_to_process</name>
-        <type>Integer</type>
-        <length>-1</length>
-        <precision>-1</precision>
+      </field>
+      <field>
+        <name>insert_id</name>
+      </field>
+      <field>
+        <name>last_updated_on</name>
       </field>
       <field>
         <name>progress_milliseconds</name>
-        <type>Integer</type>
-        <length>-1</length>
-        <precision>-1</precision>
       </field>
-      <select_unspecified>N</select_unspecified>
+      <field>
+        <name>prev_progress_milliseconds</name>
+      </field>
+      <field>
+        <name>qf_etl_progress_interval_rows</name>
+      </field>
+      <field>
+        <name>qf_etl_progress_log_history</name>
+      </field>
+      <field>
+        <name>qf_check_for_shutdown_request_in_progress_log_interval</name>
+      </field>
+      <field>
+        <name>param_etl_run_id</name>
+      </field>
+      <field>
+        <name>param_target_table_update_id</name>
+      </field>
+      <field>
+        <name>param_etl_operation</name>
+      </field>
+      <field>
+        <name>progress_rows_to_process_remaining</name>
+      </field>
+      <field>
+        <name>progress_interval_milliseconds</name>
+      </field>
+      <field>
+        <name>progress_rows_processed_per_second</name>
+      </field>
     </fields>
     <attributes />
     <cluster_schema />
@@ -727,14 +843,14 @@ transposed here so that there is one value per COLUMN.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>160</xloc>
-      <yloc>272</yloc>
+      <xloc>464</xloc>
+      <yloc>928</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Mapping output specification</name>
-    <type>MappingOutput</type>
+    <name>Check for shutdown request?</name>
+    <type>FilterRows</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -743,6 +859,25 @@ transposed here so that there is one value per COLUMN.</note>
       <method>none</method>
       <schema_name />
     </partitioning>
+    <send_true_to>Check for shutdown request</send_true_to>
+    <send_false_to>Do NOT check for shutdown request</send_false_to>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <leftvalue>qf_check_for_shutdown_request_in_progress_log_interval</leftvalue>
+        <function>=</function>
+        <rightvalue />
+        <value>
+          <name>constant</name>
+          <type>String</type>
+          <text>Y</text>
+          <length>-1</length>
+          <precision>-1</precision>
+          <isnull>N</isnull>
+          <mask />
+        </value>
+      </condition>
+    </compare>
     <attributes />
     <cluster_schema />
     <remotesteps>
@@ -753,7 +888,7 @@ transposed here so that there is one value per COLUMN.</note>
     </remotesteps>
     <GUI>
       <xloc>160</xloc>
-      <yloc>784</yloc>
+      <yloc>928</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -776,32 +911,119 @@ transposed here so that there is one value per COLUMN.</note>
         <jsScript_name>Script 1</jsScript_name>
         <jsScript_script>//Script here
 
-var prev_progress_milliseconds;  // input field
-var progress_milliseconds;  // input field
+// Input fields:
+var current_row_num;
+var prev_progress_milliseconds;
+var progress_milliseconds;
+var num_rows_to_process;
 
-var progress_interval_milliseconds = null;  // output field
-var progress_rows_per_second = null;  // output field
+// Output fields created by this script:
+var qf_etl_progress_interval_rows = parseInt(getVariable("QF_ETL_PROGRESS_INTERVAL_ROWS", "0"));
+var qf_etl_progress_log_history = getVariable("QF_ETL_PROGRESS_LOG_HISTORY", "N");
+var qf_check_for_shutdown_request_in_progress_log_interval = getVariable("QF_CHECK_FOR_SHUTDOWN_REQUEST_IN_PROGRESS_LOG_INTERVAL", "N");
+var param_etl_run_id = parseInt(getVariable("PARAM_ETL_RUN_ID", "0"));
+var param_target_table_update_id = parseInt(getVariable("PARAM_TARGET_TABLE_UPDATE_ID", "0"));
+var param_etl_operation = getVariable("PARAM_ETL_OPERATION", "");  // e.g., "insert"  or "update"
+var progress_rows_to_process_remaining = null;
+var progress_interval_milliseconds = null;
+var progress_rows_processed_per_second = null;
+
+if (num_rows_to_process &amp;&amp; current_row_num) {
+    progress_rows_to_process_remaining = num_rows_to_process - current_row_num;
+}
 
 if (prev_progress_milliseconds) {
     progress_interval_milliseconds = progress_milliseconds - prev_progress_milliseconds;
     if (progress_interval_milliseconds) {
-        progress_rows_per_second = ((parseInt(getVariable("QF_ETL_PROGRESS_INTERVAL_ROWS", "-1")) * 1000) / progress_interval_milliseconds);
+        progress_rows_processed_per_second = ((qf_etl_progress_interval_rows * 1000) / progress_interval_milliseconds);
     }
 }</jsScript_script>
       </jsScript>
     </jsScripts>
     <fields>
       <field>
+        <name>current_row_num</name>
+        <rename>current_row_num</rename>
+        <type>Integer</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>Y</replace>
+      </field>
+      <field>
         <name>prev_progress_milliseconds</name>
         <rename>prev_progress_milliseconds</rename>
+        <type>Integer</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>Y</replace>
+      </field>
+      <field>
+        <name>progress_milliseconds</name>
+        <rename>progress_milliseconds</rename>
+        <type>Integer</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>Y</replace>
+      </field>
+      <field>
+        <name>num_rows_to_process</name>
+        <rename>num_rows_to_process</rename>
+        <type>Integer</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>Y</replace>
+      </field>
+      <field>
+        <name>qf_etl_progress_interval_rows</name>
+        <rename>qf_etl_progress_interval_rows</rename>
         <type>Integer</type>
         <length>-1</length>
         <precision>-1</precision>
         <replace>N</replace>
       </field>
       <field>
-        <name>progress_milliseconds</name>
-        <rename>progress_milliseconds</rename>
+        <name>qf_etl_progress_log_history</name>
+        <rename>qf_etl_progress_log_history</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+      <field>
+        <name>qf_check_for_shutdown_request_in_progress_log_interval</name>
+        <rename>qf_check_for_shutdown_request_in_progress_log_interval</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+      <field>
+        <name>param_etl_run_id</name>
+        <rename>param_etl_run_id</rename>
+        <type>Integer</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+      <field>
+        <name>param_target_table_update_id</name>
+        <rename>param_target_table_update_id</rename>
+        <type>Integer</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+      <field>
+        <name>param_etl_operation</name>
+        <rename>param_etl_operation</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+      <field>
+        <name>progress_rows_to_process_remaining</name>
+        <rename>progress_rows_to_process_remaining</rename>
         <type>Integer</type>
         <length>-1</length>
         <precision>-1</precision>
@@ -816,8 +1038,8 @@ if (prev_progress_milliseconds) {
         <replace>N</replace>
       </field>
       <field>
-        <name>progress_rows_per_second</name>
-        <rename>progress_rows_per_second</rename>
+        <name>progress_rows_processed_per_second</name>
+        <rename>progress_rows_processed_per_second</rename>
         <type>Number</type>
         <length>-1</length>
         <precision>-1</precision>
@@ -834,7 +1056,205 @@ if (prev_progress_milliseconds) {
     </remotesteps>
     <GUI>
       <xloc>160</xloc>
-      <yloc>512</yloc>
+      <yloc>496</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Do NOT check for shutdown request</name>
+    <type>WriteToLog</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <loglevel>log_level_minimal</loglevel>
+    <displayHeader>Y</displayHeader>
+    <limitRows>N</limitRows>
+    <limitRowsNumber>0</limitRowsNumber>
+    <logmessage />
+    <fields>
+      <field>
+        <name>current_row_num</name>
+      </field>
+      <field>
+        <name>num_rows_to_process</name>
+      </field>
+      <field>
+        <name>insert_id</name>
+      </field>
+      <field>
+        <name>last_updated_on</name>
+      </field>
+      <field>
+        <name>progress_milliseconds</name>
+      </field>
+      <field>
+        <name>prev_progress_milliseconds</name>
+      </field>
+      <field>
+        <name>qf_etl_progress_interval_rows</name>
+      </field>
+      <field>
+        <name>qf_etl_progress_log_history</name>
+      </field>
+      <field>
+        <name>qf_check_for_shutdown_request_in_progress_log_interval</name>
+      </field>
+      <field>
+        <name>param_etl_run_id</name>
+      </field>
+      <field>
+        <name>param_target_table_update_id</name>
+      </field>
+      <field>
+        <name>param_etl_operation</name>
+      </field>
+      <field>
+        <name>progress_rows_to_process_remaining</name>
+      </field>
+      <field>
+        <name>progress_interval_milliseconds</name>
+      </field>
+      <field>
+        <name>progress_rows_processed_per_second</name>
+      </field>
+    </fields>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>160</xloc>
+      <yloc>1024</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Do NOT update etl.etl_run row with progress details</name>
+    <type>WriteToLog</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <loglevel>log_level_minimal</loglevel>
+    <displayHeader>Y</displayHeader>
+    <limitRows>N</limitRows>
+    <limitRowsNumber>0</limitRowsNumber>
+    <logmessage>Do NOT update etl.etl_run row with progress details</logmessage>
+    <fields>
+      <field>
+        <name>current_row_num</name>
+      </field>
+      <field>
+        <name>num_rows_to_process</name>
+      </field>
+      <field>
+        <name>insert_id</name>
+      </field>
+      <field>
+        <name>last_updated_on</name>
+      </field>
+      <field>
+        <name>progress_milliseconds</name>
+      </field>
+      <field>
+        <name>prev_progress_milliseconds</name>
+      </field>
+      <field>
+        <name>qf_etl_progress_interval_rows</name>
+      </field>
+      <field>
+        <name>qf_etl_progress_log_history</name>
+      </field>
+      <field>
+        <name>qf_check_for_shutdown_request_in_progress_log_interval</name>
+      </field>
+      <field>
+        <name>param_etl_run_id</name>
+      </field>
+      <field>
+        <name>param_target_table_update_id</name>
+      </field>
+      <field>
+        <name>param_etl_operation</name>
+      </field>
+      <field>
+        <name>progress_rows_to_process_remaining</name>
+      </field>
+      <field>
+        <name>progress_interval_milliseconds</name>
+      </field>
+      <field>
+        <name>progress_rows_processed_per_second</name>
+      </field>
+    </fields>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>160</xloc>
+      <yloc>832</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Create etl.target_table_progress row?</name>
+    <type>FilterRows</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <send_true_to>Insert etl.target_table_progress row with progress details</send_true_to>
+    <send_false_to>Do NOT update etl.etl_run row with progress details</send_false_to>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <leftvalue>qf_etl_progress_log_history</leftvalue>
+        <function>=</function>
+        <rightvalue />
+        <value>
+          <name>constant</name>
+          <type>String</type>
+          <text>Y</text>
+          <length>-1</length>
+          <precision>-1</precision>
+          <isnull>N</isnull>
+          <mask />
+        </value>
+      </condition>
+    </compare>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>160</xloc>
+      <yloc>736</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -869,7 +1289,7 @@ if (prev_progress_milliseconds) {
     </remotesteps>
     <GUI>
       <xloc>160</xloc>
-      <yloc>432</yloc>
+      <yloc>416</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -897,16 +1317,43 @@ if (prev_progress_milliseconds) {
         <name>num_rows_to_process</name>
       </field>
       <field>
+        <name>insert_id</name>
+      </field>
+      <field>
+        <name>last_updated_on</name>
+      </field>
+      <field>
         <name>progress_milliseconds</name>
       </field>
       <field>
         <name>prev_progress_milliseconds</name>
       </field>
       <field>
+        <name>qf_etl_progress_interval_rows</name>
+      </field>
+      <field>
+        <name>qf_etl_progress_log_history</name>
+      </field>
+      <field>
+        <name>qf_check_for_shutdown_request_in_progress_log_interval</name>
+      </field>
+      <field>
+        <name>param_etl_run_id</name>
+      </field>
+      <field>
+        <name>param_target_table_update_id</name>
+      </field>
+      <field>
+        <name>param_etl_operation</name>
+      </field>
+      <field>
+        <name>progress_rows_to_process_remaining</name>
+      </field>
+      <field>
         <name>progress_interval_milliseconds</name>
       </field>
       <field>
-        <name>progress_rows_per_second</name>
+        <name>progress_rows_processed_per_second</name>
       </field>
     </fields>
     <attributes />
@@ -919,7 +1366,84 @@ if (prev_progress_milliseconds) {
     </remotesteps>
     <GUI>
       <xloc>160</xloc>
-      <yloc>592</yloc>
+      <yloc>656</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Mapping input specification</name>
+    <type>MappingInput</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <field>
+        <name>current_row_num</name>
+        <type>Integer</type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>num_rows_to_process</name>
+        <type>Integer</type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>insert_id</name>
+        <type>Integer</type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>last_updated_on</name>
+        <type>Timestamp</type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <select_unspecified>N</select_unspecified>
+    </fields>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>160</xloc>
+      <yloc>256</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Mapping output specification</name>
+    <type>MappingOutput</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>160</xloc>
+      <yloc>1104</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -965,7 +1489,239 @@ var progress_milliseconds = Date.now();</jsScript_script>
     </remotesteps>
     <GUI>
       <xloc>160</xloc>
-      <yloc>352</yloc>
+      <yloc>336</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Log etl.target_table_progress row INSERT</name>
+    <type>WriteToLog</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <loglevel>log_level_minimal</loglevel>
+    <displayHeader>Y</displayHeader>
+    <limitRows>N</limitRows>
+    <limitRowsNumber>0</limitRowsNumber>
+    <logmessage>Inserted etl.target_table_progress row with progress details</logmessage>
+    <fields>
+      <field>
+        <name>current_row_num</name>
+      </field>
+      <field>
+        <name>num_rows_to_process</name>
+      </field>
+      <field>
+        <name>insert_id</name>
+      </field>
+      <field>
+        <name>last_updated_on</name>
+      </field>
+      <field>
+        <name>progress_milliseconds</name>
+      </field>
+      <field>
+        <name>prev_progress_milliseconds</name>
+      </field>
+      <field>
+        <name>qf_etl_progress_interval_rows</name>
+      </field>
+      <field>
+        <name>qf_etl_progress_log_history</name>
+      </field>
+      <field>
+        <name>qf_check_for_shutdown_request_in_progress_log_interval</name>
+      </field>
+      <field>
+        <name>param_etl_run_id</name>
+      </field>
+      <field>
+        <name>param_target_table_update_id</name>
+      </field>
+      <field>
+        <name>param_etl_operation</name>
+      </field>
+      <field>
+        <name>progress_rows_to_process_remaining</name>
+      </field>
+      <field>
+        <name>progress_interval_milliseconds</name>
+      </field>
+      <field>
+        <name>progress_rows_processed_per_second</name>
+      </field>
+    </fields>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>464</xloc>
+      <yloc>832</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Insert etl.target_table_progress row with progress details</name>
+    <type>TableOutput</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <connection>etl_db</connection>
+    <schema>${QF_ETL_DB_SCHEMA}</schema>
+    <table>target_table_progress</table>
+    <commit>1</commit>
+    <truncate>N</truncate>
+    <ignore_errors>N</ignore_errors>
+    <use_batch>N</use_batch>
+    <specify_fields>Y</specify_fields>
+    <partitioning_enabled>N</partitioning_enabled>
+    <partitioning_field />
+    <partitioning_daily>N</partitioning_daily>
+    <partitioning_monthly>Y</partitioning_monthly>
+    <tablename_in_field>N</tablename_in_field>
+    <tablename_field />
+    <tablename_in_table>Y</tablename_in_table>
+    <return_keys>N</return_keys>
+    <return_field />
+    <fields>
+      <field>
+        <column_name>target_table_update_id</column_name>
+        <stream_name>param_target_table_update_id</stream_name>
+      </field>
+      <field>
+        <column_name>progress_etl_operation</column_name>
+        <stream_name>param_etl_operation</stream_name>
+      </field>
+      <field>
+        <column_name>progress_insert_id</column_name>
+        <stream_name>insert_id</stream_name>
+      </field>
+      <field>
+        <column_name>progress_last_updated_on</column_name>
+        <stream_name>last_updated_on</stream_name>
+      </field>
+      <field>
+        <column_name>progress_rows_processed_per_update</column_name>
+        <stream_name>qf_etl_progress_interval_rows</stream_name>
+      </field>
+      <field>
+        <column_name>progress_rows_processed</column_name>
+        <stream_name>current_row_num</stream_name>
+      </field>
+      <field>
+        <column_name>progress_rows_to_process_remaining</column_name>
+        <stream_name>progress_rows_to_process_remaining</stream_name>
+      </field>
+      <field>
+        <column_name>progress_rows_processed_per_second</column_name>
+        <stream_name>progress_rows_processed_per_second</stream_name>
+      </field>
+    </fields>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>464</xloc>
+      <yloc>736</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Convert Javascript nulls to SQL NULLs</name>
+    <type>SelectValues</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <select_unspecified>Y</select_unspecified>
+      <meta>
+        <name>insert_id</name>
+        <rename>insert_id</rename>
+        <type>Integer</type>
+        <length>-2</length>
+        <precision>-2</precision>
+        <conversion_mask />
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale />
+        <date_format_timezone />
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding />
+        <decimal_symbol />
+        <grouping_symbol />
+        <currency_symbol />
+        <storage_type />
+      </meta>
+      <meta>
+        <name>last_updated_on</name>
+        <rename>last_updated_on</rename>
+        <type>Timestamp</type>
+        <length>-2</length>
+        <precision>-2</precision>
+        <conversion_mask />
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale />
+        <date_format_timezone />
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding />
+        <decimal_symbol />
+        <grouping_symbol />
+        <currency_symbol />
+        <storage_type />
+      </meta>
+      <meta>
+        <name>progress_rows_processed_per_second</name>
+        <rename>progress_rows_processed_per_second</rename>
+        <type>Number</type>
+        <length>-2</length>
+        <precision>-2</precision>
+        <conversion_mask />
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale />
+        <date_format_timezone />
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding />
+        <decimal_symbol />
+        <grouping_symbol />
+        <currency_symbol />
+        <storage_type />
+      </meta>
+    </fields>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>160</xloc>
+      <yloc>576</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
