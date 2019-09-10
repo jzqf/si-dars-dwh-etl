@@ -484,13 +484,18 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2019/09/09 13:43:45.001</modified_date>
+    <modified_date>2019/09/10 13:50:11.913</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>This transformation logs progress while streaming rows by ETL algorithms.
+      <note>This transformation does the following while streaming rows by an ETL algorithm:
+
+1.	Logs progress the the current etl_run row.
+2.	Logs progress by inserting an tl.target_table_progress row, but only if: QF_ETL_PROGRESS_LOG_HISTORY = Y.
+3.	Checks if shutdown has been requested; if so, it initiates a shutdown. This is only done if:
+	QF_CHECK_FOR_SHUTDOWN_REQUEST_IN_PROGRESS_LOG_INTERVAL = Y.
 
 This transformation has been written be executed via a "Simple mapping (sub-transformation)" step from ETL algorithms that stream rows.
 
@@ -510,7 +515,7 @@ PARAM_TARGET_TABLE					Name of target table to update</note>
       <xloc>16</xloc>
       <yloc>0</yloc>
       <width>941</width>
-      <heigth>231</heigth>
+      <heigth>296</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -529,8 +534,8 @@ PARAM_TARGET_TABLE					Name of target table to update</note>
     <notepad>
       <note>This lists all the stream fields that this transformation will accept at the point where it is executed via a 
 "Simple mapping (sub-transformation)" step.</note>
-      <xloc>272</xloc>
-      <yloc>256</yloc>
+      <xloc>256</xloc>
+      <yloc>320</yloc>
       <width>576</width>
       <heigth>36</heigth>
       <fontname>Ubuntu</fontname>
@@ -549,14 +554,47 @@ PARAM_TARGET_TABLE					Name of target table to update</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Use a "Select values" step to:
+      <note>These two "Select values" steps perform the following actions:
 
-1.	Convert Javascript "null" vales to SQL NULLs. For some reason I was not able to do this with a "Null if" step.
-2.	Adjust local timestamp to UTC timestamp.</note>
-      <xloc>272</xloc>
-      <yloc>480</yloc>
-      <width>615</width>
-      <heigth>62</heigth>
+A.	Convert Javascript "null" fields to SQL NULLs. For some reason, this did not work with a "Null if" step.
+
+B.	Adjust local timestamp field current_timestamp_utc to UTC timestamp. The two "Select values" 
+	steps here do the following, in sequence:
+
+	1.	Convert current_timestamp_utc to UTC time zone and at the same time change data type to String.
+		This discards time zone details.
+	2.	Convert current_timestamp_utc from String back to Timestamp. *This* timestamp can then be 
+		assigned to a PostgreSQL "timestamp without time zone" column to represent the UTC timestamp.
+
+	If current_timestamp_utc is simply converted to UTC time zone and then assigned to a PostgreSQL 
+	"timestamp without time zone" column, the column is assigned the current *local* timestamp!</note>
+      <xloc>592</xloc>
+      <yloc>496</yloc>
+      <width>603</width>
+      <heigth>192</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>This is necessary because all hops to the 
+"Mapping output specification" step 
+must have the same fields.</note>
+      <xloc>336</xloc>
+      <yloc>1056</yloc>
+      <width>232</width>
+      <heigth>49</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -692,53 +730,8 @@ PARAM_TARGET_TABLE					Name of target table to update</note>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Create etl.target_table_progress row?</from>
-      <to>Do NOT update etl.etl_run row with progress details</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Check for shutdown request?</from>
-      <to>Check for shutdown request</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Check for shutdown request?</from>
-      <to>Do NOT check for shutdown request</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Do NOT update etl.etl_run row with progress details</from>
-      <to>Check for shutdown request?</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Do NOT check for shutdown request</from>
-      <to>Mapping output specification</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Check for shutdown request</from>
-      <to>Mapping output specification</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Insert etl.target_table_progress row with progress details</from>
-      <to>Log etl.target_table_progress row INSERT</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Log etl.target_table_progress row INSERT</from>
-      <to>Check for shutdown request?</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Create etl.target_table_progress row?</from>
+      <from>Create etl.target_table_progress row ?</from>
       <to>Insert etl.target_table_progress row with progress details</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Adjust field values</from>
-      <to>Log progress</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
@@ -748,7 +741,7 @@ PARAM_TARGET_TABLE					Name of target table to update</note>
     </hop>
     <hop>
       <from>Get local timestamp</from>
-      <to>Adjust field values</to>
+      <to>"null" -> NULL, current_timestamp_utc to UTC String</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
@@ -758,13 +751,83 @@ PARAM_TARGET_TABLE					Name of target table to update</note>
     </hop>
     <hop>
       <from>Update etl_run row progress details</from>
-      <to>Create etl.target_table_progress row?</to>
+      <to>Create etl.target_table_progress row ?</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Lookup etl_run row</from>
+      <to>shutdown_requested = true ?</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>shutdown_requested = true ?</from>
+      <to>Remove shutdown-related fields</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Remove shutdown-related fields</from>
+      <to>Mapping output specification</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Set variable QF_MAIL_MSG_QFREE_BODY_FAILURE_EXTRA_INFO_TRANSFORMATION</from>
+      <to>Set etl_run.shutdown_initiated_at_utc</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Convert current_timestamp_utc to timestamp</from>
+      <to>Log progress</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>"null" -> NULL, current_timestamp_utc to UTC String</from>
+      <to>Convert current_timestamp_utc to timestamp</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Generate "Shutdown requested" message for email</from>
+      <to>Set variable QF_MAIL_MSG_QFREE_BODY_FAILURE_EXTRA_INFO_TRANSFORMATION</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Create etl.target_table_progress row ?</from>
+      <to>Check for shutdown request?</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Insert etl.target_table_progress row with progress details</from>
+      <to>Check for shutdown request?</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Check for shutdown request?</from>
+      <to>Mapping output specification</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Check for shutdown request?</from>
+      <to>Lookup etl_run row</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>shutdown_requested = true ?</from>
+      <to>Generate "Shutdown requested" message for email</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Set etl_run.shutdown_initiated_at_utc</from>
+      <to>Log: Shutdown initiated</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Log: Shutdown initiated</from>
+      <to>Abort - Shutdown requested</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Check for shutdown request</name>
-    <type>WriteToLog</type>
+    <name>Abort - Shutdown requested</name>
+    <type>Abort</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -773,57 +836,105 @@ PARAM_TARGET_TABLE					Name of target table to update</note>
       <method>none</method>
       <schema_name />
     </partitioning>
-    <loglevel>log_level_minimal</loglevel>
-    <displayHeader>Y</displayHeader>
-    <limitRows>N</limitRows>
-    <limitRowsNumber>0</limitRowsNumber>
-    <logmessage />
+    <row_threshold>0</row_threshold>
+    <message>${QF_SHUTDOWN_REQUEST_ABORT_MSG_FROM_TRANSFORMATION}</message>
+    <always_log_rows>Y</always_log_rows>
+    <abort_option>ABORT_WITH_ERROR</abort_option>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1040</xloc>
+      <yloc>1056</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>"null" -> NULL, current_timestamp_utc to UTC String</name>
+    <type>SelectValues</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
     <fields>
-      <field>
-        <name>current_row_num</name>
-      </field>
-      <field>
-        <name>num_rows_to_process</name>
-      </field>
-      <field>
+      <select_unspecified>Y</select_unspecified>
+      <meta>
         <name>insert_id</name>
-      </field>
-      <field>
+        <rename>insert_id</rename>
+        <type>Integer</type>
+        <length>-2</length>
+        <precision>-2</precision>
+        <conversion_mask />
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale />
+        <date_format_timezone />
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding />
+        <decimal_symbol />
+        <grouping_symbol />
+        <currency_symbol />
+        <storage_type />
+      </meta>
+      <meta>
         <name>last_updated_on</name>
-      </field>
-      <field>
-        <name>progress_milliseconds</name>
-      </field>
-      <field>
-        <name>prev_progress_milliseconds</name>
-      </field>
-      <field>
-        <name>qf_etl_progress_interval_rows</name>
-      </field>
-      <field>
-        <name>qf_etl_progress_log_history</name>
-      </field>
-      <field>
-        <name>qf_check_for_shutdown_request_in_progress_log_interval</name>
-      </field>
-      <field>
-        <name>param_etl_run_id</name>
-      </field>
-      <field>
-        <name>param_target_table_update_id</name>
-      </field>
-      <field>
-        <name>param_etl_operation</name>
-      </field>
-      <field>
-        <name>progress_rows_to_process_remaining</name>
-      </field>
-      <field>
-        <name>progress_interval_milliseconds</name>
-      </field>
-      <field>
+        <rename>last_updated_on</rename>
+        <type>Timestamp</type>
+        <length>-2</length>
+        <precision>-2</precision>
+        <conversion_mask />
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale />
+        <date_format_timezone />
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding />
+        <decimal_symbol />
+        <grouping_symbol />
+        <currency_symbol />
+        <storage_type />
+      </meta>
+      <meta>
         <name>progress_rows_processed_per_second</name>
-      </field>
+        <rename>progress_rows_processed_per_second</rename>
+        <type>Number</type>
+        <length>-2</length>
+        <precision>-2</precision>
+        <conversion_mask />
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale />
+        <date_format_timezone />
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding />
+        <decimal_symbol />
+        <grouping_symbol />
+        <currency_symbol />
+        <storage_type />
+      </meta>
+      <meta>
+        <name>current_timestamp_utc</name>
+        <rename>current_timestamp_utc</rename>
+        <type>String</type>
+        <length>-2</length>
+        <precision>-2</precision>
+        <conversion_mask />
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale />
+        <date_format_timezone>UTC</date_format_timezone>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding />
+        <decimal_symbol />
+        <grouping_symbol />
+        <currency_symbol />
+        <storage_type />
+      </meta>
     </fields>
     <attributes />
     <cluster_schema />
@@ -834,8 +945,8 @@ PARAM_TARGET_TABLE					Name of target table to update</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>464</xloc>
-      <yloc>928</yloc>
+      <xloc>144</xloc>
+      <yloc>560</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -850,8 +961,8 @@ PARAM_TARGET_TABLE					Name of target table to update</note>
       <method>none</method>
       <schema_name />
     </partitioning>
-    <send_true_to>Check for shutdown request</send_true_to>
-    <send_false_to>Do NOT check for shutdown request</send_false_to>
+    <send_true_to>Lookup etl_run row</send_true_to>
+    <send_false_to>Mapping output specification</send_false_to>
     <compare>
       <condition>
         <negated>N</negated>
@@ -878,8 +989,8 @@ PARAM_TARGET_TABLE					Name of target table to update</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>160</xloc>
-      <yloc>928</yloc>
+      <xloc>144</xloc>
+      <yloc>816</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1046,109 +1157,13 @@ if (prev_progress_milliseconds) {
       </output>
     </remotesteps>
     <GUI>
-      <xloc>384</xloc>
-      <yloc>416</yloc>
+      <xloc>432</xloc>
+      <yloc>480</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Adjust field values</name>
-    <type>SelectValues</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <fields>
-      <select_unspecified>Y</select_unspecified>
-      <meta>
-        <name>insert_id</name>
-        <rename>insert_id</rename>
-        <type>Integer</type>
-        <length>-2</length>
-        <precision>-2</precision>
-        <conversion_mask />
-        <date_format_lenient>false</date_format_lenient>
-        <date_format_locale />
-        <date_format_timezone />
-        <lenient_string_to_number>false</lenient_string_to_number>
-        <encoding />
-        <decimal_symbol />
-        <grouping_symbol />
-        <currency_symbol />
-        <storage_type />
-      </meta>
-      <meta>
-        <name>last_updated_on</name>
-        <rename>last_updated_on</rename>
-        <type>Timestamp</type>
-        <length>-2</length>
-        <precision>-2</precision>
-        <conversion_mask />
-        <date_format_lenient>false</date_format_lenient>
-        <date_format_locale />
-        <date_format_timezone />
-        <lenient_string_to_number>false</lenient_string_to_number>
-        <encoding />
-        <decimal_symbol />
-        <grouping_symbol />
-        <currency_symbol />
-        <storage_type />
-      </meta>
-      <meta>
-        <name>progress_rows_processed_per_second</name>
-        <rename>progress_rows_processed_per_second</rename>
-        <type>Number</type>
-        <length>-2</length>
-        <precision>-2</precision>
-        <conversion_mask />
-        <date_format_lenient>false</date_format_lenient>
-        <date_format_locale />
-        <date_format_timezone />
-        <lenient_string_to_number>false</lenient_string_to_number>
-        <encoding />
-        <decimal_symbol />
-        <grouping_symbol />
-        <currency_symbol />
-        <storage_type />
-      </meta>
-      <meta>
-        <name>progress_updated_at_utc</name>
-        <rename>progress_updated_at_utc</rename>
-        <type>Timestamp</type>
-        <length>-2</length>
-        <precision>-2</precision>
-        <conversion_mask />
-        <date_format_lenient>false</date_format_lenient>
-        <date_format_locale />
-        <date_format_timezone>UTC</date_format_timezone>
-        <lenient_string_to_number>false</lenient_string_to_number>
-        <encoding />
-        <decimal_symbol />
-        <grouping_symbol />
-        <currency_symbol />
-        <storage_type />
-      </meta>
-    </fields>
-    <attributes />
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>160</xloc>
-      <yloc>496</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Create etl.target_table_progress row?</name>
+    <name>Create etl.target_table_progress row ?</name>
     <type>FilterRows</type>
     <description />
     <distribute>Y</distribute>
@@ -1159,7 +1174,7 @@ if (prev_progress_milliseconds) {
       <schema_name />
     </partitioning>
     <send_true_to>Insert etl.target_table_progress row with progress details</send_true_to>
-    <send_false_to>Do NOT update etl.etl_run row with progress details</send_false_to>
+    <send_false_to>Check for shutdown request?</send_false_to>
     <compare>
       <condition>
         <negated>N</negated>
@@ -1186,14 +1201,14 @@ if (prev_progress_milliseconds) {
       </output>
     </remotesteps>
     <GUI>
-      <xloc>160</xloc>
-      <yloc>736</yloc>
+      <xloc>144</xloc>
+      <yloc>720</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Do NOT check for shutdown request</name>
-    <type>WriteToLog</type>
+    <name>Get local timestamp</name>
+    <type>SystemInfo</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -1202,56 +1217,10 @@ if (prev_progress_milliseconds) {
       <method>none</method>
       <schema_name />
     </partitioning>
-    <loglevel>log_level_minimal</loglevel>
-    <displayHeader>Y</displayHeader>
-    <limitRows>N</limitRows>
-    <limitRowsNumber>0</limitRowsNumber>
-    <logmessage />
     <fields>
       <field>
-        <name>current_row_num</name>
-      </field>
-      <field>
-        <name>num_rows_to_process</name>
-      </field>
-      <field>
-        <name>insert_id</name>
-      </field>
-      <field>
-        <name>last_updated_on</name>
-      </field>
-      <field>
-        <name>progress_milliseconds</name>
-      </field>
-      <field>
-        <name>prev_progress_milliseconds</name>
-      </field>
-      <field>
-        <name>qf_etl_progress_interval_rows</name>
-      </field>
-      <field>
-        <name>qf_etl_progress_log_history</name>
-      </field>
-      <field>
-        <name>qf_check_for_shutdown_request_in_progress_log_interval</name>
-      </field>
-      <field>
-        <name>param_etl_run_id</name>
-      </field>
-      <field>
-        <name>param_target_table_update_id</name>
-      </field>
-      <field>
-        <name>param_etl_operation</name>
-      </field>
-      <field>
-        <name>progress_rows_to_process_remaining</name>
-      </field>
-      <field>
-        <name>progress_interval_milliseconds</name>
-      </field>
-      <field>
-        <name>progress_rows_processed_per_second</name>
+        <name>current_timestamp_utc</name>
+        <type>system date (variable)</type>
       </field>
     </fields>
     <attributes />
@@ -1263,85 +1232,8 @@ if (prev_progress_milliseconds) {
       </output>
     </remotesteps>
     <GUI>
-      <xloc>160</xloc>
-      <yloc>1024</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Do NOT update etl.etl_run row with progress details</name>
-    <type>WriteToLog</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <loglevel>log_level_minimal</loglevel>
-    <displayHeader>Y</displayHeader>
-    <limitRows>N</limitRows>
-    <limitRowsNumber>0</limitRowsNumber>
-    <logmessage>Do NOT update etl.etl_run row with progress details</logmessage>
-    <fields>
-      <field>
-        <name>current_row_num</name>
-      </field>
-      <field>
-        <name>num_rows_to_process</name>
-      </field>
-      <field>
-        <name>insert_id</name>
-      </field>
-      <field>
-        <name>last_updated_on</name>
-      </field>
-      <field>
-        <name>progress_milliseconds</name>
-      </field>
-      <field>
-        <name>prev_progress_milliseconds</name>
-      </field>
-      <field>
-        <name>qf_etl_progress_interval_rows</name>
-      </field>
-      <field>
-        <name>qf_etl_progress_log_history</name>
-      </field>
-      <field>
-        <name>qf_check_for_shutdown_request_in_progress_log_interval</name>
-      </field>
-      <field>
-        <name>param_etl_run_id</name>
-      </field>
-      <field>
-        <name>param_target_table_update_id</name>
-      </field>
-      <field>
-        <name>param_etl_operation</name>
-      </field>
-      <field>
-        <name>progress_rows_to_process_remaining</name>
-      </field>
-      <field>
-        <name>progress_interval_milliseconds</name>
-      </field>
-      <field>
-        <name>progress_rows_processed_per_second</name>
-      </field>
-    </fields>
-    <attributes />
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>160</xloc>
-      <yloc>832</yloc>
+      <xloc>144</xloc>
+      <yloc>480</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1375,8 +1267,8 @@ if (prev_progress_milliseconds) {
       </output>
     </remotesteps>
     <GUI>
-      <xloc>384</xloc>
-      <yloc>336</yloc>
+      <xloc>432</xloc>
+      <yloc>400</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1451,85 +1343,8 @@ if (prev_progress_milliseconds) {
       </output>
     </remotesteps>
     <GUI>
-      <xloc>464</xloc>
-      <yloc>736</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Log etl.target_table_progress row INSERT</name>
-    <type>WriteToLog</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <loglevel>log_level_minimal</loglevel>
-    <displayHeader>Y</displayHeader>
-    <limitRows>N</limitRows>
-    <limitRowsNumber>0</limitRowsNumber>
-    <logmessage>Inserted etl.target_table_progress row with progress details</logmessage>
-    <fields>
-      <field>
-        <name>current_row_num</name>
-      </field>
-      <field>
-        <name>num_rows_to_process</name>
-      </field>
-      <field>
-        <name>insert_id</name>
-      </field>
-      <field>
-        <name>last_updated_on</name>
-      </field>
-      <field>
-        <name>progress_milliseconds</name>
-      </field>
-      <field>
-        <name>prev_progress_milliseconds</name>
-      </field>
-      <field>
-        <name>qf_etl_progress_interval_rows</name>
-      </field>
-      <field>
-        <name>qf_etl_progress_log_history</name>
-      </field>
-      <field>
-        <name>qf_check_for_shutdown_request_in_progress_log_interval</name>
-      </field>
-      <field>
-        <name>param_etl_run_id</name>
-      </field>
-      <field>
-        <name>param_target_table_update_id</name>
-      </field>
-      <field>
-        <name>param_etl_operation</name>
-      </field>
-      <field>
-        <name>progress_rows_to_process_remaining</name>
-      </field>
-      <field>
-        <name>progress_interval_milliseconds</name>
-      </field>
-      <field>
-        <name>progress_rows_processed_per_second</name>
-      </field>
-    </fields>
-    <attributes />
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>464</xloc>
-      <yloc>832</yloc>
+      <xloc>432</xloc>
+      <yloc>720</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1595,6 +1410,9 @@ if (prev_progress_milliseconds) {
       <field>
         <name>progress_rows_processed_per_second</name>
       </field>
+      <field>
+        <name>current_timestamp_utc</name>
+      </field>
     </fields>
     <attributes />
     <cluster_schema />
@@ -1605,8 +1423,74 @@ if (prev_progress_milliseconds) {
       </output>
     </remotesteps>
     <GUI>
-      <xloc>160</xloc>
-      <yloc>576</yloc>
+      <xloc>432</xloc>
+      <yloc>640</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Lookup etl_run row</name>
+    <type>DBLookup</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <connection>etl_db</connection>
+    <cache>N</cache>
+    <cache_load_all>N</cache_load_all>
+    <cache_size>0</cache_size>
+    <lookup>
+      <schema>${QF_ETL_DB_SCHEMA}</schema>
+      <table>etl_run</table>
+      <orderby />
+      <fail_on_multiple>N</fail_on_multiple>
+      <eat_row_on_failure>N</eat_row_on_failure>
+      <key>
+        <name>param_etl_run_id</name>
+        <field>etl_run_id</field>
+        <condition>=</condition>
+        <name2 />
+      </key>
+      <value>
+        <name>shutdown_requested</name>
+        <rename>shutdown_requested</rename>
+        <default />
+        <type>Boolean</type>
+      </value>
+      <value>
+        <name>shutdown_requested_by</name>
+        <rename>shutdown_requested_by</rename>
+        <default />
+        <type>String</type>
+      </value>
+      <value>
+        <name>shutdown_requested_reason</name>
+        <rename>shutdown_requested_reason</rename>
+        <default />
+        <type>String</type>
+      </value>
+      <value>
+        <name>shutdown_requested_at_utc</name>
+        <rename>shutdown_requested_at_utc</rename>
+        <default />
+        <type>Timestamp</type>
+      </value>
+    </lookup>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>432</xloc>
+      <yloc>816</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1657,8 +1541,8 @@ if (prev_progress_milliseconds) {
       </output>
     </remotesteps>
     <GUI>
-      <xloc>160</xloc>
-      <yloc>256</yloc>
+      <xloc>144</xloc>
+      <yloc>320</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1682,8 +1566,48 @@ if (prev_progress_milliseconds) {
       </output>
     </remotesteps>
     <GUI>
-      <xloc>160</xloc>
-      <yloc>1104</yloc>
+      <xloc>144</xloc>
+      <yloc>992</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Remove shutdown-related fields</name>
+    <type>SelectValues</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <select_unspecified>N</select_unspecified>
+      <remove>
+        <name>shutdown_requested</name>
+      </remove>
+      <remove>
+        <name>shutdown_requested_by</name>
+      </remove>
+      <remove>
+        <name>shutdown_requested_reason</name>
+      </remove>
+      <remove>
+        <name>shutdown_requested_at_utc</name>
+      </remove>
+    </fields>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>432</xloc>
+      <yloc>992</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1728,14 +1652,14 @@ var progress_milliseconds = Date.now();</jsScript_script>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>160</xloc>
-      <yloc>336</yloc>
+      <xloc>144</xloc>
+      <yloc>400</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Get local timestamp</name>
-    <type>SystemInfo</type>
+    <name>Set variable QF_MAIL_MSG_QFREE_BODY_FAILURE_EXTRA_INFO_TRANSFORMATION</name>
+    <type>SetVariable</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -1746,10 +1670,13 @@ var progress_milliseconds = Date.now();</jsScript_script>
     </partitioning>
     <fields>
       <field>
-        <name>progress_updated_at_utc</name>
-        <type>system date (variable)</type>
+        <field_name>shutdown_requested_summary</field_name>
+        <variable_name>QF_MAIL_MSG_QFREE_BODY_FAILURE_EXTRA_INFO_TRANSFORMATION</variable_name>
+        <variable_type>ROOT_JOB</variable_type>
+        <default_value />
       </field>
     </fields>
+    <use_formatting>Y</use_formatting>
     <attributes />
     <cluster_schema />
     <remotesteps>
@@ -1759,8 +1686,8 @@ var progress_milliseconds = Date.now();</jsScript_script>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>160</xloc>
-      <yloc>416</yloc>
+      <xloc>848</xloc>
+      <yloc>896</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1820,7 +1747,7 @@ var progress_milliseconds = Date.now();</jsScript_script>
       </value>
       <value>
         <name>progress_updated_at_utc</name>
-        <rename>progress_updated_at_utc</rename>
+        <rename>current_timestamp_utc</rename>
       </value>
     </lookup>
     <attributes />
@@ -1832,8 +1759,259 @@ var progress_milliseconds = Date.now();</jsScript_script>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>160</xloc>
-      <yloc>656</yloc>
+      <xloc>144</xloc>
+      <yloc>640</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>shutdown_requested = true ?</name>
+    <type>FilterRows</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <send_true_to>Generate "Shutdown requested" message for email</send_true_to>
+    <send_false_to>Remove shutdown-related fields</send_false_to>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <leftvalue>shutdown_requested</leftvalue>
+        <function>=</function>
+        <rightvalue />
+        <value>
+          <name>constant</name>
+          <type>Boolean</type>
+          <text>Y</text>
+          <length>-1</length>
+          <precision>-1</precision>
+          <isnull>N</isnull>
+          <mask />
+        </value>
+      </condition>
+    </compare>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>592</xloc>
+      <yloc>816</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Log: Shutdown initiated</name>
+    <type>WriteToLog</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <loglevel>log_level_minimal</loglevel>
+    <displayHeader>Y</displayHeader>
+    <limitRows>N</limitRows>
+    <limitRowsNumber>0</limitRowsNumber>
+    <logmessage>Shutdown initiated:</logmessage>
+    <fields>
+      <field>
+        <name>shutdown_requested_by</name>
+      </field>
+      <field>
+        <name>shutdown_requested_reason</name>
+      </field>
+      <field>
+        <name>shutdown_requested_at_utc</name>
+      </field>
+    </fields>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1040</xloc>
+      <yloc>976</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Set etl_run.shutdown_initiated_at_utc</name>
+    <type>Update</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <connection>etl_db</connection>
+    <skip_lookup>N</skip_lookup>
+    <commit>1</commit>
+    <use_batch>N</use_batch>
+    <error_ignored>N</error_ignored>
+    <ignore_flag_field />
+    <lookup>
+      <schema>${QF_ETL_DB_SCHEMA}</schema>
+      <table>etl_run</table>
+      <key>
+        <name>param_etl_run_id</name>
+        <field>etl_run_id</field>
+        <condition>=</condition>
+        <name2 />
+      </key>
+      <value>
+        <name>shutdown_initiated_at_utc</name>
+        <rename>current_timestamp_utc</rename>
+      </value>
+    </lookup>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>848</xloc>
+      <yloc>976</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Convert current_timestamp_utc to timestamp</name>
+    <type>SelectValues</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <select_unspecified>Y</select_unspecified>
+      <meta>
+        <name>current_timestamp_utc</name>
+        <rename>current_timestamp_utc</rename>
+        <type>Timestamp</type>
+        <length>-2</length>
+        <precision>-2</precision>
+        <conversion_mask />
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale />
+        <date_format_timezone />
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding />
+        <decimal_symbol />
+        <grouping_symbol />
+        <currency_symbol />
+        <storage_type />
+      </meta>
+    </fields>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>432</xloc>
+      <yloc>560</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Generate "Shutdown requested" message for email</name>
+    <type>ScriptValueMod</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <compatible>N</compatible>
+    <optimizationLevel>9</optimizationLevel>
+    <jsScripts>
+      <jsScript>
+        <jsScript_type>0</jsScript_type>
+        <jsScript_name>Script 1</jsScript_name>
+        <jsScript_script>//Script here
+
+// Input fields:
+var shutdown_requested_by;
+var shutdown_requested_at_utc;
+var shutdown_requested_reason;
+
+// Output fields created by this script:
+shutdown_requested_summary = "Shutdown requested by: " + shutdown_requested_by + " at: " + shutdown_requested_at_utc + ". Reason: " + shutdown_requested_reason</jsScript_script>
+      </jsScript>
+    </jsScripts>
+    <fields>
+      <field>
+        <name>shutdown_requested_by</name>
+        <rename>shutdown_requested_by</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>Y</replace>
+      </field>
+      <field>
+        <name>shutdown_requested_at_utc</name>
+        <rename>shutdown_requested_at_utc</rename>
+        <type>Timestamp</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>Y</replace>
+      </field>
+      <field>
+        <name>shutdown_requested_reason</name>
+        <rename>shutdown_requested_reason</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>Y</replace>
+      </field>
+      <field>
+        <name>shutdown_requested_summary</name>
+        <rename>shutdown_requested_summary</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+    </fields>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>848</xloc>
+      <yloc>816</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2019/09/05 15:19:46.552</modified_date>
+  <modified_date>2019/09/10 14:00:16.183</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_ETL_RUN_ID</name>
@@ -649,6 +649,28 @@ WHERE
       <yloc>448</yloc>
       <attributes_kjc />
     </entry>
+    <entry>
+      <name>Dummy</name>
+      <description />
+      <type>SPECIAL</type>
+      <attributes />
+      <start>N</start>
+      <dummy>Y</dummy>
+      <repeat>N</repeat>
+      <schedulerType>0</schedulerType>
+      <intervalSeconds>0</intervalSeconds>
+      <intervalMinutes>60</intervalMinutes>
+      <hour>12</hour>
+      <minutes>0</minutes>
+      <weekDay>1</weekDay>
+      <DayOfMonth>1</DayOfMonth>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>208</xloc>
+      <yloc>304</yloc>
+      <attributes_kjc />
+    </entry>
   </entries>
   <hops>
     <hop>
@@ -665,7 +687,7 @@ WHERE
       <to>tr_target-etl_run-get_shutdown_details</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
-      <enabled>Y</enabled>
+      <enabled>N</enabled>
       <evaluation>Y</evaluation>
       <unconditional>N</unconditional>
     </hop>
@@ -708,6 +730,24 @@ WHERE
     <hop>
       <from>Set  shutdown_initiated_at_utc for etl_run</from>
       <to>jb_log_error - Shutdown requested</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>Has a shutdown been requested?</from>
+      <to>Dummy</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Dummy</from>
+      <to>Update etl.run row to show progress</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
