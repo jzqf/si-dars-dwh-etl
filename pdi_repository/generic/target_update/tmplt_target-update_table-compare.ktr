@@ -79,6 +79,11 @@
         <description>for target DB "dynamic" database connections</description>
       </parameter>
       <parameter>
+        <name>PARAM_ETL_RUN_ID</name>
+        <default_value />
+        <description>Primary key for the ${QF_ETL_DB_SCHEMA}.etl_run row for the current "run"</description>
+      </parameter>
+      <parameter>
         <name>PARAM_SOURCE_DB_ID</name>
         <default_value>-1</default_value>
         <description>ID the "source" database containing the table that has been mirrored to a "target" database</description>
@@ -112,6 +117,11 @@
         <name>PARAM_TARGET_TABLE</name>
         <default_value>passage</default_value>
         <description>Name of target table to update (not currently used)</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_TABLE_UPDATE_ID</name>
+        <default_value />
+        <description>Primary key of ${QF_ETL_DB_SCHEMA}.target_table_update row to be updated by this job for progress and summary statistics</description>
       </parameter>
     </parameters>
     <log>
@@ -534,7 +544,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2018/06/05 16:42:18.160</modified_date>
+    <modified_date>2019/09/11 09:59:04.569</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -547,7 +557,7 @@ must be identical and in the same order when fed to the "Merge rows" step.
 The SELECT statements in these two "Table input" steps set the field order 
 appropriately.</note>
       <xloc>464</xloc>
-      <yloc>368</yloc>
+      <yloc>400</yloc>
       <width>439</width>
       <heigth>88</heigth>
       <fontname>Ubuntu</fontname>
@@ -571,6 +581,8 @@ metadata defined. However, it should not be used to treat tables whose row count
 through this transformation. Hence, it is best suited as an alternative to the "truncate-reload" algorithm, especially when it is necessary to retain rows of the target table 
 that have been deleted from the source table. This transformation has parameters:
 
+	PARAM_ETL_RUN_ID								Primary key for the ${QF_ETL_DB_SCHEMA}.etl_run row for the current "run"
+	PARAM_TARGET_TABLE_UPDATE_ID				Primary key of ${QF_ETL_DB_SCHEMA}.target_table_update row to be updated by this job for progress and summary statistics
 	PARAM_DYN_DB_CONN_SOURCE_DB_HOST		for source DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_SOURCE_DB_PORT		for source DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE	for source DB "dynamic" database connections
@@ -594,8 +606,8 @@ that have been deleted from the source table. This transformation has parameters
 	PARAM_TARGET_TABLE							Name of target table to update</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>941</width>
-      <heigth>348</heigth>
+      <width>1013</width>
+      <heigth>374</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -616,7 +628,7 @@ that have been deleted from the source table. This transformation has parameters
 "changed," "new" or "deleted". This adds a new field named "flagfield" to the 
 stream that contains these values.</note>
       <xloc>464</xloc>
-      <yloc>560</yloc>
+      <yloc>592</yloc>
       <width>464</width>
       <heigth>49</heigth>
       <fontname>Ubuntu</fontname>
@@ -638,7 +650,7 @@ stream that contains these values.</note>
       <note>Rename the stream fields from the source DB table to the field names 
 from the target DB table. This is required for the "Merge rows" step.</note>
       <xloc>464</xloc>
-      <yloc>480</yloc>
+      <yloc>512</yloc>
       <width>400</width>
       <heigth>36</heigth>
       <fontname>Ubuntu</fontname>
@@ -661,7 +673,7 @@ from the target DB table. This is required for the "Merge rows" step.</note>
 treat separately source table rows that have been inserted, modified or deleted. The current
 behaviour retains rows of the target table that have been deleted from the source table.</note>
       <xloc>464</xloc>
-      <yloc>640</yloc>
+      <yloc>672</yloc>
       <width>523</width>
       <heigth>49</heigth>
       <fontname>Ubuntu</fontname>
@@ -687,7 +699,7 @@ I decided to use, instead a "Table Output" and an "Update" step so that
 I canavoid setting "etl_batch_id_last_update" when performing 
 inserts by the "Table Output" step.</note>
       <xloc>480</xloc>
-      <yloc>1296</yloc>
+      <yloc>1328</yloc>
       <width>397</width>
       <heigth>88</heigth>
       <fontname>Ubuntu</fontname>
@@ -709,7 +721,7 @@ inserts by the "Table Output" step.</note>
       <note>Metadata
 injected -></note>
       <xloc>32</xloc>
-      <yloc>368</yloc>
+      <yloc>400</yloc>
       <width>69</width>
       <heigth>36</heigth>
       <fontname>Ubuntu</fontname>
@@ -730,7 +742,7 @@ injected -></note>
     <notepad>
       <note>Metadata injected -></note>
       <xloc>16</xloc>
-      <yloc>480</yloc>
+      <yloc>512</yloc>
       <width>124</width>
       <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
@@ -751,7 +763,7 @@ injected -></note>
     <notepad>
       <note>Metadata injected -></note>
       <xloc>64</xloc>
-      <yloc>576</yloc>
+      <yloc>608</yloc>
       <width>124</width>
       <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
@@ -773,7 +785,7 @@ injected -></note>
       <note>Metadata
 injected -></note>
       <xloc>272</xloc>
-      <yloc>368</yloc>
+      <yloc>400</yloc>
       <width>69</width>
       <heigth>36</heigth>
       <fontname>Ubuntu</fontname>
@@ -794,7 +806,7 @@ injected -></note>
     <notepad>
       <note>Metadata injected -></note>
       <xloc>656</xloc>
-      <yloc>944</yloc>
+      <yloc>976</yloc>
       <width>130</width>
       <heigth>24</heigth>
       <fontname>Ubuntu</fontname>
@@ -815,7 +827,7 @@ injected -></note>
     <notepad>
       <note>identical</note>
       <xloc>16</xloc>
-      <yloc>784</yloc>
+      <yloc>816</yloc>
       <width>57</width>
       <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
@@ -836,7 +848,7 @@ injected -></note>
     <notepad>
       <note>deleted</note>
       <xloc>208</xloc>
-      <yloc>784</yloc>
+      <yloc>816</yloc>
       <width>53</width>
       <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
@@ -857,7 +869,7 @@ injected -></note>
     <notepad>
       <note>new</note>
       <xloc>464</xloc>
-      <yloc>784</yloc>
+      <yloc>816</yloc>
       <width>33</width>
       <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
@@ -878,7 +890,7 @@ injected -></note>
     <notepad>
       <note>changed</note>
       <xloc>736</xloc>
-      <yloc>784</yloc>
+      <yloc>816</yloc>
       <width>57</width>
       <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
@@ -926,7 +938,7 @@ into it, but thi will be simple because the
 "Update" step which I already support in this
 template transformation.</note>
       <xloc>112</xloc>
-      <yloc>848</yloc>
+      <yloc>880</yloc>
       <width>284</width>
       <heigth>402</heigth>
       <fontname>Ubuntu</fontname>
@@ -1232,6 +1244,7 @@ template transformation.</note>
         <valuefield />
       </field>
     </fields>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1241,7 +1254,7 @@ template transformation.</note>
     </remotesteps>
     <GUI>
       <xloc>512</xloc>
-      <yloc>1024</yloc>
+      <yloc>1056</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1267,6 +1280,7 @@ template transformation.</note>
         <valuefield />
       </field>
     </fields>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1276,7 +1290,7 @@ template transformation.</note>
     </remotesteps>
     <GUI>
       <xloc>800</xloc>
-      <yloc>1024</yloc>
+      <yloc>1056</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1298,6 +1312,7 @@ template transformation.</note>
     <execute_each_row>N</execute_each_row>
     <variables_active>Y</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1307,7 +1322,7 @@ template transformation.</note>
     </remotesteps>
     <GUI>
       <xloc>112</xloc>
-      <yloc>384</yloc>
+      <yloc>416</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1329,6 +1344,7 @@ template transformation.</note>
     <execute_each_row>N</execute_each_row>
     <variables_active>Y</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1338,7 +1354,7 @@ template transformation.</note>
     </remotesteps>
     <GUI>
       <xloc>352</xloc>
-      <yloc>384</yloc>
+      <yloc>416</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1359,6 +1375,7 @@ template transformation.</note>
         <type>transformation name</type>
       </field>
     </fields>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1368,7 +1385,7 @@ template transformation.</note>
     </remotesteps>
     <GUI>
       <xloc>512</xloc>
-      <yloc>1152</yloc>
+      <yloc>1184</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1389,6 +1406,7 @@ template transformation.</note>
         <type>transformation name</type>
       </field>
     </fields>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1398,7 +1416,7 @@ template transformation.</note>
     </remotesteps>
     <GUI>
       <xloc>800</xloc>
-      <yloc>1152</yloc>
+      <yloc>1184</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1432,6 +1450,7 @@ template transformation.</note>
     <return_field />
     <fields>
     </fields>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1441,7 +1460,7 @@ template transformation.</note>
     </remotesteps>
     <GUI>
       <xloc>512</xloc>
-      <yloc>944</yloc>
+      <yloc>976</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1474,6 +1493,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
         <name>num_rows_inserted</name>
       </field>
     </fields>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1483,7 +1503,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
     </remotesteps>
     <GUI>
       <xloc>512</xloc>
-      <yloc>1216</yloc>
+      <yloc>1248</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1516,6 +1536,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
         <name>num_rows_updated</name>
       </field>
     </fields>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1525,7 +1546,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
     </remotesteps>
     <GUI>
       <xloc>800</xloc>
-      <yloc>1216</yloc>
+      <yloc>1248</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1549,6 +1570,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
     <compare>Rename source DB field names -> target DB field names</compare>
     <compare>
     </compare>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1558,7 +1580,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
     </remotesteps>
     <GUI>
       <xloc>208</xloc>
-      <yloc>576</yloc>
+      <yloc>608</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1579,6 +1601,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
         <name>flagfield</name>
       </remove>
     </fields>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1588,7 +1611,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
     </remotesteps>
     <GUI>
       <xloc>512</xloc>
-      <yloc>864</yloc>
+      <yloc>896</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1609,6 +1632,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
         <name>flagfield</name>
       </remove>
     </fields>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1618,7 +1642,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
     </remotesteps>
     <GUI>
       <xloc>800</xloc>
-      <yloc>864</yloc>
+      <yloc>896</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1636,6 +1660,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
     <fields>
       <select_unspecified>N</select_unspecified>
     </fields>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1645,7 +1670,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
     </remotesteps>
     <GUI>
       <xloc>160</xloc>
-      <yloc>480</yloc>
+      <yloc>512</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1660,6 +1685,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       <method>none</method>
       <schema_name />
     </partitioning>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1669,7 +1695,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
     </remotesteps>
     <GUI>
       <xloc>80</xloc>
-      <yloc>784</yloc>
+      <yloc>816</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1693,6 +1719,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       </field>
     </fields>
     <use_formatting>Y</use_formatting>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1702,7 +1729,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
     </remotesteps>
     <GUI>
       <xloc>512</xloc>
-      <yloc>1088</yloc>
+      <yloc>1120</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1726,6 +1753,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       </field>
     </fields>
     <use_formatting>Y</use_formatting>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1735,7 +1763,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
     </remotesteps>
     <GUI>
       <xloc>800</xloc>
-      <yloc>1088</yloc>
+      <yloc>1120</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1756,6 +1784,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
         <type>batch ID</type>
       </field>
     </fields>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1765,7 +1794,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
     </remotesteps>
     <GUI>
       <xloc>512</xloc>
-      <yloc>784</yloc>
+      <yloc>816</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1786,6 +1815,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
         <type>batch ID</type>
       </field>
     </fields>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1795,7 +1825,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
     </remotesteps>
     <GUI>
       <xloc>800</xloc>
-      <yloc>784</yloc>
+      <yloc>816</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1810,6 +1840,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       <method>none</method>
       <schema_name />
     </partitioning>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1819,7 +1850,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
     </remotesteps>
     <GUI>
       <xloc>272</xloc>
-      <yloc>784</yloc>
+      <yloc>816</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1859,6 +1890,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
         <target_step>Source row deleted - Do nothing</target_step>
       </case>
     </cases>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1868,7 +1900,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
     </remotesteps>
     <GUI>
       <xloc>208</xloc>
-      <yloc>656</yloc>
+      <yloc>688</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1897,6 +1929,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       <schema>${PARAM_TARGET_SCHEMA}</schema>
       <table>${PARAM_TARGET_TABLE}</table>
     </lookup>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1906,7 +1939,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
     </remotesteps>
     <GUI>
       <xloc>656</xloc>
-      <yloc>1248</yloc>
+      <yloc>1280</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1931,6 +1964,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       <schema>${PARAM_TARGET_SCHEMA}</schema>
       <table>${PARAM_TARGET_TABLE}</table>
     </lookup>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1940,7 +1974,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
     </remotesteps>
     <GUI>
       <xloc>800</xloc>
-      <yloc>944</yloc>
+      <yloc>976</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1949,4 +1983,5 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
   <slave-step-copy-partition-distribution>
   </slave-step-copy-partition-distribution>
   <slave_transformation>N</slave_transformation>
+  <attributes />
 </transformation>

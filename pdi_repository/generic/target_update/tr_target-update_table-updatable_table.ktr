@@ -89,6 +89,11 @@
         <description>for target DB "dynamic" database connections</description>
       </parameter>
       <parameter>
+        <name>PARAM_ETL_RUN_ID</name>
+        <default_value />
+        <description>Primary key for the ${QF_ETL_DB_SCHEMA}.etl_run row for the current "run"</description>
+      </parameter>
+      <parameter>
         <name>PARAM_SOURCE_DB_ID</name>
         <default_value>2</default_value>
         <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
@@ -157,6 +162,11 @@
         <name>PARAM_TARGET_TABLE</name>
         <default_value>sid_register</default_value>
         <description>Name of target table to update</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_TABLE_UPDATE_ID</name>
+        <default_value />
+        <description>Primary key of ${QF_ETL_DB_SCHEMA}.target_table_update row to be updated by this job for progress and summary statistics</description>
       </parameter>
     </parameters>
     <log>
@@ -579,7 +589,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2018/05/11 13:13:54.261</modified_date>
+    <modified_date>2019/09/11 10:13:02.956</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -590,6 +600,8 @@ of a target table in a target database. This is a generic algorithm that can wor
 (INSERTs &amp; UPDATEs allowed, but no DELETEs) and it has the necessary "insert_id", "inserted_on" &amp; "last_updated_on" columns. 
 The "updatable" table generic update algorithm #1 is used. This transformation has parameters:
 
+	PARAM_ETL_RUN_ID								Primary key for the ${QF_ETL_DB_SCHEMA}.etl_run row for the current "run"
+	PARAM_TARGET_TABLE_UPDATE_ID				Primary key of ${QF_ETL_DB_SCHEMA}.target_table_update row to be updated by this job for progress and summary statistics
 	PARAM_CDC_LAST_LOAD_UTC					Timestamp for when the target DB was most recently updated successfully
 	PARAM_CDC_CURRENT_LOAD_UTC				Used so that a consistent max timestamp is used for all ETL
 	PARAM_DYN_DB_CONN_SOURCE_DB_HOST		for source DB "dynamic" database connections
@@ -622,8 +634,8 @@ The "updatable" table generic update algorithm #1 is used. This transformation h
 	PARAM_TARGET_LAST_UPDATED_ON_COLNAME	Name of "last_updated_on" timestamp column of target table</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>923</width>
-      <heigth>465</heigth>
+      <width>1013</width>
+      <heigth>491</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -646,7 +658,7 @@ jb_target-update_table-updatable_table
 where this transformation is executed. See the 
 comments in that job for an explanation.</note>
       <xloc>576</xloc>
-      <yloc>480</yloc>
+      <yloc>512</yloc>
       <width>271</width>
       <heigth>75</heigth>
       <fontname>Ubuntu</fontname>
@@ -671,7 +683,7 @@ jb_target-update_table-updatable_table
 where this transformation is executed. See the 
 comments in that job for an explanation.</note>
       <xloc>576</xloc>
-      <yloc>592</yloc>
+      <yloc>624</yloc>
       <width>271</width>
       <heigth>75</heigth>
       <fontname>Ubuntu</fontname>
@@ -696,7 +708,7 @@ jb_target-update_table-updatable_table
 where this transformation is executed. See the 
 comments in that job for an explanation.</note>
       <xloc>576</xloc>
-      <yloc>704</yloc>
+      <yloc>736</yloc>
       <width>271</width>
       <heigth>75</heigth>
       <fontname>Ubuntu</fontname>
@@ -719,7 +731,7 @@ comments in that job for an explanation.</note>
 which is de-referenced in the template transformation. In that way it
 would be easier to debug &amp; log this statement.</note>
       <xloc>16</xloc>
-      <yloc>784</yloc>
+      <yloc>816</yloc>
       <width>388</width>
       <heigth>49</heigth>
       <fontname>Ubuntu</fontname>
@@ -946,6 +958,7 @@ FROM
     <execute_each_row>N</execute_each_row>
     <variables_active>Y</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -955,7 +968,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>96</xloc>
-      <yloc>720</yloc>
+      <yloc>752</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1004,6 +1017,7 @@ ORDER BY
     <execute_each_row>N</execute_each_row>
     <variables_active>Y</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1013,7 +1027,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>432</xloc>
-      <yloc>496</yloc>
+      <yloc>528</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1048,6 +1062,7 @@ ORDER BY
     <execute_each_row>N</execute_each_row>
     <variables_active>Y</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1057,7 +1072,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>432</xloc>
-      <yloc>608</yloc>
+      <yloc>640</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1103,6 +1118,7 @@ ORDER BY
     <execute_each_row>N</execute_each_row>
     <variables_active>Y</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1112,7 +1128,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>432</xloc>
-      <yloc>720</yloc>
+      <yloc>752</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1217,6 +1233,7 @@ ORDER BY
         <source_field>no_field</source_field>
       </mapping>
     </mappings>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1226,7 +1243,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>608</yloc>
+      <yloc>640</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1235,4 +1252,5 @@ ORDER BY
   <slave-step-copy-partition-distribution>
   </slave-step-copy-partition-distribution>
   <slave_transformation>N</slave_transformation>
+  <attributes />
 </transformation>

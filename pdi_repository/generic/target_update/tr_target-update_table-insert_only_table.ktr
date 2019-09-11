@@ -89,6 +89,11 @@
         <description>for target DB "dynamic" database connections</description>
       </parameter>
       <parameter>
+        <name>PARAM_ETL_RUN_ID</name>
+        <default_value />
+        <description>Primary key for the ${QF_ETL_DB_SCHEMA}.etl_run row for the current "run"</description>
+      </parameter>
+      <parameter>
         <name>PARAM_SOURCE_DB_ID</name>
         <default_value>2</default_value>
         <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
@@ -147,6 +152,11 @@
         <name>PARAM_TARGET_TABLE</name>
         <default_value>road_scheme_validity</default_value>
         <description>Name of target table to update</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_TABLE_UPDATE_ID</name>
+        <default_value />
+        <description>Primary key of ${QF_ETL_DB_SCHEMA}.target_table_update row to be updated by this job for progress and summary statistics</description>
       </parameter>
     </parameters>
     <log>
@@ -569,7 +579,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2018/10/17 14:34:03.010</modified_date>
+    <modified_date>2019/09/11 09:59:07.282</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -579,6 +589,8 @@
 of a target table in a target database. This is a generic algorithm that can work with *any* table, as long as it is "insert-only" and it 
 has the necessary  "insert_id" &amp; "inserted_on" columns. This transformation has parameters:
 
+	PARAM_ETL_RUN_ID								Primary key for the ${QF_ETL_DB_SCHEMA}.etl_run row for the current "run"
+	PARAM_TARGET_TABLE_UPDATE_ID				Primary key of ${QF_ETL_DB_SCHEMA}.target_table_update row to be updated by this job for progress and summary statistics
 	PARAM_CDC_LAST_LOAD_UTC						Timestamp for when the target DB was most recently updated successfully
 	PARAM_CDC_CURRENT_LOAD_UTC					Used so that a consistent max timestamp is used for all ETL
 	PARAM_TABLE_META_ID							Primary key of ${QF_ETL_DB_SCHEMA}.table_meta row for "source" table from which rows will be deleted
@@ -609,8 +621,8 @@ has the necessary  "insert_id" &amp; "inserted_on" columns. This transformation 
 	PARAM_TARGET_INSERTED_ON_COLNAME			Name of column acting as "inserted_on" column of target table</note>
       <xloc>16</xloc>
       <yloc>0</yloc>
-      <width>966</width>
-      <heigth>458</heigth>
+      <width>1062</width>
+      <heigth>486</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -638,7 +650,7 @@ manually supplied parameter values (or default values set for the parameters). W
 disable a hop to the ETL Metadata Injection step, all configuration settings may be cleared,
 so do not do this unless you are prepared to reconfigure this step.</note>
       <xloc>16</xloc>
-      <yloc>768</yloc>
+      <yloc>800</yloc>
       <width>541</width>
       <heigth>150</heigth>
       <fontname>Ubuntu</fontname>
@@ -663,7 +675,7 @@ jb_target-update_table-insert_only_table
 where this transformation is executed. See the 
 comments in that job for an explanation.</note>
       <xloc>16</xloc>
-      <yloc>480</yloc>
+      <yloc>512</yloc>
       <width>283</width>
       <heigth>80</heigth>
       <fontname>Ubuntu</fontname>
@@ -686,7 +698,7 @@ comments in that job for an explanation.</note>
 which is de-referenced in the template transformation. In that way it
 would be easier to debug &amp; log this statement.</note>
       <xloc>736</xloc>
-      <yloc>480</yloc>
+      <yloc>512</yloc>
       <width>406</width>
       <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
@@ -869,6 +881,7 @@ ORDER BY
     <execute_each_row>N</execute_each_row>
     <variables_active>Y</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -878,7 +891,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>384</xloc>
-      <yloc>496</yloc>
+      <yloc>528</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -951,6 +964,7 @@ ORDER BY
         <item>etl_batch_id_insert</item>
       </line>
     </data>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -960,7 +974,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>384</xloc>
-      <yloc>704</yloc>
+      <yloc>736</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -995,13 +1009,6 @@ ORDER BY
         <source_field>source_col_length</source_field>
       </mapping>
       <mapping>
-        <target_step_name>Map column names</target_step_name>
-        <target_attribute_key>FIELD_PRECISION</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Column mapping metadata</source_step>
-        <source_field>source_col_precision</source_field>
-      </mapping>
-      <mapping>
         <target_step_name>Table input -  source_db.schema.table</target_step_name>
         <target_attribute_key>SQL</target_attribute_key>
         <target_detail>N</target_detail>
@@ -1010,19 +1017,27 @@ ORDER BY
       </mapping>
       <mapping>
         <target_step_name>Map column names</target_step_name>
-        <target_attribute_key>FIELD_RENAME</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Column mapping metadata</source_step>
-        <source_field>target_col_name</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Map column names</target_step_name>
         <target_attribute_key>FIELD_NAME</target_attribute_key>
         <target_detail>Y</target_detail>
         <source_step>Column mapping metadata</source_step>
         <source_field>source_col_name</source_field>
       </mapping>
+      <mapping>
+        <target_step_name>Map column names</target_step_name>
+        <target_attribute_key>FIELD_PRECISION</target_attribute_key>
+        <target_detail>Y</target_detail>
+        <source_step>Column mapping metadata</source_step>
+        <source_field>source_col_precision</source_field>
+      </mapping>
+      <mapping>
+        <target_step_name>Map column names</target_step_name>
+        <target_attribute_key>FIELD_RENAME</target_attribute_key>
+        <target_detail>Y</target_detail>
+        <source_step>Column mapping metadata</source_step>
+        <source_field>target_col_name</source_field>
+      </mapping>
     </mappings>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1032,7 +1047,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>496</xloc>
-      <yloc>608</yloc>
+      <yloc>640</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1081,6 +1096,7 @@ FROM
     <execute_each_row>N</execute_each_row>
     <variables_active>Y</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1090,7 +1106,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>624</xloc>
-      <yloc>496</yloc>
+      <yloc>528</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1099,4 +1115,5 @@ FROM
   <slave-step-copy-partition-distribution>
   </slave-step-copy-partition-distribution>
   <slave_transformation>N</slave_transformation>
+  <attributes />
 </transformation>
