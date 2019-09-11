@@ -544,7 +544,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2019/09/11 09:59:04.569</modified_date>
+    <modified_date>2019/09/11 13:23:35.853</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -556,7 +556,7 @@ column(s). This is needed by the "Merge Rows" step. The fields in each stream
 must be identical and in the same order when fed to the "Merge rows" step. 
 The SELECT statements in these two "Table input" steps set the field order 
 appropriately.</note>
-      <xloc>464</xloc>
+      <xloc>720</xloc>
       <yloc>400</yloc>
       <width>439</width>
       <heigth>88</heigth>
@@ -627,7 +627,7 @@ that have been deleted from the source table. This transformation has parameters
       <note>Compare the two streams row by row and determine whether they are "identical", 
 "changed," "new" or "deleted". This adds a new field named "flagfield" to the 
 stream that contains these values.</note>
-      <xloc>464</xloc>
+      <xloc>640</xloc>
       <yloc>592</yloc>
       <width>464</width>
       <heigth>49</heigth>
@@ -649,8 +649,8 @@ stream that contains these values.</note>
     <notepad>
       <note>Rename the stream fields from the source DB table to the field names 
 from the target DB table. This is required for the "Merge rows" step.</note>
-      <xloc>464</xloc>
-      <yloc>512</yloc>
+      <xloc>640</xloc>
+      <yloc>544</yloc>
       <width>400</width>
       <heigth>36</heigth>
       <fontname>Ubuntu</fontname>
@@ -672,7 +672,7 @@ from the target DB table. This is required for the "Merge rows" step.</note>
       <note>Filter rows on field "flagfield" that was created by the "Merge Rows" step. This so that we can
 treat separately source table rows that have been inserted, modified or deleted. The current
 behaviour retains rows of the target table that have been deleted from the source table.</note>
-      <xloc>464</xloc>
+      <xloc>640</xloc>
       <yloc>672</yloc>
       <width>523</width>
       <heigth>49</heigth>
@@ -718,31 +718,9 @@ inserts by the "Table Output" step.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Metadata
-injected -></note>
-      <xloc>32</xloc>
-      <yloc>400</yloc>
-      <width>69</width>
-      <heigth>36</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>9</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>255</fontcolorred>
-      <fontcolorgreen>255</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>26</backgroundcolorred>
-      <backgroundcolorgreen>26</backgroundcolorgreen>
-      <backgroundcolorblue>26</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
       <note>Metadata injected -></note>
-      <xloc>16</xloc>
-      <yloc>512</yloc>
+      <xloc>240</xloc>
+      <yloc>400</yloc>
       <width>124</width>
       <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
@@ -762,7 +740,28 @@ injected -></note>
     </notepad>
     <notepad>
       <note>Metadata injected -></note>
-      <xloc>64</xloc>
+      <xloc>240</xloc>
+      <yloc>544</yloc>
+      <width>124</width>
+      <heigth>23</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>255</fontcolorred>
+      <fontcolorgreen>255</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>26</backgroundcolorred>
+      <backgroundcolorgreen>26</backgroundcolorgreen>
+      <backgroundcolorblue>26</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Metadata injected -></note>
+      <xloc>336</xloc>
       <yloc>608</yloc>
       <width>124</width>
       <heigth>23</heigth>
@@ -782,12 +781,11 @@ injected -></note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Metadata
-injected -></note>
-      <xloc>272</xloc>
+      <note>Metadata injected -></note>
+      <xloc>480</xloc>
       <yloc>400</yloc>
-      <width>69</width>
-      <heigth>36</heigth>
+      <width>124</width>
+      <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -1112,11 +1110,6 @@ template transformation.</note>
   </connection>
   <order>
     <hop>
-      <from>Get rows from source DB table</from>
-      <to>Rename source DB field names -> target DB field names</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>Rename source DB field names -> target DB field names</from>
       <to>Merge Rows (diff)</to>
       <enabled>Y</enabled>
@@ -1221,6 +1214,16 @@ template transformation.</note>
       <to>Log number of rows updated</to>
       <enabled>Y</enabled>
     </hop>
+    <hop>
+      <from>Get rows from source DB table</from>
+      <to>Remove progress-related fields</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Remove progress-related fields</from>
+      <to>Rename source DB field names -> target DB field names</to>
+      <enabled>Y</enabled>
+    </hop>
   </order>
   <step>
     <name>Compute number of rows inserted</name>
@@ -1321,8 +1324,8 @@ template transformation.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>112</xloc>
-      <yloc>416</yloc>
+      <xloc>368</xloc>
+      <yloc>400</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1353,8 +1356,8 @@ template transformation.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>352</xloc>
-      <yloc>416</yloc>
+      <xloc>608</xloc>
+      <yloc>400</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1579,7 +1582,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>208</xloc>
+      <xloc>464</xloc>
       <yloc>608</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1669,8 +1672,8 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>160</xloc>
-      <yloc>512</yloc>
+      <xloc>368</xloc>
+      <yloc>544</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1899,7 +1902,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>208</xloc>
+      <xloc>464</xloc>
       <yloc>688</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1975,6 +1978,46 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
     <GUI>
       <xloc>800</xloc>
       <yloc>976</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Remove progress-related fields</name>
+    <type>SelectValues</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <select_unspecified>N</select_unspecified>
+      <remove>
+        <name>current_row_num</name>
+      </remove>
+      <remove>
+        <name>num_rows_to_process</name>
+      </remove>
+      <remove>
+        <name>update_progress</name>
+      </remove>
+      <remove>
+        <name>null_column</name>
+      </remove>
+    </fields>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>368</xloc>
+      <yloc>480</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

@@ -474,7 +474,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2019/09/11 10:48:25.433</modified_date>
+    <modified_date>2019/09/11 15:35:12.492</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -485,7 +485,7 @@
 It is important to sort these rows chronologically (by either the "insert_id" or "inserted_on" columns) so that if this transformation
 fails in the middle somewhere and if this transaction does not run in a single transaction, then next time this transformation is 
 executed, we can start again where we left off (by computing, e.g., by making use of MAX(insert_id) for the PSA table).</note>
-      <xloc>304</xloc>
+      <xloc>448</xloc>
       <yloc>544</yloc>
       <width>723</width>
       <heigth>75</heigth>
@@ -528,8 +528,8 @@ An odd behaviour is observed when the error handling sends rows to the "Update" 
 it takes a long time for this transformation to end. During this period the "Pause" and "Stop" buttons remain enabled. Furthermore,
 running" top" shows that both "postgres"and "java" processes are actively using a 25-75% of the CPU. When this CPU usage stops, 
 the  "Pause" and "Stop" buttons become disabled, showing that the transformation is finally finished. Strange.</note>
-      <xloc>304</xloc>
-      <yloc>816</yloc>
+      <xloc>448</xloc>
+      <yloc>896</yloc>
       <width>730</width>
       <heigth>309</heigth>
       <fontname>Ubuntu</fontname>
@@ -549,8 +549,8 @@ the  "Pause" and "Stop" buttons become disabled, showing that the transformation
     </notepad>
     <notepad>
       <note>Get batch ID for current transformation. This will be stored in the PSA table for auditing/logging.</note>
-      <xloc>304</xloc>
-      <yloc>768</yloc>
+      <xloc>448</xloc>
+      <yloc>848</yloc>
       <width>542</width>
       <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
@@ -613,7 +613,7 @@ This transformation has parameters:
       <note>Get the maximum values stored in the "insert_id" &amp; "last_upated_on" columns of the target obo.passage_with_images table that will
 be updated by this transformation. This will be used to the select data from the source passage.passage table that was inserted or
 modified since the last update to the PSA DB.</note>
-      <xloc>304</xloc>
+      <xloc>448</xloc>
       <yloc>304</yloc>
       <width>732</width>
       <heigth>49</heigth>
@@ -634,8 +634,8 @@ modified since the last update to the PSA DB.</note>
     </notepad>
     <notepad>
       <note>Select, delete and map/rename fields (table column names), as appropriate.</note>
-      <xloc>304</xloc>
-      <yloc>640</yloc>
+      <xloc>448</xloc>
+      <yloc>720</yloc>
       <width>423</width>
       <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
@@ -665,7 +665,7 @@ modified since the last update to the PSA DB.</note>
 		Before executing the SQL, modify it where appropriate. For example, replace "UNKNOWN" for timestamp columns with 
 		"timestamp without time zone" or "bytea", add declaration for column "etl_batch_id_last_update", primary key constraint, ...
 	6.	Re-enable the hop from the "Get max "insert_id" step and disable the hop from the "Set max ID &amp; ..." step.</note>
-      <xloc>304</xloc>
+      <xloc>448</xloc>
       <yloc>368</yloc>
       <width>753</width>
       <heigth>153</heigth>
@@ -697,8 +697,8 @@ column(s) is
 order for error 
 handling to be 
 triggered here!</note>
-      <xloc>16</xloc>
-      <yloc>816</yloc>
+      <xloc>160</xloc>
+      <yloc>896</yloc>
       <width>105</width>
       <heigth>166</heigth>
       <fontname>Ubuntu</fontname>
@@ -718,10 +718,33 @@ triggered here!</note>
     </notepad>
     <notepad>
       <note>Denormalize the stream data by introducing new passage columns to hold details for up to 4 images linked to each passage.</note>
-      <xloc>304</xloc>
-      <yloc>704</yloc>
+      <xloc>448</xloc>
+      <yloc>784</yloc>
       <width>686</width>
       <heigth>23</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>The progress-related fields must be removed here because the "Table output" step attempts to write 
+*all* fields to the target table. Alternatively, we would not need to remove the progress-related
+fields here if we injected into the "Table output" step the fields that *shall* be written.</note>
+      <xloc>448</xloc>
+      <yloc>640</yloc>
+      <width>570</width>
+      <heigth>49</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -969,11 +992,6 @@ triggered here!</note>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Table input - Source DB: obo_opr</from>
-      <to>Map column names</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>Set max id &amp; date</from>
       <to>Write to log: parameters, max id &amp; date</to>
       <enabled>N</enabled>
@@ -1004,11 +1022,6 @@ triggered here!</note>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Table input - Source DB: obo_opr</from>
-      <to>Compute number of rows processed</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>Set QF_UPDATE_TABLE_NUM_UPDATES</from>
       <to>Get transformation name</to>
       <enabled>Y</enabled>
@@ -1026,6 +1039,21 @@ triggered here!</note>
     <hop>
       <from>Get transformation name 2</from>
       <to>Log number of rows processed</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Table input - Source DB: obo_opr</from>
+      <to>Remove progress-related fields</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Remove progress-related fields</from>
+      <to>Map column names</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Remove progress-related fields</from>
+      <to>Compute number of rows processed</to>
       <enabled>Y</enabled>
     </hop>
   </order>
@@ -1060,8 +1088,8 @@ triggered here!</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>384</xloc>
-      <yloc>1152</yloc>
+      <xloc>528</xloc>
+      <yloc>1232</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1096,8 +1124,8 @@ triggered here!</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>1152</yloc>
+      <xloc>288</xloc>
+      <yloc>1232</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1146,7 +1174,7 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
+      <xloc>288</xloc>
       <yloc>320</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1177,8 +1205,8 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>1280</yloc>
+      <xloc>288</xloc>
+      <yloc>1360</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1208,8 +1236,8 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>384</xloc>
-      <yloc>1280</yloc>
+      <xloc>528</xloc>
+      <yloc>1360</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1251,8 +1279,8 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>384</xloc>
-      <yloc>1344</yloc>
+      <xloc>528</xloc>
+      <yloc>1424</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1294,8 +1322,8 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>1344</yloc>
+      <xloc>288</xloc>
+      <yloc>1424</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1339,8 +1367,8 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>640</yloc>
+      <xloc>288</xloc>
+      <yloc>720</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1596,8 +1624,8 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>704</yloc>
+      <xloc>288</xloc>
+      <yloc>784</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1630,8 +1658,8 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>384</xloc>
-      <yloc>1216</yloc>
+      <xloc>528</xloc>
+      <yloc>1296</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1664,8 +1692,8 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>1216</yloc>
+      <xloc>288</xloc>
+      <yloc>1296</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1695,8 +1723,8 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>768</yloc>
+      <xloc>288</xloc>
+      <yloc>848</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1726,8 +1754,8 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>960</yloc>
+      <xloc>288</xloc>
+      <yloc>1040</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1763,7 +1791,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>224</xloc>
+      <xloc>368</xloc>
       <yloc>416</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1772,7 +1800,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
     <name>Table input - Source DB: obo_opr</name>
     <type>TableInput</type>
     <description />
-    <distribute>N</distribute>
+    <distribute>Y</distribute>
     <custom_distribution />
     <copies>1</copies>
     <partitioning>
@@ -1795,6 +1823,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
     -- This numbers the images for each passage: 1, 2, 3, ...
     -- It resets to 1 when the value of p.passage_id changes.
     row_number() OVER (PARTITION by p.passage_id ORDER BY i.image_id) as "image_index_for_passage" 
+    , row_number() OVER () AS "current_row_num", COUNT(*) OVER () AS "num_rows_to_process", MOD (row_number() OVER (), ${QF_ETL_PROGRESS_INTERVAL_ROWS}) AS "update_progress", NULL AS "null_column"  -- Special rows for monitoring progress 
 FROM 
     ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE} p  -- passage.passage
 INNER JOIN 
@@ -1846,7 +1875,7 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
+      <xloc>288</xloc>
       <yloc>576</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1890,8 +1919,8 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>864</yloc>
+      <xloc>288</xloc>
+      <yloc>944</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -2027,8 +2056,8 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>1040</yloc>
+      <xloc>288</xloc>
+      <yloc>1120</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -2074,8 +2103,48 @@ PARAM_SOURCE_TABLE_MAX_INSERT_ID        = ${PARAM_SOURCE_TABLE_MAX_INSERT_ID}</l
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
+      <xloc>288</xloc>
       <yloc>480</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Remove progress-related fields</name>
+    <type>SelectValues</type>
+    <description />
+    <distribute>N</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <select_unspecified>N</select_unspecified>
+      <remove>
+        <name>current_row_num</name>
+      </remove>
+      <remove>
+        <name>num_rows_to_process</name>
+      </remove>
+      <remove>
+        <name>update_progress</name>
+      </remove>
+      <remove>
+        <name>null_column</name>
+      </remove>
+    </fields>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>288</xloc>
+      <yloc>640</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

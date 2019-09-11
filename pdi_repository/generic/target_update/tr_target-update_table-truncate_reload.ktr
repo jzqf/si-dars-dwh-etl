@@ -554,15 +554,14 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2019/09/09 10:26:31.236</modified_date>
+    <modified_date>2019/09/11 13:28:29.554</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>This transformation uses ETL Metadata injection to control how columns of a table in a source database are mapped to columns 
-of a target table in a target database. This is a generic algorithm that can work with *any* table, as long as it is "insert-only" and it 
-has the necessary  "insert_id" &amp; "inserted_on" columns. This transformation has parameters:
+      <note>This transformation uses ETL Metadata injection to control how columns of a table in a source database are mapped to columns of a target table 
+in a target database. This is a generic "truncate-reload" algorithm that can work with *any* table. This transformation has parameters:
 
 	PARAM_ETL_RUN_ID								Primary key for the ${QF_ETL_DB_SCHEMA}.etl_run row for the current "run"
 	PARAM_TARGET_TABLE_UPDATE_ID				Primary key of ${QF_ETL_DB_SCHEMA}.target_table_update row to be updated by this job for progress and summary statistics
@@ -592,7 +591,7 @@ has the necessary  "insert_id" &amp; "inserted_on" columns. This transformation 
       <xloc>16</xloc>
       <yloc>0</yloc>
       <width>1013</width>
-      <heigth>387</heigth>
+      <heigth>374</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -615,7 +614,7 @@ jb_target-update_table-truncate_reload
 where this transformation is executed. See
 the comments in that job for an explanation.</note>
       <xloc>16</xloc>
-      <yloc>416</yloc>
+      <yloc>400</yloc>
       <width>254</width>
       <heigth>75</heigth>
       <fontname>Ubuntu</fontname>
@@ -820,45 +819,6 @@ so I have now cleared this setting.</note>
         table_meta_id = ${PARAM_TABLE_META_ID} AND 
         mirror_column = true AND
         source_column_name IS NOT NULL 
-
--- These are special columns created by the SELECT query for the source table so that we can monitor
--- progress as rows are streamed to the target table in the template transformation.
-
-UNION ALL
-
-    SELECT 
-        'current_row_num'  AS "source_col_name",
-        NULL       AS "source_col_length",
-        -1         AS "source_col_precision",
-        'current_row_num'  AS "target_col_name",
-        10000      AS "column_meta_id"
-
-UNION ALL
-
-    SELECT 
-        'num_rows_to_process' AS "source_col_name",
-        NULL       AS "source_col_length",
-        -1         AS "source_col_precision",
-        'num_rows_to_process' AS "target_col_name",
-        10001      AS "column_meta_id"
-
-UNION ALL
-
-    SELECT 
-        'update_progress' AS "source_col_name",
-        NULL       AS "source_col_length",
-        -1         AS "source_col_precision",
-        'update_progress' AS "target_col_name",
-        10002      AS "column_meta_id"
-
-UNION ALL
-
-    SELECT 
-        'null_column' AS "source_col_name",
-        NULL       AS "source_col_length",
-        -1         AS "source_col_precision",
-        'null_column' AS "target_col_name",
-        10003      AS "column_meta_id"
 )
 SELECT 
     source_col_name,
@@ -886,7 +846,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>368</xloc>
-      <yloc>448</yloc>
+      <yloc>432</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -993,7 +953,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>848</xloc>
-      <yloc>560</yloc>
+      <yloc>544</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1094,7 +1054,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>496</xloc>
-      <yloc>560</yloc>
+      <yloc>544</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1148,7 +1108,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>608</xloc>
-      <yloc>448</yloc>
+      <yloc>432</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

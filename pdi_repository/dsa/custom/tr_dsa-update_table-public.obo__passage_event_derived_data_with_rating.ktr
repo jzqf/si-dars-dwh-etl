@@ -474,7 +474,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2019/09/11 10:48:18.614</modified_date>
+    <modified_date>2019/09/11 15:35:10.039</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -517,7 +517,7 @@ For benchmark results I obtained testing the speed of various INSERT/UPDATE algo
 
 	/development/jeffreyz/tests/cdc_timestamps/tr_TEST_mirror_update-passage.passage-table_output</note>
       <xloc>896</xloc>
-      <yloc>944</yloc>
+      <yloc>1008</yloc>
       <width>588</width>
       <heigth>153</heigth>
       <fontname>Ubuntu</fontname>
@@ -539,7 +539,7 @@ For benchmark results I obtained testing the speed of various INSERT/UPDATE algo
       <note>Get batch ID for current transformation. This will be stored in the DSA table for auditing/logging.
 It *must* be named "etl_batch_id_insert" here because we do not specify the table / stream fields in the "Table output" step.</note>
       <xloc>608</xloc>
-      <yloc>432</yloc>
+      <yloc>496</yloc>
       <width>696</width>
       <heigth>36</heigth>
       <fontname>Ubuntu</fontname>
@@ -628,7 +628,7 @@ order for error
 handling to be 
 triggered here!</note>
       <xloc>1328</xloc>
-      <yloc>480</yloc>
+      <yloc>544</yloc>
       <width>108</width>
       <heigth>164</heigth>
       <fontname>Ubuntu</fontname>
@@ -655,7 +655,7 @@ handling to an "Update" step. But it
 is *faster* for a *remote* target 
 database!</note>
       <xloc>16</xloc>
-      <yloc>848</yloc>
+      <yloc>912</yloc>
       <width>219</width>
       <heigth>101</heigth>
       <fontname>Ubuntu</fontname>
@@ -679,7 +679,7 @@ This algorithm appears to be fastest for both local and remote target
 databases. But because of the potential race condition described 
 above, be careful that it is only used where this in not an issue.</note>
       <xloc>272</xloc>
-      <yloc>1136</yloc>
+      <yloc>1200</yloc>
       <width>392</width>
       <heigth>62</heigth>
       <fontname>Ubuntu</fontname>
@@ -711,7 +711,7 @@ the current use case, this job is the only way that the
 target table can be modified so we do *not* need to 
 worry about this potential race condition.</note>
       <xloc>544</xloc>
-      <yloc>496</yloc>
+      <yloc>560</yloc>
       <width>317</width>
       <heigth>166</heigth>
       <fontname>Ubuntu</fontname>
@@ -741,9 +741,32 @@ made in the opo_opr DB that
 affects the pedd in some way,
 which is probably not the case.</note>
       <xloc>656</xloc>
-      <yloc>704</yloc>
+      <yloc>768</yloc>
       <width>203</width>
       <heigth>140</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>The progress-related fields must be removed here because the "Table output" step attempts to write 
+*all* fields to the target table. Alternatively, we would not need to remove the progress-related
+fields here if we injected into the "Table output" step the fields that *shall* be written.</note>
+      <xloc>608</xloc>
+      <yloc>432</yloc>
+      <width>570</width>
+      <heigth>49</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -930,11 +953,6 @@ which is probably not the case.</note>
       <enabled>N</enabled>
     </hop>
     <hop>
-      <from>Table input - source PSA tables</from>
-      <to>Set etl_batch_id_insert = Xform batch ID</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>Set etl_batch_id_insert = Xform batch ID</from>
       <to>Set insert_if_null flag field</to>
       <enabled>Y</enabled>
@@ -1094,6 +1112,16 @@ which is probably not the case.</note>
       <to>Update - DSA.schema.table</to>
       <enabled>Y</enabled>
     </hop>
+    <hop>
+      <from>Table input - source PSA tables</from>
+      <to>Remove progress-related fields</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Remove progress-related fields</from>
+      <to>Set etl_batch_id_insert = Xform batch ID</to>
+      <enabled>Y</enabled>
+    </hop>
   </order>
   <step>
     <name>Compute number of rows inserted</name>
@@ -1127,7 +1155,7 @@ which is probably not the case.</note>
     </remotesteps>
     <GUI>
       <xloc>336</xloc>
-      <yloc>880</yloc>
+      <yloc>944</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1163,7 +1191,7 @@ which is probably not the case.</note>
     </remotesteps>
     <GUI>
       <xloc>96</xloc>
-      <yloc>592</yloc>
+      <yloc>656</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1199,7 +1227,7 @@ which is probably not the case.</note>
     </remotesteps>
     <GUI>
       <xloc>976</xloc>
-      <yloc>688</yloc>
+      <yloc>752</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1235,7 +1263,7 @@ which is probably not the case.</note>
     </remotesteps>
     <GUI>
       <xloc>560</xloc>
-      <yloc>880</yloc>
+      <yloc>944</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1271,7 +1299,7 @@ which is probably not the case.</note>
     </remotesteps>
     <GUI>
       <xloc>1216</xloc>
-      <yloc>688</yloc>
+      <yloc>752</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1352,7 +1380,7 @@ which is probably not the case.</note>
     </remotesteps>
     <GUI>
       <xloc>320</xloc>
-      <yloc>560</yloc>
+      <yloc>624</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1423,7 +1451,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>336</xloc>
-      <yloc>1008</yloc>
+      <yloc>1072</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1454,7 +1482,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>560</xloc>
-      <yloc>1008</yloc>
+      <yloc>1072</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1485,7 +1513,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>96</xloc>
-      <yloc>720</yloc>
+      <yloc>784</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1516,7 +1544,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>976</xloc>
-      <yloc>816</yloc>
+      <yloc>880</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1547,7 +1575,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>1216</xloc>
-      <yloc>816</yloc>
+      <yloc>880</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1591,7 +1619,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>448</xloc>
-      <yloc>592</yloc>
+      <yloc>656</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1729,7 +1757,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>96</xloc>
-      <yloc>528</yloc>
+      <yloc>592</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1770,7 +1798,7 @@ PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}</logmessage>
     </remotesteps>
     <GUI>
       <xloc>336</xloc>
-      <yloc>1072</yloc>
+      <yloc>1136</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1811,7 +1839,7 @@ PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}</logmessage>
     </remotesteps>
     <GUI>
       <xloc>96</xloc>
-      <yloc>784</yloc>
+      <yloc>848</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1852,7 +1880,7 @@ PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}</logmessage>
     </remotesteps>
     <GUI>
       <xloc>976</xloc>
-      <yloc>880</yloc>
+      <yloc>944</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1893,7 +1921,7 @@ PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}</logmessage>
     </remotesteps>
     <GUI>
       <xloc>560</xloc>
-      <yloc>1072</yloc>
+      <yloc>1136</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1934,7 +1962,7 @@ PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}</logmessage>
     </remotesteps>
     <GUI>
       <xloc>1216</xloc>
-      <yloc>880</yloc>
+      <yloc>944</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1959,7 +1987,7 @@ PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}</logmessage>
     </remotesteps>
     <GUI>
       <xloc>336</xloc>
-      <yloc>688</yloc>
+      <yloc>752</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1984,7 +2012,7 @@ PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}</logmessage>
     </remotesteps>
     <GUI>
       <xloc>560</xloc>
-      <yloc>688</yloc>
+      <yloc>752</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -2015,7 +2043,7 @@ PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}</logmessage>
     </remotesteps>
     <GUI>
       <xloc>336</xloc>
-      <yloc>752</yloc>
+      <yloc>816</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -2049,7 +2077,7 @@ PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}</logmessage>
     </remotesteps>
     <GUI>
       <xloc>336</xloc>
-      <yloc>944</yloc>
+      <yloc>1008</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -2083,7 +2111,7 @@ PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}</logmessage>
     </remotesteps>
     <GUI>
       <xloc>96</xloc>
-      <yloc>656</yloc>
+      <yloc>720</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -2117,7 +2145,7 @@ PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}</logmessage>
     </remotesteps>
     <GUI>
       <xloc>976</xloc>
-      <yloc>752</yloc>
+      <yloc>816</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -2151,7 +2179,7 @@ PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}</logmessage>
     </remotesteps>
     <GUI>
       <xloc>560</xloc>
-      <yloc>944</yloc>
+      <yloc>1008</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -2185,7 +2213,7 @@ PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}</logmessage>
     </remotesteps>
     <GUI>
       <xloc>1216</xloc>
-      <yloc>752</yloc>
+      <yloc>816</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -2216,7 +2244,7 @@ PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}</logmessage>
     </remotesteps>
     <GUI>
       <xloc>448</xloc>
-      <yloc>432</yloc>
+      <yloc>496</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -2264,7 +2292,7 @@ PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}</logmessage>
     </remotesteps>
     <GUI>
       <xloc>448</xloc>
-      <yloc>512</yloc>
+      <yloc>576</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -2306,7 +2334,7 @@ PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}</logmessage>
     </remotesteps>
     <GUI>
       <xloc>560</xloc>
-      <yloc>752</yloc>
+      <yloc>816</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -2430,6 +2458,7 @@ SELECT
     pedd.last_updated_on, 
     peddd.created_on                 AS "peddd_created_on",
     peddd.last_updated_on            AS "peddd_last_updated_on"
+    , row_number() OVER () AS "current_row_num", COUNT(*) OVER () AS "num_rows_to_process", MOD (row_number() OVER (), ${QF_ETL_PROGRESS_INTERVAL_ROWS}) AS "update_progress", NULL AS "null_column"  -- Special rows for monitoring progress 
 FROM
     public.obo__passage_event_derived_data pedd
 LEFT OUTER JOIN
@@ -2559,7 +2588,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>336</xloc>
-      <yloc>816</yloc>
+      <yloc>880</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -2603,7 +2632,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>1216</xloc>
-      <yloc>496</yloc>
+      <yloc>560</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -2716,7 +2745,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>560</xloc>
-      <yloc>816</yloc>
+      <yloc>880</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -2829,7 +2858,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>1216</xloc>
-      <yloc>592</yloc>
+      <yloc>656</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -2878,6 +2907,46 @@ PARAM_SOURCE_TABLE_MAX_INSERT_ID = ${PARAM_SOURCE_TABLE_MAX_INSERT_ID}</logmessa
     <GUI>
       <xloc>448</xloc>
       <yloc>288</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Remove progress-related fields</name>
+    <type>SelectValues</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <select_unspecified>N</select_unspecified>
+      <remove>
+        <name>current_row_num</name>
+      </remove>
+      <remove>
+        <name>num_rows_to_process</name>
+      </remove>
+      <remove>
+        <name>update_progress</name>
+      </remove>
+      <remove>
+        <name>null_column</name>
+      </remove>
+    </fields>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>448</xloc>
+      <yloc>432</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

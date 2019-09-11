@@ -484,7 +484,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2019/09/10 13:50:11.913</modified_date>
+    <modified_date>2019/09/11 14:59:53.596</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -595,6 +595,35 @@ must have the same fields.</note>
       <yloc>1056</yloc>
       <width>232</width>
       <heigth>49</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>It is possible for more than one row to stream through this branch of the 
+transformation if the sample interval QF_ETL_PROGRESS_INTERVAL_ROWS
+is small. This will cause the "Set variables" step below (it sets the variable
+QF_MAIL_MSG_QFREE_BODY_FAILURE_EXTRA_INFO_TRANSFORMATION)
+to throw an error because it assumes that there is only a single row in the
+stream. To avoid this from happening, I add a sequence field named 
+"seqnum" to the stream and then filter on seqnum=1 to select the first 
+row in the stream. If there is more than one row in the stream, the 
+subsequent row(s) will be discarded.</note>
+      <xloc>1056</xloc>
+      <yloc>752</yloc>
+      <width>422</width>
+      <heigth>127</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -785,11 +814,6 @@ must have the same fields.</note>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Generate "Shutdown requested" message for email</from>
-      <to>Set variable QF_MAIL_MSG_QFREE_BODY_FAILURE_EXTRA_INFO_TRANSFORMATION</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>Create etl.target_table_progress row ?</from>
       <to>Check for shutdown request?</to>
       <enabled>Y</enabled>
@@ -810,11 +834,6 @@ must have the same fields.</note>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>shutdown_requested = true ?</from>
-      <to>Generate "Shutdown requested" message for email</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>Set etl_run.shutdown_initiated_at_utc</from>
       <to>Log: Shutdown initiated</to>
       <enabled>Y</enabled>
@@ -824,36 +843,32 @@ must have the same fields.</note>
       <to>Abort - Shutdown requested</to>
       <enabled>Y</enabled>
     </hop>
+    <hop>
+      <from>Generate "Shutdown requested" message for email</from>
+      <to>Set variable QF_MAIL_MSG_QFREE_BODY_FAILURE_EXTRA_INFO_TRANSFORMATION</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>shutdown_requested = true ?</from>
+      <to>Add sequence named "seqnum"</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Add sequence named "seqnum"</from>
+      <to>First row (seqnum=1) ?</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>First row (seqnum=1) ?</from>
+      <to>Generate "Shutdown requested" message for email</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>First row (seqnum=1) ?</from>
+      <to>Discard extra rows</to>
+      <enabled>Y</enabled>
+    </hop>
   </order>
-  <step>
-    <name>Abort - Shutdown requested</name>
-    <type>Abort</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <row_threshold>0</row_threshold>
-    <message>${QF_SHUTDOWN_REQUEST_ABORT_MSG_FROM_TRANSFORMATION}</message>
-    <always_log_rows>Y</always_log_rows>
-    <abort_option>ABORT_WITH_ERROR</abort_option>
-    <attributes />
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>1040</xloc>
-      <yloc>1056</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
   <step>
     <name>"null" -> NULL, current_timestamp_utc to UTC String</name>
     <type>SelectValues</type>
@@ -947,6 +962,35 @@ must have the same fields.</note>
     <GUI>
       <xloc>144</xloc>
       <yloc>560</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Abort - Shutdown requested</name>
+    <type>Abort</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <row_threshold>0</row_threshold>
+    <message>${QF_SHUTDOWN_REQUEST_ABORT_MSG_FROM_TRANSFORMATION}</message>
+    <always_log_rows>Y</always_log_rows>
+    <abort_option>ABORT_WITH_ERROR</abort_option>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1328</xloc>
+      <yloc>1072</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1163,6 +1207,51 @@ if (prev_progress_milliseconds) {
     </GUI>
   </step>
   <step>
+    <name>Convert current_timestamp_utc to timestamp</name>
+    <type>SelectValues</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <select_unspecified>Y</select_unspecified>
+      <meta>
+        <name>current_timestamp_utc</name>
+        <rename>current_timestamp_utc</rename>
+        <type>Timestamp</type>
+        <length>-2</length>
+        <precision>-2</precision>
+        <conversion_mask />
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale />
+        <date_format_timezone />
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding />
+        <decimal_symbol />
+        <grouping_symbol />
+        <currency_symbol />
+        <storage_type />
+      </meta>
+    </fields>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>432</xloc>
+      <yloc>560</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
     <name>Create etl.target_table_progress row ?</name>
     <type>FilterRows</type>
     <description />
@@ -1203,6 +1292,96 @@ if (prev_progress_milliseconds) {
     <GUI>
       <xloc>144</xloc>
       <yloc>720</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Generate "Shutdown requested" message for email</name>
+    <type>ScriptValueMod</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <compatible>N</compatible>
+    <optimizationLevel>9</optimizationLevel>
+    <jsScripts>
+      <jsScript>
+        <jsScript_type>0</jsScript_type>
+        <jsScript_name>Script 1</jsScript_name>
+        <jsScript_script>//Script here
+
+// Input fields:
+var shutdown_requested_by;
+var shutdown_requested_at_utc;
+var shutdown_requested_reason;
+
+// Output fields created by this script:
+shutdown_requested_summary = "Shutdown requested by: " + shutdown_requested_by + " at: " + shutdown_requested_at_utc + ". Reason: " + shutdown_requested_reason
+
+// Set variable with scope "root job". The variable will be valid
+// in the root job and all the child jobs and transformations.
+// Possible scopes:
+//   "s": system-wide
+//   "r": up to the root job
+//   "p": up to the parent job
+//   "g": up to the grandparent job
+//
+// Set the variables that will be displayed in the Q-Free "failure" e-mail notification:
+//Alert("shutdown_requested_summary = " + shutdown_requested_summary);
+// This does not seem to work, so I have commented it out:
+//setVariable("QF_MAIL_MSG_QFREE_BODY_FAILURE_EXTRA_INFO_TRANSFORMATION", shutdown_requested_summary, "r");
+</jsScript_script>
+      </jsScript>
+    </jsScripts>
+    <fields>
+      <field>
+        <name>shutdown_requested_by</name>
+        <rename>shutdown_requested_by</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>Y</replace>
+      </field>
+      <field>
+        <name>shutdown_requested_at_utc</name>
+        <rename>shutdown_requested_at_utc</rename>
+        <type>Timestamp</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>Y</replace>
+      </field>
+      <field>
+        <name>shutdown_requested_reason</name>
+        <rename>shutdown_requested_reason</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>Y</replace>
+      </field>
+      <field>
+        <name>shutdown_requested_summary</name>
+        <rename>shutdown_requested_summary</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+    </fields>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>960</xloc>
+      <yloc>912</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1429,6 +1608,47 @@ if (prev_progress_milliseconds) {
     </GUI>
   </step>
   <step>
+    <name>Log: Shutdown initiated</name>
+    <type>WriteToLog</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <loglevel>log_level_minimal</loglevel>
+    <displayHeader>Y</displayHeader>
+    <limitRows>N</limitRows>
+    <limitRowsNumber>0</limitRowsNumber>
+    <logmessage>Shutdown initiated:</logmessage>
+    <fields>
+      <field>
+        <name>shutdown_requested_by</name>
+      </field>
+      <field>
+        <name>shutdown_requested_reason</name>
+      </field>
+      <field>
+        <name>shutdown_requested_at_utc</name>
+      </field>
+    </fields>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1152</xloc>
+      <yloc>1072</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
     <name>Lookup etl_run row</name>
     <type>DBLookup</type>
     <description />
@@ -1612,6 +1832,51 @@ if (prev_progress_milliseconds) {
     </GUI>
   </step>
   <step>
+    <name>Set etl_run.shutdown_initiated_at_utc</name>
+    <type>Update</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <connection>etl_db</connection>
+    <skip_lookup>N</skip_lookup>
+    <commit>1</commit>
+    <use_batch>N</use_batch>
+    <error_ignored>N</error_ignored>
+    <ignore_flag_field />
+    <lookup>
+      <schema>${QF_ETL_DB_SCHEMA}</schema>
+      <table>etl_run</table>
+      <key>
+        <name>param_etl_run_id</name>
+        <field>etl_run_id</field>
+        <condition>=</condition>
+        <name2 />
+      </key>
+      <value>
+        <name>shutdown_initiated_at_utc</name>
+        <rename>current_timestamp_utc</rename>
+      </value>
+    </lookup>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>960</xloc>
+      <yloc>1072</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
     <name>Set row time in ms</name>
     <type>ScriptValueMod</type>
     <description />
@@ -1686,8 +1951,8 @@ var progress_milliseconds = Date.now();</jsScript_script>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>848</xloc>
-      <yloc>896</yloc>
+      <xloc>960</xloc>
+      <yloc>992</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1775,7 +2040,7 @@ var progress_milliseconds = Date.now();</jsScript_script>
       <method>none</method>
       <schema_name />
     </partitioning>
-    <send_true_to>Generate "Shutdown requested" message for email</send_true_to>
+    <send_true_to>Add sequence named "seqnum"</send_true_to>
     <send_false_to>Remove shutdown-related fields</send_false_to>
     <compare>
       <condition>
@@ -1809,8 +2074,8 @@ var progress_milliseconds = Date.now();</jsScript_script>
     </GUI>
   </step>
   <step>
-    <name>Log: Shutdown initiated</name>
-    <type>WriteToLog</type>
+    <name>Add sequence named "seqnum"</name>
+    <type>Sequence</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -1819,22 +2084,16 @@ var progress_milliseconds = Date.now();</jsScript_script>
       <method>none</method>
       <schema_name />
     </partitioning>
-    <loglevel>log_level_minimal</loglevel>
-    <displayHeader>Y</displayHeader>
-    <limitRows>N</limitRows>
-    <limitRowsNumber>0</limitRowsNumber>
-    <logmessage>Shutdown initiated:</logmessage>
-    <fields>
-      <field>
-        <name>shutdown_requested_by</name>
-      </field>
-      <field>
-        <name>shutdown_requested_reason</name>
-      </field>
-      <field>
-        <name>shutdown_requested_at_utc</name>
-      </field>
-    </fields>
+    <valuename>seqnum</valuename>
+    <use_database>N</use_database>
+    <connection />
+    <schema />
+    <seqname>SEQ_</seqname>
+    <use_counter>Y</use_counter>
+    <counter_name />
+    <start_at>1</start_at>
+    <increment_by>1</increment_by>
+    <max_value>999999999</max_value>
     <attributes />
     <cluster_schema />
     <remotesteps>
@@ -1844,174 +2103,77 @@ var progress_milliseconds = Date.now();</jsScript_script>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1040</xloc>
-      <yloc>976</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Set etl_run.shutdown_initiated_at_utc</name>
-    <type>Update</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <connection>etl_db</connection>
-    <skip_lookup>N</skip_lookup>
-    <commit>1</commit>
-    <use_batch>N</use_batch>
-    <error_ignored>N</error_ignored>
-    <ignore_flag_field />
-    <lookup>
-      <schema>${QF_ETL_DB_SCHEMA}</schema>
-      <table>etl_run</table>
-      <key>
-        <name>param_etl_run_id</name>
-        <field>etl_run_id</field>
-        <condition>=</condition>
-        <name2 />
-      </key>
-      <value>
-        <name>shutdown_initiated_at_utc</name>
-        <rename>current_timestamp_utc</rename>
-      </value>
-    </lookup>
-    <attributes />
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>848</xloc>
-      <yloc>976</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Convert current_timestamp_utc to timestamp</name>
-    <type>SelectValues</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <fields>
-      <select_unspecified>Y</select_unspecified>
-      <meta>
-        <name>current_timestamp_utc</name>
-        <rename>current_timestamp_utc</rename>
-        <type>Timestamp</type>
-        <length>-2</length>
-        <precision>-2</precision>
-        <conversion_mask />
-        <date_format_lenient>false</date_format_lenient>
-        <date_format_locale />
-        <date_format_timezone />
-        <lenient_string_to_number>false</lenient_string_to_number>
-        <encoding />
-        <decimal_symbol />
-        <grouping_symbol />
-        <currency_symbol />
-        <storage_type />
-      </meta>
-    </fields>
-    <attributes />
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>432</xloc>
-      <yloc>560</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Generate "Shutdown requested" message for email</name>
-    <type>ScriptValueMod</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <compatible>N</compatible>
-    <optimizationLevel>9</optimizationLevel>
-    <jsScripts>
-      <jsScript>
-        <jsScript_type>0</jsScript_type>
-        <jsScript_name>Script 1</jsScript_name>
-        <jsScript_script>//Script here
-
-// Input fields:
-var shutdown_requested_by;
-var shutdown_requested_at_utc;
-var shutdown_requested_reason;
-
-// Output fields created by this script:
-shutdown_requested_summary = "Shutdown requested by: " + shutdown_requested_by + " at: " + shutdown_requested_at_utc + ". Reason: " + shutdown_requested_reason</jsScript_script>
-      </jsScript>
-    </jsScripts>
-    <fields>
-      <field>
-        <name>shutdown_requested_by</name>
-        <rename>shutdown_requested_by</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>Y</replace>
-      </field>
-      <field>
-        <name>shutdown_requested_at_utc</name>
-        <rename>shutdown_requested_at_utc</rename>
-        <type>Timestamp</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>Y</replace>
-      </field>
-      <field>
-        <name>shutdown_requested_reason</name>
-        <rename>shutdown_requested_reason</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>Y</replace>
-      </field>
-      <field>
-        <name>shutdown_requested_summary</name>
-        <rename>shutdown_requested_summary</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>
-    </fields>
-    <attributes />
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>848</xloc>
+      <xloc>784</xloc>
       <yloc>816</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>First row (seqnum=1) ?</name>
+    <type>FilterRows</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <send_true_to>Generate "Shutdown requested" message for email</send_true_to>
+    <send_false_to>Discard extra rows</send_false_to>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <leftvalue>seqnum</leftvalue>
+        <function>=</function>
+        <rightvalue />
+        <value>
+          <name>constant</name>
+          <type>Integer</type>
+          <text>1</text>
+          <length>-1</length>
+          <precision>0</precision>
+          <isnull>N</isnull>
+          <mask>####0;-####0</mask>
+        </value>
+      </condition>
+    </compare>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>960</xloc>
+      <yloc>816</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Discard extra rows</name>
+    <type>Dummy</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>960</xloc>
+      <yloc>736</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

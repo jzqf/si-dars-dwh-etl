@@ -539,15 +539,15 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2019/09/10 16:03:52.916</modified_date>
+    <modified_date>2019/09/11 13:23:50.979</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
       <note>Load the data from the source DB table that will be moved to the target DB table.</note>
-      <xloc>496</xloc>
-      <yloc>384</yloc>
+      <xloc>512</xloc>
+      <yloc>368</yloc>
       <width>461</width>
       <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
@@ -567,8 +567,8 @@
     </notepad>
     <notepad>
       <note>Insert the new rows into the target DB table.</note>
-      <xloc>496</xloc>
-      <yloc>672</yloc>
+      <xloc>512</xloc>
+      <yloc>640</yloc>
       <width>258</width>
       <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
@@ -590,8 +590,8 @@
       <note>Get batch ID for current transformation. This will be stored in the target DB table for auditing/logging.
 This step *must* come after the "Map column names" step because the metadata injected into that step
 does not include this column/field.</note>
-      <xloc>496</xloc>
-      <yloc>512</yloc>
+      <xloc>512</xloc>
+      <yloc>560</yloc>
       <width>582</width>
       <heigth>49</heigth>
       <fontname>Ubuntu</fontname>
@@ -610,9 +610,8 @@ does not include this column/field.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>This transformation updates the target DB mirror of an "insert-only" table from the source DB. This is a generic algorithm
-that can work with *any* table,  as long as it is insert-only and it has the necessary  "insert_id" &amp; "inserted_on" columns. 
-This transformation has parameters:
+      <note>This transformation updates the target DB mirror of a  table from the source DB using a "truncate-reload" algorithm. This is a generic algorithm
+that can work with *any* table. This transformation has parameters:
 
 	PARAM_ETL_RUN_ID								Primary key for the ${QF_ETL_DB_SCHEMA}.etl_run row for the current "run"
 	PARAM_TARGET_TABLE_UPDATE_ID				Primary key of ${QF_ETL_DB_SCHEMA}.target_table_update row to be updated by this job for progress and summary statistics
@@ -639,7 +638,7 @@ This transformation has parameters:
       <xloc>0</xloc>
       <yloc>0</yloc>
       <width>1013</width>
-      <heigth>348</heigth>
+      <heigth>335</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -675,7 +674,7 @@ This transformation has parameters:
 		commands for that table. Before executing the SQL, modify it where appropriate. For example, replace "UNKNOWN" 
 		for timestamp columns with "timestamp without time zone" or "bytea", primary key constraint, ...</note>
       <xloc>544</xloc>
-      <yloc>880</yloc>
+      <yloc>864</yloc>
       <width>707</width>
       <heigth>244</heigth>
       <fontname>Ubuntu</fontname>
@@ -695,8 +694,8 @@ This transformation has parameters:
     </notepad>
     <notepad>
       <note>Select and possibly rename fields (table column names), as appropriate.</note>
-      <xloc>496</xloc>
-      <yloc>448</yloc>
+      <xloc>512</xloc>
+      <yloc>512</yloc>
       <width>399</width>
       <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
@@ -716,8 +715,8 @@ This transformation has parameters:
     </notepad>
     <notepad>
       <note>Metadata injected -></note>
-      <xloc>208</xloc>
-      <yloc>448</yloc>
+      <xloc>240</xloc>
+      <yloc>512</yloc>
       <width>124</width>
       <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
@@ -769,8 +768,8 @@ passed to it in the normal fashion because it is a normal transformation (all me
     </notepad>
     <notepad>
       <note>Metadata injected -></note>
-      <xloc>208</xloc>
-      <yloc>384</yloc>
+      <xloc>240</xloc>
+      <yloc>368</yloc>
       <width>124</width>
       <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
@@ -792,8 +791,8 @@ passed to it in the normal fashion because it is a normal transformation (all me
       <note>Set PDI variable:
 
 	QF_UPDATE_TABLE_NUM_INSERTS</note>
-      <xloc>496</xloc>
-      <yloc>800</yloc>
+      <xloc>512</xloc>
+      <yloc>768</yloc>
       <width>226</width>
       <heigth>49</heigth>
       <fontname>Ubuntu</fontname>
@@ -815,8 +814,8 @@ passed to it in the normal fashion because it is a normal transformation (all me
       <note>The progress-related fields must be removed here because the "Table output" step attempts to write 
 *all* fields to the target table. Alternatively, we would not need to remove the progress-related
 fields here if we injected into the "Table output" step the fields that *shall* be written.</note>
-      <xloc>496</xloc>
-      <yloc>608</yloc>
+      <xloc>512</xloc>
+      <yloc>448</yloc>
       <width>570</width>
       <heigth>49</heigth>
       <fontname>Ubuntu</fontname>
@@ -838,8 +837,8 @@ fields here if we injected into the "Table output" step the fields that *shall* 
       <note>This stream logs progress statistics every
 QF_ETL_PROGRESS_INTERVAL_ROWS 
 rows that are processed by this algorithm.</note>
-      <xloc>0</xloc>
-      <yloc>704</yloc>
+      <xloc>16</xloc>
+      <yloc>688</yloc>
       <width>240</width>
       <heigth>49</heigth>
       <fontname>Ubuntu</fontname>
@@ -859,8 +858,8 @@ rows that are processed by this algorithm.</note>
     </notepad>
     <notepad>
       <note>This stream implements the ETL algorithm.</note>
-      <xloc>256</xloc>
-      <yloc>992</yloc>
+      <xloc>272</xloc>
+      <yloc>960</yloc>
       <width>244</width>
       <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
@@ -881,7 +880,7 @@ rows that are processed by this algorithm.</note>
     <notepad>
       <note>&lt;- Metadata injected</note>
       <xloc>144</xloc>
-      <yloc>576</yloc>
+      <yloc>560</yloc>
       <width>124</width>
       <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
@@ -1060,11 +1059,6 @@ rows that are processed by this algorithm.</note>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Table input -  source_db.schema.table</from>
-      <to>Map column names</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>Compute number of rows inserted</from>
       <to>Set QF_UPDATE_TABLE_NUM_INSERTS</to>
       <enabled>Y</enabled>
@@ -1085,16 +1079,6 @@ rows that are processed by this algorithm.</note>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Set etl_batch_id_insert = Xform batch ID</from>
-      <to>Remove progress-related fields</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Remove progress-related fields</from>
-      <to>Table output - target_db.schema.table</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>Select rows for progress monitoring</from>
       <to>Discard rows</to>
       <enabled>Y</enabled>
@@ -1112,6 +1096,21 @@ rows that are processed by this algorithm.</note>
     <hop>
       <from>Table input -  source_db.schema.table</from>
       <to>Select rows for progress monitoring</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Table input -  source_db.schema.table</from>
+      <to>Remove progress-related fields</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Remove progress-related fields</from>
+      <to>Map column names</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Set etl_batch_id_insert = Xform batch ID</from>
+      <to>Table output - target_db.schema.table</to>
       <enabled>Y</enabled>
     </hop>
   </order>
@@ -1146,8 +1145,8 @@ rows that are processed by this algorithm.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>352</xloc>
-      <yloc>736</yloc>
+      <xloc>368</xloc>
+      <yloc>704</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1171,8 +1170,8 @@ rows that are processed by this algorithm.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>176</xloc>
-      <yloc>496</yloc>
+      <xloc>48</xloc>
+      <yloc>480</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1202,8 +1201,8 @@ rows that are processed by this algorithm.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>352</xloc>
-      <yloc>864</yloc>
+      <xloc>368</xloc>
+      <yloc>832</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1245,8 +1244,8 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>352</xloc>
-      <yloc>928</yloc>
+      <xloc>368</xloc>
+      <yloc>896</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1273,8 +1272,8 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>352</xloc>
-      <yloc>448</yloc>
+      <xloc>368</xloc>
+      <yloc>512</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1313,8 +1312,8 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>352</xloc>
-      <yloc>608</yloc>
+      <xloc>368</xloc>
+      <yloc>448</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1341,8 +1340,8 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>96</xloc>
-      <yloc>576</yloc>
+      <xloc>112</xloc>
+      <yloc>560</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1385,8 +1384,8 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>96</xloc>
-      <yloc>384</yloc>
+      <xloc>112</xloc>
+      <yloc>368</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1419,8 +1418,8 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>352</xloc>
-      <yloc>800</yloc>
+      <xloc>368</xloc>
+      <yloc>768</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1450,8 +1449,8 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>352</xloc>
-      <yloc>512</yloc>
+      <xloc>368</xloc>
+      <yloc>576</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1488,8 +1487,8 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>352</xloc>
-      <yloc>384</yloc>
+      <xloc>368</xloc>
+      <yloc>368</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1532,8 +1531,8 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>352</xloc>
-      <yloc>672</yloc>
+      <xloc>368</xloc>
+      <yloc>640</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1605,8 +1604,8 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>96</xloc>
-      <yloc>640</yloc>
+      <xloc>112</xloc>
+      <yloc>624</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

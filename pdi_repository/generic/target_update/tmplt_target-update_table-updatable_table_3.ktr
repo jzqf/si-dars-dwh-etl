@@ -574,7 +574,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2019/09/11 10:43:00.710</modified_date>
+    <modified_date>2019/09/11 15:19:11.406</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -585,7 +585,7 @@
 It is important to sort these rows chronologically (by either the "insert_id" or "inserted_on" columns) so that if this transformation
 fails in the middle somewhere and if this transaction does not run in a single transaction, then next time this transformation is 
 executed, we want to start again where we left off (by computing, e.g., MAX(insert_id) for the target DB table).</note>
-      <xloc>336</xloc>
+      <xloc>464</xloc>
       <yloc>704</yloc>
       <width>723</width>
       <heigth>75</heigth>
@@ -607,8 +607,8 @@ executed, we want to start again where we left off (by computing, e.g., MAX(inse
     <notepad>
       <note>Get batch ID for current transformation. This will be stored in the target  table for auditing/logging. This step *must* come after the
 "Map column names" step because the metadata injected into that step does not include this column/field.</note>
-      <xloc>336</xloc>
-      <yloc>864</yloc>
+      <xloc>464</xloc>
+      <yloc>928</yloc>
       <width>739</width>
       <heigth>36</heigth>
       <fontname>Ubuntu</fontname>
@@ -695,7 +695,7 @@ exist in the target table.
 Alternatively, we could eliminate this step entirely and load source DB table rows for: inserted_on >= PARAM_CDC_LAST_LOAD_UTC,
 but this will not be as efficient for the case when we need to re-start the mirroring process after it fails for some reason. In that
 case we would re-process all of the rows that were successfully mirrored during the previous run.</note>
-      <xloc>336</xloc>
+      <xloc>464</xloc>
       <yloc>464</yloc>
       <width>737</width>
       <heigth>192</heigth>
@@ -751,8 +751,8 @@ injected into it).</note>
     </notepad>
     <notepad>
       <note>Select and possibly map/rename fields (table column names), as appropriate.</note>
-      <xloc>336</xloc>
-      <yloc>800</yloc>
+      <xloc>464</xloc>
+      <yloc>864</yloc>
       <width>427</width>
       <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
@@ -772,8 +772,8 @@ injected into it).</note>
     </notepad>
     <notepad>
       <note>Metadata injected -></note>
-      <xloc>64</xloc>
-      <yloc>800</yloc>
+      <xloc>192</xloc>
+      <yloc>864</yloc>
       <width>124</width>
       <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
@@ -793,8 +793,8 @@ injected into it).</note>
     </notepad>
     <notepad>
       <note>&lt;- Metadata injected</note>
-      <xloc>352</xloc>
-      <yloc>1232</yloc>
+      <xloc>480</xloc>
+      <yloc>1296</yloc>
       <width>124</width>
       <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
@@ -814,7 +814,7 @@ injected into it).</note>
     </notepad>
     <notepad>
       <note>Metadata injected -></note>
-      <xloc>64</xloc>
+      <xloc>192</xloc>
       <yloc>720</yloc>
       <width>124</width>
       <heigth>23</heigth>
@@ -863,8 +863,8 @@ Could I somehow use, instead, a
     </notepad>
     <notepad>
       <note>Metadata injected ->			This step does not currently support metadata injection, so this algorithm cannot be made generic!!!</note>
-      <xloc>64</xloc>
-      <yloc>928</yloc>
+      <xloc>192</xloc>
+      <yloc>992</yloc>
       <width>726</width>
       <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
@@ -884,8 +884,8 @@ Could I somehow use, instead, a
     </notepad>
     <notepad>
       <note>Metadata injected -> 			This injection has not been tested!</note>
-      <xloc>64</xloc>
-      <yloc>1008</yloc>
+      <xloc>192</xloc>
+      <yloc>1072</yloc>
       <width>367</width>
       <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
@@ -898,6 +898,29 @@ Could I somehow use, instead, a
       <backgroundcolorred>0</backgroundcolorred>
       <backgroundcolorgreen>0</backgroundcolorgreen>
       <backgroundcolorblue>0</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>The progress-related fields must be removed here because the "Table output" step attempts to write 
+*all* fields to the target table. Alternatively, we would not need to remove the progress-related
+fields here if we injected into the "Table output" step the fields that *shall* be written.</note>
+      <xloc>464</xloc>
+      <yloc>800</yloc>
+      <width>570</width>
+      <heigth>49</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
       <bordercolorblue>100</bordercolorblue>
@@ -1079,11 +1102,6 @@ Could I somehow use, instead, a
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Table input -  source_db.schema.table</from>
-      <to>Map column names</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>INSERT or UPDATE?</from>
       <to>Perform INSERT</to>
       <enabled>Y</enabled>
@@ -1158,6 +1176,16 @@ Could I somehow use, instead, a
       <to>Log number of rows updated</to>
       <enabled>Y</enabled>
     </hop>
+    <hop>
+      <from>Table input -  source_db.schema.table</from>
+      <to>Remove progress-related fields</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Remove progress-related fields</from>
+      <to>Map column names</to>
+      <enabled>Y</enabled>
+    </hop>
   </order>
   <step>
     <name>Compute number of rows inserted</name>
@@ -1190,8 +1218,8 @@ Could I somehow use, instead, a
       </output>
     </remotesteps>
     <GUI>
-      <xloc>96</xloc>
-      <yloc>1296</yloc>
+      <xloc>224</xloc>
+      <yloc>1360</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1226,8 +1254,8 @@ Could I somehow use, instead, a
       </output>
     </remotesteps>
     <GUI>
-      <xloc>320</xloc>
-      <yloc>1296</yloc>
+      <xloc>448</xloc>
+      <yloc>1360</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1263,7 +1291,7 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>192</xloc>
+      <xloc>320</xloc>
       <yloc>512</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1294,8 +1322,8 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>96</xloc>
-      <yloc>1424</yloc>
+      <xloc>224</xloc>
+      <yloc>1488</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1325,8 +1353,8 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>320</xloc>
-      <yloc>1424</yloc>
+      <xloc>448</xloc>
+      <yloc>1488</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1369,8 +1397,8 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>192</xloc>
-      <yloc>1008</yloc>
+      <xloc>320</xloc>
+      <yloc>1072</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1412,8 +1440,8 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>96</xloc>
-      <yloc>1488</yloc>
+      <xloc>224</xloc>
+      <yloc>1552</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1455,8 +1483,8 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>320</xloc>
-      <yloc>1488</yloc>
+      <xloc>448</xloc>
+      <yloc>1552</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1483,8 +1511,8 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>192</xloc>
-      <yloc>800</yloc>
+      <xloc>320</xloc>
+      <yloc>864</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1508,8 +1536,8 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>96</xloc>
-      <yloc>1104</yloc>
+      <xloc>224</xloc>
+      <yloc>1168</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1533,8 +1561,8 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>320</xloc>
-      <yloc>1104</yloc>
+      <xloc>448</xloc>
+      <yloc>1168</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1564,8 +1592,8 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>96</xloc>
-      <yloc>1168</yloc>
+      <xloc>224</xloc>
+      <yloc>1232</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1598,8 +1626,8 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>96</xloc>
-      <yloc>1360</yloc>
+      <xloc>224</xloc>
+      <yloc>1424</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1632,8 +1660,8 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>320</xloc>
-      <yloc>1360</yloc>
+      <xloc>448</xloc>
+      <yloc>1424</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1663,8 +1691,8 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>192</xloc>
-      <yloc>864</yloc>
+      <xloc>320</xloc>
+      <yloc>928</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1694,8 +1722,8 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>320</xloc>
-      <yloc>1168</yloc>
+      <xloc>448</xloc>
+      <yloc>1232</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1742,8 +1770,8 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>192</xloc>
-      <yloc>928</yloc>
+      <xloc>320</xloc>
+      <yloc>992</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1808,7 +1836,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>192</xloc>
+      <xloc>320</xloc>
       <yloc>720</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1852,8 +1880,8 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>96</xloc>
-      <yloc>1232</yloc>
+      <xloc>224</xloc>
+      <yloc>1296</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1887,8 +1915,8 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>320</xloc>
-      <yloc>1232</yloc>
+      <xloc>448</xloc>
+      <yloc>1296</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1952,8 +1980,48 @@ PARAM_TARGET_LAST_UPDATED_ON_COLNAME = ${PARAM_TARGET_LAST_UPDATED_ON_COLNAME}</
       </output>
     </remotesteps>
     <GUI>
-      <xloc>192</xloc>
+      <xloc>320</xloc>
       <yloc>640</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Remove progress-related fields</name>
+    <type>SelectValues</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <select_unspecified>N</select_unspecified>
+      <remove>
+        <name>current_row_num</name>
+      </remove>
+      <remove>
+        <name>num_rows_to_process</name>
+      </remove>
+      <remove>
+        <name>update_progress</name>
+      </remove>
+      <remove>
+        <name>null_column</name>
+      </remove>
+    </fields>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>320</xloc>
+      <yloc>800</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
