@@ -1,46 +1,126 @@
+--
+-- PostgreSQL database dump
+--
 
--- Get rid of old tables from previous upgrade. The order of these deletions
--- is important in order to avoid foreign key constraint violations.
-DROP TABLE IF EXISTS etl.column_meta_old;
-DROP TABLE IF EXISTS etl.table_state_old;
-DROP TABLE IF EXISTS etl.target_table_compare_old;
-DROP TABLE IF EXISTS etl.target_table_update_old;
-DROP TABLE IF EXISTS etl.table_meta_old;
+-- Dumped from database version 9.5.19
+-- Dumped by pg_dump version 9.5.19
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+ALTER TABLE ONLY etl.table_state DROP CONSTRAINT fk_tablestate_tablemeta;
+ALTER TABLE ONLY etl.target_table_update DROP CONSTRAINT fk_etl_ttupdate_tablemeta;
+ALTER TABLE ONLY etl.target_table_update DROP CONSTRAINT fk_etl_ttupdate_etljob;
+ALTER TABLE ONLY etl.target_table_progress DROP CONSTRAINT fk_etl_ttprogress_ttupdate;
+ALTER TABLE ONLY etl.target_table_compare DROP CONSTRAINT fk_etl_targettablecompare_tablemeta;
+ALTER TABLE ONLY etl.column_meta DROP CONSTRAINT fk_columnmeta_tablemeta;
+DROP INDEX etl.idx_log_transformations_2;
+DROP INDEX etl.idx_log_transformations_1;
+DROP INDEX etl.idx_log_jobs_2;
+DROP INDEX etl.idx_log_jobs_1;
+DROP INDEX etl.idx_log_job_entries_1;
+ALTER TABLE ONLY etl.table_meta DROP CONSTRAINT uq_etl_tablemeta_targetdb_targetschema_targettable;
+ALTER TABLE ONLY etl.column_meta DROP CONSTRAINT uq_etl_columnmeta_tablemetaid_targetcolumnname;
+ALTER TABLE ONLY etl.target_table_update DROP CONSTRAINT pk_target_table_update;
+ALTER TABLE ONLY etl.target_table_progress DROP CONSTRAINT pk_target_table_progress;
+ALTER TABLE ONLY etl.target_table_compare DROP CONSTRAINT pk_etl_targettablecompare;
+ALTER TABLE ONLY etl.table_state DROP CONSTRAINT pk_etl_table_state;
+ALTER TABLE ONLY etl.table_meta DROP CONSTRAINT pk_etl_table_meta;
+ALTER TABLE ONLY etl.etl_run DROP CONSTRAINT pk_etl_run;
+ALTER TABLE ONLY etl.configuration DROP CONSTRAINT pk_etl_configuration;
+ALTER TABLE ONLY etl.column_meta DROP CONSTRAINT pk_etl_column_meta;
+ALTER TABLE ONLY etl.cdc_timestamps DROP CONSTRAINT pk_etl_cdc_timestamps;
+ALTER TABLE etl.target_table_progress ALTER COLUMN target_table_progress_id DROP DEFAULT;
+ALTER TABLE etl.target_table_compare ALTER COLUMN target_table_compare_id DROP DEFAULT;
+DROP TABLE etl.target_table_update;
+DROP SEQUENCE etl.target_table_progress_target_table_progress_id_seq;
+DROP TABLE etl.target_table_progress;
+DROP SEQUENCE etl.target_table_compare_target_table_compare_id_seq;
+DROP TABLE etl.target_table_compare;
+DROP TABLE etl.table_state;
+DROP TABLE etl.table_meta;
+DROP TABLE etl.log_transformations;
+DROP TABLE etl.log_transformation_steps;
+DROP TABLE etl.log_transformation_performance;
+DROP TABLE etl.log_transformation_metrics;
+DROP TABLE etl.log_jobs;
+DROP TABLE etl.log_job_entries;
+DROP TABLE etl.log_channel;
+DROP TABLE etl.etl_run;
+DROP TABLE etl.configuration;
+DROP TABLE etl.column_meta;
+DROP TABLE etl.cdc_timestamps;
+DROP FUNCTION etl.psa_last_update_summary();
+DROP FUNCTION etl.dsa_last_update_summary();
+DROP EXTENSION "uuid-ossp";
+DROP EXTENSION plpgsql;
+DROP SCHEMA public;
+DROP SCHEMA etl;
+--
+-- Name: etl; Type: SCHEMA; Schema: -; Owner: qfree_etl
+--
+
+CREATE SCHEMA etl;
 
 
--- Rename the tables that will be "patched" in this script. New versions of 
--- these tables are created and patched below.
-ALTER TABLE IF EXISTS etl.column_meta          RENAME TO column_meta_old;
-ALTER TABLE IF EXISTS etl.table_state          RENAME TO table_state_old;
-ALTER TABLE IF EXISTS etl.target_table_compare RENAME TO target_table_compare_old;
-DELETE FROM etl.target_table_update;  -- Delete all rows, since these there are no etl.etl_run rows to link them to, which means we would trigger a foreign key violation if we kept them.
-ALTER TABLE etl.target_table_update ALTER COLUMN target_table_update_id DROP DEFAULT;   -- Primary key for table target_table_update will no longer be assigned from a    sequence.
-DROP SEQUENCE IF EXISTS etl.target_table_update_target_table_update_id_seq;             -- Primary key for table target_table_update will no longer be assigned from this sequence.
-ALTER TABLE IF EXISTS etl.target_table_update  RENAME TO target_table_update_old;
-ALTER TABLE IF EXISTS etl.table_meta           RENAME TO table_meta_old;
+ALTER SCHEMA etl OWNER TO qfree_etl;
+
+--
+-- Name: public; Type: SCHEMA; Schema: -; Owner: postgres
+--
+
+CREATE SCHEMA public;
 
 
--- Rename existing constraints that apply to the tables that were just renamed
--- so that new constraints with these names can be created below for the new
--- tables created below.
-ALTER TABLE IF EXISTS ONLY etl.column_meta_old          RENAME CONSTRAINT pk_etl_column_meta                                 TO pk_etl_column_meta_old;
-ALTER TABLE IF EXISTS ONLY etl.table_meta_old           RENAME CONSTRAINT pk_etl_table_meta                                  TO pk_etl_table_meta_old;
-ALTER TABLE IF EXISTS ONLY etl.table_state_old          RENAME CONSTRAINT pk_etl_table_state                                 TO pk_etl_table_state_old;
-ALTER TABLE IF EXISTS ONLY etl.target_table_compare_old RENAME CONSTRAINT pk_etl_targettablecompare                          TO pk_etl_targettablecompare_old;
-ALTER TABLE IF EXISTS ONLY etl.target_table_update_old  RENAME CONSTRAINT pk_etl_targettableupdate                           TO pk_etl_targettableupdate_old;
-ALTER TABLE IF EXISTS ONLY etl.target_table_update_old  RENAME CONSTRAINT fk_etl_targettableupdate_tablemeta                 TO fk_etl_targettableupdate_tablemeta_old;
-ALTER TABLE IF EXISTS ONLY etl.column_meta_old          RENAME CONSTRAINT uq_etl_columnmeta_tablemetaid_targetcolumnname     TO uq_etl_columnmeta_tablemetaid_targetcolumnname_old;
-ALTER TABLE IF EXISTS ONLY etl.table_meta_old           RENAME CONSTRAINT uq_etl_tablemeta_targetdb_targetschema_targettable TO uq_etl_tablemeta_targetdb_targetschema_targettable_old;
-ALTER TABLE IF EXISTS ONLY etl.column_meta_old          RENAME CONSTRAINT fk_columnmeta_tablemeta                            TO fk_columnmeta_tablemeta_old;
-ALTER TABLE IF EXISTS ONLY etl.target_table_compare_old RENAME CONSTRAINT fk_etl_targettablecompare_tablemeta                TO fk_etl_targettablecompare_tablemeta_old;
-ALTER TABLE IF EXISTS ONLY etl.table_state_old          RENAME CONSTRAINT fk_tablestate_tablemeta                            TO fk_tablestate_tablemeta_old;
+ALTER SCHEMA public OWNER TO postgres;
+
+--
+-- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: postgres
+--
+
+COMMENT ON SCHEMA public IS 'standard public schema';
+
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+--
+-- Name: uuid-ossp; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA etl;
+
+
+--
+-- Name: EXTENSION "uuid-ossp"; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UUIDs)';
 
 
 --
 -- Name: dsa_last_update_summary(); Type: FUNCTION; Schema: etl; Owner: qfree_etl
 --
 
-CREATE OR REPLACE FUNCTION etl.dsa_last_update_summary() RETURNS TABLE(tblid smallint, src smallint, srcsch character varying, srctable character varying, tgt smallint, tgtsch character varying, tgttable character varying, mir boolean, alg smallint, target_last_updated_on timestamp without time zone, r integer, i integer, u integer, millis integer, "r/s" real, iidcol character varying, max_iid bigint, luocol character varying, max_luo timestamp without time zone)
+CREATE FUNCTION etl.dsa_last_update_summary() RETURNS TABLE(tblid smallint, src smallint, srcsch character varying, srctable character varying, tgt smallint, tgtsch character varying, tgttable character varying, mir boolean, alg smallint, target_last_updated_on timestamp without time zone, r integer, i integer, u integer, millis integer, "r/s" real, iidcol character varying, max_iid bigint, luocol character varying, max_luo timestamp without time zone)
     LANGUAGE plpgsql
     AS $$
 BEGIN
@@ -79,11 +159,13 @@ tm.source_table_name ;
 END; $$;
 
 
+ALTER FUNCTION etl.dsa_last_update_summary() OWNER TO qfree_etl;
+
 --
 -- Name: psa_last_update_summary(); Type: FUNCTION; Schema: etl; Owner: qfree_etl
 --
 
-CREATE OR REPLACE FUNCTION etl.psa_last_update_summary() RETURNS TABLE(tblid smallint, src smallint, srcsch character varying, srctable character varying, tgt smallint, tgtsch character varying, tgttable character varying, mir boolean, alg smallint, target_last_updated_on timestamp without time zone, r integer, i integer, u integer, millis integer, "r/s" real, iidcol character varying, max_iid bigint, luocol character varying, max_luo timestamp without time zone)
+CREATE FUNCTION etl.psa_last_update_summary() RETURNS TABLE(tblid smallint, src smallint, srcsch character varying, srctable character varying, tgt smallint, tgtsch character varying, tgttable character varying, mir boolean, alg smallint, target_last_updated_on timestamp without time zone, r integer, i integer, u integer, millis integer, "r/s" real, iidcol character varying, max_iid bigint, luocol character varying, max_luo timestamp without time zone)
     LANGUAGE plpgsql
     AS $$
 BEGIN
@@ -122,6 +204,25 @@ tm.source_table_name ;
 END; $$;
 
 
+ALTER FUNCTION etl.psa_last_update_summary() OWNER TO qfree_etl;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: cdc_timestamps; Type: TABLE; Schema: etl; Owner: qfree_admin
+--
+
+CREATE TABLE etl.cdc_timestamps (
+    target_db_id smallint NOT NULL,
+    last_successful_load timestamp without time zone DEFAULT '1970-01-01 00:00:00'::timestamp without time zone NOT NULL,
+    current_load timestamp without time zone DEFAULT '1970-01-01 00:00:00'::timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE etl.cdc_timestamps OWNER TO qfree_admin;
+
 --
 -- Name: column_meta; Type: TABLE; Schema: etl; Owner: qfree_admin
 --
@@ -143,6 +244,34 @@ CREATE TABLE etl.column_meta (
     compare_column boolean DEFAULT false NOT NULL
 );
 
+
+ALTER TABLE etl.column_meta OWNER TO qfree_admin;
+
+--
+-- Name: configuration; Type: TABLE; Schema: etl; Owner: qfree_admin
+--
+
+CREATE TABLE etl.configuration (
+    configuration_id uuid DEFAULT etl.uuid_generate_v4() NOT NULL,
+    boolean_value boolean,
+    bytea_value bytea,
+    created_on timestamp without time zone NOT NULL,
+    date_value date,
+    datetime_value timestamp without time zone,
+    double_value double precision,
+    float_value real,
+    integer_value integer,
+    long_value bigint,
+    param_name character varying(64) NOT NULL,
+    param_type character varying(16) NOT NULL,
+    string_value character varying(1000),
+    text_value text,
+    time_value time without time zone,
+    role_id uuid
+);
+
+
+ALTER TABLE etl.configuration OWNER TO qfree_admin;
 
 --
 -- Name: etl_run; Type: TABLE; Schema: etl; Owner: qfree_admin
@@ -177,6 +306,176 @@ CREATE TABLE etl.etl_run (
 );
 
 
+ALTER TABLE etl.etl_run OWNER TO qfree_admin;
+
+--
+-- Name: log_channel; Type: TABLE; Schema: etl; Owner: qfree_admin
+--
+
+CREATE TABLE etl.log_channel (
+    id_batch integer,
+    channel_id character varying(255),
+    log_date timestamp without time zone,
+    logging_object_type character varying(255),
+    object_name character varying(255),
+    object_copy character varying(255),
+    repository_directory character varying(255),
+    filename character varying(255),
+    object_id character varying(255),
+    object_revision character varying(255),
+    parent_channel_id character varying(255),
+    root_channel_id character varying(255)
+);
+
+
+ALTER TABLE etl.log_channel OWNER TO qfree_admin;
+
+--
+-- Name: log_job_entries; Type: TABLE; Schema: etl; Owner: qfree_admin
+--
+
+CREATE TABLE etl.log_job_entries (
+    id_batch integer,
+    channel_id character varying(255),
+    log_date timestamp without time zone,
+    transname character varying(255),
+    stepname character varying(255),
+    lines_read bigint,
+    lines_written bigint,
+    lines_updated bigint,
+    lines_input bigint,
+    lines_output bigint,
+    lines_rejected bigint,
+    errors bigint,
+    result boolean,
+    nr_result_rows bigint,
+    nr_result_files bigint
+);
+
+
+ALTER TABLE etl.log_job_entries OWNER TO qfree_admin;
+
+--
+-- Name: log_jobs; Type: TABLE; Schema: etl; Owner: qfree_admin
+--
+
+CREATE TABLE etl.log_jobs (
+    id_job integer,
+    channel_id character varying(255),
+    jobname character varying(255),
+    status character varying(15),
+    lines_read bigint,
+    lines_written bigint,
+    lines_updated bigint,
+    lines_input bigint,
+    lines_output bigint,
+    lines_rejected bigint,
+    errors bigint,
+    startdate timestamp without time zone,
+    enddate timestamp without time zone,
+    logdate timestamp without time zone,
+    depdate timestamp without time zone,
+    replaydate timestamp without time zone,
+    log_field text
+);
+
+
+ALTER TABLE etl.log_jobs OWNER TO qfree_admin;
+
+--
+-- Name: log_transformation_metrics; Type: TABLE; Schema: etl; Owner: qfree_admin
+--
+
+CREATE TABLE etl.log_transformation_metrics (
+    id_batch integer,
+    channel_id character varying(255),
+    log_date timestamp without time zone,
+    metrics_date timestamp without time zone,
+    metrics_code character varying(255),
+    metrics_description character varying(255),
+    metrics_subject character varying(255),
+    metrics_type character varying(255),
+    metrics_value bigint
+);
+
+
+ALTER TABLE etl.log_transformation_metrics OWNER TO qfree_admin;
+
+--
+-- Name: log_transformation_performance; Type: TABLE; Schema: etl; Owner: qfree_admin
+--
+
+CREATE TABLE etl.log_transformation_performance (
+    id_batch integer,
+    seq_nr integer,
+    logdate timestamp without time zone,
+    transname character varying(255),
+    stepname character varying(255),
+    step_copy integer,
+    lines_read bigint,
+    lines_written bigint,
+    lines_updated bigint,
+    lines_input bigint,
+    lines_output bigint,
+    lines_rejected bigint,
+    errors bigint,
+    input_buffer_rows bigint,
+    output_buffer_rows bigint
+);
+
+
+ALTER TABLE etl.log_transformation_performance OWNER TO qfree_admin;
+
+--
+-- Name: log_transformation_steps; Type: TABLE; Schema: etl; Owner: qfree_admin
+--
+
+CREATE TABLE etl.log_transformation_steps (
+    id_batch integer,
+    channel_id character varying(255),
+    log_date timestamp without time zone,
+    transname character varying(255),
+    stepname character varying(255),
+    step_copy smallint,
+    lines_read bigint,
+    lines_written bigint,
+    lines_updated bigint,
+    lines_input bigint,
+    lines_output bigint,
+    lines_rejected bigint,
+    errors bigint
+);
+
+
+ALTER TABLE etl.log_transformation_steps OWNER TO qfree_admin;
+
+--
+-- Name: log_transformations; Type: TABLE; Schema: etl; Owner: qfree_admin
+--
+
+CREATE TABLE etl.log_transformations (
+    id_batch integer,
+    channel_id character varying(255),
+    transname character varying(255),
+    status character varying(15),
+    lines_read bigint,
+    lines_written bigint,
+    lines_updated bigint,
+    lines_input bigint,
+    lines_output bigint,
+    lines_rejected bigint,
+    errors bigint,
+    startdate timestamp without time zone,
+    enddate timestamp without time zone,
+    logdate timestamp without time zone,
+    depdate timestamp without time zone,
+    replaydate timestamp without time zone,
+    log_field text
+);
+
+
+ALTER TABLE etl.log_transformations OWNER TO qfree_admin;
+
 --
 -- Name: table_meta; Type: TABLE; Schema: etl; Owner: qfree_admin
 --
@@ -210,6 +509,8 @@ CREATE TABLE etl.table_meta (
 );
 
 
+ALTER TABLE etl.table_meta OWNER TO qfree_admin;
+
 --
 -- Name: table_state; Type: TABLE; Schema: etl; Owner: qfree_admin
 --
@@ -236,6 +537,8 @@ CREATE TABLE etl.table_state (
 );
 
 
+ALTER TABLE etl.table_state OWNER TO qfree_admin;
+
 --
 -- Name: target_table_compare; Type: TABLE; Schema: etl; Owner: qfree_admin
 --
@@ -250,6 +553,22 @@ CREATE TABLE etl.target_table_compare (
     num_rows_extra_in_target integer
 );
 
+
+ALTER TABLE etl.target_table_compare OWNER TO qfree_admin;
+
+--
+-- Name: target_table_compare_target_table_compare_id_seq; Type: SEQUENCE; Schema: etl; Owner: qfree_admin
+--
+
+CREATE SEQUENCE etl.target_table_compare_target_table_compare_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE etl.target_table_compare_target_table_compare_id_seq OWNER TO qfree_admin;
 
 --
 -- Name: target_table_compare_target_table_compare_id_seq; Type: SEQUENCE OWNED BY; Schema: etl; Owner: qfree_admin
@@ -276,6 +595,8 @@ CREATE TABLE etl.target_table_progress (
 );
 
 
+ALTER TABLE etl.target_table_progress OWNER TO qfree_admin;
+
 --
 -- Name: target_table_progress_target_table_progress_id_seq; Type: SEQUENCE; Schema: etl; Owner: qfree_admin
 --
@@ -287,6 +608,8 @@ CREATE SEQUENCE etl.target_table_progress_target_table_progress_id_seq
     NO MAXVALUE
     CACHE 1;
 
+
+ALTER TABLE etl.target_table_progress_target_table_progress_id_seq OWNER TO qfree_admin;
 
 --
 -- Name: target_table_progress_target_table_progress_id_seq; Type: SEQUENCE OWNED BY; Schema: etl; Owner: qfree_admin
@@ -317,6 +640,8 @@ CREATE TABLE etl.target_table_update (
     last_updated_on_maxvalue timestamp without time zone
 );
 
+
+ALTER TABLE etl.target_table_update OWNER TO qfree_admin;
 
 --
 -- Name: target_table_compare_id; Type: DEFAULT; Schema: etl; Owner: qfree_admin
@@ -3187,7 +3512,7 @@ INSERT INTO etl.column_meta (column_meta_id, table_meta_id, source_column_name, 
 -- Data for Name: configuration; Type: TABLE DATA; Schema: etl; Owner: qfree_admin
 --
 
-INSERT INTO etl.configuration (configuration_id, boolean_value, bytea_value, created_on, date_value, datetime_value, double_value, float_value, integer_value, long_value, param_name, param_type, string_value, text_value, time_value, role_id) VALUES ('3aaa6ca9-1f23-4a40-8b95-007dcadc4637', NULL, NULL, current_timestamp, NULL, NULL, NULL, NULL, 11, NULL, 'DB_VERSION', 'INTEGER', '11', NULL, NULL, NULL) ON CONFLICT (configuration_id) DO UPDATE SET (created_on, integer_value, string_value) = (current_timestamp, 11, '11');
+INSERT INTO etl.configuration (configuration_id, boolean_value, bytea_value, created_on, date_value, datetime_value, double_value, float_value, integer_value, long_value, param_name, param_type, string_value, text_value, time_value, role_id) VALUES ('3aaa6ca9-1f23-4a40-8b95-007dcadc4637', NULL, NULL, '2019-09-13 14:39:13.39038', NULL, NULL, NULL, NULL, 11, NULL, 'DB_VERSION', 'INTEGER', '11', NULL, NULL, NULL);
 
 
 --
@@ -4097,6 +4422,13 @@ INSERT INTO etl.table_state (table_state_id, target_last_updated_on, target_last
 
 
 --
+-- Name: target_table_compare_target_table_compare_id_seq; Type: SEQUENCE SET; Schema: etl; Owner: qfree_admin
+--
+
+SELECT pg_catalog.setval('etl.target_table_compare_target_table_compare_id_seq', 5035, true);
+
+
+--
 -- Data for Name: target_table_progress; Type: TABLE DATA; Schema: etl; Owner: qfree_admin
 --
 
@@ -4106,7 +4438,7 @@ INSERT INTO etl.table_state (table_state_id, target_last_updated_on, target_last
 -- Name: target_table_progress_target_table_progress_id_seq; Type: SEQUENCE SET; Schema: etl; Owner: qfree_admin
 --
 
---SELECT pg_catalog.setval('etl.target_table_progress_target_table_progress_id_seq', 2187, true);
+SELECT pg_catalog.setval('etl.target_table_progress_target_table_progress_id_seq', 2187, true);
 
 
 --
@@ -4116,11 +4448,27 @@ INSERT INTO etl.table_state (table_state_id, target_last_updated_on, target_last
 
 
 --
+-- Name: pk_etl_cdc_timestamps; Type: CONSTRAINT; Schema: etl; Owner: qfree_admin
+--
+
+ALTER TABLE ONLY etl.cdc_timestamps
+    ADD CONSTRAINT pk_etl_cdc_timestamps PRIMARY KEY (target_db_id);
+
+
+--
 -- Name: pk_etl_column_meta; Type: CONSTRAINT; Schema: etl; Owner: qfree_admin
 --
 
 ALTER TABLE ONLY etl.column_meta
     ADD CONSTRAINT pk_etl_column_meta PRIMARY KEY (column_meta_id);
+
+
+--
+-- Name: pk_etl_configuration; Type: CONSTRAINT; Schema: etl; Owner: qfree_admin
+--
+
+ALTER TABLE ONLY etl.configuration
+    ADD CONSTRAINT pk_etl_configuration PRIMARY KEY (configuration_id);
 
 
 --
@@ -4188,6 +4536,41 @@ ALTER TABLE ONLY etl.table_meta
 
 
 --
+-- Name: idx_log_job_entries_1; Type: INDEX; Schema: etl; Owner: qfree_admin
+--
+
+CREATE INDEX idx_log_job_entries_1 ON etl.log_job_entries USING btree (id_batch);
+
+
+--
+-- Name: idx_log_jobs_1; Type: INDEX; Schema: etl; Owner: qfree_admin
+--
+
+CREATE INDEX idx_log_jobs_1 ON etl.log_jobs USING btree (id_job);
+
+
+--
+-- Name: idx_log_jobs_2; Type: INDEX; Schema: etl; Owner: qfree_admin
+--
+
+CREATE INDEX idx_log_jobs_2 ON etl.log_jobs USING btree (errors, status, jobname);
+
+
+--
+-- Name: idx_log_transformations_1; Type: INDEX; Schema: etl; Owner: qfree_admin
+--
+
+CREATE INDEX idx_log_transformations_1 ON etl.log_transformations USING btree (id_batch);
+
+
+--
+-- Name: idx_log_transformations_2; Type: INDEX; Schema: etl; Owner: qfree_admin
+--
+
+CREATE INDEX idx_log_transformations_2 ON etl.log_transformations USING btree (errors, status, transname);
+
+
+--
 -- Name: fk_columnmeta_tablemeta; Type: FK CONSTRAINT; Schema: etl; Owner: qfree_admin
 --
 
@@ -4235,426 +4618,304 @@ ALTER TABLE ONLY etl.table_state
     ADD CONSTRAINT fk_tablestate_tablemeta FOREIGN KEY (table_state_id) REFERENCES etl.table_meta(table_meta_id);
 
 
--- Update each new (empty) etl.table_state row that matches a row of the copy of
--- the "old" data, etl.table_state_old. Some etl.table_state_old rows may not 
--- match an etl.table_state row because tables can be removed from a source
--- database.
-WITH olddata AS (
-    SELECT
-        tm.table_meta_id AS "table_meta_id_new",
---        tso.table_state_id,
-        tso.target_last_updated_on,
-        tso.target_last_updated_algorithm_id,
-        tso.target_last_updated_elapsed_time_millis,
-        tso.target_last_updated_num_inserts,
-        tso.target_last_updated_num_updates,
-        tso.target_last_updated_num_rows_processed,
-        tso.target_last_updated_num_rows_processed_per_sec,
-        tso.target_last_updated_insert_id_colname,
-        tso.target_last_updated_insert_id_maxvalue,
-        tso.target_last_updated_last_updated_on_colname,
-        tso.target_last_updated_last_updated_on_maxvalue,
-        tso.last_compared_on,
-        tso.last_compared_num_rows_equal,
-        tso.last_compared_num_rows_unequal,
-        tso.last_compared_num_rows_missing_from_target,
-        tso.last_compared_num_rows_extra_in_target,
-        tso.max_insert_id
-    FROM
-        etl.table_state_old tso
-    INNER JOIN
-        -- Join to the row of the "old" table_meta table that corresponds to the 
-        -- "old" table_state data so that we will have access to the values of:
-        --     target_db_id
-        --     target_schema_name
-        --     target_table_name
-        -- from the "old" data. These three values will be used in the next join 
-        -- to join to the row of the "new" table_meta table to get access to its 
-        -- value of table_meta_id, which is also equal to the "new" value of
-        -- table_state_id from the "new" table_state table.
-        etl.table_meta_old tmo ON tmo.table_meta_id=tso.table_state_id
-    INNER JOIN
-        -- Join to the row of the "new" table_meta table that corresponds to the 
-        -- same values of values of:
-        --     target_db_id
-        --     target_schema_name
-        --     target_table_name
-        -- (which form an alternate key) from the "old" data so that we will
-        -- have access to the value of table_meta_id from the "new" data.
-        etl.table_meta tm ON (tm.target_db_id=tmo.target_db_id AND tm.target_schema_name=tmo.target_schema_name AND tm.target_table_name=tmo.target_table_name)
-)
-UPDATE etl.table_state SET (
---    table_state_id,
-    target_last_updated_on,
-    target_last_updated_algorithm_id,
-    target_last_updated_elapsed_time_millis,
-    target_last_updated_num_inserts,
-    target_last_updated_num_updates,
-    target_last_updated_num_rows_processed,
-    target_last_updated_num_rows_processed_per_sec,
-    target_last_updated_insert_id_colname,
-    target_last_updated_insert_id_maxvalue,
-    target_last_updated_last_updated_on_colname,
-    target_last_updated_last_updated_on_maxvalue,
-    last_compared_on,
-    last_compared_num_rows_equal,
-    last_compared_num_rows_unequal,
-    last_compared_num_rows_missing_from_target,
-    last_compared_num_rows_extra_in_target,
-    max_insert_id
-) = (
---    olddata.table_state_id,
-    olddata.target_last_updated_on,
-    olddata.target_last_updated_algorithm_id,
-    olddata.target_last_updated_elapsed_time_millis,
-    olddata.target_last_updated_num_inserts,
-    olddata.target_last_updated_num_updates,
-    olddata.target_last_updated_num_rows_processed,
-    olddata.target_last_updated_num_rows_processed_per_sec,
-    olddata.target_last_updated_insert_id_colname,
-    olddata.target_last_updated_insert_id_maxvalue,
-    olddata.target_last_updated_last_updated_on_colname,
-    olddata.target_last_updated_last_updated_on_maxvalue,
-    olddata.last_compared_on,
-    olddata.last_compared_num_rows_equal,
-    olddata.last_compared_num_rows_unequal,
-    olddata.last_compared_num_rows_missing_from_target,
-    olddata.last_compared_num_rows_extra_in_target,
-    olddata.max_insert_id
-)
-FROM
-    olddata
-WHERE
-    table_state.table_state_id=olddata.table_meta_id_new;
-
-
--- Insert one row into the "new" target_table_update table for *each* row of the
--- "old" target_table_update table, but assigning a new value to the
--- "table_meta_id" column in order to link the new row to the appropriate row of 
--- the "new" table_meta table. Rows of the "old" target_table_update table that 
--- correspond to source tables that have been dropped will not be processed and 
--- these rows will be deleted when the "old" target_table_update table is
--- dropped.
-WITH olddata AS (
-    SELECT
---        ttuo.target_table_update_id,
---        ttuo.table_meta_id AS "table_meta_id_old",
-        tm.table_meta_id AS "table_meta_id_new",
---        ttuo.created_on, OLD COLUMN: DELETE THIS LINE
-        ttuo.algorithm_id,
-        ttuo.elapsed_time_millis,
-        ttuo.num_inserts,
-        ttuo.num_updates,
-        ttuo.num_rows_processed,
-        ttuo.num_rows_processed_per_sec,
-        ttuo.insert_id_colname,
-        ttuo.insert_id_maxvalue,
-        ttuo.last_updated_on_colname,
-        ttuo.last_updated_on_maxvalue
-    FROM
-        etl.target_table_update_old ttuo
-    INNER JOIN
-        -- Join to the row of the "old" table_meta table that corresponds to the 
-        -- "old" target_table_update data so that we will have access to the 
-        -- values of:
-        --     target_db_id
-        --     target_schema_name
-        --     target_table_name
-        -- from the "old" data. These three values will be used in the next join 
-        -- to join to the row of the "new" table_meta table to get access to its 
-        -- value of table_meta_id so that the new target_table_update row that
-        -- we insert below will be linked to the appropriate "new" table_meta
-        -- row.
-        etl.table_meta_old tmo ON tmo.table_meta_id=ttuo.table_meta_id
-    INNER JOIN
-        -- Join to the row of the "new" table_meta table that corresponds to the 
-        -- same values of values of:
-        --     target_db_id
-        --     target_schema_name
-        --     target_table_name
-        -- (which form an alternate key) from the "old" data so that we will
-        -- have access to the value of table_meta_id from the "new" data.
-        etl.table_meta tm ON (tm.target_db_id=tmo.target_db_id AND tm.target_schema_name=tmo.target_schema_name AND tm.target_table_name=tmo.target_table_name)
-)
-INSERT INTO etl.target_table_update (
---    target_table_update_id,  -- Value assigned from a sequence via column DEFAULT setting
-    table_meta_id,
---    created_on,  OLD COLUMN: DELETE THIS LINE
-    algorithm_id,
-    elapsed_time_millis,
-    num_inserts,
-    num_updates,
-    num_rows_processed,
-    num_rows_processed_per_sec,
-    insert_id_colname,
-    insert_id_maxvalue,
-    last_updated_on_colname,
-    last_updated_on_maxvalue
-)
-SELECT
-    table_meta_id_new,
---    created_on,  OLD COLUMN: DELETE THIS LINE
-    algorithm_id,
-    elapsed_time_millis,
-    num_inserts,
-    num_updates,
-    num_rows_processed,
-    num_rows_processed_per_sec,
-    insert_id_colname,
-    insert_id_maxvalue,
-    last_updated_on_colname,
-    last_updated_on_maxvalue
-FROM
-    olddata;
-
-
--- Insert one row into the "new" target_table_compare table for *each* row of
--- the "old" target_table_compare table, but assigning a new value to the
--- "table_meta_id" column in order to link the new row to the appropriate row of 
--- the "new" table_meta table. Rows of the "old" target_table_compare table that 
--- correspond to source tables that have been dropped will not be processed and 
--- these rows will be deleted when the "old" target_table_compare table is
--- dropped.
-WITH olddata AS (
-    SELECT
---        ttco.target_table_compare_id,
---        ttco.table_meta_id AS "table_meta_id_old",
-        tm.table_meta_id AS "table_meta_id_new",
-        ttco.compared_on,
-        ttco.num_rows_equal,
-        ttco.num_rows_unequal,
-        ttco.num_rows_missing_from_target,
-        ttco.num_rows_extra_in_target
-    FROM
-        etl.target_table_compare_old ttco
-    INNER JOIN
-        -- Join to the row of the "old" table_meta table that corresponds to the 
-        -- "old" target_table_compare data so that we will have access to the 
-        -- values of:
-        --     target_db_id
-        --     target_schema_name
-        --     target_table_name
-        -- from the "old" data. These three values will be used in the next join 
-        -- to join to the row of the "new" table_meta table to get access to its 
-        -- value of table_meta_id so that the new target_table_compare row that
-        -- we insert below will be linked to the appropriate "new" table_meta
-        -- row.
-        etl.table_meta_old tmo ON tmo.table_meta_id=ttco.table_meta_id
-    INNER JOIN
-        -- Join to the row of the "new" table_meta table that corresponds to the 
-        -- same values of values of:
-        --     target_db_id
-        --     target_schema_name
-        --     target_table_name
-        -- (which form an alternate key) from the "old" data so that we will
-        -- have access to the value of table_meta_id from the "new" data.
-        etl.table_meta tm ON (tm.target_db_id=tmo.target_db_id AND tm.target_schema_name=tmo.target_schema_name AND tm.target_table_name=tmo.target_table_name)
-)
-INSERT INTO etl.target_table_compare (
---    target_table_compare_id,  -- Value assigned from a sequence via column DEFAULT setting
-    table_meta_id,
-    compared_on,
-    num_rows_equal,
-    num_rows_unequal,
-    num_rows_missing_from_target,
-    num_rows_extra_in_target
-)
-SELECT
-    table_meta_id_new,
-    compared_on,
-    num_rows_equal,
-    num_rows_unequal,
-    num_rows_missing_from_target,
-    num_rows_extra_in_target
-FROM
-    olddata;
-
-
--- The code below for migrating the etl.table_meta and etl.column_meta *data*
--- during an "upgrade install" may be commented out if we want to ensure that
--- new metadata is always used, i.e., updates made in an environment between
--- installs are discarded.
- 
----- Update each new etl.table_meta row that matches a row of the "old" data
----- stored in the table etl.table_meta_old. Some etl.table_meta_old rows may not 
----- match an etl.table_meta row because tables can be removed from a source
----- database, in which case there will no longer be a matching table_meta row.
---WITH olddata AS (
---    SELECT
---        tmo.table_meta_id,
---        tmo.source_db_id,
---        tmo.source_schema_name,
---        tmo.source_table_name,
---        tmo.target_db_id,
---        tmo.target_schema_name,
---        tmo.target_table_name,
---        tmo.can_insert_rows,
---        tmo.can_update_rows,
---        tmo.can_delete_rows,
---        tmo.is_static_support_table,
---        tmo.row_can_be_deleted_from_seconds,
---        tmo.can_delete_row_schema_name,
---        tmo.can_delete_row_table_name,
---        tmo.delete_marked_rows_table_order,
---        tmo.mark_rows_for_deletion_algorithm_id,
---        tmo.delete_marked_rows_algorithm_id,
---        tmo.update_target_table_algorithm_id,
---        tmo.update_target_table,
---        tmo.mark_rows_for_deletion,
---        tmo.delete_marked_rows,
---        tmo.compare_target_table,
---        tmo.source_db_etl_state_register_schema_name,
---        tmo.source_db_etl_state_register_table_name
---    FROM
---        etl.table_meta_old tmo
---)
---UPDATE etl.table_meta SET (
-----    table_meta_id,
---    source_db_id,
---    source_schema_name,
---    source_table_name,
---    target_db_id,
---    target_schema_name,
---    target_table_name,
---    can_insert_rows,
---    can_update_rows,
---    can_delete_rows,
---    is_static_support_table,
---    row_can_be_deleted_from_seconds,
---    can_delete_row_schema_name,
---    can_delete_row_table_name,
---    delete_marked_rows_table_order,
---    mark_rows_for_deletion_algorithm_id,
---    delete_marked_rows_algorithm_id,
---    update_target_table_algorithm_id,
---    update_target_table,
---    mark_rows_for_deletion,
---    delete_marked_rows,
---    compare_target_table,
---    source_db_etl_state_register_schema_name,
---    source_db_etl_state_register_table_name
---) = (
-----    olddata.table_meta_id,
---    olddata.source_db_id,
---    olddata.source_schema_name,
---    olddata.source_table_name,
---    olddata.target_db_id,
---    olddata.target_schema_name,
---    olddata.target_table_name,
---    olddata.can_insert_rows,
---    olddata.can_update_rows,
---    olddata.can_delete_rows,
---    olddata.is_static_support_table,
---    olddata.row_can_be_deleted_from_seconds,
---    olddata.can_delete_row_schema_name,
---    olddata.can_delete_row_table_name,
---    olddata.delete_marked_rows_table_order,
---    olddata.mark_rows_for_deletion_algorithm_id,
---    olddata.delete_marked_rows_algorithm_id,
---    olddata.update_target_table_algorithm_id,
---    olddata.update_target_table,
---    olddata.mark_rows_for_deletion,
---    olddata.delete_marked_rows,
---    olddata.compare_target_table,
---    olddata.source_db_etl_state_register_schema_name,
---    olddata.source_db_etl_state_register_table_name
---)
---FROM
---    olddata
---WHERE
---    -- Columns:
---    --     target_db_id
---    --     target_schema_name
---    --     target_table_name
---    -- form an alternate key for the table_meta table.
---    table_meta.target_db_id       = olddata.target_db_id       AND 
---    table_meta.target_schema_name = olddata.target_schema_name AND 
---    table_meta.target_table_name  = olddata.target_table_name;
 --
+-- Name: SCHEMA etl; Type: ACL; Schema: -; Owner: qfree_etl
 --
----- Update each new etl.column_meta row that matches a row of the copy of
----- the "old" data, etl.column_meta_old. Some etl.column_meta_old rows may not 
----- match an etl.column_meta row because tables and columns can be removed from 
----- a source database, in which case there will no longer be a matching 
----- table_meta and/or column_meta row.
---WITH olddata AS (
---    SELECT
---        tm.table_meta_id AS "table_meta_id_new",
-----        cmo.column_meta_id,
-----        cmo.table_meta_id,
---        cmo.source_column_name,
---        cmo.target_column_name,
---        cmo.is_primary_key_column,
---        cmo.primary_key_column_order,
---        cmo.is_insert_id_column,
---        cmo.is_inserted_on_column,
---        cmo.is_last_updated_on_column,
---        cmo.is_row_can_be_deleted_from_column,
---        cmo.is_can_delete_row_column,
---        cmo.is_updatable_column,
---        cmo.mirror_column,
---        cmo.compare_column
---    FROM
---        etl.column_meta_old cmo
---    INNER JOIN
---        -- Join to the row of the "old" table_meta table that corresponds to the 
---        -- "old" column_meta data so that we will have access to the values of:
---        --     target_db_id
---        --     target_schema_name
---        --     target_table_name
---        -- from the "old" data. These three values will be used in the next join 
---        -- to join to the row of the "new" table_meta table to get access to its 
---        -- value of table_meta_id, which is also equal to the "new" value of
---        -- column_meta_id from the "new" column_meta table.
---        etl.table_meta_old tmo ON tmo.table_meta_id=cmo.table_meta_id
---    INNER JOIN
---        -- Join to the row of the "new" table_meta table that corresponds to the 
---        -- same values of values of:
---        --     target_db_id
---        --     target_schema_name
---        --     target_table_name
---        -- (which form an alternate key) from the "old" data so that we will
---        -- have access to the value of table_meta_id from the "new" data.
---        etl.table_meta tm ON (tm.target_db_id=tmo.target_db_id AND tm.target_schema_name=tmo.target_schema_name AND tm.target_table_name=tmo.target_table_name)
---)
---UPDATE etl.column_meta SET (
-----    column_meta_id,
---    table_meta_id,
---    source_column_name,
---    target_column_name,
---    is_primary_key_column,
---    primary_key_column_order,
---    is_insert_id_column,
---    is_inserted_on_column,
---    is_last_updated_on_column,
---    is_row_can_be_deleted_from_column,
---    is_can_delete_row_column,
---    is_updatable_column,
---    mirror_column,
---    compare_column
---) = (
-----    olddata.column_meta_id,
---    olddata.table_meta_id_new,
---    olddata.source_column_name,
---    olddata.target_column_name,
---    olddata.is_primary_key_column,
---    olddata.primary_key_column_order,
---    olddata.is_insert_id_column,
---    olddata.is_inserted_on_column,
---    olddata.is_last_updated_on_column,
---    olddata.is_row_can_be_deleted_from_column,
---    olddata.is_can_delete_row_column,
---    olddata.is_updatable_column,
---    olddata.mirror_column,
---    olddata.compare_column
---)
---FROM
---    olddata
---WHERE
---    -- Columns:
---    --     table_meta_id
---    --     target_column_name
---    -- form an alternate key for the column_meta table.
---    column_meta.table_meta_id      = olddata.table_meta_id_new AND
---    column_meta.target_column_name = olddata.target_column_name;
+
+REVOKE ALL ON SCHEMA etl FROM PUBLIC;
+REVOKE ALL ON SCHEMA etl FROM qfree_etl;
+GRANT ALL ON SCHEMA etl TO qfree_etl;
+GRANT USAGE ON SCHEMA etl TO qfree_sm_ro_role;
+GRANT USAGE ON SCHEMA etl TO qfree_sm_rw_role;
+
+
+--
+-- Name: SCHEMA public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- Name: TABLE cdc_timestamps; Type: ACL; Schema: etl; Owner: qfree_admin
+--
+
+REVOKE ALL ON TABLE etl.cdc_timestamps FROM PUBLIC;
+REVOKE ALL ON TABLE etl.cdc_timestamps FROM qfree_admin;
+GRANT ALL ON TABLE etl.cdc_timestamps TO qfree_admin;
+GRANT SELECT ON TABLE etl.cdc_timestamps TO qfree_sm_ro_role;
+GRANT SELECT ON TABLE etl.cdc_timestamps TO qfree_bi_ro_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.cdc_timestamps TO qfree_rw_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.cdc_timestamps TO qfree_etl_mgmt_role;
+
+
+--
+-- Name: TABLE column_meta; Type: ACL; Schema: etl; Owner: qfree_admin
+--
+
+REVOKE ALL ON TABLE etl.column_meta FROM PUBLIC;
+REVOKE ALL ON TABLE etl.column_meta FROM qfree_admin;
+GRANT ALL ON TABLE etl.column_meta TO qfree_admin;
+GRANT SELECT ON TABLE etl.column_meta TO qfree_sm_ro_role;
+GRANT SELECT ON TABLE etl.column_meta TO qfree_bi_ro_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.column_meta TO qfree_rw_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.column_meta TO qfree_etl_mgmt_role;
+
+
+--
+-- Name: TABLE configuration; Type: ACL; Schema: etl; Owner: qfree_admin
+--
+
+REVOKE ALL ON TABLE etl.configuration FROM PUBLIC;
+REVOKE ALL ON TABLE etl.configuration FROM qfree_admin;
+GRANT ALL ON TABLE etl.configuration TO qfree_admin;
+GRANT SELECT ON TABLE etl.configuration TO qfree_sm_ro_role;
+GRANT SELECT ON TABLE etl.configuration TO qfree_bi_ro_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.configuration TO qfree_rw_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.configuration TO qfree_etl_mgmt_role;
+
+
+--
+-- Name: TABLE etl_run; Type: ACL; Schema: etl; Owner: qfree_admin
+--
+
+REVOKE ALL ON TABLE etl.etl_run FROM PUBLIC;
+REVOKE ALL ON TABLE etl.etl_run FROM qfree_admin;
+GRANT ALL ON TABLE etl.etl_run TO qfree_admin;
+GRANT SELECT ON TABLE etl.etl_run TO qfree_sm_ro_role;
+GRANT SELECT ON TABLE etl.etl_run TO qfree_bi_ro_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.etl_run TO qfree_rw_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.etl_run TO qfree_etl_mgmt_role;
+
+
+--
+-- Name: TABLE log_channel; Type: ACL; Schema: etl; Owner: qfree_admin
+--
+
+REVOKE ALL ON TABLE etl.log_channel FROM PUBLIC;
+REVOKE ALL ON TABLE etl.log_channel FROM qfree_admin;
+GRANT ALL ON TABLE etl.log_channel TO qfree_admin;
+GRANT SELECT ON TABLE etl.log_channel TO qfree_sm_ro_role;
+GRANT SELECT ON TABLE etl.log_channel TO qfree_bi_ro_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.log_channel TO qfree_rw_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.log_channel TO qfree_etl_mgmt_role;
+
+
+--
+-- Name: TABLE log_job_entries; Type: ACL; Schema: etl; Owner: qfree_admin
+--
+
+REVOKE ALL ON TABLE etl.log_job_entries FROM PUBLIC;
+REVOKE ALL ON TABLE etl.log_job_entries FROM qfree_admin;
+GRANT ALL ON TABLE etl.log_job_entries TO qfree_admin;
+GRANT SELECT ON TABLE etl.log_job_entries TO qfree_sm_ro_role;
+GRANT SELECT ON TABLE etl.log_job_entries TO qfree_bi_ro_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.log_job_entries TO qfree_rw_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.log_job_entries TO qfree_etl_mgmt_role;
+
+
+--
+-- Name: TABLE log_jobs; Type: ACL; Schema: etl; Owner: qfree_admin
+--
+
+REVOKE ALL ON TABLE etl.log_jobs FROM PUBLIC;
+REVOKE ALL ON TABLE etl.log_jobs FROM qfree_admin;
+GRANT ALL ON TABLE etl.log_jobs TO qfree_admin;
+GRANT SELECT ON TABLE etl.log_jobs TO qfree_sm_ro_role;
+GRANT SELECT ON TABLE etl.log_jobs TO qfree_bi_ro_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.log_jobs TO qfree_rw_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.log_jobs TO qfree_etl_mgmt_role;
+
+
+--
+-- Name: TABLE log_transformation_metrics; Type: ACL; Schema: etl; Owner: qfree_admin
+--
+
+REVOKE ALL ON TABLE etl.log_transformation_metrics FROM PUBLIC;
+REVOKE ALL ON TABLE etl.log_transformation_metrics FROM qfree_admin;
+GRANT ALL ON TABLE etl.log_transformation_metrics TO qfree_admin;
+GRANT SELECT ON TABLE etl.log_transformation_metrics TO qfree_sm_ro_role;
+GRANT SELECT ON TABLE etl.log_transformation_metrics TO qfree_bi_ro_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.log_transformation_metrics TO qfree_rw_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.log_transformation_metrics TO qfree_etl_mgmt_role;
+
+
+--
+-- Name: TABLE log_transformation_performance; Type: ACL; Schema: etl; Owner: qfree_admin
+--
+
+REVOKE ALL ON TABLE etl.log_transformation_performance FROM PUBLIC;
+REVOKE ALL ON TABLE etl.log_transformation_performance FROM qfree_admin;
+GRANT ALL ON TABLE etl.log_transformation_performance TO qfree_admin;
+GRANT SELECT ON TABLE etl.log_transformation_performance TO qfree_sm_ro_role;
+GRANT SELECT ON TABLE etl.log_transformation_performance TO qfree_bi_ro_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.log_transformation_performance TO qfree_rw_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.log_transformation_performance TO qfree_etl_mgmt_role;
+
+
+--
+-- Name: TABLE log_transformation_steps; Type: ACL; Schema: etl; Owner: qfree_admin
+--
+
+REVOKE ALL ON TABLE etl.log_transformation_steps FROM PUBLIC;
+REVOKE ALL ON TABLE etl.log_transformation_steps FROM qfree_admin;
+GRANT ALL ON TABLE etl.log_transformation_steps TO qfree_admin;
+GRANT SELECT ON TABLE etl.log_transformation_steps TO qfree_sm_ro_role;
+GRANT SELECT ON TABLE etl.log_transformation_steps TO qfree_bi_ro_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.log_transformation_steps TO qfree_rw_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.log_transformation_steps TO qfree_etl_mgmt_role;
+
+
+--
+-- Name: TABLE log_transformations; Type: ACL; Schema: etl; Owner: qfree_admin
+--
+
+REVOKE ALL ON TABLE etl.log_transformations FROM PUBLIC;
+REVOKE ALL ON TABLE etl.log_transformations FROM qfree_admin;
+GRANT ALL ON TABLE etl.log_transformations TO qfree_admin;
+GRANT SELECT ON TABLE etl.log_transformations TO qfree_sm_ro_role;
+GRANT SELECT ON TABLE etl.log_transformations TO qfree_bi_ro_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.log_transformations TO qfree_rw_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.log_transformations TO qfree_etl_mgmt_role;
+
+
+--
+-- Name: TABLE table_meta; Type: ACL; Schema: etl; Owner: qfree_admin
+--
+
+REVOKE ALL ON TABLE etl.table_meta FROM PUBLIC;
+REVOKE ALL ON TABLE etl.table_meta FROM qfree_admin;
+GRANT ALL ON TABLE etl.table_meta TO qfree_admin;
+GRANT SELECT ON TABLE etl.table_meta TO qfree_sm_ro_role;
+GRANT SELECT ON TABLE etl.table_meta TO qfree_bi_ro_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.table_meta TO qfree_rw_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.table_meta TO qfree_etl_mgmt_role;
+
+
+--
+-- Name: TABLE table_state; Type: ACL; Schema: etl; Owner: qfree_admin
+--
+
+REVOKE ALL ON TABLE etl.table_state FROM PUBLIC;
+REVOKE ALL ON TABLE etl.table_state FROM qfree_admin;
+GRANT ALL ON TABLE etl.table_state TO qfree_admin;
+GRANT SELECT ON TABLE etl.table_state TO qfree_sm_ro_role;
+GRANT SELECT ON TABLE etl.table_state TO qfree_bi_ro_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.table_state TO qfree_rw_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.table_state TO qfree_etl_mgmt_role;
+
+
+--
+-- Name: TABLE target_table_compare; Type: ACL; Schema: etl; Owner: qfree_admin
+--
+
+REVOKE ALL ON TABLE etl.target_table_compare FROM PUBLIC;
+REVOKE ALL ON TABLE etl.target_table_compare FROM qfree_admin;
+GRANT ALL ON TABLE etl.target_table_compare TO qfree_admin;
+GRANT SELECT ON TABLE etl.target_table_compare TO qfree_sm_ro_role;
+GRANT SELECT ON TABLE etl.target_table_compare TO qfree_bi_ro_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.target_table_compare TO qfree_rw_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.target_table_compare TO qfree_etl_mgmt_role;
+
+
+--
+-- Name: SEQUENCE target_table_compare_target_table_compare_id_seq; Type: ACL; Schema: etl; Owner: qfree_admin
+--
+
+REVOKE ALL ON SEQUENCE etl.target_table_compare_target_table_compare_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE etl.target_table_compare_target_table_compare_id_seq FROM qfree_admin;
+GRANT ALL ON SEQUENCE etl.target_table_compare_target_table_compare_id_seq TO qfree_admin;
+GRANT SELECT,USAGE ON SEQUENCE etl.target_table_compare_target_table_compare_id_seq TO qfree_rw_role;
+GRANT SELECT,USAGE ON SEQUENCE etl.target_table_compare_target_table_compare_id_seq TO qfree_etl_mgmt_role;
+
+
+--
+-- Name: TABLE target_table_progress; Type: ACL; Schema: etl; Owner: qfree_admin
+--
+
+REVOKE ALL ON TABLE etl.target_table_progress FROM PUBLIC;
+REVOKE ALL ON TABLE etl.target_table_progress FROM qfree_admin;
+GRANT ALL ON TABLE etl.target_table_progress TO qfree_admin;
+GRANT SELECT ON TABLE etl.target_table_progress TO qfree_sm_ro_role;
+GRANT SELECT ON TABLE etl.target_table_progress TO qfree_bi_ro_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.target_table_progress TO qfree_rw_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.target_table_progress TO qfree_etl_mgmt_role;
+
+
+--
+-- Name: SEQUENCE target_table_progress_target_table_progress_id_seq; Type: ACL; Schema: etl; Owner: qfree_admin
+--
+
+REVOKE ALL ON SEQUENCE etl.target_table_progress_target_table_progress_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE etl.target_table_progress_target_table_progress_id_seq FROM qfree_admin;
+GRANT ALL ON SEQUENCE etl.target_table_progress_target_table_progress_id_seq TO qfree_admin;
+GRANT SELECT,USAGE ON SEQUENCE etl.target_table_progress_target_table_progress_id_seq TO qfree_rw_role;
+GRANT SELECT,USAGE ON SEQUENCE etl.target_table_progress_target_table_progress_id_seq TO qfree_etl_mgmt_role;
+
+
+--
+-- Name: TABLE target_table_update; Type: ACL; Schema: etl; Owner: qfree_admin
+--
+
+REVOKE ALL ON TABLE etl.target_table_update FROM PUBLIC;
+REVOKE ALL ON TABLE etl.target_table_update FROM qfree_admin;
+GRANT ALL ON TABLE etl.target_table_update TO qfree_admin;
+GRANT SELECT ON TABLE etl.target_table_update TO qfree_sm_ro_role;
+GRANT SELECT ON TABLE etl.target_table_update TO qfree_bi_ro_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.target_table_update TO qfree_rw_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE etl.target_table_update TO qfree_etl_mgmt_role;
+
+
+--
+-- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: etl; Owner: qfree_admin
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA etl REVOKE ALL ON SEQUENCES  FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA etl REVOKE ALL ON SEQUENCES  FROM qfree_admin;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA etl GRANT SELECT,USAGE ON SEQUENCES  TO qfree_rw_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA etl GRANT SELECT,USAGE ON SEQUENCES  TO qfree_etl_mgmt_role;
+
+
+--
+-- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: etl; Owner: qfree_admin
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA etl REVOKE ALL ON TABLES  FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA etl REVOKE ALL ON TABLES  FROM qfree_admin;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA etl GRANT SELECT ON TABLES  TO qfree_sm_ro_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA etl GRANT SELECT ON TABLES  TO qfree_bi_ro_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA etl GRANT SELECT,INSERT,DELETE,UPDATE ON TABLES  TO qfree_rw_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA etl GRANT SELECT,INSERT,DELETE,UPDATE ON TABLES  TO qfree_etl_mgmt_role;
+
+
+--
+-- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: public; Owner: qfree_admin
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA public REVOKE ALL ON SEQUENCES  FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA public REVOKE ALL ON SEQUENCES  FROM qfree_admin;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA public GRANT SELECT ON SEQUENCES  TO qfree_sm_ro_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA public GRANT SELECT,USAGE ON SEQUENCES  TO qfree_rw_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA public GRANT SELECT,USAGE ON SEQUENCES  TO qfree_bi_rw_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA public GRANT SELECT,USAGE ON SEQUENCES  TO qfree_etl_mgmt_role;
+
+
+--
+-- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: public; Owner: qfree_admin
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA public REVOKE ALL ON TABLES  FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA public REVOKE ALL ON TABLES  FROM qfree_admin;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA public GRANT SELECT ON TABLES  TO qfree_sm_ro_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA public GRANT SELECT ON TABLES  TO qfree_bi_ro_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA public GRANT SELECT,INSERT,DELETE,UPDATE ON TABLES  TO qfree_rw_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE qfree_admin IN SCHEMA public GRANT SELECT,INSERT,DELETE,UPDATE ON TABLES  TO qfree_etl_mgmt_role;
+
+
+--
+-- PostgreSQL database dump complete
+--
 

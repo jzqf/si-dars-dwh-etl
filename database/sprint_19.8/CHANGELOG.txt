@@ -1,0 +1,31 @@
+No new tables or columns were added to any of the operational databases and no
+changes were made to the data models of the dwh_psa_obo and dwh_dsa_obo
+databases.
+
+This release added support for:
+
+1.	ETL job progress monitoring.
+2.	ETL job shutdown requests.
+
+This required the following changes:
+
+1.	Changes to PDI jobs & transformations.
+
+2.	Changes to the etl_mgmt database data model. Specifically:
+
+	a.	Added table		etl.etl_run
+	b.	Added table:	etl.target_table_progres
+	c.	Modified table:	etl.target_table_update
+
+Additional chnages:
+
+*	si-dars-dwh-etl/bin/dwh-update.sh: 
+
+	This script now runs the single PDI job:
+	
+		/jb_dwh-update
+	
+	instead of running, in sequence, the two PDI jobs:
+	
+		/psa/jb_psa-update
+		/dsa/jb_dsa-update
