@@ -9,6 +9,11 @@
     <directory>/generic</directory>
     <parameters>
       <parameter>
+        <name>PARAM_CHECK_FOR_SHUTDOWN_REQUEST</name>
+        <default_value>N</default_value>
+        <description>If "Y", a shutdown request will be checked for in this transformation</description>
+      </parameter>
+      <parameter>
         <name>PARAM_ETL_OPERATION</name>
         <default_value />
         <description>ETL operation currently being performed, e.g., "insert"  or "update"</description>
@@ -484,7 +489,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2019/09/11 14:59:53.596</modified_date>
+    <modified_date>2019/09/16 08:34:35.171</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -495,27 +500,28 @@
 1.	Logs progress the the current etl_run row.
 2.	Logs progress by inserting an tl.target_table_progress row, but only if: QF_ETL_PROGRESS_LOG_HISTORY = Y.
 3.	Checks if shutdown has been requested; if so, it initiates a shutdown. This is only done if:
-	QF_CHECK_FOR_SHUTDOWN_REQUEST_IN_PROGRESS_LOG_INTERVAL = Y.
+	PARAM_CHECK_FOR_SHUTDOWN_REQUEST = Y.
 
 This transformation has been written be executed via a "Simple mapping (sub-transformation)" step from ETL algorithms that stream rows.
 
 This transformation has parameters:
 
-PARAM_ETL_RUN_ID						Primary key for the ${QF_ETL_DB_SCHEMA}.etl_run row for the current "run"
-PARAM_TARGET_TABLE_UPDATE_ID		Primary key of ${QF_ETL_DB_SCHEMA}.target_table_update row to be updated by this job for progress and summary statistics
-PARAM_ETL_OPERATION					ETL operation currently being performed, e.g., "insert"  or "update"
-PARAM_SOURCE_DB_DATABASE			Name of source DB
-PARAM_SOURCE_DB_ID					ID the "source" database containing tables will be mirrored to a "target" database
-PARAM_SOURCE_SCHEMA				Name of schema containing source table to mirror to target table
-PARAM_SOURCE_TABLE					Name of source table to mirror to target table
-PARAM_TARGET_DB_DATABASE			Name of target DB
-PARAM_TARGET_DB_ID					ID of the "target" database to which "source" DB tables will be archived/mirrored
-PARAM_TARGET_SCHEMA				Name of schema containing target table to update
-PARAM_TARGET_TABLE					Name of target table to update</note>
-      <xloc>16</xloc>
+PARAM_ETL_RUN_ID							Primary key for the ${QF_ETL_DB_SCHEMA}.etl_run row for the current "run"
+PARAM_TARGET_TABLE_UPDATE_ID			Primary key of ${QF_ETL_DB_SCHEMA}.target_table_update row to be updated by this job for progress and summary statistics
+PARAM_ETL_OPERATION						ETL operation currently being performed, e.g., "insert"  or "update"
+PARAM_CHECK_FOR_SHUTDOWN_REQUEST	If "Y", a shutdown request will be checked for in this transformation
+PARAM_SOURCE_DB_DATABASE				Name of source DB
+PARAM_SOURCE_DB_ID						ID the "source" database containing tables will be mirrored to a "target" database
+PARAM_SOURCE_SCHEMA					Name of schema containing source table to mirror to target table
+PARAM_SOURCE_TABLE						Name of source table to mirror to target table
+PARAM_TARGET_DB_DATABASE				Name of target DB
+PARAM_TARGET_DB_ID						ID of the "target" database to which "source" DB tables will be archived/mirrored
+PARAM_TARGET_SCHEMA					Name of schema containing target table to update
+PARAM_TARGET_TABLE						Name of target table to update</note>
+      <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>941</width>
-      <heigth>296</heigth>
+      <width>965</width>
+      <heigth>309</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -535,7 +541,7 @@ PARAM_TARGET_TABLE					Name of target table to update</note>
       <note>This lists all the stream fields that this transformation will accept at the point where it is executed via a 
 "Simple mapping (sub-transformation)" step.</note>
       <xloc>256</xloc>
-      <yloc>320</yloc>
+      <yloc>336</yloc>
       <width>576</width>
       <heigth>36</heigth>
       <fontname>Ubuntu</fontname>
@@ -569,7 +575,7 @@ B.	Adjust local timestamp field current_timestamp_utc to UTC timestamp. The two 
 	If current_timestamp_utc is simply converted to UTC time zone and then assigned to a PostgreSQL 
 	"timestamp without time zone" column, the column is assigned the current *local* timestamp!</note>
       <xloc>592</xloc>
-      <yloc>496</yloc>
+      <yloc>512</yloc>
       <width>603</width>
       <heigth>192</heigth>
       <fontname>Ubuntu</fontname>
@@ -592,7 +598,7 @@ B.	Adjust local timestamp field current_timestamp_utc to UTC timestamp. The two 
 "Mapping output specification" step 
 must have the same fields.</note>
       <xloc>336</xloc>
-      <yloc>1056</yloc>
+      <yloc>1072</yloc>
       <width>232</width>
       <heigth>49</heigth>
       <fontname>Ubuntu</fontname>
@@ -621,7 +627,7 @@ stream. To avoid this from happening, I add a sequence field named
 row in the stream. If there is more than one row in the stream, the 
 subsequent row(s) will be discarded.</note>
       <xloc>1056</xloc>
-      <yloc>752</yloc>
+      <yloc>768</yloc>
       <width>422</width>
       <heigth>127</heigth>
       <fontname>Ubuntu</fontname>
@@ -961,7 +967,7 @@ subsequent row(s) will be discarded.</note>
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>560</yloc>
+      <yloc>576</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -990,7 +996,42 @@ subsequent row(s) will be discarded.</note>
     </remotesteps>
     <GUI>
       <xloc>1328</xloc>
-      <yloc>1072</yloc>
+      <yloc>1088</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Add sequence named "seqnum"</name>
+    <type>Sequence</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <valuename>seqnum</valuename>
+    <use_database>N</use_database>
+    <connection />
+    <schema />
+    <seqname>SEQ_</seqname>
+    <use_counter>Y</use_counter>
+    <counter_name />
+    <start_at>1</start_at>
+    <increment_by>1</increment_by>
+    <max_value>999999999</max_value>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>784</xloc>
+      <yloc>832</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1010,7 +1051,7 @@ subsequent row(s) will be discarded.</note>
     <compare>
       <condition>
         <negated>N</negated>
-        <leftvalue>qf_check_for_shutdown_request_in_progress_log_interval</leftvalue>
+        <leftvalue>param_check_for_shutdown_request</leftvalue>
         <function>=</function>
         <rightvalue />
         <value>
@@ -1034,7 +1075,7 @@ subsequent row(s) will be discarded.</note>
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>816</yloc>
+      <yloc>832</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1066,7 +1107,7 @@ var num_rows_to_process;
 // Output fields created by this script:
 var qf_etl_progress_interval_rows = parseInt(getVariable("QF_ETL_PROGRESS_INTERVAL_ROWS", "0"));
 var qf_etl_progress_log_history = getVariable("QF_ETL_PROGRESS_LOG_HISTORY", "N");
-var qf_check_for_shutdown_request_in_progress_log_interval = getVariable("QF_CHECK_FOR_SHUTDOWN_REQUEST_IN_PROGRESS_LOG_INTERVAL", "N");
+var param_check_for_shutdown_request = getVariable("PARAM_CHECK_FOR_SHUTDOWN_REQUEST", "N");
 var param_etl_run_id = parseInt(getVariable("PARAM_ETL_RUN_ID", "0"));
 var param_target_table_update_id = parseInt(getVariable("PARAM_TARGET_TABLE_UPDATE_ID", "0"));
 var param_etl_operation = getVariable("PARAM_ETL_OPERATION", "");  // e.g., "insert"  or "update"
@@ -1136,8 +1177,8 @@ if (prev_progress_milliseconds) {
         <replace>N</replace>
       </field>
       <field>
-        <name>qf_check_for_shutdown_request_in_progress_log_interval</name>
-        <rename>qf_check_for_shutdown_request_in_progress_log_interval</rename>
+        <name>param_check_for_shutdown_request</name>
+        <rename>param_check_for_shutdown_request</rename>
         <type>String</type>
         <length>-1</length>
         <precision>-1</precision>
@@ -1202,7 +1243,7 @@ if (prev_progress_milliseconds) {
     </remotesteps>
     <GUI>
       <xloc>432</xloc>
-      <yloc>480</yloc>
+      <yloc>496</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1247,7 +1288,7 @@ if (prev_progress_milliseconds) {
     </remotesteps>
     <GUI>
       <xloc>432</xloc>
-      <yloc>560</yloc>
+      <yloc>576</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1291,7 +1332,76 @@ if (prev_progress_milliseconds) {
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>720</yloc>
+      <yloc>736</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Discard extra rows</name>
+    <type>Dummy</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>960</xloc>
+      <yloc>752</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>First row (seqnum=1) ?</name>
+    <type>FilterRows</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <send_true_to>Generate "Shutdown requested" message for email</send_true_to>
+    <send_false_to>Discard extra rows</send_false_to>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <leftvalue>seqnum</leftvalue>
+        <function>=</function>
+        <rightvalue />
+        <value>
+          <name>constant</name>
+          <type>Integer</type>
+          <text>1</text>
+          <length>-1</length>
+          <precision>0</precision>
+          <isnull>N</isnull>
+          <mask>####0;-####0</mask>
+        </value>
+      </condition>
+    </compare>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>960</xloc>
+      <yloc>832</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1381,7 +1491,7 @@ shutdown_requested_summary = "Shutdown requested by: " + shutdown_requested_by +
     </remotesteps>
     <GUI>
       <xloc>960</xloc>
-      <yloc>912</yloc>
+      <yloc>928</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1412,7 +1522,7 @@ shutdown_requested_summary = "Shutdown requested by: " + shutdown_requested_by +
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>480</yloc>
+      <yloc>496</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1447,7 +1557,7 @@ shutdown_requested_summary = "Shutdown requested by: " + shutdown_requested_by +
     </remotesteps>
     <GUI>
       <xloc>432</xloc>
-      <yloc>400</yloc>
+      <yloc>416</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1523,7 +1633,7 @@ shutdown_requested_summary = "Shutdown requested by: " + shutdown_requested_by +
     </remotesteps>
     <GUI>
       <xloc>432</xloc>
-      <yloc>720</yloc>
+      <yloc>736</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1569,7 +1679,7 @@ shutdown_requested_summary = "Shutdown requested by: " + shutdown_requested_by +
         <name>qf_etl_progress_log_history</name>
       </field>
       <field>
-        <name>qf_check_for_shutdown_request_in_progress_log_interval</name>
+        <name>param_check_for_shutdown_request</name>
       </field>
       <field>
         <name>param_etl_run_id</name>
@@ -1603,7 +1713,7 @@ shutdown_requested_summary = "Shutdown requested by: " + shutdown_requested_by +
     </remotesteps>
     <GUI>
       <xloc>432</xloc>
-      <yloc>640</yloc>
+      <yloc>656</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1644,7 +1754,7 @@ shutdown_requested_summary = "Shutdown requested by: " + shutdown_requested_by +
     </remotesteps>
     <GUI>
       <xloc>1152</xloc>
-      <yloc>1072</yloc>
+      <yloc>1088</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1710,7 +1820,7 @@ shutdown_requested_summary = "Shutdown requested by: " + shutdown_requested_by +
     </remotesteps>
     <GUI>
       <xloc>432</xloc>
-      <yloc>816</yloc>
+      <yloc>832</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1762,7 +1872,7 @@ shutdown_requested_summary = "Shutdown requested by: " + shutdown_requested_by +
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>320</yloc>
+      <yloc>336</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1787,7 +1897,7 @@ shutdown_requested_summary = "Shutdown requested by: " + shutdown_requested_by +
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>992</yloc>
+      <yloc>1008</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1827,7 +1937,7 @@ shutdown_requested_summary = "Shutdown requested by: " + shutdown_requested_by +
     </remotesteps>
     <GUI>
       <xloc>432</xloc>
-      <yloc>992</yloc>
+      <yloc>1008</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1872,7 +1982,7 @@ shutdown_requested_summary = "Shutdown requested by: " + shutdown_requested_by +
     </remotesteps>
     <GUI>
       <xloc>960</xloc>
-      <yloc>1072</yloc>
+      <yloc>1088</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1918,7 +2028,7 @@ var progress_milliseconds = Date.now();</jsScript_script>
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>400</yloc>
+      <yloc>416</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1952,7 +2062,7 @@ var progress_milliseconds = Date.now();</jsScript_script>
     </remotesteps>
     <GUI>
       <xloc>960</xloc>
-      <yloc>992</yloc>
+      <yloc>1008</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -2025,7 +2135,7 @@ var progress_milliseconds = Date.now();</jsScript_script>
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>640</yloc>
+      <yloc>656</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -2069,111 +2179,7 @@ var progress_milliseconds = Date.now();</jsScript_script>
     </remotesteps>
     <GUI>
       <xloc>592</xloc>
-      <yloc>816</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Add sequence named "seqnum"</name>
-    <type>Sequence</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <valuename>seqnum</valuename>
-    <use_database>N</use_database>
-    <connection />
-    <schema />
-    <seqname>SEQ_</seqname>
-    <use_counter>Y</use_counter>
-    <counter_name />
-    <start_at>1</start_at>
-    <increment_by>1</increment_by>
-    <max_value>999999999</max_value>
-    <attributes />
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>784</xloc>
-      <yloc>816</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>First row (seqnum=1) ?</name>
-    <type>FilterRows</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <send_true_to>Generate "Shutdown requested" message for email</send_true_to>
-    <send_false_to>Discard extra rows</send_false_to>
-    <compare>
-      <condition>
-        <negated>N</negated>
-        <leftvalue>seqnum</leftvalue>
-        <function>=</function>
-        <rightvalue />
-        <value>
-          <name>constant</name>
-          <type>Integer</type>
-          <text>1</text>
-          <length>-1</length>
-          <precision>0</precision>
-          <isnull>N</isnull>
-          <mask>####0;-####0</mask>
-        </value>
-      </condition>
-    </compare>
-    <attributes />
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>960</xloc>
-      <yloc>816</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Discard extra rows</name>
-    <type>Dummy</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <attributes />
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>960</xloc>
-      <yloc>736</yloc>
+      <yloc>832</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
