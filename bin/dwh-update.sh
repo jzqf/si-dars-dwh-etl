@@ -26,6 +26,6 @@
 # Include environment variables
 source ${app.rootDir}/${app.user}/bin/${app.name}-env.sh
 
-$DWH_HOME/bin/kitchen.sh / jb_dwh-update Basic # Minimal Basic Debug
+$DWH_HOME/bin/kitchen.sh / jb_dwh-update Minimal # Minimal Basic Debug
 #$DWH_HOME/bin/kitchen.sh /psa jb_psa-update Basic # Minimal Basic Debug
 #$DWH_HOME/bin/kitchen.sh /dsa jb_dsa-update Basic # Minimal Basic Debug
