@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2019/08/15 13:03:24.950</modified_date>
+  <modified_date>2019/09/06 13:47:02.255</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
@@ -91,6 +91,11 @@
       <description>for target DB "dynamic" database connections</description>
     </parameter>
     <parameter>
+      <name>PARAM_ETL_RUN_ID</name>
+      <default_value />
+      <description>Primary key for the ${QF_ETL_DB_SCHEMA}.etl_run row for the current "run"</description>
+    </parameter>
+    <parameter>
       <name>PARAM_SOURCE_DB_ID</name>
       <default_value>2</default_value>
       <description>ID the "source" database containing tables will be archived/mirrored to a "target" database</description>
@@ -129,6 +134,11 @@
       <name>PARAM_TARGET_TABLE</name>
       <default_value>obo__managed_process_control</default_value>
       <description>Name of target table to update (not currently used)</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_TARGET_TABLE_UPDATE_ID</name>
+      <default_value />
+      <description>Primary key of ${QF_ETL_DB_SCHEMA}.target_table_update row to be updated by this job for progress and summary statistics</description>
     </parameter>
   </parameters>
   <connection>
@@ -527,7 +537,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>448</xloc>
-      <yloc>384</yloc>
+      <yloc>416</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -596,7 +606,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>560</xloc>
-      <yloc>1152</yloc>
+      <yloc>1184</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -668,7 +678,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>560</xloc>
-      <yloc>1248</yloc>
+      <yloc>1280</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -710,7 +720,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>352</xloc>
-      <yloc>1152</yloc>
+      <yloc>1184</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -723,7 +733,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>240</xloc>
-      <yloc>720</yloc>
+      <yloc>752</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -771,7 +781,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>560</xloc>
-      <yloc>480</yloc>
+      <yloc>512</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -813,7 +823,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>1</nr>
       <xloc>352</xloc>
-      <yloc>480</yloc>
+      <yloc>512</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -825,7 +835,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>240</xloc>
-      <yloc>480</yloc>
+      <yloc>512</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -860,7 +870,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>1</nr>
       <xloc>560</xloc>
-      <yloc>576</yloc>
+      <yloc>608</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -902,7 +912,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>2</nr>
       <xloc>352</xloc>
-      <yloc>576</yloc>
+      <yloc>608</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -946,7 +956,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>1</nr>
       <xloc>560</xloc>
-      <yloc>672</yloc>
+      <yloc>704</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -988,7 +998,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>2</nr>
       <xloc>352</xloc>
-      <yloc>672</yloc>
+      <yloc>704</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -1027,7 +1037,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>560</xloc>
-      <yloc>768</yloc>
+      <yloc>800</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -1069,7 +1079,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>352</xloc>
-      <yloc>768</yloc>
+      <yloc>800</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -1108,7 +1118,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>560</xloc>
-      <yloc>864</yloc>
+      <yloc>896</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -1150,7 +1160,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>352</xloc>
-      <yloc>960</yloc>
+      <yloc>992</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -1172,7 +1182,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>240</xloc>
-      <yloc>1248</yloc>
+      <yloc>1280</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -1180,7 +1190,8 @@ ORDER BY
       <description />
       <type>WRITE_TO_LOG</type>
       <attributes />
-      <logmessage>Parameters received by ${Internal.Job.Name}:
+      <logmessage>PARAM_ETL_RUN_ID                     = ${PARAM_ETL_RUN_ID}
+PARAM_TARGET_TABLE_UPDATE_ID         = ${PARAM_TARGET_TABLE_UPDATE_ID}
 PARAM_CDC_LAST_LOAD_UTC              = ${PARAM_CDC_LAST_LOAD_UTC}
 PARAM_CDC_CURRENT_LOAD_UTC           = ${PARAM_CDC_CURRENT_LOAD_UTC}
 PARAM_DYN_DB_CONN_SOURCE_DB_HOST     = ${PARAM_DYN_DB_CONN_SOURCE_DB_HOST}
@@ -1206,12 +1217,12 @@ PARAM_TARGET_DB_ID                   = ${PARAM_TARGET_DB_ID}
 PARAM_TARGET_SCHEMA                  = ${PARAM_TARGET_SCHEMA}
 PARAM_TARGET_TABLE                   = ${PARAM_TARGET_TABLE}</logmessage>
       <loglevel>Minimal</loglevel>
-      <logsubject>Parameters received by ${Internal.Job.Name}</logsubject>
+      <logsubject>${Internal.Job.Name}</logsubject>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>560</xloc>
-      <yloc>384</yloc>
+      <yloc>416</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -1250,7 +1261,7 @@ PARAM_TARGET_TABLE                   = ${PARAM_TARGET_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>560</xloc>
-      <yloc>1056</yloc>
+      <yloc>1088</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -1263,7 +1274,7 @@ PARAM_TARGET_TABLE                   = ${PARAM_TARGET_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>560</xloc>
-      <yloc>960</yloc>
+      <yloc>992</yloc>
       <attributes_kjc />
     </entry>
   </entries>
@@ -1499,6 +1510,8 @@ PARAM_TARGET_TABLE                   = ${PARAM_TARGET_TABLE}</logmessage>
       <note>This job updates a single "updatable" table (INSERTs &amp; UPDATEs allowed, but no DELETEs) in the target database that mirrors a table from a source database.
 The "updatable" table generic update algorithm #1 is used. This job has parameters:
 
+	PARAM_ETL_RUN_ID								Primary key for the ${QF_ETL_DB_SCHEMA}.etl_run row for the current "run"
+	PARAM_TARGET_TABLE_UPDATE_ID				Primary key of ${QF_ETL_DB_SCHEMA}.target_table_update row to be updated by this job for progress and summary statistics
 	PARAM_CDC_LAST_LOAD_UTC					Timestamp for when the target DB was most recently updated successfully
 	PARAM_CDC_CURRENT_LOAD_UTC				Used so that a consistent max timestamp is used for all ETL
 	PARAM_DYN_DB_CONN_TARGET_DB_HOST		for target DB "dynamic" database connections
@@ -1525,8 +1538,8 @@ The "updatable" table generic update algorithm #1 is used. This job has paramete
 	PARAM_TABLE_META_ID							Primary key of ${QF_ETL_DB_SCHEMA}.table_meta row for "source" table archived/mirrored to "target" table</note>
       <xloc>16</xloc>
       <yloc>0</yloc>
-      <width>923</width>
-      <heigth>361</heigth>
+      <width>1013</width>
+      <heigth>387</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -1547,7 +1560,7 @@ The "updatable" table generic update algorithm #1 is used. This job has paramete
 table treated in the current job. This records which mirror algorithm was used,
 as well as when the mirroring was performed.</note>
       <xloc>736</xloc>
-      <yloc>1232</yloc>
+      <yloc>1264</yloc>
       <width>440</width>
       <heigth>49</heigth>
       <fontname>Ubuntu</fontname>
@@ -1572,7 +1585,7 @@ execution has failed. It will then
 direct the execution flow to the 
 job that sends out failure e-mails.</note>
       <xloc>16</xloc>
-      <yloc>704</yloc>
+      <yloc>736</yloc>
       <width>198</width>
       <heigth>75</heigth>
       <fontname>Ubuntu</fontname>
@@ -1598,7 +1611,7 @@ no column mapping metdata is
 provided for the table. This may 
 not be the best behaviour.</note>
       <xloc>16</xloc>
-      <yloc>464</yloc>
+      <yloc>496</yloc>
       <width>193</width>
       <heigth>88</heigth>
       <fontname>Ubuntu</fontname>
@@ -1624,7 +1637,7 @@ step for the source DB. This step  is passed the additional parameters:
 	PARAM_SOURCE_INSERTED_ON_COLNAME
 	PARAM_SOURCE_LAST_UPDATED_ON_COLNAME</note>
       <xloc>736</xloc>
-      <yloc>1120</yloc>
+      <yloc>1152</yloc>
       <width>433</width>
       <heigth>88</heigth>
       <fontname>Ubuntu</fontname>
@@ -1653,7 +1666,7 @@ occur is if a table is marked for mirroring, but no column mapping
 metadata is provided - this should never occur, but we check in order to 
 provide a warning message, rather than letting PDI choke on this problem.</note>
       <xloc>736</xloc>
-      <yloc>416</yloc>
+      <yloc>448</yloc>
       <width>423</width>
       <heigth>127</heigth>
       <fontname>Ubuntu</fontname>
@@ -1676,7 +1689,7 @@ provide a warning message, rather than letting PDI choke on this problem.</note>
 tr_target-update_table-updatable_table
 that is executed below (same reason as above).</note>
       <xloc>736</xloc>
-      <yloc>576</yloc>
+      <yloc>608</yloc>
       <width>352</width>
       <heigth>49</heigth>
       <fontname>Ubuntu</fontname>
@@ -1699,7 +1712,7 @@ that is executed below (same reason as above).</note>
 tr_target-update_table-updatable_table
 that is executed below (same reason as above).</note>
       <xloc>736</xloc>
-      <yloc>672</yloc>
+      <yloc>704</yloc>
       <width>352</width>
       <heigth>49</heigth>
       <fontname>Ubuntu</fontname>
@@ -1723,7 +1736,7 @@ column from the source table that functions as a "last_updated_on"
 column. This value is passed as a parameter to the job entry 
 tr_mirrored_updatable_table-inject_meta-update below.</note>
       <xloc>736</xloc>
-      <yloc>752</yloc>
+      <yloc>784</yloc>
       <width>451</width>
       <heigth>62</heigth>
       <fontname>Ubuntu</fontname>
@@ -1747,7 +1760,7 @@ to the names of the columns from the source table that function as
 "insert_id" &amp; "inserted_on" column. These values are passed as parameters
 to the job entry tr_target-update_table-updatable_table below.</note>
       <xloc>736</xloc>
-      <yloc>848</yloc>
+      <yloc>880</yloc>
       <width>524</width>
       <heigth>62</heigth>
       <fontname>Ubuntu</fontname>
@@ -1769,7 +1782,7 @@ to the job entry tr_target-update_table-updatable_table below.</note>
       <note>TODO:	This sub-transformation entry must abort the current
 		job if it is not successful for every row. Is this the case?</note>
       <xloc>144</xloc>
-      <yloc>1104</yloc>
+      <yloc>1136</yloc>
       <width>358</width>
       <heigth>36</heigth>
       <fontname>Ubuntu</fontname>
@@ -1790,7 +1803,7 @@ to the job entry tr_target-update_table-updatable_table below.</note>
     <notepad>
       <note>&lt;- Currently, this is *always* true!</note>
       <xloc>1104</xloc>
-      <yloc>672</yloc>
+      <yloc>704</yloc>
       <width>193</width>
       <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
@@ -1815,7 +1828,7 @@ to the job entry tr_target-update_table-updatable_table below.</note>
 	QF_UPDATE_TABLE_NUM_INSERTS
 	QF_UPDATE_TABLE_NUM_UPDATES</note>
       <xloc>736</xloc>
-      <yloc>1024</yloc>
+      <yloc>1056</yloc>
       <width>553</width>
       <heigth>75</heigth>
       <fontname>Ubuntu</fontname>
@@ -1837,7 +1850,7 @@ to the job entry tr_target-update_table-updatable_table below.</note>
       <note>Test that name of the "insert_id" column is set for both the source and target tables, because 
 both columns are needed by this ETL algorithm.</note>
       <xloc>736</xloc>
-      <yloc>960</yloc>
+      <yloc>992</yloc>
       <width>526</width>
       <heigth>36</heigth>
       <fontname>Ubuntu</fontname>

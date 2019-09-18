@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2018/10/30 12:42:15.163</modified_date>
+  <modified_date>2019/09/17 08:17:36.128</modified_date>
   <parameters>
     </parameters>
   <connection>
@@ -33,8 +33,16 @@
         <attribute>N</attribute>
       </attribute>
       <attribute>
+        <code>INITIAL_POOL_SIZE</code>
+        <attribute>10</attribute>
+      </attribute>
+      <attribute>
         <code>IS_CLUSTERED</code>
         <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>MAXIMUM_POOL_SIZE</code>
+        <attribute>10</attribute>
       </attribute>
       <attribute>
         <code>PORT_NUMBER</code>
@@ -58,7 +66,7 @@
       </attribute>
       <attribute>
         <code>USE_POOLING</code>
-        <attribute>N</attribute>
+        <attribute>Y</attribute>
       </attribute>
     </attributes>
   </connection>
@@ -355,8 +363,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>224</xloc>
-      <yloc>144</yloc>
+      <xloc>304</xloc>
+      <yloc>128</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -387,13 +395,18 @@
       <run_configuration>Pentaho local</run_configuration>
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_ETL_RUN_ID</name>
+          <stream_name />
+          <value>${QF_ETL_RUN_ID}</value>
+        </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>224</xloc>
-      <yloc>240</yloc>
+      <xloc>304</xloc>
+      <yloc>304</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -404,8 +417,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>224</xloc>
-      <yloc>432</yloc>
+      <xloc>560</xloc>
+      <yloc>496</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -413,12 +426,12 @@
       <description />
       <type>ABORT</type>
       <attributes />
-      <message>Job ${Internal.Job.Name} failed updating the PSA. See log and e-mail sent.</message>
+      <message>Job ${Internal.Job.Name} failed. See log and e-mail sent.</message>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>96</xloc>
-      <yloc>240</yloc>
+      <xloc>48</xloc>
+      <yloc>496</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -449,48 +462,153 @@
       <run_configuration>Pentaho local</run_configuration>
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_ETL_RUN_ID</name>
+          <stream_name />
+          <value>${QF_ETL_RUN_ID}</value>
+        </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>224</xloc>
-      <yloc>336</yloc>
+      <xloc>304</xloc>
+      <yloc>400</yloc>
       <attributes_kjc />
     </entry>
     <entry>
-      <name>Abort job 2</name>
+      <name>jb_target-etl_run-init</name>
       <description />
-      <type>ABORT</type>
+      <type>JOB</type>
       <attributes />
-      <message>Job ${Internal.Job.Name} failed updating the DSA. See log and e-mail sent.</message>
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_target-etl_run-init</jobname>
+      <directory>/generic/target_update</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <run_configuration>Pentaho local</run_configuration>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>96</xloc>
-      <yloc>336</yloc>
+      <xloc>304</xloc>
+      <yloc>208</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>jb_target-etl_run-end - Success</name>
+      <description />
+      <type>JOB</type>
+      <attributes />
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_target-etl_run-end</jobname>
+      <directory>/generic/target_update</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <run_configuration>Pentaho local</run_configuration>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_ETL_RUN_ID</name>
+          <stream_name />
+          <value>${QF_ETL_RUN_ID}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_SUCCESS</name>
+          <stream_name />
+          <value>true</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>432</xloc>
+      <yloc>496</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>jb_target-etl_run-end - Failed</name>
+      <description />
+      <type>JOB</type>
+      <attributes />
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_target-etl_run-end</jobname>
+      <directory>/generic/target_update</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <run_configuration>Pentaho local</run_configuration>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_ETL_RUN_ID</name>
+          <stream_name />
+          <value>${QF_ETL_RUN_ID}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_SUCCESS</name>
+          <stream_name />
+          <value>false</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>176</xloc>
+      <yloc>496</yloc>
       <attributes_kjc />
     </entry>
   </entries>
   <hops>
-    <hop>
-      <from>START</from>
-      <to>jb_psa-update</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>jb_psa-update</from>
-      <to>Abort job</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
     <hop>
       <from>jb_psa-update</from>
       <to>jb_dsa-update</to>
@@ -501,8 +619,17 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>jb_dsa-update</from>
-      <to>Success</to>
+      <from>START</from>
+      <to>jb_target-etl_run-init</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>jb_target-etl_run-init</from>
+      <to>jb_psa-update</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -510,8 +637,53 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
+      <from>jb_target-etl_run-init</from>
+      <to>Abort job</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
       <from>jb_dsa-update</from>
-      <to>Abort job 2</to>
+      <to>jb_target-etl_run-end - Success</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_target-etl_run-end - Success</from>
+      <to>Success</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>jb_psa-update</from>
+      <to>jb_target-etl_run-end - Failed</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_target-etl_run-end - Failed</from>
+      <to>Abort job</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>jb_dsa-update</from>
+      <to>jb_target-etl_run-end - Failed</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -549,8 +721,8 @@ should be assigned the batch ID of the root job (not this job). This may vary fr
     </notepad>
     <notepad>
       <note>Update the PSA.</note>
-      <xloc>320</xloc>
-      <yloc>240</yloc>
+      <xloc>384</xloc>
+      <yloc>304</yloc>
       <width>99</width>
       <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
@@ -570,8 +742,8 @@ should be assigned the batch ID of the root job (not this job). This may vary fr
     </notepad>
     <notepad>
       <note>Update the DSA.</note>
-      <xloc>320</xloc>
-      <yloc>336</yloc>
+      <xloc>384</xloc>
+      <yloc>400</yloc>
       <width>101</width>
       <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
@@ -590,36 +762,25 @@ should be assigned the batch ID of the root job (not this job). This may vary fr
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>IMPORTANT:
+      <note>Create a {QF_ETL_DB_SCHEMA}.etl_run row and set the PDI variable:
 
-Do not execute this job because testing indicates that this job consumes 
-excessive resources. This  seems to occur when the second sub-job, 
-"jb_dsa-update" executes. Therefore, the problem may be causes by 
-running my PDI job "jb_target-update" twice in a row within the same job. 
+	QF_ETL_RUN_ID
 
-I encountered a situation running this job in Spoon where it aborted.
-A message was displayed that the GC overhead limit was exceeded. 
- Running "top" in a bash shell also indicated that this second sub-job, 
-"jb_ssa-update", used a larger percentage of the available CPU that the 
-first sub-job, "jb_psa-update". This occurred with PDI v8.1.0.5-632 and 
-logging level= "Basic".
-
-Could it be that "jb_target-update" consumes resources in some way that 
-are not released after it finishes?</note>
-      <xloc>720</xloc>
-      <yloc>0</yloc>
-      <width>416</width>
-      <heigth>218</heigth>
+to the value of the primary key of this row.</note>
+      <xloc>384</xloc>
+      <yloc>176</yloc>
+      <width>386</width>
+      <heigth>75</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
-      <fontcolorred>255</fontcolorred>
-      <fontcolorgreen>255</fontcolorgreen>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
       <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>0</backgroundcolorred>
-      <backgroundcolorgreen>0</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
       <bordercolorblue>100</bordercolorblue>
