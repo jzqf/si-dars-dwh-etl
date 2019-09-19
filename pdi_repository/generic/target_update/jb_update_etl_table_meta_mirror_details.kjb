@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2018/06/13 09:06:17.172</modified_date>
+  <modified_date>2019/09/06 14:23:02.223</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE</name>
@@ -81,6 +81,11 @@
       <description>for target DB "dynamic" database connections</description>
     </parameter>
     <parameter>
+      <name>PARAM_ETL_RUN_ID</name>
+      <default_value />
+      <description>Primary key for the ${QF_ETL_DB_SCHEMA}.etl_run row for the current "run"</description>
+    </parameter>
+    <parameter>
       <name>PARAM_TABLE_META_ID</name>
       <default_value>-1</default_value>
       <description>Primary key of ${QF_ETL_DB_SCHEMA}.table_meta row for "source" table archived/mirrored to "target" table</description>
@@ -109,6 +114,11 @@
       <name>PARAM_TARGET_TABLE</name>
       <default_value />
       <description>Name of target table to update</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_TARGET_TABLE_UPDATE_ID</name>
+      <default_value />
+      <description>Primary key of ${QF_ETL_DB_SCHEMA}.target_table_update row to be updated by this job for progress and summary statistics</description>
     </parameter>
     <parameter>
       <name>PARAM_UPDATE_TABLE_NUM_INSERTS</name>
@@ -512,6 +522,7 @@
       <name>START</name>
       <description />
       <type>SPECIAL</type>
+      <attributes />
       <start>Y</start>
       <dummy>N</dummy>
       <repeat>N</repeat>
@@ -526,12 +537,14 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>32</xloc>
-      <yloc>400</yloc>
+      <yloc>432</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>Update details stored in table_state row</name>
       <description />
       <type>SQL</type>
+      <attributes />
       <sql>UPDATE
     ${QF_ETL_DB_SCHEMA}.table_state
 SET
@@ -562,13 +575,17 @@ WHERE
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>352</xloc>
-      <yloc>928</yloc>
+      <yloc>960</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>Log - Parameters</name>
       <description />
       <type>WRITE_TO_LOG</type>
-      <logmessage>PARAM_DYN_DB_CONN_SOURCE_DB_HOST     = ${PARAM_DYN_DB_CONN_SOURCE_DB_HOST}
+      <attributes />
+      <logmessage>PARAM_ETL_RUN_ID                     = ${PARAM_ETL_RUN_ID}
+PARAM_TARGET_TABLE_UPDATE_ID         = ${PARAM_TARGET_TABLE_UPDATE_ID}
+PARAM_DYN_DB_CONN_SOURCE_DB_HOST     = ${PARAM_DYN_DB_CONN_SOURCE_DB_HOST}
 PARAM_DYN_DB_CONN_SOURCE_DB_PORT     = ${PARAM_DYN_DB_CONN_SOURCE_DB_PORT}
 PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE = ${PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE}
 PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME = ${PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME}
@@ -598,12 +615,14 @@ PARAM_UPDATE_TABLE_NUM_UPDATES        = ${PARAM_UPDATE_TABLE_NUM_UPDATES}</logme
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>160</xloc>
-      <yloc>400</yloc>
+      <yloc>432</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>jb_log_error</name>
       <description />
       <type>JOB</type>
+      <attributes />
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
@@ -638,23 +657,27 @@ PARAM_UPDATE_TABLE_NUM_UPDATES        = ${PARAM_UPDATE_TABLE_NUM_UPDATES}</logme
       <draw>Y</draw>
       <nr>1</nr>
       <xloc>560</xloc>
-      <yloc>928</yloc>
+      <yloc>960</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>Abort job</name>
       <description />
       <type>ABORT</type>
+      <attributes />
       <message>Aborting ${Internal.Job.Name}</message>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>656</xloc>
-      <yloc>1024</yloc>
+      <yloc>1056</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>tr_table_update_statistics_compute</name>
       <description />
       <type>TRANS</type>
+      <attributes />
       <specification_method>rep_name</specification_method>
       <trans_object_id />
       <filename />
@@ -686,12 +709,14 @@ PARAM_UPDATE_TABLE_NUM_UPDATES        = ${PARAM_UPDATE_TABLE_NUM_UPDATES}</logme
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>352</xloc>
-      <yloc>400</yloc>
+      <yloc>432</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>Log update details</name>
       <description />
       <type>WRITE_TO_LOG</type>
+      <attributes />
       <logmessage>PARAM_TABLE_META_ID                   = ${PARAM_TABLE_META_ID}
 PARAM_TARGET_SCHEMA                   = ${PARAM_TARGET_SCHEMA}
 PARAM_TARGET_TABLE                    = ${PARAM_TARGET_TABLE}
@@ -712,12 +737,14 @@ QF_TARGET_TABLE_MAX_LAST_UPDATED_ON   = ${QF_TARGET_TABLE_MAX_LAST_UPDATED_ON}</
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>352</xloc>
-      <yloc>832</yloc>
+      <yloc>864</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>tr_set_target_table_max_insert_id_vrbl</name>
       <description />
       <type>TRANS</type>
+      <attributes />
       <specification_method>rep_name</specification_method>
       <trans_object_id />
       <filename />
@@ -749,12 +776,14 @@ QF_TARGET_TABLE_MAX_LAST_UPDATED_ON   = ${QF_TARGET_TABLE_MAX_LAST_UPDATED_ON}</
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>512</xloc>
-      <yloc>576</yloc>
+      <yloc>608</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>Set QF_TARGET_TABLE_MAX_INSERT_ID to "not set" value</name>
       <description />
       <type>SET_VARIABLES</type>
+      <attributes />
       <replacevars>Y</replacevars>
       <filename />
       <file_variable_type>JVM</file_variable_type>
@@ -769,12 +798,14 @@ QF_TARGET_TABLE_MAX_LAST_UPDATED_ON   = ${QF_TARGET_TABLE_MAX_LAST_UPDATED_ON}</
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>176</xloc>
-      <yloc>576</yloc>
+      <yloc>608</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>PARAM_TARGET_INSERT_ID_COLNAME is not ""</name>
       <description />
       <type>SIMPLE_EVAL</type>
+      <attributes />
       <valuetype>variable</valuetype>
       <fieldname />
       <variablename>PARAM_TARGET_INSERT_ID_COLNAME</variablename>
@@ -791,12 +822,14 @@ QF_TARGET_TABLE_MAX_LAST_UPDATED_ON   = ${QF_TARGET_TABLE_MAX_LAST_UPDATED_ON}</
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>352</xloc>
-      <yloc>496</yloc>
+      <yloc>528</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>tr_set_target_table_max_last_updated_on_vrbl</name>
       <description />
       <type>TRANS</type>
+      <attributes />
       <specification_method>rep_name</specification_method>
       <trans_object_id />
       <filename />
@@ -828,12 +861,14 @@ QF_TARGET_TABLE_MAX_LAST_UPDATED_ON   = ${QF_TARGET_TABLE_MAX_LAST_UPDATED_ON}</
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>512</xloc>
-      <yloc>736</yloc>
+      <yloc>768</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>Set QF_TARGET_TABLE_MAX_LAST_UPDATED_ON to "not set" value</name>
       <description />
       <type>SET_VARIABLES</type>
+      <attributes />
       <replacevars>Y</replacevars>
       <filename />
       <file_variable_type>JVM</file_variable_type>
@@ -848,12 +883,14 @@ QF_TARGET_TABLE_MAX_LAST_UPDATED_ON   = ${QF_TARGET_TABLE_MAX_LAST_UPDATED_ON}</
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>176</xloc>
-      <yloc>736</yloc>
+      <yloc>768</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>PARAM_TARGET_LAST_UPDATED_ON_COLNAME is not ""</name>
       <description />
       <type>SIMPLE_EVAL</type>
+      <attributes />
       <valuetype>variable</valuetype>
       <fieldname />
       <variablename>PARAM_TARGET_LAST_UPDATED_ON_COLNAME</variablename>
@@ -870,12 +907,14 @@ QF_TARGET_TABLE_MAX_LAST_UPDATED_ON   = ${QF_TARGET_TABLE_MAX_LAST_UPDATED_ON}</
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>352</xloc>
-      <yloc>656</yloc>
+      <yloc>688</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>Store update details in new target_table_update row</name>
       <description />
       <type>SQL</type>
+      <attributes />
       <sql>INSERT INTO ${QF_ETL_DB_SCHEMA}.target_table_update (
     table_meta_id,
     created_on,
@@ -917,12 +956,14 @@ VALUES (
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>352</xloc>
-      <yloc>1024</yloc>
+      <yloc>1056</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>jb_log_error 2</name>
       <description />
       <type>JOB</type>
+      <attributes />
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
@@ -943,13 +984,13 @@ VALUES (
       <expand_remote_job>N</expand_remote_job>
       <create_parent_folder>N</create_parent_folder>
       <pass_export>N</pass_export>
-      <run_configuration />
+      <run_configuration>Pentaho local</run_configuration>
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
         <parameter>
           <name>PARAM_ERROR_MESSAGE</name>
           <stream_name />
-          <value>Error inserting target_table_update row in ${Internal.Job.Name} for target table: ${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</value>
+          <value>Error updating target_table_update row in ${Internal.Job.Name} for target table: ${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</value>
         </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
@@ -957,12 +998,14 @@ VALUES (
       <draw>Y</draw>
       <nr>1</nr>
       <xloc>560</xloc>
-      <yloc>1024</yloc>
+      <yloc>1056</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>jb_etl_state_register-update</name>
       <description />
       <type>JOB</type>
+      <attributes />
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
@@ -1002,12 +1045,14 @@ VALUES (
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>352</xloc>
-      <yloc>1120</yloc>
+      <yloc>1152</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>jb_log_error 3</name>
       <description />
       <type>JOB</type>
+      <attributes />
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
@@ -1042,7 +1087,48 @@ VALUES (
       <draw>Y</draw>
       <nr>1</nr>
       <xloc>560</xloc>
-      <yloc>1120</yloc>
+      <yloc>1152</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>Store update details in target_table_update row</name>
+      <description />
+      <type>SQL</type>
+      <attributes />
+      <sql>UPDATE
+    ${QF_ETL_DB_SCHEMA}.target_table_update 
+SET (
+    update_finished_timestamp_utc,
+    elapsed_time_millis,
+    num_inserts,
+    num_updates,
+    num_rows_processed,
+    num_rows_processed_per_sec,
+    insert_id_maxvalue,
+    last_updated_on_maxvalue
+) = (
+    now() at time zone 'utc',
+    ${QF_UPDATE_TABLE_ELAPSED_MILLISECONDS},
+    ${PARAM_UPDATE_TABLE_NUM_INSERTS},
+    ${PARAM_UPDATE_TABLE_NUM_UPDATES},
+    ${PARAM_UPDATE_TABLE_NUM_ROWS},
+    ${QF_UPDATE_TABLE_ROWS_PER_SEC},
+    NULLIF(${QF_TARGET_TABLE_MAX_INSERT_ID}, ${QF_POSITIVE_INTEGER_NOT_SET_VALUE}),
+    NULLIF(TIMESTAMP '${QF_TARGET_TABLE_MAX_LAST_UPDATED_ON}', TIMESTAMP '${QF_TIMESTAMP_NOT_SET_VALUE}')
+)
+WHERE
+    target_table_update_id = ${PARAM_TARGET_TABLE_UPDATE_ID}</sql>
+      <useVariableSubstitution>T</useVariableSubstitution>
+      <sqlfromfile>F</sqlfromfile>
+      <sqlfilename />
+      <sendOneStatement>F</sendOneStatement>
+      <connection>etl_db</connection>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>432</xloc>
+      <yloc>1008</yloc>
+      <attributes_kjc />
     </entry>
   </entries>
   <hops>
@@ -1168,7 +1254,7 @@ VALUES (
       <to>Store update details in new target_table_update row</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
-      <enabled>Y</enabled>
+      <enabled>N</enabled>
       <evaluation>Y</evaluation>
       <unconditional>N</unconditional>
     </hop>
@@ -1186,7 +1272,7 @@ VALUES (
       <to>jb_log_error 2</to>
       <from_nr>0</from_nr>
       <to_nr>1</to_nr>
-      <enabled>Y</enabled>
+      <enabled>N</enabled>
       <evaluation>N</evaluation>
       <unconditional>N</unconditional>
     </hop>
@@ -1195,7 +1281,7 @@ VALUES (
       <to>jb_etl_state_register-update</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
-      <enabled>Y</enabled>
+      <enabled>N</enabled>
       <evaluation>Y</evaluation>
       <unconditional>N</unconditional>
     </hop>
@@ -1226,12 +1312,41 @@ VALUES (
       <evaluation>N</evaluation>
       <unconditional>Y</unconditional>
     </hop>
+    <hop>
+      <from>Update details stored in table_state row</from>
+      <to>Store update details in target_table_update row</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Store update details in target_table_update row</from>
+      <to>jb_etl_state_register-update</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Store update details in target_table_update row</from>
+      <to>jb_log_error 2</to>
+      <from_nr>0</from_nr>
+      <to_nr>1</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
   </hops>
   <notepads>
     <notepad>
       <note>This job updates a row of the ${QF_ETL_DB_SCHEMA}.table_state table after a table has been updated in the target DB from a table in
 a source database. This job has parameters:
 
+	PARAM_ETL_RUN_ID								Primary key for the ${QF_ETL_DB_SCHEMA}.etl_run row for the current "run"
+	PARAM_TARGET_TABLE_UPDATE_ID				Primary key of ${QF_ETL_DB_SCHEMA}.target_table_update row to be updated by this job for progress and summary statistics
 	PARAM_DYN_DB_CONN_SOURCE_DB_HOST		for source DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_SOURCE_DB_PORT		for source DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE	for source DB "dynamic" database connections
@@ -1258,8 +1373,8 @@ a source database. This job has parameters:
 	PARAM_UPDATE_TABLE_NUM_UPDATES			Number of rows of the target table updated by the ETL job</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>956</width>
-      <heigth>361</heigth>
+      <width>1013</width>
+      <heigth>387</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -1282,7 +1397,7 @@ execution has failed. It will then direct
 the execution flow to the job that 
 sends out failure e-mails.</note>
       <xloc>720</xloc>
-      <yloc>992</yloc>
+      <yloc>1024</yloc>
       <width>220</width>
       <heigth>75</heigth>
       <fontname>Ubuntu</fontname>
@@ -1307,7 +1422,7 @@ This transformation sets the PDI variables:
 	QF_UPDATE_TABLE_ELAPSED_MILLISECONDS
 	QF_UPDATE_TABLE_ROWS_PER_SEC</note>
       <xloc>480</xloc>
-      <yloc>384</yloc>
+      <yloc>416</yloc>
       <width>438</width>
       <heigth>75</heigth>
       <fontname>Ubuntu</fontname>
@@ -1334,7 +1449,7 @@ This transformation sets the PDI variables:
 	QF_TARGET_TABLE_MAX_INSERT_ID
 	QF_TARGET_TABLE_MAX_LAST_UPDATED_ON</note>
       <xloc>480</xloc>
-      <yloc>800</yloc>
+      <yloc>832</yloc>
       <width>289</width>
       <heigth>101</heigth>
       <fontname>Ubuntu</fontname>
@@ -1358,7 +1473,7 @@ the specified target table. This value is assigned to the PDI variable:
 
 	QF_TARGET_TABLE_MAX_INSERT_ID</note>
       <xloc>672</xloc>
-      <yloc>560</yloc>
+      <yloc>592</yloc>
       <width>380</width>
       <heigth>62</heigth>
       <fontname>Ubuntu</fontname>
@@ -1382,7 +1497,7 @@ the specified target table. This value is assigned to the PDI variable:
 
 	QF_TARGET_TABLE_MAX_LAST_UPDATED_ON</note>
       <xloc>672</xloc>
-      <yloc>720</yloc>
+      <yloc>752</yloc>
       <width>413</width>
       <heigth>62</heigth>
       <fontname>Ubuntu</fontname>
@@ -1410,7 +1525,7 @@ However, it may be useful to keep
 these columns so I have not deleted 
 this step.</note>
       <xloc>16</xloc>
-      <yloc>896</yloc>
+      <yloc>928</yloc>
       <width>210</width>
       <heigth>114</heigth>
       <fontname>Ubuntu</fontname>
@@ -1432,7 +1547,7 @@ this step.</note>
       <note>Update the "ETL state register" This is 
 implemented as a table in the source DB.</note>
       <xloc>16</xloc>
-      <yloc>1120</yloc>
+      <yloc>1152</yloc>
       <width>235</width>
       <heigth>36</heigth>
       <fontname>Ubuntu</fontname>

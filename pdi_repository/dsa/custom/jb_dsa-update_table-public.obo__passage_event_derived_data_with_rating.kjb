@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2018/04/18 17:34:38.068</modified_date>
+  <modified_date>2019/09/11 10:48:22.002</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
@@ -19,6 +19,11 @@
       <name>PARAM_CDC_LAST_LOAD_UTC</name>
       <default_value />
       <description>Timestamp of last successful load from the source database</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_ETL_RUN_ID</name>
+      <default_value />
+      <description>Primary key for the ${QF_ETL_DB_SCHEMA}.etl_run row for the current "run"</description>
     </parameter>
     <parameter>
       <name>PARAM_SOURCE_DB_ID</name>
@@ -64,6 +69,11 @@
       <name>PARAM_TARGET_TABLE</name>
       <default_value />
       <description />
+    </parameter>
+    <parameter>
+      <name>PARAM_TARGET_TABLE_UPDATE_ID</name>
+      <default_value />
+      <description>Primary key of ${QF_ETL_DB_SCHEMA}.target_table_update row to be updated by this job for progress and summary statistics</description>
     </parameter>
   </parameters>
   <connection>
@@ -396,6 +406,7 @@
       <name>START</name>
       <description />
       <type>SPECIAL</type>
+      <attributes />
       <start>Y</start>
       <dummy>N</dummy>
       <repeat>N</repeat>
@@ -410,12 +421,14 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>208</xloc>
-      <yloc>256</yloc>
+      <yloc>288</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>Write To Log: Parameters</name>
       <description />
       <type>WRITE_TO_LOG</type>
+      <attributes />
       <logmessage>PARAM_CDC_LAST_LOAD_UTC       = ${PARAM_CDC_LAST_LOAD_UTC}
 PARAM_CDC_CURRENT_LOAD_UTC    = ${PARAM_CDC_CURRENT_LOAD_UTC}
 PARAM_TABLE_META_ID           = ${PARAM_TABLE_META_ID}
@@ -433,33 +446,39 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>208</xloc>
-      <yloc>352</yloc>
+      <yloc>384</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>Success</name>
       <description />
       <type>SUCCESS</type>
+      <attributes />
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>208</xloc>
-      <yloc>576</yloc>
+      <yloc>608</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>Abort job</name>
       <description />
       <type>ABORT</type>
+      <attributes />
       <message>Aborting from ${Internal.Job.Name} after error caught in tr_dsa-update_table-public.obo__passage_event_derived_data_with_rating</message>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>720</xloc>
-      <yloc>464</yloc>
+      <yloc>496</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>jb_log_error - Error description</name>
       <description />
       <type>JOB</type>
+      <attributes />
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
@@ -480,6 +499,7 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
       <expand_remote_job>N</expand_remote_job>
       <create_parent_folder>N</create_parent_folder>
       <pass_export>N</pass_export>
+      <run_configuration />
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
         <parameter>
@@ -493,12 +513,14 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>544</xloc>
-      <yloc>464</yloc>
+      <yloc>496</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>tr_dsa-update_table-public.obo__passage_event_derived_data_with_rating</name>
       <description />
       <type>TRANS</type>
+      <attributes />
       <specification_method>rep_name</specification_method>
       <trans_object_id />
       <filename />
@@ -530,7 +552,8 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>208</xloc>
-      <yloc>464</yloc>
+      <yloc>496</yloc>
+      <attributes_kjc />
     </entry>
   </entries>
   <hops>
@@ -588,6 +611,8 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
 
 This job has parameters:
 
+	PARAM_ETL_RUN_ID						Primary key for the ${QF_ETL_DB_SCHEMA}.etl_run row for the current "run"
+	PARAM_TARGET_TABLE_UPDATE_ID		Primary key of ${QF_ETL_DB_SCHEMA}.target_table_update row to be updated by this job for progress and summary statistics
 	PARAM_CDC_LAST_LOAD_UTC			Timestamp for when the target DSA DB mirror tables were last updated from the source DB
 	PARAM_CDC_CURRENT_LOAD_UTC		Timestamp of the current load (no rows after this timestamp will be loaded)
 	PARAM_TABLE_META_ID					Primary key of ${QF_ETL_DB_SCHEMA}.table_meta row for "source" table archived/mirrored to "target" table
@@ -601,8 +626,8 @@ This job has parameters:
 	PARAM_TARGET_SCHEMA_DOT_TABLE</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>875</width>
-      <heigth>231</heigth>
+      <width>965</width>
+      <heigth>257</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -622,7 +647,7 @@ This job has parameters:
       <note>The error message set here will be
 sent out by e-mail by the root job.</note>
       <xloc>464</xloc>
-      <yloc>528</yloc>
+      <yloc>560</yloc>
       <width>200</width>
       <heigth>36</heigth>
       <fontname>Ubuntu</fontname>
@@ -651,7 +676,7 @@ transformation "tr_dsa-update_table-public.obo__passage_event_derived_data_with_
 only to be able to perform a little extra logging and to set a meaningful error message in 
 case of an error.</note>
       <xloc>352</xloc>
-      <yloc>256</yloc>
+      <yloc>288</yloc>
       <width>518</width>
       <heigth>127</heigth>
       <fontname>Ubuntu</fontname>

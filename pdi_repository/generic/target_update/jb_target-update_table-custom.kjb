@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2018/06/27 10:34:32.477</modified_date>
+  <modified_date>2019/09/06 13:45:23.387</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
@@ -91,6 +91,11 @@
       <description>for target DB "dynamic" database connections</description>
     </parameter>
     <parameter>
+      <name>PARAM_ETL_RUN_ID</name>
+      <default_value />
+      <description>Primary key for the ${QF_ETL_DB_SCHEMA}.etl_run row for the current "run"</description>
+    </parameter>
+    <parameter>
       <name>PARAM_SOURCE_DB_ID</name>
       <default_value>-1</default_value>
       <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
@@ -139,6 +144,11 @@
       <name>PARAM_TARGET_TABLE</name>
       <default_value />
       <description />
+    </parameter>
+    <parameter>
+      <name>PARAM_TARGET_TABLE_UPDATE_ID</name>
+      <default_value />
+      <description>Primary key of ${QF_ETL_DB_SCHEMA}.target_table_update row to be updated by this job for progress and summary statistics</description>
     </parameter>
   </parameters>
   <connection>
@@ -471,6 +481,7 @@
       <name>START</name>
       <description />
       <type>SPECIAL</type>
+      <attributes />
       <start>Y</start>
       <dummy>N</dummy>
       <repeat>N</repeat>
@@ -485,13 +496,16 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>16</xloc>
-      <yloc>416</yloc>
+      <yloc>448</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>Write To Log: Parameters</name>
       <description />
       <type>WRITE_TO_LOG</type>
-      <logmessage>Parameters received by ${Internal.Job.Name}:
+      <attributes />
+      <logmessage>PARAM_ETL_RUN_ID                     = ${PARAM_ETL_RUN_ID}
+PARAM_TARGET_TABLE_UPDATE_ID         = ${PARAM_TARGET_TABLE_UPDATE_ID}
 PARAM_CDC_LAST_LOAD_UTC              = ${PARAM_CDC_LAST_LOAD_UTC}
 PARAM_CDC_CURRENT_LOAD_UTC           = ${PARAM_CDC_CURRENT_LOAD_UTC}
 PARAM_DYN_DB_CONN_SOURCE_DB_HOST     = ${PARAM_DYN_DB_CONN_SOURCE_DB_HOST}
@@ -519,28 +533,32 @@ PARAM_TARGET_SCHEMA                  = ${PARAM_TARGET_SCHEMA}
 PARAM_TARGET_TABLE                   = ${PARAM_TARGET_TABLE}
 PARAM_TARGET_SCHEMA_DOT_TABLE        = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
       <loglevel>Minimal</loglevel>
-      <logsubject>Parameters received by ${Internal.Job.Name}</logsubject>
+      <logsubject>${Internal.Job.Name}</logsubject>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>144</xloc>
-      <yloc>416</yloc>
+      <yloc>448</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>Abort job - Untreated target DB</name>
       <description />
       <type>ABORT</type>
+      <attributes />
       <message>Aborting from jb_target-update_table-custom:  PARAM_TARGET_DB_ID=${PARAM_TARGET_DB_ID}, PARAM_TARGET_SCHEMA=${PARAM_TARGET_SCHEMA}, PARAM_TARGET_TABLE=${PARAM_TARGET_TABLE}</message>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>144</xloc>
-      <yloc>800</yloc>
+      <yloc>832</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>jb_log_error - Untreated target DB</name>
       <description />
       <type>JOB</type>
+      <attributes />
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
@@ -575,23 +593,27 @@ PARAM_TARGET_SCHEMA_DOT_TABLE        = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmess
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>144</xloc>
-      <yloc>704</yloc>
+      <yloc>736</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>Abort job 1</name>
       <description />
       <type>ABORT</type>
+      <attributes />
       <message>Aborting ${Internal.Job.Name} after job entry jb_psa-update_table-custom</message>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>1</nr>
       <xloc>608</xloc>
-      <yloc>512</yloc>
+      <yloc>544</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>jb_psa-update_table-custom</name>
       <description />
       <type>JOB</type>
+      <attributes />
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
@@ -621,12 +643,14 @@ PARAM_TARGET_SCHEMA_DOT_TABLE        = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmess
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>400</xloc>
-      <yloc>512</yloc>
+      <yloc>544</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>Target DB = PSA ?</name>
       <description />
       <type>SIMPLE_EVAL</type>
+      <attributes />
       <valuetype>variable</valuetype>
       <fieldname />
       <variablename>${PARAM_TARGET_DB_ID}</variablename>
@@ -643,12 +667,14 @@ PARAM_TARGET_SCHEMA_DOT_TABLE        = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmess
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>144</xloc>
-      <yloc>512</yloc>
+      <yloc>544</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>Target DB = DSA ?</name>
       <description />
       <type>SIMPLE_EVAL</type>
+      <attributes />
       <valuetype>variable</valuetype>
       <fieldname />
       <variablename>${PARAM_TARGET_DB_ID}</variablename>
@@ -665,12 +691,14 @@ PARAM_TARGET_SCHEMA_DOT_TABLE        = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmess
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>144</xloc>
-      <yloc>608</yloc>
+      <yloc>640</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>jb_dsa-update_table-custom</name>
       <description />
       <type>JOB</type>
+      <attributes />
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
@@ -700,18 +728,21 @@ PARAM_TARGET_SCHEMA_DOT_TABLE        = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmess
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>400</xloc>
-      <yloc>608</yloc>
+      <yloc>640</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>Abort job 2</name>
       <description />
       <type>ABORT</type>
+      <attributes />
       <message>Aborting ${Internal.Job.Name} after job entry jb_dsa-update_table-custom</message>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>1</nr>
       <xloc>608</xloc>
-      <yloc>608</yloc>
+      <yloc>640</yloc>
+      <attributes_kjc />
     </entry>
   </entries>
   <hops>
@@ -802,6 +833,8 @@ PARAM_TARGET_SCHEMA_DOT_TABLE        = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmess
       <note>This job updates a table in a target database. This job acts as a "dispatcher" in that it runs an appropriate job to perform a CUSTOM 
 treatment that is specific for the target DB that is specified. This job has parameters:
 
+	PARAM_ETL_RUN_ID								Primary key for the ${QF_ETL_DB_SCHEMA}.etl_run row for the current "run"
+	PARAM_TARGET_TABLE_UPDATE_ID				Primary key of ${QF_ETL_DB_SCHEMA}.target_table_update row to be updated by this job for progress and summary statistics
 	PARAM_CDC_LAST_LOAD_UTC					Timestamp for when the target DB was most recently updated successfully
 	PARAM_CDC_CURRENT_LOAD_UTC				Timestamp of the current load (no rows after this timestamp will be loaded)
 	PARAM_DYN_DB_CONN_SOURCE_DB_HOST		for source DB "dynamic" database connections
@@ -830,8 +863,8 @@ treatment that is specific for the target DB that is specified. This job has par
 	PARAM_TARGET_SCHEMA_DOT_TABLE</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>923</width>
-      <heigth>387</heigth>
+      <width>1013</width>
+      <heigth>413</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -848,4 +881,5 @@ treatment that is specific for the target DB that is specified. This job has par
       <drawshadow>Y</drawshadow>
     </notepad>
   </notepads>
+  <attributes />
 </job>

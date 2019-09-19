@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2019/08/15 12:01:23.387</modified_date>
+  <modified_date>2019/09/06 13:46:37.144</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
@@ -91,6 +91,11 @@
       <description>for target DB "dynamic" database connections</description>
     </parameter>
     <parameter>
+      <name>PARAM_ETL_RUN_ID</name>
+      <default_value />
+      <description>Primary key for the ${QF_ETL_DB_SCHEMA}.etl_run row for the current "run"</description>
+    </parameter>
+    <parameter>
       <name>PARAM_SOURCE_DB_ID</name>
       <default_value>2</default_value>
       <description>ID the "source" database containing tables will be archived/mirrored to a "target" database</description>
@@ -129,6 +134,11 @@
       <name>PARAM_TARGET_TABLE</name>
       <default_value>obo__analysis_queue</default_value>
       <description>Name of target table to update (not currently used)</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_TARGET_TABLE_UPDATE_ID</name>
+      <default_value />
+      <description>Primary key of ${QF_ETL_DB_SCHEMA}.target_table_update row to be updated by this job for progress and summary statistics</description>
     </parameter>
   </parameters>
   <connection>
@@ -527,7 +537,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>496</xloc>
-      <yloc>368</yloc>
+      <yloc>400</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -586,7 +596,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>608</xloc>
-      <yloc>848</yloc>
+      <yloc>880</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -658,7 +668,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>608</xloc>
-      <yloc>944</yloc>
+      <yloc>976</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -700,7 +710,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>400</xloc>
-      <yloc>848</yloc>
+      <yloc>880</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -713,7 +723,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>288</xloc>
-      <yloc>560</yloc>
+      <yloc>592</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -761,7 +771,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>608</xloc>
-      <yloc>464</yloc>
+      <yloc>496</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -803,7 +813,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>1</nr>
       <xloc>400</xloc>
-      <yloc>464</yloc>
+      <yloc>496</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -815,7 +825,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>288</xloc>
-      <yloc>464</yloc>
+      <yloc>496</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -854,7 +864,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>608</xloc>
-      <yloc>560</yloc>
+      <yloc>592</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -896,7 +906,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>400</xloc>
-      <yloc>656</yloc>
+      <yloc>688</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -918,7 +928,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>288</xloc>
-      <yloc>944</yloc>
+      <yloc>976</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -926,7 +936,8 @@ ORDER BY
       <description />
       <type>WRITE_TO_LOG</type>
       <attributes />
-      <logmessage>Parameters received by ${Internal.Job.Name}:
+      <logmessage>PARAM_ETL_RUN_ID                     = ${PARAM_ETL_RUN_ID}
+PARAM_TARGET_TABLE_UPDATE_ID         = ${PARAM_TARGET_TABLE_UPDATE_ID}
 PARAM_CDC_LAST_LOAD_UTC              = ${PARAM_CDC_LAST_LOAD_UTC}
 PARAM_CDC_CURRENT_LOAD_UTC           = ${PARAM_CDC_CURRENT_LOAD_UTC}
 PARAM_DYN_DB_CONN_SOURCE_DB_HOST     = ${PARAM_DYN_DB_CONN_SOURCE_DB_HOST}
@@ -952,12 +963,12 @@ PARAM_TARGET_DB_ID                   = ${PARAM_TARGET_DB_ID}
 PARAM_TARGET_SCHEMA                  = ${PARAM_TARGET_SCHEMA}
 PARAM_TARGET_TABLE                   = ${PARAM_TARGET_TABLE}</logmessage>
       <loglevel>Minimal</loglevel>
-      <logsubject>Parameters received by ${Internal.Job.Name}</logsubject>
+      <logsubject>${Internal.Job.Name}</logsubject>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>608</xloc>
-      <yloc>368</yloc>
+      <yloc>400</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -996,7 +1007,7 @@ PARAM_TARGET_TABLE                   = ${PARAM_TARGET_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>608</xloc>
-      <yloc>752</yloc>
+      <yloc>784</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -1009,7 +1020,7 @@ PARAM_TARGET_TABLE                   = ${PARAM_TARGET_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>608</xloc>
-      <yloc>656</yloc>
+      <yloc>688</yloc>
       <attributes_kjc />
     </entry>
   </entries>
@@ -1163,6 +1174,8 @@ PARAM_TARGET_TABLE                   = ${PARAM_TARGET_TABLE}</logmessage>
     <notepad>
       <note>This job updates a single "insert-only" table in the target database that mirrors a table from a source database. This job has parameters:
 
+	PARAM_ETL_RUN_ID								Primary key for the ${QF_ETL_DB_SCHEMA}.etl_run row for the current "run"
+	PARAM_TARGET_TABLE_UPDATE_ID				Primary key of ${QF_ETL_DB_SCHEMA}.target_table_update row to be updated by this job for progress and summary statistics
 	PARAM_CDC_LAST_LOAD_UTC					Timestamp for when the target DB was most recently updated successfully
 	PARAM_CDC_CURRENT_LOAD_UTC				Used so that a consistent max timestamp is used for all ETL
 	PARAM_DYN_DB_CONN_TARGET_DB_HOST		for target DB "dynamic" database connections
@@ -1189,8 +1202,8 @@ PARAM_TARGET_TABLE                   = ${PARAM_TARGET_TABLE}</logmessage>
 	PARAM_TARGET_TABLE							Name of target table to update (not currently used)</note>
       <xloc>16</xloc>
       <yloc>0</yloc>
-      <width>923</width>
-      <heigth>348</heigth>
+      <width>1013</width>
+      <heigth>374</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -1211,7 +1224,7 @@ PARAM_TARGET_TABLE                   = ${PARAM_TARGET_TABLE}</logmessage>
 table treated in the current job. This records which mirror algorithm was used, 
 as well as when the mirroring was performed.</note>
       <xloc>768</xloc>
-      <yloc>928</yloc>
+      <yloc>960</yloc>
       <width>443</width>
       <heigth>49</heigth>
       <fontname>Ubuntu</fontname>
@@ -1236,7 +1249,7 @@ execution has failed. It will then direct
 the execution flow to the job that 
 sends out failure e-mails.</note>
       <xloc>16</xloc>
-      <yloc>528</yloc>
+      <yloc>560</yloc>
       <width>220</width>
       <heigth>75</heigth>
       <fontname>Ubuntu</fontname>
@@ -1261,7 +1274,7 @@ the case where no column mapping
 metdata is provided for the table. This
 may not be the best behaviour.</note>
       <xloc>16</xloc>
-      <yloc>432</yloc>
+      <yloc>464</yloc>
       <width>239</width>
       <heigth>75</heigth>
       <fontname>Ubuntu</fontname>
@@ -1286,7 +1299,7 @@ may not be the best behaviour.</note>
 	PARAM_SOURCE_INSERT_ID_COLNAME
 	PARAM_SOURCE_INSERTED_ON_COLNAME</note>
       <xloc>768</xloc>
-      <yloc>816</yloc>
+      <yloc>848</yloc>
       <width>441</width>
       <heigth>75</heigth>
       <fontname>Ubuntu</fontname>
@@ -1315,7 +1328,7 @@ occur is if a table is marked for mirroring, but no column mapping
 metadata is provided - this should never occur, but we check in order to 
 provide a warning message, rather than letting PDI choke on this problem.</note>
       <xloc>768</xloc>
-      <yloc>400</yloc>
+      <yloc>432</yloc>
       <width>423</width>
       <heigth>127</heigth>
       <fontname>Ubuntu</fontname>
@@ -1339,7 +1352,7 @@ to the names of the columns from the source table that function as
 "insert_id" &amp; "inserted_on" column. These values are passed as parameters
 to the job entry tr_target-update_table-insert_only_table below.</note>
       <xloc>768</xloc>
-      <yloc>544</yloc>
+      <yloc>576</yloc>
       <width>524</width>
       <heigth>62</heigth>
       <fontname>Ubuntu</fontname>
@@ -1361,7 +1374,7 @@ to the job entry tr_target-update_table-insert_only_table below.</note>
       <note>TODO:	This sub-transformation entry must abort the current
 		job if it is not successful for every row. Is this the case?</note>
       <xloc>224</xloc>
-      <yloc>784</yloc>
+      <yloc>816</yloc>
       <width>375</width>
       <heigth>38</heigth>
       <fontname>Ubuntu</fontname>
@@ -1386,7 +1399,7 @@ to the job entry tr_target-update_table-insert_only_table below.</note>
 	QF_UPDATE_TABLE_NUM_INSERTS
 	QF_UPDATE_TABLE_NUM_UPDATES</note>
       <xloc>768</xloc>
-      <yloc>720</yloc>
+      <yloc>752</yloc>
       <width>553</width>
       <heigth>75</heigth>
       <fontname>Ubuntu</fontname>
@@ -1408,7 +1421,7 @@ to the job entry tr_target-update_table-insert_only_table below.</note>
       <note>Test that name of the "insert_id" column is set for both the source and target tables, because 
 both columns are needed by this ETL algorithm.</note>
       <xloc>768</xloc>
-      <yloc>656</yloc>
+      <yloc>688</yloc>
       <width>526</width>
       <heigth>36</heigth>
       <fontname>Ubuntu</fontname>

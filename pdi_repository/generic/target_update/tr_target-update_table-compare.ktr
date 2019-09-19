@@ -89,6 +89,11 @@
         <description>for target DB "dynamic" database connections</description>
       </parameter>
       <parameter>
+        <name>PARAM_ETL_RUN_ID</name>
+        <default_value />
+        <description>Primary key for the ${QF_ETL_DB_SCHEMA}.etl_run row for the current "run"</description>
+      </parameter>
+      <parameter>
         <name>PARAM_SOURCE_DB_ID</name>
         <default_value>10</default_value>
         <description>ID the "source" database containing the table that has been mirrored to a "target" database</description>
@@ -122,6 +127,11 @@
         <name>PARAM_TARGET_TABLE</name>
         <default_value>country</default_value>
         <description>Name of target table to update (not currently used)</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_TABLE_UPDATE_ID</name>
+        <default_value />
+        <description>Primary key of ${QF_ETL_DB_SCHEMA}.target_table_update row to be updated by this job for progress and summary statistics</description>
       </parameter>
     </parameters>
     <log>
@@ -544,7 +554,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2018/05/11 13:07:36.418</modified_date>
+    <modified_date>2019/09/12 09:58:54.788</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -553,6 +563,8 @@
       <note>This transformation uses ETL Metadata injection to update a "target" table by comparing all rows of the "target" tables with all rows of its "source" table .
 This is a generic algorithm that can work with *any* table, as long as the necessary metadata is available to be injected. This transformation has parameters:
 
+	PARAM_ETL_RUN_ID								Primary key for the ${QF_ETL_DB_SCHEMA}.etl_run row for the current "run"
+	PARAM_TARGET_TABLE_UPDATE_ID				Primary key of ${QF_ETL_DB_SCHEMA}.target_table_update row to be updated by this job for progress and summary statistics
 	PARAM_CDC_LAST_LOAD_UTC					Timestamp for when the target DB was most recently updated successfully
 	PARAM_CDC_CURRENT_LOAD_UTC				Used so that a consistent max timestamp is used for all ETL
 	PARAM_DYN_DB_CONN_SOURCE_DB_HOST		for source DB "dynamic" database connections
@@ -578,8 +590,8 @@ This is a generic algorithm that can work with *any* table, as long as the neces
 	PARAM_TARGET_TABLE							Name of target table to update</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>923</width>
-      <heigth>348</heigth>
+      <width>1013</width>
+      <heigth>374</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -601,7 +613,7 @@ provide the source DB column names must
 match the query in "jb_target-update_table-compare"
 from where this transformation is executed.
 See the comments in that job for an explanation.</note>
-      <xloc>480</xloc>
+      <xloc>560</xloc>
       <yloc>672</yloc>
       <width>307</width>
       <heigth>75</heigth>
@@ -626,7 +638,7 @@ provide the source DB key column names must
 match the query in "jb_target-update_table-compare"
  from where this transformation is executed.
 See the comments in that job for an explanation.</note>
-      <xloc>112</xloc>
+      <xloc>192</xloc>
       <yloc>672</yloc>
       <width>307</width>
       <heigth>75</heigth>
@@ -647,7 +659,7 @@ See the comments in that job for an explanation.</note>
     </notepad>
     <notepad>
       <note>Compare stream (the new data)</note>
-      <xloc>32</xloc>
+      <xloc>112</xloc>
       <yloc>400</yloc>
       <width>183</width>
       <heigth>23</heigth>
@@ -668,7 +680,7 @@ See the comments in that job for an explanation.</note>
     </notepad>
     <notepad>
       <note>Reference stream (the old data)</note>
-      <xloc>656</xloc>
+      <xloc>736</xloc>
       <yloc>400</yloc>
       <width>187</width>
       <heigth>23</heigth>
@@ -816,6 +828,11 @@ See the comments in that job for an explanation.</note>
       <to>ETL Metadata Injection: tmplt_target-update_table-compare</to>
       <enabled>Y</enabled>
     </hop>
+    <hop>
+      <from>Column mapping metadata for progress monitoring</from>
+      <to>ETL Metadata Injection: tmplt_target-update_table-compare</to>
+      <enabled>Y</enabled>
+    </hop>
   </order>
   <step>
     <name>ETL Metadata Injection: tmplt_target-update_table-compare</name>
@@ -842,20 +859,6 @@ See the comments in that job for an explanation.</note>
     <mappings>
       <mapping>
         <target_step_name>Update existing rows of target table</target_step_name>
-        <target_attribute_key>KEY_CONDITION</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Target DB primary key column names</source_step>
-        <source_field>key_field_value_comparator</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Merge Rows (diff)</target_step_name>
-        <target_attribute_key>KEY_FIELDS</target_attribute_key>
-        <target_detail>N</target_detail>
-        <source_step>Target DB primary key column names</source_step>
-        <source_field>target_key_col_name</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Update existing rows of target table</target_step_name>
         <target_attribute_key>UPDATE_STREAM</target_attribute_key>
         <target_detail>Y</target_detail>
         <source_step>Target DB table updatable column metadata</source_step>
@@ -867,6 +870,13 @@ See the comments in that job for an explanation.</note>
         <target_detail>N</target_detail>
         <source_step>SELECT statement for target DB</source_step>
         <source_field>select_target_rows_sql</source_field>
+      </mapping>
+      <mapping>
+        <target_step_name>Select fields for progress monitoring</target_step_name>
+        <target_attribute_key>FIELD_PRECISION</target_attribute_key>
+        <target_detail>Y</target_detail>
+        <source_step>Column mapping metadata for progress monitoring</source_step>
+        <source_field>source_col_precision</source_field>
       </mapping>
       <mapping>
         <target_step_name>Merge Rows (diff)</target_step_name>
@@ -883,13 +893,6 @@ See the comments in that job for an explanation.</note>
         <source_field>target_key_col_name</source_field>
       </mapping>
       <mapping>
-        <target_step_name>Update existing rows of target table</target_step_name>
-        <target_attribute_key>KEY_STREAM2</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Target DB primary key column names</source_step>
-        <source_field>no_field</source_field>
-      </mapping>
-      <mapping>
         <target_step_name>Synchronize after merge</target_step_name>
         <target_attribute_key>COMPARATOR</target_attribute_key>
         <target_detail>Y</target_detail>
@@ -897,11 +900,11 @@ See the comments in that job for an explanation.</note>
         <source_field>key_field_value_comparator</source_field>
       </mapping>
       <mapping>
-        <target_step_name>Rename source DB field names -> target DB field names</target_step_name>
-        <target_attribute_key>FIELD_NAME</target_attribute_key>
+        <target_step_name>Select fields for progress monitoring</target_step_name>
+        <target_attribute_key>FIELD_LENGTH</target_attribute_key>
         <target_detail>Y</target_detail>
-        <source_step>Source &amp; Target DB column names to mirror</source_step>
-        <source_field>source_col_name</source_field>
+        <source_step>Column mapping metadata for progress monitoring</source_step>
+        <source_field>source_col_length</source_field>
       </mapping>
       <mapping>
         <target_step_name>Synchronize after merge</target_step_name>
@@ -932,13 +935,6 @@ See the comments in that job for an explanation.</note>
         <source_field>target_key_col_name</source_field>
       </mapping>
       <mapping>
-        <target_step_name>Rename source DB field names -> target DB field names</target_step_name>
-        <target_attribute_key>FIELD_RENAME</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Source &amp; Target DB column names to mirror</source_step>
-        <source_field>target_col_name</source_field>
-      </mapping>
-      <mapping>
         <target_step_name>Synchronize after merge</target_step_name>
         <target_attribute_key>TABLE_FIELD</target_attribute_key>
         <target_detail>Y</target_detail>
@@ -953,25 +949,11 @@ See the comments in that job for an explanation.</note>
         <source_field>target_col_precision</source_field>
       </mapping>
       <mapping>
-        <target_step_name>Update existing rows of target table</target_step_name>
-        <target_attribute_key>KEY_LOOKUP</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Target DB primary key column names</source_step>
-        <source_field>target_key_col_name</source_field>
-      </mapping>
-      <mapping>
         <target_step_name>Synchronize after merge</target_step_name>
         <target_attribute_key>UPDATE</target_attribute_key>
         <target_detail>Y</target_detail>
         <source_step>Source &amp; Target DB column names to mirror</source_step>
         <source_field>is_updateable_column</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Synchronize after merge</target_step_name>
-        <target_attribute_key>STREAM_FIELD</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Source &amp; Target DB column names to mirror</source_step>
-        <source_field>target_col_name</source_field>
       </mapping>
       <mapping>
         <target_step_name>Rename source DB field names -> target DB field names</target_step_name>
@@ -987,7 +969,71 @@ See the comments in that job for an explanation.</note>
         <source_step>SELECT statement for source DB</source_step>
         <source_field>select_source_rows_sql</source_field>
       </mapping>
+      <mapping>
+        <target_step_name>Select fields for progress monitoring</target_step_name>
+        <target_attribute_key>FIELD_RENAME</target_attribute_key>
+        <target_detail>Y</target_detail>
+        <source_step>Column mapping metadata for progress monitoring</source_step>
+        <source_field>target_col_name</source_field>
+      </mapping>
+      <mapping>
+        <target_step_name>Update existing rows of target table</target_step_name>
+        <target_attribute_key>KEY_CONDITION</target_attribute_key>
+        <target_detail>Y</target_detail>
+        <source_step>Target DB primary key column names</source_step>
+        <source_field>key_field_value_comparator</source_field>
+      </mapping>
+      <mapping>
+        <target_step_name>Merge Rows (diff)</target_step_name>
+        <target_attribute_key>KEY_FIELDS</target_attribute_key>
+        <target_detail>N</target_detail>
+        <source_step>Target DB primary key column names</source_step>
+        <source_field>target_key_col_name</source_field>
+      </mapping>
+      <mapping>
+        <target_step_name>Update existing rows of target table</target_step_name>
+        <target_attribute_key>KEY_STREAM2</target_attribute_key>
+        <target_detail>Y</target_detail>
+        <source_step>Target DB primary key column names</source_step>
+        <source_field>no_field</source_field>
+      </mapping>
+      <mapping>
+        <target_step_name>Rename source DB field names -> target DB field names</target_step_name>
+        <target_attribute_key>FIELD_NAME</target_attribute_key>
+        <target_detail>Y</target_detail>
+        <source_step>Source &amp; Target DB column names to mirror</source_step>
+        <source_field>source_col_name</source_field>
+      </mapping>
+      <mapping>
+        <target_step_name>Rename source DB field names -> target DB field names</target_step_name>
+        <target_attribute_key>FIELD_RENAME</target_attribute_key>
+        <target_detail>Y</target_detail>
+        <source_step>Source &amp; Target DB column names to mirror</source_step>
+        <source_field>target_col_name</source_field>
+      </mapping>
+      <mapping>
+        <target_step_name>Update existing rows of target table</target_step_name>
+        <target_attribute_key>KEY_LOOKUP</target_attribute_key>
+        <target_detail>Y</target_detail>
+        <source_step>Target DB primary key column names</source_step>
+        <source_field>target_key_col_name</source_field>
+      </mapping>
+      <mapping>
+        <target_step_name>Synchronize after merge</target_step_name>
+        <target_attribute_key>STREAM_FIELD</target_attribute_key>
+        <target_detail>Y</target_detail>
+        <source_step>Source &amp; Target DB column names to mirror</source_step>
+        <source_field>target_col_name</source_field>
+      </mapping>
+      <mapping>
+        <target_step_name>Select fields for progress monitoring</target_step_name>
+        <target_attribute_key>FIELD_NAME</target_attribute_key>
+        <target_detail>Y</target_detail>
+        <source_step>Column mapping metadata for progress monitoring</source_step>
+        <source_field>source_col_name</source_field>
+      </mapping>
     </mappings>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -996,7 +1042,7 @@ See the comments in that job for an explanation.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>416</xloc>
+      <xloc>496</xloc>
       <yloc>496</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1050,6 +1096,7 @@ See the comments in that job for an explanation.</note>
 SELECT
     -- Create SELECT statement:
     'SELECT ' || CAST(select_list.str_value AS VARCHAR) || 
+    ', row_number() OVER () AS "current_row_num", COUNT(*) OVER () AS "num_rows_to_process", MOD (row_number() OVER (), ${QF_ETL_PROGRESS_INTERVAL_ROWS}) AS "update_progress", NULL AS "null_column"' ||  -- Special rows for monitoring progress
     ' FROM ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE} ' || 
     'ORDER BY ' || CAST(orderby_list.str_value AS VARCHAR) 
     AS "select_source_rows_sql" 
@@ -1062,6 +1109,7 @@ CROSS JOIN
     <execute_each_row>N</execute_each_row>
     <variables_active>Y</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1070,7 +1118,7 @@ CROSS JOIN
       </output>
     </remotesteps>
     <GUI>
-      <xloc>240</xloc>
+      <xloc>320</xloc>
       <yloc>400</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1136,6 +1184,7 @@ CROSS JOIN
     <execute_each_row>N</execute_each_row>
     <variables_active>Y</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1144,7 +1193,7 @@ CROSS JOIN
       </output>
     </remotesteps>
     <GUI>
-      <xloc>608</xloc>
+      <xloc>688</xloc>
       <yloc>400</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1198,6 +1247,7 @@ ORDER BY
     <execute_each_row>N</execute_each_row>
     <variables_active>Y</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1206,7 +1256,7 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>608</xloc>
+      <xloc>688</xloc>
       <yloc>608</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1242,6 +1292,7 @@ ORDER BY
     <execute_each_row>N</execute_each_row>
     <variables_active>Y</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1250,7 +1301,7 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>240</xloc>
+      <xloc>320</xloc>
       <yloc>608</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1297,6 +1348,7 @@ ORDER BY
     <execute_each_row>N</execute_each_row>
     <variables_active>Y</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1305,7 +1357,114 @@ ORDER BY
       </output>
     </remotesteps>
     <GUI>
-      <xloc>752</xloc>
+      <xloc>848</xloc>
+      <yloc>496</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Column mapping metadata for progress monitoring</name>
+    <type>TableInput</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <connection>etl_db</connection>
+    <sql>WITH column_mappings AS (
+
+    SELECT 
+        COALESCE((SELECT source_column_name FROM etl.column_meta cm WHERE cm.table_meta_id=tm.table_meta_id AND cm.is_insert_id_column=true), 'null_column') AS "source_col_name",
+        NULL AS "source_col_length",
+        -1      AS  "source_col_precision",
+        'insert_id' AS "target_col_name",
+        1       AS "column_meta_id"
+     FROM 
+          ${QF_ETL_DB_SCHEMA}.table_meta tm 
+     WHERE 
+         tm.table_meta_id=${PARAM_TABLE_META_ID}
+         
+UNION ALL
+
+    SELECT 
+        COALESCE((SELECT source_column_name FROM etl.column_meta cm WHERE cm.table_meta_id=tm.table_meta_id AND cm.is_last_updated_on_column=true), 'null_column') AS "source_col_name",
+        NULL AS "source_col_length",
+        -1      AS  "source_col_precision",
+        'last_updated_on' AS "target_col_name",
+        2       AS "column_meta_id"
+     FROM 
+          ${QF_ETL_DB_SCHEMA}.table_meta tm 
+     WHERE 
+         tm.table_meta_id=${PARAM_TABLE_META_ID}
+         
+UNION ALL
+
+-- These are special columns created by the SELECT query for the source table so that we can monitor
+-- progress as rows are streamed to the target table in the template transformation.
+
+    SELECT 
+        'current_row_num'  AS "source_col_name",
+        NULL   AS "source_col_length",
+        -1        AS  "source_col_precision",
+        'current_row_num'  AS "target_col_name",
+        10000 AS "column_meta_id"
+
+UNION ALL
+
+    SELECT 
+        'num_rows_to_process' AS "source_col_name",
+        NULL   AS "source_col_length",
+        -1        AS "source_col_precision",
+        'num_rows_to_process' AS "target_col_name",
+        10001 AS "column_meta_id"
+
+UNION ALL
+
+    SELECT 
+        'update_progress' AS "source_col_name",
+        NULL   AS "source_col_length",
+        -1        AS "source_col_precision",
+        'update_progress' AS "target_col_name",
+        10002 AS "column_meta_id"
+
+UNION ALL
+
+    SELECT 
+        'null_column' AS "source_col_name",
+        NULL   AS "source_col_length",
+        -1        AS "source_col_precision",
+        'null_column' AS "target_col_name",
+        10003 AS "column_meta_id"
+)
+SELECT 
+    source_col_name,
+    source_col_length,
+    source_col_precision,
+    target_col_name
+FROM 
+    column_mappings
+ORDER BY 
+    -- Ordering by "column_meta_id" means the columns will be treated in
+    -- the same order as they appear in the table in the "source" DB. 
+    column_meta_id ASC</sql>
+    <limit>0</limit>
+    <lookup />
+    <execute_each_row>N</execute_each_row>
+    <variables_active>Y</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>128</xloc>
       <yloc>496</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1315,4 +1474,5 @@ ORDER BY
   <slave-step-copy-partition-distribution>
   </slave-step-copy-partition-distribution>
   <slave_transformation>N</slave_transformation>
+  <attributes />
 </transformation>

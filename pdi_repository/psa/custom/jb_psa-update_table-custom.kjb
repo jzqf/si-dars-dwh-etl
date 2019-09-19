@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2018/06/12 09:57:04.922</modified_date>
+  <modified_date>2019/09/06 13:44:35.994</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
@@ -91,6 +91,11 @@
       <description>for target DB "dynamic" database connections</description>
     </parameter>
     <parameter>
+      <name>PARAM_ETL_RUN_ID</name>
+      <default_value />
+      <description>Primary key for the ${QF_ETL_DB_SCHEMA}.etl_run row for the current "run"</description>
+    </parameter>
+    <parameter>
       <name>PARAM_SOURCE_DB_ID</name>
       <default_value>-1</default_value>
       <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
@@ -139,6 +144,11 @@
       <name>PARAM_TARGET_TABLE</name>
       <default_value />
       <description />
+    </parameter>
+    <parameter>
+      <name>PARAM_TARGET_TABLE_UPDATE_ID</name>
+      <default_value />
+      <description>Primary key of ${QF_ETL_DB_SCHEMA}.target_table_update row to be updated by this job for progress and summary statistics</description>
     </parameter>
   </parameters>
   <connection>
@@ -471,6 +481,7 @@
       <name>START</name>
       <description />
       <type>SPECIAL</type>
+      <attributes />
       <start>Y</start>
       <dummy>N</dummy>
       <repeat>N</repeat>
@@ -485,13 +496,19 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>64</xloc>
-      <yloc>432</yloc>
+      <yloc>464</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>Log: Parameters</name>
       <description />
       <type>WRITE_TO_LOG</type>
-      <logmessage>PARAM_CDC_LAST_LOAD_UTC       = ${PARAM_CDC_LAST_LOAD_UTC}
+      <attributes />
+      <logmessage>PARAM_ETL_RUN_ID                     = ${PARAM_ETL_RUN_ID}
+PARAM_TARGET_TABLE_UPDATE_ID         = ${PARAM_TARGET_TABLE_UPDATE_ID}
+PARAM_ETL_RUN_ID                     = ${PARAM_ETL_RUN_ID}
+PARAM_TARGET_TABLE_UPDATE_ID         = ${PARAM_TARGET_TABLE_UPDATE_ID}
+PARAM_CDC_LAST_LOAD_UTC       = ${PARAM_CDC_LAST_LOAD_UTC}
 PARAM_CDC_CURRENT_LOAD_UTC    = ${PARAM_CDC_CURRENT_LOAD_UTC}
 PARAM_TABLE_META_ID           = ${PARAM_TABLE_META_ID}
 PARAM_SOURCE_DB_ID            = ${PARAM_SOURCE_DB_ID}
@@ -504,28 +521,32 @@ PARAM_TARGET_SCHEMA           = ${PARAM_TARGET_SCHEMA}
 PARAM_TARGET_TABLE            = ${PARAM_TARGET_TABLE}
 PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
       <loglevel>Basic</loglevel>
-      <logsubject>Parameters received by ${Internal.Job.Name}</logsubject>
+      <logsubject>${Internal.Job.Name}</logsubject>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>192</xloc>
-      <yloc>432</yloc>
+      <yloc>464</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>Abort job - Untreated case</name>
       <description />
       <type>ABORT</type>
+      <attributes />
       <message>Aborting from ${Internal.Job.Name}. Untreated case:  schema.table = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</message>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>192</xloc>
       <yloc>896</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>Target table = obo.passage_with_images ?</name>
       <description />
       <type>SIMPLE_EVAL</type>
+      <attributes />
       <valuetype>variable</valuetype>
       <fieldname />
       <variablename>${PARAM_TARGET_SCHEMA_DOT_TABLE}</variablename>
@@ -542,12 +563,14 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>192</xloc>
-      <yloc>624</yloc>
+      <yloc>656</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>jb_log_error - Untreated case</name>
       <description />
       <type>JOB</type>
+      <attributes />
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
@@ -583,22 +606,26 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
       <nr>0</nr>
       <xloc>192</xloc>
       <yloc>800</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>Abort job</name>
       <description />
       <type>ABORT</type>
+      <attributes />
       <message>Aborting ${Internal.Job.Name} after job entry jb_psa-update_table-obo.passage_with_images</message>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>1</nr>
       <xloc>768</xloc>
-      <yloc>656</yloc>
+      <yloc>688</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>jb_psa-update_table-obo.passage_with_images</name>
       <description />
       <type>JOB</type>
+      <attributes />
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
@@ -628,12 +655,14 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>512</xloc>
-      <yloc>624</yloc>
+      <yloc>656</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>jb_update_etl_table_meta_mirror_details</name>
       <description />
       <type>JOB</type>
+      <attributes />
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
@@ -698,12 +727,14 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>768</xloc>
-      <yloc>592</yloc>
+      <yloc>624</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>tr_table_update_statistics_init_vrbls</name>
       <description />
       <type>TRANS</type>
+      <attributes />
       <specification_method>rep_name</specification_method>
       <trans_object_id />
       <filename />
@@ -735,7 +766,8 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>192</xloc>
-      <yloc>528</yloc>
+      <yloc>560</yloc>
+      <attributes_kjc />
     </entry>
   </entries>
   <hops>
@@ -817,6 +849,8 @@ PARAM_TARGET_SCHEMA_DOT_TABLE = ${PARAM_TARGET_SCHEMA_DOT_TABLE}</logmessage>
       <note>This job updates a table in the target PSA DB that is mirrored from a source database using a table-specific CUSTOM algorithm, i.e.,
 a custom job &amp; transformation is used that is specific to the table being updated in the target PSA DB. This job has parameters:
 
+	PARAM_ETL_RUN_ID								Primary key for the ${QF_ETL_DB_SCHEMA}.etl_run row for the current "run"
+	PARAM_TARGET_TABLE_UPDATE_ID				Primary key of ${QF_ETL_DB_SCHEMA}.target_table_update row to be updated by this job for progress and summary statistics
 	PARAM_CDC_LAST_LOAD_UTC					Timestamp for when the target DB was most recently updated successfully
 	PARAM_CDC_CURRENT_LOAD_UTC				Timestamp of the current load (no rows after this timestamp will be loaded)
 	PARAM_DYN_DB_CONN_SOURCE_DB_HOST		for source DB "dynamic" database connections
@@ -847,8 +881,8 @@ a custom job &amp; transformation is used that is specific to the table being up
 This job acts as a "dispatcher" in that it runs the appropriate job for the table that is specified by this job's parameters.</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>923</width>
-      <heigth>413</heigth>
+      <width>1013</width>
+      <heigth>439</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -871,7 +905,7 @@ This job acts as a "dispatcher" in that it runs the appropriate job for the tabl
 	QF_UPDATE_TABLE_NUM_INSERTS
 	QF_UPDATE_TABLE_NUM_UPDATES</note>
       <xloc>336</xloc>
-      <yloc>496</yloc>
+      <yloc>528</yloc>
       <width>553</width>
       <heigth>75</heigth>
       <fontname>Ubuntu</fontname>
@@ -895,7 +929,7 @@ This job acts as a "dispatcher" in that it runs the appropriate job for the tabl
 	PARAM_TARGET_INSERT_ID_COLNAME
 	PARAM_TARGET_LAST_UPDATED_ON_COLNAME</note>
       <xloc>912</xloc>
-      <yloc>576</yloc>
+      <yloc>608</yloc>
       <width>308</width>
       <heigth>62</heigth>
       <fontname>Ubuntu</fontname>
