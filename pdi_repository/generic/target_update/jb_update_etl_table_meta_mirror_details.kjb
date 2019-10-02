@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2019/09/06 14:23:02.223</modified_date>
+  <modified_date>2019/10/01 12:45:16.925</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE</name>
@@ -163,8 +163,16 @@
         <attribute>N</attribute>
       </attribute>
       <attribute>
+        <code>INITIAL_POOL_SIZE</code>
+        <attribute>10</attribute>
+      </attribute>
+      <attribute>
         <code>IS_CLUSTERED</code>
         <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>MAXIMUM_POOL_SIZE</code>
+        <attribute>10</attribute>
       </attribute>
       <attribute>
         <code>PORT_NUMBER</code>
@@ -188,7 +196,7 @@
       </attribute>
       <attribute>
         <code>USE_POOLING</code>
-        <attribute>N</attribute>
+        <attribute>Y</attribute>
       </attribute>
     </attributes>
   </connection>
@@ -214,8 +222,16 @@
         <attribute>N</attribute>
       </attribute>
       <attribute>
+        <code>INITIAL_POOL_SIZE</code>
+        <attribute>10</attribute>
+      </attribute>
+      <attribute>
         <code>IS_CLUSTERED</code>
         <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>MAXIMUM_POOL_SIZE</code>
+        <attribute>10</attribute>
       </attribute>
       <attribute>
         <code>PORT_NUMBER</code>
@@ -239,7 +255,7 @@
       </attribute>
       <attribute>
         <code>USE_POOLING</code>
-        <attribute>N</attribute>
+        <attribute>Y</attribute>
       </attribute>
     </attributes>
   </connection>
@@ -541,7 +557,7 @@
       <attributes_kjc />
     </entry>
     <entry>
-      <name>Update details stored in table_state row</name>
+      <name>Update table_state row</name>
       <description />
       <type>SQL</type>
       <attributes />
@@ -911,55 +927,6 @@ QF_TARGET_TABLE_MAX_LAST_UPDATED_ON   = ${QF_TARGET_TABLE_MAX_LAST_UPDATED_ON}</
       <attributes_kjc />
     </entry>
     <entry>
-      <name>Store update details in new target_table_update row</name>
-      <description />
-      <type>SQL</type>
-      <attributes />
-      <sql>INSERT INTO ${QF_ETL_DB_SCHEMA}.target_table_update (
-    table_meta_id,
-    created_on,
-    algorithm_id,
-    num_inserts,
-    num_updates,
-    num_rows_processed,
-    elapsed_time_millis,
-    num_rows_processed_per_sec,
-    insert_id_colname, 
-    insert_id_maxvalue,
-    last_updated_on_colname,
-    last_updated_on_maxvalue
-)
-VALUES (
-    ${PARAM_TABLE_META_ID},
-    now() at time zone 'utc',  -- LOCALTIMESTAMP
-    ${PARAM_TABLE_MIRROR_ALGORITHM_ID},
-
-    -- Values that are not set here should be SQL NULL, but it is possible that this is not so. If this occurs,
-    -- I may have to check for a guard value and then use NULLIF(&lt;update value>, &lt;guard value>).
-    ${PARAM_UPDATE_TABLE_NUM_INSERTS},
-    ${PARAM_UPDATE_TABLE_NUM_UPDATES},
-    ${PARAM_UPDATE_TABLE_NUM_ROWS},
-    ${QF_UPDATE_TABLE_ELAPSED_MILLISECONDS},
-    ${QF_UPDATE_TABLE_ROWS_PER_SEC},
-
-    NULLIF('${PARAM_TARGET_INSERT_ID_COLNAME}', ''),
-    NULLIF(${QF_TARGET_TABLE_MAX_INSERT_ID}, ${QF_POSITIVE_INTEGER_NOT_SET_VALUE}),
-    NULLIF('${PARAM_TARGET_LAST_UPDATED_ON_COLNAME}', ''),
-    NULLIF(TIMESTAMP '${QF_TARGET_TABLE_MAX_LAST_UPDATED_ON}', TIMESTAMP '${QF_TIMESTAMP_NOT_SET_VALUE}')
-)</sql>
-      <useVariableSubstitution>T</useVariableSubstitution>
-      <sqlfromfile>F</sqlfromfile>
-      <sqlfilename />
-      <sendOneStatement>F</sendOneStatement>
-      <connection>etl_db</connection>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>352</xloc>
-      <yloc>1056</yloc>
-      <attributes_kjc />
-    </entry>
-    <entry>
       <name>jb_log_error 2</name>
       <description />
       <type>JOB</type>
@@ -1091,7 +1058,7 @@ VALUES (
       <attributes_kjc />
     </entry>
     <entry>
-      <name>Store update details in target_table_update row</name>
+      <name>Update target_table_update row</name>
       <description />
       <type>SQL</type>
       <attributes />
@@ -1126,8 +1093,8 @@ WHERE
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>432</xloc>
-      <yloc>1008</yloc>
+      <xloc>352</xloc>
+      <yloc>1056</yloc>
       <attributes_kjc />
     </entry>
   </entries>
@@ -1161,7 +1128,7 @@ WHERE
     </hop>
     <hop>
       <from>Log update details</from>
-      <to>Update details stored in table_state row</to>
+      <to>Update table_state row</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -1250,39 +1217,12 @@ WHERE
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Update details stored in table_state row</from>
-      <to>Store update details in new target_table_update row</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>N</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Update details stored in table_state row</from>
+      <from>Update table_state row</from>
       <to>jb_log_error</to>
       <from_nr>0</from_nr>
       <to_nr>1</to_nr>
       <enabled>Y</enabled>
       <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Store update details in new target_table_update row</from>
-      <to>jb_log_error 2</to>
-      <from_nr>0</from_nr>
-      <to_nr>1</to_nr>
-      <enabled>N</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Store update details in new target_table_update row</from>
-      <to>jb_etl_state_register-update</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>N</enabled>
-      <evaluation>Y</evaluation>
       <unconditional>N</unconditional>
     </hop>
     <hop>
@@ -1313,8 +1253,8 @@ WHERE
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>Update details stored in table_state row</from>
-      <to>Store update details in target_table_update row</to>
+      <from>Update table_state row</from>
+      <to>Update target_table_update row</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -1322,7 +1262,7 @@ WHERE
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Store update details in target_table_update row</from>
+      <from>Update target_table_update row</from>
       <to>jb_etl_state_register-update</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -1331,7 +1271,7 @@ WHERE
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Store update details in target_table_update row</from>
+      <from>Update target_table_update row</from>
       <to>jb_log_error 2</to>
       <from_nr>0</from_nr>
       <to_nr>1</to_nr>
@@ -1342,8 +1282,8 @@ WHERE
   </hops>
   <notepads>
     <notepad>
-      <note>This job updates a row of the ${QF_ETL_DB_SCHEMA}.table_state table after a table has been updated in the target DB from a table in
-a source database. This job has parameters:
+      <note>This job updates rows of the ${QF_ETL_DB_SCHEMA}.table_state &amp; ${QF_ETL_DB_SCHEMA}.target_table_update tables after a table has been updated in the target DB 
+from a table in a source database. This job has parameters:
 
 	PARAM_ETL_RUN_ID								Primary key for the ${QF_ETL_DB_SCHEMA}.etl_run row for the current "run"
 	PARAM_TARGET_TABLE_UPDATE_ID				Primary key of ${QF_ETL_DB_SCHEMA}.target_table_update row to be updated by this job for progress and summary statistics
@@ -1516,18 +1456,17 @@ the specified target table. This value is assigned to the PDI variable:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>The original plan was to drop the 
-columns that are set here and, 
-therefore, delete this step here 
-after I added support for the new 
-"target_table_update" table. 
-However, it may be useful to keep 
-these columns so I have not deleted 
-this step.</note>
+      <note>The original plan was to drop the columns 
+of the table_state table that are set here 
+and, therefore, delete this step here after 
+I added support for the new 
+"target_table_update" table. However, it 
+may be useful to keep these columns so I 
+have not deleted this step.</note>
       <xloc>16</xloc>
       <yloc>928</yloc>
-      <width>210</width>
-      <heigth>114</heigth>
+      <width>246</width>
+      <heigth>101</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
