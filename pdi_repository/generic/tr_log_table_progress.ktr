@@ -489,7 +489,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2019/09/16 08:34:35.171</modified_date>
+    <modified_date>2019/10/03 14:43:46.137</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -668,8 +668,16 @@ subsequent row(s) will be discarded.</note>
         <attribute>N</attribute>
       </attribute>
       <attribute>
+        <code>INITIAL_POOL_SIZE</code>
+        <attribute>10</attribute>
+      </attribute>
+      <attribute>
         <code>IS_CLUSTERED</code>
         <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>MAXIMUM_POOL_SIZE</code>
+        <attribute>10</attribute>
       </attribute>
       <attribute>
         <code>PORT_NUMBER</code>
@@ -693,7 +701,7 @@ subsequent row(s) will be discarded.</note>
       </attribute>
       <attribute>
         <code>USE_POOLING</code>
-        <attribute>N</attribute>
+        <attribute>Y</attribute>
       </attribute>
     </attributes>
   </connection>
@@ -719,8 +727,16 @@ subsequent row(s) will be discarded.</note>
         <attribute>N</attribute>
       </attribute>
       <attribute>
+        <code>INITIAL_POOL_SIZE</code>
+        <attribute>10</attribute>
+      </attribute>
+      <attribute>
         <code>IS_CLUSTERED</code>
         <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>MAXIMUM_POOL_SIZE</code>
+        <attribute>10</attribute>
       </attribute>
       <attribute>
         <code>PORT_NUMBER</code>
@@ -744,7 +760,7 @@ subsequent row(s) will be discarded.</note>
       </attribute>
       <attribute>
         <code>USE_POOLING</code>
-        <attribute>N</attribute>
+        <attribute>Y</attribute>
       </attribute>
     </attributes>
   </connection>
@@ -850,7 +866,7 @@ subsequent row(s) will be discarded.</note>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Generate "Shutdown requested" message for email</from>
+      <from>Add shutdown-related fields to stream</from>
       <to>Set variable QF_MAIL_MSG_QFREE_BODY_FAILURE_EXTRA_INFO_TRANSFORMATION</to>
       <enabled>Y</enabled>
     </hop>
@@ -866,7 +882,7 @@ subsequent row(s) will be discarded.</note>
     </hop>
     <hop>
       <from>First row (seqnum=1) ?</from>
-      <to>Generate "Shutdown requested" message for email</to>
+      <to>Add shutdown-related fields to stream</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
@@ -1372,7 +1388,7 @@ if (prev_progress_milliseconds) {
       <method>none</method>
       <schema_name />
     </partitioning>
-    <send_true_to>Generate "Shutdown requested" message for email</send_true_to>
+    <send_true_to>Add shutdown-related fields to stream</send_true_to>
     <send_false_to>Discard extra rows</send_false_to>
     <compare>
       <condition>
@@ -1406,7 +1422,7 @@ if (prev_progress_milliseconds) {
     </GUI>
   </step>
   <step>
-    <name>Generate "Shutdown requested" message for email</name>
+    <name>Add shutdown-related fields to stream</name>
     <type>ScriptValueMod</type>
     <description />
     <distribute>Y</distribute>
@@ -1427,10 +1443,15 @@ if (prev_progress_milliseconds) {
 // Input fields:
 var shutdown_requested_by;
 var shutdown_requested_at_utc;
-var shutdown_requested_reason;
+var shutdown_reason;
 
 // Output fields created by this script:
-shutdown_requested_summary = "Shutdown requested by: " + shutdown_requested_by + " at: " + shutdown_requested_at_utc + ". Reason: " + shutdown_requested_reason
+//
+// "Shutdown requested" message for email:
+var shutdown_requested_summary = "Shutdown requested by: " + shutdown_requested_by + " at: " + shutdown_requested_at_utc + ". Reason: " + shutdown_reason
+//
+// To set "run state" for etl_run row:
+var run_state_id =  parseInt(getVariable("QF_ETL_RUN_STATE_ID_SHUTDOWN_INITIATED", "0"));
 
 // Set variable with scope "root job". The variable will be valid
 // in the root job and all the child jobs and transformations.
@@ -1465,8 +1486,8 @@ shutdown_requested_summary = "Shutdown requested by: " + shutdown_requested_by +
         <replace>Y</replace>
       </field>
       <field>
-        <name>shutdown_requested_reason</name>
-        <rename>shutdown_requested_reason</rename>
+        <name>shutdown_reason</name>
+        <rename>shutdown_reason</rename>
         <type>String</type>
         <length>-1</length>
         <precision>-1</precision>
@@ -1476,6 +1497,14 @@ shutdown_requested_summary = "Shutdown requested by: " + shutdown_requested_by +
         <name>shutdown_requested_summary</name>
         <rename>shutdown_requested_summary</rename>
         <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+      <field>
+        <name>run_state_id</name>
+        <rename>run_state_id</rename>
+        <type>Integer</type>
         <length>-1</length>
         <precision>-1</precision>
         <replace>N</replace>
@@ -1738,7 +1767,7 @@ shutdown_requested_summary = "Shutdown requested by: " + shutdown_requested_by +
         <name>shutdown_requested_by</name>
       </field>
       <field>
-        <name>shutdown_requested_reason</name>
+        <name>shutdown_reason</name>
       </field>
       <field>
         <name>shutdown_requested_at_utc</name>
@@ -1798,8 +1827,8 @@ shutdown_requested_summary = "Shutdown requested by: " + shutdown_requested_by +
         <type>String</type>
       </value>
       <value>
-        <name>shutdown_requested_reason</name>
-        <rename>shutdown_requested_reason</rename>
+        <name>shutdown_reason</name>
+        <rename>shutdown_reason</rename>
         <default />
         <type>String</type>
       </value>
@@ -1921,7 +1950,7 @@ shutdown_requested_summary = "Shutdown requested by: " + shutdown_requested_by +
         <name>shutdown_requested_by</name>
       </remove>
       <remove>
-        <name>shutdown_requested_reason</name>
+        <name>shutdown_reason</name>
       </remove>
       <remove>
         <name>shutdown_requested_at_utc</name>
@@ -1969,6 +1998,14 @@ shutdown_requested_summary = "Shutdown requested by: " + shutdown_requested_by +
       </key>
       <value>
         <name>shutdown_initiated_at_utc</name>
+        <rename>current_timestamp_utc</rename>
+      </value>
+      <value>
+        <name>run_state_id</name>
+        <rename>run_state_id</rename>
+      </value>
+      <value>
+        <name>run_state_set_on_utc</name>
         <rename>current_timestamp_utc</rename>
       </value>
     </lookup>

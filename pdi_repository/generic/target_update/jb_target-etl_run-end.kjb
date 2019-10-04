@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2019/10/02 13:16:00.315</modified_date>
+  <modified_date>2019/10/04 11:58:33.661</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_ETL_RUN_ID</name>
@@ -432,7 +432,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>272</xloc>
+      <xloc>400</xloc>
       <yloc>112</yloc>
       <attributes_kjc />
     </entry>
@@ -444,23 +444,25 @@
       <sql>UPDATE 
     ${QF_ETL_DB_SCHEMA}.etl_run 
 SET 
-     run_ended_at_utc=now() at time zone 'utc',
-     progress_source_db_id=NULL,
-     progress_source_schema_name=NULL,
-     progress_source_table_name=NULL,
-     progress_source_column_name_insert_id=NULL,
-     progress_source_column_name_last_updated_on=NULL,
-     progress_target_db_id=NULL,
-     progress_target_schema_name=NULL,
-     progress_target_table_name=NULL,
-     progress_etl_operation=NULL,
-     progress_insert_id=NULL,
-     progress_last_updated_on=NULL,
-     progress_rows_processed_per_update=NULL,
-     progress_rows_processed =NULL,
-     progress_rows_to_process_remaining=NULL,
-     progress_rows_processed_per_second=NULL,
-     progress_updated_at_utc=NULL
+    run_state_id=${QF_ETL_RUN_STATE_ID_TERMINATED_NORMALLY},
+    run_state_set_on_utc=now() at time zone 'utc',
+    run_ended_at_utc=now() at time zone 'utc',
+    progress_source_db_id=NULL,
+    progress_source_schema_name=NULL,
+    progress_source_table_name=NULL,
+    progress_source_column_name_insert_id=NULL,
+    progress_source_column_name_last_updated_on=NULL,
+    progress_target_db_id=NULL,
+    progress_target_schema_name=NULL,
+    progress_target_table_name=NULL,
+    progress_etl_operation=NULL,
+    progress_insert_id=NULL,
+    progress_last_updated_on=NULL,
+    progress_rows_processed_per_update=NULL,
+    progress_rows_processed =NULL,
+    progress_rows_to_process_remaining=NULL,
+    progress_rows_processed_per_second=NULL,
+    progress_updated_at_utc=NULL
 WHERE
      etl_run_id=${PARAM_ETL_RUN_ID}</sql>
       <useVariableSubstitution>T</useVariableSubstitution>
@@ -471,8 +473,8 @@ WHERE
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>416</xloc>
-      <yloc>304</yloc>
+      <xloc>576</xloc>
+      <yloc>320</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -480,7 +482,7 @@ WHERE
       <description />
       <type>WRITE_TO_LOG</type>
       <attributes />
-      <logmessage>Run failed! 
+      <logmessage>Run failed because of an error that was caught.
 PARAM_ETL_RUN_ID = ${PARAM_ETL_RUN_ID}
 ${QF_ETL_DB_SCHEMA}.etl_run row finalized.</logmessage>
       <loglevel>Error</loglevel>
@@ -488,8 +490,8 @@ ${QF_ETL_DB_SCHEMA}.etl_run row finalized.</logmessage>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>128</xloc>
-      <yloc>416</yloc>
+      <xloc>96</xloc>
+      <yloc>432</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -500,8 +502,8 @@ ${QF_ETL_DB_SCHEMA}.etl_run row finalized.</logmessage>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>272</xloc>
-      <yloc>512</yloc>
+      <xloc>400</xloc>
+      <yloc>544</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -524,7 +526,7 @@ ${QF_ETL_DB_SCHEMA}.etl_run row finalized.</logmessage>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>272</xloc>
+      <xloc>400</xloc>
       <yloc>208</yloc>
       <attributes_kjc />
     </entry>
@@ -536,7 +538,10 @@ ${QF_ETL_DB_SCHEMA}.etl_run row finalized.</logmessage>
       <sql>UPDATE 
     ${QF_ETL_DB_SCHEMA}.etl_run 
 SET 
-     run_ended_at_utc=now() at time zone 'utc'
+    run_state_id=${QF_ETL_RUN_STATE_ID_TERMINATED_BY_CAUGHT_ERROR},
+    run_state_set_on_utc=now() at time zone 'utc',
+    run_ended_at_utc=now() at time zone 'utc',
+    shutdown_reason=TRIM(BOTH FROM $escape$${QF_MAIL_MSG_QFREE_BODY_FAILURE_EXTRA_INFO}  ${QF_MAIL_MSG_QFREE_BODY_FAILURE_EXTRA_INFO_TRANSFORMATION}$escape$)
 WHERE
     etl_run_id=${PARAM_ETL_RUN_ID}</sql>
       <useVariableSubstitution>T</useVariableSubstitution>
@@ -547,8 +552,8 @@ WHERE
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>128</xloc>
-      <yloc>304</yloc>
+      <xloc>96</xloc>
+      <yloc>320</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -564,8 +569,81 @@ ${QF_ETL_DB_SCHEMA}.etl_run row finalized.</logmessage>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>416</xloc>
-      <yloc>416</yloc>
+      <xloc>576</xloc>
+      <yloc>432</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>Was a shutdown requested?</name>
+      <description />
+      <type>EVAL_TABLE_CONTENT</type>
+      <attributes />
+      <connection>etl_db</connection>
+      <schemaname>${QF_ETL_DB_SCHEMA}</schemaname>
+      <tablename>etl_run</tablename>
+      <success_condition>rows_count_greater</success_condition>
+      <limit>0</limit>
+      <is_custom_sql>Y</is_custom_sql>
+      <is_usevars>Y</is_usevars>
+      <custom_sql>SELECT 
+    1
+--    shutdown_requested_by,
+--    shutdown_reason,
+--    shutdown_requested_at_utc 
+FROM
+    ${QF_ETL_DB_SCHEMA}.etl_run
+WHERE
+    etl_run_id=${PARAM_ETL_RUN_ID} AND 
+    shutdown_requested=true</custom_sql>
+      <add_rows_result>N</add_rows_result>
+      <clear_result_rows>Y</clear_result_rows>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>208</xloc>
+      <yloc>208</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>Finalize the etl.run row for shutdown</name>
+      <description />
+      <type>SQL</type>
+      <attributes />
+      <sql>UPDATE 
+    ${QF_ETL_DB_SCHEMA}.etl_run 
+SET 
+    run_state_id=${QF_ETL_RUN_STATE_ID_TERMINATED_BY_SHUTDOWN_REQUEST},
+    run_state_set_on_utc=now() at time zone 'utc',
+    run_ended_at_utc=now() at time zone 'utc'
+WHERE
+    etl_run_id=${PARAM_ETL_RUN_ID}</sql>
+      <useVariableSubstitution>T</useVariableSubstitution>
+      <sqlfromfile>F</sqlfromfile>
+      <sqlfilename />
+      <sendOneStatement>F</sendOneStatement>
+      <connection>etl_db</connection>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>320</xloc>
+      <yloc>320</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>Log etl_run row finalized for shutdown</name>
+      <description />
+      <type>WRITE_TO_LOG</type>
+      <attributes />
+      <logmessage>Run was shut down by request.
+PARAM_ETL_RUN_ID = ${PARAM_ETL_RUN_ID}
+${QF_ETL_DB_SCHEMA}.etl_run row finalized.</logmessage>
+      <loglevel>Error</loglevel>
+      <logsubject>${Internal.Job.Name}</logsubject>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>320</xloc>
+      <yloc>432</yloc>
       <attributes_kjc />
     </entry>
   </entries>
@@ -598,15 +676,6 @@ ${QF_ETL_DB_SCHEMA}.etl_run row finalized.</logmessage>
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>PARAM_SUCCESS = true?</from>
-      <to>Finalize the etl.run row for failed run</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
       <from>Finalize the etl.run row for failed run</from>
       <to>Log etl_run row finalized for failure</to>
       <from_nr>0</from_nr>
@@ -626,6 +695,51 @@ ${QF_ETL_DB_SCHEMA}.etl_run row finalized.</logmessage>
     </hop>
     <hop>
       <from>Log etl_run row finalized for success</from>
+      <to>Success</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>PARAM_SUCCESS = true?</from>
+      <to>Was a shutdown requested?</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Was a shutdown requested?</from>
+      <to>Finalize the etl.run row for failed run</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Was a shutdown requested?</from>
+      <to>Finalize the etl.run row for shutdown</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Finalize the etl.run row for shutdown</from>
+      <to>Log etl_run row finalized for shutdown</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>Log etl_run row finalized for shutdown</from>
       <to>Success</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
