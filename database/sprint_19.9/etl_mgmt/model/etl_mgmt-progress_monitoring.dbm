@@ -1,0 +1,849 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+CAUTION: Do not modify this file unless you know what you are doing.
+         Unexpected results may occur if the code is changed deliberately.
+-->
+<dbmodel pgmodeler-ver="0.8.2" last-position="0,0" last-zoom="0.7"
+	 default-schema="public" default-owner="postgres">
+<role name="adam"
+      superuser="true"
+      createdb="true"
+      createrole="true"
+      inherit="true"
+      login="true"
+      encrypted="true"
+      password="********">
+</role>
+
+<role name="adam_rpt"
+      inherit="true"
+      login="true"
+      encrypted="true"
+      password="********">
+	<comment><![CDATA[This is an adam type user for the data warehouse]]></comment>
+</role>
+
+<role name="dbtest"
+      inherit="true"
+      login="true"
+      encrypted="true"
+      password="********">
+</role>
+
+<role name="etl"
+      inherit="true"
+      login="true"
+      encrypted="true"
+      password="********">
+</role>
+
+<role name="jeffreyz"
+      createdb="true"
+      inherit="true"
+      login="true"
+      encrypted="true"
+      password="********">
+</role>
+
+<role name="pdi"
+      inherit="true"
+      login="true"
+      encrypted="true"
+      password="********">
+</role>
+
+<role name="report_server_app"
+      inherit="true"
+      login="true"
+      encrypted="true"
+      password="********">
+</role>
+
+<role name="reportserver"
+      superuser="true"
+      createdb="true"
+      createrole="true"
+      inherit="true"
+      login="true"
+      encrypted="true"
+      password="********">
+</role>
+
+<role name="qfree_admin"
+      superuser="true"
+      inherit="true"
+      login="true"
+      encrypted="true"
+      password="********">
+</role>
+
+<role name="qfree_obo_role"
+      inherit="true"
+      login="true"
+      encrypted="true"
+      password="********">
+</role>
+
+<role name="qfree_odms_role"
+      inherit="true"
+      login="true"
+      encrypted="true"
+      password="********">
+</role>
+
+<role name="qfree_sm_rw_role"
+      inherit="true"
+      login="true"
+      encrypted="true"
+      password="********">
+</role>
+
+<role name="qfree_sm_ro_role"
+      inherit="true"
+      login="true"
+      encrypted="true"
+      password="********">
+</role>
+
+<role name="qfree_mon_cen_role"
+      inherit="true"
+      encrypted="true"
+      password="********">
+</role>
+
+<role name="qfree_netxms"
+      inherit="true"
+      login="true"
+      encrypted="true"
+      password="********">
+</role>
+
+<role name="qfree_rw_role"
+      inherit="true"
+      encrypted="true"
+      password="********">
+	<roles names="qfree_sm_rw_role" role-type="member" />
+</role>
+
+<role name="qfree_admin_role"
+      superuser="true"
+      createdb="true"
+      replication="true"
+      createrole="true"
+      inherit="true"
+      encrypted="true"
+      password="********">
+	<roles names="qfree_admin" role-type="admin" />
+</role>
+
+<role name="qfree_etl"
+      inherit="true"
+      login="true"
+      encrypted="true"
+      password="********">
+</role>
+
+<role name="qfree_bi"
+      inherit="true"
+      login="true"
+      encrypted="true"
+      password="********">
+</role>
+
+<role name="qfree_report_qry"
+      inherit="true"
+      login="true"
+      encrypted="true"
+      password="********">
+</role>
+
+<role name="qfree_dsa_obo_datman"
+      inherit="true"
+      login="true"
+      encrypted="true"
+      password="********">
+</role>
+
+<role name="qfree_report_srv"
+      inherit="true"
+      login="true"
+      encrypted="true"
+      password="********">
+</role>
+
+<role name="qfree_psa_obo_datman"
+      inherit="true"
+      login="true"
+      encrypted="true"
+      password="********">
+</role>
+
+<role name="qfree_ddad"
+      inherit="true"
+      login="true"
+      encrypted="true"
+      password="********">
+</role>
+
+<role name="qfree_bi_ro_role"
+      inherit="true"
+      login="true"
+      encrypted="true"
+      password="********">
+	<roles names="qfree_bi,qfree_report_qry,qfree_dsa_obo_datman,qfree_psa_obo_datman" role-type="member" />
+</role>
+
+<role name="qfree_bi_rw_role"
+      encrypted="true"
+      password="********">
+	<roles names="qfree_bi,qfree_dsa_obo_datman,qfree_psa_obo_datman" role-type="member" />
+</role>
+
+<role name="qfree_etl_mgmt_role"
+      encrypted="true"
+      password="********">
+	<roles names="qfree_etl" role-type="member" />
+</role>
+
+<role name="qfree_ddad_role"
+      encrypted="true"
+      password="********">
+	<roles names="qfree_ddad" role-type="member" />
+</role>
+
+<role name="qfree_report_srv_role"
+      encrypted="true"
+      password="********">
+	<roles names="qfree_report_srv" role-type="member" />
+</role>
+
+<database name="etl_mgmt" encoding="UTF8" lc-collate="en_US" lc-ctype="en_US">
+	<role name="qfree_admin"/>
+	<tablespace name="pg_default"/>
+</database>
+
+<schema name="public" rect-visible="true" fill-color="#e1e1e1" sql-disabled="true">
+</schema>
+
+<schema name="etl" rect-visible="true" fill-color="#ffff7f">
+	<role name="qfree_etl"/>
+</schema>
+
+<extension name="uuid-ossp" cur-version="1.0">
+	<schema name="etl"/>
+	<comment><![CDATA[generate universally unique identifiers (UUIDs)]]></comment>
+</extension>
+
+<sequence name="target_table_compare_target_table_compare_id_seq"
+	 start="1" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="etl"/>
+	<role name="qfree_admin"/>
+</sequence>
+
+<table name="column_meta">
+	<schema name="etl"/>
+	<role name="qfree_admin"/>
+	<position x="580" y="660"/>
+	<column name="column_meta_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="table_meta_id" not-null="true">
+		<type name="smallint"/>
+	</column>
+	<column name="source_column_name">
+		<type name="character varying" length="80"/>
+	</column>
+	<column name="target_column_name">
+		<type name="character varying" length="80"/>
+	</column>
+	<column name="is_primary_key_column" not-null="true" default-value="false">
+		<type name="boolean"/>
+	</column>
+	<column name="primary_key_column_order">
+		<type name="smallint"/>
+	</column>
+	<column name="is_insert_id_column" not-null="true" default-value="false">
+		<type name="boolean"/>
+	</column>
+	<column name="is_inserted_on_column" not-null="true" default-value="false">
+		<type name="boolean"/>
+	</column>
+	<column name="is_last_updated_on_column" not-null="true" default-value="false">
+		<type name="boolean"/>
+	</column>
+	<column name="is_row_can_be_deleted_from_column" not-null="true" default-value="false">
+		<type name="boolean"/>
+	</column>
+	<column name="is_can_delete_row_column" not-null="true" default-value="false">
+		<type name="boolean"/>
+	</column>
+	<column name="is_updatable_column" not-null="true" default-value="false">
+		<type name="boolean"/>
+	</column>
+	<column name="mirror_column" not-null="true" default-value="false">
+		<type name="boolean"/>
+	</column>
+	<column name="compare_column" not-null="true" default-value="false">
+		<type name="boolean"/>
+	</column>
+	<constraint name="pk_etl_column_meta" type="pk-constr" table="etl.column_meta">
+		<columns names="column_meta_id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="uq_etl_columnmeta_tablemetaid_targetcolumnname" type="uq-constr" table="etl.column_meta">
+		<columns names="table_meta_id,target_column_name" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="table_meta">
+	<schema name="etl"/>
+	<role name="qfree_admin"/>
+	<position x="20" y="520"/>
+	<column name="table_meta_id" not-null="true">
+		<type name="smallint"/>
+	</column>
+	<column name="source_db_id" not-null="true">
+		<type name="smallint"/>
+	</column>
+	<column name="source_schema_name" not-null="true">
+		<type name="character varying" length="80"/>
+	</column>
+	<column name="source_table_name" not-null="true">
+		<type name="character varying" length="80"/>
+	</column>
+	<column name="target_db_id" not-null="true">
+		<type name="smallint"/>
+	</column>
+	<column name="target_schema_name" not-null="true">
+		<type name="character varying" length="80"/>
+	</column>
+	<column name="target_table_name" not-null="true">
+		<type name="character varying" length="80"/>
+	</column>
+	<column name="can_insert_rows" not-null="true" default-value="true">
+		<type name="boolean"/>
+	</column>
+	<column name="can_update_rows" not-null="true" default-value="false">
+		<type name="boolean"/>
+	</column>
+	<column name="can_delete_rows" not-null="true" default-value="false">
+		<type name="boolean"/>
+	</column>
+	<column name="is_static_support_table" not-null="true" default-value="false">
+		<type name="boolean"/>
+	</column>
+	<column name="row_can_be_deleted_from_seconds">
+		<type name="integer"/>
+	</column>
+	<column name="can_delete_row_schema_name">
+		<type name="character varying" length="80"/>
+	</column>
+	<column name="can_delete_row_table_name">
+		<type name="character varying" length="80"/>
+	</column>
+	<column name="delete_marked_rows_table_order">
+		<type name="smallint"/>
+	</column>
+	<column name="mark_rows_for_deletion_algorithm_id" not-null="true" default-value="0">
+		<type name="smallint"/>
+	</column>
+	<column name="delete_marked_rows_algorithm_id" not-null="true" default-value="0">
+		<type name="smallint"/>
+	</column>
+	<column name="update_target_table_algorithm_id" not-null="true" default-value="0">
+		<type name="smallint"/>
+	</column>
+	<column name="update_target_table" not-null="true" default-value="false">
+		<type name="boolean"/>
+	</column>
+	<column name="mark_rows_for_deletion" not-null="true" default-value="false">
+		<type name="boolean"/>
+	</column>
+	<column name="delete_marked_rows" not-null="true" default-value="false">
+		<type name="boolean"/>
+	</column>
+	<column name="compare_target_table" not-null="true" default-value="false">
+		<type name="boolean"/>
+	</column>
+	<column name="source_db_etl_state_register_schema_name">
+		<type name="character varying" length="80"/>
+	</column>
+	<column name="source_db_etl_state_register_table_name">
+		<type name="character varying" length="80"/>
+	</column>
+	<constraint name="row_can_be_deleted_from_seconds_positive" type="ck-constr" table="etl.table_meta">
+			<expression><![CDATA[(row_can_be_deleted_from_seconds >= 0)]]></expression>
+	</constraint>
+	<constraint name="pk_etl_table_meta" type="pk-constr" table="etl.table_meta">
+		<columns names="table_meta_id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="uq_etl_tablemeta_targetdb_targetschema_targettable" type="uq-constr" table="etl.table_meta">
+		<columns names="target_db_id,target_schema_name,target_table_name" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="target_table_update">
+	<schema name="etl"/>
+	<role name="qfree_admin"/>
+	<position x="620" y="140"/>
+	<column name="target_table_update_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="etl_run_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="table_meta_id" not-null="true">
+		<type name="smallint"/>
+	</column>
+	<column name="update_started_timestamp_utc" not-null="true" default-value="timezone('utc'::text, now())">
+		<type name="timestamp"/>
+	</column>
+	<column name="update_finished_timestamp_utc">
+		<type name="timestamp"/>
+	</column>
+	<column name="algorithm_id" not-null="true">
+		<type name="smallint"/>
+	</column>
+	<column name="elapsed_time_millis">
+		<type name="integer"/>
+	</column>
+	<column name="num_inserts">
+		<type name="integer"/>
+	</column>
+	<column name="num_updates">
+		<type name="integer"/>
+	</column>
+	<column name="num_rows_processed">
+		<type name="integer"/>
+	</column>
+	<column name="num_rows_processed_per_sec">
+		<type name="real"/>
+	</column>
+	<column name="insert_id_colname">
+		<type name="character varying" length="80"/>
+	</column>
+	<column name="insert_id_maxvalue">
+		<type name="bigint"/>
+	</column>
+	<column name="last_updated_on_colname">
+		<type name="character varying" length="80"/>
+	</column>
+	<column name="last_updated_on_maxvalue">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="pk_target_table_update" type="pk-constr" table="etl.target_table_update">
+		<columns names="target_table_update_id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="target_table_progress_target_table_progress_id_seq"
+	 start="1" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="etl"/>
+	<role name="qfree_admin"/>
+</sequence>
+
+<table name="target_table_progress">
+	<schema name="etl"/>
+	<role name="qfree_admin"/>
+	<position x="580" y="400"/>
+	<column name="target_table_progress_id" not-null="true" sequence="etl.target_table_progress_target_table_progress_id_seq">
+		<type name="bigint"/>
+	</column>
+	<column name="target_table_update_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="progress_etl_operation">
+		<type name="character varying" length="20"/>
+	</column>
+	<column name="progress_insert_id">
+		<type name="bigint"/>
+	</column>
+	<column name="progress_last_updated_on">
+		<type name="timestamp"/>
+	</column>
+	<column name="progress_rows_processed_per_update">
+		<type name="integer"/>
+	</column>
+	<column name="progress_rows_processed">
+		<type name="bigint"/>
+	</column>
+	<column name="progress_rows_to_process_remaining">
+		<type name="bigint"/>
+	</column>
+	<column name="progress_rows_processed_per_second">
+		<type name="real"/>
+	</column>
+	<column name="progress_updated_at_utc" not-null="true" default-value="timezone('utc'::text, now())">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="pk_target_table_progress" type="pk-constr" table="etl.target_table_progress">
+		<columns names="target_table_progress_id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="run_state">
+	<schema name="etl"/>
+	<role name="qfree_admin"/>
+	<position x="620" y="40"/>
+	<column name="run_state_id" not-null="true">
+		<type name="smallint"/>
+	</column>
+	<column name="enum_name" not-null="true">
+		<type name="character varying" length="30"/>
+	</column>
+	<column name="description" not-null="true">
+		<type name="character varying" length="50"/>
+	</column>
+	<constraint name="pk_etl_run_state" type="pk-constr" table="etl.run_state">
+		<columns names="run_state_id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="ak_enum_name_etl_run_state" type="uq-constr" table="etl.run_state">
+		<columns names="enum_name" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="etl_run">
+	<schema name="etl"/>
+	<role name="qfree_admin"/>
+	<position x="20" y="40"/>
+	<column name="etl_run_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="pdi_job_batch_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="run_started_at_utc" not-null="true" default-value="timezone('utc'::text, now())">
+		<type name="timestamp"/>
+	</column>
+	<column name="run_state_id" not-null="true">
+		<type name="smallint"/>
+	</column>
+	<column name="run_state_set_on_utc" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="run_ended_at_utc">
+		<type name="timestamp"/>
+	</column>
+	<column name="progress_source_db_id">
+		<type name="smallint"/>
+	</column>
+	<column name="progress_source_schema_name">
+		<type name="character varying" length="80"/>
+	</column>
+	<column name="progress_source_table_name">
+		<type name="character varying" length="80"/>
+	</column>
+	<column name="progress_source_column_name_insert_id">
+		<type name="character varying" length="80"/>
+	</column>
+	<column name="progress_source_column_name_last_updated_on">
+		<type name="character varying" length="80"/>
+	</column>
+	<column name="progress_target_db_id">
+		<type name="smallint"/>
+	</column>
+	<column name="progress_target_schema_name">
+		<type name="character varying" length="80"/>
+	</column>
+	<column name="progress_target_table_name">
+		<type name="character varying" length="80"/>
+	</column>
+	<column name="progress_etl_operation">
+		<type name="character varying" length="20"/>
+	</column>
+	<column name="progress_insert_id">
+		<type name="bigint"/>
+	</column>
+	<column name="progress_last_updated_on">
+		<type name="timestamp"/>
+	</column>
+	<column name="progress_rows_processed_per_update">
+		<type name="integer"/>
+	</column>
+	<column name="progress_rows_processed">
+		<type name="bigint"/>
+	</column>
+	<column name="progress_rows_to_process_remaining">
+		<type name="bigint"/>
+	</column>
+	<column name="progress_rows_processed_per_second">
+		<type name="real"/>
+	</column>
+	<column name="progress_updated_at_utc">
+		<type name="timestamp"/>
+	</column>
+	<column name="shutdown_requested" not-null="true" default-value="false">
+		<type name="boolean"/>
+	</column>
+	<column name="shutdown_requested_by">
+		<type name="character varying" length="80"/>
+	</column>
+	<column name="shutdown_requested_at_utc">
+		<type name="timestamp"/>
+	</column>
+	<column name="shutdown_reason">
+		<type name="character varying" length="1024"/>
+	</column>
+	<column name="shutdown_initiated_at_utc">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="pk_etl_run" type="pk-constr" table="etl.etl_run">
+		<columns names="etl_run_id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<index name="ix_etl_run_01" table="etl.etl_run"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="run_state_id"/>
+		</idxelement>
+</index>
+
+<constraint name="fk_columnmeta_tablemeta" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="etl.table_meta" table="etl.column_meta">
+	<columns names="table_meta_id" ref-type="src-columns"/>
+	<columns names="table_meta_id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_etl_ttupdate_tablemeta" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="etl.table_meta" table="etl.target_table_update">
+	<columns names="table_meta_id" ref-type="src-columns"/>
+	<columns names="table_meta_id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_etl_ttupdate_etljob" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="etl.etl_run" table="etl.target_table_update">
+	<columns names="etl_run_id" ref-type="src-columns"/>
+	<columns names="etl_run_id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_etl_ttprogress_ttupdate" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="etl.target_table_update" table="etl.target_table_progress">
+	<columns names="target_table_update_id" ref-type="src-columns"/>
+	<columns names="target_table_update_id" ref-type="dst-columns"/>
+</constraint>
+
+<relationship name="rel_column_meta_table_meta" type="relfk"
+	 custom-color="#6706ee"
+	 src-table="etl.column_meta"
+	 dst-table="etl.table_meta"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_target_table_update_table_meta" type="relfk"
+	 custom-color="#2ad5d3"
+	 src-table="etl.target_table_update"
+	 dst-table="etl.table_meta"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_target_table_update_etl_run" type="relfk"
+	 custom-color="#fa1af4"
+	 src-table="etl.target_table_update"
+	 dst-table="etl.etl_run"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_target_table_progress_target_table_update" type="relfk"
+	 custom-color="#3f6e63"
+	 src-table="etl.target_table_progress"
+	 dst-table="etl.target_table_update"
+	 src-required="false" dst-required="false"/>
+
+<permission>
+	<object name="etl_mgmt" type="database"/>
+	<roles names="qfree_admin"/>
+	<privileges create="true" connect="true" temporary="true"/>
+</permission>
+<permission>
+	<object name="etl_mgmt" type="database"/>
+	<roles names="qfree_sm_ro_role"/>
+	<privileges connect="true" temporary="true"/>
+</permission>
+<permission>
+	<object name="etl_mgmt" type="database"/>
+	<roles names="qfree_sm_rw_role"/>
+	<privileges connect="true" temporary="true"/>
+</permission>
+<permission>
+	<object name="etl_mgmt" type="database"/>
+	<roles names="qfree_bi_ro_role"/>
+	<privileges connect="true" temporary="true"/>
+</permission>
+<permission>
+	<object name="etl_mgmt" type="database"/>
+	<roles names="qfree_bi_rw_role"/>
+	<privileges connect="true" temporary="true"/>
+</permission>
+<permission>
+	<object name="etl_mgmt" type="database"/>
+	<roles names="qfree_etl_mgmt_role"/>
+	<privileges connect="true" temporary="true"/>
+</permission>
+<permission>
+	<object name="etl" type="schema"/>
+	<roles names="qfree_etl"/>
+	<privileges create="true" usage="true"/>
+</permission>
+<permission>
+	<object name="etl" type="schema"/>
+	<roles names="qfree_sm_ro_role"/>
+	<privileges usage="true"/>
+</permission>
+<permission>
+	<object name="etl" type="schema"/>
+	<roles names="qfree_sm_rw_role"/>
+	<privileges usage="true"/>
+</permission>
+<permission>
+	<object name="etl.column_meta" type="table"/>
+	<roles names="qfree_admin"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="etl.column_meta" type="table"/>
+	<roles names="qfree_sm_ro_role"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="etl.column_meta" type="table"/>
+	<roles names="qfree_bi_ro_role"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="etl.column_meta" type="table"/>
+	<roles names="qfree_rw_role"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="etl.column_meta" type="table"/>
+	<roles names="qfree_etl_mgmt_role"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="etl.table_meta" type="table"/>
+	<roles names="qfree_admin"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="etl.table_meta" type="table"/>
+	<roles names="qfree_sm_ro_role"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="etl.table_meta" type="table"/>
+	<roles names="qfree_bi_ro_role"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="etl.table_meta" type="table"/>
+	<roles names="qfree_rw_role"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="etl.table_meta" type="table"/>
+	<roles names="qfree_etl_mgmt_role"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="etl.target_table_update" type="table"/>
+	<roles names="qfree_admin"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="etl.target_table_update" type="table"/>
+	<roles names="qfree_sm_ro_role"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="etl.target_table_update" type="table"/>
+	<roles names="qfree_bi_ro_role"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="etl.target_table_update" type="table"/>
+	<roles names="qfree_rw_role"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="etl.target_table_update" type="table"/>
+	<roles names="qfree_etl_mgmt_role"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="etl.target_table_progress" type="table"/>
+	<roles names="qfree_admin"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="etl.target_table_progress" type="table"/>
+	<roles names="qfree_sm_ro_role"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="etl.target_table_progress" type="table"/>
+	<roles names="qfree_bi_ro_role"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="etl.target_table_progress" type="table"/>
+	<roles names="qfree_rw_role"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="etl.target_table_progress" type="table"/>
+	<roles names="qfree_etl_mgmt_role"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="etl.run_state" type="table"/>
+	<roles names="qfree_admin"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="etl.run_state" type="table"/>
+	<roles names="qfree_sm_ro_role"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="etl.run_state" type="table"/>
+	<roles names="qfree_bi_ro_role"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="etl.run_state" type="table"/>
+	<roles names="qfree_rw_role"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="etl.run_state" type="table"/>
+	<roles names="qfree_etl_mgmt_role"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="etl.etl_run" type="table"/>
+	<roles names="qfree_admin"/>
+	<privileges select="true" delete="true" insert="true" update="true" truncate="true" references="true" trigger="true"/>
+</permission>
+<permission>
+	<object name="etl.etl_run" type="table"/>
+	<roles names="qfree_sm_ro_role"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="etl.etl_run" type="table"/>
+	<roles names="qfree_bi_ro_role"/>
+	<privileges select="true"/>
+</permission>
+<permission>
+	<object name="etl.etl_run" type="table"/>
+	<roles names="qfree_rw_role"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+<permission>
+	<object name="etl.etl_run" type="table"/>
+	<roles names="qfree_etl_mgmt_role"/>
+	<privileges select="true" delete="true" insert="true" update="true"/>
+</permission>
+</dbmodel>

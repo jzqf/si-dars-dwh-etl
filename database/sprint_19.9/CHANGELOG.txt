@@ -1,0 +1,23 @@
+No new tables or columns were added to any of the operational databases and no
+changes were made to the data models of the dwh_psa_obo and dwh_dsa_obo
+databases.
+
+This release added support for "run states" for ETL jobs. This required the
+following changes:
+
+1.	Modified etl_mgmt data model:
+
+	a.	New columns for table etl.etl_run
+	
+			run_state_id
+			run_state_set_on
+	
+	b.	Renamed etl.etl_run column:
+	
+			shutdown_requested_reason -> shutdown_reason
+	
+	c.	New table:
+	
+			etl.run_state
+	
+2.	Updated logic in PDI jobs & transformations to support the new data model.

@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2019/09/04 15:44:06.373</modified_date>
+  <modified_date>2019/10/03 13:54:53.670</modified_date>
   <parameters>
     </parameters>
   <connection>
@@ -33,8 +33,16 @@
         <attribute>N</attribute>
       </attribute>
       <attribute>
+        <code>INITIAL_POOL_SIZE</code>
+        <attribute>10</attribute>
+      </attribute>
+      <attribute>
         <code>IS_CLUSTERED</code>
         <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>MAXIMUM_POOL_SIZE</code>
+        <attribute>10</attribute>
       </attribute>
       <attribute>
         <code>PORT_NUMBER</code>
@@ -58,7 +66,7 @@
       </attribute>
       <attribute>
         <code>USE_POOLING</code>
-        <attribute>N</attribute>
+        <attribute>Y</attribute>
       </attribute>
     </attributes>
   </connection>
@@ -84,8 +92,16 @@
         <attribute>N</attribute>
       </attribute>
       <attribute>
+        <code>INITIAL_POOL_SIZE</code>
+        <attribute>10</attribute>
+      </attribute>
+      <attribute>
         <code>IS_CLUSTERED</code>
         <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>MAXIMUM_POOL_SIZE</code>
+        <attribute>10</attribute>
       </attribute>
       <attribute>
         <code>PORT_NUMBER</code>
@@ -109,7 +125,7 @@
       </attribute>
       <attribute>
         <code>USE_POOLING</code>
-        <attribute>N</attribute>
+        <attribute>Y</attribute>
       </attribute>
     </attributes>
   </connection>
@@ -407,7 +423,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>272</xloc>
-      <yloc>96</yloc>
+      <yloc>80</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -466,14 +482,16 @@
       <attributes_kjc />
     </entry>
     <entry>
-      <name>Close open etl.run rows</name>
+      <name>Close open etl_run rows</name>
       <description />
       <type>SQL</type>
       <attributes />
       <sql>UPDATE 
     ${QF_ETL_DB_SCHEMA}.etl_run 
 SET 
-     run_ended_at_utc=TIMESTAMP '${QF_ETL_RUN_ENDED_AT_TIMESTAMP_UNKNOWN}'
+    run_state_id=${QF_ETL_RUN_STATE_ID_TERMINATED_UNEXPECTEDLY},
+    run_state_set_on_utc=now() at time zone 'utc'
+ --  ,run_ended_at_utc=
  --  ,progress_source_db_id=NULL,
  --   progress_source_schema_name=NULL,
  --   progress_source_table_name=NULL,
@@ -491,7 +509,8 @@ SET
  --   progress_rows_processed_per_second=NULL,
  --   progress_updated_at_utc=NULL
 WHERE
-    run_ended_at_utc IS NULL</sql>
+     --run_ended_at_utc IS NULL AND
+    run_state_id=${QF_ETL_RUN_STATE_ID_RUNNING}</sql>
       <useVariableSubstitution>T</useVariableSubstitution>
       <sqlfromfile>F</sqlfromfile>
       <sqlfilename />
@@ -501,7 +520,7 @@ WHERE
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>272</xloc>
-      <yloc>192</yloc>
+      <yloc>176</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -583,7 +602,7 @@ WHERE
     </hop>
     <hop>
       <from>START</from>
-      <to>Close open etl.run rows</to>
+      <to>Close open etl_run rows</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -600,7 +619,7 @@ WHERE
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>Close open etl.run rows</from>
+      <from>Close open etl_run rows</from>
       <to>tr_target-etl_run-insert</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -629,14 +648,13 @@ WHERE
   </hops>
   <notepads>
     <notepad>
-      <note>This job performs initialization details for an ETL run, such as creating a new ${QF_ETL_DB_SCHEMA}.etl_run 
-row.
+      <note>This job performs initialization details for an ETL run, such as creating a new ${QF_ETL_DB_SCHEMA}.etl_run row.
 
 "Pass batch ID?" is selected for this job so that the top-level job batch ID is passed to tr_target-etl_run-insert.</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>608</width>
-      <heigth>62</heigth>
+      <width>629</width>
+      <heigth>49</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -653,14 +671,17 @@ row.
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>If there are any ${QF_ETL_DB_SCHEMA}.etl_run rows that have no value for column "run_ended_at_utc", 
-this column is assigned a flag value that indicates the row is no longer active, but we do not know when 
-the run ended. Such rows are probably associated with runs that aborted badly such that the cleanup
+      <note>If there are any ${QF_ETL_DB_SCHEMA}.etl_run rows that have:
+
+	run_state_id=${QF_ETL_RUN_STATE_ID_RUNNING} ,
+ 
+these rows are "closed" so that they will not be confused with actively running jobs. 
+Such rows are probably associated with runs that aborted badly such that the cleanup
 code in jb_target-etl_run-end did not run.</note>
       <xloc>368</xloc>
-      <yloc>176</yloc>
-      <width>588</width>
-      <heigth>62</heigth>
+      <yloc>144</yloc>
+      <width>478</width>
+      <heigth>101</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
