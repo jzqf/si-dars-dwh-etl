@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2020/01/22 10:43:25.626</modified_date>
+  <modified_date>2020/01/28 14:50:07.454</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
@@ -632,7 +632,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>560</xloc>
-      <yloc>1440</yloc>
+      <yloc>1536</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -704,7 +704,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>560</xloc>
-      <yloc>1808</yloc>
+      <yloc>2000</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -746,7 +746,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>352</xloc>
-      <yloc>1440</yloc>
+      <yloc>1536</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -1208,7 +1208,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>240</xloc>
-      <yloc>1808</yloc>
+      <yloc>2000</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -1386,7 +1386,7 @@ PARAM_TARGET_TABLE                   = ${PARAM_TARGET_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>560</xloc>
-      <yloc>1712</yloc>
+      <yloc>1808</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -1428,7 +1428,7 @@ PARAM_TARGET_TABLE                   = ${PARAM_TARGET_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>352</xloc>
-      <yloc>1712</yloc>
+      <yloc>1808</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -1467,7 +1467,7 @@ PARAM_TARGET_TABLE                   = ${PARAM_TARGET_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>560</xloc>
-      <yloc>1344</yloc>
+      <yloc>1440</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -1486,7 +1486,7 @@ QF_TARGET_TABLE_MAX_TIMESTAMP_COL                           = ${QF_TARGET_TABLE_
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>608</xloc>
-      <yloc>1264</yloc>
+      <yloc>1360</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -1511,7 +1511,7 @@ QF_TARGET_TABLE_MAX_TIMESTAMP_COL                           = ${QF_TARGET_TABLE_
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>560</xloc>
-      <yloc>1904</yloc>
+      <yloc>2096</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -1614,7 +1614,7 @@ QF_TARGET_TABLE_MAX_TIMESTAMP_COL                           = ${QF_TARGET_TABLE_
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>608</xloc>
-      <yloc>1536</yloc>
+      <yloc>1632</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -1631,7 +1631,74 @@ QF_TARGET_TABLE_MAX_LAST_UPDATED_ON_AFTER_INSERTS = ${QF_TARGET_TABLE_MAX_LAST_U
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>608</xloc>
-      <yloc>1616</yloc>
+      <yloc>1712</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>Set CDC state columns</name>
+      <description />
+      <type>SQL</type>
+      <attributes />
+      <sql>UPDATE 
+    ${QF_ETL_DB_SCHEMA}.table_state
+SET
+    -- Set target_synced_to_insert_id and target_synced_to_last_updated_on here 
+    -- only if they currently are NULL. This is to treat the case when these 
+    -- columns have just been added. After that first time, these two assignments
+    -- will have no effect.
+    target_synced_to_insert_id       = COALESCE(target_synced_to_insert_id      ,  ${QF_TARGET_TABLE_MAX_ID_COL}),
+    target_synced_to_last_updated_on = COALESCE(target_synced_to_last_updated_on, '${QF_TARGET_TABLE_MAX_TIMESTAMP_COL}'),
+    -- Set target_unsynced_inserts_from_last_updated_on column if it is currently
+    -- NULL. Although this will also handle the case where this column has just
+    -- been added, it is needed for normal operation. If this column is 
+    -- currently *not* null, it means that the ETL failed or did not finish for
+    -- this table for some reason on the previous run of the ETL job. If this
+    -- occurred, we do *not* update the value stored in this column. When the
+    -- ETL does finally complete successfully for this table, this column is set
+    -- to NULL.
+    target_unsynced_inserts_from_last_updated_on = COALESCE(target_unsynced_inserts_from_last_updated_on, '${QF_SOURCE_TABLE_MAX_TIMESTAMP_COL_FOR_INSERT_BEFORE_INSERTS}') 
+WHERE
+    table_state_id = ${PARAM_TABLE_META_ID}</sql>
+      <useVariableSubstitution>T</useVariableSubstitution>
+      <sqlfromfile>F</sqlfromfile>
+      <sqlfilename />
+      <sendOneStatement>F</sendOneStatement>
+      <connection>etl_db</connection>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>608</xloc>
+      <yloc>1264</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>Update CDC state columns</name>
+      <description />
+      <type>SQL</type>
+      <attributes />
+      <sql>UPDATE 
+    ${QF_ETL_DB_SCHEMA}.table_state
+SET
+    -- Update target_synced_to_insert_id and target_synced_to_last_updated_on  
+    -- appropriately for the case when the ETL successfully updates the target 
+    -- table.
+    target_synced_to_insert_id       =  ${PARAM_SOURCE_TABLE_MAX_INSERT_ID},
+    target_synced_to_last_updated_on = '${QF_TARGET_TABLE_MAX_LAST_UPDATED_ON_AFTER_INSERTS}',
+    -- Set target_unsynced_inserts_from_last_updated_on column to NULL. This 
+    -- means that the ETL successfully updated the target table.
+    target_unsynced_inserts_from_last_updated_on = NULL 
+WHERE
+    table_state_id = ${PARAM_TABLE_META_ID}</sql>
+      <useVariableSubstitution>T</useVariableSubstitution>
+      <sqlfromfile>F</sqlfromfile>
+      <sqlfilename />
+      <sendOneStatement>F</sendOneStatement>
+      <connection>etl_db</connection>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>608</xloc>
+      <yloc>1904</yloc>
       <attributes_kjc />
     </entry>
   </entries>
@@ -1818,15 +1885,6 @@ QF_TARGET_TABLE_MAX_LAST_UPDATED_ON_AFTER_INSERTS = ${QF_TARGET_TABLE_MAX_LAST_U
     </hop>
     <hop>
       <from>tr_target-update_table-updatable_table_2_updates</from>
-      <to>jb_update_etl_table_meta_mirror_details</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>tr_target-update_table-updatable_table_2_updates</from>
       <to>jb_log_error 7</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -1907,15 +1965,6 @@ QF_TARGET_TABLE_MAX_LAST_UPDATED_ON_AFTER_INSERTS = ${QF_TARGET_TABLE_MAX_LAST_U
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>tr_set_source_table_max_timestamp_vrbl_before_inserts</from>
-      <to>Write variables to log 1</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
       <from>tr_target-update_table-updatable_table_2_inserts</from>
       <to>tr_set_target_last_updated_on_after_inserts_vrbl</to>
       <from_nr>0</from_nr>
@@ -1940,6 +1989,42 @@ QF_TARGET_TABLE_MAX_LAST_UPDATED_ON_AFTER_INSERTS = ${QF_TARGET_TABLE_MAX_LAST_U
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>tr_set_source_table_max_timestamp_vrbl_before_inserts</from>
+      <to>Set CDC state columns</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>Set CDC state columns</from>
+      <to>Write variables to log 1</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>tr_target-update_table-updatable_table_2_updates</from>
+      <to>Update CDC state columns</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Update CDC state columns</from>
+      <to>jb_update_etl_table_meta_mirror_details</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
       <unconditional>Y</unconditional>
     </hop>
   </hops>
@@ -2001,7 +2086,7 @@ Note:	This transformation will fail with an error if we generate, but do not exe
 		target transformations in the prevous two transformations. This is because variables that need 
 		to be set for this transformation to execute without errors do not actually get set.</note>
       <xloc>736</xloc>
-      <yloc>1776</yloc>
+      <yloc>1968</yloc>
       <width>579</width>
       <heigth>88</heigth>
       <fontname>Ubuntu</fontname>
@@ -2076,7 +2161,7 @@ not be the best behaviour.</note>
 It implements the 1st half of generic algorithm #2 for updatable tables.
 It performs INSERTs only.</note>
       <xloc>736</xloc>
-      <yloc>1424</yloc>
+      <yloc>1520</yloc>
       <width>466</width>
       <heigth>62</heigth>
       <fontname>Ubuntu</fontname>
@@ -2222,8 +2307,8 @@ columns. These values are passed as parameters to the transformations executed b
 		for updating the target table must abort
 		the current job if it is not successful for 
 		every row. Is this the case?</note>
-      <xloc>16</xloc>
-      <yloc>1568</yloc>
+      <xloc>32</xloc>
+      <yloc>1664</yloc>
       <width>281</width>
       <heigth>75</heigth>
       <fontname>Ubuntu</fontname>
@@ -2293,7 +2378,7 @@ be passed as parameters to the two update transformations, one for INSERTs and o
 It implements the 2nd half of generic algorithm #2 for updatable tables.
 It performs UPDATEs only.</note>
       <xloc>736</xloc>
-      <yloc>1696</yloc>
+      <yloc>1792</yloc>
       <width>466</width>
       <heigth>62</heigth>
       <fontname>Ubuntu</fontname>
@@ -2318,7 +2403,7 @@ It performs UPDATEs only.</note>
 	QF_UPDATE_TABLE_NUM_INSERTS
 	QF_UPDATE_TABLE_NUM_UPDATES</note>
       <xloc>736</xloc>
-      <yloc>1328</yloc>
+      <yloc>1424</yloc>
       <width>553</width>
       <heigth>75</heigth>
       <fontname>Ubuntu</fontname>
@@ -2342,7 +2427,7 @@ It performs UPDATEs only.</note>
 	QF_TARGET_TABLE_MAX_ID_COL
 	QF_TARGET_TABLE_MAX_TIMESTAMP_COL</note>
       <xloc>736</xloc>
-      <yloc>1232</yloc>
+      <yloc>1344</yloc>
       <width>449</width>
       <heigth>62</heigth>
       <fontname>Ubuntu</fontname>
@@ -2366,7 +2451,7 @@ It performs UPDATEs only.</note>
 "insert_id" column so that we can 
 restart after a crash where we left off.</note>
       <xloc>1216</xloc>
-      <yloc>1424</yloc>
+      <yloc>1520</yloc>
       <width>246</width>
       <heigth>62</heigth>
       <fontname>Ubuntu</fontname>
@@ -2390,7 +2475,7 @@ restart after a crash where we left off.</note>
 "last_updated_on" column so that we can 
 restart after a crash where we left off.</note>
       <xloc>1216</xloc>
-      <yloc>1696</yloc>
+      <yloc>1792</yloc>
       <width>246</width>
       <heigth>62</heigth>
       <fontname>Ubuntu</fontname>
@@ -2458,7 +2543,7 @@ that will be INSERTed into the target table *before* these INSERTs are performed
       <note>Log the variable:
 	QF_TARGET_TABLE_MAX_LAST_UPDATED_ON_AFTER_INSERTS</note>
       <xloc>736</xloc>
-      <yloc>1616</yloc>
+      <yloc>1712</yloc>
       <width>383</width>
       <heigth>36</heigth>
       <fontname>Ubuntu</fontname>
@@ -2483,8 +2568,59 @@ to the maximum values for "last_updated_on" column of the target table *after* r
 INSERTed into the target table by the first part of this ETL algorithm. Some of the source rows
 may have been updated before they are INSERTed into the target table.</note>
       <xloc>736</xloc>
-      <yloc>1504</yloc>
+      <yloc>1600</yloc>
       <width>544</width>
+      <heigth>75</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Set ${QF_ETL_DB_SCHEMA}.table_state CDC-related columns:
+	target_synced_to_insert_id
+	target_synced_to_last_updated_on
+	target_unsynced_inserts_from_last_updated_on
+These are used to ensure no UPDATEs made to source tables are missed in the event that the ETL job
+crashes while updating a target table.</note>
+      <xloc>736</xloc>
+      <yloc>1232</yloc>
+      <width>565</width>
+      <heigth>88</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Update the ${QF_ETL_DB_SCHEMA}.table_state CDC-related columns:
+	target_synced_to_insert_id
+	target_synced_to_last_updated_on
+	target_unsynced_inserts_from_last_updated_on
+appropriately for the case where this ETL algorithm successfully updates the target table.</note>
+      <xloc>736</xloc>
+      <yloc>1872</yloc>
+      <width>502</width>
       <heigth>75</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
