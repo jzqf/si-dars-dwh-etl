@@ -2,12 +2,14 @@ The ETL algorithm for updateable tables, algorithm #6, was updated to treat an
 edge case for when rows are UPDATEd after they are INSERTed, but before the
 UPDATE phase of the algorithm starts.
 
+
 Three columns have been added to the etl.table_state table of the etl_mgmt 
 database in order to store CDC state between runs of the ETL job:
 
 	target_synced_to_insert_id                     | bigint                      | 
 	target_synced_to_last_updated_on               | timestamp without time zone | 
 	target_unsynced_inserts_from_last_updated_on   | timestamp without time zone | 
+
 
 A wipe install of the etl_mgmt database will exclude processing of the following 
 obo_opr tables by the ETL job. These tables will no longer be synchronized with 
