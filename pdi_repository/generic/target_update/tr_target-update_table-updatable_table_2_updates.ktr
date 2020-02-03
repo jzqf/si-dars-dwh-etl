@@ -609,7 +609,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2020/01/22 09:06:32.178</modified_date>
+    <modified_date>2020/01/28 15:41:42.157</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -1056,36 +1056,36 @@ ORDER BY
 SELECT
     -- Create SELECT statement:
     'SELECT ' || CAST(select_list.str_value AS VARCHAR) || ' '
-    ', row_number() OVER () AS "current_row_num", COUNT(*) OVER () AS "num_rows_to_process", MOD (row_number() OVER (), ${QF_ETL_PROGRESS_INTERVAL_ROWS}) AS "update_progress", NULL AS "null_column"' ||  -- Special rows for monitoring progress
+    -- Special rows for monitoring progress:
+    ', row_number() OVER () AS "current_row_num", COUNT(*) OVER () AS "num_rows_to_process", MOD (row_number() OVER (), ${QF_ETL_PROGRESS_INTERVAL_ROWS}) AS "update_progress", NULL AS "null_column"' || 
     'FROM '    ||
         '${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE} ' ||
     'WHERE '  ||
     '( '      ||
-    '    ${PARAM_SOURCE_INSERT_ID_COLNAME}       &lt;=   ${PARAM_TARGET_TABLE_MAX_INSERT_ID} '         ||  -- This excludes the rows INSERTed by the first half of this
-                                                                                                        -- algorithm that selects rows to be INSERTed:
-                                                                                                        -- tr_target-update_table-updatable_table_2_inserts. 
-    'AND ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} >= ''${PARAM_TARGET_TABLE_MAX_LAST_UPDATED_ON}'' ' ||  -- UPDATEd rows, since the last run. 
-                                                                                                        -- This condition is needed to be able to select rows that
-                                                                                                        -- are modified during a period when the table is being treated as an insert-only
-                                                                                                        -- table (not a likely scenario, but it is a possibility).
-                                                                                                        -- Because ">=" is used here, not ">", this will include a least one row that was
-                                                                                                        -- updated on the previous run (assuming that there was at least one row updated).
-                                                                                                        -- This/these rows will have:
-                                                                                                        --   ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} = ${PARAM_TARGET_TABLE_MAX_LAST_UPDATED_ON}.
-                                                                                                        -- The reason why ">=" is used is in case there were one or more rows that were *not* 
-                                                                                                        -- updated on the previous run, but which have: 
-                                                                                                        --   ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} = ${PARAM_TARGET_TABLE_MAX_LAST_UPDATED_ON}.
-                                                                                                        -- This can occur because of the finite resolution of timestamp values. As a result, more 
-                                                                                                        -- than one row can have the *same* value of ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME}, but 
-                                                                                                        -- not all of these were loaded and treated on the previous run, i.e., the cutoff imposed by
-                                                                                                        -- the condition in the WHERE clause loaded some, but not all, of the rows with this value 
-                                                                                                        -- of ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME}.
+    
+    -- Exclude the rows INSERTed by the first half of this algorithm, tr_target-update_table-updatable_table_2_inserts.
+    '    ${PARAM_SOURCE_INSERT_ID_COLNAME}       &lt;=   ' || (SELECT target_synced_to_insert_id FROM ${QF_ETL_DB_SCHEMA}.table_state WHERE table_state_id=${PARAM_TABLE_META_ID}) || ' ' ||
+    
+    -- Include rows from the source table that have been UPDATEd since the last successful ETL run for the table.
+    -- Because ">=" is used here, not ">", this will include a least one row that was updated on the previous run 
+    -- (assuming that there was at least one row updated). This treatment is used because of the finite resolution 
+    -- of timestamp values. Because ofthis, more than one row can have the *same* "last updated on" value, but not
+    -- all of these were loaded and treated on the previous run, i.e., the cutoff imposed by the condition in the 
+    -- WHERE clause loaded some, but not all, of the rows with this value. This is probably unlikely, but accounted for here.
+    'AND ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} >= ''' || (SELECT target_synced_to_last_updated_on FROM ${QF_ETL_DB_SCHEMA}.table_state WHERE table_state_id=${PARAM_TABLE_META_ID}) || ''' ' || 
     'AND ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} &lt;= ''${PARAM_TARGET_TABLE_MAX_LAST_UPDATED_ON_AFTER_INSERTS}'' ' ||  -- This will be source table "last_updated_on" lower bound for next run of the ETL job
+
     ') OR ( '   ||
-    '    ${PARAM_SOURCE_INSERT_ID_COLNAME}       >    ${PARAM_TARGET_TABLE_MAX_INSERT_ID} '         ||  -- Include rows that were just INSERTed into the target table by 
-    'AND ${PARAM_SOURCE_INSERT_ID_COLNAME}       &lt;=   ${PARAM_SOURCE_TABLE_MAX_INSERT_ID} '         ||  -- tr_target-update_table-updatable_table_2_inserts...
-    'AND ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} >= ''${PARAM_SOURCE_TABLE_MAX_LAST_UPDATED_ON_FOR_INSERT_BEFORE_INSERTS}'' ' ||  -- ... but only rows that have since been updated.
+
+    -- Include rows that were just INSERTed into the target table by tr_target-update_table-updatable_table_2_inserts...
+    '    ${PARAM_SOURCE_INSERT_ID_COLNAME}       >   ' || (SELECT target_synced_to_insert_id FROM ${QF_ETL_DB_SCHEMA}.table_state WHERE table_state_id=${PARAM_TABLE_META_ID}) || ' ' ||
+    'AND ${PARAM_SOURCE_INSERT_ID_COLNAME}       &lt;=   ${PARAM_SOURCE_TABLE_MAX_INSERT_ID} ' || 
+    
+    -- ...but only rows that have been UPDATEd since they were INSERTed. This condition is looser than required, so some additional rows may be included, 
+    -- but this is not a problem. The important point is that we do not *miss* any rows that were updated after they were INSERTed into the target table!
+    'AND ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} >= ''' || (SELECT target_unsynced_inserts_from_last_updated_on FROM ${QF_ETL_DB_SCHEMA}.table_state WHERE table_state_id=${PARAM_TABLE_META_ID}) || ''' ' || 
     'AND ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} &lt;= ''${PARAM_TARGET_TABLE_MAX_LAST_UPDATED_ON_AFTER_INSERTS}'' ' ||  -- This will be source table "last_updated_on" lower bound for next run of the ETL job
+
     ') '        ||
     'ORDER BY ' ||
         '${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} ' 
