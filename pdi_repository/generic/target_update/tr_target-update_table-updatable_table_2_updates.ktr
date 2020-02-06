@@ -129,6 +129,11 @@
         <description>Maximum value of the "insert_id" column for rows to load from the source DB table</description>
       </parameter>
       <parameter>
+        <name>PARAM_SOURCE_TABLE_MAX_LAST_UPDATED_ON_FOR_INSERT_BEFORE_INSERTS</name>
+        <default_value />
+        <description>Maximum  value for the "last updated on" column of the source table for the source rows that were INSERTed into the target table before the INSERTs were performed</description>
+      </parameter>
+      <parameter>
         <name>PARAM_TABLE_META_ID</name>
         <default_value>1435</default_value>
         <description>Primary key of ${QF_ETL_DB_SCHEMA}.table_meta row for "source" table archived/mirrored to "target" table</description>
@@ -172,6 +177,11 @@
         <name>PARAM_TARGET_TABLE_MAX_LAST_UPDATED_ON</name>
         <default_value>2018-04-13 06:12:04</default_value>
         <description>Maximum value for the "last updated on" timestamp column of the target table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_TABLE_MAX_LAST_UPDATED_ON_AFTER_INSERTS</name>
+        <default_value />
+        <description>Maximum  value for the "last updated on" column of the target table after the INSERTs were performed</description>
       </parameter>
       <parameter>
         <name>PARAM_TARGET_TABLE_UPDATE_ID</name>
@@ -599,7 +609,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2019/09/12 10:42:05.586</modified_date>
+    <modified_date>2020/01/28 15:41:42.157</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -643,11 +653,14 @@ The 2nd part of the "updatable" table generic update algorithm #2 (for UPDATEs) 
 	PARAM_TARGET_INSERTED_ON_COLNAME		Name of column acting as "inserted_on" column of target table
 	PARAM_TARGET_LAST_UPDATED_ON_COLNAME	Name of "last_updated_on" timestamp column of target table
 	PARAM_TARGET_TABLE_MAX_INSERT_ID			Maximum value for the "insert_id" integer column of the target table
-	PARAM_TARGET_TABLE_MAX_LAST_UPDATED_ON	Maximum value for the "last updated on" timestamp column of the target table</note>
+	PARAM_TARGET_TABLE_MAX_LAST_UPDATED_ON	Maximum value for the "last updated on" timestamp column of the target table
+	PARAM_SOURCE_TABLE_MAX_LAST_UPDATED_ON_FOR_INSERT_BEFORE_INSERTS	Maximum  value for the "last updated on" column of the source table for the source rows 
+																					that were INSERTed into the target table before the INSERTs were performed
+	PARAM_TARGET_TABLE_MAX_LAST_UPDATED_ON_AFTER_INSERTS					Maximum  value for the "last updated on" column of the target table after the INSERTs were performed</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>1013</width>
-      <heigth>517</heigth>
+      <width>1084</width>
+      <heigth>556</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -669,7 +682,7 @@ must match the query in the parent job
 where this transformation is executed. See the 
 comments in that job for an explanation.</note>
       <xloc>864</xloc>
-      <yloc>544</yloc>
+      <yloc>576</yloc>
       <width>271</width>
       <heigth>62</heigth>
       <fontname>Ubuntu</fontname>
@@ -693,7 +706,7 @@ must match the query the parent job
 where this transformation is executed. See the 
 comments in that job for an explanation.</note>
       <xloc>864</xloc>
-      <yloc>624</yloc>
+      <yloc>656</yloc>
       <width>271</width>
       <heigth>62</heigth>
       <fontname>Ubuntu</fontname>
@@ -717,7 +730,7 @@ must match the query in the parent job
 where this transformation is executed. See the 
 comments in that job for an explanation.</note>
       <xloc>864</xloc>
-      <yloc>704</yloc>
+      <yloc>736</yloc>
       <width>271</width>
       <heigth>62</heigth>
       <fontname>Ubuntu</fontname>
@@ -742,7 +755,7 @@ transformation. In that way it would be easier to debug
 and log this SELECT statement. In other words, metadata
 injection is not strictly necessary here.</note>
       <xloc>240</xloc>
-      <yloc>544</yloc>
+      <yloc>576</yloc>
       <width>320</width>
       <heigth>75</heigth>
       <fontname>Ubuntu</fontname>
@@ -783,8 +796,16 @@ injection is not strictly necessary here.</note>
         <attribute>N</attribute>
       </attribute>
       <attribute>
+        <code>INITIAL_POOL_SIZE</code>
+        <attribute>10</attribute>
+      </attribute>
+      <attribute>
         <code>IS_CLUSTERED</code>
         <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>MAXIMUM_POOL_SIZE</code>
+        <attribute>10</attribute>
       </attribute>
       <attribute>
         <code>PORT_NUMBER</code>
@@ -808,7 +829,7 @@ injection is not strictly necessary here.</note>
       </attribute>
       <attribute>
         <code>USE_POOLING</code>
-        <attribute>N</attribute>
+        <attribute>Y</attribute>
       </attribute>
     </attributes>
   </connection>
@@ -834,8 +855,16 @@ injection is not strictly necessary here.</note>
         <attribute>N</attribute>
       </attribute>
       <attribute>
+        <code>INITIAL_POOL_SIZE</code>
+        <attribute>10</attribute>
+      </attribute>
+      <attribute>
         <code>IS_CLUSTERED</code>
         <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>MAXIMUM_POOL_SIZE</code>
+        <attribute>10</attribute>
       </attribute>
       <attribute>
         <code>PORT_NUMBER</code>
@@ -859,7 +888,7 @@ injection is not strictly necessary here.</note>
       </attribute>
       <attribute>
         <code>USE_POOLING</code>
-        <attribute>N</attribute>
+        <attribute>Y</attribute>
       </attribute>
     </attributes>
   </connection>
@@ -891,6 +920,113 @@ injection is not strictly necessary here.</note>
     </hop>
   </order>
   <step>
+    <name>Column mapping metadata for progress monitoring</name>
+    <type>TableInput</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <connection>etl_db</connection>
+    <sql>WITH column_mappings AS (
+
+    SELECT 
+        COALESCE((SELECT source_column_name FROM etl.column_meta cm WHERE cm.table_meta_id=tm.table_meta_id AND cm.is_insert_id_column=true), 'null_column') AS "source_col_name",
+        NULL AS "source_col_length",
+        -1      AS  "source_col_precision",
+        'insert_id' AS "target_col_name",
+        1       AS "column_meta_id"
+     FROM 
+          ${QF_ETL_DB_SCHEMA}.table_meta tm 
+     WHERE 
+         tm.table_meta_id=${PARAM_TABLE_META_ID}
+         
+UNION ALL
+
+    SELECT 
+        COALESCE((SELECT source_column_name FROM etl.column_meta cm WHERE cm.table_meta_id=tm.table_meta_id AND cm.is_last_updated_on_column=true), 'null_column') AS "source_col_name",
+        NULL AS "source_col_length",
+        -1      AS  "source_col_precision",
+        'last_updated_on' AS "target_col_name",
+        2       AS "column_meta_id"
+     FROM 
+          ${QF_ETL_DB_SCHEMA}.table_meta tm 
+     WHERE 
+         tm.table_meta_id=${PARAM_TABLE_META_ID}
+         
+UNION ALL
+
+-- These are special columns created by the SELECT query for the source table so that we can monitor
+-- progress as rows are streamed to the target table in the template transformation.
+
+    SELECT 
+        'current_row_num'  AS "source_col_name",
+        NULL   AS "source_col_length",
+        -1        AS  "source_col_precision",
+        'current_row_num'  AS "target_col_name",
+        10000 AS "column_meta_id"
+
+UNION ALL
+
+    SELECT 
+        'num_rows_to_process' AS "source_col_name",
+        NULL   AS "source_col_length",
+        -1        AS "source_col_precision",
+        'num_rows_to_process' AS "target_col_name",
+        10001 AS "column_meta_id"
+
+UNION ALL
+
+    SELECT 
+        'update_progress' AS "source_col_name",
+        NULL   AS "source_col_length",
+        -1        AS "source_col_precision",
+        'update_progress' AS "target_col_name",
+        10002 AS "column_meta_id"
+
+UNION ALL
+
+    SELECT 
+        'null_column' AS "source_col_name",
+        NULL   AS "source_col_length",
+        -1        AS "source_col_precision",
+        'null_column' AS "target_col_name",
+        10003 AS "column_meta_id"
+)
+SELECT 
+    source_col_name,
+    source_col_length,
+    source_col_precision,
+    target_col_name
+FROM 
+    column_mappings
+ORDER BY 
+    -- Ordering by "column_meta_id" means the columns will be treated in
+    -- the same order as they appear in the table in the "source" DB. 
+    column_meta_id ASC</sql>
+    <limit>0</limit>
+    <lookup />
+    <execute_each_row>N</execute_each_row>
+    <variables_active>Y</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>128</xloc>
+      <yloc>672</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
     <name>SELECT statement for source DB</name>
     <type>TableInput</type>
     <description />
@@ -920,31 +1056,39 @@ injection is not strictly necessary here.</note>
 SELECT
     -- Create SELECT statement:
     'SELECT ' || CAST(select_list.str_value AS VARCHAR) || ' '
-    ', row_number() OVER () AS "current_row_num", COUNT(*) OVER () AS "num_rows_to_process", MOD (row_number() OVER (), ${QF_ETL_PROGRESS_INTERVAL_ROWS}) AS "update_progress", NULL AS "null_column"' ||  -- Special rows for monitoring progress
+    -- Special rows for monitoring progress:
+    ', row_number() OVER () AS "current_row_num", COUNT(*) OVER () AS "num_rows_to_process", MOD (row_number() OVER (), ${QF_ETL_PROGRESS_INTERVAL_ROWS}) AS "update_progress", NULL AS "null_column"' || 
     'FROM '    ||
         '${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE} ' ||
     'WHERE '  ||
-    '     ${PARAM_SOURCE_INSERT_ID_COLNAME}       &lt;=   ${PARAM_TARGET_TABLE_MAX_INSERT_ID} '        ||  -- This excludes the rows INSERTed by the first half of this
-                                                                                                        -- algorithm that selects rows to be INSERTed:
-                                                                                                        -- tr_target-update_table-updatable_table_2_inserts. 
-    'AND ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} >= ''${PARAM_TARGET_TABLE_MAX_LAST_UPDATED_ON}'' ' ||  -- UPDATEd rows, since the last run. 
-                                                                                                        -- This condition is needed to be able to select rows that
-                                                                                                        -- are modified during a period when the table is being treated as an insert-only
-                                                                                                        -- table (not a likely scenario, but it is a possibility).
-                                                                                                        -- Because ">=" is used here, not ">", this will include a least one row that was
-                                                                                                        -- updated on the previous run (assuming that there was at least one row updated).
-                                                                                                        -- This/these rows will have:
-                                                                                                        --   ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} = ${PARAM_TARGET_TABLE_MAX_LAST_UPDATED_ON}.
-                                                                                                        -- The reason why ">=" is used is in case there were one or more rows that were *not* 
-                                                                                                        -- updated on the previous run, but which have: 
-                                                                                                        --   ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} = ${PARAM_TARGET_TABLE_MAX_LAST_UPDATED_ON}.
-                                                                                                        -- This can occur because of the finite resolution of timestamp values. As a result, more 
-                                                                                                        -- than one row can have the *same* value of ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME}, but 
-                                                                                                        -- not all of these were loaded and treated on the previous run, i.e., the cutoff imposed by
-                                                                                                        -- the condition in the WHERE clause loaded some, but not all, of the rows with this value 
-                                                                                                        -- of ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME}.
+    '( '      ||
+    
+    -- Exclude the rows INSERTed by the first half of this algorithm, tr_target-update_table-updatable_table_2_inserts.
+    '    ${PARAM_SOURCE_INSERT_ID_COLNAME}       &lt;=   ' || (SELECT target_synced_to_insert_id FROM ${QF_ETL_DB_SCHEMA}.table_state WHERE table_state_id=${PARAM_TABLE_META_ID}) || ' ' ||
+    
+    -- Include rows from the source table that have been UPDATEd since the last successful ETL run for the table.
+    -- Because ">=" is used here, not ">", this will include a least one row that was updated on the previous run 
+    -- (assuming that there was at least one row updated). This treatment is used because of the finite resolution 
+    -- of timestamp values. Because ofthis, more than one row can have the *same* "last updated on" value, but not
+    -- all of these were loaded and treated on the previous run, i.e., the cutoff imposed by the condition in the 
+    -- WHERE clause loaded some, but not all, of the rows with this value. This is probably unlikely, but accounted for here.
+    'AND ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} >= ''' || (SELECT target_synced_to_last_updated_on FROM ${QF_ETL_DB_SCHEMA}.table_state WHERE table_state_id=${PARAM_TABLE_META_ID}) || ''' ' || 
+    'AND ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} &lt;= ''${PARAM_TARGET_TABLE_MAX_LAST_UPDATED_ON_AFTER_INSERTS}'' ' ||  -- This will be source table "last_updated_on" lower bound for next run of the ETL job
+
+    ') OR ( '   ||
+
+    -- Include rows that were just INSERTed into the target table by tr_target-update_table-updatable_table_2_inserts...
+    '    ${PARAM_SOURCE_INSERT_ID_COLNAME}       >   ' || (SELECT target_synced_to_insert_id FROM ${QF_ETL_DB_SCHEMA}.table_state WHERE table_state_id=${PARAM_TABLE_META_ID}) || ' ' ||
+    'AND ${PARAM_SOURCE_INSERT_ID_COLNAME}       &lt;=   ${PARAM_SOURCE_TABLE_MAX_INSERT_ID} ' || 
+    
+    -- ...but only rows that have been UPDATEd since they were INSERTed. This condition is looser than required, so some additional rows may be included, 
+    -- but this is not a problem. The important point is that we do not *miss* any rows that were updated after they were INSERTed into the target table!
+    'AND ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} >= ''' || (SELECT target_unsynced_inserts_from_last_updated_on FROM ${QF_ETL_DB_SCHEMA}.table_state WHERE table_state_id=${PARAM_TABLE_META_ID}) || ''' ' || 
+    'AND ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} &lt;= ''${PARAM_TARGET_TABLE_MAX_LAST_UPDATED_ON_AFTER_INSERTS}'' ' ||  -- This will be source table "last_updated_on" lower bound for next run of the ETL job
+
+    ') '        ||
     'ORDER BY ' ||
-        '${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} '                                                      -- So that we will continue where we left off in case of an abort
+        '${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME} ' 
     AS "select_source_rows_sql" 
 FROM
     select_list</sql>
@@ -963,7 +1107,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>128</xloc>
-      <yloc>560</yloc>
+      <yloc>592</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1022,7 +1166,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>720</xloc>
-      <yloc>560</yloc>
+      <yloc>592</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1067,7 +1211,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>720</xloc>
-      <yloc>640</yloc>
+      <yloc>672</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1123,7 +1267,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>720</xloc>
-      <yloc>720</yloc>
+      <yloc>752</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1266,114 +1410,7 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>448</xloc>
-      <yloc>640</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Column mapping metadata for progress monitoring</name>
-    <type>TableInput</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <connection>etl_db</connection>
-    <sql>WITH column_mappings AS (
-
-    SELECT 
-        COALESCE((SELECT source_column_name FROM etl.column_meta cm WHERE cm.table_meta_id=tm.table_meta_id AND cm.is_insert_id_column=true), 'null_column') AS "source_col_name",
-        NULL AS "source_col_length",
-        -1      AS  "source_col_precision",
-        'insert_id' AS "target_col_name",
-        1       AS "column_meta_id"
-     FROM 
-          ${QF_ETL_DB_SCHEMA}.table_meta tm 
-     WHERE 
-         tm.table_meta_id=${PARAM_TABLE_META_ID}
-         
-UNION ALL
-
-    SELECT 
-        COALESCE((SELECT source_column_name FROM etl.column_meta cm WHERE cm.table_meta_id=tm.table_meta_id AND cm.is_last_updated_on_column=true), 'null_column') AS "source_col_name",
-        NULL AS "source_col_length",
-        -1      AS  "source_col_precision",
-        'last_updated_on' AS "target_col_name",
-        2       AS "column_meta_id"
-     FROM 
-          ${QF_ETL_DB_SCHEMA}.table_meta tm 
-     WHERE 
-         tm.table_meta_id=${PARAM_TABLE_META_ID}
-         
-UNION ALL
-
--- These are special columns created by the SELECT query for the source table so that we can monitor
--- progress as rows are streamed to the target table in the template transformation.
-
-    SELECT 
-        'current_row_num'  AS "source_col_name",
-        NULL   AS "source_col_length",
-        -1        AS  "source_col_precision",
-        'current_row_num'  AS "target_col_name",
-        10000 AS "column_meta_id"
-
-UNION ALL
-
-    SELECT 
-        'num_rows_to_process' AS "source_col_name",
-        NULL   AS "source_col_length",
-        -1        AS "source_col_precision",
-        'num_rows_to_process' AS "target_col_name",
-        10001 AS "column_meta_id"
-
-UNION ALL
-
-    SELECT 
-        'update_progress' AS "source_col_name",
-        NULL   AS "source_col_length",
-        -1        AS "source_col_precision",
-        'update_progress' AS "target_col_name",
-        10002 AS "column_meta_id"
-
-UNION ALL
-
-    SELECT 
-        'null_column' AS "source_col_name",
-        NULL   AS "source_col_length",
-        -1        AS "source_col_precision",
-        'null_column' AS "target_col_name",
-        10003 AS "column_meta_id"
-)
-SELECT 
-    source_col_name,
-    source_col_length,
-    source_col_precision,
-    target_col_name
-FROM 
-    column_mappings
-ORDER BY 
-    -- Ordering by "column_meta_id" means the columns will be treated in
-    -- the same order as they appear in the table in the "source" DB. 
-    column_meta_id ASC</sql>
-    <limit>0</limit>
-    <lookup />
-    <execute_each_row>N</execute_each_row>
-    <variables_active>Y</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <attributes />
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>128</xloc>
-      <yloc>640</yloc>
+      <yloc>672</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

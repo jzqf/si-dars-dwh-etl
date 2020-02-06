@@ -50,7 +50,8 @@ FROM
 INNER JOIN
     etl.table_state ts ON ts.table_state_id=tm.table_meta_id
 WHERE
-    tm.target_db_id=10  -- PSA DB
+        tm.target_db_id=10           -- PSA DB
+    AND tm.update_target_table=true  -- Only show data for tables that were just updated
 ORDER BY
     tm.target_db_id,
     tm.source_db_id,

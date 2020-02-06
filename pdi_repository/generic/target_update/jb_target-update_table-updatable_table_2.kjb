@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2019/09/06 13:47:29.054</modified_date>
+  <modified_date>2020/01/30 14:41:08.862</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
@@ -163,8 +163,16 @@
         <attribute>N</attribute>
       </attribute>
       <attribute>
+        <code>INITIAL_POOL_SIZE</code>
+        <attribute>10</attribute>
+      </attribute>
+      <attribute>
         <code>IS_CLUSTERED</code>
         <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>MAXIMUM_POOL_SIZE</code>
+        <attribute>10</attribute>
       </attribute>
       <attribute>
         <code>PORT_NUMBER</code>
@@ -188,7 +196,7 @@
       </attribute>
       <attribute>
         <code>USE_POOLING</code>
-        <attribute>N</attribute>
+        <attribute>Y</attribute>
       </attribute>
     </attributes>
   </connection>
@@ -214,8 +222,16 @@
         <attribute>N</attribute>
       </attribute>
       <attribute>
+        <code>INITIAL_POOL_SIZE</code>
+        <attribute>10</attribute>
+      </attribute>
+      <attribute>
         <code>IS_CLUSTERED</code>
         <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>MAXIMUM_POOL_SIZE</code>
+        <attribute>10</attribute>
       </attribute>
       <attribute>
         <code>PORT_NUMBER</code>
@@ -239,7 +255,7 @@
       </attribute>
       <attribute>
         <code>USE_POOLING</code>
-        <attribute>N</attribute>
+        <attribute>Y</attribute>
       </attribute>
     </attributes>
   </connection>
@@ -616,7 +632,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>560</xloc>
-      <yloc>1328</yloc>
+      <yloc>1536</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -644,7 +660,7 @@
       <expand_remote_job>N</expand_remote_job>
       <create_parent_folder>N</create_parent_folder>
       <pass_export>N</pass_export>
-      <run_configuration />
+      <run_configuration>Pentaho local</run_configuration>
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
         <parameter>
@@ -682,13 +698,23 @@
           <stream_name />
           <value>${QF_TARGET_LAST_UPDATED_ON_COLNAME}</value>
         </parameter>
+        <parameter>
+          <name>PARAM_TARGET_TABLE_SYNCED_TO_INSERT_ID</name>
+          <stream_name />
+          <value>${PARAM_SOURCE_TABLE_MAX_INSERT_ID}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_TABLE_SYNCED_TO_LAST_UPDATED_ON</name>
+          <stream_name />
+          <value>${QF_TARGET_TABLE_MAX_LAST_UPDATED_ON_AFTER_INSERTS}</value>
+        </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>560</xloc>
-      <yloc>1520</yloc>
+      <yloc>2000</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -730,7 +756,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>352</xloc>
-      <yloc>1328</yloc>
+      <yloc>1536</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -837,7 +863,7 @@ ORDER BY
       <attributes_kjc />
     </entry>
     <entry>
-      <name>Success</name>
+      <name>Success 2</name>
       <description />
       <type>SUCCESS</type>
       <attributes />
@@ -1192,7 +1218,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>240</xloc>
-      <yloc>1520</yloc>
+      <yloc>2000</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -1355,12 +1381,22 @@ PARAM_TARGET_TABLE                   = ${PARAM_TARGET_TABLE}</logmessage>
           <stream_name />
           <value>${QF_TARGET_TABLE_MAX_TIMESTAMP_COL}</value>
         </parameter>
+        <parameter>
+          <name>PARAM_SOURCE_TABLE_MAX_LAST_UPDATED_ON_FOR_INSERT_BEFORE_INSERTS</name>
+          <stream_name />
+          <value>${QF_SOURCE_TABLE_MAX_TIMESTAMP_COL_FOR_INSERT_BEFORE_INSERTS}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_TABLE_MAX_LAST_UPDATED_ON_AFTER_INSERTS</name>
+          <stream_name />
+          <value>${QF_TARGET_TABLE_MAX_LAST_UPDATED_ON_AFTER_INSERTS}</value>
+        </parameter>
       </parameters>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>560</xloc>
-      <yloc>1424</yloc>
+      <yloc>1808</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -1402,7 +1438,7 @@ PARAM_TARGET_TABLE                   = ${PARAM_TARGET_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>352</xloc>
-      <yloc>1424</yloc>
+      <yloc>1808</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -1441,25 +1477,26 @@ PARAM_TARGET_TABLE                   = ${PARAM_TARGET_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>560</xloc>
-      <yloc>1232</yloc>
+      <yloc>1440</yloc>
       <attributes_kjc />
     </entry>
     <entry>
-      <name>Write To Log</name>
+      <name>Write variables to log 1</name>
       <description />
       <type>WRITE_TO_LOG</type>
       <attributes />
       <logmessage>${Internal.Job.Name}:
-QF_TARGET_TABLE_MAX_ID_COL        = ${QF_TARGET_TABLE_MAX_ID_COL}
-QF_TARGET_TABLE_MAX_TIMESTAMP_COL = ${QF_TARGET_TABLE_MAX_TIMESTAMP_COL}
+QF_SOURCE_TABLE_MAX_TIMESTAMP_COL_FOR_INSERT_BEFORE_INSERTS = ${QF_SOURCE_TABLE_MAX_TIMESTAMP_COL_FOR_INSERT_BEFORE_INSERTS}
+QF_TARGET_TABLE_MAX_ID_COL                                  = ${QF_TARGET_TABLE_MAX_ID_COL}
+QF_TARGET_TABLE_MAX_TIMESTAMP_COL                           = ${QF_TARGET_TABLE_MAX_TIMESTAMP_COL}
 </logmessage>
       <loglevel>Basic</loglevel>
       <logsubject />
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>560</xloc>
-      <yloc>1152</yloc>
+      <xloc>608</xloc>
+      <yloc>1360</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -1473,6 +1510,205 @@ QF_TARGET_TABLE_MAX_TIMESTAMP_COL = ${QF_TARGET_TABLE_MAX_TIMESTAMP_COL}
       <nr>0</nr>
       <xloc>560</xloc>
       <yloc>976</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>Success</name>
+      <description />
+      <type>SUCCESS</type>
+      <attributes />
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>560</xloc>
+      <yloc>2096</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>tr_set_source_table_max_timestamp_vrbl_before_inserts</name>
+      <description />
+      <type>TRANS</type>
+      <attributes />
+      <specification_method>rep_name</specification_method>
+      <trans_object_id />
+      <filename />
+      <transname>tr_set_source_table_max_timestamp_vrbl_before_inserts</transname>
+      <directory>/generic</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <clear_rows>N</clear_rows>
+      <clear_files>N</clear_files>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Basic</loglevel>
+      <cluster>N</cluster>
+      <slave_server_name />
+      <set_append_logfile>N</set_append_logfile>
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <create_parent_folder>N</create_parent_folder>
+      <logging_remote_work>N</logging_remote_work>
+      <run_configuration>Pentaho local</run_configuration>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_SOURCE_INSERT_ID_COLNAME</name>
+          <stream_name />
+          <value>${QF_SOURCE_INSERT_ID_COLNAME}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_SOURCE_LAST_UPDATED_ON_COLNAME</name>
+          <stream_name />
+          <value>${QF_SOURCE_LAST_UPDATED_ON_COLNAME}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_TABLE_MAX_INSERT_ID</name>
+          <stream_name />
+          <value>${QF_TARGET_TABLE_MAX_ID_COL}</value>
+        </parameter>
+      </parameters>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>608</xloc>
+      <yloc>1168</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>tr_set_target_last_updated_on_after_inserts_vrbl</name>
+      <description />
+      <type>TRANS</type>
+      <attributes />
+      <specification_method>rep_name</specification_method>
+      <trans_object_id />
+      <filename />
+      <transname>tr_set_target_last_updated_on_after_inserts_vrbl</transname>
+      <directory>/generic</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <clear_rows>N</clear_rows>
+      <clear_files>N</clear_files>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Basic</loglevel>
+      <cluster>N</cluster>
+      <slave_server_name />
+      <set_append_logfile>N</set_append_logfile>
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <create_parent_folder>N</create_parent_folder>
+      <logging_remote_work>N</logging_remote_work>
+      <run_configuration>Pentaho local</run_configuration>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_TARGET_INSERT_ID_COLNAME</name>
+          <stream_name />
+          <value>${QF_TARGET_INSERT_ID_COLNAME}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_LAST_UPDATED_ON_COLNAME</name>
+          <stream_name />
+          <value>${QF_TARGET_LAST_UPDATED_ON_COLNAME}</value>
+        </parameter>
+      </parameters>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>608</xloc>
+      <yloc>1632</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>Write variable to log 2</name>
+      <description />
+      <type>WRITE_TO_LOG</type>
+      <attributes />
+      <logmessage>${Internal.Job.Name}:
+QF_TARGET_TABLE_MAX_LAST_UPDATED_ON_AFTER_INSERTS = ${QF_TARGET_TABLE_MAX_LAST_UPDATED_ON_AFTER_INSERTS}
+</logmessage>
+      <loglevel>Basic</loglevel>
+      <logsubject />
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>608</xloc>
+      <yloc>1712</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>Set CDC state columns</name>
+      <description />
+      <type>SQL</type>
+      <attributes />
+      <sql>UPDATE 
+    ${QF_ETL_DB_SCHEMA}.table_state
+SET
+    -- Set target_synced_to_insert_id and target_synced_to_last_updated_on here 
+    -- only if they currently are NULL. This is to treat the case when these 
+    -- columns have just been added. After that first time, these two assignments
+    -- will have no effect.
+    target_synced_to_insert_id       = COALESCE(target_synced_to_insert_id      ,  ${QF_TARGET_TABLE_MAX_ID_COL}),
+    target_synced_to_last_updated_on = COALESCE(target_synced_to_last_updated_on, '${QF_TARGET_TABLE_MAX_TIMESTAMP_COL}'),
+    -- Set target_unsynced_inserts_from_last_updated_on column if it is currently
+    -- NULL. Although this will also handle the case where this column has just
+    -- been added, it is needed for normal operation. If this column is 
+    -- currently *not* null, it means that the ETL failed or did not finish for
+    -- this table for some reason on the previous run of the ETL job. If this
+    -- occurred, we do *not* update the value stored in this column. When the
+    -- ETL does finally complete successfully for this table, this column is set
+    -- to NULL.
+    target_unsynced_inserts_from_last_updated_on = COALESCE(target_unsynced_inserts_from_last_updated_on, '${QF_SOURCE_TABLE_MAX_TIMESTAMP_COL_FOR_INSERT_BEFORE_INSERTS}') 
+WHERE
+    table_state_id = ${PARAM_TABLE_META_ID}</sql>
+      <useVariableSubstitution>T</useVariableSubstitution>
+      <sqlfromfile>F</sqlfromfile>
+      <sqlfilename />
+      <sendOneStatement>F</sendOneStatement>
+      <connection>etl_db</connection>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>608</xloc>
+      <yloc>1264</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>Update CDC state columns</name>
+      <description />
+      <type>SQL</type>
+      <attributes />
+      <sql>UPDATE 
+    ${QF_ETL_DB_SCHEMA}.table_state
+SET
+    -- Update target_synced_to_insert_id and target_synced_to_last_updated_on  
+    -- appropriately for the case when the ETL successfully updates the target 
+    -- table.
+    target_synced_to_insert_id       =  ${PARAM_SOURCE_TABLE_MAX_INSERT_ID},
+    target_synced_to_last_updated_on = '${QF_TARGET_TABLE_MAX_LAST_UPDATED_ON_AFTER_INSERTS}',
+    -- Set target_unsynced_inserts_from_last_updated_on column to NULL. This 
+    -- means that the ETL successfully updated the target table.
+    target_unsynced_inserts_from_last_updated_on = NULL 
+WHERE
+    table_state_id = ${PARAM_TABLE_META_ID}</sql>
+      <useVariableSubstitution>T</useVariableSubstitution>
+      <sqlfromfile>F</sqlfromfile>
+      <sqlfilename />
+      <sendOneStatement>F</sendOneStatement>
+      <connection>etl_db</connection>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>608</xloc>
+      <yloc>1904</yloc>
       <attributes_kjc />
     </entry>
   </entries>
@@ -1515,7 +1751,7 @@ QF_TARGET_TABLE_MAX_TIMESTAMP_COL = ${QF_TARGET_TABLE_MAX_TIMESTAMP_COL}
     </hop>
     <hop>
       <from>jb_log_error 1</from>
-      <to>Success</to>
+      <to>Success 2</to>
       <from_nr>1</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -1658,24 +1894,6 @@ QF_TARGET_TABLE_MAX_TIMESTAMP_COL = ${QF_TARGET_TABLE_MAX_TIMESTAMP_COL}
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>tr_target-update_table-updatable_table_2_inserts</from>
-      <to>tr_target-update_table-updatable_table_2_updates</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>tr_target-update_table-updatable_table_2_updates</from>
-      <to>jb_update_etl_table_meta_mirror_details</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
       <from>tr_target-update_table-updatable_table_2_updates</from>
       <to>jb_log_error 7</to>
       <from_nr>0</from_nr>
@@ -1703,16 +1921,7 @@ QF_TARGET_TABLE_MAX_TIMESTAMP_COL = ${QF_TARGET_TABLE_MAX_TIMESTAMP_COL}
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>tr_set_target_table_max_id_and_date_vrbls</from>
-      <to>Write To Log</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>Write To Log</from>
+      <from>Write variables to log 1</from>
       <to>tr_table_update_statistics_init_vrbls</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -1746,6 +1955,87 @@ QF_TARGET_TABLE_MAX_TIMESTAMP_COL = ${QF_TARGET_TABLE_MAX_TIMESTAMP_COL}
       <enabled>Y</enabled>
       <evaluation>N</evaluation>
       <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_update_etl_table_meta_mirror_details</from>
+      <to>Success</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>tr_set_target_table_max_id_and_date_vrbls</from>
+      <to>tr_set_source_table_max_timestamp_vrbl_before_inserts</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>tr_target-update_table-updatable_table_2_inserts</from>
+      <to>tr_set_target_last_updated_on_after_inserts_vrbl</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>tr_set_target_last_updated_on_after_inserts_vrbl</from>
+      <to>Write variable to log 2</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>Write variable to log 2</from>
+      <to>tr_target-update_table-updatable_table_2_updates</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>tr_set_source_table_max_timestamp_vrbl_before_inserts</from>
+      <to>Set CDC state columns</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>Set CDC state columns</from>
+      <to>Write variables to log 1</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>tr_target-update_table-updatable_table_2_updates</from>
+      <to>Update CDC state columns</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Update CDC state columns</from>
+      <to>jb_update_etl_table_meta_mirror_details</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
     </hop>
   </hops>
   <notepads>
@@ -1799,15 +2089,15 @@ The "updatable" table generic update algorithm #2 is used. This job has paramete
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Update the ${QF_ETL_DB_SCHEMA}.table_meta row that corresponds to the table treated in the 
-current job. This records which mirror algorithm was used, as well as when the mirroring was performed.
+      <note>Update the ${QF_ETL_DB_SCHEMA}.table_state &amp; ${QF_ETL_DB_SCHEMA}.target_table_update rows 
+that correspond to the table treated in the current job.
 
 Note:	This transformation will fail with an error if we generate, but do not execute, ETL metadata 
 		target transformations in the prevous two transformations. This is because variables that need 
 		to be set for this transformation to execute without errors do not actually get set.</note>
       <xloc>736</xloc>
-      <yloc>1488</yloc>
-      <width>581</width>
+      <yloc>1968</yloc>
+      <width>579</width>
       <heigth>88</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
@@ -1881,7 +2171,7 @@ not be the best behaviour.</note>
 It implements the 1st half of generic algorithm #2 for updatable tables.
 It performs INSERTs only.</note>
       <xloc>736</xloc>
-      <yloc>1312</yloc>
+      <yloc>1520</yloc>
       <width>466</width>
       <heigth>62</heigth>
       <fontname>Ubuntu</fontname>
@@ -2022,14 +2312,15 @@ columns. These values are passed as parameters to the transformations executed b
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>TODO:	These two sub-transformation entries
+      <note>TODO:	The *_inserts &amp; *_updates
+		transformation entries
 		for updating the target table must abort
 		the current job if it is not successful for 
 		every row. Is this the case?</note>
-      <xloc>16</xloc>
-      <yloc>1360</yloc>
+      <xloc>32</xloc>
+      <yloc>1664</yloc>
       <width>281</width>
-      <heigth>62</heigth>
+      <heigth>75</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -2097,7 +2388,7 @@ be passed as parameters to the two update transformations, one for INSERTs and o
 It implements the 2nd half of generic algorithm #2 for updatable tables.
 It performs UPDATEs only.</note>
       <xloc>736</xloc>
-      <yloc>1408</yloc>
+      <yloc>1792</yloc>
       <width>466</width>
       <heigth>62</heigth>
       <fontname>Ubuntu</fontname>
@@ -2122,7 +2413,7 @@ It performs UPDATEs only.</note>
 	QF_UPDATE_TABLE_NUM_INSERTS
 	QF_UPDATE_TABLE_NUM_UPDATES</note>
       <xloc>736</xloc>
-      <yloc>1216</yloc>
+      <yloc>1424</yloc>
       <width>553</width>
       <heigth>75</heigth>
       <fontname>Ubuntu</fontname>
@@ -2142,12 +2433,13 @@ It performs UPDATEs only.</note>
     </notepad>
     <notepad>
       <note>Log the variables:
+	QF_SOURCE_TABLE_MAX_TIMESTAMP_COL_FOR_INSERT_BEFORE_INSERTS
 	QF_TARGET_TABLE_MAX_ID_COL
 	QF_TARGET_TABLE_MAX_TIMESTAMP_COL</note>
       <xloc>736</xloc>
-      <yloc>1152</yloc>
-      <width>270</width>
-      <heigth>49</heigth>
+      <yloc>1344</yloc>
+      <width>449</width>
+      <heigth>62</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -2169,7 +2461,7 @@ It performs UPDATEs only.</note>
 "insert_id" column so that we can 
 restart after a crash where we left off.</note>
       <xloc>1216</xloc>
-      <yloc>1312</yloc>
+      <yloc>1520</yloc>
       <width>246</width>
       <heigth>62</heigth>
       <fontname>Ubuntu</fontname>
@@ -2193,7 +2485,7 @@ restart after a crash where we left off.</note>
 "last_updated_on" column so that we can 
 restart after a crash where we left off.</note>
       <xloc>1216</xloc>
-      <yloc>1408</yloc>
+      <yloc>1792</yloc>
       <width>246</width>
       <heigth>62</heigth>
       <fontname>Ubuntu</fontname>
@@ -2233,6 +2525,128 @@ both columns are needed by this ETL algorithm.</note>
       <bordercolorblue>100</bordercolorblue>
       <drawshadow>Y</drawshadow>
     </notepad>
+    <notepad>
+      <note>Set the variable:
+	QF_SOURCE_TABLE_MAX_TIMESTAMP_COL_FOR_INSERT_BEFORE_INSERTS
+to the maximum values for "last_updated_on" column of the source table for the rows 
+that will be INSERTed into the target table *before* these INSERTs are performed.</note>
+      <xloc>736</xloc>
+      <yloc>1152</yloc>
+      <width>485</width>
+      <heigth>62</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Log the variable:
+	QF_TARGET_TABLE_MAX_LAST_UPDATED_ON_AFTER_INSERTS</note>
+      <xloc>736</xloc>
+      <yloc>1712</yloc>
+      <width>383</width>
+      <heigth>36</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Set the variable:
+	QF_TARGET_TABLE_MAX_LAST_UPDATED_ON_AFTER_INSERTS
+to the maximum values for "last_updated_on" column of the target table *after* rows have been 
+INSERTed into the target table by the first part of this ETL algorithm. Some of the source rows
+may have been updated before they are INSERTed into the target table.</note>
+      <xloc>736</xloc>
+      <yloc>1600</yloc>
+      <width>544</width>
+      <heigth>75</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Set ${QF_ETL_DB_SCHEMA}.table_state CDC-related columns:
+	target_synced_to_insert_id
+	target_synced_to_last_updated_on
+	target_unsynced_inserts_from_last_updated_on
+These are used to ensure no UPDATEs made to source tables are missed in the event that the ETL job
+crashes while updating a target table.</note>
+      <xloc>736</xloc>
+      <yloc>1232</yloc>
+      <width>565</width>
+      <heigth>88</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Update the ${QF_ETL_DB_SCHEMA}.table_state CDC-related columns:
+	target_synced_to_insert_id
+	target_synced_to_last_updated_on
+	target_unsynced_inserts_from_last_updated_on
+appropriately for the case where this ETL algorithm successfully updates the target table.</note>
+      <xloc>736</xloc>
+      <yloc>1872</yloc>
+      <width>502</width>
+      <heigth>75</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
   </notepads>
   <attributes>
     <group>
@@ -2246,7 +2660,7 @@ both columns are needed by this ETL algorithm.</note>
       <name>{"_":"Embedded MetaStore Elements","namespace":"pentaho","type":"Default Run Configuration"}</name>
       <attribute>
         <key>Pentaho local</key>
-        <value>{"children":[{"children":[],"id":"server","value":null},{"children":[],"id":"clustered","value":"N"},{"children":[],"id":"name","value":"Pentaho local"},{"children":[],"id":"description","value":null},{"children":[],"id":"readOnly","value":"Y"},{"children":[],"id":"sendResources","value":"N"},{"children":[],"id":"logRemoteExecutionLocally","value":"N"},{"children":[],"id":"remote","value":"N"},{"children":[],"id":"local","value":"Y"},{"children":[],"id":"showTransformations","value":"N"}],"id":"Pentaho local","value":null,"name":"Pentaho local","owner":null,"ownerPermissionsList":[]}</value>
+        <value>{"children":[{"children":[],"id":"server","value":null},{"children":[],"id":"clustered","value":"N"},{"children":[],"id":"name","value":"Pentaho local"},{"children":[],"id":"description","value":null},{"children":[],"id":"pentaho","value":"N"},{"children":[],"id":"readOnly","value":"Y"},{"children":[],"id":"sendResources","value":"N"},{"children":[],"id":"logRemoteExecutionLocally","value":"N"},{"children":[],"id":"remote","value":"N"},{"children":[],"id":"local","value":"Y"},{"children":[],"id":"showTransformations","value":"N"}],"id":"Pentaho local","value":null,"name":"Pentaho local","owner":null,"ownerPermissionsList":[]}</value>
       </attribute>
     </group>
   </attributes>
