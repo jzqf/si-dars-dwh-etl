@@ -466,6 +466,7 @@ WHERE
             'passage_event_timestamp', 
             'control_point_id', 
             'obu_present',
+            'obu_mmi_signaled',
             'applied_scheme_liability_category_id',
             'applied_scheme_compliance_category_id',
             'applied_scheme_compliance_sub_category_id',

@@ -128,8 +128,9 @@ ALTER TABLE public.obo__dsrc_data_receipt          ADD COLUMN etl_batch_id_last_
 ALTER TABLE public.obo__euro_emissions_class       ADD COLUMN etl_batch_id_last_update bigint;
 ALTER TABLE public.obo__obu_register_status        ADD COLUMN etl_batch_id_last_update bigint;
 
--- Add two columns to table: obo__passage_event_derived_data_details:
+-- Add three columns to table: obo__passage_event_derived_data_details:
 -- 
+--     obu_mmi_signaled
 --     applied_scheme_compliance_category_id
 --     applied_scheme_compliance_sub_category_id
 DROP TABLE IF EXISTS public.obo__passage_event_derived_data_details CASCADE;
@@ -144,6 +145,7 @@ CREATE TABLE public.obo__passage_event_derived_data_details (
    passage_event_timestamp                   TIMESTAMP            not null,
    control_point_id                          SMALLINT             not null,
    obu_present                               BOOLEAN              not null,
+   obu_mmi_signaled                          SMALLINT             null,         -- new column
    applied_scheme_liability_category_id      SMALLINT             not null,
    applied_scheme_compliance_category_id     SMALLINT             not null,     -- new column
    applied_scheme_compliance_sub_category_id SMALLINT             not null,     -- new column
