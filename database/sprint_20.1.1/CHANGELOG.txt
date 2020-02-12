@@ -1,0 +1,67 @@
+QFC-BODARS-4844, QFC-BODARS-4845:
+
+*	The following tables have been removed from the DSA:
+
+		obo__passage_event_derived_data_with_rating
+		obo__analysis_queue
+
+QFC-BODARS-4850:
+
+*	The following obo_opr table is no longer replicated to the PSA:
+
+		analysis_queue
+
+QFC-BODARS-4851:
+
+*	The ETL treatment of the obo_opr table analysis_request was changed from 
+	"insert-only" to "updateable", with the column. The column 
+	analysis_request_status_timestamp is used as the "last updated on" column.
+	This applies to replication to both the PSA and the DSA.
+
+QFC-BODARS-4855, QFC-BODARS-4856;
+
+*	The following tables have been added to the DSA:
+
+		obo__analysis_request_status
+		obo__analysis_request_type
+		obo__analysis_result_status
+		obo__analysis_result_type
+
+*	Replication has been enabled for the following tables in the PSA. 
+	Replication was disabled in the previous release:
+
+		obo__analysis_request_status
+		obo__analysis_request_type
+		obo__analysis_result_status
+		obo__analysis_result_type
+
+QFC-BODARS-4847:
+
+*	The following columns have been added to the DSA table 
+	obo__analysis_request:
+	
+		analysis_request_type_id
+		analysis_request_status_id
+		analysis_request_status_timestamp
+		analysis_result_id
+
+QFC-BODARS-4857:
+
+*	The following columns have been added to the DSA table 
+	obo__analysis_results:
+	
+		analysis_result_status_timestamp
+
+QFC-BODARS-4846:
+
+*	The following columns have been added to the DSA table
+	obo__passage_event_derived_data_details:
+		
+		obu_mmi_signaled
+		applied_scheme_compliance_category_id
+		applied_scheme_compliance_sub_category_id
+
+Additional changes:
+
+*	A column named "etl_batch_id_last_update" of type bigint was added to each
+	DSA tables that lacked this column.
