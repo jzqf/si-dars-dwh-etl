@@ -1,12 +1,11 @@
 <transformation>
   <info>
-    <name>tr_target-compare_table-inject_meta</name>
+    <name>tmplt_target-compare_table-injected</name>
     <description />
     <extended_description />
     <trans_version />
     <trans_type>Normal</trans_type>
-    <trans_status>0</trans_status>
-    <directory>/generic/target_compare</directory>
+    <directory>/development/jeffreyz/tests/template_transformation_metadata_injection</directory>
     <parameters>
       <parameter>
         <name>PARAM_CDC_LAST_LOAD_UTC</name>
@@ -156,12 +155,12 @@
     </parameters>
     <log>
       <trans-log-table>
-        <connection>${QF_LOGGING_DB_CONNECTION}</connection>
-        <schema>${QF_LOG_TRANS_SCHEMA}</schema>
-        <table>${QF_LOG_TRANS_TABLE}</table>
+        <connection />
+        <schema />
+        <table />
         <size_limit_lines />
         <interval />
-        <timeout_days>${QF_LOG_TRANS_TIMEOUT_IN_DAYS}</timeout_days>
+        <timeout_days />
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -270,11 +269,11 @@
         </field>
       </trans-log-table>
       <perf-log-table>
-        <connection>${QF_LOGGING_DB_CONNECTION}</connection>
-        <schema>${QF_LOG_TRANSPERF_SCHEMA}</schema>
-        <table>${QF_LOG_TRANSPERF_TABLE}</table>
+        <connection />
+        <schema />
+        <table />
         <interval />
-        <timeout_days>${QF_LOG_TRANSPERF_TIMEOUT_IN_DAYS}</timeout_days>
+        <timeout_days />
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -352,10 +351,10 @@
         </field>
       </perf-log-table>
       <channel-log-table>
-        <connection>${QF_LOGGING_DB_CONNECTION}</connection>
-        <schema>${QF_LOG_CHANNEL_SCHEMA}</schema>
-        <table>${QF_LOG_CHANNEL_TABLE}</table>
-        <timeout_days>${QF_LOG_CHANNEL_TIMEOUT_IN_DAYS}</timeout_days>
+        <connection />
+        <schema />
+        <table />
+        <timeout_days />
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -418,10 +417,10 @@
         </field>
       </channel-log-table>
       <step-log-table>
-        <connection>${QF_LOGGING_DB_CONNECTION}</connection>
-        <schema>${QF_LOG_TRANSSTEP_SCHEMA}</schema>
-        <table>${QF_LOG_TRANSSTEP_TABLE}</table>
-        <timeout_days>${QF_LOG_TRANSSTEP_TIMEOUT_IN_DAYS}</timeout_days>
+        <connection />
+        <schema />
+        <table />
+        <timeout_days />
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -494,10 +493,10 @@
         </field>
       </step-log-table>
       <metrics-log-table>
-        <connection>${QF_LOGGING_DB_CONNECTION}</connection>
-        <schema>${QF_LOG_TRANSMETRICS_SCHEMA}</schema>
-        <table>${QF_LOG_TRANSMETRICS_TABLE}</table>
-        <timeout_days>${QF_LOG_TRANSMETRICS_TIMEOUT_IN_DAYS}</timeout_days>
+        <connection />
+        <schema />
+        <table />
+        <timeout_days />
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -560,7 +559,7 @@
     <feedback_size>50000</feedback_size>
     <using_thread_priorities>Y</using_thread_priorities>
     <shared_objects_file />
-    <capture_step_performance>Y</capture_step_performance>
+    <capture_step_performance>N</capture_step_performance>
     <step_performance_capturing_delay>1000</step_performance_capturing_delay>
     <step_performance_capturing_size_limit>100</step_performance_capturing_size_limit>
     <dependencies>
@@ -572,17 +571,41 @@
     <clusterschemas>
     </clusterschemas>
     <created_user>-</created_user>
-    <created_date>2016/04/03 09:57:16.279</created_date>
+    <created_date>2020/02/17 12:07:55.792</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2020/02/18 12:51:01.072</modified_date>
+    <modified_date>2020/02/17 12:07:55.792</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>This transformation uses ETL Metadata injection to control how columns of a source table in a source DB are compared to columns 
-of a target table in a target DB. This is a generic algorithm that can work with *any* table, as long as the necessary metadata is
-available to be injected. This transformation has parameters:
+      <note>Load the data from both the source DB table and the target DB table to which it is mirrored. 
+The "ORDER BY" clauses must consist of the tables' primary key column(s). This is needed by
+the "Merge Rows" step. The fields in each stream must be identical and in the same order 
+when fed to the "Merge rows" step. The SELECT statements in these two "Table input" steps
+set the field order appropriately.</note>
+      <xloc>528</xloc>
+      <yloc>432</yloc>
+      <width>521</width>
+      <heigth>75</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>This transformation verifies that a table from a "source" DB has been correctly mirrored to a "target" DB. This is an ETL metadata injection
+"template" transformation that can be used to compare *any* tables that are mirrored between two databases. It has parameters (many are not used):
 
 	PARAM_CDC_LAST_LOAD_UTC					Timestamp for when the target DB was most recently updated successfully
 	PARAM_INSERT_ID_FROM						"from" value for the "insert_id" column of the source table that is being compared to the target table
@@ -602,7 +625,6 @@ available to be injected. This transformation has parameters:
 	PARAM_DYN_DB_CONN_TARGET_DB_URL			for target DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_TARGET_DB_DRIVER		for target DB "dynamic" database connections
 	PARAM_TABLE_META_ID							Primary key of ${QF_ETL_DB_SCHEMA}.table_meta row for the table pair being compared
-	PARAM_UPDATE_ALGORITHM_ID					ID of the algorithm used for mirroring/archiving the tables
 	PARAM_SOURCE_DB_ID							ID the "source" database containing tables that are mirrored to a "target" database
 	PARAM_SOURCE_SCHEMA						Name of schema containing the source table to compare to the target table
 	PARAM_SOURCE_TABLE							Name of the source table to compare to the target table
@@ -616,7 +638,7 @@ available to be injected. This transformation has parameters:
       <xloc>0</xloc>
       <yloc>0</yloc>
       <width>880</width>
-      <heigth>439</heigth>
+      <heigth>413</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -633,91 +655,24 @@ available to be injected. This transformation has parameters:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>The query here (at least the WHERE clause) to
-provide the source DB column names must 
-match the query in "jb_target-compare_table"
-from where this transformation is executed.
-See the comments in that job for an explanation.</note>
-      <xloc>464</xloc>
-      <yloc>832</yloc>
-      <width>277</width>
-      <heigth>75</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>9</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>255</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>The query here (at least the WHERE clause) to
-provide the source DB key column names must
-match the query in "jb_target-compare_table"
- from where this transformation is executed.
-See the comments in that job for an explanation.</note>
-      <xloc>16</xloc>
-      <yloc>624</yloc>
-      <width>277</width>
-      <heigth>75</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>9</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>255</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>The query is identical to the query in step 
-"Source &amp; Target DB column names to compare", 
-except that it adds a row for the column
-"updated_after_last_etl_run". This is necessary
-because if we do not explicitly rename this column,
-it will be deleted from the PDI stream, even though
-this column's name is not changed. However, we do 
-not want these columns to be *compared*.</note>
-      <xloc>128</xloc>
-      <yloc>832</yloc>
-      <width>293</width>
-      <heigth>114</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>9</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Optional target file to specify for template transformation with injected metadata:
+      <note>Update the "table_meta" row for the tables being compared with the comparison statistics:
 
-/development/jeffreyz/tests/template_transformation_metadata_injection/tmplt_target-compare_table-injected.ktr</note>
-      <xloc>128</xloc>
-      <yloc>960</yloc>
-      <width>654</width>
-      <heigth>49</heigth>
+	compared_rows_equal	(flag="identical")
+	compared_rows_unequal	(flag="changed")
+	compared_rows_extra	(flag="new")		Extra rows in the *target* table with no corresponding rows in the *source* table
+	compared_rows_missing	(flag="deleted")	Rows in *source* table, but missing from *target* table
+
+This sub-transformation (mapping) is passed a single stream field "flagfield" that is 
+generated by the "Merge Rows (diff)" step. In order to update the appropriate 
+${QF_ETL_DB_SCHEMA}.table_meta row, it is also passed the parameters:
+
+	PARAM_SOURCE_DB_ID
+	PARAM_SOURCE_SCHEMA
+	PARAM_SOURCE_TABLE</note>
+      <xloc>448</xloc>
+      <yloc>752</yloc>
+      <width>722</width>
+      <heigth>192</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -725,9 +680,85 @@ not want these columns to be *compared*.</note>
       <fontcolorred>0</fontcolorred>
       <fontcolorgreen>0</fontcolorgreen>
       <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>173</backgroundcolorred>
-      <backgroundcolorgreen>216</backgroundcolorgreen>
-      <backgroundcolorblue>230</backgroundcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Compare the two streams row by row and flag each row as one of: 
+
+	"identical":	Row from source table matches by key to row from target table, and all columns are identical.
+				The output row is created based on the *source* row.
+	"changed":	Row from source table matches by key to row from target table, but not all columns are identical
+				The output row is created based on the *target* row.
+	"new":		Row exists in the *target* table with no corresponding rows in the *source* table
+				The output row is created based on the *target* row.
+	"deleted":	Row exists in the *source* table with no corresponding rows in the *target* table
+				The output row is created based on the *source* row.</note>
+      <xloc>448</xloc>
+      <yloc>592</yloc>
+      <width>637</width>
+      <heigth>140</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Rename the stream fields from the target DB to the field names 
+from the source DB. This is required for the "Merge rows" step.</note>
+      <xloc>528</xloc>
+      <yloc>528</yloc>
+      <width>367</width>
+      <heigth>36</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>The primary keys of rows that 
+are *not* identical are written
+to a file so the problem rows 
+can be examined post-mortem.</note>
+      <xloc>256</xloc>
+      <yloc>880</yloc>
+      <width>180</width>
+      <heigth>62</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
       <bordercolorblue>100</bordercolorblue>
@@ -735,14 +766,14 @@ not want these columns to be *compared*.</note>
     </notepad>
   </notepads>
   <connection>
-    <name>etl_db</name>
-    <server>${QF_ETL_DB_HOST}</server>
+    <name>generic_source_db</name>
+    <server>${PARAM_DYN_DB_CONN_SOURCE_DB_HOST}</server>
     <type>POSTGRESQL</type>
     <access>Native</access>
-    <database>${QF_ETL_DB_DATABASE}</database>
-    <port>${QF_ETL_DB_PORT}</port>
-    <username>${QF_ETL_DB_USERNAME}</username>
-    <password>${QF_ETL_DB_PASSWORD}</password>
+    <database>${PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE}</database>
+    <port>${PARAM_DYN_DB_CONN_SOURCE_DB_PORT}</port>
+    <username>${PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME}</username>
+    <password>${PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD}</password>
     <servername />
     <data_tablespace />
     <index_tablespace />
@@ -756,24 +787,16 @@ not want these columns to be *compared*.</note>
         <attribute>N</attribute>
       </attribute>
       <attribute>
-        <code>INITIAL_POOL_SIZE</code>
-        <attribute>10</attribute>
-      </attribute>
-      <attribute>
         <code>IS_CLUSTERED</code>
         <attribute>N</attribute>
       </attribute>
       <attribute>
-        <code>MAXIMUM_POOL_SIZE</code>
-        <attribute>10</attribute>
-      </attribute>
-      <attribute>
         <code>PORT_NUMBER</code>
-        <attribute>${QF_ETL_DB_PORT}</attribute>
+        <attribute>${PARAM_DYN_DB_CONN_SOURCE_DB_PORT}</attribute>
       </attribute>
       <attribute>
         <code>PRESERVE_RESERVED_WORD_CASE</code>
-        <attribute>N</attribute>
+        <attribute>Y</attribute>
       </attribute>
       <attribute>
         <code>QUOTE_ALL_FIELDS</code>
@@ -789,19 +812,19 @@ not want these columns to be *compared*.</note>
       </attribute>
       <attribute>
         <code>USE_POOLING</code>
-        <attribute>Y</attribute>
+        <attribute>N</attribute>
       </attribute>
     </attributes>
   </connection>
   <connection>
-    <name>logging_db</name>
-    <server>${QF_LOGGING_DB_HOST}</server>
+    <name>generic_target_db</name>
+    <server>${PARAM_DYN_DB_CONN_TARGET_DB_HOST}</server>
     <type>POSTGRESQL</type>
     <access>Native</access>
-    <database>${QF_LOGGING_DB_DATABASE}</database>
-    <port>${QF_LOGGING_DB_PORT}</port>
-    <username>${QF_LOGGING_DB_USERNAME}</username>
-    <password>${QF_LOGGING_DB_PASSWORD}</password>
+    <database>${PARAM_DYN_DB_CONN_TARGET_DB_DATABASE}</database>
+    <port>${PARAM_DYN_DB_CONN_TARGET_DB_PORT}</port>
+    <username>${PARAM_DYN_DB_CONN_TARGET_DB_USERNAME}</username>
+    <password>${PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD}</password>
     <servername />
     <data_tablespace />
     <index_tablespace />
@@ -815,24 +838,16 @@ not want these columns to be *compared*.</note>
         <attribute>N</attribute>
       </attribute>
       <attribute>
-        <code>INITIAL_POOL_SIZE</code>
-        <attribute>10</attribute>
-      </attribute>
-      <attribute>
         <code>IS_CLUSTERED</code>
         <attribute>N</attribute>
       </attribute>
       <attribute>
-        <code>MAXIMUM_POOL_SIZE</code>
-        <attribute>10</attribute>
-      </attribute>
-      <attribute>
         <code>PORT_NUMBER</code>
-        <attribute>${QF_LOGGING_DB_PORT}</attribute>
+        <attribute>${PARAM_DYN_DB_CONN_TARGET_DB_PORT}</attribute>
       </attribute>
       <attribute>
         <code>PRESERVE_RESERVED_WORD_CASE</code>
-        <attribute>N</attribute>
+        <attribute>Y</attribute>
       </attribute>
       <attribute>
         <code>QUOTE_ALL_FIELDS</code>
@@ -848,55 +863,467 @@ not want these columns to be *compared*.</note>
       </attribute>
       <attribute>
         <code>USE_POOLING</code>
-        <attribute>Y</attribute>
+        <attribute>N</attribute>
       </attribute>
     </attributes>
   </connection>
   <order>
     <hop>
-      <from>SELECT statement for target DB</from>
-      <to>ETL Metadata Injection: tmplt_target-compare_table</to>
+      <from>Get rows from target DB table</from>
+      <to>Rename target DB field names -> source DB field names</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Source DB primary key column names</from>
-      <to>ETL Metadata Injection: tmplt_target-compare_table</to>
+      <from>Rename target DB field names -> source DB field names</from>
+      <to>Merge Rows (diff)</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Source &amp; Target DB column names to compare</from>
-      <to>ETL Metadata Injection: tmplt_target-compare_table</to>
+      <from>Merge Rows (diff)</from>
+      <to>tr_update_table_meta_compare_stats</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>SELECT statement for source DB</from>
-      <to>ETL Metadata Injection: tmplt_target-compare_table</to>
+      <from>Get rows from source DB table</from>
+      <to>Merge Rows (diff)</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Source DB problem row columns to write to file</from>
-      <to>ETL Metadata Injection: tmplt_target-compare_table</to>
+      <from>Merge Rows (diff)</from>
+      <to>Rows identical?</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Filter condition to select problem rows</from>
-      <to>ETL Metadata Injection: tmplt_target-compare_table</to>
+      <from>Rows identical?</from>
+      <to>Write problem rows to file</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Source &amp; Target DB column names to rename</from>
-      <to>ETL Metadata Injection: tmplt_target-compare_table</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Filter condition for rows updated after ETL last run</from>
-      <to>ETL Metadata Injection: tmplt_target-compare_table</to>
+      <from>Rows identical?</from>
+      <to>Discard rows</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>ETL Metadata Injection: tmplt_target-compare_table</name>
-    <type>MetaInject</type>
+    <name>Discard rows</name>
+    <type>Dummy</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>32</xloc>
+      <yloc>896</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Get rows from source DB table</name>
+    <type>TableInput</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <connection>generic_source_db</connection>
+    <sql>SELECT compliance_case_id,compliance_case_type_id,compliance_case_status_id,compliance_case_status_timestamp,compliance_case_priority_class_id,compliance_case_completion_category_id,completion_timestamp,cbo_account_valid_from,cbo_case_id,compliance_case_cbo_status_id,compliance_case_cbo_status_subcode,compliance_case_cbo_status_timestamp,eph_case_id,compliance_case_eph_status_id,compliance_case_eph_status_subcode,compliance_case_eph_status_timestamp,case_description,licence_plate_country_code,licence_plate_number,payment_means_pan,pan_linked_on,obuid,registered_by_sid,registered_by_euid,registered_on,last_updated_by_sid,last_updated_by_euid,last_updated_on FROM public.compliance_case_register WHERE compliance_case_id >= 100 AND compliance_case_id &lt;= 110 ORDER BY compliance_case_id</sql>
+    <limit>0</limit>
+    <lookup />
+    <execute_each_row>N</execute_each_row>
+    <variables_active>Y</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>112</xloc>
+      <yloc>448</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Get rows from target DB table</name>
+    <type>TableInput</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <connection>generic_target_db</connection>
+    <sql>SELECT compliance_case_id,compliance_case_type_id,compliance_case_status_id,compliance_case_status_timestamp,compliance_case_priority_class_id,compliance_case_completion_category_id,completion_timestamp,cbo_account_valid_from,cbo_case_id,compliance_case_cbo_status_id,compliance_case_cbo_status_subcode,compliance_case_cbo_status_timestamp,eph_case_id,compliance_case_eph_status_id,compliance_case_eph_status_subcode,compliance_case_eph_status_timestamp,case_description,licence_plate_country_code,licence_plate_number,payment_means_pan,pan_linked_on,obuid,registered_by_sid,registered_by_euid,registered_on,last_updated_by_sid,last_updated_by_euid,last_updated_on FROM public.obo__compliance_case_register WHERE compliance_case_id >= 100 AND compliance_case_id &lt;= 110 ORDER BY compliance_case_id</sql>
+    <limit>0</limit>
+    <lookup />
+    <execute_each_row>N</execute_each_row>
+    <variables_active>Y</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>352</xloc>
+      <yloc>448</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Merge Rows (diff)</name>
+    <type>MergeRows</type>
+    <description />
+    <distribute>N</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <keys>
+      <key>compliance_case_id</key>
+    </keys>
+    <values>
+      <value>compliance_case_id</value>
+      <value>compliance_case_type_id</value>
+      <value>compliance_case_status_id</value>
+      <value>compliance_case_status_timestamp</value>
+      <value>compliance_case_priority_class_id</value>
+      <value>compliance_case_completion_category_id</value>
+      <value>completion_timestamp</value>
+      <value>cbo_account_valid_from</value>
+      <value>cbo_case_id</value>
+      <value>compliance_case_cbo_status_id</value>
+      <value>compliance_case_cbo_status_subcode</value>
+      <value>compliance_case_cbo_status_timestamp</value>
+      <value>eph_case_id</value>
+      <value>compliance_case_eph_status_id</value>
+      <value>compliance_case_eph_status_subcode</value>
+      <value>compliance_case_eph_status_timestamp</value>
+      <value>case_description</value>
+      <value>licence_plate_country_code</value>
+      <value>licence_plate_number</value>
+      <value>payment_means_pan</value>
+      <value>pan_linked_on</value>
+      <value>obuid</value>
+      <value>registered_by_sid</value>
+      <value>registered_by_euid</value>
+      <value>registered_on</value>
+      <value>last_updated_by_sid</value>
+      <value>last_updated_by_euid</value>
+      <value>last_updated_on</value>
+    </values>
+    <flag_field>flagfield</flag_field>
+    <reference>Get rows from source DB table</reference>
+    <compare>Rename target DB field names -> source DB field names</compare>
+    <compare>
+    </compare>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>208</xloc>
+      <yloc>624</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Rename target DB field names -> source DB field names</name>
+    <type>SelectValues</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <field>
+        <name>compliance_case_id</name>
+        <rename>compliance_case_id</rename>
+      </field>
+      <field>
+        <name>compliance_case_type_id</name>
+        <rename>compliance_case_type_id</rename>
+      </field>
+      <field>
+        <name>compliance_case_status_id</name>
+        <rename>compliance_case_status_id</rename>
+      </field>
+      <field>
+        <name>compliance_case_status_timestamp</name>
+        <rename>compliance_case_status_timestamp</rename>
+      </field>
+      <field>
+        <name>compliance_case_priority_class_id</name>
+        <rename>compliance_case_priority_class_id</rename>
+      </field>
+      <field>
+        <name>compliance_case_completion_category_id</name>
+        <rename>compliance_case_completion_category_id</rename>
+      </field>
+      <field>
+        <name>completion_timestamp</name>
+        <rename>completion_timestamp</rename>
+      </field>
+      <field>
+        <name>cbo_account_valid_from</name>
+        <rename>cbo_account_valid_from</rename>
+      </field>
+      <field>
+        <name>cbo_case_id</name>
+        <rename>cbo_case_id</rename>
+      </field>
+      <field>
+        <name>compliance_case_cbo_status_id</name>
+        <rename>compliance_case_cbo_status_id</rename>
+      </field>
+      <field>
+        <name>compliance_case_cbo_status_subcode</name>
+        <rename>compliance_case_cbo_status_subcode</rename>
+      </field>
+      <field>
+        <name>compliance_case_cbo_status_timestamp</name>
+        <rename>compliance_case_cbo_status_timestamp</rename>
+      </field>
+      <field>
+        <name>eph_case_id</name>
+        <rename>eph_case_id</rename>
+      </field>
+      <field>
+        <name>compliance_case_eph_status_id</name>
+        <rename>compliance_case_eph_status_id</rename>
+      </field>
+      <field>
+        <name>compliance_case_eph_status_subcode</name>
+        <rename>compliance_case_eph_status_subcode</rename>
+      </field>
+      <field>
+        <name>compliance_case_eph_status_timestamp</name>
+        <rename>compliance_case_eph_status_timestamp</rename>
+      </field>
+      <field>
+        <name>case_description</name>
+        <rename>case_description</rename>
+      </field>
+      <field>
+        <name>licence_plate_country_code</name>
+        <rename>licence_plate_country_code</rename>
+      </field>
+      <field>
+        <name>licence_plate_number</name>
+        <rename>licence_plate_number</rename>
+      </field>
+      <field>
+        <name>payment_means_pan</name>
+        <rename>payment_means_pan</rename>
+      </field>
+      <field>
+        <name>pan_linked_on</name>
+        <rename>pan_linked_on</rename>
+      </field>
+      <field>
+        <name>obuid</name>
+        <rename>obuid</rename>
+      </field>
+      <field>
+        <name>registered_by_sid</name>
+        <rename>registered_by_sid</rename>
+      </field>
+      <field>
+        <name>registered_by_euid</name>
+        <rename>registered_by_euid</rename>
+      </field>
+      <field>
+        <name>registered_on</name>
+        <rename>registered_on</rename>
+      </field>
+      <field>
+        <name>last_updated_by_sid</name>
+        <rename>last_updated_by_sid</rename>
+      </field>
+      <field>
+        <name>last_updated_by_euid</name>
+        <rename>last_updated_by_euid</rename>
+      </field>
+      <field>
+        <name>last_updated_on</name>
+        <rename>last_updated_on</rename>
+      </field>
+      <select_unspecified>N</select_unspecified>
+    </fields>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>352</xloc>
+      <yloc>528</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Rows identical?</name>
+    <type>FilterRows</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <send_true_to>Discard rows</send_true_to>
+    <send_false_to>Write problem rows to file</send_false_to>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <leftvalue>flagfield</leftvalue>
+        <function>=</function>
+        <rightvalue />
+        <value>
+          <name>constant</name>
+          <type>String</type>
+          <text>identical</text>
+          <length>-1</length>
+          <precision>-1</precision>
+          <isnull>N</isnull>
+          <mask />
+        </value>
+      </condition>
+    </compare>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>96</xloc>
+      <yloc>800</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Write problem rows to file</name>
+    <type>TextFileOutput</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <separator>;</separator>
+    <enclosure>"</enclosure>
+    <enclosure_forced>N</enclosure_forced>
+    <enclosure_fix_disabled>N</enclosure_fix_disabled>
+    <header>Y</header>
+    <footer>N</footer>
+    <format>UNIX</format>
+    <compression>None</compression>
+    <encoding>UTF-8</encoding>
+    <endedLine />
+    <fileNameInField>N</fileNameInField>
+    <fileNameField />
+    <create_parent_folder>Y</create_parent_folder>
+    <file>
+      <name>/tmp/dars_dwh_etl-problem_rows/${PARAM_DYN_DB_CONN_TARGET_DB_DATABASE}.${PARAM_TARGET_SCHEMA_TABLE}</name>
+      <servlet_output>N</servlet_output>
+      <do_not_open_new_file_init>Y</do_not_open_new_file_init>
+      <extention>csv</extention>
+      <append>N</append>
+      <split>N</split>
+      <haspartno>N</haspartno>
+      <add_date>Y</add_date>
+      <add_time>Y</add_time>
+      <SpecifyFormat>N</SpecifyFormat>
+      <date_time_format />
+      <add_to_result_filenames>Y</add_to_result_filenames>
+      <pad>N</pad>
+      <fast_dump>N</fast_dump>
+      <splitevery>0</splitevery>
+    </file>
+    <fields>
+      <field>
+        <name>compliance_case_id</name>
+        <type>None</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <nullif />
+        <trim_type>none</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>flagfield</name>
+        <type>None</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <nullif />
+        <trim_type>none</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+    </fields>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>160</xloc>
+      <yloc>896</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>tr_update_table_meta_compare_stats</name>
+    <type>SimpleMapping</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -907,93 +1334,35 @@ not want these columns to be *compared*.</note>
     </partitioning>
     <specification_method>rep_name</specification_method>
     <trans_object_id />
-    <trans_name>tmplt_target-compare_table</trans_name>
+    <trans_name>tr_update_table_meta_compare_stats</trans_name>
     <filename />
-    <directory_path>${Internal.Entry.Current.Directory}</directory_path>
-    <source_step />
-    <source_output_fields>    </source_output_fields>
-    <target_file />
-    <no_execution>N</no_execution>
-    <stream_source_step />
-    <stream_target_step />
+    <directory_path>/generic/target_compare</directory_path>
     <mappings>
-      <mapping>
-        <target_step_name>Rename target DB field names -> source DB field names</target_step_name>
-        <target_attribute_key>FIELD_LENGTH</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Source &amp; Target DB column names to rename</source_step>
-        <source_field>source_col_length</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Merge Rows (diff)</target_step_name>
-        <target_attribute_key>KEY_FIELDS</target_attribute_key>
-        <target_detail>N</target_detail>
-        <source_step>Source DB primary key column names</source_step>
-        <source_field>source_key_col_name</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Get rows from target DB table</target_step_name>
-        <target_attribute_key>SQL</target_attribute_key>
-        <target_detail>N</target_detail>
-        <source_step>SELECT statement for target DB</source_step>
-        <source_field>select_target_rows_sql</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Merge Rows (diff)</target_step_name>
-        <target_attribute_key>VALUE_FIELDS</target_attribute_key>
-        <target_detail>N</target_detail>
-        <source_step>Source &amp; Target DB column names to compare</source_step>
-        <source_field>source_col_name</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Rename target DB field names -> source DB field names</target_step_name>
-        <target_attribute_key>FIELD_NAME</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Source &amp; Target DB column names to rename</source_step>
-        <source_field>target_col_name</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Write problem rows to file</target_step_name>
-        <target_attribute_key>OUTPUT_FIELDNAME</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Source DB problem row columns to write to file</source_step>
-        <source_field>source_key_col_name</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Rename target DB field names -> source DB field names</target_step_name>
-        <target_attribute_key>FIELD_PRECISION</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Source &amp; Target DB column names to rename</source_step>
-        <source_field>source_col_precision</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Source row updated after last ETL run?</target_step_name>
-        <target_attribute_key>CONDITION</target_attribute_key>
-        <target_detail>N</target_detail>
-        <source_step>Filter condition for rows updated after ETL last run</source_step>
-        <source_field>filter_condition</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Rename target DB field names -> source DB field names</target_step_name>
-        <target_attribute_key>FIELD_RENAME</target_attribute_key>
-        <target_detail>Y</target_detail>
-        <source_step>Source &amp; Target DB column names to rename</source_step>
-        <source_field>source_col_name</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Rows identical?</target_step_name>
-        <target_attribute_key>CONDITION</target_attribute_key>
-        <target_detail>N</target_detail>
-        <source_step>Filter condition to select problem rows</source_step>
-        <source_field>filter_condition</source_field>
-      </mapping>
-      <mapping>
-        <target_step_name>Get rows from source DB table</target_step_name>
-        <target_attribute_key>SQL</target_attribute_key>
-        <target_detail>N</target_detail>
-        <source_step>SELECT statement for source DB</source_step>
-        <source_field>select_source_rows_sql</source_field>
-      </mapping>
+      <input>
+        <mapping>
+          <input_step />
+          <output_step />
+          <main_path>Y</main_path>
+          <rename_on_output>Y</rename_on_output>
+          <description />
+          <connector>
+            <parent>flagfield</parent>
+            <child>flagfield</child>
+          </connector>
+        </mapping>
+      </input>
+      <output>
+        <mapping>
+          <input_step />
+          <output_step />
+          <main_path>Y</main_path>
+          <rename_on_output>N</rename_on_output>
+          <description />
+        </mapping>
+      </output>
+      <parameters>
+        <inherit_all_vars>Y</inherit_all_vars>
+      </parameters>
     </mappings>
     <attributes />
     <cluster_schema />
@@ -1004,564 +1373,8 @@ not want these columns to be *compared*.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>416</xloc>
-      <yloc>560</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Filter condition for rows updated after ETL last run</name>
-    <type>TableInput</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <connection>etl_db</connection>
-    <sql>SELECT
-'&lt;condition>
-  &lt;negated>N&lt;/negated>
-  &lt;leftvalue>updated_after_last_etl_run&lt;/leftvalue>
-  &lt;function>=&lt;/function>
-  &lt;rightvalue />
-  &lt;value>
-    &lt;name>constant&lt;/name>
-    &lt;type>Boolean&lt;/type>
-    &lt;text>Y&lt;/text>
-    &lt;length>-1&lt;/length>
-    &lt;precision>-1&lt;/precision>
-    &lt;isnull>N&lt;/isnull>
-    &lt;mask />
-  &lt;/value>
-&lt;/condition>' AS "filter_condition"</sql>
-    <limit>0</limit>
-    <lookup />
-    <execute_each_row>N</execute_each_row>
-    <variables_active>Y</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <attributes />
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>720</xloc>
-      <yloc>624</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Filter condition to select problem rows</name>
-    <type>TableInput</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <connection>etl_db</connection>
-    <sql>SELECT
-'&lt;condition>
-  &lt;negated>N&lt;/negated>
-  &lt;leftvalue>flagfield&lt;/leftvalue>
-  &lt;function>=&lt;/function>
-  &lt;rightvalue />
-  &lt;value>
-    &lt;name>constant&lt;/name>
-    &lt;type>String&lt;/type>
-    &lt;text>identical&lt;/text>
-    &lt;length>-1&lt;/length>
-    &lt;precision>-1&lt;/precision>
-    &lt;isnull>N&lt;/isnull>
-    &lt;mask />
-  &lt;/value>
-&lt;/condition>' AS "filter_condition"</sql>
-    <limit>0</limit>
-    <lookup />
-    <execute_each_row>N</execute_each_row>
-    <variables_active>Y</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <attributes />
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>720</xloc>
-      <yloc>688</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>SELECT statement for source DB</name>
-    <type>TableInput</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <connection>etl_db</connection>
-    <sql>WITH
-    -- Create table with a string column that contains the columns from the 
-    -- source DB table to compare with corresponding columns from the 
-    -- target DB table:
-    select_list AS (
-        SELECT 
-            -- POSTGRESQL-SPECIFIC
-            array_to_string(array_agg(source_column_name ORDER BY column_meta_id ASC), ',') AS "str_value"
-        FROM 
-            ${QF_ETL_DB_SCHEMA}.column_meta 
-        WHERE
-            table_meta_id = ${PARAM_TABLE_META_ID} AND 
-            -- This selects the columns from the source DB table that will be 
-            -- compared with corresponding columns from the target DB table.
-            -- Although the primary key columns don't need to be compared, they
-            -- are needed by the "Merge Rows" step so they are included here.
-            (compare_column=true OR is_primary_key_column=true)
-    ),
-    -- Create table with a string column that contains the "ORDER BY" clause. 
-    -- This consists of the columns that make up the primary key for the 
-    -- source DB table. This is needed by the "Merge Rows" step in the 
-    -- template transformation.
-    orderby_list AS (
-        SELECT 
-           -- POSTGRESQL-SPECIFIC
-            array_to_string(array_agg(source_column_name ORDER BY primary_key_column_order ASC), ',') AS "str_value"
-        FROM 
-            ${QF_ETL_DB_SCHEMA}.column_meta 
-        WHERE
-            table_meta_id = ${PARAM_TABLE_META_ID} AND 
-            -- This selects the columns that make up the primary key for the
-            -- source DB table.
-            is_primary_key_column=true
-    )
-SELECT
-    -- Create SELECT statement:
-    'SELECT ' || CAST(select_list.str_value AS VARCHAR) || 
-
--- Add a column that specifies if rows of the source table have been updated after the most recent run of the
--- ETL job. This is so that we can exclude such rows from the compare statistics to reduce confusion and the
--- need to investigate why rows are marked as "unequal". This only applies to source tables thare are "updateable"
--- and that are being treated by the ETL algorithm with algorithm ID = 6.
--- I use the comparison operator ">=" and not ">" on purpose because timestamps are not necessarily
--- unique, but it is very unlikely that using ">" would select a row that we wanted to exclude.
-CASE WHEN (SELECT update_target_table_algorithm_id=${QF_MIRROR_ALG_INSERT_OR_UPDATE_GENERIC_2} FROM ${QF_ETL_DB_SCHEMA}.table_meta WHERE table_meta_id=${PARAM_TABLE_META_ID}) THEN
-    ',' || (SELECT source_column_name FROM ${QF_ETL_DB_SCHEMA}.column_meta WHERE table_meta_id=${PARAM_TABLE_META_ID} AND is_last_updated_on_column=true) || '>=''' ||
-           (SELECT target_synced_to_last_updated_on FROM ${QF_ETL_DB_SCHEMA}.table_state WHERE table_state_id=${PARAM_TABLE_META_ID}) || ''' AS "updated_after_last_etl_run"'
-ELSE 
-    ', false AS "updated_after_last_etl_run"'
-END ||
-
-
-   ' FROM ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE} ' || 
-    CASE
-        WHEN ${PARAM_INSERT_ID_FROM}=0 AND ${PARAM_INSERT_ID_TO}=0 THEN
-            -- If source and/or target tables do not have "insert_id" columns (not all update algorithms require them), 
-            -- PARAM_INSERT_ID_FROM &amp; PARAM_INSERT_ID_TO will be zero here. For this case, no WHERE clause is specified. 
-            -- This has the effect of selecting *all* rows, which is the desired behaviour for this case.
-            ''
-        ELSE
-            'WHERE ${PARAM_SOURCE_INSERT_ID_COLNAME} >= ${PARAM_INSERT_ID_FROM} AND ${PARAM_SOURCE_INSERT_ID_COLNAME} &lt;= ${PARAM_INSERT_ID_TO} '
-    END || 
-    'ORDER BY ' || CAST(orderby_list.str_value AS VARCHAR) 
-    AS "select_source_rows_sql" 
-FROM
-    select_list
-CROSS JOIN
-    orderby_list</sql>
-    <limit>0</limit>
-    <lookup />
-    <execute_each_row>N</execute_each_row>
-    <variables_active>Y</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <attributes />
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>128</xloc>
-      <yloc>464</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>SELECT statement for target DB</name>
-    <type>TableInput</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <connection>etl_db</connection>
-    <sql>WITH
-    -- Create table with a string column that contains the columns from the 
-    -- target DB table to compare with corresponding columns from the 
-    -- source DB table:
-    select_list AS (
-        SELECT 
-           -- POSTGRESQL-SPECIFIC
-            array_to_string(array_agg(target_column_name ORDER BY column_meta_id ASC), ',') AS "str_value"
-        FROM 
-            ${QF_ETL_DB_SCHEMA}.column_meta 
-        WHERE
-            table_meta_id = ${PARAM_TABLE_META_ID} AND 
-            -- This selects the columns from the target DB table that will be 
-            -- compared with corresponding columns from the source DB table.
-            -- Although the primary key columns don't need to be compared, they
-            -- are needed by the "Merge Rows" step so they are included here.
-            (compare_column=true OR is_primary_key_column=true)
-    ),
-    -- Create table with a string column that contains the "ORDER BY" clause. 
-    -- This consists of the columns that make up the primary key for the 
-    -- target DB table. This is needed by the "Merge Rows" step in the 
-    -- template transformation.
-    orderby_list AS (
-        SELECT 
-           -- POSTGRESQL-SPECIFIC
-            array_to_string(array_agg(target_column_name ORDER BY primary_key_column_order ASC), ',') AS "str_value"
-        FROM 
-            ${QF_ETL_DB_SCHEMA}.column_meta 
-        WHERE
-            table_meta_id = ${PARAM_TABLE_META_ID} AND 
-            -- This selects the columns that make up the primary key for the
-            -- target DB table.
-            is_primary_key_column=true
-    )
-SELECT
-    -- Create SELECT statement:
-    'SELECT ' || CAST(select_list.str_value AS VARCHAR) || 
-
--- Add a "updated_after_last_etl_run" column to the target table stream. This 
--- column is not used, but the two streams that feed in to the transformation
--- step"Merge Rows (diff)" (in the template transformation) must have 
--- identically named columns.
-',false AS "updated_after_last_etl_run"' ||
-
-    ' FROM ${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE} ' || 
-    CASE
-        WHEN ${PARAM_INSERT_ID_FROM}=0 AND ${PARAM_INSERT_ID_TO}=0 THEN
-            -- If source and/or target tables do not have "insert_id" columns (not all update algorithms require them), 
-            -- PARAM_INSERT_ID_FROM &amp; PARAM_INSERT_ID_TO will be zero here. For this case, no WHERE clause is specified. 
-            -- This hasthe effect of selecting *all* rows, which is the desired behaviour for this case.
-            ''
-        ELSE
-            'WHERE ${PARAM_TARGET_INSERT_ID_COLNAME} >= ${PARAM_INSERT_ID_FROM} AND ${PARAM_TARGET_INSERT_ID_COLNAME} &lt;= ${PARAM_INSERT_ID_TO} '
-    END || 
-    'ORDER BY ' || CAST(orderby_list.str_value AS VARCHAR) 
-    AS "select_target_rows_sql" 
-FROM
-    select_list
-CROSS JOIN
-    orderby_list</sql>
-    <limit>0</limit>
-    <lookup />
-    <execute_each_row>N</execute_each_row>
-    <variables_active>Y</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <attributes />
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>720</xloc>
-      <yloc>464</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Source &amp; Target DB column names to compare</name>
-    <type>TableInput</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <connection>etl_db</connection>
-    <sql>SELECT
-    source_column_name AS "source_col_name", 
-    NULL AS "source_col_length", 
-    -- The value "-1" is injected into the "Select values" step of the ETL metadata injection template transformation
-    -- to specify the "precision" of the "source_col_name" &amp; "target_col_name" fields. If this is not done, a problem 
-    -- was observed for fields created by loading data from database columns of PostgreSQL data type "double precison".
-    -- For such fields, it was observed that the values written out to a "target" database via a "Table output" step 
-    -- were truncated to integers. Ideally, the precision should probably be set to something like 15 or 16 for this 
-    -- case (double precision columns), but this value may not be appropriate for other data types. It was only by 
-    -- experimenting that I found that injecting "-1" solved the problem for double precision columns. I have decided 
-    -- to specify this for *all* columns until/unless I encounter a problem by doing this. If a problem does arise one 
-    -- day, it may be necessary to update the definition of the ${QF_ETL_DB_SCHEMA}.column_meta table of the 
-    -- "${QF_ETL_DB_DATABASE}" database to include 
-    -- a real column to store the column "precision" on a column-by-column basis. For columns that do not need a 
-    -- "precision" to be specified, NULL can be stored in this column. This will also require updating the 
-    -- "populate_etl_metadata_tables" ETL code that generates default metadata.
-    -1 AS "source_col_precision", 
-    target_column_name AS "target_col_name" 
-FROM 
-    ${QF_ETL_DB_SCHEMA}.column_meta 
-WHERE 
-    table_meta_id = ${PARAM_TABLE_META_ID} AND 
-    -- Although the primary key columns don't need to ne compared, they
-    -- are needed by the "Merge Rows" step so they are included here.
-    (compare_column=true OR is_primary_key_column=true) 
-ORDER BY 
-    column_meta_id ASC  -- must use the same sort order in "Target DB column names to compare"</sql>
-    <limit>0</limit>
-    <lookup />
-    <execute_each_row>N</execute_each_row>
-    <variables_active>Y</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <attributes />
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>560</xloc>
-      <yloc>768</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Source &amp; Target DB column names to rename</name>
-    <type>TableInput</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <connection>etl_db</connection>
-    <sql>WITH columns_to_rename AS
-(
-    SELECT
-        source_column_name AS "source_col_name", 
-        NULL               AS "source_col_length", 
-        -- The value "-1" is injected into the "Select values" step of the ETL metadata injection template transformation
-        -- to specify the "precision" of the "source_col_name" &amp; "target_col_name" fields. If this is not done, a problem 
-        -- was observed for fields created by loading data from database columns of PostgreSQL data type "double precison".
-        -- For such fields, it was observed that the values written out to a "target" database via a "Table output" step 
-        -- were truncated to integers. Ideally, the precision should probably be set to something like 15 or 16 for this 
-        -- case (double precision columns), but this value may not be appropriate for other data types. It was only by 
-        -- experimenting that I found that injecting "-1" solved the problem for double precision columns. I have decided 
-        -- to specify this for *all* columns until/unless I encounter a problem by doing this. If a problem does arise one 
-        -- day, it may be necessary to update the definition of the ${QF_ETL_DB_SCHEMA}.column_meta table of the 
-        -- "${QF_ETL_DB_DATABASE}" database to include 
-        -- a real column to store the column "precision" on a column-by-column basis. For columns that do not need a 
-        -- "precision" to be specified, NULL can be stored in this column. This will also require updating the 
-        -- "populate_etl_metadata_tables" ETL code that generates default metadata.
-        -1                 AS "source_col_precision", 
-        target_column_name AS "target_col_name",
-        column_meta_id
-    FROM 
-        ${QF_ETL_DB_SCHEMA}.column_meta 
-    WHERE 
-        table_meta_id = ${PARAM_TABLE_META_ID} AND 
-        -- Although the primary key columns don't need to ne compared, they
-        -- are needed by the "Merge Rows" step so they are included here.
-        (compare_column=true OR is_primary_key_column=true) 
-
-    UNION
-
-    -- Add a metadata row for the "updated_after_last_etl_run" column. We need to 
-    -- explicitly rename this column so that it is not deleted from the PDI stream,
-    -- which would generate a PDI exception because both row streams that are fed
-    -- into the "Merge Rows (diff)" step in the template transformation must have 
-    -- identical row structures.
-    SELECT
-        'updated_after_last_etl_run' AS "source_col_name",
-        NULL                         AS "source_col_length", 
-        -1                           AS "source_col_precision", 
-        'updated_after_last_etl_run' AS "target_col_name",
-        1000001                      AS "column_meta_id"  -- order this column last
-)
-SELECT
-    source_col_name,
-    source_col_length,
-    source_col_precision,
-    target_col_name,
-    column_meta_id
-FROM
-    columns_to_rename
-ORDER BY 
-    column_meta_id ASC</sql>
-    <limit>0</limit>
-    <lookup />
-    <execute_each_row>N</execute_each_row>
-    <variables_active>Y</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <attributes />
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>272</xloc>
-      <yloc>768</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Source DB primary key column names</name>
-    <type>TableInput</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <connection>etl_db</connection>
-    <sql>SELECT
-    source_column_name AS "source_key_col_name" 
-FROM 
-    ${QF_ETL_DB_SCHEMA}.column_meta 
-WHERE 
-    table_meta_id = ${PARAM_TABLE_META_ID} AND 
-    is_primary_key_column = true
-ORDER BY 
-    primary_key_column_order</sql>
-    <limit>0</limit>
-    <lookup />
-    <execute_each_row>N</execute_each_row>
-    <variables_active>Y</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <attributes />
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>128</xloc>
-      <yloc>560</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Source DB problem row columns to write to file</name>
-    <type>TableInput</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <connection>etl_db</connection>
-    <sql>--SELECT
---    source_column_name AS "source_key_col_name" 
---FROM 
---    ${QF_ETL_DB_SCHEMA}.column_meta 
---WHERE 
---    table_meta_id = ${PARAM_TABLE_META_ID} AND 
---    is_primary_key_column = true
---ORDER BY 
---    primary_key_column_order
-
-WITH columns_to_write_to_file AS
-(
-    SELECT
-        source_column_name       AS "source_key_col_name", 
-        primary_key_column_order AS "column_order"
-    FROM 
-       ${QF_ETL_DB_SCHEMA}.column_meta 
-    WHERE 
-        table_meta_id = ${PARAM_TABLE_META_ID} AND 
-        is_primary_key_column = true
-
-    UNION
-
-    -- There may be no "last_updated_on" column for the specified table, in which case
-    -- now row will be selected here, which means no attempt will be made to write the 
-    -- non-existent column to the file.
-    --
-    -- I have commented out support for writing this column to a file because for
-    -- "changed" rows (where it will be useful to see the value of this column for
-    -- the *source* table, we will, instead, write the value of this column for the
-    -- *target" table.
---    SELECT
---        source_column_name AS "source_key_col_name", 
---         1000000           AS "column_order"  -- order this column 2nd to last
---    FROM 
---       ${QF_ETL_DB_SCHEMA}.column_meta 
---    WHERE 
---        table_meta_id = ${PARAM_TABLE_META_ID} AND 
---        is_last_updated_on_column = true
--- 
---    UNION
-
-    SELECT
-        'flagfield' AS "source_key_col_name",
-        1000001     AS "column_order"  -- order this column last
-
-    UNION
-
-    SELECT
-        'updated_after_last_etl_run' AS "source_key_col_name",
-        1000002     AS "column_order"  -- order this column last
-)
-SELECT
-    source_key_col_name
-FROM
-    columns_to_write_to_file
-ORDER BY
-    column_order
-</sql>
-    <limit>0</limit>
-    <lookup />
-    <execute_each_row>N</execute_each_row>
-    <variables_active>Y</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <attributes />
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>128</xloc>
-      <yloc>720</yloc>
+      <xloc>304</xloc>
+      <yloc>800</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
