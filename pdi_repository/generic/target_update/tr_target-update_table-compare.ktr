@@ -554,7 +554,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2019/09/12 09:58:54.788</modified_date>
+    <modified_date>2020/02/21 11:34:59.507</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -722,8 +722,16 @@ See the comments in that job for an explanation.</note>
         <attribute>N</attribute>
       </attribute>
       <attribute>
+        <code>INITIAL_POOL_SIZE</code>
+        <attribute>10</attribute>
+      </attribute>
+      <attribute>
         <code>IS_CLUSTERED</code>
         <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>MAXIMUM_POOL_SIZE</code>
+        <attribute>10</attribute>
       </attribute>
       <attribute>
         <code>PORT_NUMBER</code>
@@ -747,7 +755,7 @@ See the comments in that job for an explanation.</note>
       </attribute>
       <attribute>
         <code>USE_POOLING</code>
-        <attribute>N</attribute>
+        <attribute>Y</attribute>
       </attribute>
     </attributes>
   </connection>
@@ -773,8 +781,16 @@ See the comments in that job for an explanation.</note>
         <attribute>N</attribute>
       </attribute>
       <attribute>
+        <code>INITIAL_POOL_SIZE</code>
+        <attribute>10</attribute>
+      </attribute>
+      <attribute>
         <code>IS_CLUSTERED</code>
         <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>MAXIMUM_POOL_SIZE</code>
+        <attribute>10</attribute>
       </attribute>
       <attribute>
         <code>PORT_NUMBER</code>
@@ -798,7 +814,7 @@ See the comments in that job for an explanation.</note>
       </attribute>
       <attribute>
         <code>USE_POOLING</code>
-        <attribute>N</attribute>
+        <attribute>Y</attribute>
       </attribute>
     </attributes>
   </connection>
@@ -834,6 +850,113 @@ See the comments in that job for an explanation.</note>
       <enabled>Y</enabled>
     </hop>
   </order>
+  <step>
+    <name>Column mapping metadata for progress monitoring</name>
+    <type>TableInput</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <connection>etl_db</connection>
+    <sql>WITH column_mappings AS (
+
+    SELECT 
+        COALESCE((SELECT source_column_name FROM etl.column_meta cm WHERE cm.table_meta_id=tm.table_meta_id AND cm.is_insert_id_column=true), 'null_column') AS "source_col_name",
+        NULL AS "source_col_length",
+        -1      AS  "source_col_precision",
+        'insert_id' AS "target_col_name",
+        1       AS "column_meta_id"
+     FROM 
+          ${QF_ETL_DB_SCHEMA}.table_meta tm 
+     WHERE 
+         tm.table_meta_id=${PARAM_TABLE_META_ID}
+         
+UNION ALL
+
+    SELECT 
+        COALESCE((SELECT source_column_name FROM etl.column_meta cm WHERE cm.table_meta_id=tm.table_meta_id AND cm.is_last_updated_on_column=true), 'null_column') AS "source_col_name",
+        NULL AS "source_col_length",
+        -1      AS  "source_col_precision",
+        'last_updated_on' AS "target_col_name",
+        2       AS "column_meta_id"
+     FROM 
+          ${QF_ETL_DB_SCHEMA}.table_meta tm 
+     WHERE 
+         tm.table_meta_id=${PARAM_TABLE_META_ID}
+         
+UNION ALL
+
+-- These are special columns created by the SELECT query for the source table so that we can monitor
+-- progress as rows are streamed to the target table in the template transformation.
+
+    SELECT 
+        'current_row_num'  AS "source_col_name",
+        NULL   AS "source_col_length",
+        -1        AS  "source_col_precision",
+        'current_row_num'  AS "target_col_name",
+        10000 AS "column_meta_id"
+
+UNION ALL
+
+    SELECT 
+        'num_rows_to_process' AS "source_col_name",
+        NULL   AS "source_col_length",
+        -1        AS "source_col_precision",
+        'num_rows_to_process' AS "target_col_name",
+        10001 AS "column_meta_id"
+
+UNION ALL
+
+    SELECT 
+        'update_progress' AS "source_col_name",
+        NULL   AS "source_col_length",
+        -1        AS "source_col_precision",
+        'update_progress' AS "target_col_name",
+        10002 AS "column_meta_id"
+
+UNION ALL
+
+    SELECT 
+        'null_column' AS "source_col_name",
+        NULL   AS "source_col_length",
+        -1        AS "source_col_precision",
+        'null_column' AS "target_col_name",
+        10003 AS "column_meta_id"
+)
+SELECT 
+    source_col_name,
+    source_col_length,
+    source_col_precision,
+    target_col_name
+FROM 
+    column_mappings
+ORDER BY 
+    -- Ordering by "column_meta_id" means the columns will be treated in
+    -- the same order as they appear in the table in the "source" DB. 
+    column_meta_id ASC</sql>
+    <limit>0</limit>
+    <lookup />
+    <execute_each_row>N</execute_each_row>
+    <variables_active>Y</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>128</xloc>
+      <yloc>496</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
   <step>
     <name>ETL Metadata Injection: tmplt_target-update_table-compare</name>
     <type>MetaInject</type>
@@ -1096,8 +1219,14 @@ See the comments in that job for an explanation.</note>
 SELECT
     -- Create SELECT statement:
     'SELECT ' || CAST(select_list.str_value AS VARCHAR) || 
-    ', row_number() OVER () AS "current_row_num", COUNT(*) OVER () AS "num_rows_to_process", MOD (row_number() OVER (), ${QF_ETL_PROGRESS_INTERVAL_ROWS}) AS "update_progress", NULL AS "null_column"' ||  -- Special rows for monitoring progress
-    ' FROM ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE} ' || 
+ 
+    -- Special rows for monitoring progress.  IMPORTANT: I have not tested this SQL for the row_number window function calls!
+    ',row_number()      OVER (ORDER BY ' || CAST(orderby_list.str_value AS VARCHAR) || ') AS "current_row_num"' ||
+    ',COUNT(*)          OVER () AS "num_rows_to_process"' ||
+    ',MOD (row_number() OVER (ORDER BY ' || CAST(orderby_list.str_value AS VARCHAR) || '), ${QF_ETL_PROGRESS_INTERVAL_ROWS}) AS "update_progress"' ||
+    ',NULL AS "null_column" ' || 
+
+    'FROM ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE} ' || 
     'ORDER BY ' || CAST(orderby_list.str_value AS VARCHAR) 
     AS "select_source_rows_sql" 
 FROM
@@ -1358,113 +1487,6 @@ ORDER BY
     </remotesteps>
     <GUI>
       <xloc>848</xloc>
-      <yloc>496</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Column mapping metadata for progress monitoring</name>
-    <type>TableInput</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <connection>etl_db</connection>
-    <sql>WITH column_mappings AS (
-
-    SELECT 
-        COALESCE((SELECT source_column_name FROM etl.column_meta cm WHERE cm.table_meta_id=tm.table_meta_id AND cm.is_insert_id_column=true), 'null_column') AS "source_col_name",
-        NULL AS "source_col_length",
-        -1      AS  "source_col_precision",
-        'insert_id' AS "target_col_name",
-        1       AS "column_meta_id"
-     FROM 
-          ${QF_ETL_DB_SCHEMA}.table_meta tm 
-     WHERE 
-         tm.table_meta_id=${PARAM_TABLE_META_ID}
-         
-UNION ALL
-
-    SELECT 
-        COALESCE((SELECT source_column_name FROM etl.column_meta cm WHERE cm.table_meta_id=tm.table_meta_id AND cm.is_last_updated_on_column=true), 'null_column') AS "source_col_name",
-        NULL AS "source_col_length",
-        -1      AS  "source_col_precision",
-        'last_updated_on' AS "target_col_name",
-        2       AS "column_meta_id"
-     FROM 
-          ${QF_ETL_DB_SCHEMA}.table_meta tm 
-     WHERE 
-         tm.table_meta_id=${PARAM_TABLE_META_ID}
-         
-UNION ALL
-
--- These are special columns created by the SELECT query for the source table so that we can monitor
--- progress as rows are streamed to the target table in the template transformation.
-
-    SELECT 
-        'current_row_num'  AS "source_col_name",
-        NULL   AS "source_col_length",
-        -1        AS  "source_col_precision",
-        'current_row_num'  AS "target_col_name",
-        10000 AS "column_meta_id"
-
-UNION ALL
-
-    SELECT 
-        'num_rows_to_process' AS "source_col_name",
-        NULL   AS "source_col_length",
-        -1        AS "source_col_precision",
-        'num_rows_to_process' AS "target_col_name",
-        10001 AS "column_meta_id"
-
-UNION ALL
-
-    SELECT 
-        'update_progress' AS "source_col_name",
-        NULL   AS "source_col_length",
-        -1        AS "source_col_precision",
-        'update_progress' AS "target_col_name",
-        10002 AS "column_meta_id"
-
-UNION ALL
-
-    SELECT 
-        'null_column' AS "source_col_name",
-        NULL   AS "source_col_length",
-        -1        AS "source_col_precision",
-        'null_column' AS "target_col_name",
-        10003 AS "column_meta_id"
-)
-SELECT 
-    source_col_name,
-    source_col_length,
-    source_col_precision,
-    target_col_name
-FROM 
-    column_mappings
-ORDER BY 
-    -- Ordering by "column_meta_id" means the columns will be treated in
-    -- the same order as they appear in the table in the "source" DB. 
-    column_meta_id ASC</sql>
-    <limit>0</limit>
-    <lookup />
-    <execute_each_row>N</execute_each_row>
-    <variables_active>Y</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <attributes />
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>128</xloc>
       <yloc>496</yloc>
       <draw>Y</draw>
     </GUI>
