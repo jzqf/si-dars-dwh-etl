@@ -8,8 +8,18 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2018/04/26 10:38:40.903</modified_date>
+  <modified_date>2020/02/28 13:45:37.295</modified_date>
   <parameters>
+    <parameter>
+      <name>PARAM_INSERT_ID_FROM</name>
+      <default_value>-1</default_value>
+      <description>"from" value for the "insert_id" column of the source and target tsbles that will be compared</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_INSERT_ID_TO</name>
+      <default_value>-1</default_value>
+      <description>"to" value for the "insert_id" column of the source and target tsbles that will be compared</description>
+    </parameter>
     <parameter>
       <name>PARAM_MAX_NUM_COMPARE_ROWS</name>
       <default_value>1000000</default_value>
@@ -24,6 +34,16 @@
       <name>PARAM_TARGET_DB_ID</name>
       <default_value>10</default_value>
       <description>ID of the "target" database to which the "source" DB tables have been archived/mirrored</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_TARGET_SCHEMA</name>
+      <default_value>public</default_value>
+      <description>Name of schema containing target table to compare with its source table</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_TARGET_TABLE</name>
+      <default_value />
+      <description>Name of target table to be compared with its source table</description>
     </parameter>
   </parameters>
   <connection>
@@ -48,8 +68,16 @@
         <attribute>N</attribute>
       </attribute>
       <attribute>
+        <code>INITIAL_POOL_SIZE</code>
+        <attribute>10</attribute>
+      </attribute>
+      <attribute>
         <code>IS_CLUSTERED</code>
         <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>MAXIMUM_POOL_SIZE</code>
+        <attribute>10</attribute>
       </attribute>
       <attribute>
         <code>PORT_NUMBER</code>
@@ -73,7 +101,7 @@
       </attribute>
       <attribute>
         <code>USE_POOLING</code>
-        <attribute>N</attribute>
+        <attribute>Y</attribute>
       </attribute>
     </attributes>
   </connection>
@@ -356,6 +384,7 @@
       <name>START</name>
       <description />
       <type>SPECIAL</type>
+      <attributes />
       <start>Y</start>
       <dummy>N</dummy>
       <repeat>N</repeat>
@@ -370,12 +399,14 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>32</xloc>
-      <yloc>208</yloc>
+      <yloc>256</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>tr_get_last_successful_load</name>
       <description />
       <type>TRANS</type>
+      <attributes />
       <specification_method>rep_name</specification_method>
       <trans_object_id />
       <filename />
@@ -407,12 +438,14 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>368</xloc>
-      <yloc>304</yloc>
+      <yloc>352</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>tr_list_of_tables_to_compare</name>
       <description />
       <type>TRANS</type>
+      <attributes />
       <specification_method>rep_name</specification_method>
       <trans_object_id />
       <filename />
@@ -443,13 +476,15 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>368</xloc>
-      <yloc>608</yloc>
+      <xloc>480</xloc>
+      <yloc>736</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>jb_target-compare_table</name>
       <description />
       <type>JOB</type>
+      <attributes />
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
@@ -470,6 +505,7 @@
       <expand_remote_job>N</expand_remote_job>
       <create_parent_folder>N</create_parent_folder>
       <pass_export>N</pass_export>
+      <run_configuration />
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
         <parameter>
@@ -572,13 +608,15 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>368</xloc>
-      <yloc>720</yloc>
+      <xloc>480</xloc>
+      <yloc>832</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>jb_send_default_email_job_notification - Success</name>
       <description />
       <type>JOB</type>
+      <attributes />
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
@@ -599,6 +637,7 @@
       <expand_remote_job>N</expand_remote_job>
       <create_parent_folder>N</create_parent_folder>
       <pass_export>N</pass_export>
+      <run_configuration />
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
         <parameter>
@@ -622,12 +661,14 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>368</xloc>
-      <yloc>864</yloc>
+      <yloc>928</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>jb_send_default_email_job_notification - Failure</name>
       <description />
       <type>JOB</type>
+      <attributes />
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
@@ -648,6 +689,7 @@
       <expand_remote_job>N</expand_remote_job>
       <create_parent_folder>N</create_parent_folder>
       <pass_export>N</pass_export>
+      <run_configuration />
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
         <parameter>
@@ -671,33 +713,39 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>368</xloc>
-      <yloc>928</yloc>
+      <yloc>992</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>Success</name>
       <description />
       <type>SUCCESS</type>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>560</xloc>
-      <yloc>864</yloc>
-    </entry>
-    <entry>
-      <name>Abort job</name>
-      <description />
-      <type>ABORT</type>
-      <message>Job ${Internal.Job.Name} failed. See log and e-mail sent.</message>
+      <attributes />
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>560</xloc>
       <yloc>928</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>Abort job</name>
+      <description />
+      <type>ABORT</type>
+      <attributes />
+      <message>Job ${Internal.Job.Name} failed. See log and e-mail sent.</message>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>560</xloc>
+      <yloc>992</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>jb_log_error 1</name>
       <description />
       <type>JOB</type>
+      <attributes />
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
@@ -718,6 +766,7 @@
       <expand_remote_job>N</expand_remote_job>
       <create_parent_folder>N</create_parent_folder>
       <pass_export>N</pass_export>
+      <run_configuration />
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
         <parameter>
@@ -731,12 +780,14 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>224</xloc>
-      <yloc>304</yloc>
+      <yloc>352</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>DUMMY</name>
       <description />
       <type>SPECIAL</type>
+      <attributes />
       <start>N</start>
       <dummy>Y</dummy>
       <repeat>N</repeat>
@@ -751,27 +802,35 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>32</xloc>
-      <yloc>512</yloc>
+      <yloc>544</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>Log parameters</name>
       <description />
       <type>WRITE_TO_LOG</type>
-      <logmessage>PARAM_TARGET_DB_ID         = ${PARAM_TARGET_DB_ID}
+      <attributes />
+      <logmessage>PARAM_PARENT_JOB_NAME      = ${PARAM_PARENT_JOB_NAME}
 PARAM_MAX_NUM_COMPARE_ROWS = ${PARAM_MAX_NUM_COMPARE_ROWS}
-PARAM_PARENT_JOB_NAME      = ${PARAM_PARENT_JOB_NAME}</logmessage>
+PARAM_TARGET_DB_ID         = ${PARAM_TARGET_DB_ID}
+PARAM_TARGET_SCHEMA        = ${PARAM_TARGET_SCHEMA}
+PARAM_TARGET_TABLE         = ${PARAM_TARGET_TABLE}
+PARAM_INSERT_ID_FROM       = ${PARAM_INSERT_ID_FROM}
+PARAM_INSERT_ID_TO         = ${PARAM_INSERT_ID_TO}</logmessage>
       <loglevel>Minimal</loglevel>
       <logsubject>Parameters received by ${Internal.Job.Name}</logsubject>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>112</xloc>
-      <yloc>208</yloc>
+      <yloc>256</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>jb_target_init</name>
       <description />
       <type>JOB</type>
+      <attributes />
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
@@ -792,6 +851,7 @@ PARAM_PARENT_JOB_NAME      = ${PARAM_PARENT_JOB_NAME}</logmessage>
       <expand_remote_job>N</expand_remote_job>
       <create_parent_folder>N</create_parent_folder>
       <pass_export>N</pass_export>
+      <run_configuration />
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
         <parameter>
@@ -805,12 +865,14 @@ PARAM_PARENT_JOB_NAME      = ${PARAM_PARENT_JOB_NAME}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>224</xloc>
-      <yloc>208</yloc>
+      <yloc>256</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>jb_set_dynamic_db_connection_variables</name>
       <description />
       <type>JOB</type>
+      <attributes />
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
@@ -831,6 +893,7 @@ PARAM_PARENT_JOB_NAME      = ${PARAM_PARENT_JOB_NAME}</logmessage>
       <expand_remote_job>N</expand_remote_job>
       <create_parent_folder>N</create_parent_folder>
       <pass_export>N</pass_export>
+      <run_configuration />
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
         <parameter>
@@ -844,12 +907,14 @@ PARAM_PARENT_JOB_NAME      = ${PARAM_PARENT_JOB_NAME}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>368</xloc>
-      <yloc>416</yloc>
+      <yloc>448</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>Set PARAM_DYN_DB_CONN_TARGET_DB_*</name>
       <description />
       <type>SET_VARIABLES</type>
+      <attributes />
       <replacevars>Y</replacevars>
       <filename />
       <file_variable_type>JVM</file_variable_type>
@@ -894,12 +959,14 @@ PARAM_PARENT_JOB_NAME      = ${PARAM_PARENT_JOB_NAME}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>368</xloc>
-      <yloc>512</yloc>
+      <yloc>544</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>DUMMY</name>
       <description />
       <type>SPECIAL</type>
+      <attributes />
       <start>N</start>
       <dummy>Y</dummy>
       <repeat>N</repeat>
@@ -914,12 +981,14 @@ PARAM_PARENT_JOB_NAME      = ${PARAM_PARENT_JOB_NAME}</logmessage>
       <draw>Y</draw>
       <nr>1</nr>
       <xloc>368</xloc>
-      <yloc>208</yloc>
+      <yloc>256</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>DUMMY</name>
       <description />
       <type>SPECIAL</type>
+      <attributes />
       <start>N</start>
       <dummy>Y</dummy>
       <repeat>N</repeat>
@@ -934,7 +1003,38 @@ PARAM_PARENT_JOB_NAME      = ${PARAM_PARENT_JOB_NAME}</logmessage>
       <draw>Y</draw>
       <nr>2</nr>
       <xloc>32</xloc>
-      <yloc>928</yloc>
+      <yloc>992</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>Compare a single, specified table?</name>
+      <description />
+      <type>EVAL</type>
+      <attributes />
+      <script>//parent_job.getVariable("PARAM_TARGET_TABLE", "").length != 0
+// &amp;&amp; !parent_job.getVariable("PARAM_INSERT_ID_FROM", "").equals("-1")
+// &amp;&amp; !parent_job.getVariable("PARAM_INSERT_ID_TO", "").equals("-1")
+// &amp;&amp; (parseInt(parent_job.getVariable("PARAM_INSERT_ID_TO", "")) >= parseInt(parent_job.getVariable("PARAM_INSERT_ID_FROM", "")))
+(parent_job.getVariable("PARAM_TARGET_TABLE", "").length != 0) &amp;&amp; !parent_job.getVariable("PARAM_INSERT_ID_FROM", "").equals("-1") &amp;&amp; !parent_job.getVariable("PARAM_INSERT_ID_TO", "").equals("-1") &amp;&amp; (parseInt(parent_job.getVariable("PARAM_INSERT_ID_TO", "")) >= parseInt(parent_job.getVariable("PARAM_INSERT_ID_FROM", "")))</script>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>368</xloc>
+      <yloc>640</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>Add support for comparing specified table</name>
+      <description />
+      <type>ABORT</type>
+      <attributes />
+      <message>***** Add support for comparing specified table *****</message>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>1</nr>
+      <xloc>256</xloc>
+      <yloc>784</yloc>
+      <attributes_kjc />
     </entry>
   </entries>
   <hops>
@@ -1056,15 +1156,6 @@ PARAM_PARENT_JOB_NAME      = ${PARAM_PARENT_JOB_NAME}</logmessage>
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Set PARAM_DYN_DB_CONN_TARGET_DB_*</from>
-      <to>tr_list_of_tables_to_compare</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
       <from>jb_set_dynamic_db_connection_variables</from>
       <to>DUMMY</to>
       <from_nr>0</from_nr>
@@ -1118,6 +1209,33 @@ PARAM_PARENT_JOB_NAME      = ${PARAM_PARENT_JOB_NAME}</logmessage>
       <evaluation>Y</evaluation>
       <unconditional>Y</unconditional>
     </hop>
+    <hop>
+      <from>Set PARAM_DYN_DB_CONN_TARGET_DB_*</from>
+      <to>Compare a single, specified table?</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Compare a single, specified table?</from>
+      <to>tr_list_of_tables_to_compare</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Compare a single, specified table?</from>
+      <to>Add support for comparing specified table</to>
+      <from_nr>0</from_nr>
+      <to_nr>1</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
   </hops>
   <notepads>
     <notepad>
@@ -1131,13 +1249,17 @@ the batch ID of the root job (not this job). This may vary from case to case.
 
 This job has parameters:
 
-	PARAM_TARGET_DB_ID				ID of the "target" database to which the "source" DB tables have been archived/mirrored
+	PARAM_PARENT_JOB_NAME			Name of the parent job that is calling this job
 	PARAM_MAX_NUM_COMPARE_ROWS	Maximum number of rows that will be compared for each table. 0 means *all* rows
-	PARAM_PARENT_JOB_NAME			Name of the parent job that is calling this job</note>
+	PARAM_TARGET_DB_ID				ID of the "target" database to which the "source" DB tables have been archived/mirrored
+	PARAM_TARGET_SCHEMA			Name of schema containing target table to compare with its source table
+	PARAM_TARGET_TABLE				Name of target table to be compared with its source table
+	PARAM_INSERT_ID_FROM			"from" value for the "insert_id" column of the source and target tsbles that will be compared
+	PARAM_INSERT_ID_TO				"to" value for the "insert_id" column of the source and target tsbles that will be compared</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
       <width>901</width>
-      <heigth>179</heigth>
+      <heigth>231</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -1157,7 +1279,7 @@ This job has parameters:
       <note>Get the "last successful load" timestamp for the specified "target" DB database
 and assign it to variable QF_CDC_LAST_LOAD_UTC. </note>
       <xloc>512</xloc>
-      <yloc>304</yloc>
+      <yloc>352</yloc>
       <width>445</width>
       <heigth>36</heigth>
       <fontname>Ubuntu</fontname>
@@ -1176,11 +1298,11 @@ and assign it to variable QF_CDC_LAST_LOAD_UTC. </note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Create list of all tables from "source" DBs to compare with tables in the specified
-"target" DB.</note>
-      <xloc>512</xloc>
-      <yloc>592</yloc>
-      <width>454</width>
+      <note>Create list of all tables from source DB(s) to compare with tables in the specified
+target DB. If comparing a single, specified table, this list will contain a single row.</note>
+      <xloc>592</xloc>
+      <yloc>736</yloc>
+      <width>452</width>
       <heigth>36</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
@@ -1198,22 +1320,15 @@ and assign it to variable QF_CDC_LAST_LOAD_UTC. </note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Compute comparision statistics for each table that is archived/mirrored from a
-source DB to the specified target DB.  This sub-job is:
+      <note>Compute comparison metrics for each table that is archived/mirrored from a
+source DB to the specified target DB.  
 
-	1.	***** RUN ONCE FOR EACH SOURCE/TARGET TABLE PAIR. *****
-
-	2.	Passed details of the source &amp; target databases, schemas, tables, etc.
-
-	3.	Passed the CDC parameter:
-			PARAM_CDC_LAST_LOAD_UTC = ${QF_CDC_LAST_LOAD_UTC}
-
-	4.	Passed the target database connection parameters:
-			PARAM_DYN_DB_CONN_TARGET_DB_{HOST, PORT, ...}</note>
-      <xloc>512</xloc>
-      <yloc>656</yloc>
-      <width>440</width>
-      <heigth>166</heigth>
+This sub-job is RUN ONCE FOR TABLE OF THE TARGET DATABASE that is 
+configured for this in table etl.table_meta.</note>
+      <xloc>592</xloc>
+      <yloc>800</yloc>
+      <width>430</width>
+      <heigth>75</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -1232,7 +1347,7 @@ source DB to the specified target DB.  This sub-job is:
     <notepad>
       <note>Notify recipient(s) of SUCCESSFUL job execution.</note>
       <xloc>624</xloc>
-      <yloc>864</yloc>
+      <yloc>928</yloc>
       <width>277</width>
       <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
@@ -1253,7 +1368,7 @@ source DB to the specified target DB.  This sub-job is:
     <notepad>
       <note>Notify recipient(s) of FAILED job execution.</note>
       <xloc>624</xloc>
-      <yloc>928</yloc>
+      <yloc>992</yloc>
       <width>260</width>
       <heigth>24</heigth>
       <fontname />
@@ -1280,7 +1395,7 @@ based on a single parameter:
 
 	PARAM_DB_ID = PARAM_TARGET_DB_ID</note>
       <xloc>512</xloc>
-      <yloc>368</yloc>
+      <yloc>400</yloc>
       <width>360</width>
       <heigth>101</heigth>
       <fontname>Ubuntu</fontname>
@@ -1305,7 +1420,7 @@ Therefore, we define all of the PARAM_DYN_DB_CONN_TARGET_DB_* variables here, wh
 do *not* get over-written. These variables are passed as parameters to jb_target-compare_table
 each time that job is executed below.</note>
       <xloc>512</xloc>
-      <yloc>480</yloc>
+      <yloc>512</yloc>
       <width>539</width>
       <heigth>75</heigth>
       <fontname>Ubuntu</fontname>
