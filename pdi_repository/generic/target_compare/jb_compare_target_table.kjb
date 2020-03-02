@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2020/02/28 15:12:36.672</modified_date>
+  <modified_date>2020/03/02 09:26:01.953</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_INSERT_ID_FROM</name>
@@ -483,7 +483,9 @@ PARAM_INSERT_ID_TO   = ${PARAM_INSERT_ID_TO}</logmessage>
       <description />
       <type>EVAL</type>
       <attributes />
-      <script>((parseInt(parent_job.getVariable("PARAM_TARGET_DB_ID", "0"))==10) || (parseInt(parent_job.getVariable("PARAM_TARGET_DB_ID", "0"))==20))
+      <script>// "parent_job.getVariable("PARAM_TARGET_TABLE", "").length != 0" does not work, perhaps because I need to convert the JavaScript parameter object first to a string?
+//
+((parseInt(parent_job.getVariable("PARAM_TARGET_DB_ID", "0"))==10) || (parseInt(parent_job.getVariable("PARAM_TARGET_DB_ID", "0"))==20))
 &amp;&amp; !parent_job.getVariable("PARAM_TARGET_TABLE", "").equals("") 
 &amp;&amp; (parseInt(parent_job.getVariable("PARAM_INSERT_ID_TO", "-1")) >= parseInt(parent_job.getVariable("PARAM_INSERT_ID_FROM", "-1")));</script>
       <parallel>N</parallel>
