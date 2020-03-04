@@ -15,7 +15,7 @@
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE</name>
-        <default_value />
+        <default_value>obo_opr</default_value>
         <description>for source DB "dynamic" database connections</description>
       </parameter>
       <parameter>
@@ -25,17 +25,17 @@
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_HOST</name>
-        <default_value />
+        <default_value>localhost</default_value>
         <description>for source DB "dynamic" database connections</description>
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD</name>
-        <default_value />
+        <default_value>qfree_admin</default_value>
         <description>for source DB "dynamic" database connections</description>
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_PORT</name>
-        <default_value />
+        <default_value>5432</default_value>
         <description>for source DB "dynamic" database connections</description>
       </parameter>
       <parameter>
@@ -45,12 +45,12 @@
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME</name>
-        <default_value />
+        <default_value>qfree_admin</default_value>
         <description>for source DB "dynamic" database connections</description>
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_TARGET_DB_DATABASE</name>
-        <default_value />
+        <default_value>dwh_psa_obo</default_value>
         <description>for target DB "dynamic" database connections</description>
       </parameter>
       <parameter>
@@ -60,17 +60,17 @@
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_TARGET_DB_HOST</name>
-        <default_value />
+        <default_value>localhost</default_value>
         <description>for target DB "dynamic" database connections</description>
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD</name>
-        <default_value />
+        <default_value>qfree_admin</default_value>
         <description>for target DB "dynamic" database connections</description>
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_TARGET_DB_PORT</name>
-        <default_value />
+        <default_value>5432</default_value>
         <description>for target DB "dynamic" database connections</description>
       </parameter>
       <parameter>
@@ -80,42 +80,47 @@
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_TARGET_DB_USERNAME</name>
-        <default_value />
+        <default_value>qfree_admin</default_value>
         <description>for target DB "dynamic" database connections</description>
       </parameter>
       <parameter>
+        <name>PARAM_INSERT_ID_FROM</name>
+        <default_value>-1</default_value>
+        <description>"from" value for the "insert_id" column of the source and target tables that will be compared (optional)</description>
+      </parameter>
+      <parameter>
         <name>PARAM_MAX_NUM_COMPARE_ROWS</name>
-        <default_value>100000</default_value>
+        <default_value>10</default_value>
         <description>Maximum number of rows that will be compared for these tables. Pass 0 for *all* rows.</description>
       </parameter>
       <parameter>
         <name>PARAM_SOURCE_INSERT_ID_COLNAME</name>
-        <default_value />
+        <default_value>country_id</default_value>
         <description>Name of source column acting as "insert_id" column of source table</description>
       </parameter>
       <parameter>
         <name>PARAM_SOURCE_SCHEMA</name>
-        <default_value />
+        <default_value>public</default_value>
         <description>Schema of source DB table to compare</description>
       </parameter>
       <parameter>
         <name>PARAM_SOURCE_TABLE</name>
-        <default_value />
+        <default_value>country</default_value>
         <description>Name of source DB table to compare</description>
       </parameter>
       <parameter>
         <name>PARAM_TARGET_INSERT_ID_COLNAME</name>
-        <default_value />
+        <default_value>country_id</default_value>
         <description>Name of target column acting as "insert_id" column of source table</description>
       </parameter>
       <parameter>
         <name>PARAM_TARGET_SCHEMA</name>
-        <default_value />
+        <default_value>public</default_value>
         <description>Name of schema containing target DB table to compare to</description>
       </parameter>
       <parameter>
         <name>PARAM_TARGET_TABLE</name>
-        <default_value />
+        <default_value>obo__country</default_value>
         <description>Name of target DB table to compare to</description>
       </parameter>
     </parameters>
@@ -539,7 +544,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2017/11/28 09:45:35.831</modified_date>
+    <modified_date>2020/03/03 12:48:08.005</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -559,34 +564,35 @@ Note 1:	The "from" value is computed from the source DB table, while the "to" va
 
 This transformation has parameters:
 
-	PARAM_CDC_LAST_LOAD_UTC						Timestamp for when the target DB was most recently updated successfully
+	PARAM_CDC_LAST_LOAD_UTC					Timestamp for when the target DB was most recently updated successfully
+	PARAM_INSERT_ID_FROM						Optional "from" value for the "insert_id" column of the source and target tables that will be compared
 	PARAM_MAX_NUM_COMPARE_ROWS				Maximum number of rows that will be compared for these tables. 0 means *all* rows
-	PARAM_DYN_DB_CONN_SOURCE_DB_HOST			for source DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_SOURCE_DB_PORT			for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_HOST		for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_PORT		for source DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE	for source DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME	for source DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD	for source DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER		for target DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_SOURCE_DB_URL			for target DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_TARGET_DB_HOST			for target DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_TARGET_DB_PORT			for target DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_TARGET_DB_DATABASE		for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_HOST		for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_PORT		for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_DATABASE	for target DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_TARGET_DB_USERNAME	for target DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD	for target DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_TARGET_DB_DRIVER		for target DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_TARGET_DB_URL			for target DB "dynamic" database connections
-	PARAM_SOURCE_SCHEMA							Schema of source DB table to compare
+	PARAM_SOURCE_SCHEMA						Schema of source DB table to compare
 	PARAM_SOURCE_TABLE							Name of source DB table to compare
-	PARAM_SOURCE_INSERT_ID_COLNAME				Name of source column acting as "insert_id"  timestamp column of source table
-	PARAM_TARGET_SCHEMA							Name of schema containing target DB table to compare to
-	PARAM_TARGET_TABLE								Name of target DB table to compare to
-	PARAM_TARGET_INSERT_ID_COLNAME				Name of target column acting as "insert_id" column of source table</note>
+	PARAM_SOURCE_INSERT_ID_COLNAME			Name of source column acting as "insert_id"  timestamp column of source table
+	PARAM_TARGET_SCHEMA						Name of schema containing target DB table to compare to
+	PARAM_TARGET_TABLE							Name of target DB table to compare to
+	PARAM_TARGET_INSERT_ID_COLNAME			Name of target column acting as "insert_id" column of source table</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>843</width>
-      <heigth>514</heigth>
+      <width>883</width>
+      <heigth>491</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -601,18 +607,17 @@ This transformation has parameters:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>If a value has been provided for PARAM_MAX_NUM_COMPARE_ROWS
-*other* than 0, adjust "insert_id_from", if necessary, so that no more
-than the specified number of rows will be compared. In this step, the
-field "insert_id_from" is configured with:
+      <note>The values of the stream fields "insert_id_from" &amp; "insert_id_to" are adjusted
+here, if necessary, using the values passed for the parameters:
 
-	Replace value = Y</note>
-      <xloc>448</xloc>
+	PARAM_INSERT_ID_FROM	
+	PARAM_MAX_NUM_COMPARE_ROWS</note>
+      <xloc>416</xloc>
       <yloc>656</yloc>
-      <width>422</width>
-      <heigth>94</heigth>
+      <width>434</width>
+      <heigth>75</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -751,8 +756,16 @@ field "insert_id_from" is configured with:
         <attribute>N</attribute>
       </attribute>
       <attribute>
+        <code>INITIAL_POOL_SIZE</code>
+        <attribute>10</attribute>
+      </attribute>
+      <attribute>
         <code>IS_CLUSTERED</code>
         <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>MAXIMUM_POOL_SIZE</code>
+        <attribute>10</attribute>
       </attribute>
       <attribute>
         <code>PORT_NUMBER</code>
@@ -776,28 +789,28 @@ field "insert_id_from" is configured with:
       </attribute>
       <attribute>
         <code>USE_POOLING</code>
-        <attribute>N</attribute>
+        <attribute>Y</attribute>
       </attribute>
     </attributes>
   </connection>
   <order>
     <hop>
-      <from>Get "from" "insert_id" from source DB table</from>
+      <from>Get minimum "insert_id" from source DB table</from>
       <to>Join Rows (cartesian product)</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Get "to" "insert_id" from target DB table</from>
+      <from>Get maximum "insert_id" from target DB table</from>
       <to>Join Rows (cartesian product)</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
       <from>Join Rows (cartesian product)</from>
-      <to>Adjust "insert_id_from", if necessary</to>
+      <to>Adjust "from" &amp; "to" "insert ids", if necessary</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Adjust "insert_id_from", if necessary</from>
+      <from>Adjust "from" &amp; "to" "insert ids", if necessary</from>
       <to>Log: "insert_id_from" &amp; "insert_id_to" values</to>
       <enabled>Y</enabled>
     </hop>
@@ -808,7 +821,7 @@ field "insert_id_from" is configured with:
     </hop>
   </order>
   <step>
-    <name>Adjust "insert_id_from", if necessary</name>
+    <name>Adjust "from" &amp; "to" "insert ids", if necessary</name>
     <type>ScriptValueMod</type>
     <description />
     <distribute>Y</distribute>
@@ -825,28 +838,76 @@ field "insert_id_from" is configured with:
         <jsScript_type>0</jsScript_type>
         <jsScript_name>Script 1</jsScript_name>
         <jsScript_script>/*
+This script treats two different use cases:
+
+Case 1: PARAM_INSERT_ID_FROM &lt;= 0
+
+  This is the originlk functionality implemented in this step where 
+  PARAM_INSERT_ID_FROM is *not used* and the most *recent* rows from the
+  specified table are compared.
+
   PARAM_MAX_NUM_COMPARE_ROWS: 
 
-    This parameter specifies the maximum number of rows to compare.
-    If this value is zero, then *all* rows will be compared. If this
-    value is non-zero, then the field "insert_id_from" will be 
-    increased, if necessary, so that the specified number of rows
-    will be compared.
+    This parameter specifies the maximum number of the most recent rows to 
+    compare. "Recent" means the largest values of the the "insert id" column. 
+    If this value is zero, then *all* rows will be compared. If this value is 
+    non-zero, then the field "insert_id_from" will be increased, if necessary, 
+    so that the specified number of rows will be compared.
+
+Case 2: PARAM_INSERT_ID_FROM > 0
+
+  This case makes use of the values of *both* PARAM_INSERT_ID_FROM and
+  PARAM_MAX_NUM_COMPARE_ROWS. For this case of value of the stream fields 
+  "insert_id_from" &amp; "insert_id_to" are adjusted so that:
+
+    insert_id_from	= PARAM_INSERT_ID_FROM
+    insert_id_to		= insert_id_from + PARAM_MAX_NUM_COMPARE_ROWS
 
   Author:  Jeffrey Zelt
   Date:    2017.06.29
   Changes: Initial version
+
+  Author:  Jeffrey Zelt
+  Date:    2020.03.03
+  Changes: Added support for PARAM_INSERT_ID_FROM
 */
 
-var max_num_rows = getVariable("PARAM_MAX_NUM_COMPARE_ROWS", "0");
-//Alert("max_num_rows = " + max_num_rows);
+//Alert("insert_id_from = " + insert_id_from + "\ninsert_id_to = " + insert_id_to);
 
-if(max_num_rows > 0) {
-	var numRows = insert_id_to - insert_id_from + 1;
-	//Alert("numRows = " + numRows);
-	if(numRows > max_num_rows){
-		insert_id_from = insert_id_to - max_num_rows + 1;
-	}
+var param_insert_id_from = parseInt(getVariable("PARAM_INSERT_ID_FROM", "-1"));
+var param_max_num_compare_rows = parseInt(getVariable("PARAM_MAX_NUM_COMPARE_ROWS", "0"));
+//Alert("param_insert_id_from = " + param_insert_id_from + "\nparam_max_num_compare_rows = " + param_max_num_compare_rows);
+
+if(param_insert_id_from &lt;= 0) {
+
+  // Case 1:
+
+  if(param_max_num_compare_rows > 0) {
+    var numRows = insert_id_to - insert_id_from + 1;
+    //Alert("numRows = " + numRows);
+    if(numRows > param_max_num_compare_rows){
+      insert_id_from = insert_id_to - param_max_num_compare_rows + 1;
+    }
+  }
+
+} else {
+
+  // Case 2:
+
+  // This test avoids assigning a value to insert_id_from that is less than 
+  // the minimum value of the "insert id" column from the source table.
+  // Note that insert_id_from may be -1 here if the source table is empty.
+  if(param_insert_id_from >= insert_id_from) {
+    insert_id_from = param_insert_id_from;
+  }
+
+  // This test avoids assigning a value to insert_id_to that is greater than 
+  // the maximum value of the "insert id" column from the target table.
+  // Note that insert_id_to may be -1 here if the target table is empty.
+  if((insert_id_from + param_max_num_compare_rows) - 1 &lt; insert_id_to) {
+    insert_id_to = insert_id_from + param_max_num_compare_rows - 1;
+  }
+
 }
 
 //Alert("insert_id_from = " + insert_id_from);
@@ -863,7 +924,16 @@ if(max_num_rows > 0) {
         <precision>-1</precision>
         <replace>Y</replace>
       </field>
+      <field>
+        <name>insert_id_to</name>
+        <rename>insert_id_to</rename>
+        <type>Integer</type>
+        <length>15</length>
+        <precision>-1</precision>
+        <replace>Y</replace>
+      </field>
     </fields>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -872,47 +942,13 @@ if(max_num_rows > 0) {
       </output>
     </remotesteps>
     <GUI>
-      <xloc>304</xloc>
-      <yloc>688</yloc>
+      <xloc>272</xloc>
+      <yloc>672</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Get "from" "insert_id" from source DB table</name>
-    <type>TableInput</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <connection>generic_source_db</connection>
-    <sql>SELECT
-    COALESCE(MIN(${PARAM_SOURCE_INSERT_ID_COLNAME}), ${QF_INSERT_ID_LOWER_BOUND}) AS "insert_id_from"
-FROM
-    ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</sql>
-    <limit>0</limit>
-    <lookup />
-    <execute_each_row>N</execute_each_row>
-    <variables_active>Y</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>128</xloc>
-      <yloc>544</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Get "to" "insert_id" from target DB table</name>
+    <name>Get maximum "insert_id" from target DB table</name>
     <type>TableInput</type>
     <description />
     <distribute>Y</distribute>
@@ -932,6 +968,7 @@ FROM
     <execute_each_row>N</execute_each_row>
     <variables_active>Y</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -940,8 +977,43 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>480</xloc>
-      <yloc>544</yloc>
+      <xloc>432</xloc>
+      <yloc>512</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Get minimum "insert_id" from source DB table</name>
+    <type>TableInput</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <connection>generic_source_db</connection>
+    <sql>SELECT
+    COALESCE(MIN(${PARAM_SOURCE_INSERT_ID_COLNAME}), ${QF_INSERT_ID_LOWER_BOUND}) AS "insert_id_from"
+FROM
+    ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</sql>
+    <limit>0</limit>
+    <lookup />
+    <execute_each_row>N</execute_each_row>
+    <variables_active>Y</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>112</xloc>
+      <yloc>512</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -968,6 +1040,7 @@ FROM
         <rightvalue />
       </condition>
     </compare>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -976,8 +1049,8 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>304</xloc>
-      <yloc>608</yloc>
+      <xloc>272</xloc>
+      <yloc>592</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1005,6 +1078,7 @@ FROM
         <name>insert_id_to</name>
       </field>
     </fields>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1013,8 +1087,8 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>304</xloc>
-      <yloc>768</yloc>
+      <xloc>272</xloc>
+      <yloc>752</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1044,6 +1118,7 @@ FROM
       </field>
     </fields>
     <use_formatting>Y</use_formatting>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1052,8 +1127,8 @@ FROM
       </output>
     </remotesteps>
     <GUI>
-      <xloc>304</xloc>
-      <yloc>848</yloc>
+      <xloc>272</xloc>
+      <yloc>832</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1062,4 +1137,5 @@ FROM
   <slave-step-copy-partition-distribution>
   </slave-step-copy-partition-distribution>
   <slave_transformation>N</slave_transformation>
+  <attributes />
 </transformation>
