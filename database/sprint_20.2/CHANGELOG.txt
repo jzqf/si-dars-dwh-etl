@@ -1,0 +1,19 @@
+PDI "compare" algorithm improved:
+
+	The PDI "compare" algorithm has been improved for reporting discrepancies for
+	"updateable" tables. In the new, improved algorithm rows that have been updated
+	in a source table _after_ the timestamp for which the source and target tables 
+	have been last synchronized by the ETL job will not be considered when reporting
+	the number of "changed" rows. Such updates will be propagated to the target 
+	table on the *next* run of the ETL job and, therefore, should not be considered
+	to be real discrepancies. The previous behaviour reported such updates as 
+	"changed" discrepancies, which made it difficult to identify _actual_ 
+	discrepancies due to errors in the ETL algorithm or other unknown causes.
+
+Bug fixed in ETL progress reporting:
+
+A bug in the progress reporting by the ETL job caused incorrect values to be
+reported for the number of rows processed and the number of rows remaining to
+be processed for a table. This has been corrected.
+
+*** There are no changes to the etl_mgmt database. ***
