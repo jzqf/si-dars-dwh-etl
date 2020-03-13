@@ -31,7 +31,7 @@ insert_id_from=-1
 insert_id_to=-1
 log_level=Minimal
 
-# Check if the first arguments exist. If so, it represents the id of the target
+# Check if the first argument exists. If so, it represents the id of the target
 # database that contains the specified table to compare with its corresponding
 # source table.
 if [ ! -z "$1" ]; then
@@ -41,7 +41,7 @@ else
     exit 1
 fi
 
-# Check if the second arguments exist. If so, it represents the name of the 
+# Check if the second argument exists. If so, it represents the name of the 
 # schema containing the target table to compare with its corresponding source 
 # table.
 if [ ! -z "$2" ]; then
@@ -51,7 +51,7 @@ else
     exit 1
 fi
 
-# Check if the third arguments exist. If so, it represents the name of the 
+# Check if the third argument exists. If so, it represents the name of the 
 # target table to compare with its corresponding source table.
 if [ ! -z "$3" ]; then
     target_table_name=$3
@@ -60,7 +60,7 @@ else
     exit 1
 fi
 
-# Check if the fourth arguments exist. If so, it represents the starting value 
+# Check if the fourth argument exists. If so, it represents the starting value 
 # (lower bound) of the "insert id" for the block of rows to compare.
 if [ ! -z "$4" ]; then
     insert_id_from=$4
@@ -69,7 +69,7 @@ else
     exit 1
 fi
 
-# Check if the fifth arguments exist. If so, it represents the ending value 
+# Check if the fifth argument exists. If so, it represents the ending value 
 # (upper bound) of the "insert id" for the block of rows to compare.
 if [ ! -z "$5" ]; then
     insert_id_to=$5
@@ -78,7 +78,7 @@ else
     exit 1
 fi
 
-# Check if the sixth arguments exist. If so, it represents the PDI logging 
+# Check if the sixth argument exists. If so, it represents the PDI logging 
 # level.
 if [ ! -z "$6" ]; then
     log_level=$6

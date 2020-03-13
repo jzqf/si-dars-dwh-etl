@@ -84,14 +84,14 @@
         <description>for target DB "dynamic" database connections</description>
       </parameter>
       <parameter>
-        <name>PARAM_INSERT_ID_FROM</name>
-        <default_value>100</default_value>
-        <description>"from" value for the "insert_id" column of the source DB table that is being compared to the target DB table</description>
+        <name>PARAM_PASSAGE_TIMESTAMP_FROM</name>
+        <default_value />
+        <description>"from" timestamp for passage events and rows from related tables that will be compared</description>
       </parameter>
       <parameter>
-        <name>PARAM_INSERT_ID_TO</name>
-        <default_value>110</default_value>
-        <description>"to" value for the "insert_id" column of the source DB table that is being compared to the target DB table</description>
+        <name>PARAM_PASSAGE_TIMESTAMP_TO</name>
+        <default_value />
+        <description>"to" timestamp for passage events and rows from related tables that will be compared</description>
       </parameter>
       <parameter>
         <name>PARAM_SOURCE_DB_ID</name>
@@ -574,7 +574,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2020/03/12 14:54:28.473</modified_date>
+    <modified_date>2020/03/13 10:45:05.535</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -585,8 +585,8 @@ of a target table in a target DB. This is a generic algorithm that can work with
 available to be injected. This transformation has parameters:
 
 	PARAM_CDC_LAST_LOAD_UTC					Timestamp for when the target DB was most recently updated successfully
-	PARAM_INSERT_ID_FROM						"from" value for the "insert_id" column of the source table that is being compared to the target table
-	PARAM_INSERT_ID_TO							"to" value for the "insert_id" column of the source table that is being compared to the target table
+	PARAM_PASSAGE_TIMESTAMP_FROM				"from" timestamp for passage events and rows from related tables that will be compared
+	PARAM_PASSAGE_TIMESTAMP_TO					"to" timestamp for passage events and rows from related tables that will be compared
 	PARAM_DYN_DB_CONN_SOURCE_DB_HOST		for source DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_SOURCE_DB_PORT		for source DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE	for source DB "dynamic" database connections
@@ -615,7 +615,7 @@ available to be injected. This transformation has parameters:
 	PARAM_TARGET_INSERT_ID_COLNAME			Name of column acting as the "insert_id" timestamp column of the target table</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>880</width>
+      <width>869</width>
       <heigth>439</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
@@ -913,7 +913,7 @@ not want these columns to be *compared*.</note>
     <source_step />
     <source_output_fields>    </source_output_fields>
     <target_file>development/jeffreyz/tests/template_transformation_metadata_injection/tmplt_target-compare_table-INJECTED.ktr</target_file>
-    <no_execution>Y</no_execution>
+    <no_execution>N</no_execution>
     <stream_source_step />
     <stream_target_step />
     <mappings>
@@ -1196,7 +1196,7 @@ END ||
                 ELSE
                     ''
             END ||
-            'WHERE passage_events.passage_event_timestamp >= ''2020-01-01 00:00:00'' AND passage_events.passage_event_timestamp &lt;= ''2020-01-01 00:00:01'' '
+            'WHERE passage_events.passage_event_timestamp >= ''${PARAM_PASSAGE_TIMESTAMP_FROM}'' AND passage_events.passage_event_timestamp &lt; ''${PARAM_PASSAGE_TIMESTAMP_TO}'' '
         WHEN ${PARAM_TARGET_DB_ID}=20 THEN
             CASE
                 WHEN '${PARAM_SOURCE_TABLE}' = 'obo__passage_events' THEN
@@ -1208,7 +1208,7 @@ END ||
                 ELSE
                     ''
             END ||
-            'WHERE obo__passage_events.passage_event_timestamp >= ''2020-01-01 00:00:00'' AND obo__passage_events.passage_event_timestamp &lt;= ''2020-01-01 00:00:01'' '
+            'WHERE obo__passage_events.passage_event_timestamp >= ''${PARAM_PASSAGE_TIMESTAMP_FROM}'' AND obo__passage_events.passage_event_timestamp &lt; ''${PARAM_PASSAGE_TIMESTAMP_TO}'' '
         ELSE
             ''
     END || 
@@ -1322,7 +1322,7 @@ SELECT
                 ELSE
                     ''
             END ||
-            'WHERE obo__passage_events.passage_event_timestamp >= ''2020-01-01 00:00:00'' AND obo__passage_events.passage_event_timestamp &lt;= ''2020-01-01 00:00:01'' '
+            'WHERE obo__passage_events.passage_event_timestamp >= ''${PARAM_PASSAGE_TIMESTAMP_FROM}'' AND obo__passage_events.passage_event_timestamp &lt; ''${PARAM_PASSAGE_TIMESTAMP_TO}'' '
         WHEN ${PARAM_TARGET_DB_ID}=20 THEN
             CASE
                 WHEN '${PARAM_TARGET_TABLE}' = 'obo__passage_event' THEN
@@ -1334,7 +1334,7 @@ SELECT
                 ELSE
                     ''
             END ||
-            'WHERE obo__passage_event.passage_event_timestamp &gt;= ''2020-01-01 00:00:00'' AND obo__passage_event.passage_event_timestamp &lt;= ''2020-01-01 00:00:01'' '
+            'WHERE obo__passage_event.passage_event_timestamp >= ''${PARAM_PASSAGE_TIMESTAMP_FROM}'' AND obo__passage_event.passage_event_timestamp &lt; ''${PARAM_PASSAGE_TIMESTAMP_TO}'' '
         ELSE
             ''
     END || 

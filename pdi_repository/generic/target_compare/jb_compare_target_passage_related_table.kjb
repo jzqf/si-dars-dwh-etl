@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2020/03/11 13:39:02.514</modified_date>
+  <modified_date>2020/03/13 09:01:51.212</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CDC_LAST_LOAD_UTC</name>
@@ -51,14 +51,14 @@
       <description>for target DB "dynamic" database connections</description>
     </parameter>
     <parameter>
-      <name>PARAM_INSERT_ID_FROM</name>
-      <default_value>-1</default_value>
-      <description>"from" value for the "insert_id" column of the source and target tables that will be compared (optional)</description>
+      <name>PARAM_PASSAGE_TIMESTAMP_FROM</name>
+      <default_value />
+      <description>"from" timestamp for passage events and rows from related tables that will be compared</description>
     </parameter>
     <parameter>
-      <name>PARAM_MAX_NUM_COMPARE_ROWS</name>
-      <default_value>1000000</default_value>
-      <description>Maximum number of rows that will be compared for these tables. Pass 0 for *all* rows.</description>
+      <name>PARAM_PASSAGE_TIMESTAMP_TO</name>
+      <default_value />
+      <description>"to" timestamp for passage events and rows from related tables that will be compared</description>
     </parameter>
     <parameter>
       <name>PARAM_SOURCE_DB_ID</name>
@@ -602,22 +602,12 @@
           <stream_name />
           <value>${QF_DYN_DB_CONN_DB_DRIVER}</value>
         </parameter>
-        <parameter>
-          <name>PARAM_INSERT_ID_FROM</name>
-          <stream_name />
-          <value>${QF_MIRROR_COMPARE_INSERT_ID_FROM}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_INSERT_ID_TO</name>
-          <stream_name />
-          <value>${QF_MIRROR_COMPARE_INSERT_ID_TO}</value>
-        </parameter>
       </parameters>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>512</xloc>
-      <yloc>992</yloc>
+      <yloc>704</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -659,7 +649,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>208</xloc>
-      <yloc>992</yloc>
+      <yloc>704</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -672,7 +662,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>48</xloc>
-      <yloc>784</yloc>
+      <yloc>704</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -783,8 +773,8 @@ ORDER BY
       <type>WRITE_TO_LOG</type>
       <attributes />
       <logmessage>PARAM_CDC_LAST_LOAD_UTC              = ${PARAM_CDC_LAST_LOAD_UTC}
-PARAM_INSERT_ID_FROM                 = ${PARAM_INSERT_ID_FROM}
-PARAM_MAX_NUM_COMPARE_ROWS           = ${PARAM_MAX_NUM_COMPARE_ROWS}
+PARAM_PASSAGE_TIMESTAMP_FROM         = ${PARAM_PASSAGE_TIMESTAMP_FROM}
+PARAM_PASSAGE_TIMESTAMP_TO           = ${PARAM_PASSAGE_TIMESTAMP_TO}
 PARAM_TABLE_META_ID                  = ${PARAM_TABLE_META_ID}
 PARAM_DYN_DB_CONN_TARGET_DB_HOST     = ${PARAM_DYN_DB_CONN_TARGET_DB_HOST}
 PARAM_DYN_DB_CONN_TARGET_DB_PORT     = ${PARAM_DYN_DB_CONN_TARGET_DB_PORT}
@@ -822,184 +812,7 @@ PARAM_UPDATE_ALGORITHM_ID            = ${PARAM_UPDATE_ALGORITHM_ID}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>512</xloc>
-      <yloc>1088</yloc>
-      <attributes_kjc />
-    </entry>
-    <entry>
-      <name>tr_target-compare_table-get_insert_id_from_to</name>
-      <description />
-      <type>TRANS</type>
-      <attributes />
-      <specification_method>rep_name</specification_method>
-      <trans_object_id />
-      <filename />
-      <transname>tr_target-compare_table-get_insert_id_from_to</transname>
-      <directory>${Internal.Entry.Current.Directory}</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <clear_rows>N</clear_rows>
-      <clear_files>N</clear_files>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Basic</loglevel>
-      <cluster>N</cluster>
-      <slave_server_name />
-      <set_append_logfile>N</set_append_logfile>
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <create_parent_folder>N</create_parent_folder>
-      <logging_remote_work>N</logging_remote_work>
-      <run_configuration>Pentaho local</run_configuration>
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-        <parameter>
-          <name>PARAM_DYN_DB_CONN_SOURCE_DB_HOST</name>
-          <stream_name />
-          <value>${QF_DYN_DB_CONN_DB_HOST}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_DYN_DB_CONN_SOURCE_DB_PORT</name>
-          <stream_name />
-          <value>${QF_DYN_DB_CONN_DB_PORT}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE</name>
-          <stream_name />
-          <value>${QF_DYN_DB_CONN_DB_DATABASE}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME</name>
-          <stream_name />
-          <value>${QF_DYN_DB_CONN_DB_USERNAME}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD</name>
-          <stream_name />
-          <value>${QF_DYN_DB_CONN_DB_PASSWORD}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_DYN_DB_CONN_SOURCE_DB_URL</name>
-          <stream_name />
-          <value>${QF_DYN_DB_CONN_DB_URL}</value>
-        </parameter>
-        <parameter>
-          <name>PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER</name>
-          <stream_name />
-          <value>${QF_DYN_DB_CONN_DB_DRIVER}</value>
-        </parameter>
-      </parameters>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>384</xloc>
-      <yloc>784</yloc>
-      <attributes_kjc />
-    </entry>
-    <entry>
-      <name>Log: "insert_id" from/to values</name>
-      <description />
-      <type>WRITE_TO_LOG</type>
-      <attributes />
-      <logmessage>PARAM_SOURCE_INSERT_ID_COLNAME   = ${PARAM_SOURCE_INSERT_ID_COLNAME}
-PARAM_TARGET_INSERT_ID_COLNAME   = ${PARAM_TARGET_INSERT_ID_COLNAME}
-QF_MIRROR_COMPARE_INSERT_ID_FROM = ${QF_MIRROR_COMPARE_INSERT_ID_FROM}
-QF_MIRROR_COMPARE_INSERT_ID_TO   = ${QF_MIRROR_COMPARE_INSERT_ID_TO}
-</logmessage>
-      <loglevel>Basic</loglevel>
-      <logsubject>Variables set by tr_target-compare_table-get_insert_id_from_to or initialized to zero</logsubject>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>512</xloc>
-      <yloc>896</yloc>
-      <attributes_kjc />
-    </entry>
-    <entry>
-      <name>jb_log_error 5</name>
-      <description />
-      <type>JOB</type>
-      <attributes />
-      <specification_method>rep_name</specification_method>
-      <job_object_id />
-      <filename />
-      <jobname>jb_log_error</jobname>
-      <directory>/generic</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Nothing</loglevel>
-      <slave_server_name />
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <expand_remote_job>N</expand_remote_job>
-      <create_parent_folder>N</create_parent_folder>
-      <pass_export>N</pass_export>
-      <run_configuration />
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-        <parameter>
-          <name>PARAM_ERROR_MESSAGE</name>
-          <stream_name />
-          <value>Error executing step 'Log: "insert_id" "from" &amp; "to" values' for target DB table: ${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</value>
-        </parameter>
-      </parameters>
-      <set_append_logfile>N</set_append_logfile>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>208</xloc>
-      <yloc>896</yloc>
-      <attributes_kjc />
-    </entry>
-    <entry>
-      <name>jb_log_error 4</name>
-      <description />
-      <type>JOB</type>
-      <attributes />
-      <specification_method>rep_name</specification_method>
-      <job_object_id />
-      <filename />
-      <jobname>jb_log_error</jobname>
-      <directory>/generic</directory>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>N</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Nothing</loglevel>
-      <slave_server_name />
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <expand_remote_job>N</expand_remote_job>
-      <create_parent_folder>N</create_parent_folder>
-      <pass_export>N</pass_export>
-      <run_configuration />
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-        <parameter>
-          <name>PARAM_ERROR_MESSAGE</name>
-          <stream_name />
-          <value>Error executing tr_target-compare_table-get_insert_id_from_to for target DB table: ${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE}</value>
-        </parameter>
-      </parameters>
-      <set_append_logfile>N</set_append_logfile>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>192</xloc>
-      <yloc>784</yloc>
+      <yloc>800</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -1129,48 +942,6 @@ ORDER BY
       <yloc>400</yloc>
       <attributes_kjc />
     </entry>
-    <entry>
-      <name>Set from/to "insert_id" vrbls=0</name>
-      <description />
-      <type>SET_VARIABLES</type>
-      <attributes />
-      <replacevars>Y</replacevars>
-      <filename />
-      <file_variable_type>JVM</file_variable_type>
-      <fields>
-        <field>
-          <variable_name>QF_MIRROR_COMPARE_INSERT_ID_FROM</variable_name>
-          <variable_value>0</variable_value>
-          <variable_type>ROOT_JOB</variable_type>
-        </field>
-        <field>
-          <variable_name>QF_MIRROR_COMPARE_INSERT_ID_TO</variable_name>
-          <variable_value>0</variable_value>
-          <variable_type>ROOT_JOB</variable_type>
-        </field>
-      </fields>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>624</xloc>
-      <yloc>784</yloc>
-      <attributes_kjc />
-    </entry>
-    <entry>
-      <name>Do source and target tables have an "insert_id" column?</name>
-      <description />
-      <type>EVAL</type>
-      <attributes />
-      <script>//!parent_job.getVariable("PARAM_SOURCE_INSERT_ID_COLNAME", "") &amp;&amp; !parent_job.getVariable("PARAM_TARGET_INSERT_ID_COLNAME", "")
-//parent_job.getVariable("PARAM_SOURCE_INSERT_ID_COLNAME", "").length != 0 &amp;&amp; parent_job.getVariable("PARAM_TARGET_INSERT_ID_COLNAME", "").length != 0
-!parent_job.getVariable("PARAM_SOURCE_INSERT_ID_COLNAME", "").equals("") &amp;&amp; !parent_job.getVariable("PARAM_TARGET_INSERT_ID_COLNAME", "").equals("")</script>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>512</xloc>
-      <yloc>688</yloc>
-      <attributes_kjc />
-    </entry>
   </entries>
   <hops>
     <hop>
@@ -1226,51 +997,6 @@ ORDER BY
       <enabled>Y</enabled>
       <evaluation>Y</evaluation>
       <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>tr_target-compare_table-get_insert_id_from_to</from>
-      <to>Log: "insert_id" from/to values</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>tr_target-compare_table-get_insert_id_from_to</from>
-      <to>jb_log_error 4</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>jb_log_error 4</from>
-      <to>Abort job</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>Log: "insert_id" from/to values</from>
-      <to>jb_log_error 5</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>jb_log_error 5</from>
-      <to>Abort job</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>Y</unconditional>
     </hop>
     <hop>
       <from>Are columns to compare configured for this table?</from>
@@ -1336,45 +1062,9 @@ ORDER BY
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Log: "insert_id" from/to values</from>
-      <to>tr_compare_target_passage_related_table</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Set from/to "insert_id" vrbls=0</from>
-      <to>Log: "insert_id" from/to values</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
       <from>Are primary key columns configured for this table?</from>
-      <to>Do source and target tables have an "insert_id" column?</to>
+      <to>tr_compare_target_passage_related_table</to>
       <from_nr>1</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Do source and target tables have an "insert_id" column?</from>
-      <to>Set from/to "insert_id" vrbls=0</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Do source and target tables have an "insert_id" column?</from>
-      <to>tr_target-compare_table-get_insert_id_from_to</to>
-      <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>Y</evaluation>
@@ -1383,11 +1073,11 @@ ORDER BY
   </hops>
   <notepads>
     <notepad>
-      <note>This job "compares" a single table from a source database with its corresponding table in the specified target database. This job has parameters:
+      <note>This job "compares" a single "passage-related" table from a source database with its corresponding table in the specified target database. This job has parameters:
 
 	PARAM_CDC_LAST_LOAD_UTC					Timestamp for when the target DB tables were last updated from the source DBs
-	PARAM_INSERT_ID_FROM						Optional "from" value for the "insert_id" column of the source and target tables that will be compared
-	PARAM_MAX_NUM_COMPARE_ROWS				Maximum number of rows that will be compared for these tables. 0 means *all* rows
+	PARAM_PASSAGE_TIMESTAMP_FROM			"from" timestamp for passage events and rows from related tables that will be compared
+	PARAM_PASSAGE_TIMESTAMP_TO				"to" timestamp for passage events and rows from related tables that will be compared
 	PARAM_TABLE_META_ID							Primary key of ${QF_ETL_DB_SCHEMA}.table_meta row for "source" table archived/mirrored to "target" table
 	PARAM_DYN_DB_CONN_TARGET_DB_HOST		for target DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_TARGET_DB_PORT		for target DB "dynamic" database connections
@@ -1436,7 +1126,7 @@ to tell the root calling
 job that execution has
 failed.</note>
       <xloc>0</xloc>
-      <yloc>832</yloc>
+      <yloc>752</yloc>
       <width>132</width>
       <heigth>62</heigth>
       <fontname>Ubuntu</fontname>
@@ -1484,10 +1174,10 @@ for the table.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>tr_target-compare_table-inject_meta" compares the source and target tables using an "ETL Metadata Injection" step.</note>
+      <note>Compare the source and target passage-related tables using "ETL Metadata Injection".</note>
       <xloc>688</xloc>
-      <yloc>992</yloc>
-      <width>653</width>
+      <yloc>704</yloc>
+      <width>482</width>
       <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
@@ -1579,7 +1269,7 @@ based on a single parameter:	PARAM_DB_ID = PARAM_SOURCE_DB_ID</note>
       <note>TODO:	This sub-transformation entry must abort the current
 		job if it is not successful for every row. Is this the case?</note>
       <xloc>688</xloc>
-      <yloc>1024</yloc>
+      <yloc>736</yloc>
       <width>358</width>
       <heigth>36</heigth>
       <fontname>Ubuntu</fontname>
@@ -1592,49 +1282,6 @@ based on a single parameter:	PARAM_DB_ID = PARAM_SOURCE_DB_ID</note>
       <backgroundcolorred>26</backgroundcolorred>
       <backgroundcolorgreen>26</backgroundcolorgreen>
       <backgroundcolorblue>26</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Description of variables:
-
-	QF_MIRROR_COMPARE_INSERT_ID_FROM
-	QF_MIRROR_COMPARE_INSERT_ID_TO
-
-If the specified source &amp; target tables both have an "insert_id" column, then tr_target-compare_table-get_insert_id_from_to is executed
-to assign values to variables QF_MIRROR_COMPARE_INSERT_ID_FROM/TO, taking into account the value of the parameter
-PARAM_MAX_NUM_COMPARE_ROWS; otherwise, they are both set to zero.
-
-The values of these variables are assigned to parameters PARAM_INSERT_ID_FROM/TO when tr_target-compare_table-inject_meta is 
-executed below. If these parameters are both found to be zero in tr_target-compare_table-inject_meta, then *all* rows of the source and
-target tables will be compare with each other. Otherwise, these parameters are used to select the block of rows that are compared in 
-order to verify that the two tables "agree". This "insert_id" range will be table-specific, of course.
-
-This approach provides a way to compare only a *subset* of all the rows from the two tables (via PARAM_MAX_NUM_COMPARE_ROWS).
-More importantly, it restricts the block of rows that are compared to avoid comparing rows that would otherwise be reported as 
-problems. These are rows that fall into one of two cases:
-
-1.	Rows that have been *removed* from the source table that were mirrored earlier to the target table. We do not want to include these
-	rows from target table because the comparision for these rows will definitely "fail" (compared_rows_missing>0 will be reported).
-2.	Rows that have been *added* to the source table after the last mirror operation updated the target table. We do not want to include
-	these rows in the comparison because we cannot expect them to be found (yet) in the target table (compared_rows_extra>0 will be 
-	reported). Presumably, these rows will be be mirrored to the target table the next time the update code is run.</note>
-      <xloc>736</xloc>
-      <yloc>656</yloc>
-      <width>775</width>
-      <heigth>309</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>9</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
       <bordercolorblue>100</bordercolorblue>

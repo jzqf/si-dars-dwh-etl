@@ -93,6 +93,16 @@
         <description>"to" value for the "insert_id" column of the source DB table that is being compared to the target DB table</description>
       </parameter>
       <parameter>
+        <name>PARAM_PASSAGE_TIMESTAMP_FROM</name>
+        <default_value />
+        <description>"from" timestamp for passage events and rows from related tables that will be compared</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_PASSAGE_TIMESTAMP_TO</name>
+        <default_value />
+        <description>"to" timestamp for passage events and rows from related tables that will be compared</description>
+      </parameter>
+      <parameter>
         <name>PARAM_SOURCE_DB_ID</name>
         <default_value>2</default_value>
         <description>ID the "source" database containing the table that has been mirrored to a "target" database</description>
@@ -571,9 +581,9 @@
     <clusterschemas>
     </clusterschemas>
     <created_user>-</created_user>
-    <created_date>2020/03/12 21:02:06.171</created_date>
+    <created_date>2020/03/13 12:36:56.330</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2020/03/12 21:02:06.171</modified_date>
+    <modified_date>2020/03/13 12:36:56.330</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -809,6 +819,320 @@ can be examined post-mortem.</note>
     </notepad>
   </notepads>
   <connection>
+    <name>dsa_db</name>
+    <server>${QF_DSA_DB_HOST}</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>${QF_DSA_DB_DATABASE}</database>
+    <port>${QF_DSA_DB_PORT}</port>
+    <username>${QF_DSA_DB_USERNAME}</username>
+    <password>${QF_DSA_DB_PASSWORD}</password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>${QF_DSA_DB_PORT}</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
+  <connection>
+    <name>dynamic_postgres_source_db</name>
+    <server>${PARAM_DYN_DB_CONN_SOURCE_DB_HOST}</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>${PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE}</database>
+    <port>${PARAM_DYN_DB_CONN_SOURCE_DB_PORT}</port>
+    <username>${PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME}</username>
+    <password>${PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD}</password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>${PARAM_DYN_DB_CONN_SOURCE_DB_PORT}</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
+  <connection>
+    <name>dynamic_postgres_target_db</name>
+    <server>${PARAM_DYN_DB_CONN_TARGET_DB_HOST}</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>${PARAM_DYN_DB_CONN_TARGET_DB_DATABASE}</database>
+    <port>${PARAM_DYN_DB_CONN_TARGET_DB_PORT}</port>
+    <username>${PARAM_DYN_DB_CONN_TARGET_DB_USERNAME}</username>
+    <password>${PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD}</password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>${PARAM_DYN_DB_CONN_TARGET_DB_PORT}</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
+  <connection>
+    <name>etl_db</name>
+    <server>${QF_ETL_DB_HOST}</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>${QF_ETL_DB_DATABASE}</database>
+    <port>${QF_ETL_DB_PORT}</port>
+    <username>${QF_ETL_DB_USERNAME}</username>
+    <password>${QF_ETL_DB_PASSWORD}</password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>INITIAL_POOL_SIZE</code>
+        <attribute>10</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>MAXIMUM_POOL_SIZE</code>
+        <attribute>10</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>${QF_ETL_DB_PORT}</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>Y</attribute>
+      </attribute>
+    </attributes>
+  </connection>
+  <connection>
+    <name>etl_demo_obo_db</name>
+    <server>trdci0913.q-free.com</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>obo_opr</database>
+    <port>5432</port>
+    <username>qfree_admin</username>
+    <password>OBF:1x8i1u2k1x8k1sw01sar1qpr1saj1svy1x8a1u2q1x8c</password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>5432</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
+  <connection>
+    <name>etl_demo_target_db</name>
+    <server>localhost</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>etl_demo_target_db</database>
+    <port>5432</port>
+    <username>jeffreyz</username>
+    <password>OBF:1mt91tp41p6b1pk31gom1vgj1vgb1glk1pi31p3f1tnq1mpt</password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>5432</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
+  <connection>
     <name>generic_source_db</name>
     <server>${PARAM_DYN_DB_CONN_SOURCE_DB_HOST}</server>
     <type>POSTGRESQL</type>
@@ -891,6 +1215,269 @@ can be examined post-mortem.</note>
       <attribute>
         <code>PRESERVE_RESERVED_WORD_CASE</code>
         <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
+  <connection>
+    <name>logging_db</name>
+    <server>${QF_LOGGING_DB_HOST}</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>${QF_LOGGING_DB_DATABASE}</database>
+    <port>${QF_LOGGING_DB_PORT}</port>
+    <username>${QF_LOGGING_DB_USERNAME}</username>
+    <password>${QF_LOGGING_DB_PASSWORD}</password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>INITIAL_POOL_SIZE</code>
+        <attribute>10</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>MAXIMUM_POOL_SIZE</code>
+        <attribute>10</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>${QF_LOGGING_DB_PORT}</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>Y</attribute>
+      </attribute>
+    </attributes>
+  </connection>
+  <connection>
+    <name>mon_opr_db</name>
+    <server>${QF_MONITORING_OPR_DB_HOST}</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>${QF_MONITORING_OPR_DB_DATABASE}</database>
+    <port>${QF_MONITORING_OPR_DB_PORT}</port>
+    <username>${QF_MONITORING_OPR_DB_USERNAME}</username>
+    <password>${QF_MONITORING_OPR_DB_PASSWORD}</password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>${QF_MONITORING_OPR_DB_PORT}</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
+  <connection>
+    <name>obo_opr_db</name>
+    <server>${QF_OBO_OPR_DB_HOST}</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>${QF_OBO_OPR_DB_DATABASE}</database>
+    <port>${QF_OBO_OPR_DB_PORT}</port>
+    <username>${QF_OBO_OPR_DB_USERNAME}</username>
+    <password>${QF_OBO_OPR_DB_PASSWORD}</password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>${QF_OBO_OPR_DB_PORT}</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
+  <connection>
+    <name>odms_opr_db</name>
+    <server>${QF_ODMS_OPR_DB_HOST}</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>${QF_ODMS_OPR_DB_DATABASE}</database>
+    <port>${QF_ODMS_OPR_DB_PORT}</port>
+    <username>${QF_ODMS_OPR_DB_USERNAME}</username>
+    <password>${QF_ODMS_OPR_DB_PASSWORD}</password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>${QF_ODMS_OPR_DB_PORT}</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
+  <connection>
+    <name>psa_db</name>
+    <server>${QF_PSA_DB_HOST}</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>${QF_PSA_DB_DATABASE}</database>
+    <port>${QF_PSA_DB_PORT}</port>
+    <username>${QF_PSA_DB_USERNAME}</username>
+    <password>${QF_PSA_DB_PASSWORD}</password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>${QF_PSA_DB_PORT}</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>N</attribute>
       </attribute>
       <attribute>
         <code>QUOTE_ALL_FIELDS</code>
@@ -1019,7 +1606,7 @@ can be examined post-mortem.</note>
       <schema_name />
     </partitioning>
     <connection>generic_source_db</connection>
-    <sql>SELECT passage_events.passage_event_id,passage_events.passage_event_type_id,passage_events.passage_event_depersonalised,passage_events.external_reference_id,passage_events.data_arrival_timestamp,passage_events.passage_event_timestamp,passage_events.control_point_id,passage_events.control_point_event_sequence_number,passage_events.control_point_event_info_flags,passage_events.control_point_event_capture_category_id,passage_events.charged_road_section_id,passage_events.obu_present,passage_events.obu_count,passage_events.vehicle_detected,passage_events.vehicle_image_count,passage_events.logical_lane_id,passage_events.wrong_way_driving,passage_events.detected_scheme_liability_category_id,passage_events.detected_scheme_compliance_category_id,passage_events.scheme_compliance_sub_category_id,passage_events.detected_axle_tariff_category_id,passage_events.detected_lpn_is_foreign,passage_events.detected_lpn_country_code,passage_events.detected_lpn_number,passage_events.declared_axle_tariff_category_id,passage_events.declared_euro_emission_class_id,passage_events.declared_lpn_country_code,passage_events.declared_lpn_number,passage_events.data_tag,passage_events.cdc_timestamp,passage_events.cdc_timestamp>='2000-01-01 00:00:00' AS "updated_after_last_etl_run" FROM public.passage_events WHERE passage_events.passage_event_timestamp >= '2020-01-01 00:00:00' AND passage_events.passage_event_timestamp &lt;= '2020-01-01 00:00:01' ORDER BY passage_events.passage_event_id</sql>
+    <sql>SELECT obo__passage_events.passage_event_id,obo__passage_events.passage_event_type_id,obo__passage_events.data_arrival_timestamp,obo__passage_events.passage_event_timestamp,obo__passage_events.control_point_id,obo__passage_events.control_point_event_capture_category_id,obo__passage_events.charged_road_section_id,obo__passage_events.obu_present,obo__passage_events.obu_count,obo__passage_events.vehicle_image_count,obo__passage_events.detected_scheme_liability_category_id,obo__passage_events.detected_scheme_compliance_category_id,obo__passage_events.scheme_compliance_sub_category_id,obo__passage_events.detected_axle_tariff_category_id,obo__passage_events.detected_lpn_country_code,obo__passage_events.detected_lpn_number,obo__passage_events.declared_axle_tariff_category_id,obo__passage_events.declared_euro_emission_class_id,obo__passage_events.declared_lpn_country_code,obo__passage_events.declared_lpn_number,obo__passage_events.cdc_timestamp,obo__passage_events.cdc_timestamp>='2000-01-01 00:00:00' AS "updated_after_last_etl_run" FROM public.obo__passage_events WHERE obo__passage_events.passage_event_timestamp >= '2019.12.15 12:00:00' AND obo__passage_events.passage_event_timestamp &lt; '2020-01-02 00:00:00' ORDER BY obo__passage_events.passage_event_id</sql>
     <limit>0</limit>
     <lookup />
     <execute_each_row>N</execute_each_row>
@@ -1051,7 +1638,7 @@ can be examined post-mortem.</note>
       <schema_name />
     </partitioning>
     <connection>generic_target_db</connection>
-    <sql>SELECT obo__passage_events.passage_event_id,obo__passage_events.passage_event_type_id,obo__passage_events.passage_event_depersonalised,obo__passage_events.external_reference_id,obo__passage_events.data_arrival_timestamp,obo__passage_events.passage_event_timestamp,obo__passage_events.control_point_id,obo__passage_events.control_point_event_sequence_number,obo__passage_events.control_point_event_info_flags,obo__passage_events.control_point_event_capture_category_id,obo__passage_events.charged_road_section_id,obo__passage_events.obu_present,obo__passage_events.obu_count,obo__passage_events.vehicle_detected,obo__passage_events.vehicle_image_count,obo__passage_events.logical_lane_id,obo__passage_events.wrong_way_driving,obo__passage_events.detected_scheme_liability_category_id,obo__passage_events.detected_scheme_compliance_category_id,obo__passage_events.scheme_compliance_sub_category_id,obo__passage_events.detected_axle_tariff_category_id,obo__passage_events.detected_lpn_is_foreign,obo__passage_events.detected_lpn_country_code,obo__passage_events.detected_lpn_number,obo__passage_events.declared_axle_tariff_category_id,obo__passage_events.declared_euro_emission_class_id,obo__passage_events.declared_lpn_country_code,obo__passage_events.declared_lpn_number,obo__passage_events.data_tag,obo__passage_events.cdc_timestamp,false AS "updated_after_last_etl_run" FROM public.obo__passage_events WHERE obo__passage_events.passage_event_timestamp >= '2020-01-01 00:00:00' AND obo__passage_events.passage_event_timestamp &lt;= '2020-01-01 00:00:01' ORDER BY obo__passage_events.passage_event_id</sql>
+    <sql>SELECT obo__passage_event.passage_event_id,obo__passage_event.passage_event_type_id,obo__passage_event.data_arrival_timestamp,obo__passage_event.passage_event_timestamp,obo__passage_event.control_point_id,obo__passage_event.control_point_event_capture_category_id,obo__passage_event.charged_road_section_id,obo__passage_event.obu_present,obo__passage_event.obu_count,obo__passage_event.vehicle_image_count,obo__passage_event.detected_scheme_liability_category_id,obo__passage_event.detected_scheme_compliance_category_id,obo__passage_event.detected_scheme_compliance_sub_category_id,obo__passage_event.detected_axle_tariff_category_id,obo__passage_event.detected_lpn_country_code,obo__passage_event.detected_lpn_number,obo__passage_event.declared_axle_tariff_category_id,obo__passage_event.declared_euro_emission_class_id,obo__passage_event.declared_lpn_country_code,obo__passage_event.declared_lpn_number,obo__passage_event.cdc_timestamp,false AS "updated_after_last_etl_run" FROM public.obo__passage_event WHERE obo__passage_event.passage_event_timestamp >= '2019.12.15 12:00:00' AND obo__passage_event.passage_event_timestamp &lt; '2020-01-02 00:00:00' ORDER BY obo__passage_event.passage_event_id</sql>
     <limit>0</limit>
     <lookup />
     <execute_each_row>N</execute_each_row>
@@ -1088,33 +1675,24 @@ can be examined post-mortem.</note>
     <values>
       <value>passage_event_id</value>
       <value>passage_event_type_id</value>
-      <value>passage_event_depersonalised</value>
-      <value>external_reference_id</value>
       <value>data_arrival_timestamp</value>
       <value>passage_event_timestamp</value>
       <value>control_point_id</value>
-      <value>control_point_event_sequence_number</value>
-      <value>control_point_event_info_flags</value>
       <value>control_point_event_capture_category_id</value>
       <value>charged_road_section_id</value>
       <value>obu_present</value>
       <value>obu_count</value>
-      <value>vehicle_detected</value>
       <value>vehicle_image_count</value>
-      <value>logical_lane_id</value>
-      <value>wrong_way_driving</value>
       <value>detected_scheme_liability_category_id</value>
       <value>detected_scheme_compliance_category_id</value>
       <value>scheme_compliance_sub_category_id</value>
       <value>detected_axle_tariff_category_id</value>
-      <value>detected_lpn_is_foreign</value>
       <value>detected_lpn_country_code</value>
       <value>detected_lpn_number</value>
       <value>declared_axle_tariff_category_id</value>
       <value>declared_euro_emission_class_id</value>
       <value>declared_lpn_country_code</value>
       <value>declared_lpn_number</value>
-      <value>data_tag</value>
       <value>cdc_timestamp</value>
     </values>
     <flag_field>flagfield</flag_field>
@@ -1157,14 +1735,6 @@ can be examined post-mortem.</note>
         <rename>passage_event_type_id</rename>
       </field>
       <field>
-        <name>passage_event_depersonalised</name>
-        <rename>passage_event_depersonalised</rename>
-      </field>
-      <field>
-        <name>external_reference_id</name>
-        <rename>external_reference_id</rename>
-      </field>
-      <field>
         <name>data_arrival_timestamp</name>
         <rename>data_arrival_timestamp</rename>
       </field>
@@ -1175,14 +1745,6 @@ can be examined post-mortem.</note>
       <field>
         <name>control_point_id</name>
         <rename>control_point_id</rename>
-      </field>
-      <field>
-        <name>control_point_event_sequence_number</name>
-        <rename>control_point_event_sequence_number</rename>
-      </field>
-      <field>
-        <name>control_point_event_info_flags</name>
-        <rename>control_point_event_info_flags</rename>
       </field>
       <field>
         <name>control_point_event_capture_category_id</name>
@@ -1201,20 +1763,8 @@ can be examined post-mortem.</note>
         <rename>obu_count</rename>
       </field>
       <field>
-        <name>vehicle_detected</name>
-        <rename>vehicle_detected</rename>
-      </field>
-      <field>
         <name>vehicle_image_count</name>
         <rename>vehicle_image_count</rename>
-      </field>
-      <field>
-        <name>logical_lane_id</name>
-        <rename>logical_lane_id</rename>
-      </field>
-      <field>
-        <name>wrong_way_driving</name>
-        <rename>wrong_way_driving</rename>
       </field>
       <field>
         <name>detected_scheme_liability_category_id</name>
@@ -1225,16 +1775,12 @@ can be examined post-mortem.</note>
         <rename>detected_scheme_compliance_category_id</rename>
       </field>
       <field>
-        <name>scheme_compliance_sub_category_id</name>
+        <name>detected_scheme_compliance_sub_category_id</name>
         <rename>scheme_compliance_sub_category_id</rename>
       </field>
       <field>
         <name>detected_axle_tariff_category_id</name>
         <rename>detected_axle_tariff_category_id</rename>
-      </field>
-      <field>
-        <name>detected_lpn_is_foreign</name>
-        <rename>detected_lpn_is_foreign</rename>
       </field>
       <field>
         <name>detected_lpn_country_code</name>
@@ -1259,10 +1805,6 @@ can be examined post-mortem.</note>
       <field>
         <name>declared_lpn_number</name>
         <rename>declared_lpn_number</rename>
-      </field>
-      <field>
-        <name>data_tag</name>
-        <rename>data_tag</rename>
       </field>
       <field>
         <name>cdc_timestamp</name>
