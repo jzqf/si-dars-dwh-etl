@@ -13,9 +13,7 @@
 # 0 2 * * * . $HOME/.profile; $DWH_HOME/bin/dsa-compare.sh
 #
 # This script can also be run manually from a bash shell. Be sure that this is
-# done under the "${app.user}" Linux account because this script expects certain 
-# environment variables to be defined appropriately, which will be done 
-# for you when logging into the "${app.user}" account.
+# done under the "${app.user}" Linux account.
 #
 # Version history:
 #
