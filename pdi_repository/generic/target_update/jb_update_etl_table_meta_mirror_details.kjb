@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2020/01/30 15:10:15.013</modified_date>
+  <modified_date>2020/03/19 16:16:05.668</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE</name>
@@ -638,7 +638,7 @@ PARAM_UPDATE_TABLE_NUM_UPDATES               = ${PARAM_UPDATE_TABLE_NUM_UPDATES}
 PARAM_TARGET_TABLE_SYNCED_TO_INSERT_ID       = ${PARAM_TARGET_TABLE_SYNCED_TO_INSERT_ID}
 PARAM_TARGET_TABLE_SYNCED_TO_LAST_UPDATED_ON = ${PARAM_TARGET_TABLE_SYNCED_TO_LAST_UPDATED_ON}</logmessage>
       <loglevel>Basic</loglevel>
-      <logsubject>${Internal.Job.Name}:</logsubject>
+      <logsubject>Parameters passed to ${Internal.Job.Name}:</logsubject>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
@@ -761,8 +761,8 @@ QF_UPDATE_TABLE_ELAPSED_MILLISECONDS         = ${QF_UPDATE_TABLE_ELAPSED_MILLISE
 QF_UPDATE_TABLE_ROWS_PER_SEC                 = ${QF_UPDATE_TABLE_ROWS_PER_SEC}
 QF_TARGET_TABLE_MAX_INSERT_ID                = ${QF_TARGET_TABLE_MAX_INSERT_ID}
 QF_TARGET_TABLE_MAX_LAST_UPDATED_ON          = ${QF_TARGET_TABLE_MAX_LAST_UPDATED_ON}</logmessage>
-      <loglevel>Minimal</loglevel>
-      <logsubject>${Internal.Job.Name}</logsubject>
+      <loglevel>Basic</loglevel>
+      <logsubject>Variables set in ${Internal.Job.Name}:</logsubject>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
@@ -1204,6 +1204,22 @@ WHERE
       <yloc>1360</yloc>
       <attributes_kjc />
     </entry>
+    <entry>
+      <name>Log variables computed by tr_table_update_statistics_compute</name>
+      <description />
+      <type>WRITE_TO_LOG</type>
+      <attributes />
+      <logmessage>QF_UPDATE_TABLE_ELAPSED_MILLISECONDS = ${QF_UPDATE_TABLE_ELAPSED_MILLISECONDS}
+QF_UPDATE_TABLE_ROWS_PER_SEC         = ${QF_UPDATE_TABLE_ROWS_PER_SEC}</logmessage>
+      <loglevel>Minimal</loglevel>
+      <logsubject>Variables computed by tr_table_update_statistics_compute:</logsubject>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>128</xloc>
+      <yloc>512</yloc>
+      <attributes_kjc />
+    </entry>
   </entries>
   <hops>
     <hop>
@@ -1241,15 +1257,6 @@ WHERE
       <enabled>Y</enabled>
       <evaluation>N</evaluation>
       <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>tr_table_update_statistics_compute</from>
-      <to>PARAM_TARGET_INSERT_ID_COLNAME is not ""</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
     </hop>
     <hop>
       <from>PARAM_TARGET_INSERT_ID_COLNAME is not ""</from>
@@ -1420,6 +1427,24 @@ WHERE
       <to_nr>1</to_nr>
       <enabled>Y</enabled>
       <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>tr_table_update_statistics_compute</from>
+      <to>Log variables computed by tr_table_update_statistics_compute</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Log variables computed by tr_table_update_statistics_compute</from>
+      <to>PARAM_TARGET_INSERT_ID_COLNAME is not ""</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
       <unconditional>N</unconditional>
     </hop>
   </hops>

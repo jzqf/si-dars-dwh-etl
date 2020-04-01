@@ -1,0 +1,80 @@
+
+QFC-BODARS-4956:
+
+*	The content notification email that is sent when the ETL process terminates 
+	has been improved for the case when the ETL job is terminated by a shutdown
+	request. Previously, the email indicated that an error occurred, which is
+	not correct. Now, the email will explain the the job was terminated in a
+	controlled manner by a shutdown request.
+	
+
+QFC-BODARS-4957:
+
+*	If the ETL process is shut down or terminated for any other reason, the 
+	attachment to the notification email will now include update statistics for 
+	the table that was being processed when the ETL process was terminated. 
+	Update statistics for the table being processed will also be persisted in
+	the etl_mgmt database.
+	
+	Previously, update statistics were provided and persisted only for tables
+	that were fully processed by the ETL job, not for tables that we being
+	processed when the ETL job was terminated.
+
+QFC-BODARS-4967, QFC-BODARS-4968, QFC-BODARS-4969:
+
+*	It is now possible to compare a *single* target table with its source table
+	for a range of "insert id" values. Previously, it was only possible to
+	compare a specified number of the most *recently inserted* rows of a table.
+	
+	A shell script is provided to simplify using this new functionality.
+
+*	It is now possible to compare DWH content associated with passages that 
+	occurred between specified "from" and "to" timestamps. More specifically,
+	the "from" and "to" timestamps are used to select rows to compare from the 
+	"passage_events" table. SQL joins are performed with other passage-related
+	tables to select rows to compare from these related tables.
+	
+	This compare can be performed between the obo_opr database and the PSA, or
+	between the PSA and DSA. 
+	
+	Shell script are provided to simplify using this new functionality.
+
+QFC-BODARS-4937:
+
+*	The metadata in the etl_mgmt database has been updated to support the 
+	following changes:
+
+	*	The following columns were added to table obo__svc_lvl_event_register in
+		both the PSA and DSA:
+
+		*	origin_domain_id
+		*	origin_control_point_id
+		*	origin_road_section_id
+
+	*	Table 
+	
+			obo__svc_lvl_impact_domain 
+		
+		has been renamed to 
+		
+			obo__svc_lvl_domain 
+			
+		in both the PSA and DSA.
+
+	*	Table 
+	
+			obo__svc_lvl_event_impact_register 
+		
+		has been renamed to 
+		
+			obo__svc_lvl_impact_register 
+			
+		in both the PSA and DSA.
+
+
+	*	The following tables have bee added to both the PSA and DSA:
+
+		*	obo__kpi_impact_type
+		*	obo__svc_lvl_event_impact_map
+		*	obo__svc_lvl_impact_details
+		*	obo__svc_lvl_impact_status

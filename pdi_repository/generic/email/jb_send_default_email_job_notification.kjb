@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2018/11/16 12:32:35.042</modified_date>
+  <modified_date>2020/03/17 14:19:49.774</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_JOB_BATCH_ID</name>
@@ -58,8 +58,16 @@
         <attribute>N</attribute>
       </attribute>
       <attribute>
+        <code>INITIAL_POOL_SIZE</code>
+        <attribute>10</attribute>
+      </attribute>
+      <attribute>
         <code>IS_CLUSTERED</code>
         <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>MAXIMUM_POOL_SIZE</code>
+        <attribute>10</attribute>
       </attribute>
       <attribute>
         <code>PORT_NUMBER</code>
@@ -83,7 +91,7 @@
       </attribute>
       <attribute>
         <code>USE_POOLING</code>
-        <attribute>N</attribute>
+        <attribute>Y</attribute>
       </attribute>
     </attributes>
   </connection>
@@ -385,7 +393,7 @@
       <attributes_kjc />
     </entry>
     <entry>
-      <name>PARAM_SUCCESS = true? 1</name>
+      <name>PARAM_SUCCESS = true?</name>
       <description />
       <type>SIMPLE_EVAL</type>
       <attributes />
@@ -497,7 +505,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>112</xloc>
-      <yloc>416</yloc>
+      <yloc>512</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -588,8 +596,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>368</xloc>
-      <yloc>416</yloc>
+      <xloc>848</xloc>
+      <yloc>512</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -681,7 +689,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>112</xloc>
-      <yloc>528</yloc>
+      <yloc>672</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -772,8 +780,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>368</xloc>
-      <yloc>528</yloc>
+      <xloc>848</xloc>
+      <yloc>672</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -796,24 +804,283 @@ PARAM_REPO_PATH_TO_JOB_SUMMARY_SQL_QFREE    = ${PARAM_REPO_PATH_TO_JOB_SUMMARY_S
       <yloc>224</yloc>
       <attributes_kjc />
     </entry>
+    <entry>
+      <name>QF_ABORT_TYPE_ID=QF_ABORT_TYPE_ID_SHUTDOWN_REQUESTED ?</name>
+      <description />
+      <type>SIMPLE_EVAL</type>
+      <attributes />
+      <valuetype>variable</valuetype>
+      <fieldname />
+      <variablename>${QF_ABORT_TYPE_ID}</variablename>
+      <fieldtype>string</fieldtype>
+      <mask />
+      <comparevalue>${QF_ABORT_TYPE_ID_SHUTDOWN_REQUESTED}</comparevalue>
+      <minvalue />
+      <maxvalue />
+      <successcondition>equal</successcondition>
+      <successnumbercondition>equal</successnumbercondition>
+      <successbooleancondition>false</successbooleancondition>
+      <successwhenvarset>N</successwhenvarset>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>544</xloc>
+      <yloc>320</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>QF_MAIL_SEND_MSG_QFREE_FOR_SHUTDOWN_REQUESTED = Y ?</name>
+      <description />
+      <type>SIMPLE_EVAL</type>
+      <attributes />
+      <valuetype>variable</valuetype>
+      <fieldname />
+      <variablename>${QF_MAIL_SEND_MSG_QFREE_FOR_SHUTDOWN_REQUESTED}</variablename>
+      <fieldtype>string</fieldtype>
+      <mask />
+      <comparevalue>Y</comparevalue>
+      <minvalue />
+      <maxvalue />
+      <successcondition>equal</successcondition>
+      <successnumbercondition>equal</successnumbercondition>
+      <successbooleancondition>false</successbooleancondition>
+      <successwhenvarset>N</successwhenvarset>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>544</xloc>
+      <yloc>416</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>QF_MAIL_SEND_MSG_CUST_FOR_SHUTDOWN_REQUESTED = Y ?</name>
+      <description />
+      <type>SIMPLE_EVAL</type>
+      <attributes />
+      <valuetype>variable</valuetype>
+      <fieldname />
+      <variablename>${QF_MAIL_SEND_MSG_CUST_FOR_SHUTDOWN_REQUESTED}</variablename>
+      <fieldtype>string</fieldtype>
+      <mask />
+      <comparevalue>Y</comparevalue>
+      <minvalue />
+      <maxvalue />
+      <successcondition>equal</successcondition>
+      <successnumbercondition>equal</successnumbercondition>
+      <successbooleancondition>false</successbooleancondition>
+      <successwhenvarset>N</successwhenvarset>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>544</xloc>
+      <yloc>576</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>jb_send_mail - to Q-Free - Shutdown requested</name>
+      <description />
+      <type>JOB</type>
+      <attributes />
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_send_mail</jobname>
+      <directory>/generic/email</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <run_configuration>Pentaho local</run_configuration>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_MAIL_MSG_ADDRESS_BCC</name>
+          <stream_name />
+          <value>${QF_MAIL_MSG_QFREE_ADDRESS_BCC}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_MAIL_MSG_ADDRESS_CC</name>
+          <stream_name />
+          <value>${QF_MAIL_MSG_QFREE_ADDRESS_CC}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_MAIL_MSG_ADDRESS_TO</name>
+          <stream_name />
+          <value>${QF_MAIL_MSG_QFREE_ADDRESS_TO}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_MAIL_MSG_BODY</name>
+          <stream_name />
+          <value>${QF_MAIL_MSG_QFREE_BODY_SHUTDOWN_REQUESTED}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_MAIL_MSG_CONTACT_PERSON</name>
+          <stream_name />
+          <value>${QF_MAIL_MSG_QFREE_CONTACT_PERSON}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_MAIL_MSG_CONTACT_PHONE</name>
+          <stream_name />
+          <value>${QF_MAIL_MSG_QFREE_CONTACT_PHONE}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_MAIL_MSG_REPLY_TO_ADDRESS</name>
+          <stream_name />
+          <value>${QF_MAIL_MSG_QFREE_REPLY_TO_ADDRESS}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_MAIL_MSG_SENDER_ADDRESS</name>
+          <stream_name />
+          <value>${QF_MAIL_MSG_QFREE_SENDER_ADDRESS}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_MAIL_MSG_SENDER_NAME</name>
+          <stream_name />
+          <value>${QF_MAIL_MSG_QFREE_SENDER_NAME}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_MAIL_MSG_SUBJECT</name>
+          <stream_name />
+          <value>${QF_MAIL_MSG_QFREE_SUBJECT_SHUTDOWN_REQUESTED}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_REPO_PATH_TO_JOB_SUMMARY_SQL</name>
+          <stream_name />
+          <value>${PARAM_REPO_PATH_TO_JOB_SUMMARY_SQL_QFREE}</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>400</xloc>
+      <yloc>512</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>jb_send_mail - to customer - Shutdown requested</name>
+      <description />
+      <type>JOB</type>
+      <attributes />
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_send_mail</jobname>
+      <directory>/generic/email</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <run_configuration>Pentaho local</run_configuration>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_MAIL_MSG_ADDRESS_BCC</name>
+          <stream_name />
+          <value>${QF_MAIL_MSG_CUST_ADDRESS_BCC}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_MAIL_MSG_ADDRESS_CC</name>
+          <stream_name />
+          <value>${QF_MAIL_MSG_CUST_ADDRESS_CC}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_MAIL_MSG_ADDRESS_TO</name>
+          <stream_name />
+          <value>${QF_MAIL_MSG_CUST_ADDRESS_TO}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_MAIL_MSG_BODY</name>
+          <stream_name />
+          <value>${QF_MAIL_MSG_CUST_BODY_SHUTDOWN_REQUESTED}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_MAIL_MSG_CONTACT_PERSON</name>
+          <stream_name />
+          <value>${QF_MAIL_MSG_CUST_CONTACT_PERSON}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_MAIL_MSG_CONTACT_PHONE</name>
+          <stream_name />
+          <value>${QF_MAIL_MSG_CUST_CONTACT_PHONE}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_MAIL_MSG_REPLY_TO_ADDRESS</name>
+          <stream_name />
+          <value>${QF_MAIL_MSG_CUST_REPLY_TO_ADDRESS}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_MAIL_MSG_SENDER_ADDRESS</name>
+          <stream_name />
+          <value>${QF_MAIL_MSG_CUST_SENDER_ADDRESS}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_MAIL_MSG_SENDER_NAME</name>
+          <stream_name />
+          <value>${QF_MAIL_MSG_CUST_SENDER_NAME}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_MAIL_MSG_SUBJECT</name>
+          <stream_name />
+          <value>${QF_MAIL_MSG_CUST_SUBJECT_SHUTDOWN_REQUESTED}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_REPO_PATH_TO_JOB_SUMMARY_SQL</name>
+          <stream_name />
+          <value>${PARAM_REPO_PATH_TO_JOB_SUMMARY_SQL_CUSTOMER}</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>400</xloc>
+      <yloc>672</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>Success</name>
+      <description />
+      <type>SUCCESS</type>
+      <attributes />
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>544</xloc>
+      <yloc>768</yloc>
+      <attributes_kjc />
+    </entry>
   </entries>
   <hops>
     <hop>
-      <from>PARAM_SUCCESS = true? 1</from>
+      <from>PARAM_SUCCESS = true?</from>
       <to>jb_send_mail - to Q-Free - Success</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>PARAM_SUCCESS = true? 1</from>
-      <to>jb_send_mail - to Q-Free - Failure</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
       <unconditional>N</unconditional>
     </hop>
     <hop>
@@ -845,22 +1112,121 @@ PARAM_REPO_PATH_TO_JOB_SUMMARY_SQL_QFREE    = ${PARAM_REPO_PATH_TO_JOB_SUMMARY_S
     </hop>
     <hop>
       <from>Log parameters</from>
-      <to>PARAM_SUCCESS = true? 1</to>
+      <to>PARAM_SUCCESS = true?</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>N</evaluation>
       <unconditional>Y</unconditional>
     </hop>
+    <hop>
+      <from>PARAM_SUCCESS = true?</from>
+      <to>QF_ABORT_TYPE_ID=QF_ABORT_TYPE_ID_SHUTDOWN_REQUESTED ?</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>QF_ABORT_TYPE_ID=QF_ABORT_TYPE_ID_SHUTDOWN_REQUESTED ?</from>
+      <to>jb_send_mail - to Q-Free - Failure</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>QF_ABORT_TYPE_ID=QF_ABORT_TYPE_ID_SHUTDOWN_REQUESTED ?</from>
+      <to>QF_MAIL_SEND_MSG_QFREE_FOR_SHUTDOWN_REQUESTED = Y ?</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>QF_MAIL_SEND_MSG_QFREE_FOR_SHUTDOWN_REQUESTED = Y ?</from>
+      <to>jb_send_mail - to Q-Free - Shutdown requested</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>QF_MAIL_SEND_MSG_QFREE_FOR_SHUTDOWN_REQUESTED = Y ?</from>
+      <to>QF_MAIL_SEND_MSG_CUST_FOR_SHUTDOWN_REQUESTED = Y ?</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_send_mail - to Q-Free - Shutdown requested</from>
+      <to>QF_MAIL_SEND_MSG_CUST_FOR_SHUTDOWN_REQUESTED = Y ?</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>QF_MAIL_SEND_MSG_CUST_FOR_SHUTDOWN_REQUESTED = Y ?</from>
+      <to>jb_send_mail - to customer - Shutdown requested</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_send_mail - to customer - Success</from>
+      <to>Success</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_send_mail - to customer - Shutdown requested</from>
+      <to>Success</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>QF_MAIL_SEND_MSG_CUST_FOR_SHUTDOWN_REQUESTED = Y ?</from>
+      <to>Success</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_send_mail - to customer - Failure</from>
+      <to>Success</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
   </hops>
   <notepads>
     <notepad>
-      <note>Send a "success" or "failure" e-mail to the
-default Q-Free address. Most details are 
-passed to the job via parameters.</note>
-      <xloc>496</xloc>
-      <yloc>416</yloc>
-      <width>237</width>
+      <note>Send a notification e-mail to the
+default Q-Free address. Most details 
+are passed to the job via parameters.</note>
+      <xloc>976</xloc>
+      <yloc>496</yloc>
+      <width>212</width>
       <heigth>49</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
@@ -906,13 +1272,57 @@ This job has three parameters:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Send a "success" or "failure" e-mail to the
-default customer address. Most details are 
-passed to the job via parameters.</note>
-      <xloc>496</xloc>
-      <yloc>528</yloc>
-      <width>246</width>
+      <note>Send a notification e-mail to the
+default customer address. Most details 
+are passed to the job via parameters.</note>
+      <xloc>976</xloc>
+      <yloc>656</yloc>
+      <width>225</width>
       <heigth>49</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Send e-mail
+if configured.</note>
+      <xloc>592</xloc>
+      <yloc>400</yloc>
+      <width>85</width>
+      <heigth>36</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Send e-mail
+if configured.</note>
+      <xloc>592</xloc>
+      <yloc>560</yloc>
+      <width>85</width>
+      <heigth>36</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>

@@ -489,7 +489,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2019/10/03 14:43:46.137</modified_date>
+    <modified_date>2020/03/19 11:26:53.240</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -626,10 +626,44 @@ stream. To avoid this from happening, I add a sequence field named
 "seqnum" to the stream and then filter on seqnum=1 to select the first 
 row in the stream. If there is more than one row in the stream, the 
 subsequent row(s) will be discarded.</note>
-      <xloc>1056</xloc>
+      <xloc>1072</xloc>
       <yloc>768</yloc>
       <width>422</width>
       <heigth>127</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>This sets:
+	QF_MAIL_MSG_QFREE_BODY_FAILURE_EXTRA_INFO_TRANSFORMATION
+	QF_ABORT_TYPE_ID = QF_ABORT_TYPE_ID_SHUTDOWN_REQUESTED
+It also sets:
+	QF_UPDATE_TABLE_NUM_ROWS = current_row_num
+This is done so that we can provide an approximate value for  the number of rows processed,
+as well as so that we can compute an approximate value for num_rows_per_sec in 
+tr_table_update_statistics_compute. Normally, one of QF_UPDATE_TABLE_NUM_ROWS, 
+QF_UPDATE_TABLE_NUM_INSERTS or QF_UPDATE_TABLE_NUM_UPDATES is set in the ETL 
+template transformation after it has processed all rows and an aggregate value can be 
+computed. However, if the ETL template transformation is aborted by a shutdown request,
+neither of these three variables will get set; hence, we set QF_UPDATE_TABLE_NUM_ROWS
+here to the best estimate possible so that ETLstatistics can be persisted for the ETL run by
+jb_update_etl_table_meta_mirror_details.</note>
+      <xloc>1072</xloc>
+      <yloc>928</yloc>
+      <width>518</width>
+      <heigth>192</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -821,7 +855,7 @@ subsequent row(s) will be discarded.</note>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Set variable QF_MAIL_MSG_QFREE_BODY_FAILURE_EXTRA_INFO_TRANSFORMATION</from>
+      <from>Set shutdown-related variables</from>
       <to>Set etl_run.shutdown_initiated_at_utc</to>
       <enabled>Y</enabled>
     </hop>
@@ -867,7 +901,7 @@ subsequent row(s) will be discarded.</note>
     </hop>
     <hop>
       <from>Add shutdown-related fields to stream</from>
-      <to>Set variable QF_MAIL_MSG_QFREE_BODY_FAILURE_EXTRA_INFO_TRANSFORMATION</to>
+      <to>Set shutdown-related variables</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
@@ -1011,8 +1045,8 @@ subsequent row(s) will be discarded.</note>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1328</xloc>
-      <yloc>1088</yloc>
+      <xloc>1312</xloc>
+      <yloc>1136</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1048,6 +1082,120 @@ subsequent row(s) will be discarded.</note>
     <GUI>
       <xloc>784</xloc>
       <yloc>832</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Add shutdown-related fields to stream</name>
+    <type>ScriptValueMod</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <compatible>N</compatible>
+    <optimizationLevel>9</optimizationLevel>
+    <jsScripts>
+      <jsScript>
+        <jsScript_type>0</jsScript_type>
+        <jsScript_name>Script 1</jsScript_name>
+        <jsScript_script>//Script here
+
+// Input fields:
+var shutdown_requested_by;
+var shutdown_requested_at_utc;
+var shutdown_reason;
+
+// Output fields created by this script:
+//
+// "Shutdown requested" message for email:
+var shutdown_requested_summary = "Shutdown requested by: " + shutdown_requested_by + " at: " + shutdown_requested_at_utc + ". Reason: " + shutdown_reason
+//
+// To set "run state" for etl_run row:
+var run_state_id =  parseInt(getVariable("QF_ETL_RUN_STATE_ID_SHUTDOWN_INITIATED", "0"));
+//
+// To set PDI variable QF_ABORT_TYPE_ID:
+var qf_abort_type_id = parseInt(getVariable("QF_ABORT_TYPE_ID_SHUTDOWN_REQUESTED", "0"));
+
+// Set variable with scope "root job". The variable will be valid
+// in the root job and all the child jobs and transformations.
+// Possible scopes:
+//   "s": system-wide
+//   "r": up to the root job
+//   "p": up to the parent job
+//   "g": up to the grandparent job
+//
+// Set the variables that will be displayed in the Q-Free "failure" e-mail notification:
+//Alert("shutdown_requested_summary = " + shutdown_requested_summary);
+// This does not seem to work, so I have commented it out:
+//setVariable("QF_MAIL_MSG_QFREE_BODY_FAILURE_EXTRA_INFO_TRANSFORMATION", shutdown_requested_summary, "r");
+</jsScript_script>
+      </jsScript>
+    </jsScripts>
+    <fields>
+      <field>
+        <name>shutdown_requested_by</name>
+        <rename>shutdown_requested_by</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>Y</replace>
+      </field>
+      <field>
+        <name>shutdown_requested_at_utc</name>
+        <rename>shutdown_requested_at_utc</rename>
+        <type>Timestamp</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>Y</replace>
+      </field>
+      <field>
+        <name>shutdown_reason</name>
+        <rename>shutdown_reason</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>Y</replace>
+      </field>
+      <field>
+        <name>shutdown_requested_summary</name>
+        <rename>shutdown_requested_summary</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+      <field>
+        <name>run_state_id</name>
+        <rename>run_state_id</rename>
+        <type>Integer</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+      <field>
+        <name>qf_abort_type_id</name>
+        <rename>qf_abort_type_id</rename>
+        <type>Integer</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+    </fields>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>944</xloc>
+      <yloc>928</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1372,7 +1520,7 @@ if (prev_progress_milliseconds) {
       </output>
     </remotesteps>
     <GUI>
-      <xloc>960</xloc>
+      <xloc>944</xloc>
       <yloc>752</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1416,111 +1564,8 @@ if (prev_progress_milliseconds) {
       </output>
     </remotesteps>
     <GUI>
-      <xloc>960</xloc>
+      <xloc>944</xloc>
       <yloc>832</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Add shutdown-related fields to stream</name>
-    <type>ScriptValueMod</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <compatible>N</compatible>
-    <optimizationLevel>9</optimizationLevel>
-    <jsScripts>
-      <jsScript>
-        <jsScript_type>0</jsScript_type>
-        <jsScript_name>Script 1</jsScript_name>
-        <jsScript_script>//Script here
-
-// Input fields:
-var shutdown_requested_by;
-var shutdown_requested_at_utc;
-var shutdown_reason;
-
-// Output fields created by this script:
-//
-// "Shutdown requested" message for email:
-var shutdown_requested_summary = "Shutdown requested by: " + shutdown_requested_by + " at: " + shutdown_requested_at_utc + ". Reason: " + shutdown_reason
-//
-// To set "run state" for etl_run row:
-var run_state_id =  parseInt(getVariable("QF_ETL_RUN_STATE_ID_SHUTDOWN_INITIATED", "0"));
-
-// Set variable with scope "root job". The variable will be valid
-// in the root job and all the child jobs and transformations.
-// Possible scopes:
-//   "s": system-wide
-//   "r": up to the root job
-//   "p": up to the parent job
-//   "g": up to the grandparent job
-//
-// Set the variables that will be displayed in the Q-Free "failure" e-mail notification:
-//Alert("shutdown_requested_summary = " + shutdown_requested_summary);
-// This does not seem to work, so I have commented it out:
-//setVariable("QF_MAIL_MSG_QFREE_BODY_FAILURE_EXTRA_INFO_TRANSFORMATION", shutdown_requested_summary, "r");
-</jsScript_script>
-      </jsScript>
-    </jsScripts>
-    <fields>
-      <field>
-        <name>shutdown_requested_by</name>
-        <rename>shutdown_requested_by</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>Y</replace>
-      </field>
-      <field>
-        <name>shutdown_requested_at_utc</name>
-        <rename>shutdown_requested_at_utc</rename>
-        <type>Timestamp</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>Y</replace>
-      </field>
-      <field>
-        <name>shutdown_reason</name>
-        <rename>shutdown_reason</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>Y</replace>
-      </field>
-      <field>
-        <name>shutdown_requested_summary</name>
-        <rename>shutdown_requested_summary</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>
-      <field>
-        <name>run_state_id</name>
-        <rename>run_state_id</rename>
-        <type>Integer</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>
-    </fields>
-    <attributes />
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>960</xloc>
-      <yloc>928</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1761,7 +1806,7 @@ var run_state_id =  parseInt(getVariable("QF_ETL_RUN_STATE_ID_SHUTDOWN_INITIATED
     <displayHeader>Y</displayHeader>
     <limitRows>N</limitRows>
     <limitRowsNumber>0</limitRowsNumber>
-    <logmessage>Shutdown initiated:</logmessage>
+    <logmessage>Shutdown initiated.</logmessage>
     <fields>
       <field>
         <name>shutdown_requested_by</name>
@@ -1771,6 +1816,9 @@ var run_state_id =  parseInt(getVariable("QF_ETL_RUN_STATE_ID_SHUTDOWN_INITIATED
       </field>
       <field>
         <name>shutdown_requested_at_utc</name>
+      </field>
+      <field>
+        <name>qf_abort_type_id</name>
       </field>
     </fields>
     <attributes />
@@ -1782,8 +1830,8 @@ var run_state_id =  parseInt(getVariable("QF_ETL_RUN_STATE_ID_SHUTDOWN_INITIATED
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1152</xloc>
-      <yloc>1088</yloc>
+      <xloc>1136</xloc>
+      <yloc>1136</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -2018,8 +2066,8 @@ var run_state_id =  parseInt(getVariable("QF_ETL_RUN_STATE_ID_SHUTDOWN_INITIATED
       </output>
     </remotesteps>
     <GUI>
-      <xloc>960</xloc>
-      <yloc>1088</yloc>
+      <xloc>944</xloc>
+      <yloc>1136</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -2070,7 +2118,7 @@ var progress_milliseconds = Date.now();</jsScript_script>
     </GUI>
   </step>
   <step>
-    <name>Set variable QF_MAIL_MSG_QFREE_BODY_FAILURE_EXTRA_INFO_TRANSFORMATION</name>
+    <name>Set shutdown-related variables</name>
     <type>SetVariable</type>
     <description />
     <distribute>Y</distribute>
@@ -2087,6 +2135,18 @@ var progress_milliseconds = Date.now();</jsScript_script>
         <variable_type>ROOT_JOB</variable_type>
         <default_value />
       </field>
+      <field>
+        <field_name>qf_abort_type_id</field_name>
+        <variable_name>QF_ABORT_TYPE_ID</variable_name>
+        <variable_type>ROOT_JOB</variable_type>
+        <default_value />
+      </field>
+      <field>
+        <field_name>current_row_num</field_name>
+        <variable_name>QF_UPDATE_TABLE_NUM_ROWS</variable_name>
+        <variable_type>ROOT_JOB</variable_type>
+        <default_value />
+      </field>
     </fields>
     <use_formatting>Y</use_formatting>
     <attributes />
@@ -2098,8 +2158,8 @@ var progress_milliseconds = Date.now();</jsScript_script>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>960</xloc>
-      <yloc>1008</yloc>
+      <xloc>944</xloc>
+      <yloc>1024</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

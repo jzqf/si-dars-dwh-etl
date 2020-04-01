@@ -12,9 +12,7 @@
 # 0 2 * * * . $HOME/.profile; $DWH_HOME/bin/dma-update.sh
 #
 # This script can also be run manually from a bash shell. Be sure that this is
-# done under the "${app.user}" Linux account because this script expects certain 
-# environment variables to be defined appropriately, which will be done 
-# for you when logging into the "${app.user}" account.
+# done under the "${app.user}" Linux account.
 #
 # Version history:
 #
@@ -22,5 +20,8 @@
 # Updated:  2017.05.29
 # Author:   Jeffrey Zelt
 # Changes:  Initial version
+
+# Include environment variables
+source ${app.rootDir}/${app.user}/bin/${app.name}-env.sh
 
 $DWH_HOME/bin/kitchen.sh /data_mart jb_dma-update
