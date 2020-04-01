@@ -11,5 +11,6 @@ WHERE
     table_name IN
     (
        'obo__svc_lvl_impact_domain',
-       'obo__svc_lvl_event_impact_register'
+       'obo__svc_lvl_event_impact_register',
+       'obo__svc_lvl_event_register'
     );
