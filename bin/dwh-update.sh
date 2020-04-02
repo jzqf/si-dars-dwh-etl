@@ -2,7 +2,15 @@
 #
 # This is a wrapper script called frequently from CRON,
 # that tries to make some semi-smart decisions about
-# running the DWH ETL jobs.
+# running the DWH ETL jobs. This script can be runs as follows:
+#
+#	sudo su -l -s /bin/bash dwh_etl
+#	/opt/qfree/dwh_etl/bin/dwh-update.sh
+#
+#	or:
+#
+#	sudo su -l -s /bin/bash dwh_etl -c "/opt/qfree/dwh_etl/bin/dwh-update.sh"
+#
 #
 # Ideally we whish the continuious running changes to the
 # core app to land, but until then, we try a script based

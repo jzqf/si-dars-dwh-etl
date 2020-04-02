@@ -434,7 +434,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2019/09/10 13:07:00.918</modified_date>
+    <modified_date>2020/03/19 16:11:21.197</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -445,14 +445,16 @@
 	QF_SHUTDOWN_REQUESTED_BY
 	QF_SHUTDOWN_REASON
 	QF_SHUTDOWN_REQUESTED_AT_UTC
+	QF_ABORT_TYPE_ID
+	QF_MAIL_MSG_QFREE_BODY_FAILURE_EXTRA_INFO_TRANSFORMATION		The value of this variable appears in the body of the notification email
 
 This job has the parameters:
 
 	PARAM_ETL_RUN_ID		Primary key of the row of ${QF_ETL_DB_SCHEMA}.etl_run for the current ETL run</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>782</width>
-      <heigth>127</heigth>
+      <width>850</width>
+      <heigth>153</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -472,7 +474,7 @@ This job has the parameters:
       <note>Generate a single stream row from the ${QF_ETL_DB_SCHEMA}.etl_run row 
 that is responsible for the shutdown request.</note>
       <xloc>288</xloc>
-      <yloc>160</yloc>
+      <yloc>192</yloc>
       <width>427</width>
       <heigth>36</heigth>
       <fontname>Ubuntu</fontname>
@@ -496,11 +498,12 @@ that is responsible for the shutdown request.</note>
 	QF_SHUTDOWN_REQUESTED_BY
 	QF_SHUTDOWN_REASON
 	QF_SHUTDOWN_REQUESTED_AT_UTC
-</note>
+	QF_ABORT_TYPE_ID
+	QF_MAIL_MSG_QFREE_BODY_FAILURE_EXTRA_INFO_TRANSFORMATION</note>
       <xloc>288</xloc>
-      <yloc>304</yloc>
-      <width>249</width>
-      <heigth>88</heigth>
+      <yloc>320</yloc>
+      <width>434</width>
+      <heigth>101</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -539,8 +542,16 @@ that is responsible for the shutdown request.</note>
         <attribute>N</attribute>
       </attribute>
       <attribute>
+        <code>INITIAL_POOL_SIZE</code>
+        <attribute>10</attribute>
+      </attribute>
+      <attribute>
         <code>IS_CLUSTERED</code>
         <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>MAXIMUM_POOL_SIZE</code>
+        <attribute>10</attribute>
       </attribute>
       <attribute>
         <code>PORT_NUMBER</code>
@@ -564,7 +575,7 @@ that is responsible for the shutdown request.</note>
       </attribute>
       <attribute>
         <code>USE_POOLING</code>
-        <attribute>N</attribute>
+        <attribute>Y</attribute>
       </attribute>
     </attributes>
   </connection>
@@ -590,8 +601,16 @@ that is responsible for the shutdown request.</note>
         <attribute>N</attribute>
       </attribute>
       <attribute>
+        <code>INITIAL_POOL_SIZE</code>
+        <attribute>10</attribute>
+      </attribute>
+      <attribute>
         <code>IS_CLUSTERED</code>
         <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>MAXIMUM_POOL_SIZE</code>
+        <attribute>10</attribute>
       </attribute>
       <attribute>
         <code>PORT_NUMBER</code>
@@ -615,7 +634,7 @@ that is responsible for the shutdown request.</note>
       </attribute>
       <attribute>
         <code>USE_POOLING</code>
-        <attribute>N</attribute>
+        <attribute>Y</attribute>
       </attribute>
     </attributes>
   </connection>
@@ -646,7 +665,9 @@ that is responsible for the shutdown request.</note>
     <sql>SELECT 
     shutdown_requested_by,
     shutdown_reason,
-    shutdown_requested_at_utc 
+    shutdown_requested_at_utc,
+    ${QF_ABORT_TYPE_ID_SHUTDOWN_REQUESTED} AS "qf_abort_type_id",
+    'Shutdown requested by: ' || shutdown_requested_by || ' at: ' || shutdown_requested_at_utc || '. Reason: ' || shutdown_reason AS "shutdown_requested_summary"
 FROM
     ${QF_ETL_DB_SCHEMA}.etl_run
 WHERE
@@ -667,7 +688,51 @@ WHERE
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>160</yloc>
+      <yloc>192</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Log: Shutdown initiated</name>
+    <type>WriteToLog</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <loglevel>log_level_minimal</loglevel>
+    <displayHeader>Y</displayHeader>
+    <limitRows>N</limitRows>
+    <limitRowsNumber>0</limitRowsNumber>
+    <logmessage>Shutdown initiated:</logmessage>
+    <fields>
+      <field>
+        <name>shutdown_requested_by</name>
+      </field>
+      <field>
+        <name>shutdown_reason</name>
+      </field>
+      <field>
+        <name>shutdown_requested_at_utc</name>
+      </field>
+      <field>
+        <name>qf_abort_type_id</name>
+      </field>
+    </fields>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>144</xloc>
+      <yloc>272</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -701,6 +766,18 @@ WHERE
         <variable_type>ROOT_JOB</variable_type>
         <default_value />
       </field>
+      <field>
+        <field_name>qf_abort_type_id</field_name>
+        <variable_name>QF_ABORT_TYPE_ID</variable_name>
+        <variable_type>ROOT_JOB</variable_type>
+        <default_value />
+      </field>
+      <field>
+        <field_name>shutdown_requested_summary</field_name>
+        <variable_name>QF_MAIL_MSG_QFREE_BODY_FAILURE_EXTRA_INFO_TRANSFORMATION</variable_name>
+        <variable_type>ROOT_JOB</variable_type>
+        <default_value />
+      </field>
     </fields>
     <use_formatting>Y</use_formatting>
     <attributes />
@@ -713,48 +790,7 @@ WHERE
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>320</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Log: Shutdown initiated</name>
-    <type>WriteToLog</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <loglevel>log_level_minimal</loglevel>
-    <displayHeader>Y</displayHeader>
-    <limitRows>N</limitRows>
-    <limitRowsNumber>0</limitRowsNumber>
-    <logmessage>Shutdown initiated:</logmessage>
-    <fields>
-      <field>
-        <name>shutdown_requested_by</name>
-      </field>
-      <field>
-        <name>shutdown_reason</name>
-      </field>
-      <field>
-        <name>shutdown_requested_at_utc</name>
-      </field>
-    </fields>
-    <attributes />
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>144</xloc>
-      <yloc>240</yloc>
+      <yloc>352</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
