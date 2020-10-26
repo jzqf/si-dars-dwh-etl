@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2018/08/10 15:03:57.348</modified_date>
+  <modified_date>2020/10/26 14:37:36.842</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CAN_DELETE_ROWS</name>
@@ -88,12 +88,12 @@
     <parameter>
       <name>PARAM_SOURCE_DB_ETL_STATE_REGISTER_SCHEMA_NAME</name>
       <default_value />
-      <description>Name the schema in the "source" DB that contains the "etl state register" table</description>
+      <description>Name the schema in the "source" DB that contains the "etl state register source" table</description>
     </parameter>
     <parameter>
       <name>PARAM_SOURCE_DB_ETL_STATE_REGISTER_TABLE_NAME</name>
       <default_value />
-      <description>Name of the table in the "source" DB acting as the "etl state register" table</description>
+      <description>Name of the table in the "source" DB acting as the "etl state register source" table</description>
     </parameter>
     <parameter>
       <name>PARAM_SOURCE_DB_ID</name>
@@ -119,6 +119,16 @@
       <name>PARAM_SOURCE_TABLE</name>
       <default_value />
       <description>Name of source table to mirror to target table</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_TARGET_DB_ETL_STATE_REGISTER_SCHEMA_NAME</name>
+      <default_value />
+      <description>Name the schema in the "target" DB that contains the "etl state register target" table</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_TARGET_DB_ETL_STATE_REGISTER_TABLE_NAME</name>
+      <default_value />
+      <description>Name of the table in the "target" DB acting as the "etl state register target" table</description>
     </parameter>
     <parameter>
       <name>PARAM_TARGET_DB_ID</name>
@@ -158,8 +168,16 @@
         <attribute>N</attribute>
       </attribute>
       <attribute>
+        <code>INITIAL_POOL_SIZE</code>
+        <attribute>10</attribute>
+      </attribute>
+      <attribute>
         <code>IS_CLUSTERED</code>
         <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>MAXIMUM_POOL_SIZE</code>
+        <attribute>10</attribute>
       </attribute>
       <attribute>
         <code>PORT_NUMBER</code>
@@ -183,7 +201,7 @@
       </attribute>
       <attribute>
         <code>USE_POOLING</code>
-        <attribute>N</attribute>
+        <attribute>Y</attribute>
       </attribute>
     </attributes>
   </connection>
@@ -466,6 +484,7 @@
       <name>START</name>
       <description />
       <type>SPECIAL</type>
+      <attributes />
       <start>Y</start>
       <dummy>N</dummy>
       <repeat>N</repeat>
@@ -480,12 +499,14 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>16</xloc>
-      <yloc>496</yloc>
+      <yloc>512</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>tr_populate_table_meta-one_table</name>
       <description />
       <type>TRANS</type>
+      <attributes />
       <specification_method>rep_name</specification_method>
       <trans_object_id />
       <filename />
@@ -527,12 +548,14 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>304</xloc>
-      <yloc>864</yloc>
+      <yloc>880</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>Log parameters</name>
       <description />
       <type>WRITE_TO_LOG</type>
+      <attributes />
       <logmessage>PARAM_SOURCE_DB_ID                             = ${PARAM_SOURCE_DB_ID}
 PARAM_SOURCE_SCHEMA                            = ${PARAM_SOURCE_SCHEMA}
 PARAM_SOURCE_TABLE                             = ${PARAM_SOURCE_TABLE}
@@ -557,19 +580,23 @@ PARAM_CAN_DELETE_ROW_SCHEMA_NAME               = ${PARAM_CAN_DELETE_ROW_SCHEMA_N
 PARAM_CAN_DELETE_ROW_TABLE_NAME                = ${PARAM_CAN_DELETE_ROW_TABLE_NAME}
 PARAM_DELETE_MARKED_ROWS_TABLE_ORDER           = ${PARAM_DELETE_MARKED_ROWS_TABLE_ORDER}
 PARAM_SOURCE_DB_ETL_STATE_REGISTER_SCHEMA_NAME = ${PARAM_SOURCE_DB_ETL_STATE_REGISTER_SCHEMA_NAME}
-PARAM_SOURCE_DB_ETL_STATE_REGISTER_TABLE_NAME  = ${PARAM_SOURCE_DB_ETL_STATE_REGISTER_TABLE_NAME}</logmessage>
+PARAM_SOURCE_DB_ETL_STATE_REGISTER_TABLE_NAME  = ${PARAM_SOURCE_DB_ETL_STATE_REGISTER_TABLE_NAME}
+PARAM_TARGET_DB_ETL_STATE_REGISTER_SCHEMA_NAME = ${PARAM_TARGET_DB_ETL_STATE_REGISTER_SCHEMA_NAME}
+PARAM_TARGET_DB_ETL_STATE_REGISTER_TABLE_NAME  = ${PARAM_TARGET_DB_ETL_STATE_REGISTER_TABLE_NAME}</logmessage>
       <loglevel>Basic</loglevel>
       <logsubject>Parameters received by ${Internal.Job.Name}</logsubject>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>128</xloc>
-      <yloc>496</yloc>
+      <yloc>512</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>tr_populate_column_meta-one_table</name>
       <description />
       <type>TRANS</type>
+      <attributes />
       <specification_method>rep_name</specification_method>
       <trans_object_id />
       <filename />
@@ -641,12 +668,14 @@ PARAM_SOURCE_DB_ETL_STATE_REGISTER_TABLE_NAME  = ${PARAM_SOURCE_DB_ETL_STATE_REG
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>304</xloc>
-      <yloc>1040</yloc>
+      <yloc>1056</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>jb_log_error</name>
       <description />
       <type>JOB</type>
+      <attributes />
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
@@ -681,23 +710,27 @@ PARAM_SOURCE_DB_ETL_STATE_REGISTER_TABLE_NAME  = ${PARAM_SOURCE_DB_ETL_STATE_REG
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>80</xloc>
-      <yloc>1040</yloc>
+      <yloc>1056</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>Abort job</name>
       <description />
       <type>ABORT</type>
+      <attributes />
       <message>${QF_ABORT_JOB_MESSAGE}</message>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>80</xloc>
-      <yloc>944</yloc>
+      <yloc>960</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>jb_set_dynamic_db_connection_variables</name>
       <description />
       <type>JOB</type>
+      <attributes />
       <specification_method>rep_name</specification_method>
       <job_object_id />
       <filename />
@@ -732,12 +765,14 @@ PARAM_SOURCE_DB_ETL_STATE_REGISTER_TABLE_NAME  = ${PARAM_SOURCE_DB_ETL_STATE_REG
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>304</xloc>
-      <yloc>704</yloc>
+      <yloc>720</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>Set PARAM_TARGET_SCHEMA = PARAM_SOURCE_SCHEMA</name>
       <description />
       <type>SET_VARIABLES</type>
+      <attributes />
       <replacevars>Y</replacevars>
       <filename />
       <file_variable_type>JVM</file_variable_type>
@@ -752,12 +787,14 @@ PARAM_SOURCE_DB_ETL_STATE_REGISTER_TABLE_NAME  = ${PARAM_SOURCE_DB_ETL_STATE_REG
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>608</xloc>
-      <yloc>496</yloc>
+      <yloc>512</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>PARAM_TARGET_SCHEMA has value ?</name>
       <description />
       <type>SIMPLE_EVAL</type>
+      <attributes />
       <valuetype>variable</valuetype>
       <fieldname />
       <variablename>${PARAM_TARGET_SCHEMA}</variablename>
@@ -774,12 +811,14 @@ PARAM_SOURCE_DB_ETL_STATE_REGISTER_TABLE_NAME  = ${PARAM_SOURCE_DB_ETL_STATE_REG
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>304</xloc>
-      <yloc>496</yloc>
+      <yloc>512</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>Set PARAM_TARGET_TABLE = PARAM_SOURCE_TABLE</name>
       <description />
       <type>SET_VARIABLES</type>
+      <attributes />
       <replacevars>Y</replacevars>
       <filename />
       <file_variable_type>JVM</file_variable_type>
@@ -794,12 +833,14 @@ PARAM_SOURCE_DB_ETL_STATE_REGISTER_TABLE_NAME  = ${PARAM_SOURCE_DB_ETL_STATE_REG
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>608</xloc>
-      <yloc>592</yloc>
+      <yloc>608</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>PARAM_TARGET_TABLE has value ?</name>
       <description />
       <type>SIMPLE_EVAL</type>
+      <attributes />
       <valuetype>variable</valuetype>
       <fieldname />
       <variablename>${PARAM_TARGET_TABLE}</variablename>
@@ -816,17 +857,20 @@ PARAM_SOURCE_DB_ETL_STATE_REGISTER_TABLE_NAME  = ${PARAM_SOURCE_DB_ETL_STATE_REG
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>304</xloc>
-      <yloc>592</yloc>
+      <yloc>608</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>Success</name>
       <description />
       <type>SUCCESS</type>
+      <attributes />
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>304</xloc>
-      <yloc>1136</yloc>
+      <yloc>1152</yloc>
+      <attributes_kjc />
     </entry>
   </entries>
   <hops>
@@ -1001,12 +1045,14 @@ This job has parameters:
 	PARAM_CAN_DELETE_ROW_SCHEMA_NAME				Name of the schema containing the "can delete row" table
 	PARAM_CAN_DELETE_ROW_TABLE_NAME					Name of the "can delete row" table
 	PARAM_DELETE_MARKED_ROWS_TABLE_ORDER			Integer value for setting the order that tables are processed by the default the "delete marked rows" algorithm
-	PARAM_SOURCE_DB_ETL_STATE_REGISTER_SCHEMA_NAME	Name the schema in the "source" DB that contains the "etl state register" table
-	PARAM_SOURCE_DB_ETL_STATE_REGISTER_TABLE_NAME	Name of the table in the "source" DB acting as the "etl state register" table</note>
+	PARAM_SOURCE_DB_ETL_STATE_REGISTER_SCHEMA_NAME	Name the schema in the "source" DB that contains the "etl state register source" table
+	PARAM_SOURCE_DB_ETL_STATE_REGISTER_TABLE_NAME	Name of the table in the "source" DB acting as the "etl state register source" table
+	PARAM_TARGET_DB_ETL_STATE_REGISTER_SCHEMA_NAME	Name the schema in the "target" DB that contains the "etl state register target" table
+	PARAM_TARGET_DB_ETL_STATE_REGISTER_TABLE_NAME	Name of the table in the "target" DB acting as the "etl state register target" table</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
       <width>984</width>
-      <heigth>465</heigth>
+      <heigth>491</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -1038,7 +1084,7 @@ This is because the values for these variables are modified in this job if they 
 "". If this is done, it seems that their *original* blank values are passed to sub-transformation here 
 unless the parameters are explicitly passed as shown.</note>
       <xloc>448</xloc>
-      <yloc>784</yloc>
+      <yloc>800</yloc>
       <width>561</width>
       <heigth>192</heigth>
       <fontname>Ubuntu</fontname>
@@ -1062,7 +1108,7 @@ row just created, one for each column of the table in the source DB.
 
 This transformation is passed the value of the PDI variable QF_TABLE_META_ID as a parameter.</note>
       <xloc>448</xloc>
-      <yloc>1024</yloc>
+      <yloc>1040</yloc>
       <width>615</width>
       <heigth>62</heigth>
       <fontname>Ubuntu</fontname>
@@ -1089,7 +1135,7 @@ based on a single parameter:
 
 	PARAM_DB_ID = ${PARAM_SOURCE_DB_ID}</note>
       <xloc>448</xloc>
-      <yloc>656</yloc>
+      <yloc>672</yloc>
       <width>275</width>
       <heigth>101</heigth>
       <fontname>Ubuntu</fontname>
