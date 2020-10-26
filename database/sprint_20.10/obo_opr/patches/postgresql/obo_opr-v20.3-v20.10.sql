@@ -11,7 +11,7 @@
 SELECT COUNT(*)   AS "dwh_etl_state_register rows (before)" FROM public.dwh_etl_state_register;
 SELECT last_value AS "dwh_etl_state_register_desr_id_seq (before)" FROM dwh_etl_state_register_desr_id_seq;
 CREATE TABLE dwh_etl_state_register_source (
-   desr_id                                   BIGSERIAL            not null,
+   desrs_id                                   BIGSERIAL            not null,
    schema_name                               VARCHAR(80)          not null,
    table_name                                VARCHAR(80)          not null,
    dwh_last_updated_insert_id_colname        VARCHAR(80)          null,
@@ -19,14 +19,14 @@ CREATE TABLE dwh_etl_state_register_source (
    dwh_last_updated_last_updated_on_colname  VARCHAR(80)          null,
    dwh_last_updated_last_updated_on_maxvalue TIMESTAMP            null,
    etl_job_id                                INTEGER              not null,
-   CONSTRAINT PK_DWH_ETL_STATE_REGISTER_SRC PRIMARY KEY (desr_id),
+   CONSTRAINT PK_DWH_ETL_STATE_REGISTER_SRC PRIMARY KEY (desrs_id),
    CONSTRAINT AK_KEY_2_DWH_ETL_STATE_SRC UNIQUE (schema_name, table_name)
 );
 -- Special Per Table Permissions (Be Sure to Try and be SQL Standards compliant here!)
 -- NOTE Sequence usage is needed, but granted in the DB level default permissions.
 GRANT SELECT, INSERT, UPDATE, DELETE ON dwh_etl_state_register_source TO qfree_bi_rw_role;
 INSERT INTO public.dwh_etl_state_register_source (
---  desr_id,    <-- We do not specify this column so that the sequence associated with this column will get incremented.
+--  desrs_id,    <-- We do not specify this column so that the sequence associated with this column will get incremented.
    schema_name,
    table_name,
    dwh_last_updated_insert_id_colname,
@@ -54,7 +54,7 @@ DROP TABLE public.dwh_etl_state_register;  -- should only be executed if there w
 -- Add table dwh_etl_state_register_target:
 -- -----------------------------------------------------------------------------
 CREATE TABLE dwh_etl_state_register_target (
-   desr_id                                   BIGSERIAL            not null,
+   desrt_id                                   BIGSERIAL            not null,
    schema_name                               VARCHAR(80)          not null,
    table_name                                VARCHAR(80)          not null,
    dwh_last_updated_insert_id_colname        VARCHAR(80)          null,
@@ -62,7 +62,7 @@ CREATE TABLE dwh_etl_state_register_target (
    dwh_last_updated_last_updated_on_colname  VARCHAR(80)          null,
    dwh_last_updated_last_updated_on_maxvalue TIMESTAMP            null,
    etl_job_id                                INTEGER              not null,
-   CONSTRAINT PK_DWH_ETL_STATE_REGISTER_TGT PRIMARY KEY (desr_id),
+   CONSTRAINT PK_DWH_ETL_STATE_REGISTER_TGT PRIMARY KEY (desrt_id),
    CONSTRAINT AK_KEY_2_DWH_ETL_STATE_TGT UNIQUE (schema_name, table_name)
 );
 -- Special Per Table Permissions (Be Sure to Try and be SQL Standards compliant here!)
