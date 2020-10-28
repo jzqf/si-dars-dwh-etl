@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2020/10/28 08:55:01.495</modified_date>
+  <modified_date>2020/10/28 12:25:46.847</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE</name>
@@ -556,9 +556,9 @@ PARAM_TARGET_TABLE_MAX_LAST_UPDATED_ON = ${PARAM_TARGET_TABLE_MAX_LAST_UPDATED_O
       <type>WRITE_TO_LOG</type>
       <attributes />
       <logmessage>PARAM_TABLE_META_ID                    = ${PARAM_TABLE_META_ID}
-QF_ETL_STATE_REGISTER_SCHEMA_NAME      = ${QF_ETL_STATE_REGISTER_SCHEMA_NAME}
-QF_ETL_STATE_REGISTER_TABLE_NAME       = ${QF_ETL_STATE_REGISTER_TABLE_NAME}
-QF_ETL_STATE_REGISTER_FQ_TABLE_NAME    = ${QF_ETL_STATE_REGISTER_FQ_TABLE_NAME}</logmessage>
+QF_ETL_STATE_REGISTER_SOURCE_SCHEMA_NAME      = ${QF_ETL_STATE_REGISTER_SOURCE_SCHEMA_NAME}
+QF_ETL_STATE_REGISTER_SOURCE_TABLE_NAME       = ${QF_ETL_STATE_REGISTER_SOURCE_TABLE_NAME}
+QF_ETL_STATE_REGISTER_SOURCE_FQ_TABLE_NAME    = ${QF_ETL_STATE_REGISTER_SOURCE_FQ_TABLE_NAME}</logmessage>
       <loglevel>Minimal</loglevel>
       <logsubject>${Internal.Job.Name}</logsubject>
       <parallel>N</parallel>
@@ -650,13 +650,13 @@ QF_ETL_STATE_REGISTER_FQ_TABLE_NAME    = ${QF_ETL_STATE_REGISTER_FQ_TABLE_NAME}<
       <attributes_kjc />
     </entry>
     <entry>
-      <name>QF_ETL_STATE_REGISTER_FQ_TABLE_NAME is set?</name>
+      <name>qf_etl_state_register_source table specified?</name>
       <description />
       <type>SIMPLE_EVAL</type>
       <attributes />
       <valuetype>variable</valuetype>
       <fieldname />
-      <variablename>QF_ETL_STATE_REGISTER_FQ_TABLE_NAME</variablename>
+      <variablename>QF_ETL_STATE_REGISTER_SOURCE_FQ_TABLE_NAME</variablename>
       <fieldtype>string</fieldtype>
       <mask />
       <comparevalue />
@@ -705,19 +705,19 @@ QF_ETL_STATE_REGISTER_FQ_TABLE_NAME    = ${QF_ETL_STATE_REGISTER_FQ_TABLE_NAME}<
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
         <parameter>
-          <name>PARAM_ETL_STATE_REGISTER_SCHEMA_NAME</name>
+          <name>PARAM_ETL_STATE_REGISTER_SOURCE_SCHEMA_NAME</name>
           <stream_name />
-          <value>${QF_ETL_STATE_REGISTER_SCHEMA_NAME}</value>
+          <value>${QF_ETL_STATE_REGISTER_SOURCE_SCHEMA_NAME}</value>
         </parameter>
         <parameter>
-          <name>PARAM_ETL_STATE_REGISTER_TABLE_NAME</name>
+          <name>PARAM_ETL_STATE_REGISTER_SOURCE_TABLE_NAME</name>
           <stream_name />
-          <value>${QF_ETL_STATE_REGISTER_TABLE_NAME}</value>
+          <value>${QF_ETL_STATE_REGISTER_SOURCE_TABLE_NAME}</value>
         </parameter>
         <parameter>
-          <name>PARAM_ETL_STATE_REGISTER_FQ_TABLE_NAME</name>
+          <name>PARAM_ETL_STATE_REGISTER_SOURCE_FQ_TABLE_NAME</name>
           <stream_name />
-          <value>${QF_ETL_STATE_REGISTER_FQ_TABLE_NAME}</value>
+          <value>${QF_ETL_STATE_REGISTER_SOURCE_FQ_TABLE_NAME}</value>
         </parameter>
       </parameters>
       <parallel>N</parallel>
@@ -826,19 +826,19 @@ QF_ETL_STATE_REGISTER_FQ_TABLE_NAME    = ${QF_ETL_STATE_REGISTER_FQ_TABLE_NAME}<
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
         <parameter>
-          <name>PARAM_ETL_STATE_REGISTER_SCHEMA_NAME</name>
+          <name>PARAM_ETL_STATE_REGISTER_TARGET_SCHEMA_NAME</name>
           <stream_name />
-          <value>${QF_ETL_STATE_REGISTER_SCHEMA_NAME}</value>
+          <value>${QF_ETL_STATE_REGISTER_TARGET_SCHEMA_NAME}</value>
         </parameter>
         <parameter>
-          <name>PARAM_ETL_STATE_REGISTER_TABLE_NAME</name>
+          <name>PARAM_ETL_STATE_REGISTER_TARGET_TABLE_NAME</name>
           <stream_name />
-          <value>${QF_ETL_STATE_REGISTER_TABLE_NAME}</value>
+          <value>${QF_ETL_STATE_REGISTER_TARGET_TABLE_NAME}</value>
         </parameter>
         <parameter>
-          <name>PARAM_ETL_STATE_REGISTER_FQ_TABLE_NAME</name>
+          <name>PARAM_ETL_STATE_REGISTER_TARGET_FQ_TABLE_NAME</name>
           <stream_name />
-          <value>${QF_ETL_STATE_REGISTER_FQ_TABLE_NAME}</value>
+          <value>${QF_ETL_STATE_REGISTER_TARGET_FQ_TABLE_NAME}</value>
         </parameter>
       </parameters>
       <parallel>N</parallel>
@@ -849,13 +849,13 @@ QF_ETL_STATE_REGISTER_FQ_TABLE_NAME    = ${QF_ETL_STATE_REGISTER_FQ_TABLE_NAME}<
       <attributes_kjc />
     </entry>
     <entry>
-      <name>QF_ETL_STATE_REGISTER_FQ_TABLE_NAME is set? 2</name>
+      <name>qf_etl_state_register_target table specified?</name>
       <description />
       <type>SIMPLE_EVAL</type>
       <attributes />
       <valuetype>variable</valuetype>
       <fieldname />
-      <variablename>QF_ETL_STATE_REGISTER_FQ_TABLE_NAME</variablename>
+      <variablename>QF_ETL_STATE_REGISTER_TARGET_FQ_TABLE_NAME</variablename>
       <fieldtype>string</fieldtype>
       <mask />
       <comparevalue />
@@ -929,7 +929,7 @@ QF_ETL_STATE_REGISTER_FQ_TABLE_NAME    = ${QF_ETL_STATE_REGISTER_FQ_TABLE_NAME}<
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>QF_ETL_STATE_REGISTER_FQ_TABLE_NAME is set?</from>
+      <from>qf_etl_state_register_source table specified?</from>
       <to>tr_etl_state_register_source-update</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -948,7 +948,7 @@ QF_ETL_STATE_REGISTER_FQ_TABLE_NAME    = ${QF_ETL_STATE_REGISTER_FQ_TABLE_NAME}<
     </hop>
     <hop>
       <from>Log details</from>
-      <to>QF_ETL_STATE_REGISTER_FQ_TABLE_NAME is set?</to>
+      <to>qf_etl_state_register_source table specified?</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -956,8 +956,8 @@ QF_ETL_STATE_REGISTER_FQ_TABLE_NAME    = ${QF_ETL_STATE_REGISTER_FQ_TABLE_NAME}<
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>QF_ETL_STATE_REGISTER_FQ_TABLE_NAME is set?</from>
-      <to>QF_ETL_STATE_REGISTER_FQ_TABLE_NAME is set? 2</to>
+      <from>qf_etl_state_register_source table specified?</from>
+      <to>qf_etl_state_register_target table specified?</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>N</enabled>
@@ -966,7 +966,7 @@ QF_ETL_STATE_REGISTER_FQ_TABLE_NAME    = ${QF_ETL_STATE_REGISTER_FQ_TABLE_NAME}<
     </hop>
     <hop>
       <from>tr_etl_state_register_source-update</from>
-      <to>QF_ETL_STATE_REGISTER_FQ_TABLE_NAME is set? 2</to>
+      <to>qf_etl_state_register_target table specified?</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>N</enabled>
@@ -974,7 +974,7 @@ QF_ETL_STATE_REGISTER_FQ_TABLE_NAME    = ${QF_ETL_STATE_REGISTER_FQ_TABLE_NAME}<
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>QF_ETL_STATE_REGISTER_FQ_TABLE_NAME is set? 2</from>
+      <from>qf_etl_state_register_target table specified?</from>
       <to>tr_etl_state_register_target-update</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -992,7 +992,7 @@ QF_ETL_STATE_REGISTER_FQ_TABLE_NAME    = ${QF_ETL_STATE_REGISTER_FQ_TABLE_NAME}<
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>QF_ETL_STATE_REGISTER_FQ_TABLE_NAME is set? 2</from>
+      <from>qf_etl_state_register_target table specified?</from>
       <to>Success</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -1079,9 +1079,9 @@ sends out failure e-mails.</note>
     <notepad>
       <note>Use the value of PARAM_TABLE_META_ID to set the PDI variables:
 
-	QF_ETL_STATE_REGISTER_SCHEMA_NAME
-	QF_ETL_STATE_REGISTER_TABLE_NAME
-	QF_ETL_STATE_REGISTER_FQ_TABLE_NAME</note>
+	QF_ETL_STATE_REGISTER_SOURCE_SCHEMA_NAME
+	QF_ETL_STATE_REGISTER_SOURCE_TABLE_NAME
+	QF_ETL_STATE_REGISTER_SOURCE_FQ_TABLE_NAME</note>
       <xloc>704</xloc>
       <yloc>400</yloc>
       <width>371</width>
@@ -1104,12 +1104,12 @@ sends out failure e-mails.</note>
     <notepad>
       <note>Log the values assigned to the PDI variables:
 
-	QF_ETL_STATE_REGISTER_SCHEMA_NAME
-	QF_ETL_STATE_REGISTER_TABLE_NAME
-	QF_ETL_STATE_REGISTER_FQ_TABLE_NAME</note>
+	QF_ETL_STATE_REGISTER_SOURCE_SCHEMA_NAME
+	QF_ETL_STATE_REGISTER_SOURCE_TABLE_NAME
+	QF_ETL_STATE_REGISTER_SOURCE_FQ_TABLE_NAME</note>
       <xloc>704</xloc>
       <yloc>496</yloc>
-      <width>276</width>
+      <width>327</width>
       <heigth>75</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
