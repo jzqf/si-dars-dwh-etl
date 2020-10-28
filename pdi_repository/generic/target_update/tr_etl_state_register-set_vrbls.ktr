@@ -9,54 +9,9 @@
     <directory>/generic/target_update</directory>
     <parameters>
       <parameter>
-        <name>PARAM_DYN_DB_CONN_TARGET_DB_DATABASE</name>
+        <name>PARAM_TABLE_META_ID</name>
         <default_value />
-        <description>for target DB "dynamic" database connections</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_DYN_DB_CONN_TARGET_DB_DRIVER</name>
-        <default_value />
-        <description>for target DB "dynamic" database connections</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_DYN_DB_CONN_TARGET_DB_HOST</name>
-        <default_value />
-        <description>for target DB "dynamic" database connections</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD</name>
-        <default_value />
-        <description>for target DB "dynamic" database connections</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_DYN_DB_CONN_TARGET_DB_PORT</name>
-        <default_value />
-        <description>for target DB "dynamic" database connections</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_DYN_DB_CONN_TARGET_DB_URL</name>
-        <default_value />
-        <description>for target DB "dynamic" database connections</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_DYN_DB_CONN_TARGET_DB_USERNAME</name>
-        <default_value />
-        <description>for target DB "dynamic" database connections</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_TARGET_INSERT_ID_COLNAME</name>
-        <default_value />
-        <description>Name of column acting as "insert_id" column of target table</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_TARGET_SCHEMA</name>
-        <default_value />
-        <description>Name of schema containing target table to update</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_TARGET_TABLE</name>
-        <default_value />
-        <description>Name of target table to update</description>
+        <description>Primary key of ${QF_ETL_DB_SCHEMA}.table_meta row for "source" table archived/mirrored to "target" table</description>
       </parameter>
     </parameters>
     <log>
@@ -479,7 +434,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2018/06/12 12:37:09.577</modified_date>
+    <modified_date>2020/10/28 15:27:33.793</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -487,9 +442,20 @@
     <notepad>
       <note>This transformation uses the value of PARAM_TABLE_META_ID to set the PDI variables:
 
+	QF_SOURCE_SCHEMA
+	QF_SOURCE_TABLE
+	QF_SOURCE_INSERT_ID_COLNAME
+	QF_SOURCE_LAST_UPDATED_ON_COLNAME
 	QF_ETL_STATE_REGISTER_SOURCE_SCHEMA_NAME
 	QF_ETL_STATE_REGISTER_SOURCE_TABLE_NAME
 	QF_ETL_STATE_REGISTER_SOURCE_FQ_TABLE_NAME
+	QF_TARGET_SCHEMA
+	QF_TARGET_TABLE
+	QF_TARGET_INSERT_ID_COLNAME
+	QF_TARGET_LAST_UPDATED_ON_COLNAME
+	QF_ETL_STATE_REGISTER_TARGET_SCHEMA_NAME
+	QF_ETL_STATE_REGISTER_TARGET_TABLE_NAME
+	QF_ETL_STATE_REGISTER_TARGET_FQ_TABLE_NAME
 
  This job has parameters:
 
@@ -497,7 +463,7 @@
       <xloc>0</xloc>
       <yloc>0</yloc>
       <width>836</width>
-      <heigth>127</heigth>
+      <heigth>270</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -536,8 +502,16 @@
         <attribute>N</attribute>
       </attribute>
       <attribute>
+        <code>INITIAL_POOL_SIZE</code>
+        <attribute>10</attribute>
+      </attribute>
+      <attribute>
         <code>IS_CLUSTERED</code>
         <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>MAXIMUM_POOL_SIZE</code>
+        <attribute>10</attribute>
       </attribute>
       <attribute>
         <code>PORT_NUMBER</code>
@@ -561,7 +535,7 @@
       </attribute>
       <attribute>
         <code>USE_POOLING</code>
-        <attribute>N</attribute>
+        <attribute>Y</attribute>
       </attribute>
     </attributes>
   </connection>
@@ -587,8 +561,16 @@
         <attribute>N</attribute>
       </attribute>
       <attribute>
+        <code>INITIAL_POOL_SIZE</code>
+        <attribute>10</attribute>
+      </attribute>
+      <attribute>
         <code>IS_CLUSTERED</code>
         <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>MAXIMUM_POOL_SIZE</code>
+        <attribute>10</attribute>
       </attribute>
       <attribute>
         <code>PORT_NUMBER</code>
@@ -612,7 +594,7 @@
       </attribute>
       <attribute>
         <code>USE_POOLING</code>
-        <attribute>N</attribute>
+        <attribute>Y</attribute>
       </attribute>
     </attributes>
   </connection>
@@ -641,12 +623,60 @@
     </partitioning>
     <connection>etl_db</connection>
     <sql>SELECT
+
+-- Source table:
+
+    t.source_schema_name,
+    t.source_table_name,
+    COALESCE(
+       (SELECT 
+            c.source_column_name 
+        FROM 
+            ${QF_ETL_DB_SCHEMA}.column_meta c 
+        WHERE 
+            c.table_meta_id=t.table_meta_id AND c.is_insert_id_column=true)
+    ,'') AS source_insert_id_colname,
+    COALESCE(
+       (SELECT 
+            c.source_column_name 
+        FROM 
+            ${QF_ETL_DB_SCHEMA}.column_meta c 
+        WHERE 
+            c.table_meta_id=t.table_meta_id AND c.is_last_updated_on_column=true)
+    ,'') AS source_last_updated_on_colname, 
     source_db_etl_state_register_schema_name, 
     source_db_etl_state_register_table_name, 
     -- This will be NULL if the schema name and/or the table name is NULL:
-    source_db_etl_state_register_schema_name || '.' || source_db_etl_state_register_table_name AS "source_db_etl_state_register_fq_table_name" 
+    source_db_etl_state_register_schema_name || '.' || source_db_etl_state_register_table_name AS "source_db_etl_state_register_fq_table_name", 
+       
+-- Target table:
+
+    t.target_schema_name,
+    t.target_table_name,
+    COALESCE(
+       (SELECT 
+            c.target_column_name 
+        FROM 
+            ${QF_ETL_DB_SCHEMA}.column_meta c 
+        WHERE 
+            c.table_meta_id=t.table_meta_id AND c.is_insert_id_column=true)
+    ,'') AS target_insert_id_colname,
+    COALESCE(
+       (SELECT 
+            c.target_column_name 
+        FROM 
+            ${QF_ETL_DB_SCHEMA}.column_meta c 
+        WHERE 
+            c.table_meta_id=t.table_meta_id AND c.is_last_updated_on_column=true)
+    ,'') AS target_last_updated_on_colname,
+
+    target_db_etl_state_register_schema_name, 
+    target_db_etl_state_register_table_name, 
+    -- This will be NULL if the schema name and/or the table name is NULL:
+    target_db_etl_state_register_schema_name || '.' || target_db_etl_state_register_table_name AS "target_db_etl_state_register_fq_table_name" 
+    
 FROM 
-    ${QF_ETL_DB_SCHEMA}.table_meta 
+    ${QF_ETL_DB_SCHEMA}.table_meta t 
 WHERE 
     table_meta_id =  ${PARAM_TABLE_META_ID}</sql>
     <limit>0</limit>
@@ -654,6 +684,7 @@ WHERE
     <execute_each_row>N</execute_each_row>
     <variables_active>Y</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -662,8 +693,8 @@ WHERE
       </output>
     </remotesteps>
     <GUI>
-      <xloc>240</xloc>
-      <yloc>160</yloc>
+      <xloc>224</xloc>
+      <yloc>304</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -679,6 +710,30 @@ WHERE
       <schema_name />
     </partitioning>
     <fields>
+      <field>
+        <field_name>source_schema_name</field_name>
+        <variable_name>QF_SOURCE_SCHEMA</variable_name>
+        <variable_type>ROOT_JOB</variable_type>
+        <default_value />
+      </field>
+      <field>
+        <field_name>source_table_name</field_name>
+        <variable_name>QF_SOURCE_TABLE</variable_name>
+        <variable_type>ROOT_JOB</variable_type>
+        <default_value />
+      </field>
+      <field>
+        <field_name>source_insert_id_colname</field_name>
+        <variable_name>QF_SOURCE_INSERT_ID_COLNAME</variable_name>
+        <variable_type>ROOT_JOB</variable_type>
+        <default_value />
+      </field>
+      <field>
+        <field_name>source_last_updated_on_colname</field_name>
+        <variable_name>QF_SOURCE_LAST_UPDATED_ON_COLNAME</variable_name>
+        <variable_type>ROOT_JOB</variable_type>
+        <default_value />
+      </field>
       <field>
         <field_name>source_db_etl_state_register_schema_name</field_name>
         <variable_name>QF_ETL_STATE_REGISTER_SOURCE_SCHEMA_NAME</variable_name>
@@ -697,8 +752,51 @@ WHERE
         <variable_type>ROOT_JOB</variable_type>
         <default_value />
       </field>
+      <field>
+        <field_name>target_schema_name</field_name>
+        <variable_name>QF_TARGET_SCHEMA</variable_name>
+        <variable_type>ROOT_JOB</variable_type>
+        <default_value />
+      </field>
+      <field>
+        <field_name>target_table_name</field_name>
+        <variable_name>QF_TARGET_TABLE</variable_name>
+        <variable_type>ROOT_JOB</variable_type>
+        <default_value />
+      </field>
+      <field>
+        <field_name>target_insert_id_colname</field_name>
+        <variable_name>QF_TARGET_INSERT_ID_COLNAME</variable_name>
+        <variable_type>ROOT_JOB</variable_type>
+        <default_value />
+      </field>
+      <field>
+        <field_name>target_last_updated_on_colname</field_name>
+        <variable_name>QF_TARGET_LAST_UPDATED_ON_COLNAME</variable_name>
+        <variable_type>ROOT_JOB</variable_type>
+        <default_value />
+      </field>
+      <field>
+        <field_name>target_db_etl_state_register_schema_name</field_name>
+        <variable_name>QF_ETL_STATE_REGISTER_TARGET_SCHEMA_NAME</variable_name>
+        <variable_type>ROOT_JOB</variable_type>
+        <default_value />
+      </field>
+      <field>
+        <field_name>target_db_etl_state_register_table_name</field_name>
+        <variable_name>QF_ETL_STATE_REGISTER_TARGET_TABLE_NAME</variable_name>
+        <variable_type>ROOT_JOB</variable_type>
+        <default_value />
+      </field>
+      <field>
+        <field_name>target_db_etl_state_register_fq_table_name</field_name>
+        <variable_name>QF_ETL_STATE_REGISTER_TARGET_FQ_TABLE_NAME</variable_name>
+        <variable_type>ROOT_JOB</variable_type>
+        <default_value />
+      </field>
     </fields>
     <use_formatting>Y</use_formatting>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -707,8 +805,8 @@ WHERE
       </output>
     </remotesteps>
     <GUI>
-      <xloc>240</xloc>
-      <yloc>320</yloc>
+      <xloc>224</xloc>
+      <yloc>464</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -730,6 +828,18 @@ WHERE
     <logmessage />
     <fields>
       <field>
+        <name>source_schema_name</name>
+      </field>
+      <field>
+        <name>source_table_name</name>
+      </field>
+      <field>
+        <name>source_insert_id_colname</name>
+      </field>
+      <field>
+        <name>source_last_updated_on_colname</name>
+      </field>
+      <field>
         <name>source_db_etl_state_register_schema_name</name>
       </field>
       <field>
@@ -738,7 +848,29 @@ WHERE
       <field>
         <name>source_db_etl_state_register_fq_table_name</name>
       </field>
+      <field>
+        <name>target_schema_name</name>
+      </field>
+      <field>
+        <name>target_table_name</name>
+      </field>
+      <field>
+        <name>target_insert_id_colname</name>
+      </field>
+      <field>
+        <name>target_last_updated_on_colname</name>
+      </field>
+      <field>
+        <name>target_db_etl_state_register_schema_name</name>
+      </field>
+      <field>
+        <name>target_db_etl_state_register_table_name</name>
+      </field>
+      <field>
+        <name>target_db_etl_state_register_fq_table_name</name>
+      </field>
     </fields>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -747,8 +879,8 @@ WHERE
       </output>
     </remotesteps>
     <GUI>
-      <xloc>240</xloc>
-      <yloc>240</yloc>
+      <xloc>224</xloc>
+      <yloc>384</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -757,4 +889,5 @@ WHERE
   <slave-step-copy-partition-distribution>
   </slave-step-copy-partition-distribution>
   <slave_transformation>N</slave_transformation>
+  <attributes />
 </transformation>
