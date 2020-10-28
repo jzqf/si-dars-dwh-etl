@@ -22,8 +22,8 @@ CREATE TABLE dwh_etl_state_register_source (
    dwh_last_updated_last_updated_on_colname  VARCHAR(80)          null,
    dwh_last_updated_last_updated_on_maxvalue TIMESTAMP            null,
    etl_job_id                                INTEGER              not null,
-   CONSTRAINT PK_DWH_ETL_STATE_REGISTER_SRC PRIMARY KEY (desrs_id),
-   CONSTRAINT AK_KEY_2_DWH_ETL_STATE_SRC UNIQUE (schema_name, table_name)
+   CONSTRAINT PK_DWH_ETL_STATE_REGISTER_SOUR PRIMARY KEY (desrs_id),
+   CONSTRAINT AK_KEY_2_DWH_ETL_STATE UNIQUE (schema_name, table_name)
 );
 -- Special Per Table Permissions (Be Sure to Try and be SQL Standards compliant here!)
 -- NOTE Sequence usage is needed, but granted in the DB level default permissions.
@@ -42,8 +42,8 @@ CREATE TABLE dwh_etl_state_register_target (
    dwh_last_updated_last_updated_on_colname  VARCHAR(80)          null,
    dwh_last_updated_last_updated_on_maxvalue TIMESTAMP            null,
    etl_job_id                                INTEGER              not null,
-   CONSTRAINT PK_DWH_ETL_STATE_REGISTER_TGT PRIMARY KEY (desrt_id),
-   CONSTRAINT AK_KEY_2_DWH_ETL_STATE_TGT UNIQUE (schema_name, table_name)
+   CONSTRAINT PK_DWH_ETL_STATE_REGISTER_TARG PRIMARY KEY (desrt_id),
+   CONSTRAINT AK_KEY_2T_DWH_ETL_STATE UNIQUE (schema_name, table_name)
 );
 -- Special Per Table Permissions (Be Sure to Try and be SQL Standards compliant here!)
 -- NOTE Sequence usage is needed, but granted in the DB level default permissions.
