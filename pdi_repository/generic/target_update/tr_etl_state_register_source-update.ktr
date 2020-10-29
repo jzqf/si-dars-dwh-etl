@@ -59,24 +59,24 @@
         <description>Name of the "ETL state register" table in the source DB</description>
       </parameter>
       <parameter>
-        <name>PARAM_TARGET_INSERT_ID_COLNAME</name>
+        <name>PARAM_SOURCE_INSERT_ID_COLNAME</name>
         <default_value />
-        <description>Name of column acting as "insert_id" column of target table - DONOT PROVIDE A DEFAULT VALUE BECAUSE WE NEED TO DETECT WHEN A VALUE IS NOT PASSED!</description>
+        <description>Name of column acting as "insert_id" column of source table - DONOT PROVIDE A DEFAULT VALUE BECAUSE WE NEED TO DETECT WHEN A VALUE IS NOT PASSED!</description>
       </parameter>
       <parameter>
-        <name>PARAM_TARGET_LAST_UPDATED_ON_COLNAME</name>
+        <name>PARAM_SOURCE_LAST_UPDATED_ON_COLNAME</name>
         <default_value />
-        <description>Name of "last_updated_on" timestamp column of target table - DONOT PROVIDE A DEFAULT VALUE BECAUSE WE NEED TO DETECT WHEN A VALUE IS NOT PASSED!</description>
+        <description>Name of "last_updated_on" timestamp column of source table - DONOT PROVIDE A DEFAULT VALUE BECAUSE WE NEED TO DETECT WHEN A VALUE IS NOT PASSED!</description>
       </parameter>
       <parameter>
-        <name>PARAM_TARGET_SCHEMA</name>
+        <name>PARAM_SOURCE_SCHEMA</name>
         <default_value />
-        <description>Name of schema containing target table to update</description>
+        <description>Name of schema containing source table</description>
       </parameter>
       <parameter>
-        <name>PARAM_TARGET_TABLE</name>
+        <name>PARAM_SOURCE_TABLE</name>
         <default_value />
-        <description>Name of target table to update</description>
+        <description>Name of source table</description>
       </parameter>
       <parameter>
         <name>PARAM_TARGET_TABLE_MAX_INSERT_ID</name>
@@ -509,7 +509,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2020/10/29 13:55:48.938</modified_date>
+    <modified_date>2020/10/29 15:27:45.210</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -526,10 +526,10 @@ target tables. This job has parameters:
 	PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD			for source DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER				for source DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_SOURCE_DB_URL					for source DB "dynamic" database connections
-	PARAM_TARGET_SCHEMA								Name of schema containing target table to update
-	PARAM_TARGET_TABLE									Name of target table to update
-	PARAM_TARGET_INSERT_ID_COLNAME					Name of column acting as "insert_id"  timestamp column of target table
-	PARAM_TARGET_LAST_UPDATED_ON_COLNAME			Name of "last_updated_on" timestamp column of target table
+	PARAM_SOURCE_SCHEMA								Name of schema containing source table
+	PARAM_SOURCE_TABLE									Name of source table
+	PARAM_SOURCE_INSERT_ID_COLNAME					Name of column acting as "insert_id"  timestamp column of source table
+	PARAM_SOURCE_LAST_UPDATED_ON_COLNAME			Name of "last_updated_on" timestamp column of source table
 	PARAM_TARGET_TABLE_MAX_INSERT_ID					Maximum value written to the "insert_id" column of the target table
 	PARAM_TARGET_TABLE_MAX_LAST_UPDATED_ON			Maximum value written to the "last_updated_on" column of the target table
 	PARAM_ETL_STATE_REGISTER_SOURCE_SCHEMA_NAME		Name of schema in the source DB containing the "ETL state register" table
@@ -690,11 +690,11 @@ target tables. This job has parameters:
     </partitioning>
     <connection>generic_source_db</connection>
     <sql>SELECT
-    '${PARAM_TARGET_SCHEMA}' AS "schema_name", 
-    '${PARAM_TARGET_TABLE}'  AS "table_name", 
-    NULLIF('${PARAM_TARGET_INSERT_ID_COLNAME}'                  , ''                                       ) AS "dwh_last_updated_insert_id_colname", 
+    '${PARAM_SOURCE_SCHEMA}' AS "schema_name", 
+    '${PARAM_SOURCE_TABLE}'  AS "table_name", 
+    NULLIF('${PARAM_SOURCE_INSERT_ID_COLNAME}'                  , ''                                       ) AS "dwh_last_updated_insert_id_colname", 
     NULLIF(${PARAM_TARGET_TABLE_MAX_INSERT_ID}                  , ${QF_POSITIVE_INTEGER_NOT_SET_VALUE}     ) AS "dwh_last_updated_insert_id_maxvalue", 
-    NULLIF('${PARAM_TARGET_LAST_UPDATED_ON_COLNAME}'            , ''                                       ) AS "dwh_last_updated_last_updated_on_colname", 
+    NULLIF('${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME}'            , ''                                       ) AS "dwh_last_updated_last_updated_on_colname", 
     NULLIF(TIMESTAMP '${PARAM_TARGET_TABLE_MAX_LAST_UPDATED_ON}', TIMESTAMP '${QF_TIMESTAMP_NOT_SET_VALUE}') AS "dwh_last_updated_last_updated_on_maxvalue", 
     ${QF_JOB_BATCH_ID} AS "etl_job_id" </sql>
     <limit>0</limit>
@@ -738,11 +738,11 @@ PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME   = ${PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME}
 PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD   = ${PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD}
 PARAM_DYN_DB_CONN_SOURCE_DB_URL        = ${PARAM_DYN_DB_CONN_SOURCE_DB_URL}
 PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER     = ${PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER}
-PARAM_TARGET_SCHEMA                    = ${PARAM_TARGET_SCHEMA}
-PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}
-PARAM_TARGET_INSERT_ID_COLNAME         = ${PARAM_TARGET_INSERT_ID_COLNAME}
+PARAM_SOURCE_SCHEMA                    = ${PARAM_SOURCE_SCHEMA}
+PARAM_SOURCE_TABLE                     = ${PARAM_SOURCE_TABLE}
+PARAM_SOURCE_INSERT_ID_COLNAME         = ${PARAM_SOURCE_INSERT_ID_COLNAME}
 PARAM_TARGET_TABLE_MAX_INSERT_ID       = ${PARAM_TARGET_TABLE_MAX_INSERT_ID}
-PARAM_TARGET_LAST_UPDATED_ON_COLNAME   = ${PARAM_TARGET_LAST_UPDATED_ON_COLNAME}
+PARAM_SOURCE_LAST_UPDATED_ON_COLNAME   = ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME}
 PARAM_TARGET_TABLE_MAX_LAST_UPDATED_ON = ${PARAM_TARGET_TABLE_MAX_LAST_UPDATED_ON}
 PARAM_ETL_STATE_REGISTER_SOURCE_FQ_TABLE_NAME = ${PARAM_ETL_STATE_REGISTER_SOURCE_FQ_TABLE_NAME}
 PARAM_ETL_STATE_REGISTER_SOURCE_SCHEMA_NAME   = ${PARAM_ETL_STATE_REGISTER_SOURCE_SCHEMA_NAME}
