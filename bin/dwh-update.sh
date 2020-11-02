@@ -39,10 +39,10 @@ estimated_finish_time=$(date --date "${current_time} +${estimated_executiontime_
 estimated_finish_time_epocsecs=$(date --date "${estimated_finish_time}" +%s)
 
 # Defined window we should not execute in. Basically OBO & DWH Backup Window
-no_run_window_start_time=$(date --date "01:05" --iso-8601=seconds)
+no_run_window_start_time=$(date --date "00:10" --iso-8601=seconds)
 no_run_window_start_time_epocsecs=$(date --date "${no_run_window_start_time}" +%s)
 
-no_run_window_end_time=$(date --date "06:05" --iso-8601=seconds)
+no_run_window_end_time=$(date --date "05:10" --iso-8601=seconds)
 no_run_window_end_time_epocsecs=$(date --date "${no_run_window_end_time}" +%s)
 
 # TEST: Are we currently Running ?
