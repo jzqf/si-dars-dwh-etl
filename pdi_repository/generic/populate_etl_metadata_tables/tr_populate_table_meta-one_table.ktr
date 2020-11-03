@@ -86,12 +86,12 @@
       <parameter>
         <name>PARAM_SOURCE_DB_ETL_STATE_REGISTER_SCHEMA_NAME</name>
         <default_value />
-        <description>Name the schema in the "source" DB that contains the "etl state register" table</description>
+        <description>Name the schema in the "source" DB that contains the "etl state register source" table</description>
       </parameter>
       <parameter>
         <name>PARAM_SOURCE_DB_ETL_STATE_REGISTER_TABLE_NAME</name>
         <default_value />
-        <description>Name of the table in the "source" DB acting as the "etl state register" table</description>
+        <description>Name of the table in the "source" DB acting as the "etl state register source" table</description>
       </parameter>
       <parameter>
         <name>PARAM_SOURCE_DB_ID</name>
@@ -117,6 +117,16 @@
         <name>PARAM_SOURCE_TABLE</name>
         <default_value />
         <description>Name of source table to mirror to target table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_DB_ETL_STATE_REGISTER_SCHEMA_NAME</name>
+        <default_value />
+        <description>Name the schema in the "target" DB that contains the "etl state register target" table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_DB_ETL_STATE_REGISTER_TABLE_NAME</name>
+        <default_value />
+        <description>Name of the table in the "target" DB acting as the "etl state register target" table</description>
       </parameter>
       <parameter>
         <name>PARAM_TARGET_DB_ID</name>
@@ -554,7 +564,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2018/08/10 15:08:13.612</modified_date>
+    <modified_date>2020/10/26 14:49:18.630</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -588,12 +598,14 @@ This transformation has parameters:
 	PARAM_CAN_DELETE_ROW_SCHEMA_NAME				Name of the schema containing the "can delete row" table
 	PARAM_CAN_DELETE_ROW_TABLE_NAME					Name of the "can delete row" table
 	PARAM_DELETE_MARKED_ROWS_TABLE_ORDER			Integer value for setting the order that tables are processed by the default the "delete marked rows" algorithm
-	PARAM_SOURCE_DB_ETL_STATE_REGISTER_SCHEMA_NAME	Name the schema in the "source" DB that contains the "etl state register" table
-	PARAM_SOURCE_DB_ETL_STATE_REGISTER_TABLE_NAME	Name of the table in the "source" DB acting as the "etl state register" table</note>
+	PARAM_SOURCE_DB_ETL_STATE_REGISTER_SCHEMA_NAME	Name the schema in the "source" DB that contains the "etl state register source" table
+	PARAM_SOURCE_DB_ETL_STATE_REGISTER_TABLE_NAME	Name of the table in the "source" DB acting as the "etl state register source" table
+	PARAM_TARGET_DB_ETL_STATE_REGISTER_SCHEMA_NAME	Name the schema in the "target" DB that contains the "etl state register target" table
+	PARAM_TARGET_DB_ETL_STATE_REGISTER_TABLE_NAME	Name of the table in the "target" DB acting as the "etl state register target" table</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
       <width>984</width>
-      <heigth>400</heigth>
+      <heigth>426</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -613,7 +625,7 @@ This transformation has parameters:
       <note>Create a single stream row using the parameter values passed to this transformation
 for the field/column values.</note>
       <xloc>224</xloc>
-      <yloc>416</yloc>
+      <yloc>448</yloc>
       <width>472</width>
       <heigth>36</heigth>
       <fontname>Ubuntu</fontname>
@@ -649,7 +661,7 @@ delete_marked_rows_algorithm_id=1		Generic "delete marked rows" algorithm will b
 THIS STEP IS NO LONGER NEEDED NOW THAT I SPECIFY VALUES FOR *ALL* COLUMNS OF THE "table_meta"
 TABLE IN AN INITIAL "Data Grid" STEP.</note>
       <xloc>288</xloc>
-      <yloc>608</yloc>
+      <yloc>640</yloc>
       <width>630</width>
       <heigth>218</heigth>
       <fontname>Ubuntu</fontname>
@@ -672,7 +684,7 @@ TABLE IN AN INITIAL "Data Grid" STEP.</note>
 that contains the value MAX(table_meta_id)+1. This value
 will be used as the primary key for the new row. </note>
       <xloc>496</xloc>
-      <yloc>528</yloc>
+      <yloc>560</yloc>
       <width>329</width>
       <heigth>49</heigth>
       <fontname>Ubuntu</fontname>
@@ -694,7 +706,7 @@ will be used as the primary key for the new row. </note>
       <note>Table "table_state" contains state information for each source/target table pair. It has a one-to-one relation
 to the table_meta table.</note>
       <xloc>224</xloc>
-      <yloc>1040</yloc>
+      <yloc>1072</yloc>
       <width>600</width>
       <heigth>36</heigth>
       <fontname>Ubuntu</fontname>
@@ -716,7 +728,7 @@ to the table_meta table.</note>
       <note>Table "table_meta" contains metadata for each source/target table pair. It has a one-to-one relation
 to the table_state table.</note>
       <xloc>224</xloc>
-      <yloc>848</yloc>
+      <yloc>880</yloc>
       <width>556</width>
       <heigth>36</heigth>
       <fontname>Ubuntu</fontname>
@@ -737,7 +749,7 @@ to the table_state table.</note>
     <notepad>
       <note>In order to write SQL NULL values to strig-type columns of the table_meta row, the string value passed to this transformation must be "&lt;null>".</note>
       <xloc>224</xloc>
-      <yloc>480</yloc>
+      <yloc>512</yloc>
       <width>793</width>
       <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
@@ -763,7 +775,7 @@ to the table_state table.</note>
 to the value of the primary key of the ${QF_ETL_DB_SCHEMA}.table_meta table row that was just created. The value of
 this variable will be passed as a parameter to a sub-transformation in the calling code.</note>
       <xloc>224</xloc>
-      <yloc>928</yloc>
+      <yloc>960</yloc>
       <width>663</width>
       <heigth>88</heigth>
       <fontname>Ubuntu</fontname>
@@ -804,8 +816,16 @@ this variable will be passed as a parameter to a sub-transformation in the calli
         <attribute>N</attribute>
       </attribute>
       <attribute>
+        <code>INITIAL_POOL_SIZE</code>
+        <attribute>10</attribute>
+      </attribute>
+      <attribute>
         <code>IS_CLUSTERED</code>
         <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>MAXIMUM_POOL_SIZE</code>
+        <attribute>10</attribute>
       </attribute>
       <attribute>
         <code>PORT_NUMBER</code>
@@ -829,7 +849,7 @@ this variable will be passed as a parameter to a sub-transformation in the calli
       </attribute>
       <attribute>
         <code>USE_POOLING</code>
-        <attribute>N</attribute>
+        <attribute>Y</attribute>
       </attribute>
     </attributes>
   </connection>
@@ -855,8 +875,16 @@ this variable will be passed as a parameter to a sub-transformation in the calli
         <attribute>N</attribute>
       </attribute>
       <attribute>
+        <code>INITIAL_POOL_SIZE</code>
+        <attribute>10</attribute>
+      </attribute>
+      <attribute>
         <code>IS_CLUSTERED</code>
         <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>MAXIMUM_POOL_SIZE</code>
+        <attribute>10</attribute>
       </attribute>
       <attribute>
         <code>PORT_NUMBER</code>
@@ -880,7 +908,7 @@ this variable will be passed as a parameter to a sub-transformation in the calli
       </attribute>
       <attribute>
         <code>USE_POOLING</code>
-        <attribute>N</attribute>
+        <attribute>Y</attribute>
       </attribute>
     </attributes>
   </connection>
@@ -1076,6 +1104,7 @@ this variable will be passed as a parameter to a sub-transformation in the calli
         <set_empty_string>N</set_empty_string>
       </field>
     </fields>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1085,7 +1114,7 @@ this variable will be passed as a parameter to a sub-transformation in the calli
     </remotesteps>
     <GUI>
       <xloc>176</xloc>
-      <yloc>704</yloc>
+      <yloc>736</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1377,7 +1406,32 @@ this variable will be passed as a parameter to a sub-transformation in the calli
         <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
+      <field>
+        <name>target_db_etl_state_register_schema_name</name>
+        <variable>${PARAM_TARGET_DB_ETL_STATE_REGISTER_SCHEMA_NAME}</variable>
+        <type>String</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>80</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>target_db_etl_state_register_table_name</name>
+        <variable>${PARAM_TARGET_DB_ETL_STATE_REGISTER_TABLE_NAME}</variable>
+        <type>String</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>80</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
     </fields>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1387,7 +1441,7 @@ this variable will be passed as a parameter to a sub-transformation in the calli
     </remotesteps>
     <GUI>
       <xloc>80</xloc>
-      <yloc>416</yloc>
+      <yloc>448</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1413,6 +1467,7 @@ FROM
     <execute_each_row>N</execute_each_row>
     <variables_active>Y</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1422,7 +1477,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>336</xloc>
-      <yloc>544</yloc>
+      <yloc>576</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1456,6 +1511,7 @@ FROM
     <return_field />
     <fields>
     </fields>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1465,7 +1521,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>80</xloc>
-      <yloc>848</yloc>
+      <yloc>880</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1503,6 +1559,7 @@ FROM
         <stream_name>table_meta_id</stream_name>
       </field>
     </fields>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1512,7 +1569,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>80</xloc>
-      <yloc>1040</yloc>
+      <yloc>1072</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1539,6 +1596,7 @@ FROM
         <rightvalue />
       </condition>
     </compare>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1548,7 +1606,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>80</xloc>
-      <yloc>544</yloc>
+      <yloc>576</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1580,7 +1638,16 @@ FROM
         <name>source_db_etl_state_register_table_name</name>
         <value>&lt;null></value>
       </field>
+      <field>
+        <name>target_db_etl_state_register_schema_name</name>
+        <value>&lt;null></value>
+      </field>
+      <field>
+        <name>target_db_etl_state_register_table_name</name>
+        <value>&lt;null></value>
+      </field>
     </fields>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1590,7 +1657,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>80</xloc>
-      <yloc>480</yloc>
+      <yloc>512</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1614,6 +1681,7 @@ FROM
       </field>
     </fields>
     <use_formatting>Y</use_formatting>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1623,7 +1691,7 @@ FROM
     </remotesteps>
     <GUI>
       <xloc>80</xloc>
-      <yloc>976</yloc>
+      <yloc>1008</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1654,6 +1722,7 @@ PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}</logmessage>
         <name>table_meta_id</name>
       </field>
     </fields>
+    <attributes />
     <cluster_schema />
     <remotesteps>
       <input>
@@ -1663,7 +1732,7 @@ PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}</logmessage>
     </remotesteps>
     <GUI>
       <xloc>80</xloc>
-      <yloc>912</yloc>
+      <yloc>944</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1672,4 +1741,5 @@ PARAM_TARGET_TABLE  = ${PARAM_TARGET_TABLE}</logmessage>
   <slave-step-copy-partition-distribution>
   </slave-step-copy-partition-distribution>
   <slave_transformation>N</slave_transformation>
+  <attributes />
 </transformation>
