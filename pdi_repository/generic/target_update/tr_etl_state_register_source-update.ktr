@@ -1,12 +1,12 @@
 <transformation>
   <info>
-    <name>tr_set_source_table_max_timestamp_vrbl_before_inserts</name>
+    <name>tr_etl_state_register_source-update</name>
     <description />
     <extended_description />
     <trans_version />
     <trans_type>Normal</trans_type>
     <trans_status>0</trans_status>
-    <directory>/generic</directory>
+    <directory>/generic/target_update</directory>
     <parameters>
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE</name>
@@ -20,17 +20,17 @@
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_HOST</name>
-        <default_value>localhost</default_value>
+        <default_value />
         <description>for source DB "dynamic" database connections</description>
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD</name>
-        <default_value>qfree_admin</default_value>
+        <default_value />
         <description>for source DB "dynamic" database connections</description>
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_PORT</name>
-        <default_value>5432</default_value>
+        <default_value />
         <description>for source DB "dynamic" database connections</description>
       </parameter>
       <parameter>
@@ -40,38 +40,53 @@
       </parameter>
       <parameter>
         <name>PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME</name>
-        <default_value>qfree_admin</default_value>
+        <default_value />
         <description>for source DB "dynamic" database connections</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_ETL_STATE_REGISTER_SOURCE_FQ_TABLE_NAME</name>
+        <default_value />
+        <description>Fully qualified name (schema.table) of the "ETL state register" table in the source DB</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_ETL_STATE_REGISTER_SOURCE_SCHEMA_NAME</name>
+        <default_value />
+        <description>Name of schema in the source DB containing the "ETL state register" table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_ETL_STATE_REGISTER_SOURCE_TABLE_NAME</name>
+        <default_value />
+        <description>Name of the "ETL state register" table in the source DB</description>
       </parameter>
       <parameter>
         <name>PARAM_SOURCE_INSERT_ID_COLNAME</name>
         <default_value />
-        <description>Name of "id" ("insert_id") column of source table</description>
+        <description>Name of column acting as "insert_id" column of source table - DONOT PROVIDE A DEFAULT VALUE BECAUSE WE NEED TO DETECT WHEN A VALUE IS NOT PASSED!</description>
       </parameter>
       <parameter>
         <name>PARAM_SOURCE_LAST_UPDATED_ON_COLNAME</name>
-        <default_value>last_updated_on</default_value>
-        <description>Name of timestamp ("last_updated_on") column of source table</description>
+        <default_value />
+        <description>Name of "last_updated_on" timestamp column of source table - DONOT PROVIDE A DEFAULT VALUE BECAUSE WE NEED TO DETECT WHEN A VALUE IS NOT PASSED!</description>
       </parameter>
       <parameter>
         <name>PARAM_SOURCE_SCHEMA</name>
-        <default_value>public</default_value>
+        <default_value />
         <description>Name of schema containing source table</description>
       </parameter>
       <parameter>
         <name>PARAM_SOURCE_TABLE</name>
         <default_value />
-        <description>Name of source table to compute maximum values for columns</description>
-      </parameter>
-      <parameter>
-        <name>PARAM_SOURCE_TABLE_MAX_INSERT_ID</name>
-        <default_value />
-        <description>Maximum value of the "insert_id" column for rows to load from the source DB table</description>
+        <description>Name of source table</description>
       </parameter>
       <parameter>
         <name>PARAM_TARGET_TABLE_MAX_INSERT_ID</name>
         <default_value />
-        <description>Maximum value for the "insert_id" integer column of the target table</description>
+        <description>Maximum value written to the "insert_id" column of the target table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_TABLE_MAX_LAST_UPDATED_ON</name>
+        <default_value />
+        <description>Maximum value written to the "last_updated_on" column of the target table</description>
       </parameter>
     </parameters>
     <log>
@@ -494,61 +509,38 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2020/11/03 15:21:32.857</modified_date>
+    <modified_date>2020/10/29 15:27:45.210</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>This transformation sets the variable:
+      <note>This transformation updates the "ETL state register". It writes to this register the maximum values for the "insert_id" and "last_updated_on"
+columns of the target table that was just updated. It also writes the names of these columns since these column names can vary for different
+target tables. This job has parameters:
 
-	QF_SOURCE_TABLE_MAX_TIMESTAMP_COL_FOR_INSERT_BEFORE_INSERTS
-
-to the maximum value for the "last updated on" column of a specified source table for the rows that will be INSERTed
-into the target table *before* the INSERTs are performed. This transformation has parameters:
-
-	PARAM_DYN_DB_CONN_SOURCE_DB_HOST			for source DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_SOURCE_DB_PORT			for source DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE	for source DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME	for source DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD	for source DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_SOURCE_DB_URL			for source DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER		for source DB "dynamic" database connections
-	PARAM_SOURCE_INSERT_ID_COLNAME				Name of "id" ("insert_id") column of source table
-	PARAM_SOURCE_LAST_UPDATED_ON_COLNAME	Name of timestamp ("last_updated_on") column of source table
-	PARAM_SOURCE_SCHEMA							Name of schema containing source table
-	PARAM_SOURCE_TABLE							Name of source table to compute maximum values for columns
-	PARAM_SOURCE_TABLE_MAX_INSERT_ID			Maximum value of the "insert_id" column for rows to load from the source DB table
-	PARAM_TARGET_TABLE_MAX_INSERT_ID			Maximum value for the "insert_id" integer column of the target table</note>
+	PARAM_DYN_DB_CONN_SOURCE_DB_HOST				for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_PORT				for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE			for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME			for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD			for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER				for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_URL					for source DB "dynamic" database connections
+	PARAM_SOURCE_SCHEMA								Name of schema containing source table
+	PARAM_SOURCE_TABLE									Name of source table
+	PARAM_SOURCE_INSERT_ID_COLNAME					Name of column acting as "insert_id"  timestamp column of source table
+	PARAM_SOURCE_LAST_UPDATED_ON_COLNAME			Name of "last_updated_on" timestamp column of source table
+	PARAM_TARGET_TABLE_MAX_INSERT_ID					Maximum value written to the "insert_id" column of the target table
+	PARAM_TARGET_TABLE_MAX_LAST_UPDATED_ON			Maximum value written to the "last_updated_on" column of the target table
+	PARAM_ETL_STATE_REGISTER_SOURCE_SCHEMA_NAME		Name of schema in the source DB containing the "ETL state register" table
+	PARAM_ETL_STATE_REGISTER_SOURCE_TABLE_NAME		Name of the "ETL state register" table in the source DB
+	PARAM_ETL_STATE_REGISTER_SOURCE_FQ_TABLE_NAME	Fully qualified name (schema.table) of the "ETL state register" table in the source DB</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>834</width>
-      <heigth>290</heigth>
+      <width>836</width>
+      <heigth>270</heigth>
       <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Set PDI variable:
-
-	QF_SOURCE_TABLE_MAX_TIMESTAMP_COL_FOR_INSERT_BEFORE_INSERTS</note>
-      <xloc>336</xloc>
-      <yloc>496</yloc>
-      <width>477</width>
-      <heigth>52</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>10</fontsize>
+      <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
       <fontcolorred>0</fontcolorred>
@@ -675,18 +667,18 @@ into the target table *before* the INSERTs are performed. This transformation ha
   </connection>
   <order>
     <hop>
-      <from>Get max source timestamp for inserts before inserts</from>
-      <to>Write max timestamp "source" field to log</to>
+      <from>Create row to write to "ETL state register"</from>
+      <to>Log "ETL state register source" details</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Write max timestamp "source" field to log</from>
-      <to>Set QF_SOURCE_TABLE_MAX_TIMESTAMP_... variable</to>
+      <from>Log "ETL state register source" details</from>
+      <to>Update the "ETL state register" in source DB</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Get max source timestamp for inserts before inserts</name>
+    <name>Create row to write to "ETL state register"</name>
     <type>TableInput</type>
     <description />
     <distribute>Y</distribute>
@@ -698,16 +690,13 @@ into the target table *before* the INSERTs are performed. This transformation ha
     </partitioning>
     <connection>generic_source_db</connection>
     <sql>SELECT
-    COALESCE(MAX(${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME}) , '${QF_LAST_UPDATED_ON_LOWER_BOUND}') AS max_source_last_updated_on_for_inserts_before_inserts
-FROM
-    ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
-WHERE
-    -- This is the condition that will be used to select source rows to be inserted into the target table by transformation:
-    -- tr_target-update_table-updatable_table_2_inserts . That is why the name of the column selected here contains:
-    -- "for_inserts_before_inserts".
-        ${PARAM_SOURCE_INSERT_ID_COLNAME}   >  ${PARAM_TARGET_TABLE_MAX_INSERT_ID}
-    AND ${PARAM_SOURCE_INSERT_ID_COLNAME}   &lt;= ${PARAM_SOURCE_TABLE_MAX_INSERT_ID}
-</sql>
+    '${PARAM_SOURCE_SCHEMA}' AS "schema_name", 
+    '${PARAM_SOURCE_TABLE}'  AS "table_name", 
+    NULLIF('${PARAM_SOURCE_INSERT_ID_COLNAME}'                  , ''                                       ) AS "dwh_last_updated_insert_id_colname", 
+    NULLIF(${PARAM_TARGET_TABLE_MAX_INSERT_ID}                  , ${QF_POSITIVE_INTEGER_NOT_SET_VALUE}     ) AS "dwh_last_updated_insert_id_maxvalue", 
+    NULLIF('${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME}'            , ''                                       ) AS "dwh_last_updated_last_updated_on_colname", 
+    NULLIF(TIMESTAMP '${PARAM_TARGET_TABLE_MAX_LAST_UPDATED_ON}', TIMESTAMP '${QF_TIMESTAMP_NOT_SET_VALUE}') AS "dwh_last_updated_last_updated_on_maxvalue", 
+    ${QF_JOB_BATCH_ID} AS "etl_job_id" </sql>
     <limit>0</limit>
     <lookup />
     <execute_each_row>N</execute_each_row>
@@ -723,13 +712,13 @@ WHERE
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>320</yloc>
+      <yloc>304</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Set QF_SOURCE_TABLE_MAX_TIMESTAMP_... variable</name>
-    <type>SetVariable</type>
+    <name>Log "ETL state register source" details</name>
+    <type>WriteToLog</type>
     <description />
     <distribute>Y</distribute>
     <custom_distribution />
@@ -738,15 +727,49 @@ WHERE
       <method>none</method>
       <schema_name />
     </partitioning>
+    <loglevel>log_level_minimal</loglevel>
+    <displayHeader>Y</displayHeader>
+    <limitRows>N</limitRows>
+    <limitRowsNumber>0</limitRowsNumber>
+    <logmessage>PARAM_DYN_DB_CONN_SOURCE_DB_HOST       = ${PARAM_DYN_DB_CONN_SOURCE_DB_HOST}
+PARAM_DYN_DB_CONN_SOURCE_DB_PORT       = ${PARAM_DYN_DB_CONN_SOURCE_DB_PORT}
+PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE   = ${PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE}
+PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME   = ${PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME}
+PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD   = ${PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD}
+PARAM_DYN_DB_CONN_SOURCE_DB_URL        = ${PARAM_DYN_DB_CONN_SOURCE_DB_URL}
+PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER     = ${PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER}
+PARAM_SOURCE_SCHEMA                    = ${PARAM_SOURCE_SCHEMA}
+PARAM_SOURCE_TABLE                     = ${PARAM_SOURCE_TABLE}
+PARAM_SOURCE_INSERT_ID_COLNAME         = ${PARAM_SOURCE_INSERT_ID_COLNAME}
+PARAM_TARGET_TABLE_MAX_INSERT_ID       = ${PARAM_TARGET_TABLE_MAX_INSERT_ID}
+PARAM_SOURCE_LAST_UPDATED_ON_COLNAME   = ${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME}
+PARAM_TARGET_TABLE_MAX_LAST_UPDATED_ON = ${PARAM_TARGET_TABLE_MAX_LAST_UPDATED_ON}
+PARAM_ETL_STATE_REGISTER_SOURCE_FQ_TABLE_NAME = ${PARAM_ETL_STATE_REGISTER_SOURCE_FQ_TABLE_NAME}
+PARAM_ETL_STATE_REGISTER_SOURCE_SCHEMA_NAME   = ${PARAM_ETL_STATE_REGISTER_SOURCE_SCHEMA_NAME}
+PARAM_ETL_STATE_REGISTER_SOURCE_TABLE_NAME    = ${PARAM_ETL_STATE_REGISTER_SOURCE_TABLE_NAME}</logmessage>
     <fields>
       <field>
-        <field_name>max_source_last_updated_on_for_inserts_before_inserts</field_name>
-        <variable_name>QF_SOURCE_TABLE_MAX_TIMESTAMP_COL_FOR_INSERT_BEFORE_INSERTS</variable_name>
-        <variable_type>ROOT_JOB</variable_type>
-        <default_value />
+        <name>schema_name</name>
+      </field>
+      <field>
+        <name>table_name</name>
+      </field>
+      <field>
+        <name>dwh_last_updated_insert_id_colname</name>
+      </field>
+      <field>
+        <name>dwh_last_updated_insert_id_maxvalue</name>
+      </field>
+      <field>
+        <name>dwh_last_updated_last_updated_on_colname</name>
+      </field>
+      <field>
+        <name>dwh_last_updated_last_updated_on_maxvalue</name>
+      </field>
+      <field>
+        <name>etl_job_id</name>
       </field>
     </fields>
-    <use_formatting>Y</use_formatting>
     <attributes />
     <cluster_schema />
     <remotesteps>
@@ -757,31 +780,75 @@ WHERE
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>512</yloc>
+      <yloc>384</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Write max timestamp "source" field to log</name>
-    <type>WriteToLog</type>
+    <name>Update the "ETL state register" in source DB</name>
+    <type>InsertUpdate</type>
     <description />
-    <distribute>N</distribute>
+    <distribute>Y</distribute>
     <custom_distribution />
     <copies>1</copies>
     <partitioning>
       <method>none</method>
       <schema_name />
     </partitioning>
-    <loglevel>log_level_basic</loglevel>
-    <displayHeader>Y</displayHeader>
-    <limitRows>N</limitRows>
-    <limitRowsNumber>0</limitRowsNumber>
-    <logmessage>tr_set_source_table_max_id_and_date_vrbls</logmessage>
-    <fields>
-      <field>
-        <name>max_source_last_updated_on_for_inserts_before_inserts</name>
-      </field>
-    </fields>
+    <connection>generic_source_db</connection>
+    <commit>1</commit>
+    <update_bypassed>N</update_bypassed>
+    <lookup>
+      <schema>${PARAM_ETL_STATE_REGISTER_SOURCE_SCHEMA_NAME}</schema>
+      <table>${PARAM_ETL_STATE_REGISTER_SOURCE_TABLE_NAME}</table>
+      <key>
+        <name>schema_name</name>
+        <field>schema_name</field>
+        <condition>=</condition>
+        <name2 />
+      </key>
+      <key>
+        <name>table_name</name>
+        <field>table_name</field>
+        <condition>=</condition>
+        <name2 />
+      </key>
+      <value>
+        <name>schema_name</name>
+        <rename>schema_name</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>table_name</name>
+        <rename>table_name</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>dwh_last_updated_insert_id_colname</name>
+        <rename>dwh_last_updated_insert_id_colname</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>dwh_last_updated_insert_id_maxvalue</name>
+        <rename>dwh_last_updated_insert_id_maxvalue</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>dwh_last_updated_last_updated_on_colname</name>
+        <rename>dwh_last_updated_last_updated_on_colname</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>dwh_last_updated_last_updated_on_maxvalue</name>
+        <rename>dwh_last_updated_last_updated_on_maxvalue</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>etl_job_id</name>
+        <rename>etl_job_id</rename>
+        <update>Y</update>
+      </value>
+    </lookup>
     <attributes />
     <cluster_schema />
     <remotesteps>
@@ -792,7 +859,7 @@ WHERE
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>416</yloc>
+      <yloc>464</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

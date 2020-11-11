@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2020/03/15 12:43:54.166</modified_date>
+  <modified_date>2020/11/03 15:21:40.079</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
@@ -1658,14 +1658,13 @@ SET
     -- will have no effect.
     target_synced_to_insert_id       = COALESCE(target_synced_to_insert_id      ,  ${QF_TARGET_TABLE_MAX_ID_COL}),
     target_synced_to_last_updated_on = COALESCE(target_synced_to_last_updated_on, '${QF_TARGET_TABLE_MAX_TIMESTAMP_COL}'),
-    -- Set target_unsynced_inserts_from_last_updated_on column if it is currently
-    -- NULL. Although this will also handle the case where this column has just
-    -- been added, it is needed for normal operation. If this column is 
-    -- currently *not* null, it means that the ETL failed or did not finish for
-    -- this table for some reason on the previous run of the ETL job. If this
+    -- Set target_unsynced_inserts_from_last_updated_on column *if* it is currently
+    -- NULL. If this column is currently *not* null, it means that the ETL failed or did
+    -- not finish for this table for some reason on the previous run of the ETL job. If this
     -- occurred, we do *not* update the value stored in this column. When the
-    -- ETL does finally complete successfully for this table, this column is set
-    -- to NULL.
+    -- ETL does finally complete *successfully* for this table, this column is set to NULL
+    -- in job step "Update CDC state columns" after transformation
+    -- tr_target-update_table-updatable_table_2_updates is executed (successfully).
     target_unsynced_inserts_from_last_updated_on = COALESCE(target_unsynced_inserts_from_last_updated_on, '${QF_SOURCE_TABLE_MAX_TIMESTAMP_COL_FOR_INSERT_BEFORE_INSERTS}') 
 WHERE
     table_state_id = ${PARAM_TABLE_META_ID}</sql>
