@@ -579,7 +579,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2020/11/18 13:34:52.621</modified_date>
+    <modified_date>2020/11/20 14:01:40.612</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -677,7 +677,7 @@ Some of these parameters are not used:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Set PDI variable:
+      <note>Update PDI variable:
 
 	QF_UPDATE_TABLE_NUM_DELETES</note>
       <xloc>496</xloc>
@@ -788,46 +788,6 @@ Some of these parameters are not used:
       <backgroundcolorred>173</backgroundcolorred>
       <backgroundcolorgreen>216</backgroundcolorgreen>
       <backgroundcolorblue>230</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>No, I need to *aggregate* the number of rows deleted 
-into the PDI variable QF_UPDATE_TABLE_NUM_DELETES, 
-NOT *SET* IT here. I may need to use a Javascript step
-for this. For an example, see transformation:
-
-	tr_table_update_statistics_compute ,
-
-which is called from:
-
-	jb_update_etl_table_meta_mirror_details .
-
-But in order to aggregate correctly, this variable must be
-initialized to zero, not -1 !!!! Perhaps this is OK, but I need to
-check why it was necessary to initialize the other variables to
- -1  to see if I can initialize QF_UPDATE_TABLE_NUM_DELETES
-to 0.
-
-Perhaps I can just treat deletes differently than inserts 
-and updates? If necessary, introduce ...NUM_DELETES_PER_SEC ?
-Only if strictly necessary!</note>
-      <xloc>736</xloc>
-      <yloc>1040</yloc>
-      <width>505</width>
-      <heigth>370</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>12</fontsize>
-      <fontbold>Y</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>0</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
       <bordercolorblue>100</bordercolorblue>
@@ -997,11 +957,6 @@ Only if strictly necessary!</note>
   </connection>
   <order>
     <hop>
-      <from>QF_UPDATE_TABLE_NUM_DELETES</from>
-      <to>Get transformation name</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>Get transformation name</from>
       <to>Log number of rows deleted</to>
       <enabled>Y</enabled>
@@ -1038,12 +993,17 @@ Only if strictly necessary!</note>
     </hop>
     <hop>
       <from>Delete block of CDC control table rows</from>
-      <to>QF_UPDATE_TABLE_NUM_DELETES</to>
+      <to>Write error message to log 2</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
       <from>Delete block of CDC control table rows</from>
-      <to>Write error message to log 2</to>
+      <to>Update QF_UPDATE_TABLE_NUM_DELETES</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Update QF_UPDATE_TABLE_NUM_DELETES</from>
+      <to>Get transformation name</to>
       <enabled>Y</enabled>
     </hop>
   </order>
@@ -1322,40 +1282,6 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
     </GUI>
   </step>
   <step>
-    <name>QF_UPDATE_TABLE_NUM_DELETES</name>
-    <type>SetVariable</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <fields>
-      <field>
-        <field_name>num_rows_deleted</field_name>
-        <variable_name>QF_UPDATE_TABLE_NUM_DELETES</variable_name>
-        <variable_type>ROOT_JOB</variable_type>
-        <default_value />
-      </field>
-    </fields>
-    <use_formatting>Y</use_formatting>
-    <attributes />
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>352</xloc>
-      <yloc>1024</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
     <name>Table input -  Source DB CDC control table</name>
     <type>TableInput</type>
     <description />
@@ -1480,6 +1406,58 @@ LIMIT
     <GUI>
       <xloc>144</xloc>
       <yloc>944</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Update QF_UPDATE_TABLE_NUM_DELETES</name>
+    <type>ScriptValueMod</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <compatible>N</compatible>
+    <optimizationLevel>9</optimizationLevel>
+    <jsScripts>
+      <jsScript>
+        <jsScript_type>0</jsScript_type>
+        <jsScript_name>Script 1</jsScript_name>
+        <jsScript_script>//Script here
+
+// Input fields:
+var num_rows_deleted;
+
+var num_rows_deleted_aggregated = parseInt(getVariable("QF_UPDATE_TABLE_NUM_DELETES", "0")) + num_rows_deleted;
+
+setVariable("QF_UPDATE_TABLE_NUM_DELETES", num_rows_deleted_aggregated, "r");
+</jsScript_script>
+      </jsScript>
+    </jsScripts>
+    <fields>
+      <field>
+        <name>num_rows_deleted</name>
+        <rename>num_rows_deleted</rename>
+        <type>Integer</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>Y</replace>
+      </field>
+    </fields>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>352</xloc>
+      <yloc>1024</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

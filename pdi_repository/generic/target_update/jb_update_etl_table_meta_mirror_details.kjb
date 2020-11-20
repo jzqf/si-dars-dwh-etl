@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2020/03/19 16:16:05.668</modified_date>
+  <modified_date>2020/11/20 12:28:23.462</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE</name>
@@ -129,6 +129,11 @@
       <name>PARAM_TARGET_TABLE_UPDATE_ID</name>
       <default_value />
       <description>Primary key of ${QF_ETL_DB_SCHEMA}.target_table_update row to be updated by this job for progress and summary statistics</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_UPDATE_TABLE_NUM_DELETES</name>
+      <default_value />
+      <description>Number of rows of the target table deleted by the ETL job</description>
     </parameter>
     <parameter>
       <name>PARAM_UPDATE_TABLE_NUM_INSERTS</name>
@@ -563,7 +568,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>32</xloc>
-      <yloc>448</yloc>
+      <yloc>464</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -588,6 +593,7 @@ SET
     target_last_updated_num_rows_processed         = ${PARAM_UPDATE_TABLE_NUM_ROWS},
     target_last_updated_num_inserts                = ${PARAM_UPDATE_TABLE_NUM_INSERTS},
     target_last_updated_num_updates                = ${PARAM_UPDATE_TABLE_NUM_UPDATES},
+--    target_last_updated_num_deletes                = ${PARAM_UPDATE_TABLE_NUM_DELETES},  -- MAKE_CHANGE_TO_SUPPORT_QF_UPDATE_TABLE_NUM_DELETES 
     target_last_updated_num_rows_processed_per_sec = ${QF_UPDATE_TABLE_ROWS_PER_SEC}
 
 WHERE
@@ -601,7 +607,7 @@ WHERE
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>352</xloc>
-      <yloc>976</yloc>
+      <yloc>992</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -635,6 +641,7 @@ PARAM_UPDATE_TABLE_START_MILLISECONDS        = ${PARAM_UPDATE_TABLE_START_MILLIS
 PARAM_UPDATE_TABLE_NUM_ROWS                  = ${PARAM_UPDATE_TABLE_NUM_ROWS}
 PARAM_UPDATE_TABLE_NUM_INSERTS               = ${PARAM_UPDATE_TABLE_NUM_INSERTS}
 PARAM_UPDATE_TABLE_NUM_UPDATES               = ${PARAM_UPDATE_TABLE_NUM_UPDATES}
+PARAM_UPDATE_TABLE_NUM_DELETES               = ${PARAM_UPDATE_TABLE_NUM_DELETES}
 PARAM_TARGET_TABLE_SYNCED_TO_INSERT_ID       = ${PARAM_TARGET_TABLE_SYNCED_TO_INSERT_ID}
 PARAM_TARGET_TABLE_SYNCED_TO_LAST_UPDATED_ON = ${PARAM_TARGET_TABLE_SYNCED_TO_LAST_UPDATED_ON}</logmessage>
       <loglevel>Basic</loglevel>
@@ -643,7 +650,7 @@ PARAM_TARGET_TABLE_SYNCED_TO_LAST_UPDATED_ON = ${PARAM_TARGET_TABLE_SYNCED_TO_LA
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>160</xloc>
-      <yloc>448</yloc>
+      <yloc>464</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -685,7 +692,7 @@ PARAM_TARGET_TABLE_SYNCED_TO_LAST_UPDATED_ON = ${PARAM_TARGET_TABLE_SYNCED_TO_LA
       <draw>Y</draw>
       <nr>1</nr>
       <xloc>560</xloc>
-      <yloc>976</yloc>
+      <yloc>992</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -698,7 +705,7 @@ PARAM_TARGET_TABLE_SYNCED_TO_LAST_UPDATED_ON = ${PARAM_TARGET_TABLE_SYNCED_TO_LA
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>656</xloc>
-      <yloc>1072</yloc>
+      <yloc>1088</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -737,7 +744,7 @@ PARAM_TARGET_TABLE_SYNCED_TO_LAST_UPDATED_ON = ${PARAM_TARGET_TABLE_SYNCED_TO_LA
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>352</xloc>
-      <yloc>448</yloc>
+      <yloc>464</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -755,6 +762,7 @@ PARAM_UPDATE_TABLE_START_MILLISECONDS        = ${PARAM_UPDATE_TABLE_START_MILLIS
 PARAM_UPDATE_TABLE_NUM_ROWS                  = ${PARAM_UPDATE_TABLE_NUM_ROWS}
 PARAM_UPDATE_TABLE_NUM_INSERTS               = ${PARAM_UPDATE_TABLE_NUM_INSERTS}
 PARAM_UPDATE_TABLE_NUM_UPDATES               = ${PARAM_UPDATE_TABLE_NUM_UPDATES}
+PARAM_UPDATE_TABLE_NUM_DELETES               = ${PARAM_UPDATE_TABLE_NUM_DELETES}
 PARAM_TARGET_TABLE_SYNCED_TO_INSERT_ID       = ${PARAM_TARGET_TABLE_SYNCED_TO_INSERT_ID}
 PARAM_TARGET_TABLE_SYNCED_TO_LAST_UPDATED_ON = ${PARAM_TARGET_TABLE_SYNCED_TO_LAST_UPDATED_ON}
 QF_UPDATE_TABLE_ELAPSED_MILLISECONDS         = ${QF_UPDATE_TABLE_ELAPSED_MILLISECONDS}
@@ -767,7 +775,7 @@ QF_TARGET_TABLE_MAX_LAST_UPDATED_ON          = ${QF_TARGET_TABLE_MAX_LAST_UPDATE
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>352</xloc>
-      <yloc>880</yloc>
+      <yloc>896</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -806,7 +814,7 @@ QF_TARGET_TABLE_MAX_LAST_UPDATED_ON          = ${QF_TARGET_TABLE_MAX_LAST_UPDATE
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>512</xloc>
-      <yloc>624</yloc>
+      <yloc>640</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -828,7 +836,7 @@ QF_TARGET_TABLE_MAX_LAST_UPDATED_ON          = ${QF_TARGET_TABLE_MAX_LAST_UPDATE
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>176</xloc>
-      <yloc>624</yloc>
+      <yloc>640</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -852,7 +860,7 @@ QF_TARGET_TABLE_MAX_LAST_UPDATED_ON          = ${QF_TARGET_TABLE_MAX_LAST_UPDATE
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>352</xloc>
-      <yloc>544</yloc>
+      <yloc>560</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -891,7 +899,7 @@ QF_TARGET_TABLE_MAX_LAST_UPDATED_ON          = ${QF_TARGET_TABLE_MAX_LAST_UPDATE
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>512</xloc>
-      <yloc>784</yloc>
+      <yloc>800</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -913,7 +921,7 @@ QF_TARGET_TABLE_MAX_LAST_UPDATED_ON          = ${QF_TARGET_TABLE_MAX_LAST_UPDATE
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>176</xloc>
-      <yloc>784</yloc>
+      <yloc>800</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -937,7 +945,7 @@ QF_TARGET_TABLE_MAX_LAST_UPDATED_ON          = ${QF_TARGET_TABLE_MAX_LAST_UPDATE
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>352</xloc>
-      <yloc>704</yloc>
+      <yloc>720</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -979,7 +987,7 @@ QF_TARGET_TABLE_MAX_LAST_UPDATED_ON          = ${QF_TARGET_TABLE_MAX_LAST_UPDATE
       <draw>Y</draw>
       <nr>1</nr>
       <xloc>560</xloc>
-      <yloc>1072</yloc>
+      <yloc>1088</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -1026,7 +1034,7 @@ QF_TARGET_TABLE_MAX_LAST_UPDATED_ON          = ${QF_TARGET_TABLE_MAX_LAST_UPDATE
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>272</xloc>
-      <yloc>1264</yloc>
+      <yloc>1280</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -1068,7 +1076,7 @@ QF_TARGET_TABLE_MAX_LAST_UPDATED_ON          = ${QF_TARGET_TABLE_MAX_LAST_UPDATE
       <draw>Y</draw>
       <nr>1</nr>
       <xloc>352</xloc>
-      <yloc>1360</yloc>
+      <yloc>1376</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -1083,6 +1091,7 @@ SET (
     elapsed_time_millis,
     num_inserts,
     num_updates,
+--    num_deletes,  -- MAKE_CHANGE_TO_SUPPORT_QF_UPDATE_TABLE_NUM_DELETES 
     num_rows_processed,
     num_rows_processed_per_sec,
     insert_id_maxvalue,
@@ -1092,6 +1101,7 @@ SET (
     ${QF_UPDATE_TABLE_ELAPSED_MILLISECONDS},
     ${PARAM_UPDATE_TABLE_NUM_INSERTS},
     ${PARAM_UPDATE_TABLE_NUM_UPDATES},
+--    ${PARAM_UPDATE_TABLE_NUM_UPDATES},  -- MAKE_CHANGE_TO_SUPPORT_QF_UPDATE_TABLE_NUM_DELETES 
     ${PARAM_UPDATE_TABLE_NUM_ROWS},
     ${QF_UPDATE_TABLE_ROWS_PER_SEC},
     NULLIF(${QF_TARGET_TABLE_MAX_INSERT_ID}, ${QF_POSITIVE_INTEGER_NOT_SET_VALUE}),
@@ -1108,7 +1118,7 @@ WHERE
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>352</xloc>
-      <yloc>1072</yloc>
+      <yloc>1088</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -1132,7 +1142,7 @@ WHERE
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>352</xloc>
-      <yloc>1168</yloc>
+      <yloc>1184</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -1179,7 +1189,7 @@ WHERE
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>448</xloc>
-      <yloc>1264</yloc>
+      <yloc>1280</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -1201,7 +1211,7 @@ WHERE
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>656</xloc>
-      <yloc>1360</yloc>
+      <yloc>1376</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -1217,7 +1227,7 @@ QF_UPDATE_TABLE_ROWS_PER_SEC         = ${QF_UPDATE_TABLE_ROWS_PER_SEC}</logmessa
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>128</xloc>
-      <yloc>512</yloc>
+      <yloc>528</yloc>
       <attributes_kjc />
     </entry>
   </entries>
@@ -1479,12 +1489,13 @@ from a table in a source database. This job has parameters:
 	PARAM_UPDATE_TABLE_NUM_ROWS						Number of rows processed by the ETL job (in case this number cannot be broken down into inserts &amp; updates)
 	PARAM_UPDATE_TABLE_NUM_INSERTS					Number of rows inserted into the target table by the ETL job
 	PARAM_UPDATE_TABLE_NUM_UPDATES					Number of rows of the target table updated by the ETL job
+	PARAM_UPDATE_TABLE_NUM_DELETES					Number of rows of the target table deleted by the ETL job
 	PARAM_TARGET_TABLE_SYNCED_TO_INSERT_ID			Maximum value of "insert id" for which the target table has been syncronized with the source table
 	PARAM_TARGET_TABLE_SYNCED_TO_LAST_UPDATED_ON	Maximum value of "last updated on" for which the target table has been syncronized with the source table</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
       <width>1061</width>
-      <heigth>413</heigth>
+      <heigth>426</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -1507,7 +1518,7 @@ execution has failed. It will then direct
 the execution flow to the job that 
 sends out failure e-mails.</note>
       <xloc>720</xloc>
-      <yloc>1040</yloc>
+      <yloc>1056</yloc>
       <width>220</width>
       <heigth>75</heigth>
       <fontname>Ubuntu</fontname>
@@ -1532,7 +1543,7 @@ This transformation sets the PDI variables:
 	QF_UPDATE_TABLE_ELAPSED_MILLISECONDS
 	QF_UPDATE_TABLE_ROWS_PER_SEC</note>
       <xloc>480</xloc>
-      <yloc>432</yloc>
+      <yloc>448</yloc>
       <width>438</width>
       <heigth>75</heigth>
       <fontname>Ubuntu</fontname>
@@ -1559,7 +1570,7 @@ This transformation sets the PDI variables:
 	QF_TARGET_TABLE_MAX_INSERT_ID
 	QF_TARGET_TABLE_MAX_LAST_UPDATED_ON</note>
       <xloc>480</xloc>
-      <yloc>848</yloc>
+      <yloc>864</yloc>
       <width>289</width>
       <heigth>101</heigth>
       <fontname>Ubuntu</fontname>
@@ -1583,7 +1594,7 @@ the specified target table. This value is assigned to the PDI variable:
 
 	QF_TARGET_TABLE_MAX_INSERT_ID</note>
       <xloc>672</xloc>
-      <yloc>608</yloc>
+      <yloc>624</yloc>
       <width>380</width>
       <heigth>62</heigth>
       <fontname>Ubuntu</fontname>
@@ -1607,7 +1618,7 @@ the specified target table. This value is assigned to the PDI variable:
 
 	QF_TARGET_TABLE_MAX_LAST_UPDATED_ON</note>
       <xloc>672</xloc>
-      <yloc>768</yloc>
+      <yloc>784</yloc>
       <width>413</width>
       <heigth>62</heigth>
       <fontname>Ubuntu</fontname>
@@ -1634,7 +1645,7 @@ I added support for the new
 may be useful to keep these columns so I 
 have not deleted this step.</note>
       <xloc>16</xloc>
-      <yloc>944</yloc>
+      <yloc>960</yloc>
       <width>246</width>
       <heigth>101</heigth>
       <fontname>Ubuntu</fontname>
@@ -1657,7 +1668,7 @@ have not deleted this step.</note>
 This is implemented as a table 
 in the source DB.</note>
       <xloc>16</xloc>
-      <yloc>1248</yloc>
+      <yloc>1264</yloc>
       <width>186</width>
       <heigth>49</heigth>
       <fontname>Ubuntu</fontname>
@@ -1692,7 +1703,7 @@ computed in this job:
 	QF_TARGET_TABLE_MAX_INSERT_ID
 	QF_TARGET_TABLE_MAX_LAST_UPDATED_ON</note>
       <xloc>704</xloc>
-      <yloc>1184</yloc>
+      <yloc>1200</yloc>
       <width>419</width>
       <heigth>205</heigth>
       <fontname>Ubuntu</fontname>
