@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2020/11/18 10:01:24.472</modified_date>
+  <modified_date>2020/11/22 20:22:00.936</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CDC_CONTROL_SCHEMA_NAME</name>
@@ -518,7 +518,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>368</xloc>
+      <xloc>176</xloc>
       <yloc>656</yloc>
       <attributes_kjc />
     </entry>
@@ -531,7 +531,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>240</xloc>
+      <xloc>48</xloc>
       <yloc>784</yloc>
       <attributes_kjc />
     </entry>
@@ -572,7 +572,7 @@ PARAM_DYN_DB_CONN_SOURCE_DB_URL      = ${PARAM_DYN_DB_CONN_SOURCE_DB_URL}</logme
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>480</xloc>
+      <xloc>288</xloc>
       <yloc>656</yloc>
       <attributes_kjc />
     </entry>
@@ -611,7 +611,7 @@ PARAM_DYN_DB_CONN_SOURCE_DB_URL      = ${PARAM_DYN_DB_CONN_SOURCE_DB_URL}</logme
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>480</xloc>
+      <xloc>288</xloc>
       <yloc>784</yloc>
       <attributes_kjc />
     </entry>
@@ -623,8 +623,91 @@ PARAM_DYN_DB_CONN_SOURCE_DB_URL      = ${PARAM_DYN_DB_CONN_SOURCE_DB_URL}</logme
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>480</xloc>
-      <yloc>992</yloc>
+      <xloc>496</xloc>
+      <yloc>1008</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>tr_log_table_progress-wrapper</name>
+      <description />
+      <type>TRANS</type>
+      <attributes />
+      <specification_method>rep_name</specification_method>
+      <trans_object_id />
+      <filename />
+      <transname>tr_log_table_progress-wrapper</transname>
+      <directory>/generic</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <clear_rows>N</clear_rows>
+      <clear_files>N</clear_files>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Basic</loglevel>
+      <cluster>N</cluster>
+      <slave_server_name />
+      <set_append_logfile>N</set_append_logfile>
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <create_parent_folder>N</create_parent_folder>
+      <logging_remote_work>N</logging_remote_work>
+      <run_configuration>Pentaho local</run_configuration>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_CURRENT_ROW_NUMBER</name>
+          <stream_name />
+          <value>${PARAM_ROWS_DELETED}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_INSERT_ID</name>
+          <stream_name />
+          <value>${QF_POSITIVE_INTEGER_NOT_SET_VALUE}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_LAST_UPDATED_ON</name>
+          <stream_name />
+          <value>${QF_TIMESTAMP_NOT_SET_VALUE}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_NUM_ROWS_TO_PROCESS</name>
+          <stream_name />
+          <value>${PARAM_ROWS_TO_DELETE}</value>
+        </parameter>
+      </parameters>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>496</xloc>
+      <yloc>912</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>Log_ rogress and check for shutdown?</name>
+      <description />
+      <type>EVAL</type>
+      <attributes />
+      <script>// The final expression in this script evaluates to false, except when "param_rows_deleted" increases by "QF_ETL_PROGRESS_INTERVAL_ROWS".
+// The transformation "tr_log_table_progress-wrapper" is executed only when this expression evaluates to true. As a result, 
+// an etl.target_table_progress row is created once for each "QF_ETL_PROGRESS_INTERVAL_ROWS" that are processed (deleted). 
+// This throttling is done to avoid creating an unreasonably large number of etl.target_table_progress rows.
+
+var param_rows_deleted                         = parseInt(parent_job.getVariable("PARAM_ROWS_DELETED", "0"));    // This value will increase by PARAM_CDC_CONTROL_TABLE_BATCH_SIZE each time this job is executed (for a given table).
+var qf_etl_progress_interval_rows            = parseInt(parent_job.getVariable("QF_ETL_PROGRESS_INTERVAL_ROWS", "0"));
+var param_cdc_control_table_batch_size = parseInt(parent_job.getVariable("PARAM_CDC_CONTROL_TABLE_BATCH_SIZE", "0"));
+
+param_rows_deleted % qf_etl_progress_interval_rows &lt; param_cdc_control_table_batch_size
+
+//( parseInt(parent_job.getVariable("PARAM_ROWS_DELETED", "0")) % parseInt(parent_job.getVariable("QF_ETL_PROGRESS_INTERVAL_ROWS", "0")) ) &lt; parseInt(parent_job.getVariable("PARAM_CDC_CONTROL_TABLE_BATCH_SIZE", "0"))</script>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>288</xloc>
+      <yloc>912</yloc>
       <attributes_kjc />
     </entry>
   </entries>
@@ -649,7 +732,34 @@ PARAM_DYN_DB_CONN_SOURCE_DB_URL      = ${PARAM_DYN_DB_CONN_SOURCE_DB_URL}</logme
     </hop>
     <hop>
       <from>tr_target-update_table-delete_rows-without_mi</from>
+      <to>Abort job</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>tr_log_table_progress-wrapper</from>
       <to>Success</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>tr_target-update_table-delete_rows-without_mi</from>
+      <to>Log_ rogress and check for shutdown?</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>Log_ rogress and check for shutdown?</from>
+      <to>tr_log_table_progress-wrapper</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -657,8 +767,8 @@ PARAM_DYN_DB_CONN_SOURCE_DB_URL      = ${PARAM_DYN_DB_CONN_SOURCE_DB_URL}</logme
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>tr_target-update_table-delete_rows-without_mi</from>
-      <to>Abort job</to>
+      <from>Log_ rogress and check for shutdown?</from>
+      <to>Success</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -742,7 +852,7 @@ execution has failed. It will then
 direct the execution flow to the 
 job that sends out failure e-mails.</note>
       <xloc>16</xloc>
-      <yloc>768</yloc>
+      <yloc>848</yloc>
       <width>198</width>
       <heigth>75</heigth>
       <fontname>Ubuntu</fontname>
@@ -761,11 +871,12 @@ job that sends out failure e-mails.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>This transformation uses a "CDC control table" to delete rows from the target table.</note>
-      <xloc>624</xloc>
+      <note>This transformation uses a "CDC control table" 
+to delete rows from the target table.</note>
+      <xloc>448</xloc>
       <yloc>784</yloc>
-      <width>471</width>
-      <heigth>23</heigth>
+      <width>267</width>
+      <heigth>36</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -776,38 +887,6 @@ job that sends out failure e-mails.</note>
       <backgroundcolorred>255</backgroundcolorred>
       <backgroundcolorgreen>205</backgroundcolorgreen>
       <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>If this is the final content of this job, 
-then I should probably execute its
-transformation directly in the calling job, 
-right? But only if it works with the 
-"Execute every into row" option!
-Don't delete this job until I successfully
-can execute the transformation this way
-in the calling job!
-
-But don't I want to perform all logging
-and monitoring here in this job? In that
-case, I cannot eliminate this job!</note>
-      <xloc>0</xloc>
-      <yloc>864</yloc>
-      <width>464</width>
-      <heigth>334</heigth>
-      <fontname>Ubuntu</fontname>
-      <fontsize>18</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>173</backgroundcolorred>
-      <backgroundcolorgreen>216</backgroundcolorgreen>
-      <backgroundcolorblue>230</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
       <bordercolorblue>100</bordercolorblue>
@@ -827,8 +906,8 @@ However, the template transformation in tr_target-update_table-delete_rows-witho
 makes use of the "Delete" transformation step, which does not support metadata injection.
 Metadata injection was not added to the "Delete" step until PDI v9.0. Currenlty, this project 
 is using PDI v8.2.</note>
-      <xloc>1104</xloc>
-      <yloc>720</yloc>
+      <xloc>736</xloc>
+      <yloc>656</yloc>
       <width>516</width>
       <heigth>179</heigth>
       <fontname>Ubuntu</fontname>
@@ -847,29 +926,32 @@ is using PDI v8.2.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Does it make sense to execute:
+      <note>Execute tr_log_table_progress-wrapper after every QF_ETL_PROGRESS_INTERVAL_ROWS are deleted. 
+This does the following:
 
-	tr_log_table_progress
+1.	It logs progress in the current etl_run row.
 
-here? But then it must be modified to also 
- treat row *deletions*.
+2.	It logs progress by inserting an etl.target_table_progress row, but only if:
 
-Depending on the changes, it may or may 
-not be necessary to also update all calls to iit!</note>
-      <xloc>480</xloc>
-      <yloc>848</yloc>
-      <width>257</width>
-      <heigth>127</heigth>
+		QF_ETL_PROGRESS_LOG_HISTORY = Y
+
+3.	It checks if a shutdown has been requested; if so, it initiates a shutdown. This is only done if:
+
+		PARAM_CHECK_FOR_SHUTDOWN_REQUEST = Y</note>
+      <xloc>624</xloc>
+      <yloc>864</yloc>
+      <width>577</width>
+      <heigth>166</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
       <fontitalic>N</fontitalic>
-      <fontcolorred>255</fontcolorred>
-      <fontcolorgreen>255</fontcolorgreen>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
       <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>0</backgroundcolorred>
-      <backgroundcolorgreen>0</backgroundcolorgreen>
-      <backgroundcolorblue>0</backgroundcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
       <bordercolorblue>100</bordercolorblue>
