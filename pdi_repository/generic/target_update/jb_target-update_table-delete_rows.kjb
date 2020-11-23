@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2020/11/22 20:22:00.936</modified_date>
+  <modified_date>2020/11/23 10:19:11.432</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CDC_CONTROL_SCHEMA_NAME</name>
@@ -952,6 +952,43 @@ This does the following:
       <backgroundcolorred>255</backgroundcolorred>
       <backgroundcolorgreen>205</backgroundcolorgreen>
       <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>For each target table that is being updated during a run of the ETL job, this job (jb_target-update_table-delete_rows) is called multiple times  to delete target rows. 
+Each execution of this job executes:
+
+	tr_target-update_table-delete_rows-without_mi
+
+to delete QF_CDC_CONTROL_TABLE_BATCH_SIZE rows of the target table, and jb_target-update_table-delete_rows is executed multiple times until it processes all of the 
+CDC control table rows for deleting target table rows for the current target table being processed.
+
+However, this job executes:
+
+	tr_log_table_progress-wrapper
+
+only once for each QF_ETL_PROGRESS_INTERVAL_ROWS row that are processed (deleted). This allows for rows to be deleted in much smaller batches than the row
+interval where checks for shutdown requests are made and etl.target_table_progress rows are created. If tr_log_table_progress-wrapper were called at the same rate
+at which batches of rows are deleted in tr_target-update_table-delete_rows-without_mi, an excessive amount of time might be spent checking for shutdown requests,
+inserting etl.target_table_progress rows and updating the etl.etl_run row for the current ETL execution.
+</note>
+      <xloc>48</xloc>
+      <yloc>1072</yloc>
+      <width>944</width>
+      <heigth>231</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>173</backgroundcolorred>
+      <backgroundcolorgreen>216</backgroundcolorgreen>
+      <backgroundcolorblue>230</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
       <bordercolorblue>100</bordercolorblue>
