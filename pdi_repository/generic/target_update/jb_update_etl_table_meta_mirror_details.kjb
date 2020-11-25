@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2020/11/20 12:28:23.462</modified_date>
+  <modified_date>2020/11/25 12:28:19.294</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE</name>
@@ -1034,7 +1034,7 @@ QF_TARGET_TABLE_MAX_LAST_UPDATED_ON          = ${QF_TARGET_TABLE_MAX_LAST_UPDATE
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>272</xloc>
-      <yloc>1280</yloc>
+      <yloc>1376</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -1076,7 +1076,7 @@ QF_TARGET_TABLE_MAX_LAST_UPDATED_ON          = ${QF_TARGET_TABLE_MAX_LAST_UPDATE
       <draw>Y</draw>
       <nr>1</nr>
       <xloc>352</xloc>
-      <yloc>1376</yloc>
+      <yloc>1472</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -1189,7 +1189,7 @@ WHERE
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>448</xloc>
-      <yloc>1280</yloc>
+      <yloc>1376</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -1211,7 +1211,7 @@ WHERE
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>656</xloc>
-      <yloc>1376</yloc>
+      <yloc>1472</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -1228,6 +1228,30 @@ QF_UPDATE_TABLE_ROWS_PER_SEC         = ${QF_UPDATE_TABLE_ROWS_PER_SEC}</logmessa
       <nr>0</nr>
       <xloc>128</xloc>
       <yloc>528</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>Was the generic algorithm for updatable tables + deletes used?</name>
+      <description />
+      <type>SIMPLE_EVAL</type>
+      <attributes />
+      <valuetype>variable</valuetype>
+      <fieldname />
+      <variablename>${PARAM_TABLE_MIRROR_ALGORITHM_ID}</variablename>
+      <fieldtype>number</fieldtype>
+      <mask />
+      <comparevalue>${QF_MIRROR_ALG_INSERT_UPDATE_DELETE_GENERIC}</comparevalue>
+      <minvalue />
+      <maxvalue />
+      <successcondition>equal</successcondition>
+      <successnumbercondition>equal</successnumbercondition>
+      <successbooleancondition>true</successbooleancondition>
+      <successwhenvarset>N</successwhenvarset>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>272</xloc>
+      <yloc>1280</yloc>
       <attributes_kjc />
     </entry>
   </entries>
@@ -1396,15 +1420,6 @@ QF_UPDATE_TABLE_ROWS_PER_SEC         = ${QF_UPDATE_TABLE_ROWS_PER_SEC}</logmessa
     </hop>
     <hop>
       <from>Was generic algorithm #2 for updatable tables used?</from>
-      <to>jb_etl_state_register-update</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Was generic algorithm #2 for updatable tables used?</from>
       <to>jb_etl_state_register-update 2</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -1451,6 +1466,33 @@ QF_UPDATE_TABLE_ROWS_PER_SEC         = ${QF_UPDATE_TABLE_ROWS_PER_SEC}</logmessa
     <hop>
       <from>Log variables computed by tr_table_update_statistics_compute</from>
       <to>PARAM_TARGET_INSERT_ID_COLNAME is not ""</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Was generic algorithm #2 for updatable tables used?</from>
+      <to>Was the generic algorithm for updatable tables + deletes used?</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Was the generic algorithm for updatable tables + deletes used?</from>
+      <to>jb_etl_state_register-update</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Was the generic algorithm for updatable tables + deletes used?</from>
+      <to>jb_etl_state_register-update 2</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -1668,7 +1710,7 @@ have not deleted this step.</note>
 This is implemented as a table 
 in the source DB.</note>
       <xloc>16</xloc>
-      <yloc>1264</yloc>
+      <yloc>1360</yloc>
       <width>186</width>
       <heigth>49</heigth>
       <fontname>Ubuntu</fontname>
@@ -1687,15 +1729,15 @@ in the source DB.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>ETL algorithm #2 for updateable tables is special because it keeps track of 
-CDC state in the etl_mgmt database. If this algorithm was just used for 
-updating the target table, then jb_target-update_table-updatable_table_2
-will pass values to the current job for the parameters:
+      <note>ETL algorithm #2 &amp; #10 for updateable tables is special because they keeps track
+of CDC state in the etl_mgmt database. If one of these algorithm was just used
+for updating the target table, then the job that performs the update will pass 
+values to the current job for the parameters:
 
 	PARAM_TARGET_TABLE_SYNCED_TO_INSERT_ID
 	PARAM_TARGET_TABLE_SYNCED_TO_LAST_UPDATED_ON
 
-For this case only, we pass these parameter values to 
+For these cases only, we pass these parameter values to 
 jb_etl_state_register-update. For all other algorithms, we pass the
 maximum values for the "insert id" and "last updatd on" columns that are
 computed in this job:
@@ -1703,8 +1745,8 @@ computed in this job:
 	QF_TARGET_TABLE_MAX_INSERT_ID
 	QF_TARGET_TABLE_MAX_LAST_UPDATED_ON</note>
       <xloc>704</xloc>
-      <yloc>1200</yloc>
-      <width>419</width>
+      <yloc>1248</yloc>
+      <width>454</width>
       <heigth>205</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>

@@ -17,6 +17,7 @@
 --    r,
 --    i,
 --    u,
+--    d,
 --    millis,
 --    "r/s",
 --    CAST(iIdCol AS VARCHAR(80)),
