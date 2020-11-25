@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2020/11/24 08:23:58.088</modified_date>
+  <modified_date>2020/11/25 09:09:06.978</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CDC_CONTROL_SCHEMA_NAME</name>
@@ -531,8 +531,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>48</xloc>
-      <yloc>784</yloc>
+      <xloc>80</xloc>
+      <yloc>848</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -612,7 +612,7 @@ PARAM_DYN_DB_CONN_SOURCE_DB_URL      = ${PARAM_DYN_DB_CONN_SOURCE_DB_URL}</logme
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>288</xloc>
-      <yloc>784</yloc>
+      <yloc>848</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -623,8 +623,8 @@ PARAM_DYN_DB_CONN_SOURCE_DB_URL      = ${PARAM_DYN_DB_CONN_SOURCE_DB_URL}</logme
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>496</xloc>
-      <yloc>1008</yloc>
+      <xloc>80</xloc>
+      <yloc>1072</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -682,12 +682,12 @@ PARAM_DYN_DB_CONN_SOURCE_DB_URL      = ${PARAM_DYN_DB_CONN_SOURCE_DB_URL}</logme
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>496</xloc>
-      <yloc>912</yloc>
+      <xloc>80</xloc>
+      <yloc>960</yloc>
       <attributes_kjc />
     </entry>
     <entry>
-      <name>Log_ rogress and check for shutdown?</name>
+      <name>Log progress and check for shutdown?</name>
       <description />
       <type>EVAL</type>
       <attributes />
@@ -707,7 +707,7 @@ param_rows_deleted % qf_etl_progress_interval_rows &lt; param_cdc_control_table_
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>288</xloc>
-      <yloc>912</yloc>
+      <yloc>960</yloc>
       <attributes_kjc />
     </entry>
   </entries>
@@ -745,12 +745,12 @@ param_rows_deleted % qf_etl_progress_interval_rows &lt; param_cdc_control_table_
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>Y</unconditional>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
     </hop>
     <hop>
       <from>tr_target-update_table-delete_rows-without_mi</from>
-      <to>Log_ rogress and check for shutdown?</to>
+      <to>Log progress and check for shutdown?</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -758,7 +758,7 @@ param_rows_deleted % qf_etl_progress_interval_rows &lt; param_cdc_control_table_
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>Log_ rogress and check for shutdown?</from>
+      <from>Log progress and check for shutdown?</from>
       <to>tr_log_table_progress-wrapper</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -767,8 +767,17 @@ param_rows_deleted % qf_etl_progress_interval_rows &lt; param_cdc_control_table_
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Log_ rogress and check for shutdown?</from>
+      <from>Log progress and check for shutdown?</from>
       <to>Success</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>tr_log_table_progress-wrapper</from>
+      <to>Abort job</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -852,7 +861,7 @@ execution has failed. It will then
 direct the execution flow to the 
 job that sends out failure e-mails.</note>
       <xloc>16</xloc>
-      <yloc>848</yloc>
+      <yloc>752</yloc>
       <width>198</width>
       <heigth>75</heigth>
       <fontname>Ubuntu</fontname>
@@ -871,12 +880,11 @@ job that sends out failure e-mails.</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>This transformation uses a "CDC control table" 
-to delete rows from the target table.</note>
+      <note>This transformation uses a "CDC control table" to delete rows from the target table.</note>
       <xloc>448</xloc>
-      <yloc>784</yloc>
-      <width>267</width>
-      <heigth>36</heigth>
+      <yloc>864</yloc>
+      <width>471</width>
+      <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -905,7 +913,7 @@ However, the template transformation in tr_target-update_table-delete_rows-witho
 makes use of the "Delete" transformation step, which does not support metadata injection.
 Metadata injection was not added to the "Delete" step until PDI v9.0. Currenlty, this project 
 is using PDI v8.2.</note>
-      <xloc>736</xloc>
+      <xloc>448</xloc>
       <yloc>672</yloc>
       <width>516</width>
       <heigth>166</heigth>
@@ -937,8 +945,8 @@ This does the following:
 3.	It checks if a shutdown has been requested; if so, it initiates a shutdown. This is only done if:
 
 		PARAM_CHECK_FOR_SHUTDOWN_REQUEST = Y</note>
-      <xloc>624</xloc>
-      <yloc>864</yloc>
+      <xloc>448</xloc>
+      <yloc>912</yloc>
       <width>577</width>
       <heigth>166</heigth>
       <fontname>Ubuntu</fontname>
@@ -975,7 +983,7 @@ at which batches of rows are deleted in tr_target-update_table-delete_rows-witho
 inserting etl.target_table_progress rows and updating the etl.etl_run row for the current ETL execution.
 </note>
       <xloc>48</xloc>
-      <yloc>1072</yloc>
+      <yloc>1136</yloc>
       <width>944</width>
       <heigth>231</heigth>
       <fontname>Ubuntu</fontname>

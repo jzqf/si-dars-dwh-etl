@@ -39,6 +39,7 @@ SELECT
     ts.target_last_updated_num_rows_processed AS "r",
     ts.target_last_updated_num_inserts AS "i",
     ts.target_last_updated_num_updates AS "u",
+    ts.target_last_updated_num_deletes AS "d",
     ts.target_last_updated_elapsed_time_millis AS "millis",
     ts.target_last_updated_num_rows_processed_per_sec AS "r/s",
     ts.target_last_updated_insert_id_colname AS "iIdCol",
