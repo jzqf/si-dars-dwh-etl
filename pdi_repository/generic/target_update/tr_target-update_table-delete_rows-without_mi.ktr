@@ -579,7 +579,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2020/11/20 14:01:40.612</modified_date>
+    <modified_date>2020/12/03 10:23:07.310</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -681,7 +681,7 @@ Some of these parameters are not used:
 
 	QF_UPDATE_TABLE_NUM_DELETES</note>
       <xloc>496</xloc>
-      <yloc>1024</yloc>
+      <yloc>1136</yloc>
       <width>229</width>
       <heigth>49</heigth>
       <fontname>Ubuntu</fontname>
@@ -700,11 +700,12 @@ Some of these parameters are not used:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Delete target rows specified by the stream of CDC control table rows.</note>
+      <note>Delete target rows specified by the stream of CDC control table rows. If a row to be deleted does not exist in the 
+target table (as specified by its primary key), this will *not* trigger an error here.</note>
       <xloc>496</xloc>
       <yloc>864</yloc>
-      <width>394</width>
-      <heigth>23</heigth>
+      <width>634</width>
+      <heigth>36</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -747,11 +748,12 @@ Some of these parameters are not used:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Delete the CDC control table rows.</note>
+      <note>Delete the CDC control table rows. If a row to be deleted does not exist in the CDC control table (as specified by its 
+primary key), this will *not* trigger an error here.</note>
       <xloc>496</xloc>
-      <yloc>944</yloc>
-      <width>202</width>
-      <heigth>23</heigth>
+      <yloc>1056</yloc>
+      <width>645</width>
+      <heigth>36</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -768,16 +770,19 @@ Some of these parameters are not used:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>IMPORTANT:	If an error occurs in this transformation, the row deletions for both
-				the target table and the CDC control table will be rolled back, even 
-				though these two tables are in different databases. This is because 
-				this transformation has the following option enabled:
+      <note>IMPORTANT:	If an error occurs in this transformation, the row deletions for
+				both the target table and the source DB "CDC control table", 
+				as well as the rows inserted into the target DB 
+				"CDC control table" (if this is implemented), will be rolled 
+				back, even though these tables are in two different databases.
+				This is because this transformation has the following option 
+				enabled:
 
 					Make the transformation database transactional</note>
-      <xloc>752</xloc>
-      <yloc>928</yloc>
-      <width>492</width>
-      <heigth>88</heigth>
+      <xloc>624</xloc>
+      <yloc>1216</yloc>
+      <width>462</width>
+      <heigth>127</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>Y</fontbold>
@@ -788,6 +793,35 @@ Some of these parameters are not used:
       <backgroundcolorred>173</backgroundcolorred>
       <backgroundcolorgreen>216</backgroundcolorgreen>
       <backgroundcolorblue>230</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>For each row deleted from the target DB, a corresponding row could be inserted into the "CDC control table" in the 
+target DB here. These new "CDC control table" rows will be used on a subsequent run of the ETL job if the current 
+target table is used as a source table in another database. This enables row deletions to be "chained" between 
+databases that are maintained by ETL jobs. For example, if a table is mirrored from an operational DB to the PSA, and
+then that PSA table is mirrored to the DSA, then rows from the DSA table will get deleted on a subsequent run of 
+the ETL job after rows are deleted from the PSA table.
+
+Kym has so far decided that these "CDC control table" rows in the target DB will be inserted via a trigger on each 
+target table, so this feature has *not* currently been implemented here in the ETL.</note>
+      <xloc>496</xloc>
+      <yloc>912</yloc>
+      <width>650</width>
+      <heigth>127</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
       <bordercolorred>100</bordercolorred>
       <bordercolorgreen>100</bordercolorgreen>
       <bordercolorblue>100</bordercolorblue>
@@ -1061,7 +1095,7 @@ Some of these parameters are not used:
     </remotesteps>
     <GUI>
       <xloc>32</xloc>
-      <yloc>944</yloc>
+      <yloc>1056</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1153,7 +1187,7 @@ WHERE
     </remotesteps>
     <GUI>
       <xloc>352</xloc>
-      <yloc>944</yloc>
+      <yloc>1056</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1228,7 +1262,7 @@ WHERE
     </remotesteps>
     <GUI>
       <xloc>352</xloc>
-      <yloc>1104</yloc>
+      <yloc>1216</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1277,7 +1311,7 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
     </remotesteps>
     <GUI>
       <xloc>352</xloc>
-      <yloc>1184</yloc>
+      <yloc>1296</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1324,6 +1358,58 @@ LIMIT
     <GUI>
       <xloc>352</xloc>
       <yloc>704</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Update QF_UPDATE_TABLE_NUM_DELETES</name>
+    <type>ScriptValueMod</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <compatible>N</compatible>
+    <optimizationLevel>9</optimizationLevel>
+    <jsScripts>
+      <jsScript>
+        <jsScript_type>0</jsScript_type>
+        <jsScript_name>Script 1</jsScript_name>
+        <jsScript_script>//Script here
+
+// Input fields:
+var num_rows_deleted;
+
+var num_rows_deleted_aggregated = parseInt(getVariable("QF_UPDATE_TABLE_NUM_DELETES", "0")) + num_rows_deleted;
+
+setVariable("QF_UPDATE_TABLE_NUM_DELETES", num_rows_deleted_aggregated, "r");
+</jsScript_script>
+      </jsScript>
+    </jsScripts>
+    <fields>
+      <field>
+        <name>num_rows_deleted</name>
+        <rename>num_rows_deleted</rename>
+        <type>Integer</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>Y</replace>
+      </field>
+    </fields>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>352</xloc>
+      <yloc>1136</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1405,59 +1491,7 @@ LIMIT
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>944</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Update QF_UPDATE_TABLE_NUM_DELETES</name>
-    <type>ScriptValueMod</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <compatible>N</compatible>
-    <optimizationLevel>9</optimizationLevel>
-    <jsScripts>
-      <jsScript>
-        <jsScript_type>0</jsScript_type>
-        <jsScript_name>Script 1</jsScript_name>
-        <jsScript_script>//Script here
-
-// Input fields:
-var num_rows_deleted;
-
-var num_rows_deleted_aggregated = parseInt(getVariable("QF_UPDATE_TABLE_NUM_DELETES", "0")) + num_rows_deleted;
-
-setVariable("QF_UPDATE_TABLE_NUM_DELETES", num_rows_deleted_aggregated, "r");
-</jsScript_script>
-      </jsScript>
-    </jsScripts>
-    <fields>
-      <field>
-        <name>num_rows_deleted</name>
-        <rename>num_rows_deleted</rename>
-        <type>Integer</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>Y</replace>
-      </field>
-    </fields>
-    <attributes />
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>352</xloc>
-      <yloc>1024</yloc>
+      <yloc>1056</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
