@@ -1,0 +1,858 @@
+<transformation>
+  <info>
+    <name>tr_log_table_progress-wrapper</name>
+    <description />
+    <extended_description />
+    <trans_version />
+    <trans_type>Normal</trans_type>
+    <trans_status>0</trans_status>
+    <directory>/generic</directory>
+    <parameters>
+      <parameter>
+        <name>PARAM_CHECK_FOR_SHUTDOWN_REQUEST</name>
+        <default_value>N</default_value>
+        <description>If "Y", a shutdown request will be checked for in this transformation</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_CURRENT_ROW_NUMBER</name>
+        <default_value />
+        <description>The row number that is currently being processed</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_ETL_OPERATION</name>
+        <default_value />
+        <description>ETL operation currently being performed, e.g., "insert"  or "update"</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_ETL_RUN_ID</name>
+        <default_value />
+        <description>Primary key for the ${QF_ETL_DB_SCHEMA}.etl_run row for the current "run"</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_INSERT_ID</name>
+        <default_value />
+        <description>The value of the "insert id" integer column for the most recently processed row</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_LAST_UPDATED_ON</name>
+        <default_value />
+        <description>The value of the "last updated on" timestamp column for the most recently processed row</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_NUM_ROWS_TO_PROCESS</name>
+        <default_value />
+        <description>The total number of rows to be processed by the ETL using the specified ETL operation </description>
+      </parameter>
+      <parameter>
+        <name>PARAM_SOURCE_DB_DATABASE</name>
+        <default_value />
+        <description>Name of source DB</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_SOURCE_DB_ID</name>
+        <default_value />
+        <description>ID the "source" database containing tables will be mirrored to a "target" database</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_SOURCE_SCHEMA</name>
+        <default_value />
+        <description>Name of schema containing source table to mirror to target table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_SOURCE_TABLE</name>
+        <default_value />
+        <description>Name of source table to mirror to target table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_DB_DATABASE</name>
+        <default_value />
+        <description>Name of target DB</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_DB_ID</name>
+        <default_value />
+        <description>ID of the "target" database to which "source" DB tables will be archived/mirrored</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_SCHEMA</name>
+        <default_value />
+        <description>Name of schema containing target table to update</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_TABLE</name>
+        <default_value />
+        <description>Name of target table to update</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_TARGET_TABLE_UPDATE_ID</name>
+        <default_value />
+        <description>Primary key of ${QF_ETL_DB_SCHEMA}.target_table_update row to be updated by this job for progress and summary statistics</description>
+      </parameter>
+    </parameters>
+    <log>
+      <trans-log-table>
+        <connection>${QF_LOGGING_DB_CONNECTION}</connection>
+        <schema>${QF_LOG_TRANS_SCHEMA}</schema>
+        <table>${QF_LOG_TRANS_TABLE}</table>
+        <size_limit_lines />
+        <interval />
+        <timeout_days>${QF_LOG_TRANS_TIMEOUT_IN_DAYS}</timeout_days>
+        <field>
+          <id>ID_BATCH</id>
+          <enabled>Y</enabled>
+          <name>ID_BATCH</name>
+        </field>
+        <field>
+          <id>CHANNEL_ID</id>
+          <enabled>Y</enabled>
+          <name>CHANNEL_ID</name>
+        </field>
+        <field>
+          <id>TRANSNAME</id>
+          <enabled>Y</enabled>
+          <name>TRANSNAME</name>
+        </field>
+        <field>
+          <id>STATUS</id>
+          <enabled>Y</enabled>
+          <name>STATUS</name>
+        </field>
+        <field>
+          <id>LINES_READ</id>
+          <enabled>Y</enabled>
+          <name>LINES_READ</name>
+          <subject />
+        </field>
+        <field>
+          <id>LINES_WRITTEN</id>
+          <enabled>Y</enabled>
+          <name>LINES_WRITTEN</name>
+          <subject />
+        </field>
+        <field>
+          <id>LINES_UPDATED</id>
+          <enabled>Y</enabled>
+          <name>LINES_UPDATED</name>
+          <subject />
+        </field>
+        <field>
+          <id>LINES_INPUT</id>
+          <enabled>Y</enabled>
+          <name>LINES_INPUT</name>
+          <subject />
+        </field>
+        <field>
+          <id>LINES_OUTPUT</id>
+          <enabled>Y</enabled>
+          <name>LINES_OUTPUT</name>
+          <subject />
+        </field>
+        <field>
+          <id>LINES_REJECTED</id>
+          <enabled>Y</enabled>
+          <name>LINES_REJECTED</name>
+          <subject />
+        </field>
+        <field>
+          <id>ERRORS</id>
+          <enabled>Y</enabled>
+          <name>ERRORS</name>
+        </field>
+        <field>
+          <id>STARTDATE</id>
+          <enabled>Y</enabled>
+          <name>STARTDATE</name>
+        </field>
+        <field>
+          <id>ENDDATE</id>
+          <enabled>Y</enabled>
+          <name>ENDDATE</name>
+        </field>
+        <field>
+          <id>LOGDATE</id>
+          <enabled>Y</enabled>
+          <name>LOGDATE</name>
+        </field>
+        <field>
+          <id>DEPDATE</id>
+          <enabled>Y</enabled>
+          <name>DEPDATE</name>
+        </field>
+        <field>
+          <id>REPLAYDATE</id>
+          <enabled>Y</enabled>
+          <name>REPLAYDATE</name>
+        </field>
+        <field>
+          <id>LOG_FIELD</id>
+          <enabled>Y</enabled>
+          <name>LOG_FIELD</name>
+        </field>
+        <field>
+          <id>EXECUTING_SERVER</id>
+          <enabled>N</enabled>
+          <name>EXECUTING_SERVER</name>
+        </field>
+        <field>
+          <id>EXECUTING_USER</id>
+          <enabled>N</enabled>
+          <name>EXECUTING_USER</name>
+        </field>
+        <field>
+          <id>CLIENT</id>
+          <enabled>N</enabled>
+          <name>CLIENT</name>
+        </field>
+      </trans-log-table>
+      <perf-log-table>
+        <connection>${QF_LOGGING_DB_CONNECTION}</connection>
+        <schema>${QF_LOG_TRANSPERF_SCHEMA}</schema>
+        <table>${QF_LOG_TRANSPERF_TABLE}</table>
+        <interval />
+        <timeout_days>${QF_LOG_TRANSPERF_TIMEOUT_IN_DAYS}</timeout_days>
+        <field>
+          <id>ID_BATCH</id>
+          <enabled>Y</enabled>
+          <name>ID_BATCH</name>
+        </field>
+        <field>
+          <id>SEQ_NR</id>
+          <enabled>Y</enabled>
+          <name>SEQ_NR</name>
+        </field>
+        <field>
+          <id>LOGDATE</id>
+          <enabled>Y</enabled>
+          <name>LOGDATE</name>
+        </field>
+        <field>
+          <id>TRANSNAME</id>
+          <enabled>Y</enabled>
+          <name>TRANSNAME</name>
+        </field>
+        <field>
+          <id>STEPNAME</id>
+          <enabled>Y</enabled>
+          <name>STEPNAME</name>
+        </field>
+        <field>
+          <id>STEP_COPY</id>
+          <enabled>Y</enabled>
+          <name>STEP_COPY</name>
+        </field>
+        <field>
+          <id>LINES_READ</id>
+          <enabled>Y</enabled>
+          <name>LINES_READ</name>
+        </field>
+        <field>
+          <id>LINES_WRITTEN</id>
+          <enabled>Y</enabled>
+          <name>LINES_WRITTEN</name>
+        </field>
+        <field>
+          <id>LINES_UPDATED</id>
+          <enabled>Y</enabled>
+          <name>LINES_UPDATED</name>
+        </field>
+        <field>
+          <id>LINES_INPUT</id>
+          <enabled>Y</enabled>
+          <name>LINES_INPUT</name>
+        </field>
+        <field>
+          <id>LINES_OUTPUT</id>
+          <enabled>Y</enabled>
+          <name>LINES_OUTPUT</name>
+        </field>
+        <field>
+          <id>LINES_REJECTED</id>
+          <enabled>Y</enabled>
+          <name>LINES_REJECTED</name>
+        </field>
+        <field>
+          <id>ERRORS</id>
+          <enabled>Y</enabled>
+          <name>ERRORS</name>
+        </field>
+        <field>
+          <id>INPUT_BUFFER_ROWS</id>
+          <enabled>Y</enabled>
+          <name>INPUT_BUFFER_ROWS</name>
+        </field>
+        <field>
+          <id>OUTPUT_BUFFER_ROWS</id>
+          <enabled>Y</enabled>
+          <name>OUTPUT_BUFFER_ROWS</name>
+        </field>
+      </perf-log-table>
+      <channel-log-table>
+        <connection>${QF_LOGGING_DB_CONNECTION}</connection>
+        <schema>${QF_LOG_CHANNEL_SCHEMA}</schema>
+        <table>${QF_LOG_CHANNEL_TABLE}</table>
+        <timeout_days>${QF_LOG_CHANNEL_TIMEOUT_IN_DAYS}</timeout_days>
+        <field>
+          <id>ID_BATCH</id>
+          <enabled>Y</enabled>
+          <name>ID_BATCH</name>
+        </field>
+        <field>
+          <id>CHANNEL_ID</id>
+          <enabled>Y</enabled>
+          <name>CHANNEL_ID</name>
+        </field>
+        <field>
+          <id>LOG_DATE</id>
+          <enabled>Y</enabled>
+          <name>LOG_DATE</name>
+        </field>
+        <field>
+          <id>LOGGING_OBJECT_TYPE</id>
+          <enabled>Y</enabled>
+          <name>LOGGING_OBJECT_TYPE</name>
+        </field>
+        <field>
+          <id>OBJECT_NAME</id>
+          <enabled>Y</enabled>
+          <name>OBJECT_NAME</name>
+        </field>
+        <field>
+          <id>OBJECT_COPY</id>
+          <enabled>Y</enabled>
+          <name>OBJECT_COPY</name>
+        </field>
+        <field>
+          <id>REPOSITORY_DIRECTORY</id>
+          <enabled>Y</enabled>
+          <name>REPOSITORY_DIRECTORY</name>
+        </field>
+        <field>
+          <id>FILENAME</id>
+          <enabled>Y</enabled>
+          <name>FILENAME</name>
+        </field>
+        <field>
+          <id>OBJECT_ID</id>
+          <enabled>Y</enabled>
+          <name>OBJECT_ID</name>
+        </field>
+        <field>
+          <id>OBJECT_REVISION</id>
+          <enabled>Y</enabled>
+          <name>OBJECT_REVISION</name>
+        </field>
+        <field>
+          <id>PARENT_CHANNEL_ID</id>
+          <enabled>Y</enabled>
+          <name>PARENT_CHANNEL_ID</name>
+        </field>
+        <field>
+          <id>ROOT_CHANNEL_ID</id>
+          <enabled>Y</enabled>
+          <name>ROOT_CHANNEL_ID</name>
+        </field>
+      </channel-log-table>
+      <step-log-table>
+        <connection>${QF_LOGGING_DB_CONNECTION}</connection>
+        <schema>${QF_LOG_TRANSSTEP_SCHEMA}</schema>
+        <table>${QF_LOG_TRANSSTEP_TABLE}</table>
+        <timeout_days>${QF_LOG_TRANSSTEP_TIMEOUT_IN_DAYS}</timeout_days>
+        <field>
+          <id>ID_BATCH</id>
+          <enabled>Y</enabled>
+          <name>ID_BATCH</name>
+        </field>
+        <field>
+          <id>CHANNEL_ID</id>
+          <enabled>Y</enabled>
+          <name>CHANNEL_ID</name>
+        </field>
+        <field>
+          <id>LOG_DATE</id>
+          <enabled>Y</enabled>
+          <name>LOG_DATE</name>
+        </field>
+        <field>
+          <id>TRANSNAME</id>
+          <enabled>Y</enabled>
+          <name>TRANSNAME</name>
+        </field>
+        <field>
+          <id>STEPNAME</id>
+          <enabled>Y</enabled>
+          <name>STEPNAME</name>
+        </field>
+        <field>
+          <id>STEP_COPY</id>
+          <enabled>Y</enabled>
+          <name>STEP_COPY</name>
+        </field>
+        <field>
+          <id>LINES_READ</id>
+          <enabled>Y</enabled>
+          <name>LINES_READ</name>
+        </field>
+        <field>
+          <id>LINES_WRITTEN</id>
+          <enabled>Y</enabled>
+          <name>LINES_WRITTEN</name>
+        </field>
+        <field>
+          <id>LINES_UPDATED</id>
+          <enabled>Y</enabled>
+          <name>LINES_UPDATED</name>
+        </field>
+        <field>
+          <id>LINES_INPUT</id>
+          <enabled>Y</enabled>
+          <name>LINES_INPUT</name>
+        </field>
+        <field>
+          <id>LINES_OUTPUT</id>
+          <enabled>Y</enabled>
+          <name>LINES_OUTPUT</name>
+        </field>
+        <field>
+          <id>LINES_REJECTED</id>
+          <enabled>Y</enabled>
+          <name>LINES_REJECTED</name>
+        </field>
+        <field>
+          <id>ERRORS</id>
+          <enabled>Y</enabled>
+          <name>ERRORS</name>
+        </field>
+        <field>
+          <id>LOG_FIELD</id>
+          <enabled>N</enabled>
+          <name>LOG_FIELD</name>
+        </field>
+      </step-log-table>
+      <metrics-log-table>
+        <connection>${QF_LOGGING_DB_CONNECTION}</connection>
+        <schema>${QF_LOG_TRANSMETRICS_SCHEMA}</schema>
+        <table>${QF_LOG_TRANSMETRICS_TABLE}</table>
+        <timeout_days>${QF_LOG_TRANSMETRICS_TIMEOUT_IN_DAYS}</timeout_days>
+        <field>
+          <id>ID_BATCH</id>
+          <enabled>Y</enabled>
+          <name>ID_BATCH</name>
+        </field>
+        <field>
+          <id>CHANNEL_ID</id>
+          <enabled>Y</enabled>
+          <name>CHANNEL_ID</name>
+        </field>
+        <field>
+          <id>LOG_DATE</id>
+          <enabled>Y</enabled>
+          <name>LOG_DATE</name>
+        </field>
+        <field>
+          <id>METRICS_DATE</id>
+          <enabled>Y</enabled>
+          <name>METRICS_DATE</name>
+        </field>
+        <field>
+          <id>METRICS_CODE</id>
+          <enabled>Y</enabled>
+          <name>METRICS_CODE</name>
+        </field>
+        <field>
+          <id>METRICS_DESCRIPTION</id>
+          <enabled>Y</enabled>
+          <name>METRICS_DESCRIPTION</name>
+        </field>
+        <field>
+          <id>METRICS_SUBJECT</id>
+          <enabled>Y</enabled>
+          <name>METRICS_SUBJECT</name>
+        </field>
+        <field>
+          <id>METRICS_TYPE</id>
+          <enabled>Y</enabled>
+          <name>METRICS_TYPE</name>
+        </field>
+        <field>
+          <id>METRICS_VALUE</id>
+          <enabled>Y</enabled>
+          <name>METRICS_VALUE</name>
+        </field>
+      </metrics-log-table>
+    </log>
+    <maxdate>
+      <connection />
+      <table />
+      <field />
+      <offset>0.0</offset>
+      <maxdiff>0.0</maxdiff>
+    </maxdate>
+    <size_rowset>10000</size_rowset>
+    <sleep_time_empty>50</sleep_time_empty>
+    <sleep_time_full>50</sleep_time_full>
+    <unique_connections>N</unique_connections>
+    <feedback_shown>Y</feedback_shown>
+    <feedback_size>50000</feedback_size>
+    <using_thread_priorities>Y</using_thread_priorities>
+    <shared_objects_file />
+    <capture_step_performance>Y</capture_step_performance>
+    <step_performance_capturing_delay>1000</step_performance_capturing_delay>
+    <step_performance_capturing_size_limit>100</step_performance_capturing_size_limit>
+    <dependencies>
+    </dependencies>
+    <partitionschemas>
+    </partitionschemas>
+    <slaveservers>
+    </slaveservers>
+    <clusterschemas>
+    </clusterschemas>
+    <created_user>-</created_user>
+    <created_date>2016/04/03 09:57:16.279</created_date>
+    <modified_user>-</modified_user>
+    <modified_date>2020/11/27 15:02:32.539</modified_date>
+    <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
+    <is_key_private>N</is_key_private>
+  </info>
+  <notepads>
+    <notepad>
+      <note>This transformation is a "wrapper" for tr_log_table_progress so that tr_log_table_progress can be called from a job. This is done because tr_log_table_progress was written to be executed from a
+*transformations" as a *sub-transformation*. As such, tr_log_table_progress begins and ends with the following transformation step types:
+
+	Begin:		Mapping input specification
+	End:		Mapping output specification
+
+It is not clear how tr_log_table_progress can be executed directly from a job, although it may be possible. However, a simple way to do this is to wrap  tr_log_table_progress in a new 
+transformation, i.e, *this* transformation, where this new transformation executes  tr_log_table_progress as a sub-transformation (using a "Simple mapping (subtransformation)" step). 
+Then the wrapper transformation can easily be executed from any job using the usual "Transformation" job entry.
+
+This wrapper transformation has parameters:
+
+PARAM_ETL_RUN_ID							Primary key for the ${QF_ETL_DB_SCHEMA}.etl_run row for the current "run"
+PARAM_TARGET_TABLE_UPDATE_ID			Primary key of ${QF_ETL_DB_SCHEMA}.target_table_update row to be updated by this job for progress and summary statistics
+PARAM_ETL_OPERATION						ETL operation currently being performed, e.g., "insert"  or "update"
+PARAM_CHECK_FOR_SHUTDOWN_REQUEST	If "Y", a shutdown request will be checked for in this transformation
+
+	These four parameters are used to create a single-row stream to execute tr_log_table_progress with a "Simple mapping (subtransformation)" step:
+
+PARAM_CURRENT_ROW_NUMBER			The row number that is currently being processed
+PARAM_NUM_ROWS_TO_PROCESS			The total number of rows to be processed by the ETL using the specified ETL operation 
+PARAM_INSERT_ID							The value of the "insert id" integer column for the most recently processed row
+PARAM_LAST_UPDATED_ON					The value of the "last updated on" timestamp column for the most recently processed row
+
+PARAM_SOURCE_DB_DATABASE				Name of source DB
+PARAM_SOURCE_DB_ID						ID the "source" database containing tables will be mirrored to a "target" database
+PARAM_SOURCE_SCHEMA					Name of schema containing source table to mirror to target table
+PARAM_SOURCE_TABLE						Name of source table to mirror to target table
+PARAM_TARGET_DB_DATABASE				Name of target DB
+PARAM_TARGET_DB_ID						ID of the "target" database to which "source" DB tables will be archived/mirrored
+PARAM_TARGET_SCHEMA					Name of schema containing target table to update
+PARAM_TARGET_TABLE						Name of target table to update</note>
+      <xloc>0</xloc>
+      <yloc>0</yloc>
+      <width>1074</width>
+      <heigth>426</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Create a single-row stream to execute tr_log_table_progress with a "Simple mapping (subtransformation)" step.</note>
+      <xloc>272</xloc>
+      <yloc>464</yloc>
+      <width>622</width>
+      <heigth>23</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>1.	Create an etl.table_update_progress row.
+2.	Check for a shutdown request.</note>
+      <xloc>272</xloc>
+      <yloc>576</yloc>
+      <width>262</width>
+      <heigth>36</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+  </notepads>
+  <connection>
+    <name>etl_db</name>
+    <server>${QF_ETL_DB_HOST}</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>${QF_ETL_DB_DATABASE}</database>
+    <port>${QF_ETL_DB_PORT}</port>
+    <username>${QF_ETL_DB_USERNAME}</username>
+    <password>${QF_ETL_DB_PASSWORD}</password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>INITIAL_POOL_SIZE</code>
+        <attribute>10</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>MAXIMUM_POOL_SIZE</code>
+        <attribute>10</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>${QF_ETL_DB_PORT}</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>Y</attribute>
+      </attribute>
+    </attributes>
+  </connection>
+  <connection>
+    <name>logging_db</name>
+    <server>${QF_LOGGING_DB_HOST}</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>${QF_LOGGING_DB_DATABASE}</database>
+    <port>${QF_LOGGING_DB_PORT}</port>
+    <username>${QF_LOGGING_DB_USERNAME}</username>
+    <password>${QF_LOGGING_DB_PASSWORD}</password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>INITIAL_POOL_SIZE</code>
+        <attribute>10</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>MAXIMUM_POOL_SIZE</code>
+        <attribute>10</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>${QF_LOGGING_DB_PORT}</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>Y</attribute>
+      </attribute>
+    </attributes>
+  </connection>
+  <order>
+    <hop>
+      <from>Create single-row stream to execute sub-transformation</from>
+      <to>tr_log_table_progress</to>
+      <enabled>Y</enabled>
+    </hop>
+  </order>
+  <step>
+    <name>Create single-row stream to execute sub-transformation</name>
+    <type>TableInput</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <connection>etl_db</connection>
+    <sql>SELECT 
+    ${PARAM_CURRENT_ROW_NUMBER} AS "current_row_num",       -- The row number that is currently being processed
+    ${PARAM_NUM_ROWS_TO_PROCESS} AS "num_rows_to_process",  --The total number of rows to be processed by the ETL using the specified ETL operation 
+    NULLIF(${PARAM_INSERT_ID}, ${QF_POSITIVE_INTEGER_NOT_SET_VALUE}) AS "insert_id",                      -- The value of the "insert id" integer column for the most recently processed row
+    NULLIF('${PARAM_LAST_UPDATED_ON}', '${QF_TIMESTAMP_NOT_SET_VALUE}') AS "last_updated_on"           -- The value of the "last updated on" timestamp column for the most recently processed row
+</sql>
+    <limit>0</limit>
+    <lookup />
+    <execute_each_row>N</execute_each_row>
+    <variables_active>Y</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>176</xloc>
+      <yloc>464</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>tr_log_table_progress</name>
+    <type>SimpleMapping</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <specification_method>rep_name</specification_method>
+    <trans_object_id />
+    <trans_name>tr_log_table_progress</trans_name>
+    <filename />
+    <directory_path>/generic</directory_path>
+    <mappings>
+      <input>
+        <mapping>
+          <input_step />
+          <output_step />
+          <main_path>Y</main_path>
+          <rename_on_output>Y</rename_on_output>
+          <description />
+          <connector>
+            <parent>current_row_num</parent>
+            <child>current_row_num</child>
+          </connector>
+          <connector>
+            <parent>num_rows_to_process</parent>
+            <child>num_rows_to_process</child>
+          </connector>
+          <connector>
+            <parent>insert_id</parent>
+            <child>insert_id</child>
+          </connector>
+          <connector>
+            <parent>last_updated_on</parent>
+            <child>last_updated_on</child>
+          </connector>
+        </mapping>
+      </input>
+      <output>
+        <mapping>
+          <input_step />
+          <output_step />
+          <main_path>Y</main_path>
+          <rename_on_output>N</rename_on_output>
+          <description />
+        </mapping>
+      </output>
+      <parameters>
+        <variablemapping>
+          <variable>PARAM_ETL_OPERATION</variable>
+          <input>delete</input>
+        </variablemapping>
+        <variablemapping>
+          <variable>PARAM_CHECK_FOR_SHUTDOWN_REQUEST</variable>
+          <input>${QF_CHECK_FOR_SHUTDOWN_REQUEST_IN_PROGRESS_LOG_INTERVAL}</input>
+        </variablemapping>
+        <inherit_all_vars>Y</inherit_all_vars>
+      </parameters>
+    </mappings>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>176</xloc>
+      <yloc>576</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step_error_handling>
+  </step_error_handling>
+  <slave-step-copy-partition-distribution>
+  </slave-step-copy-partition-distribution>
+  <slave_transformation>N</slave_transformation>
+  <attributes />
+</transformation>

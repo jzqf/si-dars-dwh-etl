@@ -9,6 +9,11 @@
     <directory>/generic/target_update</directory>
     <parameters>
       <parameter>
+        <name>PARAM_UPDATE_TABLE_NUM_DELETES</name>
+        <default_value />
+        <description>Number of rows of the target table deleted by the ETL job</description>
+      </parameter>
+      <parameter>
         <name>PARAM_UPDATE_TABLE_NUM_INSERTS</name>
         <default_value />
         <description>Number of rows inserted into the target table by the ETL job</description>
@@ -449,7 +454,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/05 11:01:03.994</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2020/03/19 16:16:53.018</modified_date>
+    <modified_date>2020/11/24 13:15:32.204</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -466,11 +471,12 @@
 	PARAM_UPDATE_TABLE_START_MILLISECONDS	Timer start value for updating a table
 	PARAM_UPDATE_TABLE_NUM_ROWS			Number of rows processed by the ETL job (in case this number cannot be broken down into inserts &amp; updates)
 	PARAM_UPDATE_TABLE_NUM_INSERTS		Number of rows inserted into the target table by the ETL job
-	PARAM_UPDATE_TABLE_NUM_UPDATES		Number of rows of the target table updated by the ETL job</note>
+	PARAM_UPDATE_TABLE_NUM_UPDATES		Number of rows of the target table updated by the ETL job
+	PARAM_UPDATE_TABLE_NUM_DELETES		Number of rows of the target table deleted by the ETL job</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
       <width>900</width>
-      <heigth>166</heigth>
+      <heigth>179</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -598,7 +604,7 @@
     </remotesteps>
     <GUI>
       <xloc>176</xloc>
-      <yloc>192</yloc>
+      <yloc>208</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -636,12 +642,24 @@ start_millis = getVariable("PARAM_UPDATE_TABLE_START_MILLISECONDS", not_set_valu
 num_rows     = getVariable("PARAM_UPDATE_TABLE_NUM_ROWS"          , not_set_value);
 num_inserts  = getVariable("PARAM_UPDATE_TABLE_NUM_INSERTS"       , not_set_value);
 num_updates  = getVariable("PARAM_UPDATE_TABLE_NUM_UPDATES"       , not_set_value);
+num_deletes  = getVariable("PARAM_UPDATE_TABLE_NUM_DELETES"       , 0);    // QF_UPDATE_TABLE_NUM_DELETES is initialized to 0, not -1, so it should always be usable here
 
-// Inititalize in case any or all of the PDI variables are not set:
+// Initialize in case any or all of the PDI variables are not set:
 elapsed_millis      = setVariable("QF_UPDATE_TABLE_ELAPSED_MILLISECONDS", null, "r");
 num_rows_per_sec    = setVariable("QF_UPDATE_TABLE_ROWS_PER_SEC"        , null, "r");
 //num_inserts_per_sec = setVariable("QF_UPDATE_TABLE_INSERTS_PER_SEC"     , null, "r");
 //num_updates_per_sec = setVariable("QF_UPDATE_TABLE_UPDATES_PER_SEC"     , null, "r");
+
+// num_rows can be set when updating an updatable table when it is not known ho many INSERTs or UPDATEs are known individually.
+// We add in the number of deletes here 
+if(num_rows != not_set_value) {
+    num_rows = num_rows + num_deletes;
+    // Update PARAM_UPDATE_TABLE_NUM_ROWS since it will be used to report the number of rows processed if it is not -1.
+    // In jobs or transformations where PARAM_UPDATE_TABLE_NUM_ROWS is already defined, we must explicitly pass
+    // PARAM_UPDATE_TABLE_NUM_ROWS with the value ${PARAM_UPDATE_TABLE_NUM_ROWS} to any jobs or transformations that 
+    // use this parameter (we cannot rely on the option "Pass parameter values to sub-transformation").
+    setVariable("PARAM_UPDATE_TABLE_NUM_ROWS", num_rows, "r");
+}
 
 if (start_millis != not_set_value) {
     elapsed_millis = now_millis - start_millis;
@@ -651,12 +669,14 @@ if (start_millis != not_set_value) {
         } else if (num_inserts != not_set_value &amp;&amp; num_updates != not_set_value) {
             //num_rows = parseInt(num_inserts, 10) + parseInt(num_updates, 10);
             //num_rows_per_sec    = num_rows * 1000/elapsed_millis;
-            num_rows_per_sec    = (parseInt(num_inserts, 10) + parseInt(num_updates, 10)) * 1000/elapsed_millis;
+            num_rows_per_sec    = (parseInt(num_inserts, 10) + parseInt(num_updates, 10) + num_deletes) * 1000/elapsed_millis;
             //Alert("num_rows = "+num_rows+"\nelapsed_millis = "+elapsed_millis+"\nnum_rows_per_sec = "+num_rows_per_sec);
         } else if (num_inserts != not_set_value) {
-            num_rows_per_sec    = num_inserts * 1000/elapsed_millis;
+            num_rows_per_sec    = (num_inserts + num_deletes) * 1000/elapsed_millis;
         } else if (num_updates != not_set_value) {
-            num_rows_per_sec    = num_updates * 1000/elapsed_millis;
+            num_rows_per_sec    = (num_updates + num_deletes) * 1000/elapsed_millis;
+        } else {
+            num_rows_per_sec    = num_deletes * 1000/elapsed_millis;    // will be zero if deletes are not supportd for the target table
         }
         //if(num_rows != not_set_value) {
         //    num_rows_per_sec    = num_rows*1000    / elapsed_millis;
@@ -689,7 +709,7 @@ setVariable("QF_UPDATE_TABLE_ROWS_PER_SEC"        , num_rows_per_sec  , "r");
     </remotesteps>
     <GUI>
       <xloc>176</xloc>
-      <yloc>352</yloc>
+      <yloc>368</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -712,7 +732,8 @@ setVariable("QF_UPDATE_TABLE_ROWS_PER_SEC"        , num_rows_per_sec  , "r");
 PARAM_UPDATE_TABLE_START_MILLISECONDS = ${PARAM_UPDATE_TABLE_START_MILLISECONDS}
 PARAM_UPDATE_TABLE_NUM_ROWS           = ${PARAM_UPDATE_TABLE_NUM_ROWS}
 PARAM_UPDATE_TABLE_NUM_INSERTS        = ${PARAM_UPDATE_TABLE_NUM_INSERTS}
-PARAM_UPDATE_TABLE_NUM_UPDATES        = ${PARAM_UPDATE_TABLE_NUM_UPDATES}</logmessage>
+PARAM_UPDATE_TABLE_NUM_UPDATES        = ${PARAM_UPDATE_TABLE_NUM_UPDATES}
+PARAM_UPDATE_TABLE_NUM_DELETES        = ${PARAM_UPDATE_TABLE_NUM_DELETES}</logmessage>
     <fields>
       <field>
         <name>rownum</name>
@@ -728,7 +749,7 @@ PARAM_UPDATE_TABLE_NUM_UPDATES        = ${PARAM_UPDATE_TABLE_NUM_UPDATES}</logme
     </remotesteps>
     <GUI>
       <xloc>176</xloc>
-      <yloc>272</yloc>
+      <yloc>288</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
