@@ -1,10 +1,68 @@
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET search_path = etl, pg_catalog;
+
+DROP SCHEMA IF EXISTS etl CASCADE;
+
+-- See: /si-dars-solution/env-init/qfr/si01-qfr-08cl/postgres/initialise/03.dbms_databases/03.etl_mgmt/001.set_db_permissions_etl_mgmt.sql
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO qfree_sm_ro_role;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON SEQUENCES TO qfree_sm_ro_role;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO qfree_rw_role;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT, USAGE ON SEQUENCES TO qfree_rw_role;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO qfree_bi_ro_role;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT, USAGE ON SEQUENCES TO qfree_bi_rw_role;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO qfree_etl_mgmt_role;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT, USAGE ON SEQUENCES TO qfree_etl_mgmt_role;
+--
+-- See: /si-dars-solution/env-init/qfr/si01-qfr-08cl/postgres/initialise/03.dbms_databases/03.etl_mgmt/002.set_db_extra-config_etl_mgmt.sql:
+CREATE SCHEMA etl AUTHORIZATION qfree_etl;
+ALTER ROLE qfree_etl IN DATABASE etl_mgmt SET search_path TO etl, public;
+--CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA etl;  This line can be deleted because it is created by pg_dump
+---- Standard Roles Permissions
+GRANT USAGE ON SCHEMA etl TO qfree_sm_ro_role;
+GRANT USAGE ON SCHEMA etl TO qfree_sm_rw_role;
+ALTER DEFAULT PRIVILEGES IN SCHEMA etl GRANT SELECT ON TABLES TO qfree_sm_ro_role;
+ALTER DEFAULT PRIVILEGES IN SCHEMA etl GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO qfree_rw_role;
+ALTER DEFAULT PRIVILEGES IN SCHEMA etl GRANT SELECT, USAGE ON SEQUENCES TO qfree_rw_role;
+------ Known default users
+----ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO qfree_bi_rw_role;
+----ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT, USAGE ON SEQUENCES TO qfree_bi_rw_role;
+-- Standard Roles Permissions in new SCHEMA
+ALTER DEFAULT PRIVILEGES IN SCHEMA etl GRANT SELECT ON TABLES TO qfree_sm_ro_role;
+ALTER DEFAULT PRIVILEGES IN SCHEMA etl GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO qfree_rw_role;
+ALTER DEFAULT PRIVILEGES IN SCHEMA etl GRANT SELECT, USAGE ON SEQUENCES TO qfree_rw_role;
+ALTER DEFAULT PRIVILEGES IN SCHEMA etl GRANT SELECT ON TABLES TO qfree_bi_ro_role;
+-- Known default users
+ALTER DEFAULT PRIVILEGES IN SCHEMA etl GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO qfree_etl_mgmt_role;
+ALTER DEFAULT PRIVILEGES IN SCHEMA etl GRANT SELECT, USAGE ON SEQUENCES TO qfree_etl_mgmt_role;
+
+
+--
+-- Name: uuid-ossp; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA etl;
+
+
+--
+-- Name: EXTENSION "uuid-ossp"; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UUIDs)';
 
 
 --
 -- Name: dsa_last_update_summary(); Type: FUNCTION; Schema: etl; Owner: qfree_admin
 --
 
-CREATE OR REPLACE FUNCTION etl.dsa_last_update_summary() RETURNS TABLE(tblid smallint, src smallint, srcsch character varying, srctable character varying, tgt smallint, tgtsch character varying, tgttable character varying, mir boolean, alg smallint, target_last_updated_on timestamp without time zone, r integer, i integer, u integer, d integer, millis integer, "r/s" real, iidcol character varying, max_iid bigint, luocol character varying, max_luo timestamp without time zone)
+CREATE FUNCTION etl.dsa_last_update_summary() RETURNS TABLE(tblid smallint, src smallint, srcsch character varying, srctable character varying, tgt smallint, tgtsch character varying, tgttable character varying, mir boolean, alg smallint, target_last_updated_on timestamp without time zone, r integer, i integer, u integer, d integer, millis integer, "r/s" real, iidcol character varying, max_iid bigint, luocol character varying, max_luo timestamp without time zone)
     LANGUAGE plpgsql
     AS $$
 BEGIN
@@ -44,11 +102,13 @@ tm.source_table_name ;
 END; $$;
 
 
+ALTER FUNCTION etl.dsa_last_update_summary() OWNER TO qfree_admin;
+
 --
 -- Name: psa_last_update_summary(); Type: FUNCTION; Schema: etl; Owner: qfree_admin
 --
 
-CREATE OR REPLACE FUNCTION etl.psa_last_update_summary() RETURNS TABLE(tblid smallint, src smallint, srcsch character varying, srctable character varying, tgt smallint, tgtsch character varying, tgttable character varying, mir boolean, alg smallint, target_last_updated_on timestamp without time zone, r integer, i integer, u integer, d integer, millis integer, "r/s" real, iidcol character varying, max_iid bigint, luocol character varying, max_luo timestamp without time zone)
+CREATE FUNCTION etl.psa_last_update_summary() RETURNS TABLE(tblid smallint, src smallint, srcsch character varying, srctable character varying, tgt smallint, tgtsch character varying, tgttable character varying, mir boolean, alg smallint, target_last_updated_on timestamp without time zone, r integer, i integer, u integer, d integer, millis integer, "r/s" real, iidcol character varying, max_iid bigint, luocol character varying, max_luo timestamp without time zone)
     LANGUAGE plpgsql
     AS $$
 BEGIN
@@ -88,6 +148,12 @@ tm.source_table_name ;
 END; $$;
 
 
+ALTER FUNCTION etl.psa_last_update_summary() OWNER TO qfree_admin;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
 --
 -- Name: cdc_timestamps; Type: TABLE; Schema: etl; Owner: qfree_admin
 --
@@ -98,6 +164,8 @@ CREATE TABLE etl.cdc_timestamps (
     current_load timestamp without time zone DEFAULT '1970-01-01 00:00:00'::timestamp without time zone NOT NULL
 );
 
+
+ALTER TABLE etl.cdc_timestamps OWNER TO qfree_admin;
 
 --
 -- Name: column_meta; Type: TABLE; Schema: etl; Owner: qfree_admin
@@ -121,11 +189,13 @@ CREATE TABLE etl.column_meta (
 );
 
 
+ALTER TABLE etl.column_meta OWNER TO qfree_admin;
+
 --
 -- Name: configuration; Type: TABLE; Schema: etl; Owner: qfree_admin
 --
 
-CREATE TABLE IF NOT EXISTS etl.configuration (
+CREATE TABLE etl.configuration (
     configuration_id uuid DEFAULT etl.uuid_generate_v4() NOT NULL,
     boolean_value boolean,
     bytea_value bytea,
@@ -144,6 +214,8 @@ CREATE TABLE IF NOT EXISTS etl.configuration (
     role_id uuid
 );
 
+
+ALTER TABLE etl.configuration OWNER TO qfree_admin;
 
 --
 -- Name: etl_run; Type: TABLE; Schema: etl; Owner: qfree_admin
@@ -180,6 +252,8 @@ CREATE TABLE etl.etl_run (
 );
 
 
+ALTER TABLE etl.etl_run OWNER TO qfree_admin;
+
 --
 -- Name: log_channel; Type: TABLE; Schema: etl; Owner: qfree_admin
 --
@@ -199,6 +273,8 @@ CREATE TABLE etl.log_channel (
     root_channel_id character varying(255)
 );
 
+
+ALTER TABLE etl.log_channel OWNER TO qfree_admin;
 
 --
 -- Name: log_job_entries; Type: TABLE; Schema: etl; Owner: qfree_admin
@@ -222,6 +298,8 @@ CREATE TABLE etl.log_job_entries (
     nr_result_files bigint
 );
 
+
+ALTER TABLE etl.log_job_entries OWNER TO qfree_admin;
 
 --
 -- Name: log_jobs; Type: TABLE; Schema: etl; Owner: qfree_admin
@@ -248,6 +326,8 @@ CREATE TABLE etl.log_jobs (
 );
 
 
+ALTER TABLE etl.log_jobs OWNER TO qfree_admin;
+
 --
 -- Name: log_transformation_metrics; Type: TABLE; Schema: etl; Owner: qfree_admin
 --
@@ -264,6 +344,8 @@ CREATE TABLE etl.log_transformation_metrics (
     metrics_value bigint
 );
 
+
+ALTER TABLE etl.log_transformation_metrics OWNER TO qfree_admin;
 
 --
 -- Name: log_transformation_performance; Type: TABLE; Schema: etl; Owner: qfree_admin
@@ -288,6 +370,8 @@ CREATE TABLE etl.log_transformation_performance (
 );
 
 
+ALTER TABLE etl.log_transformation_performance OWNER TO qfree_admin;
+
 --
 -- Name: log_transformation_steps; Type: TABLE; Schema: etl; Owner: qfree_admin
 --
@@ -308,6 +392,8 @@ CREATE TABLE etl.log_transformation_steps (
     errors bigint
 );
 
+
+ALTER TABLE etl.log_transformation_steps OWNER TO qfree_admin;
 
 --
 -- Name: log_transformations; Type: TABLE; Schema: etl; Owner: qfree_admin
@@ -334,6 +420,8 @@ CREATE TABLE etl.log_transformations (
 );
 
 
+ALTER TABLE etl.log_transformations OWNER TO qfree_admin;
+
 --
 -- Name: run_state; Type: TABLE; Schema: etl; Owner: qfree_admin
 --
@@ -344,6 +432,8 @@ CREATE TABLE etl.run_state (
     description character varying(50) NOT NULL
 );
 
+
+ALTER TABLE etl.run_state OWNER TO qfree_admin;
 
 --
 -- Name: table_meta; Type: TABLE; Schema: etl; Owner: qfree_admin
@@ -380,6 +470,8 @@ CREATE TABLE etl.table_meta (
 );
 
 
+ALTER TABLE etl.table_meta OWNER TO qfree_admin;
+
 --
 -- Name: table_state; Type: TABLE; Schema: etl; Owner: qfree_admin
 --
@@ -410,6 +502,8 @@ CREATE TABLE etl.table_state (
 );
 
 
+ALTER TABLE etl.table_state OWNER TO qfree_admin;
+
 --
 -- Name: target_table_compare; Type: TABLE; Schema: etl; Owner: qfree_admin
 --
@@ -425,6 +519,8 @@ CREATE TABLE etl.target_table_compare (
 );
 
 
+ALTER TABLE etl.target_table_compare OWNER TO qfree_admin;
+
 --
 -- Name: target_table_compare_target_table_compare_id_seq; Type: SEQUENCE; Schema: etl; Owner: qfree_admin
 --
@@ -436,6 +532,8 @@ CREATE SEQUENCE etl.target_table_compare_target_table_compare_id_seq
     NO MAXVALUE
     CACHE 1;
 
+
+ALTER TABLE etl.target_table_compare_target_table_compare_id_seq OWNER TO qfree_admin;
 
 --
 -- Name: target_table_compare_target_table_compare_id_seq; Type: SEQUENCE OWNED BY; Schema: etl; Owner: qfree_admin
@@ -462,6 +560,8 @@ CREATE TABLE etl.target_table_progress (
 );
 
 
+ALTER TABLE etl.target_table_progress OWNER TO qfree_admin;
+
 --
 -- Name: target_table_progress_target_table_progress_id_seq; Type: SEQUENCE; Schema: etl; Owner: qfree_admin
 --
@@ -473,6 +573,8 @@ CREATE SEQUENCE etl.target_table_progress_target_table_progress_id_seq
     NO MAXVALUE
     CACHE 1;
 
+
+ALTER TABLE etl.target_table_progress_target_table_progress_id_seq OWNER TO qfree_admin;
 
 --
 -- Name: target_table_progress_target_table_progress_id_seq; Type: SEQUENCE OWNED BY; Schema: etl; Owner: qfree_admin
@@ -504,6 +606,8 @@ CREATE TABLE etl.target_table_update (
     last_updated_on_maxvalue timestamp without time zone
 );
 
+
+ALTER TABLE etl.target_table_update OWNER TO qfree_admin;
 
 --
 -- Name: target_table_compare_id; Type: DEFAULT; Schema: etl; Owner: qfree_admin
@@ -3390,7 +3494,7 @@ INSERT INTO etl.column_meta (column_meta_id, table_meta_id, source_column_name, 
 -- Data for Name: configuration; Type: TABLE DATA; Schema: etl; Owner: qfree_admin
 --
 
-INSERT INTO etl.configuration (configuration_id, boolean_value, bytea_value, created_on, date_value, datetime_value, double_value, float_value, integer_value, long_value, param_name, param_type, string_value, text_value, time_value, role_id) VALUES ('3aaa6ca9-1f23-4a40-8b95-007dcadc4637', NULL, NULL, current_timestamp, NULL, NULL, NULL, NULL, 18, NULL, 'DB_VERSION', 'INTEGER', '18', NULL, NULL, NULL);
+INSERT INTO etl.configuration (configuration_id, boolean_value, bytea_value, created_on, date_value, datetime_value, double_value, float_value, integer_value, long_value, param_name, param_type, string_value, text_value, time_value, role_id) VALUES ('3aaa6ca9-1f23-4a40-8b95-007dcadc4637', NULL, NULL, '2020-12-14 14:34:59.424315', NULL, NULL, NULL, NULL, 18, NULL, 'DB_VERSION', 'INTEGER', '18', NULL, NULL, NULL);
 
 
 --
@@ -4343,6 +4447,13 @@ SELECT pg_catalog.setval('etl.target_table_compare_target_table_compare_id_seq',
 -- Data for Name: target_table_progress; Type: TABLE DATA; Schema: etl; Owner: qfree_admin
 --
 
+
+
+--
+-- Name: target_table_progress_target_table_progress_id_seq; Type: SEQUENCE SET; Schema: etl; Owner: qfree_admin
+--
+
+SELECT pg_catalog.setval('etl.target_table_progress_target_table_progress_id_seq', 3011, true);
 
 
 --
