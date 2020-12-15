@@ -1,5 +1,5 @@
---ALTER TABLE etl.table_state         ADD COLUMN target_last_updated_num_deletes integer;
---ALTER TABLE etl.target_table_update ADD COLUMN num_deletes                     integer;
+ALTER TABLE etl.table_state         ADD COLUMN target_last_updated_num_deletes integer;
+ALTER TABLE etl.target_table_update ADD COLUMN num_deletes                     integer;
 
 -- Get rid of old tables from previous upgrade. The order of these deletions
 -- is important in order to avoid foreign key constraint violations.
