@@ -31,8 +31,8 @@ source ${app.rootDir}/${app.user}/bin/${app.name}-env.sh
 current_time=$(date --utc --iso-8601=seconds)
 current_time_epocsecs=$(date --date "${current_time}" +%s)
 
-# Current Estimated Run Time is 1hr and 20 mins
-estimated_executiontime_seconds=4800
+# Current Estimated Run Time is 2hrs (was 1hr and 20 mins)
+estimated_executiontime_seconds=7200
 
 # Calculated end time for a run if we ran now
 estimated_finish_time=$(date --date "${current_time} +${estimated_executiontime_seconds} sec")
@@ -42,7 +42,8 @@ estimated_finish_time_epocsecs=$(date --date "${estimated_finish_time}" +%s)
 no_run_window_start_time=$(date --date "00:10" --iso-8601=seconds)
 no_run_window_start_time_epocsecs=$(date --date "${no_run_window_start_time}" +%s)
 
-no_run_window_end_time=$(date --date "05:10" --iso-8601=seconds)
+# was 05:10
+no_run_window_end_time=$(date --date "06:10" --iso-8601=seconds)
 no_run_window_end_time_epocsecs=$(date --date "${no_run_window_end_time}" +%s)
 
 # TEST: Are we currently Running ?
