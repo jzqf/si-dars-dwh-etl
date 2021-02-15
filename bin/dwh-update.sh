@@ -4,12 +4,12 @@
 # that tries to make some semi-smart decisions about
 # running the DWH ETL jobs. This script can be runs as follows:
 #
-#	sudo su -l -s /bin/bash dwh_etl
-#	/opt/qfree/dwh_etl/bin/dwh-update.sh
+#   sudo su -l -s /bin/bash dwh_etl
+#   /opt/qfree/dwh_etl/bin/dwh-update.sh
 #
-#	or:
+#   or:
 #
-#	sudo su -l -s /bin/bash dwh_etl -c "/opt/qfree/dwh_etl/bin/dwh-update.sh"
+#   sudo su -l -s /bin/bash dwh_etl -c "/opt/qfree/dwh_etl/bin/dwh-update.sh"
 #
 #
 # Ideally we whish the continuious running changes to the
@@ -31,18 +31,24 @@ source ${app.rootDir}/${app.user}/bin/${app.name}-env.sh
 current_time=$(date --utc --iso-8601=seconds)
 current_time_epocsecs=$(date --date "${current_time}" +%s)
 
-# Current Estimated Run Time is 1hr and 20 mins
-estimated_executiontime_seconds=4800
+# Current Estimated Run Time is 2hrs (was 1hr and 20 mins)
+estimated_executiontime_seconds=7200
 
 # Calculated end time for a run if we ran now
 estimated_finish_time=$(date --date "${current_time} +${estimated_executiontime_seconds} sec")
 estimated_finish_time_epocsecs=$(date --date "${estimated_finish_time}" +%s)
 
 # Defined window we should not execute in. Basically OBO & DWH Backup Window
+# We define a window whose span is expected to be fully "within the current day", e.g. 00:10-06:10
+# And this then means that if estimated_finish_time is in the next day, we need to add one day to the window
+
+midnight_today=$(date --date "00:00+00:00 + 1day" --iso-8601=seconds)
+midnight_today_epocsecs=$(date --date "${midnight_today}" +%s)
+
 no_run_window_start_time=$(date --date "00:10" --iso-8601=seconds)
 no_run_window_start_time_epocsecs=$(date --date "${no_run_window_start_time}" +%s)
 
-no_run_window_end_time=$(date --date "05:10" --iso-8601=seconds)
+no_run_window_end_time=$(date --date "06:10" --iso-8601=seconds)
 no_run_window_end_time_epocsecs=$(date --date "${no_run_window_end_time}" +%s)
 
 # TEST: Are we currently Running ?
@@ -60,21 +66,21 @@ then
     # Is it unexpectedly long?
     if [ $active_runtime_seconds -gt $estimated_executiontime_seconds ];
     then
-        
+
         debug_msg="CinX WARNING ${debug_msg}"
         # DEBUG echo "${debug_msg}"
-        
+
         /usr/bin/logger -t dwh-update.sh "${debug_msg}"
         exit 0
-        
+
     else
-    
+
         debug_msg="CinX ${debug_msg}"
         # DEBUG echo "${debug_msg}"
-        
+
         /usr/bin/logger -t dwh-update.sh "${debug_msg}"
         exit 0
-        
+
     fi;
 
 fi;
@@ -82,11 +88,25 @@ fi;
 # Not Already Running, so Proceed to next tests
 
 # TESTS for time :
-#  (1) If starting now is in the no run window, dont run
-#  (2) Else If starting now, our estimated end execution time, places us in no run window, dont run
+#  (1) f estimated_finish_time is in the next day, we need to add one day to the window
+#  (2) If starting now is in the no run window, dont run
+#  (3) Else If starting now, our estimated end execution time, places us in no run window, dont run
 
-# Boolean and a standard debug message
+# Boolean
 dont_run=0;
+
+# Check First Test
+
+if [ $estimated_finish_time_epocsecs -ge $midnight_today_epocsecs ];
+then
+    debug_msg="Midnight Rollover Detected: nrw_et(${no_run_window_end_time}. Add 1 Day to nrw."
+    /usr/bin/logger -t dwh-update.sh "${debug_msg}"
+    no_run_window_start_time=$(date --date "${no_run_window_start_time} +1day" --iso-8601=seconds)
+    no_run_window_start_time_epocsecs=$(date --date "${no_run_window_start_time}" +%s)
+    no_run_window_end_time=$(date --date "${no_run_window_end_time} +1day" --iso-8601=seconds)
+    no_run_window_end_time_epocsecs=$(date --date "${no_run_window_end_time}" +%s)
+fi;
+
 debug_msg="ct(${current_time}) eft(${estimated_finish_time}) nrw_st(${no_run_window_start_time}) nrw_et(${no_run_window_end_time})";
 
 # Actual time compares
