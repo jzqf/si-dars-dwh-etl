@@ -1,0 +1,65 @@
+*	Updated ETL metadata so that the name of the primary key is updated to 
+	"sid_role_id" for database tables:
+	
+	*	mon_opr.sid_roles
+	*	obo_opr.sid_roles
+	*	odms_opr.sid_roles
+	*	dwh_psa_obo.mon__sid_roles
+	*	dwh_psa_obo.obo__sid_roles
+	*	dwh_psa_obo.odms__sid_roles
+
+	This was an error/bug that was introduced into the 21.02 release.
+
+
+*	Updated ETL metadata so that:
+
+	*	PSA database dwh_psa_obo:
+	
+		*	Table: mon__alarms
+
+			Change ETL algorithm from #6 ("updateable" table) to #10 ("updateable" + delete)
+	
+		*	Table: mon__alarm_actions
+
+			Change ETL algorithm from #1 ("insert-only" table) to #9 ("insert-only" + delete)
+	
+		*	Table: mon__data_collection_source
+
+			Change ETL algorithm from #6 ("updateable" table) to #10 ("updateable" + delete)
+	
+		*	Table: obo__applied_rating_detail_data
+
+			Change ETL algorithm from #9 ("insert-only" + delete) to #11 ("updateable" + delete (updates & deletes via etl_cdc_xxxxx table))
+
+	*	DSA database dwh_dsa_obo:
+	
+		*	Table: mon__alarm
+
+			Change ETL algorithm from #6 ("updateable" table) to #10 ("updateable" + delete)
+	
+		*	Table: mon__alarm_actions
+
+			Change ETL algorithm from #1 ("insert-only" table) to #9 ("insert-only" + delete)
+	
+		*	Table: mon__data_collection_source
+
+			Change ETL algorithm from #6 ("updateable" table) to #10 ("updateable" + delete)
+	
+		*	Table: obo__applied_rating_detail_data
+
+			Change ETL algorithm from #9 ("insert-only" + delete) to #11 ("updateable" + delete (updates & deletes via etl_cdc_xxxxx table))
+
+
+https://q-free.atlassian.net/browse/TSDSD-1020: ETL App: Implement new algorithm (#11)
+
+*	Added ETL algorithm #11. This algorithm treats both updates and the 
+	deletion of rows from target tables using "etl_cdc_xxxxx" control tables.
+
+*	Added configuration parameter QF_CDC_CONTROL_TABLE_BATCH_SIZE_UPDATES to 
+	config projects for each environment for the si-dars-dwh-etl project:
+
+# When updating rows from a target table using an "etl_cdc_*" control table in
+# the source database, the ETLjob  will update target rows and delete their 
+# corresponding "etl_cdc_*" control table rows in transactions that process 
+# batches of this number of rows from each table.
+QF_CDC_CONTROL_TABLE_BATCH_SIZE_UPDATES=5000

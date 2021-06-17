@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2020/11/25 12:35:24.051</modified_date>
+  <modified_date>2021/03/05 15:53:28.888</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
@@ -1191,9 +1191,9 @@ QF_UPDATE_TABLE_NUM_DELETES        = ${QF_UPDATE_TABLE_NUM_DELETES}</logmessage>
           <value>${QF_CDC_CONTROL_TABLE_NAME}</value>
         </parameter>
         <parameter>
-          <name>PARAM_CDC_CONTROL_TABLE_BATCH_SIZE</name>
+          <name>PARAM_CDC_CONTROL_TABLE_BATCH_SIZE_DELETES</name>
           <stream_name />
-          <value>${QF_CDC_CONTROL_TABLE_BATCH_SIZE}</value>
+          <value>${QF_CDC_CONTROL_TABLE_BATCH_SIZE_DELETES}</value>
         </parameter>
         <parameter>
           <name>PARAM_ITER_COUNTER</name>
@@ -1207,12 +1207,12 @@ QF_UPDATE_TABLE_NUM_DELETES        = ${QF_UPDATE_TABLE_NUM_DELETES}</logmessage>
         </parameter>
         <parameter>
           <name>PARAM_ROWS_DELETED</name>
-          <stream_name>rows_deleted</stream_name>
+          <stream_name>rows_num_processed_so_far</stream_name>
           <value />
         </parameter>
         <parameter>
           <name>PARAM_ROWS_TO_DELETE</name>
-          <stream_name>rows_to_delete</stream_name>
+          <stream_name>rows_total_num_to_process</stream_name>
           <value />
         </parameter>
         <parameter>
@@ -1311,7 +1311,7 @@ QF_UPDATE_TABLE_NUM_DELETES        = ${QF_UPDATE_TABLE_NUM_DELETES}</logmessage>
       <attributes_kjc />
     </entry>
     <entry>
-      <name>tr_create_cdc_control_stream</name>
+      <name>tr_create_cdc_control_stream - deletes</name>
       <description />
       <type>TRANS</type>
       <attributes />
@@ -1359,7 +1359,7 @@ QF_UPDATE_TABLE_NUM_DELETES        = ${QF_UPDATE_TABLE_NUM_DELETES}</logmessage>
         <parameter>
           <name>PARAM_CDC_CONTROL_TABLE_BATCH_SIZE</name>
           <stream_name />
-          <value>${QF_CDC_CONTROL_TABLE_BATCH_SIZE}</value>
+          <value>${QF_CDC_CONTROL_TABLE_BATCH_SIZE_DELETES}</value>
         </parameter>
       </parameters>
       <parallel>N</parallel>
@@ -1630,7 +1630,7 @@ QF_UPDATE_TABLE_NUM_DELETES        = ${QF_UPDATE_TABLE_NUM_DELETES}</logmessage>
     </hop>
     <hop>
       <from>tr_set_cdc_control_table_vrbls</from>
-      <to>tr_create_cdc_control_stream</to>
+      <to>tr_create_cdc_control_stream - deletes</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -1638,7 +1638,7 @@ QF_UPDATE_TABLE_NUM_DELETES        = ${QF_UPDATE_TABLE_NUM_DELETES}</logmessage>
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>tr_create_cdc_control_stream</from>
+      <from>tr_create_cdc_control_stream - deletes</from>
       <to>jb_target-update_table-delete_rows</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>

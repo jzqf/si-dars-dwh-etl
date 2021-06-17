@@ -14,7 +14,7 @@
         <description>The name of the schema in the source database that contains the "CDC control table"</description>
       </parameter>
       <parameter>
-        <name>PARAM_CDC_CONTROL_TABLE_BATCH_SIZE</name>
+        <name>PARAM_CDC_CONTROL_TABLE_BATCH_SIZE_DELETES</name>
         <default_value>100</default_value>
         <description>The number of CDC control rows that will be processed in a single transaction</description>
       </parameter>
@@ -111,7 +111,7 @@
       <parameter>
         <name>PARAM_ROWS_DELETED</name>
         <default_value>400</default_value>
-        <description>the number of rows ofthe target table so far deleted = (PARAM_ITER_COUNTER-1) * PARAM_CDC_CONTROL_TABLE_BATCH_SIZE</description>
+        <description>the number of rows ofthe target table so far deleted = (PARAM_ITER_COUNTER-1) * PARAM_CDC_CONTROL_TABLE_BATCH_SIZE_DELETES</description>
       </parameter>
       <parameter>
         <name>PARAM_ROWS_TO_DELETE</name>
@@ -619,12 +619,12 @@ This transformation has parameters:
 
 	PARAM_CDC_CONTROL_SCHEMA_NAME			The name of the schema in the source database that contains the "CDC control table"
 	PARAM_CDC_CONTROL_TABLE_NAME				The name of the "CDC control table"
-	PARAM_CDC_CONTROL_TABLE_BATCH_SIZE		The number of CDC control rows that will be processed in a single transaction
+	PARAM_CDC_CONTROL_TABLE_BATCH_SIZE_DELETES		The number of CDC control rows that will be processed in a single transaction
 	PARAM_ITER_COUNTER							Will have the value 1, 2,  .., PARAM_ITER_COUNTER_MAX on successive calls to this job. On each call, this 
-													job should attempt to select a batch/block/page of PARAM_CDC_CONTROL_TABLE_BATCH_SIZE rows of the 
+													job should attempt to select a batch/block/page of PARAM_CDC_CONTROL_TABLE_BATCH_SIZE_DELETES rows of the 
 													CDC control table and then use these to delete the corresponding rows of the target table
 	PARAM_ITER_COUNTER_MAX						the maximum value that will be reached by PARAM_ITER_COUNTER on successive calls for the target table being treated
-	PARAM_ROWS_DELETED							the number of rows ofthe target table so far deleted = (PARAM_ITER_COUNTER-1) * PARAM_CDC_CONTROL_TABLE_BATCH_SIZE
+	PARAM_ROWS_DELETED							the number of rows ofthe target table so far deleted = (PARAM_ITER_COUNTER-1) * PARAM_CDC_CONTROL_TABLE_BATCH_SIZE_DELETES
 	PARAM_ROWS_TO_DELETE						the number of rows of the target table that will be deleted after PARAM_ITER_COUNTER has reached PARAM_ITER_COUNTER_MAX
 
 	PARAM_DYN_DB_CONN_SOURCE_DB_HOST		for source DB "dynamic" database connections
@@ -771,7 +771,7 @@ injected into it).</note>
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>This should always equal PARAM_CDC_CONTROL_TABLE_BATCH_SIZE, except for the last batch of deletes.</note>
+      <note>This should always equal PARAM_CDC_CONTROL_TABLE_BATCH_SIZE_DELETES, except for the last batch of deletes.</note>
       <xloc>320</xloc>
       <yloc>928</yloc>
       <width>592</width>
@@ -1162,7 +1162,7 @@ which can be used with PDI 8.2.</note>
       <schema_name />
     </partitioning>
     <connection>generic_source_db</connection>
-    <commit>${PARAM_CDC_CONTROL_TABLE_BATCH_SIZE}</commit>
+    <commit>${PARAM_CDC_CONTROL_TABLE_BATCH_SIZE_DELETES}</commit>
     <lookup>
       <schema>${PARAM_CDC_CONTROL_SCHEMA_NAME}</schema>
       <table>${PARAM_CDC_CONTROL_TABLE_NAME}</table>
@@ -1199,7 +1199,7 @@ which can be used with PDI 8.2.</note>
       <schema_name />
     </partitioning>
     <connection>generic_target_db</connection>
-    <commit>${PARAM_CDC_CONTROL_TABLE_BATCH_SIZE}</commit>
+    <commit>${PARAM_CDC_CONTROL_TABLE_BATCH_SIZE_DELETES}</commit>
     <lookup>
       <schema>public</schema>
       <table>obo__analysis_request</table>
@@ -1324,7 +1324,7 @@ WHERE
 ORDER BY
     cdc_id
 LIMIT 
-    ${PARAM_CDC_CONTROL_TABLE_BATCH_SIZE}</sql>
+    ${PARAM_CDC_CONTROL_TABLE_BATCH_SIZE_DELETES}</sql>
     <limit>0</limit>
     <lookup />
     <execute_each_row>N</execute_each_row>
