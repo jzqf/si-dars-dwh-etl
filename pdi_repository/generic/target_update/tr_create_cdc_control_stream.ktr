@@ -63,6 +63,11 @@
         <default_value>qfree_bi</default_value>
         <description>for source DB "dynamic" database connections</description>
       </parameter>
+      <parameter>
+        <name>PARAM_SOURCE_TABLE_MAX_INSERT_ID</name>
+        <default_value />
+        <description>Maximum value of the "insert_id" column for rows to load from the source DB table for insertion into the target table</description>
+      </parameter>
     </parameters>
     <log>
       <trans-log-table>
@@ -484,14 +489,14 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2020/11/18 11:29:26.812</modified_date>
+    <modified_date>2021/03/30 10:10:25.241</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>This transformation creates a stream where each row is used to load a block of "CDC control table" rows for a source table for
-applying the changes represented by the CDC control changes to a target table.
+      <note>This transformation creates a stream where each row is used to load a block of "CDC control table" rows from a source database for migrating changes
+from a source table to a target table.
 
 This stream is copied to the "result" of this transformation so that it can be used in the calling job by enabling the following job
 entry's "Execute every input row" option..
@@ -509,11 +514,14 @@ This transformation has parameters:
 	PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME	for source DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD	for source DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER		for source DB "dynamic" database connections
-	PARAM_DYN_DB_CONN_SOURCE_DB_URL			for source DB "dynamic" database connections</note>
+	PARAM_DYN_DB_CONN_SOURCE_DB_URL			for source DB "dynamic" database connections
+
+	PARAM_SOURCE_TABLE_MAX_INSERT_ID			Maximum value of the "insert_id" column for source rows that the ETL will insert into the target table
+													during the curret ETL run.</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>791</width>
-      <heigth>270</heigth>
+      <width>879</width>
+      <heigth>309</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -530,12 +538,13 @@ This transformation has parameters:
       <drawshadow>Y</drawshadow>
     </notepad>
     <notepad>
-      <note>Each row of the stream created by this step specifies a table 
-that is mirrored from a source database to a target database.</note>
+      <note>Each row of the stream created by this step represents a 
+block of "CDC control table" rows for migrating changes 
+from a source table to a target table.</note>
       <xloc>32</xloc>
-      <yloc>368</yloc>
-      <width>344</width>
-      <heigth>36</heigth>
+      <yloc>416</yloc>
+      <width>325</width>
+      <heigth>49</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -690,7 +699,7 @@ that is mirrored from a source database to a target database.</note>
     </remotesteps>
     <GUI>
       <xloc>560</xloc>
-      <yloc>304</yloc>
+      <yloc>352</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -708,23 +717,36 @@ that is mirrored from a source database to a target database.</note>
     <connection>generic_source_db</connection>
     <sql>WITH cte AS (
     SELECT 
-         row_number() OVER (ORDER BY cdc_id) - 1                                                AS "rows_deleted", 
+         row_number() OVER (ORDER BY cdc_id) - 1                                                AS "rows_num_processed_so_far", 
         (row_number() OVER (ORDER BY cdc_id) - 1) / ${PARAM_CDC_CONTROL_TABLE_BATCH_SIZE} + 1  AS "counter", 
         (row_number() OVER (ORDER BY cdc_id) - 1) % ${PARAM_CDC_CONTROL_TABLE_BATCH_SIZE}      AS "reset_each_batch" ,
          CEIL(COUNT(*) OVER () / FLOAT4(${PARAM_CDC_CONTROL_TABLE_BATCH_SIZE}))                AS "counter_max",
-              COUNT(*) OVER ()                                 AS "rows_to_delete"
+              COUNT(*) OVER ()                                 AS "rows_total_num_to_process"
     FROM 
         ${PARAM_CDC_CONTROL_SCHEMA_NAME}.${PARAM_CDC_CONTROL_TABLE_NAME} 
     WHERE
-        cdc_type='${QF_CDC_CONTROL_TABLE_OP_CODE_DELETE}'
+        cdc_type='${PARAM_CDC_CONTROL_TABLE_OP_CODE}' 
+--
+-- This condition was originally added to avoid updating or deleting rows that are not yet inserted during the current ETL run. However, it is not correct for the following reason:
+--
+-- If an etl_cdc_xxxx row of type "d" specifies a row that has not yet been migrated to the target database, it will have no effect when processed by the ETL job and then the 
+-- ETL job will delete this etl_cdc_xxxx row. This sounds bad; however, the next run of the ETL job will *not* INSERT that row into the target database because that row no longer 
+-- exists in the source database. So although it never will be DELETEd from the target database, neither will it ever be INSERTed.
+--
+-- Similarly for UPDATEs: 
+--
+-- If an etl_cdc_xxxx row of type "u" specifies a row that has not yet been migrated to the target database, it will have no effect when processed by the ETL job and then the 
+-- ETL job will delete this etl_cdc_xxxx row. This sounds bad; however, the next run of the ETL job should INSERT that row into the target database and the state of that row 
+-- at that time will include the changes from the UPDATE that triggered the creation of the etl_cdc_xxxx of type "u" in the first place.
+--        AND cdc_key_id &lt;= ${PARAM_SOURCE_TABLE_MAX_INSERT_ID}
     ORDER BY      -- This ORDER BY clause is not needed; it is only potentially useful for *viewing* output of this query
         cdc_id
 )
 SELECT 
     counter, 
     counter_max, 
-    rows_deleted,
-    rows_to_delete
+    rows_num_processed_so_far,
+    rows_total_num_to_process
 --    ,reset_each_batch
 --    ,cdc_id
 FROM 
@@ -747,7 +769,7 @@ WHERE
     </remotesteps>
     <GUI>
       <xloc>160</xloc>
-      <yloc>304</yloc>
+      <yloc>352</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

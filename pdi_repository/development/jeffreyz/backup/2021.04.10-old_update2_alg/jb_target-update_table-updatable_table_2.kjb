@@ -1,0 +1,2909 @@
+<job>
+  <name>jb_target-update_table-updatable_table_2</name>
+  <description />
+  <extended_description />
+  <job_version />
+  <job_status>0</job_status>
+  <directory>/development/jeffreyz/backup/2021.04.10-old_update2_alg</directory>
+  <created_user>-</created_user>
+  <created_date>2016/04/03 14:57:58.609</created_date>
+  <modified_user>-</modified_user>
+  <modified_date>2021/04/10 06:49:37.492</modified_date>
+  <parameters>
+    <parameter>
+      <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
+      <default_value>2018.05.16 14:12:00</default_value>
+      <description>Timestamp of the current load (no rows after this timestamp will be loaded)</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_CDC_LAST_LOAD_UTC</name>
+      <default_value>2018.05.16 13:43:00</default_value>
+      <description>Timestamp of last successful load from the source database</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE</name>
+      <default_value>obo_opr</default_value>
+      <description>for source DB "dynamic" database connections</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER</name>
+      <default_value>org.postgresql.Driver</default_value>
+      <description>for source DB "dynamic" database connections</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_SOURCE_DB_HOST</name>
+      <default_value>si01-qfr-07cl.si01.q-free.com</default_value>
+      <description>for source DB "dynamic" database connections</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD</name>
+      <default_value>kc2H2F5mY8U2b4Vwp6BT4OnY_hq4p7+Y</default_value>
+      <description>for source DB "dynamic" database connections</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_SOURCE_DB_PORT</name>
+      <default_value>5432</default_value>
+      <description>for source DB "dynamic" database connections</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_SOURCE_DB_URL</name>
+      <default_value>jdbc:postgresql://si01-qfr-07cl.si01.q-free.com:5432/obo_opr</default_value>
+      <description>for source DB "dynamic" database connections</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME</name>
+      <default_value>qfree_bi</default_value>
+      <description>for source DB "dynamic" database connections</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_TARGET_DB_DATABASE</name>
+      <default_value>dwh_psa_obo</default_value>
+      <description>for target DB "dynamic" database connections</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_TARGET_DB_DRIVER</name>
+      <default_value>org.postgresql.Driver</default_value>
+      <description>for target DB "dynamic" database connections</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_TARGET_DB_HOST</name>
+      <default_value>localhost</default_value>
+      <description>for target DB "dynamic" database connections</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD</name>
+      <default_value>qfree_admin</default_value>
+      <description>for target DB "dynamic" database connections</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_TARGET_DB_PORT</name>
+      <default_value>5432</default_value>
+      <description>for target DB "dynamic" database connections</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_TARGET_DB_URL</name>
+      <default_value>jdbc:postgresql://localhost:5432/dwh_psa_obo</default_value>
+      <description>for target DB "dynamic" database connections</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_DYN_DB_CONN_TARGET_DB_USERNAME</name>
+      <default_value>qfree_admin</default_value>
+      <description>for target DB "dynamic" database connections</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_ETL_RUN_ID</name>
+      <default_value />
+      <description>Primary key for the ${QF_ETL_DB_SCHEMA}.etl_run row for the current "run"</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_SOURCE_DB_ID</name>
+      <default_value>2</default_value>
+      <description>ID the "source" database containing tables will be archived/mirrored to a "target" database</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_SOURCE_SCHEMA</name>
+      <default_value>public</default_value>
+      <description>Name of schema containing source table to mirror to target table</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_SOURCE_TABLE</name>
+      <default_value>vehicle_register</default_value>
+      <description>Name of source table to mirror to target table</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_SOURCE_TABLE_MAX_INSERT_ID</name>
+      <default_value>1956786</default_value>
+      <description>Maximum value of the "insert_id" column for rows to load from the source DB table</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_TABLE_META_ID</name>
+      <default_value>2392</default_value>
+      <description>Primary key of ${QF_ETL_DB_SCHEMA}.table_meta row for "source" table from which rows will be deleted</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_TARGET_DB_ID</name>
+      <default_value>10</default_value>
+      <description>ID of the "target" database to which "source" DB tables will be archived/mirrored</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_TARGET_SCHEMA</name>
+      <default_value>public</default_value>
+      <description>Name of schema containing target table to update (not currently used)</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_TARGET_TABLE</name>
+      <default_value>obo__vehicle_register</default_value>
+      <description>Name of target table to update (not currently used)</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_TARGET_TABLE_UPDATE_ID</name>
+      <default_value />
+      <description>Primary key of ${QF_ETL_DB_SCHEMA}.target_table_update row to be updated by this job for progress and summary statistics</description>
+    </parameter>
+  </parameters>
+  <connection>
+    <name>etl_db</name>
+    <server>${QF_ETL_DB_HOST}</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>${QF_ETL_DB_DATABASE}</database>
+    <port>${QF_ETL_DB_PORT}</port>
+    <username>${QF_ETL_DB_USERNAME}</username>
+    <password>${QF_ETL_DB_PASSWORD}</password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>INITIAL_POOL_SIZE</code>
+        <attribute>10</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>MAXIMUM_POOL_SIZE</code>
+        <attribute>10</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>${QF_ETL_DB_PORT}</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>Y</attribute>
+      </attribute>
+    </attributes>
+  </connection>
+  <connection>
+    <name>logging_db</name>
+    <server>${QF_LOGGING_DB_HOST}</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>${QF_LOGGING_DB_DATABASE}</database>
+    <port>${QF_LOGGING_DB_PORT}</port>
+    <username>${QF_LOGGING_DB_USERNAME}</username>
+    <password>${QF_LOGGING_DB_PASSWORD}</password>
+    <servername />
+    <data_tablespace />
+    <index_tablespace />
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>INITIAL_POOL_SIZE</code>
+        <attribute>10</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>MAXIMUM_POOL_SIZE</code>
+        <attribute>10</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>${QF_LOGGING_DB_PORT}</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>Y</attribute>
+      </attribute>
+    </attributes>
+  </connection>
+  <slaveservers>
+    </slaveservers>
+  <job-log-table>
+    <connection>${QF_LOGGING_DB_CONNECTION}</connection>
+    <schema>${QF_LOG_JOB_SCHEMA}</schema>
+    <table>${QF_LOG_JOB_TABLE}</table>
+    <size_limit_lines />
+    <interval />
+    <timeout_days>${QF_LOG_JOB_TIMEOUT_IN_DAYS}</timeout_days>
+    <field>
+      <id>ID_JOB</id>
+      <enabled>Y</enabled>
+      <name>ID_JOB</name>
+    </field>
+    <field>
+      <id>CHANNEL_ID</id>
+      <enabled>Y</enabled>
+      <name>CHANNEL_ID</name>
+    </field>
+    <field>
+      <id>JOBNAME</id>
+      <enabled>Y</enabled>
+      <name>JOBNAME</name>
+    </field>
+    <field>
+      <id>STATUS</id>
+      <enabled>Y</enabled>
+      <name>STATUS</name>
+    </field>
+    <field>
+      <id>LINES_READ</id>
+      <enabled>Y</enabled>
+      <name>LINES_READ</name>
+    </field>
+    <field>
+      <id>LINES_WRITTEN</id>
+      <enabled>Y</enabled>
+      <name>LINES_WRITTEN</name>
+    </field>
+    <field>
+      <id>LINES_UPDATED</id>
+      <enabled>Y</enabled>
+      <name>LINES_UPDATED</name>
+    </field>
+    <field>
+      <id>LINES_INPUT</id>
+      <enabled>Y</enabled>
+      <name>LINES_INPUT</name>
+    </field>
+    <field>
+      <id>LINES_OUTPUT</id>
+      <enabled>Y</enabled>
+      <name>LINES_OUTPUT</name>
+    </field>
+    <field>
+      <id>LINES_REJECTED</id>
+      <enabled>Y</enabled>
+      <name>LINES_REJECTED</name>
+    </field>
+    <field>
+      <id>ERRORS</id>
+      <enabled>Y</enabled>
+      <name>ERRORS</name>
+    </field>
+    <field>
+      <id>STARTDATE</id>
+      <enabled>Y</enabled>
+      <name>STARTDATE</name>
+    </field>
+    <field>
+      <id>ENDDATE</id>
+      <enabled>Y</enabled>
+      <name>ENDDATE</name>
+    </field>
+    <field>
+      <id>LOGDATE</id>
+      <enabled>Y</enabled>
+      <name>LOGDATE</name>
+    </field>
+    <field>
+      <id>DEPDATE</id>
+      <enabled>Y</enabled>
+      <name>DEPDATE</name>
+    </field>
+    <field>
+      <id>REPLAYDATE</id>
+      <enabled>Y</enabled>
+      <name>REPLAYDATE</name>
+    </field>
+    <field>
+      <id>LOG_FIELD</id>
+      <enabled>Y</enabled>
+      <name>LOG_FIELD</name>
+    </field>
+    <field>
+      <id>EXECUTING_SERVER</id>
+      <enabled>N</enabled>
+      <name>EXECUTING_SERVER</name>
+    </field>
+    <field>
+      <id>EXECUTING_USER</id>
+      <enabled>N</enabled>
+      <name>EXECUTING_USER</name>
+    </field>
+    <field>
+      <id>START_JOB_ENTRY</id>
+      <enabled>N</enabled>
+      <name>START_JOB_ENTRY</name>
+    </field>
+    <field>
+      <id>CLIENT</id>
+      <enabled>N</enabled>
+      <name>CLIENT</name>
+    </field>
+  </job-log-table>
+  <jobentry-log-table>
+    <connection>${QF_LOGGING_DB_CONNECTION}</connection>
+    <schema>${QF_LOG_JOBENTRY_SCHEMA}</schema>
+    <table>${QF_LOG_JOBENTRY_TABLE}</table>
+    <timeout_days>${QF_LOG_JOBENTRY_TIMEOUT_IN_DAYS}</timeout_days>
+    <field>
+      <id>ID_BATCH</id>
+      <enabled>Y</enabled>
+      <name>ID_BATCH</name>
+    </field>
+    <field>
+      <id>CHANNEL_ID</id>
+      <enabled>Y</enabled>
+      <name>CHANNEL_ID</name>
+    </field>
+    <field>
+      <id>LOG_DATE</id>
+      <enabled>Y</enabled>
+      <name>LOG_DATE</name>
+    </field>
+    <field>
+      <id>JOBNAME</id>
+      <enabled>Y</enabled>
+      <name>TRANSNAME</name>
+    </field>
+    <field>
+      <id>JOBENTRYNAME</id>
+      <enabled>Y</enabled>
+      <name>STEPNAME</name>
+    </field>
+    <field>
+      <id>LINES_READ</id>
+      <enabled>Y</enabled>
+      <name>LINES_READ</name>
+    </field>
+    <field>
+      <id>LINES_WRITTEN</id>
+      <enabled>Y</enabled>
+      <name>LINES_WRITTEN</name>
+    </field>
+    <field>
+      <id>LINES_UPDATED</id>
+      <enabled>Y</enabled>
+      <name>LINES_UPDATED</name>
+    </field>
+    <field>
+      <id>LINES_INPUT</id>
+      <enabled>Y</enabled>
+      <name>LINES_INPUT</name>
+    </field>
+    <field>
+      <id>LINES_OUTPUT</id>
+      <enabled>Y</enabled>
+      <name>LINES_OUTPUT</name>
+    </field>
+    <field>
+      <id>LINES_REJECTED</id>
+      <enabled>Y</enabled>
+      <name>LINES_REJECTED</name>
+    </field>
+    <field>
+      <id>ERRORS</id>
+      <enabled>Y</enabled>
+      <name>ERRORS</name>
+    </field>
+    <field>
+      <id>RESULT</id>
+      <enabled>Y</enabled>
+      <name>RESULT</name>
+    </field>
+    <field>
+      <id>NR_RESULT_ROWS</id>
+      <enabled>Y</enabled>
+      <name>NR_RESULT_ROWS</name>
+    </field>
+    <field>
+      <id>NR_RESULT_FILES</id>
+      <enabled>Y</enabled>
+      <name>NR_RESULT_FILES</name>
+    </field>
+    <field>
+      <id>LOG_FIELD</id>
+      <enabled>N</enabled>
+      <name>LOG_FIELD</name>
+    </field>
+    <field>
+      <id>COPY_NR</id>
+      <enabled>N</enabled>
+      <name>COPY_NR</name>
+    </field>
+  </jobentry-log-table>
+  <channel-log-table>
+    <connection>${QF_LOGGING_DB_CONNECTION}</connection>
+    <schema>${QF_LOG_CHANNEL_SCHEMA}</schema>
+    <table>${QF_LOG_CHANNEL_TABLE}</table>
+    <timeout_days>${QF_LOG_CHANNEL_TIMEOUT_IN_DAYS}</timeout_days>
+    <field>
+      <id>ID_BATCH</id>
+      <enabled>Y</enabled>
+      <name>ID_BATCH</name>
+    </field>
+    <field>
+      <id>CHANNEL_ID</id>
+      <enabled>Y</enabled>
+      <name>CHANNEL_ID</name>
+    </field>
+    <field>
+      <id>LOG_DATE</id>
+      <enabled>Y</enabled>
+      <name>LOG_DATE</name>
+    </field>
+    <field>
+      <id>LOGGING_OBJECT_TYPE</id>
+      <enabled>Y</enabled>
+      <name>LOGGING_OBJECT_TYPE</name>
+    </field>
+    <field>
+      <id>OBJECT_NAME</id>
+      <enabled>Y</enabled>
+      <name>OBJECT_NAME</name>
+    </field>
+    <field>
+      <id>OBJECT_COPY</id>
+      <enabled>Y</enabled>
+      <name>OBJECT_COPY</name>
+    </field>
+    <field>
+      <id>REPOSITORY_DIRECTORY</id>
+      <enabled>Y</enabled>
+      <name>REPOSITORY_DIRECTORY</name>
+    </field>
+    <field>
+      <id>FILENAME</id>
+      <enabled>Y</enabled>
+      <name>FILENAME</name>
+    </field>
+    <field>
+      <id>OBJECT_ID</id>
+      <enabled>Y</enabled>
+      <name>OBJECT_ID</name>
+    </field>
+    <field>
+      <id>OBJECT_REVISION</id>
+      <enabled>Y</enabled>
+      <name>OBJECT_REVISION</name>
+    </field>
+    <field>
+      <id>PARENT_CHANNEL_ID</id>
+      <enabled>Y</enabled>
+      <name>PARENT_CHANNEL_ID</name>
+    </field>
+    <field>
+      <id>ROOT_CHANNEL_ID</id>
+      <enabled>Y</enabled>
+      <name>ROOT_CHANNEL_ID</name>
+    </field>
+  </channel-log-table>
+  <pass_batchid>Y</pass_batchid>
+  <shared_objects_file />
+  <entries>
+    <entry>
+      <name>START</name>
+      <description />
+      <type>SPECIAL</type>
+      <attributes />
+      <start>Y</start>
+      <dummy>N</dummy>
+      <repeat>N</repeat>
+      <schedulerType>0</schedulerType>
+      <intervalSeconds>0</intervalSeconds>
+      <intervalMinutes>60</intervalMinutes>
+      <hour>12</hour>
+      <minutes>0</minutes>
+      <weekDay>1</weekDay>
+      <DayOfMonth>1</DayOfMonth>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>480</xloc>
+      <yloc>416</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>tr_target-update_table-updatable_table_2_inserts</name>
+      <description />
+      <type>TRANS</type>
+      <attributes />
+      <specification_method>rep_name</specification_method>
+      <trans_object_id />
+      <filename />
+      <transname>tr_target-update_table-updatable_table_2_inserts</transname>
+      <directory>/generic/target_update</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <clear_rows>N</clear_rows>
+      <clear_files>N</clear_files>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Basic</loglevel>
+      <cluster>N</cluster>
+      <slave_server_name />
+      <set_append_logfile>N</set_append_logfile>
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <create_parent_folder>N</create_parent_folder>
+      <logging_remote_work>N</logging_remote_work>
+      <run_configuration>Pentaho local</run_configuration>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_SOURCE_INSERT_ID_COLNAME</name>
+          <stream_name />
+          <value>${QF_SOURCE_INSERT_ID_COLNAME}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_INSERT_ID_COLNAME</name>
+          <stream_name />
+          <value>${QF_TARGET_INSERT_ID_COLNAME}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_SOURCE_INSERTED_ON_COLNAME</name>
+          <stream_name />
+          <value>${QF_SOURCE_INSERTED_ON_COLNAME}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_INSERTED_ON_COLNAME</name>
+          <stream_name />
+          <value>${QF_TARGET_INSERTED_ON_COLNAME}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_SOURCE_LAST_UPDATED_ON_COLNAME</name>
+          <stream_name />
+          <value>${QF_SOURCE_LAST_UPDATED_ON_COLNAME}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_LAST_UPDATED_ON_COLNAME</name>
+          <stream_name />
+          <value>${QF_TARGET_LAST_UPDATED_ON_COLNAME}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_TABLE_MAX_INSERT_ID</name>
+          <stream_name />
+          <value>${QF_TARGET_TABLE_MAX_ID_COL}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_TABLE_MAX_LAST_UPDATED_ON</name>
+          <stream_name />
+          <value>${QF_TARGET_TABLE_MAX_TIMESTAMP_COL}</value>
+        </parameter>
+      </parameters>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>592</xloc>
+      <yloc>1536</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>jb_update_etl_table_meta_mirror_details</name>
+      <description />
+      <type>JOB</type>
+      <attributes />
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_update_etl_table_meta_mirror_details</jobname>
+      <directory>/generic/target_update</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <run_configuration>Pentaho local</run_configuration>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_TABLE_MIRROR_ALGORITHM_ID</name>
+          <stream_name />
+          <value>${QF_MIRROR_ALG_INSERT_OR_UPDATE_GENERIC_2}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_UPDATE_TABLE_START_MILLISECONDS</name>
+          <stream_name />
+          <value>${QF_UPDATE_TABLE_START_MILLISECONDS}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_UPDATE_TABLE_NUM_ROWS</name>
+          <stream_name />
+          <value>${QF_UPDATE_TABLE_NUM_ROWS}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_UPDATE_TABLE_NUM_INSERTS</name>
+          <stream_name />
+          <value>${QF_UPDATE_TABLE_NUM_INSERTS}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_UPDATE_TABLE_NUM_UPDATES</name>
+          <stream_name />
+          <value>${QF_UPDATE_TABLE_NUM_UPDATES}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_UPDATE_TABLE_NUM_DELETES</name>
+          <stream_name />
+          <value>${QF_UPDATE_TABLE_NUM_DELETES}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_INSERT_ID_COLNAME</name>
+          <stream_name />
+          <value>${QF_TARGET_INSERT_ID_COLNAME}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_LAST_UPDATED_ON_COLNAME</name>
+          <stream_name />
+          <value>${QF_TARGET_LAST_UPDATED_ON_COLNAME}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_TABLE_SYNCED_TO_INSERT_ID</name>
+          <stream_name />
+          <value>${PARAM_SOURCE_TABLE_MAX_INSERT_ID}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_TABLE_SYNCED_TO_LAST_UPDATED_ON</name>
+          <stream_name />
+          <value>${QF_TARGET_TABLE_MAX_LAST_UPDATED_ON_AFTER_INSERTS}</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>592</xloc>
+      <yloc>2000</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>jb_log_error 6</name>
+      <description />
+      <type>JOB</type>
+      <attributes />
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_log_error</jobname>
+      <directory>/generic</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <run_configuration />
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_ERROR_MESSAGE</name>
+          <stream_name />
+          <value>Error updating target table: ${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE} by tr_target-update_table-updatable_table_2_inserts</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>320</xloc>
+      <yloc>1440</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>Abort job</name>
+      <description />
+      <type>ABORT</type>
+      <attributes />
+      <message>${QF_ABORT_JOB_MESSAGE}</message>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>224</xloc>
+      <yloc>976</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>Is there column mapping metadata for this table?</name>
+      <description />
+      <type>EVAL_TABLE_CONTENT</type>
+      <attributes />
+      <connection>etl_db</connection>
+      <schemaname />
+      <tablename />
+      <success_condition>rows_count_greater</success_condition>
+      <limit>0</limit>
+      <is_custom_sql>Y</is_custom_sql>
+      <is_usevars>Y</is_usevars>
+      <custom_sql>SELECT
+    source_column_name AS "source_col_name", 
+    NULL AS "source_col_length", 
+    -- The value "-1" is injected into the "Select values" step of the ETL metadata injection template transformation
+    -- to specify the "precision" of the "source_col_name" &amp; "target_col_name" fields. If this is not done, a problem 
+    -- was observed for fields created by loading data from database columns of PostgreSQL data type "double precison".
+    -- For such fields, it was observed that the values written out to a "target" database via a "Table output" step 
+    -- were truncated to integers. Ideally, the precision should probably be set to something like 15 or 16 for this 
+    -- case (double precision columns), but this value may not be appropriate for other data types. It was only by 
+    -- experimenting that I found that injecting "-1" solved the problem for double precision columns. I have decided 
+    -- to specify this for *all* columns until/unless I encounter a problem by doing this. If a problem does arise one 
+    -- day, it may be necessary to update the definition of the ${QF_ETL_DB_SCHEMA}.column_meta table of the "ETL" 
+    -- database to include a real column to store the column "precision" on a column-by-column basis. For columns that 
+    -- do not need a "precision" to be specified, NULL can be stored in this column. This will also require updating the 
+    -- "populate_etl_metadata_tables" ETL code that generates default metadata.
+    -1 AS "source_col_precision", 
+    target_column_name AS "target_col_name" 
+FROM 
+    ${QF_ETL_DB_SCHEMA}.column_meta 
+WHERE 
+    table_meta_id = ${PARAM_TABLE_META_ID} AND 
+    mirror_column = true AND
+    source_column_name IS NOT NULL 
+ORDER BY 
+    -- Ordering by "column_meta_id" means the columns will be treated in
+    -- the same order as they appear in the table in the "source" DB. 
+    column_meta_id ASC</custom_sql>
+      <add_rows_result>N</add_rows_result>
+      <clear_result_rows>Y</clear_result_rows>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>592</xloc>
+      <yloc>512</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>jb_log_error 1</name>
+      <description />
+      <type>JOB</type>
+      <attributes />
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_log_error</jobname>
+      <directory>/generic</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <run_configuration />
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_ERROR_MESSAGE</name>
+          <stream_name />
+          <value>No column metadata has been configured for source table: ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>1</nr>
+      <xloc>384</xloc>
+      <yloc>512</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>Success 2</name>
+      <description />
+      <type>SUCCESS</type>
+      <attributes />
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>224</xloc>
+      <yloc>512</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>Is there primary key metadata for this table?</name>
+      <description />
+      <type>EVAL_TABLE_CONTENT</type>
+      <attributes />
+      <connection>etl_db</connection>
+      <schemaname />
+      <tablename />
+      <success_condition>rows_count_greater</success_condition>
+      <limit>0</limit>
+      <is_custom_sql>Y</is_custom_sql>
+      <is_usevars>Y</is_usevars>
+      <custom_sql>SELECT
+    target_column_name AS "target_key_col_name", 
+    '=' AS "key_field_value_comparator",
+    -- "Stream field2" is not used in the "Update" step. Nevertheless, we must set 
+    -- it to something or an error is thrown during ETL metadata injection. The
+    -- only solution I have found is to inject an empty string for this field.
+    '' AS "no_field" 
+FROM 
+    ${QF_ETL_DB_SCHEMA}.column_meta 
+WHERE 
+    table_meta_id = ${PARAM_TABLE_META_ID} AND 
+    is_primary_key_column = true
+ORDER BY 
+    primary_key_column_order</custom_sql>
+      <add_rows_result>N</add_rows_result>
+      <clear_result_rows>Y</clear_result_rows>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>1</nr>
+      <xloc>592</xloc>
+      <yloc>608</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>jb_log_error 2</name>
+      <description />
+      <type>JOB</type>
+      <attributes />
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_log_error</jobname>
+      <directory>/generic</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <run_configuration />
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_ERROR_MESSAGE</name>
+          <stream_name />
+          <value>No primary key metadata has been configured for source table: ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>2</nr>
+      <xloc>384</xloc>
+      <yloc>608</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>Is there updatable column metadata for this table?</name>
+      <description />
+      <type>EVAL_TABLE_CONTENT</type>
+      <attributes />
+      <connection>etl_db</connection>
+      <schemaname />
+      <tablename />
+      <success_condition>rows_count_greater</success_condition>
+      <limit>0</limit>
+      <is_custom_sql>Y</is_custom_sql>
+      <is_usevars>Y</is_usevars>
+      <custom_sql>WITH updateable_columns AS 
+(
+    SELECT
+        column_meta_id,
+        target_column_name AS "target_col_name" 
+    FROM 
+        ${QF_ETL_DB_SCHEMA}.column_meta  
+    WHERE 
+        table_meta_id = ${PARAM_TABLE_META_ID} AND 
+        mirror_column = true AND
+        is_updatable_column = true 
+    UNION
+    -- The "etl_batch_id_last_update" column/field is added by the ETL code.
+    SELECT
+        1000000                    AS "column_meta_id",  -- order this column last
+        'etl_batch_id_last_update' AS "target_col_name"
+) 
+SELECT
+    target_col_name 
+FROM
+    updateable_columns 
+ORDER BY 
+    column_meta_id ASC</custom_sql>
+      <add_rows_result>N</add_rows_result>
+      <clear_result_rows>Y</clear_result_rows>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>1</nr>
+      <xloc>592</xloc>
+      <yloc>704</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>jb_log_error 3</name>
+      <description />
+      <type>JOB</type>
+      <attributes />
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_log_error</jobname>
+      <directory>/generic</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <run_configuration />
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_ERROR_MESSAGE</name>
+          <stream_name />
+          <value>No updatable column metadata has been configured for source table: ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>2</nr>
+      <xloc>384</xloc>
+      <yloc>704</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>tr_set_last_updated_on_colname_vrbl</name>
+      <description />
+      <type>TRANS</type>
+      <attributes />
+      <specification_method>rep_name</specification_method>
+      <trans_object_id />
+      <filename />
+      <transname>tr_set_last_updated_on_colname_vrbl</transname>
+      <directory>/generic</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <clear_rows>N</clear_rows>
+      <clear_files>N</clear_files>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Basic</loglevel>
+      <cluster>N</cluster>
+      <slave_server_name />
+      <set_append_logfile>N</set_append_logfile>
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <create_parent_folder>N</create_parent_folder>
+      <logging_remote_work>N</logging_remote_work>
+      <run_configuration>Pentaho local</run_configuration>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+      </parameters>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>592</xloc>
+      <yloc>800</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>jb_log_error 4</name>
+      <description />
+      <type>JOB</type>
+      <attributes />
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_log_error</jobname>
+      <directory>/generic</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <run_configuration />
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_ERROR_MESSAGE</name>
+          <stream_name />
+          <value>Error setting QF_*_LAST_UPDATED_ON_COLNAME variables in tr_set_last_updated_on_colname_vrbl for source table: ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>384</xloc>
+      <yloc>800</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>tr_set_inserted_colnames_vrbls</name>
+      <description />
+      <type>TRANS</type>
+      <attributes />
+      <specification_method>rep_name</specification_method>
+      <trans_object_id />
+      <filename />
+      <transname>tr_set_inserted_colnames_vrbls</transname>
+      <directory>/generic</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <clear_rows>N</clear_rows>
+      <clear_files>N</clear_files>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Basic</loglevel>
+      <cluster>N</cluster>
+      <slave_server_name />
+      <set_append_logfile>N</set_append_logfile>
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <create_parent_folder>N</create_parent_folder>
+      <logging_remote_work>N</logging_remote_work>
+      <run_configuration>Pentaho local</run_configuration>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+      </parameters>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>592</xloc>
+      <yloc>896</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>jb_log_error 5</name>
+      <description />
+      <type>JOB</type>
+      <attributes />
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_log_error</jobname>
+      <directory>/generic</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <run_configuration />
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_ERROR_MESSAGE</name>
+          <stream_name />
+          <value>Error setting "INSERT_ID"/"INSERTED_ON" column name variables in tr_set_inserted_colnames_vrbls for source table: ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>384</xloc>
+      <yloc>976</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>DUMMY</name>
+      <description />
+      <type>SPECIAL</type>
+      <attributes />
+      <start>N</start>
+      <dummy>Y</dummy>
+      <repeat>N</repeat>
+      <schedulerType>0</schedulerType>
+      <intervalSeconds>0</intervalSeconds>
+      <intervalMinutes>60</intervalMinutes>
+      <hour>12</hour>
+      <minutes>0</minutes>
+      <weekDay>1</weekDay>
+      <DayOfMonth>1</DayOfMonth>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>240</xloc>
+      <yloc>2000</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>Log parameters</name>
+      <description />
+      <type>WRITE_TO_LOG</type>
+      <attributes />
+      <logmessage>PARAM_ETL_RUN_ID                     = ${PARAM_ETL_RUN_ID}
+PARAM_TARGET_TABLE_UPDATE_ID         = ${PARAM_TARGET_TABLE_UPDATE_ID}
+PARAM_CDC_LAST_LOAD_UTC              = ${PARAM_CDC_LAST_LOAD_UTC}
+PARAM_CDC_CURRENT_LOAD_UTC           = ${PARAM_CDC_CURRENT_LOAD_UTC}
+PARAM_DYN_DB_CONN_SOURCE_DB_HOST     = ${PARAM_DYN_DB_CONN_SOURCE_DB_HOST}
+PARAM_DYN_DB_CONN_SOURCE_DB_PORT     = ${PARAM_DYN_DB_CONN_SOURCE_DB_PORT}
+PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE = ${PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE}
+PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD = ${PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD}
+PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME = ${PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME}
+PARAM_DYN_DB_CONN_SOURCE_DB_URL      = ${PARAM_DYN_DB_CONN_SOURCE_DB_URL}
+PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER   = ${PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER}
+PARAM_DYN_DB_CONN_TARGET_DB_HOST     = ${PARAM_DYN_DB_CONN_TARGET_DB_HOST}
+PARAM_DYN_DB_CONN_TARGET_DB_PORT     = ${PARAM_DYN_DB_CONN_TARGET_DB_PORT}
+PARAM_DYN_DB_CONN_TARGET_DB_DATABASE = ${PARAM_DYN_DB_CONN_TARGET_DB_DATABASE}
+PARAM_DYN_DB_CONN_TARGET_DB_USERNAME = ${PARAM_DYN_DB_CONN_TARGET_DB_USERNAME}
+PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD = ${PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD}
+PARAM_DYN_DB_CONN_TARGET_DB_URL      = ${PARAM_DYN_DB_CONN_TARGET_DB_URL}
+PARAM_DYN_DB_CONN_TARGET_DB_DRIVER   = ${PARAM_DYN_DB_CONN_TARGET_DB_DRIVER}
+PARAM_SOURCE_TABLE_MAX_INSERT_ID     = ${PARAM_SOURCE_TABLE_MAX_INSERT_ID}
+PARAM_TABLE_META_ID                  = ${PARAM_TABLE_META_ID}
+PARAM_SOURCE_DB_ID                   = ${PARAM_SOURCE_DB_ID}
+PARAM_SOURCE_SCHEMA                  = ${PARAM_SOURCE_SCHEMA}
+PARAM_SOURCE_TABLE                   = ${PARAM_SOURCE_TABLE}
+PARAM_TARGET_DB_ID                   = ${PARAM_TARGET_DB_ID}
+PARAM_TARGET_SCHEMA                  = ${PARAM_TARGET_SCHEMA}
+PARAM_TARGET_TABLE                   = ${PARAM_TARGET_TABLE}</logmessage>
+      <loglevel>Minimal</loglevel>
+      <logsubject>${Internal.Job.Name}</logsubject>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>592</xloc>
+      <yloc>416</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>tr_set_target_table_max_id_and_date_vrbls</name>
+      <description />
+      <type>TRANS</type>
+      <attributes />
+      <specification_method>rep_name</specification_method>
+      <trans_object_id />
+      <filename />
+      <transname>tr_set_target_table_max_id_and_date_vrbls</transname>
+      <directory>/generic</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <clear_rows>N</clear_rows>
+      <clear_files>N</clear_files>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Basic</loglevel>
+      <cluster>N</cluster>
+      <slave_server_name />
+      <set_append_logfile>N</set_append_logfile>
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <create_parent_folder>N</create_parent_folder>
+      <logging_remote_work>N</logging_remote_work>
+      <run_configuration>Pentaho local</run_configuration>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_TARGET_INSERT_ID_COLNAME</name>
+          <stream_name />
+          <value>${QF_TARGET_INSERT_ID_COLNAME}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_LAST_UPDATED_ON_COLNAME</name>
+          <stream_name />
+          <value>${QF_TARGET_LAST_UPDATED_ON_COLNAME}</value>
+        </parameter>
+      </parameters>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>592</xloc>
+      <yloc>1072</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>tr_target-update_table-updatable_table_2_updates</name>
+      <description />
+      <type>TRANS</type>
+      <attributes />
+      <specification_method>rep_name</specification_method>
+      <trans_object_id />
+      <filename />
+      <transname>tr_target-update_table-updatable_table_2_updates</transname>
+      <directory>/generic/target_update</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <clear_rows>N</clear_rows>
+      <clear_files>N</clear_files>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Basic</loglevel>
+      <cluster>N</cluster>
+      <slave_server_name />
+      <set_append_logfile>N</set_append_logfile>
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <create_parent_folder>N</create_parent_folder>
+      <logging_remote_work>N</logging_remote_work>
+      <run_configuration>Pentaho local</run_configuration>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_SOURCE_INSERT_ID_COLNAME</name>
+          <stream_name />
+          <value>${QF_SOURCE_INSERT_ID_COLNAME}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_INSERT_ID_COLNAME</name>
+          <stream_name />
+          <value>${QF_TARGET_INSERT_ID_COLNAME}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_SOURCE_INSERTED_ON_COLNAME</name>
+          <stream_name />
+          <value>${QF_SOURCE_INSERTED_ON_COLNAME}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_INSERTED_ON_COLNAME</name>
+          <stream_name />
+          <value>${QF_TARGET_INSERTED_ON_COLNAME}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_SOURCE_LAST_UPDATED_ON_COLNAME</name>
+          <stream_name />
+          <value>${QF_SOURCE_LAST_UPDATED_ON_COLNAME}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_LAST_UPDATED_ON_COLNAME</name>
+          <stream_name />
+          <value>${QF_TARGET_LAST_UPDATED_ON_COLNAME}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_TABLE_MAX_INSERT_ID</name>
+          <stream_name />
+          <value>${QF_TARGET_TABLE_MAX_ID_COL}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_TABLE_MAX_LAST_UPDATED_ON</name>
+          <stream_name />
+          <value>${QF_TARGET_TABLE_MAX_TIMESTAMP_COL}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_SOURCE_TABLE_MAX_LAST_UPDATED_ON_FOR_INSERT_BEFORE_INSERTS</name>
+          <stream_name />
+          <value>${QF_SOURCE_TABLE_MAX_TIMESTAMP_COL_FOR_INSERT_BEFORE_INSERTS}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_TABLE_MAX_LAST_UPDATED_ON_AFTER_INSERTS</name>
+          <stream_name />
+          <value>${QF_TARGET_TABLE_MAX_LAST_UPDATED_ON_AFTER_INSERTS}</value>
+        </parameter>
+      </parameters>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>592</xloc>
+      <yloc>1808</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>jb_log_error 7</name>
+      <description />
+      <type>JOB</type>
+      <attributes />
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_log_error</jobname>
+      <directory>/generic</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <run_configuration />
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_ERROR_MESSAGE</name>
+          <stream_name />
+          <value>Error updating target table: ${PARAM_TARGET_SCHEMA}.${PARAM_TARGET_TABLE} by tr_target-update_table-updatable_table_2_updates</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>320</xloc>
+      <yloc>1904</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>tr_table_update_statistics_init_vrbls</name>
+      <description />
+      <type>TRANS</type>
+      <attributes />
+      <specification_method>rep_name</specification_method>
+      <trans_object_id />
+      <filename />
+      <transname>tr_table_update_statistics_init_vrbls</transname>
+      <directory>/generic/target_update</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <clear_rows>N</clear_rows>
+      <clear_files>N</clear_files>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Basic</loglevel>
+      <cluster>N</cluster>
+      <slave_server_name />
+      <set_append_logfile>N</set_append_logfile>
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <create_parent_folder>N</create_parent_folder>
+      <logging_remote_work>N</logging_remote_work>
+      <run_configuration>Pentaho local</run_configuration>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+      </parameters>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>592</xloc>
+      <yloc>1440</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>Write variables to log 1</name>
+      <description />
+      <type>WRITE_TO_LOG</type>
+      <attributes />
+      <logmessage>${Internal.Job.Name}:
+QF_SOURCE_TABLE_MAX_TIMESTAMP_COL_FOR_INSERT_BEFORE_INSERTS = ${QF_SOURCE_TABLE_MAX_TIMESTAMP_COL_FOR_INSERT_BEFORE_INSERTS}
+QF_TARGET_TABLE_MAX_ID_COL                                  = ${QF_TARGET_TABLE_MAX_ID_COL}
+QF_TARGET_TABLE_MAX_TIMESTAMP_COL                           = ${QF_TARGET_TABLE_MAX_TIMESTAMP_COL}
+</logmessage>
+      <loglevel>Basic</loglevel>
+      <logsubject />
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>592</xloc>
+      <yloc>1360</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>"insert_id" column names are set?</name>
+      <description />
+      <type>EVAL</type>
+      <attributes />
+      <script>parent_job.getVariable("QF_SOURCE_INSERT_ID_COLNAME", "") != ""  &amp;&amp;  parent_job.getVariable("QF_TARGET_INSERT_ID_COLNAME", "") != ""</script>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>592</xloc>
+      <yloc>976</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>Success</name>
+      <description />
+      <type>SUCCESS</type>
+      <attributes />
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>592</xloc>
+      <yloc>2096</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>tr_set_source_table_max_timestamp_vrbls_before_inserts</name>
+      <description />
+      <type>TRANS</type>
+      <attributes />
+      <specification_method>rep_name</specification_method>
+      <trans_object_id />
+      <filename />
+      <transname>tr_set_source_table_max_timestamp_vrbls_before_inserts</transname>
+      <directory>/generic</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <clear_rows>N</clear_rows>
+      <clear_files>N</clear_files>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Basic</loglevel>
+      <cluster>N</cluster>
+      <slave_server_name />
+      <set_append_logfile>N</set_append_logfile>
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <create_parent_folder>N</create_parent_folder>
+      <logging_remote_work>N</logging_remote_work>
+      <run_configuration>Pentaho local</run_configuration>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_SOURCE_INSERT_ID_COLNAME</name>
+          <stream_name />
+          <value>${QF_SOURCE_INSERT_ID_COLNAME}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_SOURCE_LAST_UPDATED_ON_COLNAME</name>
+          <stream_name />
+          <value>${QF_SOURCE_LAST_UPDATED_ON_COLNAME}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_TABLE_MAX_INSERT_ID</name>
+          <stream_name />
+          <value>${QF_TARGET_TABLE_MAX_ID_COL}</value>
+        </parameter>
+      </parameters>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>592</xloc>
+      <yloc>1168</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>tr_set_target_last_updated_on_after_inserts_vrbl</name>
+      <description />
+      <type>TRANS</type>
+      <attributes />
+      <specification_method>rep_name</specification_method>
+      <trans_object_id />
+      <filename />
+      <transname>tr_set_target_last_updated_on_after_inserts_vrbl</transname>
+      <directory>/generic</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <clear_rows>N</clear_rows>
+      <clear_files>N</clear_files>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Basic</loglevel>
+      <cluster>N</cluster>
+      <slave_server_name />
+      <set_append_logfile>N</set_append_logfile>
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <create_parent_folder>N</create_parent_folder>
+      <logging_remote_work>N</logging_remote_work>
+      <run_configuration>Pentaho local</run_configuration>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_TARGET_INSERT_ID_COLNAME</name>
+          <stream_name />
+          <value>${QF_TARGET_INSERT_ID_COLNAME}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_LAST_UPDATED_ON_COLNAME</name>
+          <stream_name />
+          <value>${QF_TARGET_LAST_UPDATED_ON_COLNAME}</value>
+        </parameter>
+      </parameters>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>592</xloc>
+      <yloc>1632</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>Write variable to log 2</name>
+      <description />
+      <type>WRITE_TO_LOG</type>
+      <attributes />
+      <logmessage>${Internal.Job.Name}:
+QF_TARGET_TABLE_MAX_LAST_UPDATED_ON_AFTER_INSERTS = ${QF_TARGET_TABLE_MAX_LAST_UPDATED_ON_AFTER_INSERTS}
+</logmessage>
+      <loglevel>Basic</loglevel>
+      <logsubject />
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>592</xloc>
+      <yloc>1712</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>Set CDC state columns</name>
+      <description />
+      <type>SQL</type>
+      <attributes />
+      <sql>UPDATE 
+    ${QF_ETL_DB_SCHEMA}.table_state
+SET
+    -- Set target_synced_to_insert_id and target_synced_to_last_updated_on here 
+    -- only if they currently are NULL. This is to treat the case when these 
+    -- columns have just been added. After that first time, these two assignments
+    -- will have no effect.
+    target_synced_to_insert_id       = COALESCE(target_synced_to_insert_id      ,  ${QF_TARGET_TABLE_MAX_ID_COL}),
+    target_synced_to_last_updated_on = COALESCE(target_synced_to_last_updated_on, '${QF_TARGET_TABLE_MAX_TIMESTAMP_COL}'),
+    -- Set target_unsynced_inserts_from_last_updated_on column *if* it is currently
+    -- NULL. If this column is currently *not* null, it means that the ETL failed or did
+    -- not finish for this table for some reason on the previous run of the ETL job. If this
+    -- occurred, we do *not* update the value stored in this column. When the
+    -- ETL does finally complete *successfully* for this table, this column is set to NULL
+    -- in job step "Update CDC state columns" after transformation
+    -- tr_target-update_table-updatable_table_2_updates is executed (successfully).
+    target_unsynced_inserts_from_last_updated_on = COALESCE(target_unsynced_inserts_from_last_updated_on, '${QF_SOURCE_TABLE_MAX_TIMESTAMP_COL_FOR_INSERT_BEFORE_INSERTS}') 
+WHERE
+    table_state_id = ${PARAM_TABLE_META_ID}</sql>
+      <useVariableSubstitution>T</useVariableSubstitution>
+      <sqlfromfile>F</sqlfromfile>
+      <sqlfilename />
+      <sendOneStatement>F</sendOneStatement>
+      <connection>etl_db</connection>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>592</xloc>
+      <yloc>1264</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>Update CDC state columns</name>
+      <description />
+      <type>SQL</type>
+      <attributes />
+      <sql>UPDATE 
+    ${QF_ETL_DB_SCHEMA}.table_state
+SET
+    -- Update target_synced_to_insert_id and target_synced_to_last_updated_on  
+    -- appropriately for the case when the ETL successfully updates the target 
+    -- table.
+    target_synced_to_insert_id       =  ${PARAM_SOURCE_TABLE_MAX_INSERT_ID},
+    target_synced_to_last_updated_on = '${QF_TARGET_TABLE_MAX_LAST_UPDATED_ON_AFTER_INSERTS}',
+    -- Set target_unsynced_inserts_from_last_updated_on column to NULL. This 
+    -- means that the ETL successfully updated the target table.
+    target_unsynced_inserts_from_last_updated_on = NULL 
+WHERE
+    table_state_id = ${PARAM_TABLE_META_ID}</sql>
+      <useVariableSubstitution>T</useVariableSubstitution>
+      <sqlfromfile>F</sqlfromfile>
+      <sqlfilename />
+      <sendOneStatement>F</sendOneStatement>
+      <connection>etl_db</connection>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>592</xloc>
+      <yloc>1904</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>jb_update_etl_table_meta_mirror_details 2</name>
+      <description />
+      <type>JOB</type>
+      <attributes />
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_update_etl_table_meta_mirror_details</jobname>
+      <directory>/generic/target_update</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <run_configuration>Pentaho local</run_configuration>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_TABLE_MIRROR_ALGORITHM_ID</name>
+          <stream_name />
+          <value>${QF_MIRROR_ALG_INSERT_OR_UPDATE_GENERIC_2}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_UPDATE_TABLE_START_MILLISECONDS</name>
+          <stream_name />
+          <value>${QF_UPDATE_TABLE_START_MILLISECONDS}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_UPDATE_TABLE_NUM_ROWS</name>
+          <stream_name />
+          <value>${QF_UPDATE_TABLE_NUM_ROWS}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_UPDATE_TABLE_NUM_INSERTS</name>
+          <stream_name />
+          <value>${QF_UPDATE_TABLE_NUM_INSERTS}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_UPDATE_TABLE_NUM_UPDATES</name>
+          <stream_name />
+          <value>${QF_UPDATE_TABLE_NUM_UPDATES}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_UPDATE_TABLE_NUM_DELETES</name>
+          <stream_name />
+          <value>${QF_UPDATE_TABLE_NUM_DELETES}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_INSERT_ID_COLNAME</name>
+          <stream_name />
+          <value>${QF_TARGET_INSERT_ID_COLNAME}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_LAST_UPDATED_ON_COLNAME</name>
+          <stream_name />
+          <value>${QF_TARGET_LAST_UPDATED_ON_COLNAME}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_TABLE_SYNCED_TO_INSERT_ID</name>
+          <stream_name />
+          <value>${PARAM_SOURCE_TABLE_MAX_INSERT_ID}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_TABLE_SYNCED_TO_LAST_UPDATED_ON</name>
+          <stream_name />
+          <value>${QF_TARGET_TABLE_MAX_LAST_UPDATED_ON_AFTER_INSERTS}</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>320</xloc>
+      <yloc>1536</yloc>
+      <attributes_kjc />
+    </entry>
+    <entry>
+      <name>jb_update_etl_table_meta_mirror_details 3</name>
+      <description />
+      <type>JOB</type>
+      <attributes />
+      <specification_method>rep_name</specification_method>
+      <job_object_id />
+      <filename />
+      <jobname>jb_update_etl_table_meta_mirror_details</jobname>
+      <directory>/generic/target_update</directory>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile />
+      <logext />
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name />
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <run_configuration>Pentaho local</run_configuration>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+        <parameter>
+          <name>PARAM_TABLE_MIRROR_ALGORITHM_ID</name>
+          <stream_name />
+          <value>${QF_MIRROR_ALG_INSERT_OR_UPDATE_GENERIC_2}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_UPDATE_TABLE_START_MILLISECONDS</name>
+          <stream_name />
+          <value>${QF_UPDATE_TABLE_START_MILLISECONDS}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_UPDATE_TABLE_NUM_ROWS</name>
+          <stream_name />
+          <value>${QF_UPDATE_TABLE_NUM_ROWS}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_UPDATE_TABLE_NUM_INSERTS</name>
+          <stream_name />
+          <value>${QF_UPDATE_TABLE_NUM_INSERTS}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_UPDATE_TABLE_NUM_UPDATES</name>
+          <stream_name />
+          <value>${QF_UPDATE_TABLE_NUM_UPDATES}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_UPDATE_TABLE_NUM_DELETES</name>
+          <stream_name />
+          <value>${QF_UPDATE_TABLE_NUM_DELETES}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_INSERT_ID_COLNAME</name>
+          <stream_name />
+          <value>${QF_TARGET_INSERT_ID_COLNAME}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_LAST_UPDATED_ON_COLNAME</name>
+          <stream_name />
+          <value>${QF_TARGET_LAST_UPDATED_ON_COLNAME}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_TABLE_SYNCED_TO_INSERT_ID</name>
+          <stream_name />
+          <value>${PARAM_SOURCE_TABLE_MAX_INSERT_ID}</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_TARGET_TABLE_SYNCED_TO_LAST_UPDATED_ON</name>
+          <stream_name />
+          <value>${QF_TARGET_TABLE_MAX_LAST_UPDATED_ON_AFTER_INSERTS}</value>
+        </parameter>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>320</xloc>
+      <yloc>1808</yloc>
+      <attributes_kjc />
+    </entry>
+  </entries>
+  <hops>
+    <hop>
+      <from>jb_log_error 6</from>
+      <to>Abort job</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>Is there column mapping metadata for this table?</from>
+      <to>jb_log_error 1</to>
+      <from_nr>0</from_nr>
+      <to_nr>1</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_log_error 1</from>
+      <to>Abort job</to>
+      <from_nr>1</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>N</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>jb_log_error 1</from>
+      <to>Success 2</to>
+      <from_nr>1</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>Is there column mapping metadata for this table?</from>
+      <to>Is there primary key metadata for this table?</to>
+      <from_nr>0</from_nr>
+      <to_nr>1</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Is there primary key metadata for this table?</from>
+      <to>jb_log_error 2</to>
+      <from_nr>1</from_nr>
+      <to_nr>2</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_log_error 2</from>
+      <to>Abort job</to>
+      <from_nr>2</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>Is there primary key metadata for this table?</from>
+      <to>Is there updatable column metadata for this table?</to>
+      <from_nr>1</from_nr>
+      <to_nr>1</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Is there updatable column metadata for this table?</from>
+      <to>jb_log_error 3</to>
+      <from_nr>1</from_nr>
+      <to_nr>2</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_log_error 3</from>
+      <to>Abort job</to>
+      <from_nr>2</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>Is there updatable column metadata for this table?</from>
+      <to>tr_set_last_updated_on_colname_vrbl</to>
+      <from_nr>1</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_log_error 4</from>
+      <to>Abort job</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>tr_set_last_updated_on_colname_vrbl</from>
+      <to>jb_log_error 4</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>tr_set_last_updated_on_colname_vrbl</from>
+      <to>tr_set_inserted_colnames_vrbls</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_log_error 5</from>
+      <to>Abort job</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>jb_update_etl_table_meta_mirror_details</from>
+      <to>DUMMY</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>DUMMY</from>
+      <to>Abort job</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>START</from>
+      <to>Log parameters</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>Log parameters</from>
+      <to>Is there column mapping metadata for this table?</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>tr_table_update_statistics_init_vrbls</from>
+      <to>tr_target-update_table-updatable_table_2_inserts</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>Write variables to log 1</from>
+      <to>tr_table_update_statistics_init_vrbls</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>tr_set_inserted_colnames_vrbls</from>
+      <to>"insert_id" column names are set?</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>"insert_id" column names are set?</from>
+      <to>tr_set_target_table_max_id_and_date_vrbls</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>"insert_id" column names are set?</from>
+      <to>jb_log_error 5</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_update_etl_table_meta_mirror_details</from>
+      <to>Success</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>tr_set_target_table_max_id_and_date_vrbls</from>
+      <to>tr_set_source_table_max_timestamp_vrbls_before_inserts</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>tr_target-update_table-updatable_table_2_inserts</from>
+      <to>tr_set_target_last_updated_on_after_inserts_vrbl</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>tr_set_target_last_updated_on_after_inserts_vrbl</from>
+      <to>Write variable to log 2</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>Write variable to log 2</from>
+      <to>tr_target-update_table-updatable_table_2_updates</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>tr_set_source_table_max_timestamp_vrbls_before_inserts</from>
+      <to>Set CDC state columns</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>Set CDC state columns</from>
+      <to>Write variables to log 1</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>tr_target-update_table-updatable_table_2_updates</from>
+      <to>Update CDC state columns</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Update CDC state columns</from>
+      <to>jb_update_etl_table_meta_mirror_details</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>tr_target-update_table-updatable_table_2_updates</from>
+      <to>jb_update_etl_table_meta_mirror_details 3</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_update_etl_table_meta_mirror_details 3</from>
+      <to>jb_log_error 7</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>tr_target-update_table-updatable_table_2_inserts</from>
+      <to>jb_update_etl_table_meta_mirror_details 2</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>jb_update_etl_table_meta_mirror_details 2</from>
+      <to>jb_log_error 6</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>jb_log_error 7</from>
+      <to>DUMMY</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+  </hops>
+  <notepads>
+    <notepad>
+      <note>This job updates a single "updatable" table (INSERTs &amp; UPDATEs allowed, but no DELETEs) in the target database that mirrors a table from a source database.
+The "updatable" table generic update algorithm #2 is used. This job has parameters:
+
+	PARAM_ETL_RUN_ID								Primary key for the ${QF_ETL_DB_SCHEMA}.etl_run row for the current "run"
+	PARAM_TARGET_TABLE_UPDATE_ID				Primary key of ${QF_ETL_DB_SCHEMA}.target_table_update row to be updated by this job for progress and summary statistics
+	PARAM_CDC_LAST_LOAD_UTC					Timestamp for when the target DB was most recently updated successfully
+	PARAM_CDC_CURRENT_LOAD_UTC				Used so that a consistent max timestamp is used for all ETL
+	PARAM_DYN_DB_CONN_TARGET_DB_HOST		for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_PORT		for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_DATABASE	for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_USERNAME	for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_PASSWORD	for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_DRIVER		for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_TARGET_DB_URL			for target DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_HOST		for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_PORT		for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_DATABASE	for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME	for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD	for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER		for source DB "dynamic" database connections
+	PARAM_DYN_DB_CONN_SOURCE_DB_URL			for source DB "dynamic" database connections
+	PARAM_SOURCE_DB_ID							ID the "source" database containing tables will be mirrored to a "target" database
+	PARAM_SOURCE_TABLE_MAX_INSERT_ID			Maximum value of the "insert_id" column for rows to load from the source DB table
+	PARAM_SOURCE_SCHEMA						Name of schema containing source table to mirror to target table
+	PARAM_SOURCE_TABLE							Name of source table to mirror to target table
+	PARAM_TARGET_DB_ID							ID of the "target" database to which the "source" DB tables will be archived/mirrored
+	PARAM_TARGET_SCHEMA						Name of schema containing target table to update (not currently used)
+	PARAM_TARGET_TABLE							Name of target table to update (not currently used)
+	PARAM_TABLE_META_ID							Primary key of ${QF_ETL_DB_SCHEMA}.table_meta row for "source" table archived/mirrored to "target" table</note>
+      <xloc>0</xloc>
+      <yloc>0</yloc>
+      <width>1013</width>
+      <heigth>387</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Update the ${QF_ETL_DB_SCHEMA}.table_state &amp; ${QF_ETL_DB_SCHEMA}.target_table_update rows 
+that correspond to the table treated in the current job.
+
+Note:	This transformation will fail with an error if we generate, but do not execute, ETL metadata 
+		target transformations in the prevous two transformations. This is because variables that need 
+		to be set for this transformation to execute without errors do not actually get set.</note>
+      <xloc>768</xloc>
+      <yloc>1968</yloc>
+      <width>579</width>
+      <heigth>88</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>This "Abort" is needed so that the 
+root calling job will know that 
+execution has failed. It will then 
+direct the execution flow to the 
+job that sends out failure e-mails.</note>
+      <xloc>0</xloc>
+      <yloc>960</yloc>
+      <width>198</width>
+      <heigth>75</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>This allows execution to continue
+without attempting to update a 
+target table for the case where 
+no column mapping metdata is 
+provided for the table. This may 
+not be the best behaviour.</note>
+      <xloc>0</xloc>
+      <yloc>496</yloc>
+      <width>193</width>
+      <heigth>88</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>This transformation updates the target table using an ETL Metadata Injection step. 
+
+It implements the 1st half of generic algorithm #2 for updatable tables.
+It performs INSERTs only.</note>
+      <xloc>768</xloc>
+      <yloc>1520</yloc>
+      <width>466</width>
+      <heigth>62</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>The query in this step (at least the WHERE clause) must match the corresponding query 
+in the "INSERT" &amp; "UPDATE" transformations that are executed below. This is because a 
+PDI runtime error occurs if an empty stream is sent to an ETL Metadata Injection step. 
+To avoid this from happening, we check that metadata is available here before executing 
+that transformation. The only reason why this case should occur is if a table is marked for 
+mirroring, but no column mapping metadata is provided - this should never occur, but we 
+check in order to provide a warning message, rather than letting PDI choke on this problem.</note>
+      <xloc>768</xloc>
+      <yloc>480</yloc>
+      <width>514</width>
+      <heigth>101</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>255</backgroundcolorgreen>
+      <backgroundcolorblue>0</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>The query in this step must match the corresponding query in 
+the "INSERT" &amp; "UPDATE" transformations  that are executed 
+below (same reason as above).</note>
+      <xloc>768</xloc>
+      <yloc>608</yloc>
+      <width>352</width>
+      <heigth>49</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>255</backgroundcolorgreen>
+      <backgroundcolorblue>0</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>The query in this step must match the corresponding query in 
+the "INSERT" &amp; "UPDATE" transformations  that are executed 
+below (same reason as above).</note>
+      <xloc>768</xloc>
+      <yloc>704</yloc>
+      <width>352</width>
+      <heigth>49</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>255</backgroundcolorgreen>
+      <backgroundcolorblue>0</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Set the variable: 
+	QF_SOURCE_LAST_UPDATED_ON_COLNAME 
+to the name of the column from the source table that functions as a "last_updated_on"
+column. This value is passed as a parameter to transformations executed below.</note>
+      <xloc>768</xloc>
+      <yloc>784</yloc>
+      <width>488</width>
+      <heigth>62</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Set the variable:
+	QF_SOURCE_INSERT_ID_COLNAME
+	QF_SOURCE_INSERTED_ON_COLNAME
+to the names of the columns from the source table that function as "insert_id" &amp; "inserted_on" 
+columns. These values are passed as parameters to the transformations executed below.</note>
+      <xloc>768</xloc>
+      <yloc>880</yloc>
+      <width>534</width>
+      <heigth>75</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>TODO:	The *_inserts &amp; *_updates
+		transformation entries
+		for updating the target table must 
+		abort the current job if it is not 
+		successful for every row. Is this the 
+		case?</note>
+      <xloc>1328</xloc>
+      <yloc>1664</yloc>
+      <width>254</width>
+      <heigth>88</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>255</fontcolorred>
+      <fontcolorgreen>255</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>0</backgroundcolorred>
+      <backgroundcolorgreen>0</backgroundcolorgreen>
+      <backgroundcolorblue>0</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>&lt;- Currently, this is *always* true!</note>
+      <xloc>1152</xloc>
+      <yloc>720</yloc>
+      <width>193</width>
+      <heigth>23</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>255</fontcolorred>
+      <fontcolorgreen>255</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>26</backgroundcolorred>
+      <backgroundcolorgreen>26</backgroundcolorgreen>
+      <backgroundcolorblue>26</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Set the variables:
+	QF_TARGET_TABLE_MAX_ID_COL
+	QF_TARGET_TABLE_MAX_TIMESTAMP_COL
+to the maximum values for "insert_id" &amp; "last_updated_on" columns of the target table. These will
+be passed as parameters to the two update transformations, one for INSERTs and one for UPDATEs.</note>
+      <xloc>768</xloc>
+      <yloc>1056</yloc>
+      <width>555</width>
+      <heigth>75</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>This transformation updates the target table using an ETL Metadata Injection step. 
+
+It implements the 2nd half of generic algorithm #2 for updatable tables.
+It performs UPDATEs only.</note>
+      <xloc>768</xloc>
+      <yloc>1792</yloc>
+      <width>466</width>
+      <heigth>62</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Initialize the PDI variables that will record the "update statistic" in the two update transformations:
+	QF_UPDATE_TABLE_START_MILLISECONDS
+	QF_UPDATE_TABLE_NUM_ROWS
+	QF_UPDATE_TABLE_NUM_INSERTS
+	QF_UPDATE_TABLE_NUM_UPDATES
+	QF_UPDATE_TABLE_NUM_DELETES</note>
+      <xloc>768</xloc>
+      <yloc>1424</yloc>
+      <width>553</width>
+      <heigth>88</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Log the variables:
+	QF_SOURCE_TABLE_MAX_TIMESTAMP_COL_FOR_INSERT_BEFORE_INSERTS
+	QF_TARGET_TABLE_MAX_ID_COL
+	QF_TARGET_TABLE_MAX_TIMESTAMP_COL</note>
+      <xloc>768</xloc>
+      <yloc>1344</yloc>
+      <width>449</width>
+      <heigth>62</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Important:	Rows loaded from the source 
+			database are ordered by the
+"insert_id" column so that we can 
+restart after a crash where we left off.</note>
+      <xloc>1248</xloc>
+      <yloc>1520</yloc>
+      <width>246</width>
+      <heigth>62</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>255</backgroundcolorgreen>
+      <backgroundcolorblue>0</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Important:	Rows loaded from the source 
+			database are ordered by the
+"last_updated_on" column so that we can 
+restart after a crash where we left off.</note>
+      <xloc>1248</xloc>
+      <yloc>1792</yloc>
+      <width>246</width>
+      <heigth>62</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>255</backgroundcolorgreen>
+      <backgroundcolorblue>0</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Test that name of the "insert_id" column is set for both the source and target tables, because 
+both columns are needed by this ETL algorithm.</note>
+      <xloc>768</xloc>
+      <yloc>976</yloc>
+      <width>526</width>
+      <heigth>36</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Set the variable:
+	QF_SOURCE_TABLE_MAX_TIMESTAMP_COL_FOR_INSERT_BEFORE_INSERTS
+to the maximum values for "last_updated_on" column of the source table for the rows 
+that will be INSERTed into the target table *before* these INSERTs are performed.</note>
+      <xloc>768</xloc>
+      <yloc>1152</yloc>
+      <width>485</width>
+      <heigth>62</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Log the variable:
+	QF_TARGET_TABLE_MAX_LAST_UPDATED_ON_AFTER_INSERTS</note>
+      <xloc>768</xloc>
+      <yloc>1712</yloc>
+      <width>383</width>
+      <heigth>36</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Set the variable:
+	QF_TARGET_TABLE_MAX_LAST_UPDATED_ON_AFTER_INSERTS
+to the maximum values for "last_updated_on" column of the target table *after* rows have been 
+INSERTed into the target table by the first part of this ETL algorithm. Some of the source rows
+may have been updated before they are INSERTed into the target table.</note>
+      <xloc>768</xloc>
+      <yloc>1600</yloc>
+      <width>544</width>
+      <heigth>75</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Set ${QF_ETL_DB_SCHEMA}.table_state CDC-related columns:
+	target_synced_to_insert_id
+	target_synced_to_last_updated_on
+	target_unsynced_inserts_from_last_updated_on
+These are used to ensure no UPDATEs made to source tables are missed in the event that the ETL job
+crashes while updating a target table.</note>
+      <xloc>768</xloc>
+      <yloc>1232</yloc>
+      <width>565</width>
+      <heigth>88</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Update the ${QF_ETL_DB_SCHEMA}.table_state CDC-related columns:
+	target_synced_to_insert_id
+	target_synced_to_last_updated_on
+	target_unsynced_inserts_from_last_updated_on
+appropriately for the case where this ETL algorithm successfully updates the target table.</note>
+      <xloc>768</xloc>
+      <yloc>1872</yloc>
+      <width>502</width>
+      <heigth>75</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Rune requested that the update details 
+be recorded also when an error occurs.</note>
+      <xloc>80</xloc>
+      <yloc>1792</yloc>
+      <width>231</width>
+      <heigth>36</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Rune requested that the update details 
+be recorded also when an error occurs.</note>
+      <xloc>80</xloc>
+      <yloc>1520</yloc>
+      <width>231</width>
+      <heigth>36</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+  </notepads>
+  <attributes>
+    <group>
+      <name>METASTORE.pentaho</name>
+      <attribute>
+        <key>Default Run Configuration</key>
+        <value>{"namespace":"pentaho","id":"Default Run Configuration","name":"Default Run Configuration","description":"Defines a default run configuration","metaStoreName":null}</value>
+      </attribute>
+    </group>
+    <group>
+      <name>{"_":"Embedded MetaStore Elements","namespace":"pentaho","type":"Default Run Configuration"}</name>
+      <attribute>
+        <key>Pentaho local</key>
+        <value>{"children":[{"children":[],"id":"server","value":null},{"children":[],"id":"clustered","value":"N"},{"children":[],"id":"name","value":"Pentaho local"},{"children":[],"id":"description","value":null},{"children":[],"id":"pentaho","value":"N"},{"children":[],"id":"readOnly","value":"Y"},{"children":[],"id":"sendResources","value":"N"},{"children":[],"id":"logRemoteExecutionLocally","value":"N"},{"children":[],"id":"remote","value":"N"},{"children":[],"id":"local","value":"Y"},{"children":[],"id":"showTransformations","value":"N"}],"id":"Pentaho local","value":null,"name":"Pentaho local","owner":null,"ownerPermissionsList":[]}</value>
+      </attribute>
+    </group>
+  </attributes>
+</job>

@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2020/11/25 09:09:06.978</modified_date>
+  <modified_date>2021/03/28 15:33:49.618</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CDC_CONTROL_SCHEMA_NAME</name>
@@ -16,7 +16,7 @@
       <description>The name of the schema in the source database that contains the "CDC control table"</description>
     </parameter>
     <parameter>
-      <name>PARAM_CDC_CONTROL_TABLE_BATCH_SIZE</name>
+      <name>PARAM_CDC_CONTROL_TABLE_BATCH_SIZE_DELETES</name>
       <default_value />
       <description>The number of CDC control rows that will be processed in a single transaction</description>
     </parameter>
@@ -113,7 +113,7 @@
     <parameter>
       <name>PARAM_ROWS_DELETED</name>
       <default_value />
-      <description>the number of rows ofthe target table so far deleted = (PARAM_ITER_COUNTER-1) * PARAM_CDC_CONTROL_TABLE_BATCH_SIZE</description>
+      <description>the number of rows ofthe target table so far deleted = (PARAM_ITER_COUNTER-1) * PARAM_CDC_CONTROL_TABLE_BATCH_SIZE_DELETES</description>
     </parameter>
     <parameter>
       <name>PARAM_ROWS_TO_DELETE</name>
@@ -134,6 +134,11 @@
       <name>PARAM_SOURCE_TABLE</name>
       <default_value />
       <description>Name of source table to mirror to target table</description>
+    </parameter>
+    <parameter>
+      <name>PARAM_SOURCE_TABLE_MAX_INSERT_ID</name>
+      <default_value />
+      <description>Maximum value of the "insert_id" column for rows to load from the source DB table for insertion into the target table</description>
     </parameter>
     <parameter>
       <name>PARAM_TABLE_META_ID</name>
@@ -519,7 +524,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>176</xloc>
-      <yloc>656</yloc>
+      <yloc>720</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -532,7 +537,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>80</xloc>
-      <yloc>848</yloc>
+      <yloc>912</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -545,7 +550,7 @@ PARAM_TARGET_TABLE_UPDATE_ID         = ${PARAM_TARGET_TABLE_UPDATE_ID}
 
 PARAM_CDC_CONTROL_SCHEMA_NAME        = ${PARAM_CDC_CONTROL_SCHEMA_NAME}
 PARAM_CDC_CONTROL_TABLE_NAME         = ${PARAM_CDC_CONTROL_TABLE_NAME}
-PARAM_CDC_CONTROL_TABLE_BATCH_SIZE   = ${PARAM_CDC_CONTROL_TABLE_BATCH_SIZE}
+PARAM_CDC_CONTROL_TABLE_BATCH_SIZE_DELETES   = ${PARAM_CDC_CONTROL_TABLE_BATCH_SIZE_DELETES}
 PARAM_ITER_COUNTER_MAX               = ${PARAM_ITER_COUNTER_MAX}
 PARAM_ROWS_DELETED                   = ${PARAM_ROWS_DELETED}
 PARAM_ROWS_TO_DELETE                 = ${PARAM_ROWS_TO_DELETE}
@@ -567,13 +572,13 @@ PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME = ${PARAM_DYN_DB_CONN_SOURCE_DB_USERNAME}
 PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD = ${PARAM_DYN_DB_CONN_SOURCE_DB_PASSWORD}
 PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER   = ${PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER}
 PARAM_DYN_DB_CONN_SOURCE_DB_URL      = ${PARAM_DYN_DB_CONN_SOURCE_DB_URL}</logmessage>
-      <loglevel>Minimal</loglevel>
+      <loglevel>Basic</loglevel>
       <logsubject>${Internal.Job.Name}</logsubject>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>288</xloc>
-      <yloc>656</yloc>
+      <yloc>720</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -612,7 +617,7 @@ PARAM_DYN_DB_CONN_SOURCE_DB_URL      = ${PARAM_DYN_DB_CONN_SOURCE_DB_URL}</logme
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>288</xloc>
-      <yloc>848</yloc>
+      <yloc>912</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -624,7 +629,7 @@ PARAM_DYN_DB_CONN_SOURCE_DB_URL      = ${PARAM_DYN_DB_CONN_SOURCE_DB_URL}</logme
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>80</xloc>
-      <yloc>1072</yloc>
+      <yloc>1136</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -661,7 +666,7 @@ PARAM_DYN_DB_CONN_SOURCE_DB_URL      = ${PARAM_DYN_DB_CONN_SOURCE_DB_URL}</logme
         <parameter>
           <name>PARAM_CURRENT_ROW_NUMBER</name>
           <stream_name />
-          <value>${PARAM_ROWS_DELETED}</value>
+          <value>${QF_UPDATE_TABLE_NUM_DELETES}</value>
         </parameter>
         <parameter>
           <name>PARAM_INSERT_ID</name>
@@ -678,12 +683,22 @@ PARAM_DYN_DB_CONN_SOURCE_DB_URL      = ${PARAM_DYN_DB_CONN_SOURCE_DB_URL}</logme
           <stream_name />
           <value>${PARAM_ROWS_TO_DELETE}</value>
         </parameter>
+        <parameter>
+          <name>PARAM_ETL_OPERATION</name>
+          <stream_name />
+          <value>delete</value>
+        </parameter>
+        <parameter>
+          <name>PARAM_CHECK_FOR_SHUTDOWN_REQUEST</name>
+          <stream_name />
+          <value>${QF_CHECK_FOR_SHUTDOWN_REQUEST_IN_PROGRESS_LOG_INTERVAL}</value>
+        </parameter>
       </parameters>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>80</xloc>
-      <yloc>960</yloc>
+      <yloc>1024</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -691,23 +706,29 @@ PARAM_DYN_DB_CONN_SOURCE_DB_URL      = ${PARAM_DYN_DB_CONN_SOURCE_DB_URL}</logme
       <description />
       <type>EVAL</type>
       <attributes />
-      <script>// The final expression in this script evaluates to false, except when "param_rows_deleted" increases by "QF_ETL_PROGRESS_INTERVAL_ROWS".
+      <script>// The final expression in this script evaluates to true once every "QF_ETL_PROGRESS_INTERVAL_ROWS".
 // The transformation "tr_log_table_progress-wrapper" is executed only when this expression evaluates to true. As a result, 
 // an etl.target_table_progress row is created once for each "QF_ETL_PROGRESS_INTERVAL_ROWS" that are processed (deleted). 
 // This throttling is done to avoid creating an unreasonably large number of etl.target_table_progress rows.
 
-var param_rows_deleted                         = parseInt(parent_job.getVariable("PARAM_ROWS_DELETED", "0"));    // This value will increase by PARAM_CDC_CONTROL_TABLE_BATCH_SIZE each time this job is executed (for a given table).
+//var num_rows_deleted                         = parseInt(parent_job.getVariable("PARAM_ROWS_DELETED", "0"));    // This is the number of rows deleted *before* tr_target-update_table-delete_rows-without_mi is executed
+var num_rows_deleted                         = parseInt(parent_job.getVariable("QF_UPDATE_TABLE_NUM_DELETES", "0"));    // This is the number of rows deleted *after* tr_target-update_table-delete_rows-without_mi is executed
 var qf_etl_progress_interval_rows            = parseInt(parent_job.getVariable("QF_ETL_PROGRESS_INTERVAL_ROWS", "0"));
-var param_cdc_control_table_batch_size = parseInt(parent_job.getVariable("PARAM_CDC_CONTROL_TABLE_BATCH_SIZE", "0"));
+var param_cdc_control_table_batch_size = parseInt(parent_job.getVariable("PARAM_CDC_CONTROL_TABLE_BATCH_SIZE_DELETES", "0"));
 
-param_rows_deleted % qf_etl_progress_interval_rows &lt; param_cdc_control_table_batch_size
+// This will work if qf_etl_progress_interval_rows is divisible by param_cdc_control_table_batch_size:
+num_rows_deleted % qf_etl_progress_interval_rows == 0
 
-//( parseInt(parent_job.getVariable("PARAM_ROWS_DELETED", "0")) % parseInt(parent_job.getVariable("QF_ETL_PROGRESS_INTERVAL_ROWS", "0")) ) &lt; parseInt(parent_job.getVariable("PARAM_CDC_CONTROL_TABLE_BATCH_SIZE", "0"))</script>
+// This will work even if qf_etl_progress_interval_rows is not divisible by param_cdc_control_table_batch_size:
+// But it will also return true if the total number of rows deleted is *less* than param_cdc_control_table_batch_size.
+//num_rows_deleted % qf_etl_progress_interval_rows &lt; param_cdc_control_table_batch_size
+
+//( parseInt(parent_job.getVariable("PARAM_ROWS_DELETED", "0")) % parseInt(parent_job.getVariable("QF_ETL_PROGRESS_INTERVAL_ROWS", "0")) ) &lt; parseInt(parent_job.getVariable("PARAM_CDC_CONTROL_TABLE_BATCH_SIZE_DELETES", "0"))</script>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>288</xloc>
-      <yloc>960</yloc>
+      <yloc>1024</yloc>
       <attributes_kjc />
     </entry>
   </entries>
@@ -755,7 +776,7 @@ param_rows_deleted % qf_etl_progress_interval_rows &lt; param_cdc_control_table_
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
+      <unconditional>N</unconditional>
     </hop>
     <hop>
       <from>Log progress and check for shutdown?</from>
@@ -800,12 +821,12 @@ This job has parameters:
 
 	PARAM_CDC_CONTROL_SCHEMA_NAME			The name of the schema in the source database that contains the "CDC control table"
 	PARAM_CDC_CONTROL_TABLE_NAME				The name of the "CDC control table"
-	PARAM_CDC_CONTROL_TABLE_BATCH_SIZE		The number of CDC control rows that will be processed in a single transaction
+	PARAM_CDC_CONTROL_TABLE_BATCH_SIZE_DELETES		The number of CDC control rows that will be processed in a single transaction
 	PARAM_ITER_COUNTER							Will have the value 1, 2,  .., PARAM_ITER_COUNTER_MAX on successive calls to this job. On each call, this 
-													job should attempt to select a batch/block/page of PARAM_CDC_CONTROL_TABLE_BATCH_SIZE rows of the 
+													job should attempt to select a batch/block/page of PARAM_CDC_CONTROL_TABLE_BATCH_SIZE_DELETES rows of the 
 													CDC control table and then use these to delete the corresponding rows of the target table
 	PARAM_ITER_COUNTER_MAX						the maximum value that will be reached by PARAM_ITER_COUNTER on successive calls for the target table being treated
-	PARAM_ROWS_DELETED							the number of rows ofthe target table so far deleted = (PARAM_ITER_COUNTER-1) * PARAM_CDC_CONTROL_TABLE_BATCH_SIZE
+	PARAM_ROWS_DELETED							the number of rows ofthe target table so far deleted = (PARAM_ITER_COUNTER-1) * PARAM_CDC_CONTROL_TABLE_BATCH_SIZE_DELETES
 	PARAM_ROWS_TO_DELETE						the number of rows of the target table that will be deleted after PARAM_ITER_COUNTER has reached PARAM_ITER_COUNTER_MAX
 
 	PARAM_TABLE_META_ID							Primary key of ${QF_ETL_DB_SCHEMA}.table_meta row for "source" table archived/mirrored to "target" table
@@ -826,7 +847,11 @@ This job has parameters:
 	PARAM_DYN_DB_CONN_SOURCE_DB_DRIVER		for source DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_SOURCE_DB_URL			for source DB "dynamic" database connections
 
-Many of these parameters are probably not used:
+	PARAM_SOURCE_TABLE_MAX_INSERT_ID			Maximum value of the "insert_id" column for source rows that the ETL will insert into the target table
+													during the curret ETL run. Target rows with insert ids greater than this will *not* be deleted or updated 
+													because such rows will not yet exist in the target table.
+
+Many of these parameters are possibly not used:
 
 	PARAM_SOURCE_DB_ID							ID the "source" database containing tables will be mirrored to a "target" database
 	PARAM_SOURCE_SCHEMA						Name of schema containing source table to mirror to target table
@@ -837,8 +862,8 @@ Many of these parameters are probably not used:
 	PARAM_TARGET_INSERT_ID_COLNAME			Name of column acting as "insert_id"  timestamp column of target table</note>
       <xloc>0</xloc>
       <yloc>0</yloc>
-      <width>1049</width>
-      <heigth>634</heigth>
+      <width>1088</width>
+      <heigth>686</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -861,7 +886,7 @@ execution has failed. It will then
 direct the execution flow to the 
 job that sends out failure e-mails.</note>
       <xloc>16</xloc>
-      <yloc>752</yloc>
+      <yloc>816</yloc>
       <width>198</width>
       <heigth>75</heigth>
       <fontname>Ubuntu</fontname>
@@ -882,7 +907,7 @@ job that sends out failure e-mails.</note>
     <notepad>
       <note>This transformation uses a "CDC control table" to delete rows from the target table.</note>
       <xloc>448</xloc>
-      <yloc>864</yloc>
+      <yloc>928</yloc>
       <width>471</width>
       <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
@@ -914,7 +939,7 @@ makes use of the "Delete" transformation step, which does not support metadata i
 Metadata injection was not added to the "Delete" step until PDI v9.0. Currenlty, this project 
 is using PDI v8.2.</note>
       <xloc>448</xloc>
-      <yloc>672</yloc>
+      <yloc>736</yloc>
       <width>516</width>
       <heigth>166</heigth>
       <fontname>Ubuntu</fontname>
@@ -946,7 +971,7 @@ This does the following:
 
 		PARAM_CHECK_FOR_SHUTDOWN_REQUEST = Y</note>
       <xloc>448</xloc>
-      <yloc>912</yloc>
+      <yloc>976</yloc>
       <width>577</width>
       <heigth>166</heigth>
       <fontname>Ubuntu</fontname>
@@ -970,7 +995,7 @@ Each execution of this job executes:
 
 	tr_target-update_table-delete_rows-without_mi
 
-to delete QF_CDC_CONTROL_TABLE_BATCH_SIZE rows of the target table, and jb_target-update_table-delete_rows is executed multiple times until it processes all of the 
+to delete PARAM_CDC_CONTROL_TABLE_BATCH_SIZE_DELETES rows of the target table, and jb_target-update_table-delete_rows is executed multiple times until it processes all of the 
 CDC control table rows for deleting target table rows for the current target table being processed.
 
 However, this job executes:
@@ -983,8 +1008,8 @@ at which batches of rows are deleted in tr_target-update_table-delete_rows-witho
 inserting etl.target_table_progress rows and updating the etl.etl_run row for the current ETL execution.
 </note>
       <xloc>48</xloc>
-      <yloc>1136</yloc>
-      <width>944</width>
+      <yloc>1200</yloc>
+      <width>1024</width>
       <heigth>231</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>

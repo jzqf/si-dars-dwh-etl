@@ -489,7 +489,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2020/11/27 15:08:32.642</modified_date>
+    <modified_date>2021/03/30 12:40:38.695</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -575,7 +575,7 @@ B.	Adjust local timestamp field current_timestamp_utc to UTC timestamp. The two 
 	If current_timestamp_utc is simply converted to UTC time zone and then assigned to a PostgreSQL 
 	"timestamp without time zone" column, the column is assigned the current *local* timestamp!</note>
       <xloc>592</xloc>
-      <yloc>512</yloc>
+      <yloc>544</yloc>
       <width>603</width>
       <heigth>192</heigth>
       <fontname>Ubuntu</fontname>
@@ -664,6 +664,58 @@ jb_update_etl_table_meta_mirror_details.</note>
       <yloc>928</yloc>
       <width>518</width>
       <heigth>192</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>This step always sets:
+
+	progress_milliseconds_prev = null
+
+on the *first* trip through this transformation (since there is no _previous_ value for the field "progress_milliseconds"). This means that 
+"progress_milliseconds_prev" will always be set to null when this transformation is executed via the wrapper transformation 
+"tr_log_table_progress-wrapper" when an ETL algorithm processes etl_cdc_xxxx rows. To handle both of these cases, I check for 
+progress_milliseconds_prev=null in the "Compute progress stats" step and then compute a valueforprogress_rows_processed_per_second
+using an alternate technique that uses the PDI variable "QF_UPDATE_TABLE_PROGRESS_MILLISECONDS_PREV".</note>
+      <xloc>592</xloc>
+      <yloc>400</yloc>
+      <width>767</width>
+      <heigth>127</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>The "Blocking" step here is essential in order to ensure that progress_milliseconds has
+been assigned a value "earlier" in the transformation sothat we can assign this value to
+the PDI variable QF_UPDATE_TABLE_PROGRESS_MILLISECONDS_PREV here.</note>
+      <xloc>336</xloc>
+      <yloc>1168</yloc>
+      <width>484</width>
+      <heigth>49</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -820,11 +872,6 @@ jb_update_etl_table_meta_mirror_details.</note>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Compute progress stats</from>
-      <to>Get local timestamp</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>Get local timestamp</from>
       <to>"null" -> NULL, current_timestamp_utc to UTC String</to>
       <enabled>Y</enabled>
@@ -922,6 +969,21 @@ jb_update_etl_table_meta_mirror_details.</note>
     <hop>
       <from>Remove shutdown-related fields</from>
       <to>Mapping output specification</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Compute progress stats</from>
+      <to>Get local timestamp</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Mapping output specification</from>
+      <to>Blocking step</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Blocking step</from>
+      <to>Update QF_UPDATE_TABLE_PROGRESS_MILLISECONDS_PREV</to>
       <enabled>Y</enabled>
     </hop>
   </order>
@@ -1200,6 +1262,36 @@ var qf_abort_type_id = parseInt(getVariable("QF_ABORT_TYPE_ID_SHUTDOWN_REQUESTED
     </GUI>
   </step>
   <step>
+    <name>Blocking step</name>
+    <type>BlockingStep</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <pass_all_rows>N</pass_all_rows>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>block</prefix>
+    <cache_size>5000</cache_size>
+    <compress>Y</compress>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>144</xloc>
+      <yloc>1104</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
     <name>Check for shutdown request?</name>
     <type>FilterRows</type>
     <description />
@@ -1260,11 +1352,16 @@ var qf_abort_type_id = parseInt(getVariable("QF_ABORT_TYPE_ID_SHUTDOWN_REQUESTED
       <jsScript>
         <jsScript_type>0</jsScript_type>
         <jsScript_name>Script 1</jsScript_name>
-        <jsScript_script>//Script here
+        <jsScript_script>// If a variable is set with scope "root job", the variable will be valid in the root job and all the child jobs and transformations.
+// Possible scopes:
+//   "s": system-wide
+//   "r": up to the root job
+//   "p": up to the parent job
+//   "g": up to the grandparent job
 
 // Input fields:
 var current_row_num;
-var prev_progress_milliseconds;
+var progress_milliseconds_prev;
 var progress_milliseconds;
 var num_rows_to_process;
 
@@ -1276,18 +1373,39 @@ var param_etl_run_id = parseInt(getVariable("PARAM_ETL_RUN_ID", "0"));
 var param_target_table_update_id = parseInt(getVariable("PARAM_TARGET_TABLE_UPDATE_ID", "0"));
 var param_etl_operation = getVariable("PARAM_ETL_OPERATION", "");  // e.g., "insert"  or "update"
 var progress_rows_to_process_remaining = null;
+
 var progress_interval_milliseconds = null;
 var progress_rows_processed_per_second = null;
+
+var progress_milliseconds_prev_2 = null;
 
 if (num_rows_to_process &amp;&amp; current_row_num) {
     progress_rows_to_process_remaining = num_rows_to_process - current_row_num;
 }
 
-if (prev_progress_milliseconds) {
-    progress_interval_milliseconds = progress_milliseconds - prev_progress_milliseconds;
+if (progress_milliseconds_prev) {
+
+    progress_interval_milliseconds = progress_milliseconds - progress_milliseconds_prev;
     if (progress_interval_milliseconds) {
         progress_rows_processed_per_second = ((qf_etl_progress_interval_rows * 1000) / progress_interval_milliseconds);
     }
+    
+} else {
+
+    // This block of code is a new way to compute the number of milliseconds between successive executions of tr_log_table_progress.
+    // The original mechanism that uses an "Analytic query" step to create a field with the previous value of the "progress_milliseconds"
+    // field does not work when this transformation is executed via the wrapper transformation "tr_log_table_progress-wrapper" that I
+    // was force to introduce when performing ETL operations by processing etl_cdc_xxxx rows. When processing etl_cdc_xxxx rows,
+    // the following variables/field "progress_milliseconds_prev" will all be null. In that case, we use the value of the PDI variable
+    // QF_UPDATE_TABLE_PROGRESS_MILLISECONDS_PREV to define the "previous" value of the progress timestamp, "progress_milliseconds_prev_2".
+    var progress_milliseconds_prev_2 = parseInt(getVariable("QF_UPDATE_TABLE_PROGRESS_MILLISECONDS_PREV", "0"));
+    if (progress_milliseconds_prev_2) {
+        progress_interval_milliseconds = progress_milliseconds - progress_milliseconds_prev_2;
+        if (progress_interval_milliseconds) {
+            progress_rows_processed_per_second = ((qf_etl_progress_interval_rows * 1000) / progress_interval_milliseconds);
+        }
+    }
+
 }</jsScript_script>
       </jsScript>
     </jsScripts>
@@ -1301,8 +1419,8 @@ if (prev_progress_milliseconds) {
         <replace>Y</replace>
       </field>
       <field>
-        <name>prev_progress_milliseconds</name>
-        <rename>prev_progress_milliseconds</rename>
+        <name>progress_milliseconds_prev</name>
+        <rename>progress_milliseconds_prev</rename>
         <type>Integer</type>
         <length>-1</length>
         <precision>-1</precision>
@@ -1392,6 +1510,14 @@ if (prev_progress_milliseconds) {
         <name>progress_rows_processed_per_second</name>
         <rename>progress_rows_processed_per_second</rename>
         <type>Number</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+      <field>
+        <name>progress_milliseconds_prev_2</name>
+        <rename>progress_milliseconds_prev_2</rename>
+        <type>Integer</type>
         <length>-1</length>
         <precision>-1</precision>
         <replace>N</replace>
@@ -1615,7 +1741,7 @@ if (prev_progress_milliseconds) {
       </group>
     <fields>
       <field>
-        <aggregate>prev_progress_milliseconds</aggregate>
+        <aggregate>progress_milliseconds_prev</aggregate>
         <subject>progress_milliseconds</subject>
         <type>LAG</type>
         <valuefield>1</valuefield>
@@ -1744,7 +1870,10 @@ if (prev_progress_milliseconds) {
         <name>progress_milliseconds</name>
       </field>
       <field>
-        <name>prev_progress_milliseconds</name>
+        <name>progress_milliseconds_prev</name>
+      </field>
+      <field>
+        <name>progress_milliseconds_prev_2</name>
       </field>
       <field>
         <name>qf_etl_progress_interval_rows</name>
@@ -2160,6 +2289,40 @@ var progress_milliseconds = Date.now();</jsScript_script>
     <GUI>
       <xloc>944</xloc>
       <yloc>1024</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Update QF_UPDATE_TABLE_PROGRESS_MILLISECONDS_PREV</name>
+    <type>SetVariable</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <field>
+        <field_name>progress_milliseconds</field_name>
+        <variable_name>QF_UPDATE_TABLE_PROGRESS_MILLISECONDS_PREV</variable_name>
+        <variable_type>ROOT_JOB</variable_type>
+        <default_value />
+      </field>
+    </fields>
+    <use_formatting>Y</use_formatting>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>144</xloc>
+      <yloc>1184</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
