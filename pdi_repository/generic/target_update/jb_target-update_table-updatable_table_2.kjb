@@ -8,7 +8,7 @@
   <created_user>-</created_user>
   <created_date>2016/04/03 14:57:58.609</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2020/11/20 11:22:41.981</modified_date>
+  <modified_date>2021/04/10 12:40:07.593</modified_date>
   <parameters>
     <parameter>
       <name>PARAM_CDC_CURRENT_LOAD_UTC</name>
@@ -632,7 +632,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>592</xloc>
-      <yloc>1536</yloc>
+      <yloc>1552</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -711,7 +711,7 @@
         <parameter>
           <name>PARAM_TARGET_TABLE_SYNCED_TO_LAST_UPDATED_ON</name>
           <stream_name />
-          <value>${QF_TARGET_TABLE_MAX_LAST_UPDATED_ON_AFTER_INSERTS}</value>
+          <value>${QF_SOURCE_TABLE_MAX_LAST_UPDATED_ON_BEFORE_INSERTS}</value>
         </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
@@ -719,7 +719,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>592</xloc>
-      <yloc>2000</yloc>
+      <yloc>2016</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -761,7 +761,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>320</xloc>
-      <yloc>1440</yloc>
+      <yloc>1456</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -1223,7 +1223,7 @@ ORDER BY
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>240</xloc>
-      <yloc>2000</yloc>
+      <yloc>2016</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -1401,7 +1401,7 @@ PARAM_TARGET_TABLE                   = ${PARAM_TARGET_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>592</xloc>
-      <yloc>1808</yloc>
+      <yloc>1824</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -1443,7 +1443,7 @@ PARAM_TARGET_TABLE                   = ${PARAM_TARGET_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>320</xloc>
-      <yloc>1904</yloc>
+      <yloc>1920</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -1482,7 +1482,7 @@ PARAM_TARGET_TABLE                   = ${PARAM_TARGET_TABLE}</logmessage>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>592</xloc>
-      <yloc>1440</yloc>
+      <yloc>1456</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -1501,7 +1501,7 @@ QF_TARGET_TABLE_MAX_TIMESTAMP_COL                           = ${QF_TARGET_TABLE_
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>592</xloc>
-      <yloc>1360</yloc>
+      <yloc>1376</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -1526,18 +1526,18 @@ QF_TARGET_TABLE_MAX_TIMESTAMP_COL                           = ${QF_TARGET_TABLE_
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>592</xloc>
-      <yloc>2096</yloc>
+      <yloc>2112</yloc>
       <attributes_kjc />
     </entry>
     <entry>
-      <name>tr_set_source_table_max_timestamp_vrbl_before_inserts</name>
+      <name>tr_set_source_table_max_timestamp_vrbls_before_inserts</name>
       <description />
       <type>TRANS</type>
       <attributes />
       <specification_method>rep_name</specification_method>
       <trans_object_id />
       <filename />
-      <transname>tr_set_source_table_max_timestamp_vrbl_before_inserts</transname>
+      <transname>tr_set_source_table_max_timestamp_vrbls_before_inserts</transname>
       <directory>/generic</directory>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -1629,7 +1629,7 @@ QF_TARGET_TABLE_MAX_TIMESTAMP_COL                           = ${QF_TARGET_TABLE_
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>592</xloc>
-      <yloc>1632</yloc>
+      <yloc>1648</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -1646,7 +1646,7 @@ QF_TARGET_TABLE_MAX_LAST_UPDATED_ON_AFTER_INSERTS = ${QF_TARGET_TABLE_MAX_LAST_U
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>592</xloc>
-      <yloc>1712</yloc>
+      <yloc>1728</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -1682,7 +1682,7 @@ WHERE
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>592</xloc>
-      <yloc>1264</yloc>
+      <yloc>1280</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -1697,7 +1697,11 @@ SET
     -- appropriately for the case when the ETL successfully updates the target 
     -- table.
     target_synced_to_insert_id       =  ${PARAM_SOURCE_TABLE_MAX_INSERT_ID},
-    target_synced_to_last_updated_on = '${QF_TARGET_TABLE_MAX_LAST_UPDATED_ON_AFTER_INSERTS}',
+ 
+   target_synced_to_last_updated_on = '${QF_SOURCE_TABLE_MAX_LAST_UPDATED_ON_BEFORE_INSERTS}',
+--  No, this is *not* correct (keeping commented-out line for documentation):
+--  target_synced_to_last_updated_on = '${QF_TARGET_TABLE_MAX_LAST_UPDATED_ON_AFTER_INSERTS}',
+ 
     -- Set target_unsynced_inserts_from_last_updated_on column to NULL. This 
     -- means that the ETL successfully updated the target table.
     target_unsynced_inserts_from_last_updated_on = NULL 
@@ -1712,7 +1716,7 @@ WHERE
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>592</xloc>
-      <yloc>1904</yloc>
+      <yloc>1920</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -1791,7 +1795,7 @@ WHERE
         <parameter>
           <name>PARAM_TARGET_TABLE_SYNCED_TO_LAST_UPDATED_ON</name>
           <stream_name />
-          <value>${QF_TARGET_TABLE_MAX_LAST_UPDATED_ON_AFTER_INSERTS}</value>
+          <value>${QF_TARGET_TABLE_MAX_TIMESTAMP_COL}</value>
         </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
@@ -1799,7 +1803,7 @@ WHERE
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>320</xloc>
-      <yloc>1536</yloc>
+      <yloc>1552</yloc>
       <attributes_kjc />
     </entry>
     <entry>
@@ -1878,7 +1882,7 @@ WHERE
         <parameter>
           <name>PARAM_TARGET_TABLE_SYNCED_TO_LAST_UPDATED_ON</name>
           <stream_name />
-          <value>${QF_TARGET_TABLE_MAX_LAST_UPDATED_ON_AFTER_INSERTS}</value>
+          <value>${QF_SOURCE_TABLE_MAX_LAST_UPDATED_ON_BEFORE_INSERTS}</value>
         </parameter>
       </parameters>
       <set_append_logfile>N</set_append_logfile>
@@ -1886,7 +1890,7 @@ WHERE
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>320</xloc>
-      <yloc>1808</yloc>
+      <yloc>1824</yloc>
       <attributes_kjc />
     </entry>
   </entries>
@@ -2118,7 +2122,7 @@ WHERE
     </hop>
     <hop>
       <from>tr_set_target_table_max_id_and_date_vrbls</from>
-      <to>tr_set_source_table_max_timestamp_vrbl_before_inserts</to>
+      <to>tr_set_source_table_max_timestamp_vrbls_before_inserts</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -2153,7 +2157,7 @@ WHERE
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>tr_set_source_table_max_timestamp_vrbl_before_inserts</from>
+      <from>tr_set_source_table_max_timestamp_vrbls_before_inserts</from>
       <to>Set CDC state columns</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -2292,7 +2296,7 @@ Note:	This transformation will fail with an error if we generate, but do not exe
 		target transformations in the prevous two transformations. This is because variables that need 
 		to be set for this transformation to execute without errors do not actually get set.</note>
       <xloc>768</xloc>
-      <yloc>1968</yloc>
+      <yloc>1984</yloc>
       <width>579</width>
       <heigth>88</heigth>
       <fontname>Ubuntu</fontname>
@@ -2367,7 +2371,7 @@ not be the best behaviour.</note>
 It implements the 1st half of generic algorithm #2 for updatable tables.
 It performs INSERTs only.</note>
       <xloc>768</xloc>
-      <yloc>1520</yloc>
+      <yloc>1536</yloc>
       <width>466</width>
       <heigth>62</heigth>
       <fontname>Ubuntu</fontname>
@@ -2515,7 +2519,7 @@ columns. These values are passed as parameters to the transformations executed b
 		successful for every row. Is this the 
 		case?</note>
       <xloc>1328</xloc>
-      <yloc>1664</yloc>
+      <yloc>1680</yloc>
       <width>254</width>
       <heigth>88</heigth>
       <fontname>Ubuntu</fontname>
@@ -2585,7 +2589,7 @@ be passed as parameters to the two update transformations, one for INSERTs and o
 It implements the 2nd half of generic algorithm #2 for updatable tables.
 It performs UPDATEs only.</note>
       <xloc>768</xloc>
-      <yloc>1792</yloc>
+      <yloc>1808</yloc>
       <width>466</width>
       <heigth>62</heigth>
       <fontname>Ubuntu</fontname>
@@ -2611,7 +2615,7 @@ It performs UPDATEs only.</note>
 	QF_UPDATE_TABLE_NUM_UPDATES
 	QF_UPDATE_TABLE_NUM_DELETES</note>
       <xloc>768</xloc>
-      <yloc>1424</yloc>
+      <yloc>1440</yloc>
       <width>553</width>
       <heigth>88</heigth>
       <fontname>Ubuntu</fontname>
@@ -2635,7 +2639,7 @@ It performs UPDATEs only.</note>
 	QF_TARGET_TABLE_MAX_ID_COL
 	QF_TARGET_TABLE_MAX_TIMESTAMP_COL</note>
       <xloc>768</xloc>
-      <yloc>1344</yloc>
+      <yloc>1360</yloc>
       <width>449</width>
       <heigth>62</heigth>
       <fontname>Ubuntu</fontname>
@@ -2659,7 +2663,7 @@ It performs UPDATEs only.</note>
 "insert_id" column so that we can 
 restart after a crash where we left off.</note>
       <xloc>1248</xloc>
-      <yloc>1520</yloc>
+      <yloc>1536</yloc>
       <width>246</width>
       <heigth>62</heigth>
       <fontname>Ubuntu</fontname>
@@ -2683,7 +2687,7 @@ restart after a crash where we left off.</note>
 "last_updated_on" column so that we can 
 restart after a crash where we left off.</note>
       <xloc>1248</xloc>
-      <yloc>1792</yloc>
+      <yloc>1808</yloc>
       <width>246</width>
       <heigth>62</heigth>
       <fontname>Ubuntu</fontname>
@@ -2725,13 +2729,14 @@ both columns are needed by this ETL algorithm.</note>
     </notepad>
     <notepad>
       <note>Set the variable:
+	QF_SOURCE_TABLE_MAX_LAST_UPDATED_ON_BEFORE_INSERTS
 	QF_SOURCE_TABLE_MAX_TIMESTAMP_COL_FOR_INSERT_BEFORE_INSERTS
 to the maximum values for "last_updated_on" column of the source table for the rows 
 that will be INSERTed into the target table *before* these INSERTs are performed.</note>
       <xloc>768</xloc>
       <yloc>1152</yloc>
       <width>485</width>
-      <heigth>62</heigth>
+      <heigth>75</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -2751,7 +2756,7 @@ that will be INSERTed into the target table *before* these INSERTs are performed
       <note>Log the variable:
 	QF_TARGET_TABLE_MAX_LAST_UPDATED_ON_AFTER_INSERTS</note>
       <xloc>768</xloc>
-      <yloc>1712</yloc>
+      <yloc>1728</yloc>
       <width>383</width>
       <heigth>36</heigth>
       <fontname>Ubuntu</fontname>
@@ -2776,7 +2781,7 @@ to the maximum values for "last_updated_on" column of the target table *after* r
 INSERTed into the target table by the first part of this ETL algorithm. Some of the source rows
 may have been updated before they are INSERTed into the target table.</note>
       <xloc>768</xloc>
-      <yloc>1600</yloc>
+      <yloc>1616</yloc>
       <width>544</width>
       <heigth>75</heigth>
       <fontname>Ubuntu</fontname>
@@ -2802,7 +2807,7 @@ may have been updated before they are INSERTed into the target table.</note>
 These are used to ensure no UPDATEs made to source tables are missed in the event that the ETL job
 crashes while updating a target table.</note>
       <xloc>768</xloc>
-      <yloc>1232</yloc>
+      <yloc>1248</yloc>
       <width>565</width>
       <heigth>88</heigth>
       <fontname>Ubuntu</fontname>
@@ -2827,7 +2832,7 @@ crashes while updating a target table.</note>
 	target_unsynced_inserts_from_last_updated_on
 appropriately for the case where this ETL algorithm successfully updates the target table.</note>
       <xloc>768</xloc>
-      <yloc>1872</yloc>
+      <yloc>1888</yloc>
       <width>502</width>
       <heigth>75</heigth>
       <fontname>Ubuntu</fontname>
@@ -2849,7 +2854,7 @@ appropriately for the case where this ETL algorithm successfully updates the tar
       <note>Rune requested that the update details 
 be recorded also when an error occurs.</note>
       <xloc>80</xloc>
-      <yloc>1792</yloc>
+      <yloc>1808</yloc>
       <width>231</width>
       <heigth>36</heigth>
       <fontname>Ubuntu</fontname>
@@ -2871,7 +2876,7 @@ be recorded also when an error occurs.</note>
       <note>Rune requested that the update details 
 be recorded also when an error occurs.</note>
       <xloc>80</xloc>
-      <yloc>1520</yloc>
+      <yloc>1536</yloc>
       <width>231</width>
       <heigth>36</heigth>
       <fontname>Ubuntu</fontname>

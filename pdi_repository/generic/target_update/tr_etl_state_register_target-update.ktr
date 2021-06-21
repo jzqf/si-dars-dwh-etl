@@ -509,13 +509,13 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2020/10/29 14:39:16.305</modified_date>
+    <modified_date>2021/03/24 10:35:17.853</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
-      <note>This transformation updates the "ETL state register". It writes to this register the maximum values for the "insert_id" and "last_updated_on"
+      <note>This transformation updates the target DB "ETL state register". It writes to this register the maximum values for the "insert_id" and "last_updated_on"
 columns of the target table that was just updated. It also writes the names of these columns since these column names can vary for different
 target tables. This job has parameters:
 
@@ -667,18 +667,18 @@ target tables. This job has parameters:
   </connection>
   <order>
     <hop>
-      <from>Create row to write to "ETL state register"</from>
-      <to>Log "ETL state register target" details</to>
+      <from>Create row to write to target DB "ETL state register"</from>
+      <to>Log target DB "ETL state register" details</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Log "ETL state register target" details</from>
-      <to>Update the "ETL state register" in target DB</to>
+      <from>Log target DB "ETL state register" details</from>
+      <to>Update the target DB "ETL state register"</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Create row to write to "ETL state register"</name>
+    <name>Create row to write to target DB "ETL state register"</name>
     <type>TableInput</type>
     <description />
     <distribute>Y</distribute>
@@ -717,7 +717,7 @@ target tables. This job has parameters:
     </GUI>
   </step>
   <step>
-    <name>Log "ETL state register target" details</name>
+    <name>Log target DB "ETL state register" details</name>
     <type>WriteToLog</type>
     <description />
     <distribute>Y</distribute>
@@ -785,7 +785,7 @@ PARAM_ETL_STATE_REGISTER_TARGET_TABLE_NAME    = ${PARAM_ETL_STATE_REGISTER_TARGE
     </GUI>
   </step>
   <step>
-    <name>Update the "ETL state register" in target DB</name>
+    <name>Update the target DB "ETL state register"</name>
     <type>InsertUpdate</type>
     <description />
     <distribute>Y</distribute>

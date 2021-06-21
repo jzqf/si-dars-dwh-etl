@@ -454,7 +454,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/05 11:01:03.994</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2020/11/24 13:15:32.204</modified_date>
+    <modified_date>2021/03/25 13:46:50.354</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -633,20 +633,20 @@
 //   "p": up to the parent job
 //   "g": up to the grandparent job
 
-now_millis = Date.now();
+now_millis = parseInt(Date.now());
 
-not_set_value = getVariable("QF_POSITIVE_INTEGER_NOT_SET_VALUE", "-1");
+not_set_value = parseInt(getVariable("QF_POSITIVE_INTEGER_NOT_SET_VALUE", "-1"));
 
 // Get parameter values:
-start_millis = getVariable("PARAM_UPDATE_TABLE_START_MILLISECONDS", not_set_value);
-num_rows     = getVariable("PARAM_UPDATE_TABLE_NUM_ROWS"          , not_set_value);
-num_inserts  = getVariable("PARAM_UPDATE_TABLE_NUM_INSERTS"       , not_set_value);
-num_updates  = getVariable("PARAM_UPDATE_TABLE_NUM_UPDATES"       , not_set_value);
-num_deletes  = getVariable("PARAM_UPDATE_TABLE_NUM_DELETES"       , 0);    // QF_UPDATE_TABLE_NUM_DELETES is initialized to 0, not -1, so it should always be usable here
+start_millis = parseInt(getVariable("PARAM_UPDATE_TABLE_START_MILLISECONDS", not_set_value));
+num_rows     = parseInt(getVariable("PARAM_UPDATE_TABLE_NUM_ROWS"          , not_set_value));
+num_inserts  = parseInt(getVariable("PARAM_UPDATE_TABLE_NUM_INSERTS"       , not_set_value));
+num_updates  = parseInt(getVariable("PARAM_UPDATE_TABLE_NUM_UPDATES"       , not_set_value));
+num_deletes  = parseInt(getVariable("PARAM_UPDATE_TABLE_NUM_DELETES"       , 0));    // QF_UPDATE_TABLE_NUM_DELETES is initialized to 0, not -1, so it should always be usable here
 
 // Initialize in case any or all of the PDI variables are not set:
-elapsed_millis      = setVariable("QF_UPDATE_TABLE_ELAPSED_MILLISECONDS", null, "r");
-num_rows_per_sec    = setVariable("QF_UPDATE_TABLE_ROWS_PER_SEC"        , null, "r");
+elapsed_millis      = parseInt(setVariable("QF_UPDATE_TABLE_ELAPSED_MILLISECONDS", null, "r"));
+num_rows_per_sec    = parseFloat(setVariable("QF_UPDATE_TABLE_ROWS_PER_SEC"        , null, "r"));
 //num_inserts_per_sec = setVariable("QF_UPDATE_TABLE_INSERTS_PER_SEC"     , null, "r");
 //num_updates_per_sec = setVariable("QF_UPDATE_TABLE_UPDATES_PER_SEC"     , null, "r");
 
@@ -661,6 +661,8 @@ if(num_rows != not_set_value) {
     setVariable("PARAM_UPDATE_TABLE_NUM_ROWS", num_rows, "r");
 }
 
+// It is not necessary to test below if "num_deletes" has been defined because its defaut value above is zero.
+
 if (start_millis != not_set_value) {
     elapsed_millis = now_millis - start_millis;
     if(elapsed_millis) {
@@ -669,7 +671,7 @@ if (start_millis != not_set_value) {
         } else if (num_inserts != not_set_value &amp;&amp; num_updates != not_set_value) {
             //num_rows = parseInt(num_inserts, 10) + parseInt(num_updates, 10);
             //num_rows_per_sec    = num_rows * 1000/elapsed_millis;
-            num_rows_per_sec    = (parseInt(num_inserts, 10) + parseInt(num_updates, 10) + num_deletes) * 1000/elapsed_millis;
+            num_rows_per_sec    = (num_inserts + num_updates + num_deletes) * 1000/elapsed_millis;
             //Alert("num_rows = "+num_rows+"\nelapsed_millis = "+elapsed_millis+"\nnum_rows_per_sec = "+num_rows_per_sec);
         } else if (num_inserts != not_set_value) {
             num_rows_per_sec    = (num_inserts + num_deletes) * 1000/elapsed_millis;

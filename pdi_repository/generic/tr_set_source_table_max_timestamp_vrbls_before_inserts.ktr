@@ -1,6 +1,6 @@
 <transformation>
   <info>
-    <name>tr_set_source_table_max_timestamp_vrbl_before_inserts</name>
+    <name>tr_set_source_table_max_timestamp_vrbls_before_inserts</name>
     <description />
     <extended_description />
     <trans_version />
@@ -494,7 +494,7 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2020/11/03 15:21:32.857</modified_date>
+    <modified_date>2021/04/10 11:31:24.491</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -502,6 +502,7 @@
     <notepad>
       <note>This transformation sets the variable:
 
+	QF_SOURCE_TABLE_MAX_LAST_UPDATED_ON_BEFORE_INSERTS
 	QF_SOURCE_TABLE_MAX_TIMESTAMP_COL_FOR_INSERT_BEFORE_INSERTS
 
 to the maximum value for the "last updated on" column of a specified source table for the rows that will be INSERTed
@@ -523,7 +524,7 @@ into the target table *before* the INSERTs are performed. This transformation ha
       <xloc>0</xloc>
       <yloc>0</yloc>
       <width>834</width>
-      <heigth>290</heigth>
+      <heigth>304</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
       <fontbold>N</fontbold>
@@ -543,9 +544,32 @@ into the target table *before* the INSERTs are performed. This transformation ha
       <note>Set PDI variable:
 
 	QF_SOURCE_TABLE_MAX_TIMESTAMP_COL_FOR_INSERT_BEFORE_INSERTS</note>
-      <xloc>336</xloc>
-      <yloc>496</yloc>
+      <xloc>16</xloc>
+      <yloc>592</yloc>
       <width>477</width>
+      <heigth>52</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>10</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Set PDI variable:
+
+	QF_SOURCE_TABLE_MAX_LAST_UPDATED_ON_BEFORE_INSERTS</note>
+      <xloc>528</xloc>
+      <yloc>592</yloc>
+      <width>415</width>
       <heigth>52</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>10</fontsize>
@@ -675,18 +699,28 @@ into the target table *before* the INSERTs are performed. This transformation ha
   </connection>
   <order>
     <hop>
-      <from>Get max source timestamp for inserts before inserts</from>
-      <to>Write max timestamp "source" field to log</to>
+      <from>Create field max_source_last_updated_on_for_inserts_before_inserts</from>
+      <to>Write max_source_last_updated_on_for_inserts_before_inserts to log</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Write max timestamp "source" field to log</from>
-      <to>Set QF_SOURCE_TABLE_MAX_TIMESTAMP_... variable</to>
+      <from>Write max_source_last_updated_on_for_inserts_before_inserts to log</from>
+      <to>Set QF_SOURCE_TABLE_MAX_TIMESTAMP_COL_FOR_INSERT_BEFORE_INSERTS</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Create field max_source_last_updated_on_before_inserts</from>
+      <to>Write max_source_last_updated_on_before_inserts log 2</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Write max_source_last_updated_on_before_inserts log 2</from>
+      <to>Set QF_SOURCE_TABLE_MAX_LAST_UPDATED_ON_BEFORE_INSERTS</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Get max source timestamp for inserts before inserts</name>
+    <name>Create field max_source_last_updated_on_for_inserts_before_inserts</name>
     <type>TableInput</type>
     <description />
     <distribute>Y</distribute>
@@ -722,13 +756,13 @@ WHERE
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>320</yloc>
+      <xloc>208</xloc>
+      <yloc>336</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Set QF_SOURCE_TABLE_MAX_TIMESTAMP_... variable</name>
+    <name>Set QF_SOURCE_TABLE_MAX_TIMESTAMP_COL_FOR_INSERT_BEFORE_INSERTS</name>
     <type>SetVariable</type>
     <description />
     <distribute>Y</distribute>
@@ -756,13 +790,13 @@ WHERE
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>512</yloc>
+      <xloc>208</xloc>
+      <yloc>528</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Write max timestamp "source" field to log</name>
+    <name>Write max_source_last_updated_on_for_inserts_before_inserts to log</name>
     <type>WriteToLog</type>
     <description />
     <distribute>N</distribute>
@@ -776,7 +810,7 @@ WHERE
     <displayHeader>Y</displayHeader>
     <limitRows>N</limitRows>
     <limitRowsNumber>0</limitRowsNumber>
-    <logmessage>tr_set_source_table_max_id_and_date_vrbls</logmessage>
+    <logmessage>tr_set_source_table_max_timestamp_vrbls_before_inserts</logmessage>
     <fields>
       <field>
         <name>max_source_last_updated_on_for_inserts_before_inserts</name>
@@ -791,8 +825,118 @@ WHERE
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>416</yloc>
+      <xloc>208</xloc>
+      <yloc>432</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Create field max_source_last_updated_on_before_inserts</name>
+    <type>TableInput</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <connection>generic_source_db</connection>
+    <sql>SELECT
+    COALESCE(MAX(${PARAM_SOURCE_LAST_UPDATED_ON_COLNAME}) , '${QF_LAST_UPDATED_ON_LOWER_BOUND}') AS max_source_last_updated_on_before_inserts
+FROM
+    ${PARAM_SOURCE_SCHEMA}.${PARAM_SOURCE_TABLE}
+WHERE
+    -- This excludes "last updated on" values for source rows that will not be inserted into the target table during this run of the ETL job. 
+    -- This condition is probably not necessary, but should not cause a problem.
+    ${PARAM_SOURCE_INSERT_ID_COLNAME} &lt;= ${PARAM_SOURCE_TABLE_MAX_INSERT_ID}
+
+</sql>
+    <limit>0</limit>
+    <lookup />
+    <execute_each_row>N</execute_each_row>
+    <variables_active>Y</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>720</xloc>
+      <yloc>336</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Set QF_SOURCE_TABLE_MAX_LAST_UPDATED_ON_BEFORE_INSERTS</name>
+    <type>SetVariable</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <fields>
+      <field>
+        <field_name>max_source_last_updated_on_before_inserts</field_name>
+        <variable_name>QF_SOURCE_TABLE_MAX_LAST_UPDATED_ON_BEFORE_INSERTS</variable_name>
+        <variable_type>ROOT_JOB</variable_type>
+        <default_value />
+      </field>
+    </fields>
+    <use_formatting>Y</use_formatting>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>720</xloc>
+      <yloc>528</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Write max_source_last_updated_on_before_inserts log 2</name>
+    <type>WriteToLog</type>
+    <description />
+    <distribute>N</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <loglevel>log_level_basic</loglevel>
+    <displayHeader>Y</displayHeader>
+    <limitRows>N</limitRows>
+    <limitRowsNumber>0</limitRowsNumber>
+    <logmessage>tr_set_source_table_max_timestamp_vrbls_before_inserts</logmessage>
+    <fields>
+      <field>
+        <name>max_source_last_updated_on_before_inserts</name>
+      </field>
+    </fields>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>720</xloc>
+      <yloc>432</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

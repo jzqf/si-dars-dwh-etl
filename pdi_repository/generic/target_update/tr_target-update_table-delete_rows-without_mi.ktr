@@ -14,7 +14,7 @@
         <description>The name of the schema in the source database that contains the "CDC control table"</description>
       </parameter>
       <parameter>
-        <name>PARAM_CDC_CONTROL_TABLE_BATCH_SIZE</name>
+        <name>PARAM_CDC_CONTROL_TABLE_BATCH_SIZE_DELETES</name>
         <default_value>100</default_value>
         <description>The number of CDC control rows that will be processed in a single transaction</description>
       </parameter>
@@ -111,7 +111,7 @@
       <parameter>
         <name>PARAM_ROWS_DELETED</name>
         <default_value>400</default_value>
-        <description>the number of rows ofthe target table so far deleted = (PARAM_ITER_COUNTER-1) * PARAM_CDC_CONTROL_TABLE_BATCH_SIZE</description>
+        <description>the number of rows ofthe target table so far deleted = (PARAM_ITER_COUNTER-1) * PARAM_CDC_CONTROL_TABLE_BATCH_SIZE_DELETES</description>
       </parameter>
       <parameter>
         <name>PARAM_ROWS_TO_DELETE</name>
@@ -132,6 +132,11 @@
         <name>PARAM_SOURCE_TABLE</name>
         <default_value>analysis_request</default_value>
         <description>Name of source table to mirror to target table</description>
+      </parameter>
+      <parameter>
+        <name>PARAM_SOURCE_TABLE_MAX_INSERT_ID</name>
+        <default_value />
+        <description>Maximum value of the "insert_id" column for rows to load from the source DB table for insertion into the target table</description>
       </parameter>
       <parameter>
         <name>PARAM_TARGET_DB_ID</name>
@@ -579,15 +584,15 @@
     <created_user>-</created_user>
     <created_date>2016/04/03 09:57:16.279</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2020/12/03 10:23:07.310</modified_date>
+    <modified_date>2021/03/30 10:09:45.571</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
     <notepad>
       <note>Load a block of rows from the "CDC control table" in the source DB that specify rows to delete from the target  table in the target DB.</note>
-      <xloc>496</xloc>
-      <yloc>704</yloc>
+      <xloc>480</xloc>
+      <yloc>736</yloc>
       <width>749</width>
       <heigth>23</heigth>
       <fontname>Ubuntu</fontname>
@@ -624,12 +629,12 @@ This transformation has parameters:
 
 	PARAM_CDC_CONTROL_SCHEMA_NAME			The name of the schema in the source database that contains the "CDC control table"
 	PARAM_CDC_CONTROL_TABLE_NAME				The name of the "CDC control table"
-	PARAM_CDC_CONTROL_TABLE_BATCH_SIZE		The number of CDC control rows that will be processed in a single transaction
+	PARAM_CDC_CONTROL_TABLE_BATCH_SIZE_DELETES		The number of CDC control rows that will be processed in a single transaction
 	PARAM_ITER_COUNTER							Will have the value 1, 2,  .., PARAM_ITER_COUNTER_MAX on successive calls to this job. On each call, this 
-													job should attempt to select a batch/block/page of PARAM_CDC_CONTROL_TABLE_BATCH_SIZE rows of the 
+													job should attempt to select a batch/block/page of PARAM_CDC_CONTROL_TABLE_BATCH_SIZE_DELETES rows of the 
 													CDC control table and then use these to delete the corresponding rows of the target table
 	PARAM_ITER_COUNTER_MAX						the maximum value that will be reached by PARAM_ITER_COUNTER on successive calls for the target table being treated
-	PARAM_ROWS_DELETED							the number of rows ofthe target table so far deleted = (PARAM_ITER_COUNTER-1) * PARAM_CDC_CONTROL_TABLE_BATCH_SIZE
+	PARAM_ROWS_DELETED							the number of rows ofthe target table so far deleted = (PARAM_ITER_COUNTER-1) * PARAM_CDC_CONTROL_TABLE_BATCH_SIZE_DELETES
 	PARAM_ROWS_TO_DELETE						the number of rows of the target table that will be deleted after PARAM_ITER_COUNTER has reached PARAM_ITER_COUNTER_MAX
 
 	PARAM_DYN_DB_CONN_SOURCE_DB_HOST		for source DB "dynamic" database connections
@@ -648,6 +653,9 @@ This transformation has parameters:
 	PARAM_DYN_DB_CONN_TARGET_DB_DRIVER		for target DB "dynamic" database connections
 	PARAM_DYN_DB_CONN_TARGET_DB_URL			for target DB "dynamic" database connections
 
+	PARAM_SOURCE_TABLE_MAX_INSERT_ID			Maximum value of the "insert_id" column for source rows that the ETL will insert into the target table
+													during the curret ETL run.
+
 Some of these parameters are not used:
 
 	PARAM_SOURCE_DB_ID							ID the "source" database containing tables will be mirrored to a "target" database
@@ -660,7 +668,7 @@ Some of these parameters are not used:
       <xloc>0</xloc>
       <yloc>0</yloc>
       <width>1093</width>
-      <heigth>673</heigth>
+      <heigth>712</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -680,8 +688,8 @@ Some of these parameters are not used:
       <note>Update PDI variable:
 
 	QF_UPDATE_TABLE_NUM_DELETES</note>
-      <xloc>496</xloc>
-      <yloc>1136</yloc>
+      <xloc>480</xloc>
+      <yloc>1264</yloc>
       <width>229</width>
       <heigth>49</heigth>
       <fontname>Ubuntu</fontname>
@@ -702,8 +710,8 @@ Some of these parameters are not used:
     <notepad>
       <note>Delete target rows specified by the stream of CDC control table rows. If a row to be deleted does not exist in the 
 target table (as specified by its primary key), this will *not* trigger an error here.</note>
-      <xloc>496</xloc>
-      <yloc>864</yloc>
+      <xloc>480</xloc>
+      <yloc>992</yloc>
       <width>634</width>
       <heigth>36</heigth>
       <fontname>Ubuntu</fontname>
@@ -727,10 +735,10 @@ target table (as specified by its primary key), this will *not* trigger an error
 	cdc_control_table_key_values	Comma-separated keys of the CDC control table rows (will be deleted)
 	target_table_key_values		Comma-separated keys of the target rows to delete
 	num_rows_deleted			The number of CDC control table rows in the stream. This should always equal 
-								PARAM_CDC_CONTROL_TABLE_BATCH_SIZE, except for the last batch of deletes.</note>
-      <xloc>496</xloc>
-      <yloc>752</yloc>
-      <width>649</width>
+								PARAM_CDC_CONTROL_TABLE_BATCH_SIZE_DELETES, except for the last batch of deletes.</note>
+      <xloc>480</xloc>
+      <yloc>784</yloc>
+      <width>704</width>
       <heigth>88</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
@@ -750,8 +758,8 @@ target table (as specified by its primary key), this will *not* trigger an error
     <notepad>
       <note>Delete the CDC control table rows. If a row to be deleted does not exist in the CDC control table (as specified by its 
 primary key), this will *not* trigger an error here.</note>
-      <xloc>496</xloc>
-      <yloc>1056</yloc>
+      <xloc>480</xloc>
+      <yloc>1184</yloc>
       <width>645</width>
       <heigth>36</heigth>
       <fontname>Ubuntu</fontname>
@@ -779,8 +787,8 @@ primary key), this will *not* trigger an error here.</note>
 				enabled:
 
 					Make the transformation database transactional</note>
-      <xloc>624</xloc>
-      <yloc>1216</yloc>
+      <xloc>608</xloc>
+      <yloc>1344</yloc>
       <width>462</width>
       <heigth>127</heigth>
       <fontname>Ubuntu</fontname>
@@ -806,12 +814,34 @@ databases that are maintained by ETL jobs. For example, if a table is mirrored f
 then that PSA table is mirrored to the DSA, then rows from the DSA table will get deleted on a subsequent run of 
 the ETL job after rows are deleted from the PSA table.
 
-Kym has so far decided that these "CDC control table" rows in the target DB will be inserted via a trigger on each 
-target table, so this feature has *not* currently been implemented here in the ETL.</note>
-      <xloc>496</xloc>
-      <yloc>912</yloc>
+Kym decided that these "CDC control table" rows in the target DB will be inserted via a trigger on each target table, 
+so this feature has *not* currently been implemented here in the ETL.</note>
+      <xloc>480</xloc>
+      <yloc>1040</yloc>
       <width>650</width>
       <heigth>127</heigth>
+      <fontname>Ubuntu</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>We must check for no rows; otherwise, the code below will fail where I use "IN (?)" in an SQL statement. If there are no rows, 
+it is not necessary to set QF_UPDATE_TABLE_NUM_DELETES=0 because this variable is imitialized to zero in the calling code.</note>
+      <xloc>480</xloc>
+      <yloc>896</yloc>
+      <width>693</width>
+      <heigth>36</heigth>
       <fontname>Ubuntu</fontname>
       <fontsize>9</fontsize>
       <fontbold>N</fontbold>
@@ -1011,11 +1041,6 @@ target table, so this feature has *not* currently been implemented here in the E
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Created aggregated fields</from>
-      <to>Delete block of target rows</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>Delete block of target rows</from>
       <to>Delete block of CDC control table rows</to>
       <enabled>Y</enabled>
@@ -1031,13 +1056,28 @@ target table, so this feature has *not* currently been implemented here in the E
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Delete block of CDC control table rows</from>
-      <to>Update QF_UPDATE_TABLE_NUM_DELETES</to>
+      <from>Update QF_UPDATE_TABLE_NUM_DELETES</from>
+      <to>Get transformation name</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Update QF_UPDATE_TABLE_NUM_DELETES</from>
-      <to>Get transformation name</to>
+      <from>At least one row?</from>
+      <to>Delete block of target rows</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>At least one row?</from>
+      <to>No rows - Do nothing</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Created aggregated fields</from>
+      <to>At least one row?</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Delete block of CDC control table rows</from>
+      <to>Update QF_UPDATE_TABLE_NUM_DELETES</to>
       <enabled>Y</enabled>
     </hop>
   </order>
@@ -1065,8 +1105,8 @@ target table, so this feature has *not* currently been implemented here in the E
       </output>
     </remotesteps>
     <GUI>
-      <xloc>32</xloc>
-      <yloc>864</yloc>
+      <xloc>16</xloc>
+      <yloc>992</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1094,8 +1134,52 @@ target table, so this feature has *not* currently been implemented here in the E
       </output>
     </remotesteps>
     <GUI>
-      <xloc>32</xloc>
-      <yloc>1056</yloc>
+      <xloc>16</xloc>
+      <yloc>1184</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>At least one row?</name>
+    <type>FilterRows</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <send_true_to>Delete block of target rows</send_true_to>
+    <send_false_to>No rows - Do nothing</send_false_to>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <leftvalue>num_rows_deleted</leftvalue>
+        <function>&gt;</function>
+        <rightvalue />
+        <value>
+          <name>constant</name>
+          <type>Integer</type>
+          <text>0</text>
+          <length>-1</length>
+          <precision>0</precision>
+          <isnull>N</isnull>
+          <mask>####0;-####0</mask>
+        </value>
+      </condition>
+    </compare>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>336</xloc>
+      <yloc>896</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1142,8 +1226,8 @@ target table, so this feature has *not* currently been implemented here in the E
       </output>
     </remotesteps>
     <GUI>
-      <xloc>352</xloc>
-      <yloc>784</yloc>
+      <xloc>336</xloc>
+      <yloc>816</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1186,8 +1270,8 @@ WHERE
       </output>
     </remotesteps>
     <GUI>
-      <xloc>352</xloc>
-      <yloc>1056</yloc>
+      <xloc>336</xloc>
+      <yloc>1184</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1230,8 +1314,8 @@ WHERE
       </output>
     </remotesteps>
     <GUI>
-      <xloc>352</xloc>
-      <yloc>864</yloc>
+      <xloc>336</xloc>
+      <yloc>992</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1261,8 +1345,8 @@ WHERE
       </output>
     </remotesteps>
     <GUI>
-      <xloc>352</xloc>
-      <yloc>1216</yloc>
+      <xloc>336</xloc>
+      <yloc>1344</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1277,7 +1361,7 @@ WHERE
       <method>none</method>
       <schema_name />
     </partitioning>
-    <loglevel>log_level_minimal</loglevel>
+    <loglevel>log_level_basic</loglevel>
     <displayHeader>Y</displayHeader>
     <limitRows>N</limitRows>
     <limitRowsNumber>0</limitRowsNumber>
@@ -1310,8 +1394,33 @@ PARAM_TARGET_TABLE                     = ${PARAM_TARGET_TABLE}</logmessage>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>352</xloc>
-      <yloc>1296</yloc>
+      <xloc>336</xloc>
+      <yloc>1424</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>No rows - Do nothing</name>
+    <type>Dummy</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <attributes />
+    <cluster_schema />
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>128</xloc>
+      <yloc>896</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1337,11 +1446,24 @@ SELECT
 FROM
     ${PARAM_CDC_CONTROL_SCHEMA_NAME}.${PARAM_CDC_CONTROL_TABLE_NAME}
 WHERE
-    cdc_type='${QF_CDC_CONTROL_TABLE_OP_CODE_DELETE}'
+    cdc_type='${QF_CDC_CONTROL_TABLE_OP_CODE_DELETE}' 
+--
+-- This condition was originally added to avoid updating or deleting rows that are not yet inserted during the current ETL run. However, it is not correct for the following reason:
+--
+-- If an etl_cdc_xxxx row of type "d" specifies a row that has not yet been migrated to the target database, it will have no effect when processed by the ETL job and then the 
+-- ETL job will delete this etl_cdc_xxxx row. This sounds bad; however, the next run of the ETL job will *not* INSERT that row into the target database because that row no longer 
+-- exists in the source database. So although it never will be DELETEd from the target database, neither will it ever be INSERTed.
+--
+-- Similarly for UPDATEs: 
+--
+-- If an etl_cdc_xxxx row of type "u" specifies a row that has not yet been migrated to the target database, it will have no effect when processed by the ETL job and then the 
+-- ETL job will delete this etl_cdc_xxxx row. This sounds bad; however, the next run of the ETL job should INSERT that row into the target database and the state of that row 
+-- at that time will include the changes from the UPDATE that triggered the creation of the etl_cdc_xxxx of type "u" in the first place.
+--    AND cdc_key_id &lt;= ${PARAM_SOURCE_TABLE_MAX_INSERT_ID} 
 ORDER BY
     cdc_id
 LIMIT 
-    ${PARAM_CDC_CONTROL_TABLE_BATCH_SIZE}</sql>
+    ${PARAM_CDC_CONTROL_TABLE_BATCH_SIZE_DELETES}</sql>
     <limit>0</limit>
     <lookup />
     <execute_each_row>N</execute_each_row>
@@ -1356,8 +1478,8 @@ LIMIT
       </output>
     </remotesteps>
     <GUI>
-      <xloc>352</xloc>
-      <yloc>704</yloc>
+      <xloc>336</xloc>
+      <yloc>736</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1408,8 +1530,8 @@ setVariable("QF_UPDATE_TABLE_NUM_DELETES", num_rows_deleted_aggregated, "r");
       </output>
     </remotesteps>
     <GUI>
-      <xloc>352</xloc>
-      <yloc>1136</yloc>
+      <xloc>336</xloc>
+      <yloc>1264</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1431,13 +1553,16 @@ setVariable("QF_UPDATE_TABLE_NUM_DELETES", num_rows_deleted_aggregated, "r");
     <logmessage>Error handling triggered for "Delete block of target rows"</logmessage>
     <fields>
       <field>
-        <name>cdc_control_table_key_values</name>
+        <name>error_number</name>
       </field>
       <field>
-        <name>target_table_key_values</name>
+        <name>error_description</name>
       </field>
       <field>
-        <name>num_rows_deleted</name>
+        <name>error_fields</name>
+      </field>
+      <field>
+        <name>error_codes</name>
       </field>
     </fields>
     <attributes />
@@ -1449,8 +1574,8 @@ setVariable("QF_UPDATE_TABLE_NUM_DELETES", num_rows_deleted_aggregated, "r");
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>864</yloc>
+      <xloc>128</xloc>
+      <yloc>992</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1472,13 +1597,16 @@ setVariable("QF_UPDATE_TABLE_NUM_DELETES", num_rows_deleted_aggregated, "r");
     <logmessage>Error handling triggered for "Delete block of CDC control table rows"</logmessage>
     <fields>
       <field>
-        <name>cdc_control_table_key_values</name>
+        <name>error_number</name>
       </field>
       <field>
-        <name>target_table_key_values</name>
+        <name>error_description</name>
       </field>
       <field>
-        <name>num_rows_deleted</name>
+        <name>error_fields</name>
+      </field>
+      <field>
+        <name>error_codes</name>
       </field>
     </fields>
     <attributes />
@@ -1490,8 +1618,8 @@ setVariable("QF_UPDATE_TABLE_NUM_DELETES", num_rows_deleted_aggregated, "r");
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>1056</yloc>
+      <xloc>128</xloc>
+      <yloc>1184</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1500,10 +1628,10 @@ setVariable("QF_UPDATE_TABLE_NUM_DELETES", num_rows_deleted_aggregated, "r");
       <source_step>Delete block of CDC control table rows</source_step>
       <target_step>Write error message to log 2</target_step>
       <is_enabled>Y</is_enabled>
-      <nr_valuename />
-      <descriptions_valuename />
-      <fields_valuename />
-      <codes_valuename />
+      <nr_valuename>error_number</nr_valuename>
+      <descriptions_valuename>error_description</descriptions_valuename>
+      <fields_valuename>error_fields</fields_valuename>
+      <codes_valuename>error_codes</codes_valuename>
       <max_errors />
       <max_pct_errors />
       <min_pct_rows />
@@ -1512,10 +1640,10 @@ setVariable("QF_UPDATE_TABLE_NUM_DELETES", num_rows_deleted_aggregated, "r");
       <source_step>Delete block of target rows</source_step>
       <target_step>Write error message to log</target_step>
       <is_enabled>Y</is_enabled>
-      <nr_valuename />
-      <descriptions_valuename />
-      <fields_valuename />
-      <codes_valuename />
+      <nr_valuename>error_number</nr_valuename>
+      <descriptions_valuename>error_description</descriptions_valuename>
+      <fields_valuename>error_fields</fields_valuename>
+      <codes_valuename>error_codes</codes_valuename>
       <max_errors />
       <max_pct_errors />
       <min_pct_rows />
