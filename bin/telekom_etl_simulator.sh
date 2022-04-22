@@ -6,9 +6,9 @@
 # user "postgres" so that no PostgreSQL password is required (which would be
 # environment-specific).
 #
-# To execute this script manally on the DSA server, use:
+# To execute this script manually on the DSA server, use:
 #
-#     sudo -iu postgres /opt/qfree/dwh_etl/bin/telekom_etl_simulator.sh dwh_dsa_obo
+#     sudo -iu postgres /opt/qfree/bin/telekom_etl_simulator.sh dwh_dsa_obo
 #
 # This script contains code written by KymF for the script:
 #
@@ -33,7 +33,7 @@ DATABASE=$1
 # Check input parameter for DATABASE.
 if [[ -z "$DATABASE" ]]; then
     echo "Script must have database name as argument"
-    echo "  Example:  sudo -iu postgres /opt/qfree/dwh_etl/bin/telekom_etl_simulator.sh dwh_dsa_obo"
+    echo "  Example:  sudo -iu postgres /opt/qfree/bin/telekom_etl_simulator.sh dwh_dsa_obo"
     exit -2
 fi
 
@@ -80,6 +80,5 @@ fi;
 #
 # If you want to echo the content of the SQL script to the log, 
 # use the option:  --echo-queries
-psql --echo-all --echo-errors --set ON_ERROR_STOP=on --set AUTOCOMMIT=on --set ON_ERROR_ROLLBACK=on -d $DATABASE -f "/opt/qfree/dwh_etl/bin/telekom_etl_simulator.sql"
-
+psql --echo-all --echo-errors --set ON_ERROR_STOP=on --set AUTOCOMMIT=on --set ON_ERROR_ROLLBACK=on -d $DATABASE -f "/opt/qfree/bin/telekom_etl_simulator.sql"
 
